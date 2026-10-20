@@ -1,0 +1,137 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc9       admits   806 GB (avail 665, growth 101, headroom 0, waiters 0/0 GB) load 81/128 running 39 disk 213 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3896271-1792481779 after 1 s
+NATIVE_OVER32 265
+[
+ {
+  "driver": "u_io.start$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 549,
+  "flops": 2
+ },
+ {
+  "driver": "u_core.start_b$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 293,
+  "flops": 1
+ },
+ {
+  "driver": "u_io.em_w$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 292,
+  "flops": 1
+ },
+ {
+  "driver": "u_core.u_rr.rst_n[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+  "loads": 168,
+  "flops": 168
+ },
+ {
+  "driver": "u_core.u_rr.rst_n[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+  "loads": 128,
+  "flops": 128
+ },
+ {
+  "driver": "_12617_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14962_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14966_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14970_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14976_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14980_/Y (OR2x2_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14985_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14991_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_14995_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_15005_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_19176_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 67,
+  "flops": 0
+ },
+ {
+  "driver": "_18285_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 64,
+  "flops": 0
+ },
+ {
+  "driver": "_18559_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 64,
+  "flops": 0
+ },
+ {
+  "driver": "_18831_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 64,
+  "flops": 0
+ },
+ {
+  "driver": "_19103_/Y (AND3x1_ASAP7_75t_R)",
+  "loads": 64,
+  "flops": 0
+ },
+ {
+  "driver": "_14999_/Y (OR3x1_ASAP7_75t_R)",
+  "loads": 63,
+  "flops": 0
+ },
+ {
+  "driver": "u_core.first_q$_DFF_PN1_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+  "loads": 60,
+  "flops": 0
+ },
+ {
+  "driver": "u_lpl_0_w.g_chunk[0].u_local.rq$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+  "loads": 56,
+  "flops": 0
+ },
+ {
+  "driver": "u_lpl_0_w.g_chunk[1].u_local.rq$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+  "loads": 56,
+  "flops": 0
+ },
+ {
+  "driver": "u_lpl_0_w.g_chunk[2].u_local.rq$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+  "loads": 56,
+  "flops": 0
+ }
+]
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3896271-1792481779): exit 0

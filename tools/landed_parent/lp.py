@@ -125,6 +125,7 @@ LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
+LIB_PORTS['ot_pl_land_field_copy_bit'] = dict(LIB_PORTS['ot_pl_pad'])   # KV-AHUB7: kept root / reset-group copies
 
 
 
@@ -498,6 +499,14 @@ class Parent:
         self.direct_timing = bool(spec.get("landing_direct_timing", False))
         self.chunk_bits = int(spec.get("landing_chunk_bits", 0))
         self.reset_forest = spec.get("landing_reset_forest", False)
+        # KV-AHUB7 10-20: one kept same-edge root copy per region when the summed forest branches exceed 32
+        # (same reset age; the parent reset pin then drives one D pin per region).
+        self.reset_root_copies = bool(spec.get("landing_reset_root_copies", False))
+        # KV-AHUB7 10-20 (opt-in): a child reset pin connected to '{K{<reset_port>}}' is K identical resets; the child's
+        # reset run lands once and its LAST stage is K kept same-edge copies (no added edge).
+        self.child_reset_copies = bool(spec.get("child_reset_copies", False))
+        if self.child_reset_copies and (spec.get("regional_child_resets") or spec.get("regional_child_clocks")):
+            raise SystemExit("child_reset_copies excludes regional_child_resets / regional_child_clocks ({K{rst}} syntax)")
         # QW-CTLM3 10-19: landing_reset_lead -- the ring / read rq (their own re-registering flop) released at the SAME
         # edge as a t = 0 child (regional run RB - 2 stages + rq), not one edge after it.  Without it a ring misses the
         # first word its source (child or input port) presents on the first post-reset edge: the flat reference accepts
@@ -799,7 +808,7 @@ class Parent:
             i = ins["inst"]
             cs = []
             for pin, ex in ins["conns"].items():
-                if S.get("reset_net") and self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
+                if S.get("reset_net") and self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and self.rst_copies(ex):
                     ex = ref_reset
                 elif self.cports[ins["module"]][pin] == "in":
                     for (si, net), rep_ in sub.items():
@@ -858,7 +867,7 @@ class Parent:
             row['branches'] = math.ceil(row['leaves'] / 32)
             row['FFs'] = depth - 2 + row['branches'] + row['leaves']
             scalar_uses = sum(self.region[ins['inst']] == region and any(
-                pin in (self.S.get('reset_pins') or []) and ex.strip() == self.rst
+                pin in (self.S.get('reset_pins') or []) and self.rst_copies(ex)
                 for pin, ex in ins['conns'].items()) for ins in self.insts)
             scalar_uses += sum(binding['regions'].count(region) for binding in self.regional_bindings.values()
                                if binding['role'] == 'resets')
@@ -866,10 +875,18 @@ class Parent:
             if scalar_uses > 32:
                 raise SystemExit(f'landing_reset_forest {region} scalar child reset boundary has {scalar_uses} ports; partition still required')
         root_loads = sum(v['branches'] if depth == 2 else 1 for v in regions.values())
+        copies = 0
+        if root_loads > 32 and self.reset_root_copies:
+            worst = max(v['branches'] if depth == 2 else 1 for v in regions.values())
+            if worst > 32:
+                raise SystemExit(f'landing_reset_forest: one region needs {worst} root loads even with root copies')
+            copies, root_loads = len(regions), len(regions)
         if root_loads > 32:
-            raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited')
+            raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited'
+                             ' (landing_reset_root_copies: one kept same-edge root copy per region)')
         return dict(regional_stages=depth, root_D_loads=root_loads, regions=regions,
-                    incremental_FFs=sum(v['FFs']-depth for v in regions.values()),
+                    **({} if not copies else dict(regional_root_copies=copies)),
+                    incremental_FFs=sum(v['FFs']-depth for v in regions.values()) + max(copies - 1, 0),
                     required_rtl_sources=RESET_FOREST_RTL,
                     scope='Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified.')
 
@@ -924,7 +941,13 @@ class Parent:
             w(f"    // L2H-PSLICE 10-19 regional_reset_ports: one reset port per region, landed {RB} stages on its own root")
             w(f"    // beside its pin; no reset root, no cross-region reset path (the die releases all on one edge)")
         else:
-            w(f"    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root));")
+            if forest and forest.get('regional_root_copies'):
+                w(f"    // landing_reset_root_copies: one kept same-edge root copy per region (same reset age as u_lpr_root)")
+                for j, r in enumerate(self.regions):
+                    w(f'    wire lpr_root_{r};  (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID({8192 + j})) '
+                      f'u_lpr_root_{r} (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root_{r}));')
+            else:
+                w(f"    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root));")
         if forest:
             for r in self.regions:
                 expression = '+'.join(forest['regions'][r]['terms'])
@@ -934,8 +957,13 @@ class Parent:
         for r in self.regions:
             if forest:
                 w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
-                w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
-                  f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
+                if forest.get('regional_root_copies'):
+                    rl = f'((LPR_LEAVES_{r}+31)/32)' if RB-1 == 2 else '1'
+                    w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({rl})) u_lpr_{r} '
+                      f'(.ck(ck_{r}), .d(lpr_root_{r}), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
+                else:
+                    w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
+                      f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
             elif self.rports is not None:
                 w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB})) u_lpr_{r} (.ck(ck_{r}), .d({self.rst}_{r}), .q(lpr_{r}));"
                   f"   // regional reset port landed on ck_{r}")
@@ -999,8 +1027,21 @@ class Parent:
         for ins in self.insts:
             i, r = ins["inst"], self.region[ins["inst"]]
             tc = P["t"].get(i, 0) + self.rx
-            if any(self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items()):
+            if any(self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and self.rst_copies(ex) for pin, ex in ins["conns"].items()):
                 m4 = int(S.get("mut4_stages", 1))
+                kc = self.child_rst_copies(ins)
+                if kc > 1:
+                    if tc < 1:
+                        raise SystemExit(f"{i}: {kc} reset copies need a reset run of >= 1 stage")
+                    kk = f"(MUT == 4) ? {tc - 1 + m4} : {tc - 1}" if i == mc and mut else f"{tc - 1}"
+                    w(f"    wire lpr_c_{i}_p;  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d(lpr_{r}), .q(lpr_c_{i}_p));"
+                      f"   // t({i}) = {tc}: {tc - 1} shared stages + the last stage as {kc} kept copies")
+                    w(f"    wire [{kc - 1}:0] lpr_c_{i};")
+                    for c in range(kc):
+                        w(f'    (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID({12288 + 64 * self.insts.index(ins) + c})) '
+                          f"u_lprc_{i}_k{c} (.ck(ck_{r}), .d(lpr_c_{i}_p), .q(lpr_c_{i}[{c}]));")
+                    rsub[i] = f"lpr_c_{i}"
+                    continue
                 kk = f"(MUT == 4) ? {tc + m4} : {tc}" if i == mc and mut else f"{tc}"
                 w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d(lpr_{r}), .q(lpr_c_{i}));"
                   + (f"   // t({i}) = {tc}" if not self.reference else f"   // reference schedule: held {tc} past the landing epochs"))
@@ -1033,7 +1074,7 @@ class Parent:
                 elif pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
                     cw = self.cwidth[ins["module"]].get(pin, 1)
                     ex = f"ck_{r}" if cw == 1 else f"{{{cw}{{ck_{r}}}}}"
-                elif i in rsub and self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
+                elif i in rsub and self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and self.rst_copies(ex):
                     ex = rsub[i]
                 elif self.cports[ins["module"]][pin] == "in":
                     for (si, net), rep in sub.items():
@@ -1054,9 +1095,30 @@ class Parent:
         w("endmodule")
         return "\n".join(L) + "\n", dict(reset_region=rr, hops=hops, RB=RB)
 
+    def rst_copies(self, ex):
+        """0: not the parent reset; 1: plain '<rst>'; K: '{K{<rst>}}' = K kept same-edge copies of the child's
+        LAST reset-run stage (KV-AHUB7 10-20: a child whose reset pin is a K-bit group of identical resets)."""
+        if not self.rst:
+            return 0
+        e = ex.strip()
+        if e == self.rst:
+            return 1
+        if not self.child_reset_copies:
+            return 0
+        m = re.fullmatch(r"\{\s*(\d+)\s*\{\s*" + re.escape(self.rst) + r"\s*\}\s*\}", e)
+        return int(m.group(1)) if m and int(m.group(1)) >= 1 else 0
+
+    def child_rst_copies(self, ins):
+        ks = [self.rst_copies(ex) for pin, ex in ins["conns"].items()
+              if self.cports[ins["module"]][pin] == "in" and pin in (self.S.get("reset_pins") or [])]
+        ks = [k for k in ks if k]
+        if len(set(ks)) > 1:
+            raise SystemExit(f"{ins['inst']}: reset pins with different copy counts {ks}")
+        return ks[0] if ks else 0
+
     def mut_child(self, P):
         kids = [ins["inst"] for ins in self.insts
-                if any(self.cports[ins["module"]][pin] == "in" and pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items())]
+                if any(self.cports[ins["module"]][pin] == "in" and pin in (self.S.get("reset_pins") or []) and self.rst_copies(ex) for pin, ex in ins["conns"].items())]
         want = self.S.get("mut_child")       # a child whose late reset is observable after warm-up (state that outlives
         if want:                             # the reset, e.g. a sticky flag); a pure pipeline child forgets it in 1 edge
             if want not in kids:
@@ -1157,7 +1219,8 @@ class Parent:
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
         flops_oreg = sum(eval_width(self.ports[p]["range"], self.env) * k for p, k in (P.get("oregs") or {}).items())
         flops_rst = (len(self.regions) * rt["RB"] if self.rports is not None else 1 + len(self.regions) * (rt["RB"] - 1)) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
-            pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items()))
+            pin in (S.get("reset_pins") or []) and self.rst_copies(ex) for pin, ex in i["conns"].items()))
+        flops_rst += sum(self.child_rst_copies(i) - 1 for i in self.insts if self.child_rst_copies(i) > 1)
         # emit() creates a distinct W1 u_lprb pad for EVERY regional reset
         # vector bit, in addition to the ordinary scalar child reset pad.
         regional_reset_pads = [dict(instance=i, pin=pin, bit=bit,
@@ -1176,7 +1239,7 @@ class Parent:
                    if p["dir"] == "in" and p["name"] not in self.ck | self.preserve_ck | self.static | {self.rst, self.reset_port}}
         port_out = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"] if p["dir"] == "out"}
         no_rst = [i["inst"] for i in self.insts if t.get(i["inst"], 0) and not any(
-            self.cports[i["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items())]
+            self.cports[i["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and self.rst_copies(ex) for pin, ex in i["conns"].items())]
         return dict(
             lane="PARENTS-LANDED", generator="tools/landed_parent/lp.py", flat=S["top"], top=top_lp,
             standard="landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region "

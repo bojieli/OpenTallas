@@ -1,0 +1,271 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc9       admits   811 GB (avail 663, growth 95, headroom 0, waiters 0/0 GB) load 74/128 running 37 disk 212 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3907161-1792481962 after 0 s
+mkdir -p /work/results/asap7/opentallas_qkd_ahub_static_dw_g3_lp_asap7_ref_gate/base/
+echo 833.333000000 > /work/results/asap7/opentallas_qkd_ahub_static_dw_g3_lp_asap7_ref_gate/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_qkd_ahub_static_dw_g3_lp_asap7_ref_gate/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_qkd_ahub_static_dw_g3_lp_asap7_ref_gate/base/clock_period.txt
+Setting clock period to 833.333000000
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib
+7. Executing Liberty frontend: /src/physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_tt.lib
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+12. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+13. Executing Liberty frontend: /src/physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh/ot_nhb_zh_tt.lib
+14. Executing Liberty frontend: /src/physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf/ot_qkh_recip_leaf_tt.lib
+15. Executing Verilog-2005 frontend: /src/rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g3_lp.sv
+16. Executing Verilog-2005 frontend: /src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv
+17. Executing Verilog-2005 frontend: /src/rtl/hdc/nearhbm/ot_qkd_ahub_core.sv
+18. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_delay.sv
+19. Executing Verilog-2005 frontend: /src/rtl/lib/ot_rst_pipe.sv
+20. Executing Verilog-2005 frontend: /src/rtl/common/landed_parent/ot_pl_land.sv
+21. Executing Verilog-2005 frontend: /src/rtl/common/landed_parent/ot_pl_land_field_copies.sv
+22. Executing Verilog-2005 frontend: /src/rtl/common/landed_parent/ot_pl_land_reset_forest.sv
+23. Executing Verilog-2005 frontend: /src/rtl/hdc/nearhbm/ot_nhb_tiles_bb.v
+24. Executing Verilog-2005 frontend: /src/rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v
+25. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+26. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_ahub_static_dw_g3_lp'.
+27. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_ahub_static_dw_g3_lp'.
+28. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_ahub_static_dw_g3_lp'.
+29. Executing HIERARCHY pass (managing design hierarchy).
+30. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_ahub_static_dw_g3_lp'.
+30.1. Analyzing design hierarchy..
+30.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkd_drly'.
+Warning: Replacing memory \g_r.r with list of registers. See /src/rtl/hdc/nearhbm/ot_qkd_ahub_core.sv:389
+30.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkd_drly'.
+30.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkd_drly'.
+30.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkd_drly'.
+30.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkd_drly'.
+30.7. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_ahub_static_core_la_safe'.
+Warning: Replacing memory \rz with list of registers. See /src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv:530
+Warning: Replacing memory \ret_sel with list of registers. See /src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv:527
+Warning: Replacing memory \lm_sel with list of registers. See /src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv:514
+Warning: Replacing memory \rt_q with list of registers. See /src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv:565
+Warning: Replacing memory \zseen with list of registers. See /src/rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv:483
+30.8. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_ahub_static_io_safe'.
+30.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkd_drly'.
+30.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkd_drly'.
+30.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkd_drly'.
+30.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_pad'.
+Warning: Replacing memory \g_reg.r with list of registers. See /src/rtl/common/landed_parent/ot_pl_land.sv:263
+30.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_r'.
+30.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_w'.
+30.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_r'.
+30.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_w'.
+30.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_r'.
+30.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_w'.
+30.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_r'.
+30.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_w'.
+30.21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_r'.
+30.22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_w'.
+30.23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_r'.
+30.24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_w'.
+30.25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_r'.
+30.26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_vector_reset_w'.
+30.27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_reset_forest'.
+30.28. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_reset_forest'.
+30.29. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_reset_forest'.
+30.30. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_reset_forest'.
+30.31. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_pad'.
+30.32. Analyzing design hierarchy..
+30.33. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_ahub_static_dec_safe'.
+30.34. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_pipe'.
+30.35. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_local_r'.
+30.36. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_local_w'.
+Warning: Replacing memory \epoch with list of registers. See /src/rtl/common/landed_parent/ot_pl_land.sv:191
+Warning: Replacing memory \data with list of registers. See /src/rtl/common/landed_parent/ot_pl_land.sv:191
+30.37. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_local_r'.
+30.38. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_local_w'.
+30.39. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.40. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.41. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.42. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.43. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.44. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.45. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.46. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.47. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.48. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.49. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.50. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.51. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.52. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.53. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.54. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.55. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.56. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.57. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.58. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.59. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.60. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.61. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.62. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.63. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.64. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.65. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.66. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.67. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.68. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.69. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.70. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.71. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.72. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.73. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.74. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.75. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.76. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.77. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.78. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.79. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.80. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.81. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.82. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.83. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.84. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.85. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.86. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.87. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.88. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.89. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.90. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.91. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.92. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.93. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.94. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.95. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.96. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.97. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.98. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.99. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.100. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.101. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.102. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.103. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.104. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.105. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.106. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.107. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.108. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.109. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.110. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.111. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.112. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.113. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.114. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.115. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.116. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.117. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.118. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.119. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.120. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.121. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.122. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.123. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.124. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.125. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.126. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.127. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.128. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.129. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.130. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.131. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.132. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.133. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.134. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.135. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.136. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.137. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.138. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.139. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.140. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.141. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.142. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.143. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.144. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.145. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.146. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.147. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.148. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.149. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.150. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.151. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.152. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.153. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.154. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.155. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.156. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.157. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.158. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.159. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.160. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.161. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.162. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.163. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.164. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.165. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.166. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.167. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.168. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.169. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.170. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.171. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.172. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.173. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.174. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.175. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.176. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.177. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.178. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.179. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.180. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.181. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.182. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.183. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.184. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.185. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.186. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.187. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.188. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.189. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.190. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.191. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.192. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.193. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.194. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.195. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.196. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.197. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.198. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.199. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.200. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.201. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.202. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.203. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.204. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.205. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.206. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.207. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.208. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.209. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.210. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.211. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.212. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+30.213. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_field_copy_bit'.
+ERROR: Module `\OT_LAND_RESET_FOREST_REQUIRES_DEPTH2_LEAVES1_TO1024' referenced in module `$paramod$1ed65b38d6401616bfc2a4de06534ed45e01dbd4\ot_pl_land_reset_forest' in cell `\g_invalid_shape.u_bad' is not part of the design.
+Elapsed time: 0:02.64[h:]min:sec. CPU time: user 2.47 sys 0.16 (99%). Peak memory: 82560KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_qkd_ahub_static_dw_g3_lp_asap7_ref_gate/base/1_1_yosys_canonicalize.rtlil] Error 2
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3907161-1792481962): exit 2

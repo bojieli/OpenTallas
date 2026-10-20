@@ -1,0 +1,141 @@
+{
+ "name": "qkd_ahub_g6a-g6c-COMMIT",
+ "block": "qkd_ahub_static_dw_g6_lp",
+ "ref_tile": true,
+ "owner": "Claude:KV-AHUB7",
+ "purpose": "AHUB6 native-32 hub, canonical lp.py parent (no derived-record helper); u_rx/u_ry/root copies fenced in c; no added cycles vs g3.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/kv-ahub7-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/landed_parent/lp.py",
+   "tools/qwen_kv_die/ahub6",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/test/qwen_kv_die/tb_qkd_ahub_static_dw_g6.sv",
+   "physical/ref_tile/ot_nhb_zh_m5",
+   "physical/ref_tile/qkh_recip_ref",
+   "results/arch/kv_ahub6_1020",
+   "results/rtl/qwen_kv_ahub6_1020",
+   "tools/qwen_kv_die/ahub7",
+   "results/arch/kv_ahub7_1020",
+   "results/rtl/qwen_kv_ahub7_1020"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_ahub_static_dw_g6_lp #(.Z_LAND(6), .AP_LAND(3), .FR_LAND(3)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g6_lp.sv rtl/hdc/nearhbm/qkd_ahub6_controls.sv rtl/hdc/nearhbm/ot_qkd_ahub_core.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_pipe.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/hdc/nearhbm/ot_nhb_tiles_bb.v rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ahub_g6_m0",
+    "cmd": "bash tools/qwen_kv_die/ahub7/bench.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "pass_witness": "results/rtl/qwen_kv_ahub7_1020/m0.log"
+   },
+   {
+    "name": "ahub_g6_m1",
+    "cmd": "bash tools/qwen_kv_die/ahub7/bench.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=1 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub7_1020/m1.log"
+   },
+   {
+    "name": "ahub_g6_m19",
+    "cmd": "bash tools/qwen_kv_die/ahub7/bench.sh {RUN}/bench/m19 19",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=19 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub7_1020/m19.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_ahub_g6a/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_ahub_g6a/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_ahub_g6a --out {RUN}/record/views/qkd_ahub_static_dw_g6_lp --macro-view physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh --macro-view physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_ahub_g6a/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_ahub_g4a/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_ahub_g4a/qkd_ahub_g6a-g6c-COMMIT"
+  }
+ ],
+ "cycles_added": 9,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "AHUB6 native-32 source (CHUNK2 landings, kept same-edge command/metadata/decoder/capture copies) generated canonically by lp.py (KV-AHUB7); u_rx/u_ry, the 7 root copies and the u_io reset-copy flops fenced in c."
+}
