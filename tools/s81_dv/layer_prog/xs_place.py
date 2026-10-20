@@ -487,7 +487,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         # The planner sees actual physical pairs; assignments are then translated
         # back to the stable field-slot numbering used by cfg and image writers.
         slot_ids = list(range(len(qa)))
-        if NPAIRS == 12:
+        if NPAIRS == 12 and XO.on('OT_XS_PAIR_ROTATE'):
             rot = (k * npair) % len(qa)
             slot_ids = slot_ids[rot:] + slot_ids[:rot]
         slot_ids = slot_ids[:npair]
