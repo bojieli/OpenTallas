@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_hr_core_order_n32",
+ "enable": false,
+ "reason": "Exact selected source already contains all input/output pin registers; adding a flow wrapper changes the boundary latency."
+}
