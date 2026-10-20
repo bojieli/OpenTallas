@@ -15,7 +15,49 @@ This answers the owner's request at 18:18 to measure the real decode rate with c
   - DIAG = measured on RTL that differs from the release source. It does NOT count as measured.
   - PRICED = plan price.
 
-## Single user (1u): 233,497 cycles/token = 5,141 tok/s (composed), 67.5% REL-measured. Target is >=90%: NOT MET
+## 10-20 TOKSIM-QW2: die edges folded into the schedule -> 1u 254,125 cycles/token = 4,724 tok/s; 4u 12,601 tok/s (NEWEST)
+
+This is now the composition of record (`cycles.json`, `inputs.json`). It is built on main (360c64320) plus the STG and TOKSIM-QW branches, so it uses main's `dv_lower_mat.STN_KC` per-op kc. With no die edges this tree gives 234,253 cycles = 5,124.7 tok/s; the 10-19 branch number was 233,497 with kc=1.
+
+**What changed**
+- **Die edges are in the schedule.** `dv_layer.compose(die_edges=...)` inserts each priced die edge as its own PRICED stage row at a named critical-path boundary (`EDGE_POINTS`). Everything after the boundary moves, and so do the spliced calendar, the chained period and L0 cold. The old flat 36 x 52 term is retired (`unfolded_cycles` 0).
+- **Attention is split.** D2D C2K (30) and K2C plus the landing tail (16) are REL rows from the gen3-identical pair RTL. Only the KV die service (1,779, the kvs14c stand-in) stays DIAG.
+- **DV rows.** `layer.dv_rel_rows` lists every DV stage on the gen3 release-parameter ages (REL) against the committed pre-gen3 ages (the old DIAG rows): SSQ +21, QK/RoPE +89, residual 1 and 2 +42 each, SiLU +88. With the same die edges, the chained layer is 6,669 on the old ages and 6,951 on the release ages.
+
+**Die edges per layer (604 in total; 395 with the slice2 plan bound)**
+
+| edge | boundary | cycles/layer | source |
+|---|---|---|---|
+| ctlm hr output landing +4 on each matvec go | qkv, o, gu, down | 16 | QW-CTLM3 lp D2/K1 (outputs +4). CTLM5 D4/K2 would make it +6 |
+| ctlm tl table-load landing | qkv | 2 | QW-CTLM3 tl +2 |
+| die landing, q3h broadcast 2 x 3 | qkv, gu | 6 | dv2f19g3r landing_price.json |
+| die landing, rs reduction 2 x 3 | qk, silu | 6 | landing_price.json |
+| die landing, DV chain slice<->slice hops 11 x 3 | before residual 2 | 33 | landing_price.json (182 face links owed) |
+| native59 hardened split +5 | attention | 5 | QW-N59-4 notice (replaces the N59-3 +1 on embedding words only) |
+| slice2 landed parent: forwarded lanes + taps | before residual 2 | 536 (plan 327) | QW-SLICE5 plan 327; QW-SLICE6/GEN3 bound 536, which ROOT accepted (8.3%) |
+| stream | n/a | 0 | gen3 qfd_dv_stream xw +3 is already in the REL ages; QW-STREAM2 (-1/xw) not adopted |
+| CALR | n/a | 0 | no price yet: GAP |
+
+The landings sum to 45 (the worst case of the 10-19 price). The edges are all on the one serial layer path, so where an edge sits does not change the total. Per-port placement waits for the qfd_dv_s5_lp record.
+
+**1u:** 254,125 cycles/token = **4,724.0 tok/s** at 833 ps. That is -1.8% against the price of record (4,810.9). Chained layer 6,951, L0 cold 7,467.
+- Split by grade: REL 159,612 (62.8%), DIAG 68,400 (26.9%: KV service 1,779/layer + attention return 98/layer), PRICED 24,816 (9.8%: die edges 604/layer, head 3,101, embedding 272), plan gap 1,297.
+- With the slice2 plan bound (327): 246,601 cycles = 4,868.1 tok/s, 64.7% REL.
+
+**4u (NEWEST):** 12,601.2 tok/s aggregate, from 95,267 cycles/token. Per user: 4,383 / 4,109 / 2,192 / 1,918 tok/s.
+- This is the OVL link-schedule frame scaled by (6,842 + 604) / 6,842 = 1.0883. The frame was built on the 1u dh2 pair period of 6,842 per layer, and every user-layer moves by the same folded die edges.
+- With the plan bound it is 12,965.1 tok/s.
+- It is still NEWEST, not REL: OVL is not in gen3 and no serial-MU paired testbench exists.
+
+**Still open (target >= 90% REL NOT MET):**
+- KV attention service on GEN9 (TOKSIM-KVATTN job3 is live on ep5; it belongs to that lane and is not duplicated here).
+- An attention-return bench mode on gen3.
+- The head span in RTL.
+- Exact slice2 per-port offsets (lp record) and a CALR price.
+
+No new simulation was needed: the composition uses only committed REL records, and no fleet jobs were launched.
+
+## (10-19, superseded) Single user (1u): 233,497 cycles/token = 5,141 tok/s (composed), 67.5% REL-measured. Target is >=90%: NOT MET
 
 Update 10-19 21:50: the DV families are now REL. TOKSIM-QW/STG re-ran the DV stage benches on the gen3 RTL (claude/toksim-qw-stg-1019 21bd29268, `stg/record.json`; copies of the ages are in `stg/`). The run used the tb_qfd_dv2 N12 build, all 31 build sources byte-identical to gen3, Verilator 5.050, and real L0/L1 P8191 operands.
 

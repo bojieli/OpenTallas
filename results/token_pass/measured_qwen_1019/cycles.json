@@ -7,24 +7,24 @@
  "result": {
   "1u": {
    "users": 1,
-   "cycles_per_token": 233497,
-   "tok_s": 5141.3,
+   "cycles_per_token": 254125,
+   "tok_s": 4724.0,
    "clock_ps": 833.0,
    "layer": {
-    "chained": 6326,
-    "l0_cold": 6842,
-    "layer_latency": 6359,
+    "chained": 6951,
+    "l0_cold": 7467,
+    "layer_latency": 6984,
     "priced_chained_ctlm": 6843,
-    "dv_layer_priced_chained": 5830,
+    "dv_layer_priced_chained": 5851,
     "calendar": {
      "ok": true,
      "entries": 405,
-     "last_issue": 6239
+     "last_issue": 6864
     },
     "calendar_clashes": [
      {
       "edge_w5": 3739,
-      "a": "resid1: PORTS s10 AR off b22",
+      "a": "resid1: PORTS s4 AR off b16",
       "b": "SEG base 14"
      }
     ],
@@ -38,159 +38,316 @@
       "grade": "REL"
      },
      {
-      "stage": "qkv matvec L9 -> VM QKV (column tiles + STN)",
+      "stage": "die edge @pre_qkv: ctlm hr output landing +4 (qfd_tt_ctlm_dv lp D2/K1: every hr output +4) on each matvec go",
       "start": 41,
-      "end": 357,
+      "end": 45,
+      "cycles": 4,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
+      "stage": "die edge @pre_qkv: ctlm tl table-load landing +2 (per-layer CROM/PROG table stream)",
+      "start": 45,
+      "end": 47,
+      "cycles": 2,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
+      "stage": "die edge @pre_qkv: die landing q3h broadcast (n1/E2, +3 per crossing)",
+      "start": 47,
+      "end": 50,
+      "cycles": 3,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
+      "stage": "qkv matvec L9 -> VM QKV (column tiles + STN)",
+      "start": 50,
+      "end": 366,
       "cycles": 316,
       "priced_cycles": 259,
       "grade": "REL"
      },
      {
+      "stage": "die edge @pre_qk: die landing rs reduction (n1/E2, +3 per crossing)",
+      "start": 368,
+      "end": 371,
+      "cycles": 3,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
       "stage": "QK-norm / RoPE / v*r -> D2D q,k,v (DV)",
-      "start": 359,
-      "end": 810,
+      "start": 371,
+      "end": 822,
       "cycles": 451,
       "priced_cycles": 235,
       "grade": "REL"
      },
      {
-      "stage": "attention (D2D C2K + KV die + K2C, MEASURED)",
-      "start": 818,
-      "end": 2643,
-      "cycles": 1825,
-      "priced_cycles": 1681,
+      "stage": "die edge @pre_attn: native59 hardened split service +5 (N59-4 landed parent: service calendar 5 edges later vs W5 dd face)",
+      "start": 830,
+      "end": 835,
+      "cycles": 5,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
+      "stage": "attention D2D C2K: cmd issue -> KV land (REL pair RTL)",
+      "start": 835,
+      "end": 865,
+      "cycles": 30,
+      "priced_cycles": null,
+      "grade": "REL"
+     },
+     {
+      "stage": "attention KV die service: cmd land -> r31 issue",
+      "start": 865,
+      "end": 2644,
+      "cycles": 1779,
+      "priced_cycles": null,
       "grade": "DIAG"
      },
      {
+      "stage": "attention D2D K2C: r31 issue -> landing tail (plan done)",
+      "start": 2644,
+      "end": 2660,
+      "cycles": 16,
+      "priced_cycles": null,
+      "grade": "REL"
+     },
+     {
       "stage": "attention return: dr words land (PORTS dd windows) + o_proj x stream (DV)",
-      "start": 2643,
-      "end": 2741,
-      "cycles": 98,
+      "start": 2660,
+      "end": 2779,
+      "cycles": 119,
       "priced_cycles": 16,
       "grade": "DIAG"
      },
      {
+      "stage": "die edge @pre_o: ctlm hr output landing +4 (qfd_tt_ctlm_dv lp D2/K1: every hr output +4) on each matvec go",
+      "start": 2787,
+      "end": 2791,
+      "cycles": 4,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
       "stage": "o_proj matvec L8 -> AR words + XC (column tiles + STN)",
-      "start": 2749,
-      "end": 3280,
+      "start": 2791,
+      "end": 3322,
       "cycles": 531,
       "priced_cycles": 375,
       "grade": "REL"
      },
      {
       "stage": "all-reduce 1 (TP8 collective)",
-      "start": 3025,
-      "end": 3566,
+      "start": 3067,
+      "end": 3608,
       "cycles": 541,
       "priced_cycles": 856,
       "grade": "REL"
      },
      {
       "stage": "residual 1: AR landing + post-scale + add + SSQ + x stream (DV)",
-      "start": 3566,
-      "end": 4113,
+      "start": 3608,
+      "end": 4155,
       "cycles": 547,
       "priced_cycles": 411,
       "grade": "REL"
      },
      {
+      "stage": "die edge @pre_gu: ctlm hr output landing +4 (qfd_tt_ctlm_dv lp D2/K1: every hr output +4) on each matvec go",
+      "start": 4163,
+      "end": 4167,
+      "cycles": 4,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
+      "stage": "die edge @pre_gu: die landing q3h broadcast (n1/E2, +3 per crossing)",
+      "start": 4167,
+      "end": 4170,
+      "cycles": 3,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
       "stage": "gate/up matvec L7 -> VM GU (column tiles + STN)",
-      "start": 4121,
-      "end": 4615,
+      "start": 4170,
+      "end": 4664,
       "cycles": 494,
       "priced_cycles": 562,
       "grade": "REL"
      },
      {
+      "stage": "die edge @pre_silu: die landing rs reduction (n1/E2, +3 per crossing)",
+      "start": 4666,
+      "end": 4669,
+      "cycles": 3,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
       "stage": "SiLU x up (GU*r, act stream) (DV)",
-      "start": 4617,
-      "end": 4955,
+      "start": 4669,
+      "end": 5007,
       "cycles": 338,
       "priced_cycles": 114,
       "grade": "REL"
      },
      {
+      "stage": "die edge @pre_down: ctlm hr output landing +4 (qfd_tt_ctlm_dv lp D2/K1: every hr output +4) on each matvec go",
+      "start": 5015,
+      "end": 5019,
+      "cycles": 4,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
       "stage": "down matvec L8 -> AR words + XC (column tiles + STN)",
-      "start": 4963,
-      "end": 5526,
+      "start": 5019,
+      "end": 5582,
       "cycles": 563,
       "priced_cycles": 256,
       "grade": "REL"
      },
      {
       "stage": "all-reduce 2 (TP8 collective)",
-      "start": 5271,
-      "end": 5812,
+      "start": 5327,
+      "end": 5868,
       "cycles": 541,
       "priced_cycles": 714,
       "grade": "REL"
      },
      {
+      "stage": "die edge @pre_r2: die landing dv chain slice<->slice hops (11 x +3, owed in-face, 7811217d7)",
+      "start": 5868,
+      "end": 5901,
+      "cycles": 33,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
+      "stage": "die edge @pre_r2: slice2 landed-parent forwarded lanes + taps (accepted bound)",
+      "start": 5901,
+      "end": 6437,
+      "cycles": 536,
+      "priced_cycles": 0,
+      "grade": "PRICED"
+     },
+     {
       "stage": "residual 2 + SSQ + x stream (DV)",
-      "start": 5812,
-      "end": 6359,
+      "start": 6437,
+      "end": 6984,
       "cycles": 547,
       "priced_cycles": 411,
       "grade": "REL"
      }
     ],
     "critical_path_cycles_by_grade": {
-     "REL": 4374,
+     "REL": 4429,
      "PLAN_GAP": 36,
-     "DIAG": 1923
+     "PRICED": 595,
+     "DIAG": 1898
     },
     "tile": [
      {
       "matvec": "qkv",
       "tile_first_eff": 255,
       "dv_tail": 40,
-      "land": 357,
-      "priced_done": 357,
-      "go_w5": 62
+      "land": 366,
+      "priced_done": 366,
+      "go_w5": 71
      },
      {
       "matvec": "o",
       "tile_first_eff": 207,
-      "priced_done": 3116,
-      "go_w5": 2770
+      "priced_done": 3158,
+      "go_w5": 2812
      },
      {
       "matvec": "gu",
       "tile_first_eff": 447,
       "dv_tail": 26,
-      "land": 4615,
-      "priced_done": 4615,
-      "go_w5": 4142
+      "land": 4664,
+      "priced_done": 4664,
+      "go_w5": 4191
      },
      {
       "matvec": "down",
       "tile_first_eff": 239,
-      "priced_done": 5211,
-      "go_w5": 4984
+      "priced_done": 5267,
+      "go_w5": 5040
      }
-    ]
+    ],
+    "die_edges_per_layer": 604,
+    "dv_rel_rows": [
+     {
+      "stage": "rmsnorm1 SSQ + fused ROOT r (DV)",
+      "rel_cycles": 230,
+      "base_cycles": 209,
+      "delta": 21,
+      "grade": "REL",
+      "replaces": "DIAG"
+     },
+     {
+      "stage": "QK-norm / RoPE / v*r -> D2D q,k,v (DV)",
+      "rel_cycles": 451,
+      "base_cycles": 362,
+      "delta": 89,
+      "grade": "REL",
+      "replaces": "DIAG"
+     },
+     {
+      "stage": "residual 1: AR landing + post-scale + add + SSQ + x stream (DV)",
+      "rel_cycles": 547,
+      "base_cycles": 505,
+      "delta": 42,
+      "grade": "REL",
+      "replaces": "DIAG"
+     },
+     {
+      "stage": "SiLU x up (GU*r, act stream) (DV)",
+      "rel_cycles": 338,
+      "base_cycles": 250,
+      "delta": 88,
+      "grade": "REL",
+      "replaces": "DIAG"
+     },
+     {
+      "stage": "residual 2 + SSQ + x stream (DV)",
+      "rel_cycles": 547,
+      "base_cycles": 505,
+      "delta": 42,
+      "grade": "REL",
+      "replaces": "DIAG"
+     }
+    ],
+    "dv_base_chained": 6669
    },
    "terms": [
     {
      "term": "L0 cold layer (stage-0 embedding landing + layer)",
      "n": 1,
-     "cycles": 6842,
+     "cycles": 7467,
      "grade": "composed",
      "by_grade": null
     },
     {
      "term": "L1..L35 chained layer period",
      "n": 35,
-     "cycles": 6326,
+     "cycles": 6951,
      "grade": "composed",
      "by_grade": null
     },
     {
-     "term": "per-layer die edges not yet in the compiler (landings/n59/ctlm)",
+     "term": "per-layer die edges NOT folded into the layer schedule",
      "n": 36,
-     "cycles": 52,
+     "cycles": 0,
      "grade": "PRICED",
-     "src": "TOK.QW.SCHED die edges not yet absorbed by the compiler: landings +45/layer, native59 +1, ctlm +4/+2"
+     "src": "TOK.QW.SCHED (TOKSIM-QW2 10-20): every priced die edge below is inserted into the dv_layer critical-path schedule at its stage boundary (dv_layer.compose die_edges); the old flat 52/layer term (landings 45 + n59 1 + ctlm 4 + 2) is retired"
     },
     {
      "term": "LM head + argmax (compute die)",
@@ -208,24 +365,24 @@
     }
    ],
    "token_cycles_by_grade": {
-    "REL": 157646,
-    "PLAN_GAP": 1298,
-    "DIAG": 69308,
-    "PRICED": 5245
+    "REL": 159612,
+    "PLAN_GAP": 1297,
+    "PRICED": 24816,
+    "DIAG": 68400
    },
-   "pct_measured": 67.5,
-   "pct_rel": 67.5,
+   "pct_measured": 62.8,
+   "pct_rel": 62.8,
    "pct_newest": 0.0,
    "price_of_record": {
     "tok_s": 4810.9,
     "cycles": 249431,
     "source": "results/arch/token_path_1018/qwen_rom.json price_of_record (10-13 6,835-cycle production layer)"
    },
-   "vs_price_pct": 6.87,
+   "vs_price_pct": -1.81,
    "gaps": [
-    "ATTENTION RETURN: measured span 98 != compiled 119 (re-bench the attn family)",
+    "ATTENTION RETURN: no measured span (results/rtl/qw_attnret_1019/record.json); the compiled span 119 is used",
     "IMAGE CAPACITY: the full layer needs 13940 PW words (calendar 852 + tables 12608 = (PROG 72 + BTAB 188 + CROM 528) x 16) > CMD_CEIL 976: tt_ctlm cannot hold one layer's slice tables + calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream (ROM-resident slice tables or a table DMA) is needed",
-    "CALENDAR: 1 W5 command-edge clashes between families (first [{'edge_w5': 3739, 'a': 'resid1: PORTS s10 AR off b22', 'b': 'SEG base 14'}])",
+    "CALENDAR: 1 W5 command-edge clashes between families (first [{'edge_w5': 3739, 'a': 'resid1: PORTS s4 AR off b16', 'b': 'SEG base 14'}])",
     "COLUMN-HEAD x CONSUMER: the qkv / gu / down / o matvecs read x from the slice x stream; the hr / xpf control that makes the column heads tap those words on the compiled edges is not lowered (QLB-C4b/3a left)",
     "TILE DELIVERY: tile_first 40 (ME issue -> first far cluster word) and the AR stagger (slice s gets block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar",
     "PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image blocks only (no producer of the per-token row on the die)",
@@ -258,7 +415,45 @@
     2086.0
    ],
    "source": "TOKSIM-QW/LINK: codec2 OVL 4-user D2D pair fullframe, real D2D ends + PHY model, 63,098 C->K + 57,783 K->C frames exact, one-playhead/collide/slot/user mutants FAIL; OVL hardware is NOT in qw-gen3 (newest = codex/sysface-ovl-1019); producers/consumers modelled -> link-schedule rate, not a full 4-user token run. MU ctx real link REL: slot->compute 18, period 249,600; TP8 4u window E 286 = 1u",
-   "note": "release die uses the serial MU calendar; no paired 4u TB exists for it (owed). Frame user 0 at 16 tok/frame = 4,768 tok/s vs 1u composed below."
+   "note": "release die uses the serial MU calendar; no paired 4u TB exists for it (owed). Frame user 0 at 16 tok/frame = 4,768 tok/s vs 1u composed below.",
+   "schedule_scale": {
+    "ref_layer_period": 6842,
+    "rule": "4u frame is compute-layer bound on the OVL link schedule built at the 1u dh2 pair period 6,842/layer (link/record.json); every user-layer moves by the same folded die edges -> frame x (6842 + die_edges_per_layer) / 6842 (no die edge is in the link-schedule frame)"
+   }
+  },
+  "4u_scheduled": {
+   "grade": "NEWEST",
+   "rule": "4u frame is compute-layer bound on the OVL link schedule built at the 1u dh2 pair period 6,842/layer (link/record.json); every user-layer moves by the same folded die edges -> frame x (6842 + die_edges_per_layer) / 6842 (no die edge is in the link-schedule frame)",
+   "frame_scale": 1.08828,
+   "frame_cycles": 4382279,
+   "cycles_per_token_by_user": [
+    273892,
+    292152,
+    547785,
+    626040
+   ],
+   "per_user_tok_s": [
+    4383.0,
+    4109.1,
+    2191.5,
+    1917.6
+   ],
+   "aggregate_cycles_per_token": 95267,
+   "aggregate_tok_s": 12601.2
+  },
+  "variant_plan": {
+   "cycles_per_token": 246601,
+   "tok_s": 4868.1,
+   "token_cycles_by_grade": {
+    "REL": 159617,
+    "PLAN_GAP": 1297,
+    "PRICED": 17284,
+    "DIAG": 68402
+   },
+   "pct_rel": 64.7,
+   "vs_price_pct": 1.19,
+   "chained": 6742,
+   "4u_aggregate_tok_s": 12965.1
   }
  }
 }
