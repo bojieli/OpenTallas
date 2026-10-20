@@ -6,10 +6,11 @@
   return qkd_static_kv_return_slots_mc_nc vs qkd_kvpc_s_return       two clocks, legal ring traffic + fault phases
   cdc    ot_qkd_static_emb_cdc            vs ot_qkd_static_emb_cdc_kvpc_s   two clocks, overruns, domain resets
   tq     flop array tq[tr] / tq[tr+1]     vs qkd_kvpc_s_tq            random writes incl. same-edge bypass
+  cal    qkd_controller_hbm_calendar      vs qkd_kvpc_s_calendar      KV-PC5 native32: directed-random programmes, faults, resets
   sched  qkd_ctrl_pc_sched_nc             vs qkd_kvpc_s_sched         production parameters, random inputs
   tile   qkd_kvs_pc[_h] (_ds_rl)          vs the OT_KV_PC_SRAM tile (_ds_rl_sr), random inputs, storage roots = hck
 Mutants (--mut N, must FAIL): front 1 read +1 / 4 bank permutation / 5 no prefetch; return 1 bank perm / 2 no prefetch;
-cdc 1 down bank perm / 2 down no prefetch; tq 1 bypass dropped; sched 1 tag-queue read not advanced
+cdc 1 down bank perm / 2 down no prefetch; tq 1 bypass dropped; cal (KV-PC5) 1 wait +1 / 2 burst reload 0; sched 1 tag-queue read not advanced
 (OT_KVPC_MUT_TQ_NEXT); tile 1 tag-queue read not advanced / 2 front bank permutation / 3 embedding up-FIFO bank permutation inside
 the DUT tile (random tile stimulus reaches 3 only: 1 and 2 are covered by their unit benches) / 4 health export drops the
 chain fault bit (OT_KVPC_HFX_MUT; KV-PC2: DUT pc__hfx = registered sticky {embr, es_merge, chain} of REF's internal faults).
@@ -205,7 +206,7 @@ def build_run(out, top, files, defines, threads, tag, plus=()):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--unit', required=True, choices=('front', 'return', 'cdc', 'tq', 'sched', 'ctrl', 'path', 'tile'))
+    ap.add_argument('--unit', required=True, choices=('front', 'return', 'cdc', 'tq', 'cal', 'sched', 'ctrl', 'path', 'tile'))
     ap.add_argument('--tile', default='pc', choices=('pc', 'pc_h'))
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--edges', type=int, default=0)
@@ -217,7 +218,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     plus = [f'+seed={a.seed}'] + ([f'+edges={a.edges}'] if a.edges else [])
     base = kit_sources(a.tile) + [SRAM, CLONES, MACRO]
-    if a.unit in ('front', 'return', 'cdc', 'tq'):
+    if a.unit in ('front', 'return', 'cdc', 'tq', 'cal'):
         tag = a.unit.upper()
         tb = TB + f'tb_kvpc_{a.unit}.sv'
         return build_run(out, f'tb_kvpc_{a.unit}', [tb] + base, [f'KVPC_MUT={a.mut}'], a.threads, tag, plus)

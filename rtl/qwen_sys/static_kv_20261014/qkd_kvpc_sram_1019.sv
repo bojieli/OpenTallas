@@ -291,11 +291,22 @@ module qkd_kvpc_s_return #(parameter integer DEPTH = 8, parameter integer MUT = 
    actual_valid<=slot;slot_d<=slot;
    if(fault_core_set)fault_core_s<=1;
    if(slot)begin
-    actual_data<=read_data[255:0];actual_sector<=read_data[265:256];
-    actual_layer<=read_data[271:266];actual_epoch<=read_data[287:272];
     consumed[ra]<=~rp[AW];rp<=rp+1'b1;
    end
   end
+ // KV-PC5 native32 (census f1: the capture enable rs_a && slot drove 288 / 196 pins, rs_a 109, slot copy 98): the 288-bit
+ // capture is enabled by 20 kept LOOKAHEAD copies cap_qv, cap(t) == rs_a(t) && slot(t) exactly: rs_a(t) = rsi(t-1);
+ // slot(t) = rsi(t-1) && rs_c(t-1) && expected_put(t-1) (async reset rs_c: a falling rsi clears slot after the same edge).
+ // No reset (pure function of the sampled values, as rs_a / rs_c themselves); each copy enables one <= 15-bit slice.
+ (* keep *) reg [19:0] cap_qv;
+ always @(posedge ck)cap_qv<={20{rsi && rs_c && expected_put}};
+ wire [287:0] cap_d = {read_data[287:272], read_data[271:266], read_data[265:256], read_data[255:0]};
+ reg [287:0] cap_q;
+ for(genvar g=0;g<20;g=g+1)begin:g_cap
+  localparam integer LO=g*15, WD=(288-LO<15)?288-LO:15;
+  always @(posedge ck)if(cap_qv[g])cap_q[LO+:WD]<=cap_d[LO+:WD];
+ end
+ always @*begin actual_epoch=cap_q[287:272];actual_layer=cap_q[271:266];actual_sector=cap_q[265:256];actual_data=cap_q[255:0];end
  always @(posedge ck)fault_core<=rs_a && (fault_core_s || fault_core_set);
 endmodule
 
