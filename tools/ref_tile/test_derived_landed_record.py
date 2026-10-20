@@ -61,6 +61,10 @@ class PairedAHUB6(unittest.TestCase):
         self.record['generator']='tools/landed_parent/lp.py'
         with self.assertRaisesRegex(ValueError,'unsupported typed profile'):self.validate()
 
+    def test_copied_reset_pad_cost_is_included(self):
+        self.assertEqual(self.record['flops']['reset'],1954)
+        self.validate()
+
     def test_missing_provenance(self):
         del self.record['derived_lp']['canonical_rtl']
         with self.assertRaisesRegex(ValueError,'provenance fields'):self.validate()
