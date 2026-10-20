@@ -1,0 +1,125 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers on every data input and output (+1 cycle each; kit pin_regs.json)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc6 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_dv_s5_redb_20261019-232622.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_dv_s5_redb_20261019-232622.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_redb-20261019-232622",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc6 in 783 s (gate total 2839 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 354, 'pin_rectangles': 354, 'pin_track_checked': 354, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 84c92ab45eac8d951eef8ee3360c8c82785de471fd88a71729a0daf8b10dc703",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 11027 um2 + macros 0 in core 21574: util 51%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "port_latency",
+   "message": "elaborated pin registers: 6 input / 6 output ports +1 edge; 2 ports pass through (clock/reset/excluded/inout)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qfd_dv_s5_red cells 86,198 flops 12,077 depth 775.2 ps util 0.5135 reach 0.0 um (2.5 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_ot_pr_core.u_red.g_chunk[0].g_step[6].u_op.u_add.g_f.u.s1_small[0]$_DFF_P_ -> u_ot_pr_core.u_red.g_chunk[0].g_step[6].u_op.u_add.g_f.u.s2_val[25]$_DFF_P_/D: ~775 ps estimated (21 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 286.1..303.7 ps (spread 17.6), boundary mean 295.8; tt insertion all 217.6..233.0 ps (spread 15.4), boundary mean 225.9; ff insertion all 175.9..190.2 ps (spread 14.3), boundary mean 183.7; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_dv_s5_redb/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      598 paths, worst slack 21.1 ps (e.g. u_ot_pr_core.u_red.g_chunk[0].g_step[6].u_op.u_add.g_f.u.s2_val[19]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         2 paths, worst slack 465.2 ps (e.g. u_ot_pr_core.u_rl.rst$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.1138091277350668e-11 hold WNS 4.210809478877309e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck: 12,077 sinks on the largest root; measured TT insertion 233.0 ps, FF insertion 190.2 ps, TT pin-flop spread 11.8 ps, FF pin-flop spread 10.8 ps (spread <= 80 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-slice6-scred-1019/physical/ref_tile/qfd_dv_s5_redb/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-slice6-scred-1019/physical/ref_tile/qfd_dv_s5_redb/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 33.38% used; GRT 292 s",
+   "fix": ""
+  }
+ ]
+}

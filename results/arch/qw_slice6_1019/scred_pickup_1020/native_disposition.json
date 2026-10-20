@@ -1,0 +1,124 @@
+{
+  "sc": {
+    "disposition": "FAIL_PRE_GATE_NATIVE",
+    "gate_source_base": "94483a34c",
+    "mapped_netlist": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_sc-20261019-232350/routes/gate/work/orfs/results/asap7/opentallas_qfd_dv_s5_sc_asap7_ref_gate/base/1_2_yosys.v",
+    "max_reported_loads": 3060,
+    "reported_over_limit_drivers": [
+      {
+        "net": "u_ot_pr_core.u_rl.rst$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+        "loads": 3060,
+        "flops": 2034
+      },
+      {
+        "net": "_193770_/Y (AND2x2_ASAP7_75t_R)",
+        "loads": 742,
+        "flops": 0
+      },
+      {
+        "net": "_193764_/Y (NAND2x1_ASAP7_75t_R)",
+        "loads": 282,
+        "flops": 0
+      },
+      {
+        "net": "_195203_/Y (NOR2x1_ASAP7_75t_R)",
+        "loads": 264,
+        "flops": 0
+      },
+      {
+        "net": "_194759_/Y (AND2x2_ASAP7_75t_R)",
+        "loads": 264,
+        "flops": 0
+      },
+      {
+        "net": "_194035_/Y (AND2x2_ASAP7_75t_R)",
+        "loads": 264,
+        "flops": 0
+      },
+      {
+        "net": "_193741_/Y (AND2x2_ASAP7_75t_R)",
+        "loads": 264,
+        "flops": 0
+      }
+    ],
+    "depth_ps": 1030.2,
+    "depth_levels": 27,
+    "flops": 14826,
+    "macros": 0,
+    "note": "Existing census reports only >256; these witnesses conclusively fail32 but do not enumerate all33..256 violations."
+  },
+  "scb": {
+    "disposition": "FAIL_PRE_GATE_NATIVE",
+    "gate_source_base": "94483a34c",
+    "mapped_netlist": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_scb-20261019-232622/routes/gate/work/orfs/results/asap7/opentallas_qfd_dv_s5_sc_asap7_ref_gate/base/1_2_yosys.v",
+    "max_reported_loads": 3064,
+    "reported_over_limit_drivers": [
+      {
+        "net": "u_ot_pr_core.u_rl.rst$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+        "loads": 3064,
+        "flops": 2038
+      },
+      {
+        "net": "_200222_/Y (AND2x2_ASAP7_75t_R)",
+        "loads": 644,
+        "flops": 0
+      },
+      {
+        "net": "_200355_/Y (NAND2x1_ASAP7_75t_R)",
+        "loads": 380,
+        "flops": 0
+      }
+    ],
+    "depth_ps": 876.8,
+    "depth_levels": 24,
+    "flops": 14889,
+    "macros": 0,
+    "note": "Existing census reports only >256; these witnesses conclusively fail32 but do not enumerate all33..256 violations."
+  },
+  "red": {
+    "disposition": "FAIL_PRE_GATE_NATIVE",
+    "gate_source_base": "94483a34c",
+    "mapped_netlist": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_red-20261019-232350/routes/gate/work/orfs/results/asap7/opentallas_qfd_dv_s5_red_asap7_ref_gate/base/1_2_yosys.v",
+    "max_reported_loads": 740,
+    "reported_over_limit_drivers": [
+      {
+        "net": "u_ot_pr_core.rc$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+        "loads": 740,
+        "flops": 740
+      },
+      {
+        "net": "u_ot_pr_core.u_red.u_sqd.genblk1.g_line.line[566]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+        "loads": 504,
+        "flops": 0
+      }
+    ],
+    "depth_ps": 813.5,
+    "depth_levels": 22,
+    "flops": 11913,
+    "macros": 0,
+    "note": "Existing census reports only >256; these witnesses conclusively fail32 but do not enumerate all33..256 violations."
+  },
+  "redb": {
+    "disposition": "FAIL_PRE_GATE_NATIVE",
+    "gate_source_base": "94483a34c",
+    "mapped_netlist": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_redb-20261019-232622/routes/gate/work/orfs/results/asap7/opentallas_qfd_dv_s5_red_asap7_ref_gate/base/1_2_yosys.v",
+    "max_reported_loads": 763,
+    "reported_over_limit_drivers": [
+      {
+        "net": "u_ot_pr_core.rc$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+        "loads": 763,
+        "flops": 763
+      },
+      {
+        "net": "u_ot_pr_core.u_red.u_sqd.g_ring.u_r.g_sl[0].u_s.q[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+        "loads": 504,
+        "flops": 0
+      }
+    ],
+    "depth_ps": 775.2,
+    "depth_levels": 21,
+    "flops": 12077,
+    "macros": 0,
+    "note": "Existing census reports only >256; these witnesses conclusively fail32 but do not enumerate all33..256 violations."
+  }
+}

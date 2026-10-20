@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-slice6/scred_94483a34c
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-slice6/scred_94483a34c
+ot-run: ot-epyc7       admits   570 GB (avail 500, growth 101, headroom 0, waiters 0/0 GB) load 138/96 running 47 disk 5749 GB 
+ot-run: ot-epyc9       admits   643 GB (avail 615, growth 165, headroom 0, waiters 0/0 GB) load 143/128 running 56 disk 253 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-slice6/scred_94483a34c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-slice6/scred_94483a34c
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2737292-1792479585 after 2 s
+Verilator 5.050 2026-07-01 rev v5.050
+S5_FAULT_CYCLES any=5966 heads=5951
+S5_EQ PASS quiet=0 hronly=0 legal=0 compared=124614 nonzero=96358 cycles=6000
+S5_FAULT_CYCLES any=5964 heads=5941
+S5_EQ PASS quiet=1 hronly=0 legal=0 compared=124614 nonzero=74866 cycles=6000
+S5_FAULT_CYCLES any=5946 heads=5946
+S5_EQ PASS quiet=0 hronly=1 legal=0 compared=124614 nonzero=65274 cycles=6000
+S5_FAULT_CYCLES any=5966 heads=5950
+S5_EQ PASS quiet=0 hronly=0 legal=1 compared=124614 nonzero=96320 cycles=6000
+EQ M=0: S5_EQ PASS ( rand:PASS quiet:PASS hronly:PASS legal:PASS)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2737292-1792479585): exit 0
