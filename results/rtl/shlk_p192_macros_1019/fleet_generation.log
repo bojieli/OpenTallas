@@ -1,0 +1,42 @@
+ot-run: ot-epyc4       admits   984 GB (avail 802, growth 113, headroom 0, waiters 0/0 GB) load 57/128 running 41 disk 411 GB 
+ot-run: ot-epyc5       admits   984 GB (avail 802, growth 113, headroom 0, waiters 0/0 GB) load 72/128 running 27 disk 562 GB 
+ot-run: ot-epyc6       admits  1145 GB (avail 915, growth 113, headroom 0, waiters 0/0 GB) load 64/128 running 37 disk 559 GB 
+ot-run: ot-epyc7       admits   611 GB (avail 528, growth 101, headroom 0, waiters 0/0 GB) load 81/96 running 22 disk 502 GB 
+ot-run: ot-epyc8       admits  1177 GB (avail 900, growth 76, headroom 0, waiters 0/0 GB) load 42/128 running 14 disk 565 GB 
+ot-run: ot-pve1        admits    69 GB (avail 67, growth 19, headroom 0, waiters 0/0 GB) load 21/28 running 10 disk 1199 GB 
+ot-run: ot-agidock128  admits    91 GB (avail 76, growth 13, headroom 0, waiters 0/0 GB) load 22/64 running 10 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-294396-1792456777 after 1 s
+[
+  {
+    "name": "ot_sram_1r1w2c_16x257_m1_p192",
+    "width_um": 89.448,
+    "height_um": 76.968,
+    "area_um2": 6884.633664,
+    "core_width_um": 89.3168,
+    "core_height_um": 15.351163260579265,
+    "signal_pins": 783,
+    "per_edge": {
+      "W": 392,
+      "E": 391
+    },
+    "minimum_actual_contact_pitch_um": 0.192,
+    "maximum_actual_density_per_um": 5.208333333333333
+  },
+  {
+    "name": "ot_sram_1r1w2c_16x289_m1_p192",
+    "width_um": 99.144,
+    "height_um": 86.136,
+    "area_um2": 8539.867584,
+    "core_width_um": 98.9936,
+    "core_height_um": 15.351163260579265,
+    "signal_pins": 879,
+    "per_edge": {
+      "W": 440,
+      "E": 439
+    },
+    "minimum_actual_contact_pitch_um": 0.192,
+    "maximum_actual_density_per_um": 5.208333333333333
+  }
+]
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-294396-1792456777): exit 0
