@@ -1,0 +1,450 @@
+{
+  "scope": "FAILED lg4 3_place native pin geometry diagnostic only; QN-to-QN anchor distance is not data-path timing/reach and is not a new SRAM placement",
+  "source_gzip_sha256": "4a3a5e22d3a6e6f29c76f7a36f60690f5fac739eb06bf5acfd45bf4ebcdfa172",
+  "crossings": [
+    {
+      "crossing": 0,
+      "mapped_writer_data_ff": 1042,
+      "mapped_reader_data_ff": 521,
+      "matched_slot_bits": 1042,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 519,
+        "slot": 0,
+        "distance_um": 452.7359999999999,
+        "writer": {
+          "x": 1086.442,
+          "y": 1454.625,
+          "instance": "u_lpl_0_w.b\\[0\\]\\[519\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 1211.128,
+          "y": 1782.675,
+          "instance": "u_lpl_0_r.o\\[519\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 4
+    },
+    {
+      "crossing": 1,
+      "mapped_writer_data_ff": 1042,
+      "mapped_reader_data_ff": 521,
+      "matched_slot_bits": 1042,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 395,
+        "slot": 1,
+        "distance_um": 520.452,
+        "writer": {
+          "x": 809.422,
+          "y": 1269.405,
+          "instance": "u_lpl_1_w.b\\[1\\]\\[395\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 979.684,
+          "y": 1619.595,
+          "instance": "u_lpl_1_r.o\\[395\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 54
+    },
+    {
+      "crossing": 2,
+      "mapped_writer_data_ff": 1042,
+      "mapped_reader_data_ff": 521,
+      "matched_slot_bits": 1042,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 77,
+        "slot": 1,
+        "distance_um": 261.1980000000001,
+        "writer": {
+          "x": 805.966,
+          "y": 1794.285,
+          "instance": "u_lpl_2_w.b\\[1\\]\\[77\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 880.324,
+          "y": 1607.445,
+          "instance": "u_lpl_2_r.o\\[77\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 3,
+      "mapped_writer_data_ff": 1042,
+      "mapped_reader_data_ff": 521,
+      "matched_slot_bits": 1042,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 268,
+        "slot": 1,
+        "distance_um": 319.40999999999985,
+        "writer": {
+          "x": 1053.016,
+          "y": 1982.475,
+          "instance": "u_lpl_3_w.b\\[1\\]\\[268\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 1223.386,
+          "y": 1833.435,
+          "instance": "u_lpl_3_r.o\\[268\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 4,
+      "mapped_writer_data_ff": 328,
+      "mapped_reader_data_ff": 164,
+      "matched_slot_bits": 328,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 9,
+        "slot": 0,
+        "distance_um": 373.59100000000007,
+        "writer": {
+          "x": 203.218,
+          "y": 1572.075,
+          "instance": "u_lpl_4_w.b\\[0\\]\\[9\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 206.369,
+          "y": 1201.635,
+          "instance": "u_lpl_4_r.o\\[9\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 5,
+      "mapped_writer_data_ff": 2764,
+      "mapped_reader_data_ff": 1382,
+      "matched_slot_bits": 2764,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 532,
+        "slot": 1,
+        "distance_um": 66.42000000000019,
+        "writer": {
+          "x": 40.462,
+          "y": 1291.005,
+          "instance": "u_lpl_5_w.b\\[1\\]\\[532\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 65.842,
+          "y": 1249.965,
+          "instance": "u_lpl_5_r.o\\[532\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 6,
+      "mapped_writer_data_ff": 1084,
+      "mapped_reader_data_ff": 542,
+      "matched_slot_bits": 1084,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 257,
+        "slot": 1,
+        "distance_um": 576.8279999999999,
+        "writer": {
+          "x": 205.0,
+          "y": 1314.225,
+          "instance": "u_lpl_6_w.b\\[1\\]\\[257\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 203.812,
+          "y": 738.585,
+          "instance": "u_lpl_6_r.o\\[257\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 18
+    },
+    {
+      "crossing": 7,
+      "mapped_writer_data_ff": 1042,
+      "mapped_reader_data_ff": 521,
+      "matched_slot_bits": 1042,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 282,
+        "slot": 0,
+        "distance_um": 1003.6439999999999,
+        "writer": {
+          "x": 546.82,
+          "y": 731.835,
+          "instance": "u_lpl_7_w.b\\[0\\]\\[282\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 814.444,
+          "y": 1467.855,
+          "instance": "u_lpl_7_r.o\\[282\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 232
+    },
+    {
+      "crossing": 8,
+      "mapped_writer_data_ff": 1084,
+      "mapped_reader_data_ff": 542,
+      "matched_slot_bits": 1084,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 308,
+        "slot": 1,
+        "distance_um": 310.9859999999999,
+        "writer": {
+          "x": 811.204,
+          "y": 1477.035,
+          "instance": "u_lpl_8_w.b\\[1\\]\\[308\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 813.31,
+          "y": 1785.915,
+          "instance": "u_lpl_8_r.o\\[308\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 9,
+      "mapped_writer_data_ff": 328,
+      "mapped_reader_data_ff": 164,
+      "matched_slot_bits": 328,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 20,
+        "slot": 1,
+        "distance_um": 231.13899999999995,
+        "writer": {
+          "x": 198.196,
+          "y": 1609.335,
+          "instance": "u_lpl_9_w.b\\[1\\]\\[20\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 199.295,
+          "y": 1839.375,
+          "instance": "u_lpl_9_r.o\\[20\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 10,
+      "mapped_writer_data_ff": 2764,
+      "mapped_reader_data_ff": 1382,
+      "matched_slot_bits": 2764,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 164,
+        "slot": 1,
+        "distance_um": 214.38,
+        "writer": {
+          "x": 37.114,
+          "y": 1369.305,
+          "instance": "u_lpl_10_w.b\\[1\\]\\[164\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 48.724,
+          "y": 1572.075,
+          "instance": "u_lpl_10_r.o\\[164\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 11,
+      "mapped_writer_data_ff": 1042,
+      "mapped_reader_data_ff": 521,
+      "matched_slot_bits": 1042,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 465,
+        "slot": 0,
+        "distance_um": 353.3219999999999,
+        "writer": {
+          "x": 805.966,
+          "y": 2287.305,
+          "instance": "u_lpl_11_w.b\\[0\\]\\[465\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 1022.938,
+          "y": 2150.955,
+          "instance": "u_lpl_11_r.o\\[465\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 12,
+      "mapped_writer_data_ff": 4176,
+      "mapped_reader_data_ff": 2088,
+      "matched_slot_bits": 4176,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 541,
+        "slot": 1,
+        "distance_um": 876.2930000000001,
+        "writer": {
+          "x": 515.5,
+          "y": 1234.035,
+          "instance": "u_lpl_12_w.b\\[1\\]\\[541\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 487.007,
+          "y": 386.235,
+          "instance": "u_lpl_12_r.o\\[541\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 18
+    },
+    {
+      "crossing": 13,
+      "mapped_writer_data_ff": 1084,
+      "mapped_reader_data_ff": 542,
+      "matched_slot_bits": 1084,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 34,
+        "slot": 1,
+        "distance_um": 616.6800000000001,
+        "writer": {
+          "x": 605.68,
+          "y": 1407.645,
+          "instance": "u_lpl_13_w.b\\[1\\]\\[34\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 807.64,
+          "y": 992.925,
+          "instance": "u_lpl_13_r.o\\[34\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 21
+    },
+    {
+      "crossing": 14,
+      "mapped_writer_data_ff": 1084,
+      "mapped_reader_data_ff": 542,
+      "matched_slot_bits": 1084,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 541,
+        "slot": 0,
+        "distance_um": 368.297,
+        "writer": {
+          "x": 433.312,
+          "y": 1574.505,
+          "instance": "u_lpl_14_w.b\\[0\\]\\[541\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 213.785,
+          "y": 1723.275,
+          "instance": "u_lpl_14_r.o\\[541\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 0
+    },
+    {
+      "crossing": 15,
+      "mapped_writer_data_ff": 4176,
+      "mapped_reader_data_ff": 2088,
+      "matched_slot_bits": 4176,
+      "worst_original_bank_qn_to_reader_qn": {
+        "bit": 270,
+        "slot": 1,
+        "distance_um": 561.816,
+        "writer": {
+          "x": 820.06,
+          "y": 1809.675,
+          "instance": "u_lpl_15_w.b\\[1\\]\\[270\\]$_DFFE_PP_",
+          "pin": "QN"
+        },
+        "reader": {
+          "x": 813.364,
+          "y": 2364.795,
+          "instance": "u_lpl_15_r.o\\[270\\]$_SDFF_PN0_",
+          "pin": "QN"
+        }
+      },
+      "original_bank_qn_to_reader_qn_over405": 46
+    }
+  ],
+  "clock_roots": {
+    "ck_r0": {
+      "top_port": "ck_r0",
+      "crossings": [
+        "12_r",
+        "7_w"
+      ]
+    },
+    "ck_r1": {
+      "top_port": "ck_r1",
+      "crossings": [
+        "0_w",
+        "12_w",
+        "13_r",
+        "1_w",
+        "4_r",
+        "5_r",
+        "6_r",
+        "7_r"
+      ]
+    },
+    "ck_r2": {
+      "top_port": "ck_r2",
+      "crossings": [
+        "10_r",
+        "11_r",
+        "14_r",
+        "15_w",
+        "2_w",
+        "3_w",
+        "8_r",
+        "9_r"
+      ]
+    },
+    "ck_r3": {
+      "top_port": "ck_r3",
+      "crossings": [
+        "11_w",
+        "15_r"
+      ]
+    },
+    "ck_s": {
+      "top_port": "ck_s",
+      "crossings": [
+        "0_r",
+        "10_w",
+        "13_w",
+        "14_w",
+        "1_r",
+        "2_r",
+        "3_r",
+        "4_w",
+        "5_w",
+        "6_w",
+        "8_w",
+        "9_w"
+      ]
+    }
+  },
+  "reset_rq_inputs": []
+}
