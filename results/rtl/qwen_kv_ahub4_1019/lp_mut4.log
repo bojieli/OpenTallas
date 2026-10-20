@@ -1,0 +1,10 @@
+LP_MISMATCH port=hf cycle=38 flat=1 landed=0
+LP_MISMATCH port=am0 cycle=39 flat=00000000c landed=000000008
+LP_MISMATCH port=am1 cycle=39 flat=00000000c landed=000000008
+LP_MISMATCH port=am2 cycle=39 flat=00000000c landed=000000008
+LP_MISMATCH port=am3 cycle=39 flat=00000000c landed=000000008
+LP_LOCKSTEP FAIL MUT=4 mismatches=23405 of 448205
+- rtl/hdc/nearhbm/lp/tb_qkd_ahub_static_dw_g3_lp.sv:139: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 0.329 s; speed 27.325 us/s
+- Verilator: cpu 0.329 s on 1 threads; allocated 9 MB
