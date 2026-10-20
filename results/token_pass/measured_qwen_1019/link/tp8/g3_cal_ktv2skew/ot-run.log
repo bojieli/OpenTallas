@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/tp8
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/tp8
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/tp8
+ot-run: ot-epyc8       admits  1123 GB (avail 866, growth 79, headroom 0, waiters 0/0 GB) load 33/128 running 21 disk 316 GB 
+ot-run: ot-epyc9       admits  1340 GB (avail 988, growth 46, headroom 0, waiters 0/0 GB) load 33/128 running 10 disk 791 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/tp8
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/tp8
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-216795-1792459739 after 0 s
+COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378
+case qwen_ar_256w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=2048 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=797
+case qwen_layer_2x256w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=2048 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4096 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=1537
+case qwen_argmax_1w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=64 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=446
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=2064 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4160 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=1545
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=4 latu=53 lats=378
+TP8_CASE g3_cal_ktv2skew rc=0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-216795-1792459739): exit 0
