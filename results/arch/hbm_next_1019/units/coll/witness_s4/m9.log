@@ -1,8 +1,8 @@
-2026-10-20T08:33:32-07:00 start host=ot-epyc9 bundle=3fcf420a2 Verilator 5.050 2026-07-01 rev v5.050
-2026-10-20T08:34:21-07:00 build m9 rc=0 bin=ok
-2026-10-20T08:34:22-07:00 m9: COLLQ FAIL set=0 errors=600
-2026-10-20T08:34:22-07:00 done
---- /srv/opentallas-scratch/claude/hnx-gq-s4/b_3fcf420a2/out/m9/m9.log (tail)
+2026-10-20T09:45:28-07:00 start host=ot-epyc5 bundle=19346dd7b Verilator 5.050 2026-07-01 rev v5.050
+2026-10-20T09:46:02-07:00 build m9 rc=0 bin=ok
+2026-10-20T09:46:02-07:00 m9: COLLQ FAIL set=0 errors=600
+2026-10-20T09:46:02-07:00 done
+--- /srv/opentallas-scratch/claude/hnx-gq-s4/b_19346dd7b/out/m9/m9.log (tail)
 COLLQ DATA row2 rr0 q0 seg2 word1 got f760ec6573e970e5dc736b6673716cf173db6f5ae2c2616a7469eaeb63ea68f6 exp 51ef6bec7059dde1eada62f9f771d74872ed66fe5a74686b6ee3e57062d75bf5
 COLLQ DATA row2 rr0 q0 seg2 word4 got 71695d71635367d3407c6ef8f0e8e0f474f37a6b72d26c68d8e06a54f4f5c8f6 exp eaec676868c6f7dbd9f9b56f62f9e36bf0de72486c5567f8627442576f686d6b
 COLLQ DATA row2 rr0 q0 seg2 word5 got f7f669e9ebfa576a6feee7e0f164de67435dabf575dc6ce361d44e74e36c785c exp 6ae8f179f664ee706473f5e6f059eb69f164f264d2e5eafbd067f2f56ce06f6c
@@ -25,7 +25,7 @@ COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=1 rsA=0 rsO=0 span_compiled=41 span_observ
 COLLQ FAIL set=0 errors=600
 - rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:362: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.667 s; speed 3.063 us/s
-- Verilator: cpu 0.667 s on 1 threads; allocated 19 MB
+- Verilator: $finish at 2us; walltime 0.291 s; speed 7.028 us/s
+- Verilator: cpu 0.290 s on 1 threads; allocated 19 MB
 RUN_RC=0
 verilator: /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator Verilator 5.050 2026-07-01 rev v5.050

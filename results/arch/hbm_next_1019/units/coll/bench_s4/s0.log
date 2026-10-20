@@ -7,6 +7,6 @@ COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=1 rsA=0 rsO=0 span_compiled=41 span_observ
 COLLQ PASS set=0 rows=6 loops=2 vm_words_checked=2644 reads=3104 writes=5288 isa_passthrough=38
 - rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:362: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.644 s; speed 3.174 us/s
-- Verilator: cpu 0.643 s on 1 threads; allocated 19 MB
+- Verilator: $finish at 2us; walltime 0.294 s; speed 6.956 us/s
+- Verilator: cpu 0.292 s on 1 threads; allocated 19 MB
 RUN_RC=0

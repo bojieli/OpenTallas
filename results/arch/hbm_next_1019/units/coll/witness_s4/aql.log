@@ -1,7 +1,7 @@
-2026-10-20T08:33:32-07:00 start host=ot-epyc9 bundle=3fcf420a2 Verilator 5.050 2026-07-01 rev v5.050
-2026-10-20T08:33:41-07:00 COLLQ aql FAIL AQ14_NUMERIC_MISMATCH block3 fp40 e-22/-22
-2026-10-20T08:33:41-07:00 done
---- /srv/opentallas-scratch/claude/hnx-gq-s4/b_3fcf420a2/out/aql/aql.log (tail)
+2026-10-20T09:45:28-07:00 start host=ot-epyc5 bundle=19346dd7b Verilator 5.050 2026-07-01 rev v5.050
+2026-10-20T09:45:33-07:00 COLLQ aql FAIL AQ14_NUMERIC_MISMATCH block3 fp40 e-22/-22
+2026-10-20T09:45:33-07:00 done
+--- /srv/opentallas-scratch/claude/hnx-gq-s4/b_19346dd7b/out/aql/aql.log (tail)
 [22500000] %Fatal: tb_hnx_aq14.sv:26: Assertion failed in tb: AQ14_NUMERIC_MISMATCH block3 fp40 e-22/-22
 %Error: rtl/hbm_next/coll/tb/tb_hnx_aq14.sv:26: Verilog $stop
 Aborting...

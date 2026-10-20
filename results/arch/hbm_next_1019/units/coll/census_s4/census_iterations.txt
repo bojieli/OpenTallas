@@ -1,0 +1,11 @@
+HNX-GQ s4 pre-gate native census (tools/ref_tile/native_census.py in the floorplan step, limit 32 incl. reset, no waivers)
+s3 c349adf8a: FAIL 683 drivers > 32, max 1,351
+r1 082902242 (RTL 3fcf420a2): FAIL drivers>32 133 max 63 roots 109068
+r2 95bce6710: FAIL drivers>32 13 max 43 roots 109377
+r3 951d8b7e8: FAIL drivers>32 3 max 41 roots 110142
+r4 a2e589afd: FAIL drivers>32 1 max 41 roots 110209
+r5 18acb8520: FAIL drivers>32 2 max 34 roots 110853
+r6 5eee6b8c2: FAIL drivers>32 6 max 35 roots 111952
+r7 d7ca26734: FAIL drivers>32 20 max 43 roots 112061
+r8 899a3ff63: FAIL drivers>32 21 max 43 roots 112000
+r9 19346dd7b: PASS drivers>32 0 max 32 roots 111942
