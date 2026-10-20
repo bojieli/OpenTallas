@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.qwen.su8_pre_rtl_model.v1",
+  "status": "PLANNING_ONLY_NOT_BUILD_READY",
+  "baseline_source": "rtl/qwen_dv/s5/qfd_dv_s5_suvm7.sv",
+  "goal": "SU control separated from VM; own root; all boundary signals registered",
+  "source_register_bit_estimate": {
+    "reset_forest": 18,
+    "command_accept_replicas": 84,
+    "accepted_fields": 370,
+    "active_last_class_inflight": 86,
+    "address_and_loop_state": 252,
+    "current_address_copies": 384,
+    "stride_copies": 768,
+    "lane_live_and_lane_addresses": 776,
+    "core_group_bus_and_valid": 246,
+    "progress_idle_fault_notready": 132
+  },
+  "estimated_existing_control_state_bits": 3116,
+  "excluded_state": "VM/SRAM/read captures and 256-bit BTAB field; BTAB bypasses SU",
+  "new_boundary_state_upper_budget_bits": 1700,
+  "estimated_total_ff_upper_budget": 4816,
+  "clock_budget": "one root estimated <5000 FF; actual source synthesis/clock envelope mandatory",
+  "precompute_stride_plan": "replace per-lane raw stride copies with precomputed gl*stride offsets; pipeline within priced program-word pin/accept edges to shorten cur+gl*stride recurrence",
+  "program_word_accept_edges": {
+    "before": 2,
+    "future": 6
+  },
+  "vm_read_answer_edges": {
+    "before": 2,
+    "future": 4
+  },
+  "pin_bits_estimate": {
+    "input_upper_bound": 600,
+    "output_upper_bound": 1100,
+    "clock_reset": 2
+  },
+  "bandwidth": {
+    "program_word": 457,
+    "lane_addresses_per_cycle": 768,
+    "core_group_record_per_cycle": 243,
+    "lane_live_per_cycle": 8,
+    "group_valid_per_cycle": 3,
+    "lane_request_cadence": "one vector beat per active cycle; no backpressure"
+  },
+  "floorplan_status": "Not sized in unified uarch model or synthesized; no kit/RTL authorized by this planning receipt",
+  "integration_gaps": [
+    "unified uarch_model sizing/area and routing-track capacity",
+    "actual SU control source proof including idle write observation",
+    "per-operation calendar composition against VM8b bound slice",
+    "BTAB record age paired with core group fields and lane outputs",
+    "native fanout and depth before physical gate",
+    "actual source/corner/clock/PG/reach after closure"
+  ]
+}

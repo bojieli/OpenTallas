@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.qwen.vm8_boundary_price.v1",
+  "profile": "qfd_dv_s5_vm8b_r2_single_root",
+  "source_commit": "2ef848421ebae59f1430736435472e4bc85be350",
+  "top": "qfd_dv_s5_vm8s",
+  "clock_ports": [
+    "ck"
+  ],
+  "input_hashes": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_vm8.sv": "1e16d24415a9964aaf1a846370d64b852a32fff86d98cd14b641bebcdea410b5",
+    "rtl/qwen_dv/s5/qfd_dv_s5_suvm7.sv": "608178187e433430b9371f49cc19bc649e9ebc6d59a1d3595043dfce0d102edd",
+    "rtl/test/qwen_dv/s5/vm8/tb_vm8.sv": "d3d80c8fcc144ef343639d35fa4c117c896cdd31ccff70d14f49d6532760141d",
+    "rtl/test/qwen_dv/s5/vm8/bench.sh": "fc39ad3c50b218ceb75a7ac17893dbb941a3e8e8ebc50ccb36966338d33dcab7",
+    "rtl/test/qwen_dv/s5/sram_models_nofatal.sv": "3f6de66848e831cf528928d5ead447cef36b41edca4a1105f8f16487290122a0",
+    "physical/ref_tile/qfd_dv_s5_vm8b/spec.json": "88357fce8f35e0d893f04cc82fbcd3177dd98b45fd0c31f65fd89035ee64c1e6"
+  },
+  "exact_behavior_basis": {
+    "reference": "qfd_dv_s5_vm7",
+    "read_request_delay": 1,
+    "vm_write_bundle_delay": 2,
+    "table_write_bundle_delay": 2,
+    "all_outputs_delay": 1,
+    "comparison_count": 59620,
+    "scope": "functional one-cycle macro models; old-data collision behavior, not physical macro timing",
+    "source_bound_by": "current r2 source hashes; preserved b3 fleet logs; gate source snapshot authoritative for physical source"
+  },
+  "boundary_prices": {
+    "read_answer_edges": {
+      "before": 2,
+      "vm8": 4,
+      "added": 2,
+      "ports": [
+        "a",
+        "b",
+        "c",
+        "cr",
+        "bs",
+        "p"
+      ]
+    },
+    "vm_write_read_min_distance": {
+      "before": 1,
+      "vm8": 3,
+      "added": 2
+    },
+    "vm_write_input_pipeline_added_vs_vm7": 2,
+    "table_write_pipeline_added": 2,
+    "table_write_read_min_distance": {
+      "before": 1,
+      "vm8": 2,
+      "added": 1
+    },
+    "slice_lane_vm_roundtrip_added": 2
+  },
+  "future_su8_prices": {
+    "program_command_accept_edges": {
+      "before": 2,
+      "su8": 6,
+      "added": 4,
+      "decomposition": "VM read pins+2 and SU pins+2"
+    },
+    "btab_answer_routing": "bypass SU to group/lane relay to avoid +4 misalignment",
+    "status": "PLANNING_ONLY; SU8 not implemented/qualified"
+  },
+  "evidence": {
+    "0": {
+      "path": "results/arch/qw_suvm8_1020/pickup0720/r2_bench_0.log",
+      "sha256": "623a79f1b183906ea8e807e138046fc6818604200065b9cbae46a55c3b0146de",
+      "verdict": "PASS"
+    },
+    "coll": {
+      "path": "results/arch/qw_suvm8_1020/pickup0720/r2_bench_coll.log",
+      "sha256": "bb42f2e1979f3e967aabb854e5cf6ed152b868d7cb8979ecacda3dbd677e8666",
+      "verdict": "CAUSAL_FAIL"
+    },
+    "wpri": {
+      "path": "results/arch/qw_suvm8_1020/pickup0720/r2_bench_wpri.log",
+      "sha256": "576575c3249ac58326b96807d0b58da3badab44e652fc62ad81b82e0f7daa9b3",
+      "verdict": "CAUSAL_FAIL"
+    },
+    "bsel": {
+      "path": "results/arch/qw_suvm8_1020/pickup0720/r2_bench_bsel.log",
+      "sha256": "7fb5c7d0bbe369e77e3f7e3b205865084cb4cecd6214bfb5a1c334ddd0970f3a",
+      "verdict": "CAUSAL_FAIL"
+    }
+  },
+  "compiled_authority": {
+    "path": "/home/ubuntu/scratch/qw-gen5/dv2f20g5/p2/compiled_L1/manifest.json",
+    "sha256": "a5111e39d17ebffc5fecd9dfc40dee5b903d3f49ab7869bcec1fcaff3164e9bf",
+    "source_commit": "d502ea9ae",
+    "binding": "OLD slice/VM; VM8b not instantiated",
+    "native_su_calendar": "GAP in current layer_compile.py; no blanket period adjustment applied"
+  },
+  "physical": {
+    "gate": "qfd_dv_s5_vm8b-20261020-070801",
+    "pid": 2090098,
+    "status": "LIVE_NOT_CLOSED",
+    "preferred_clocking": "one root only; no 18-clock die delivery",
+    "adopted": false
+  },
+  "qualification": "Source-derived future boundary price only; do not adopt parent/die before actual VM8b closure, source binding, SU control split, and per-operation native schedule composition."
+}
