@@ -34,8 +34,8 @@
 //            age, active), registered row write enables.
 //   ctl      native copy of ot_s81sl_xs_ctl: config tag one-hot at the pin, hold-in-reset payload on regional
 //            enables, bv copies for the lane word select.  Lane = dsfd_pq_lx (STATIC_X2) function with bv copies.
-//   reset    port -> 2 sync flops -> 4 early (capture valids, main's release edge) / 8 -> 48 regions / 8 -> 3-stage
-//            chain -> 36 controller regions; release = main's edge + 1 everywhere; payload reset-free.
+//   reset    port -> 2 sync flops -> 4 early (capture valids, main's release edge) / 8 -> 54 regions / 8 -> 4-stage
+//            chain -> 39 controller regions; release = main's edge + 1 everywhere; payload reset-free.
 // Mutants (negative controls; DUT only): OT_S81SL_XS_MUT_BANK / _OFF / _QSWAP (as main), OT_S81SL_XS4_MUT_WCOPY (one
 // rotation-select copy of write leaf (1, 3) one column off), OT_S81SL_XS4_MUT_TPAR (q table group 5 parity replica
 // misses the window open), OT_S81SL_XS4_MUT_EXP (exponent SRAM read row of group 1 from beat0).
@@ -48,8 +48,8 @@
 
 // ===================================================================================================================== reset
 // rst_n port drives 2 flops.  e: 4 early regions (release R+3 = main's ot_rst_relay edge: the capture valids, which
-// stand one edge before main's pin flops); l2: 54 regions (R+4 = main + 1); k3: 39 controller regions (R+7 = main's
-// ctl R+6 + 1).  Assert is clocked (2 edges, chain +3).
+// stand one edge before main's pin flops); l2: 54 regions (R+4 = main + 1); k4: 39 controller regions (R+7 = main's
+// ctl R+6 + 1).  Assert is clocked (2 edges, chain +4).
 (* keep_hierarchy *)
 module ot_s81sl_xs4_rst (
     input  wire        clk,
@@ -66,7 +66,7 @@ module ot_s81sl_xs4_rst (
     (* keep = "true", dont_touch = "true" *) reg [7:0]  l1;
     (* keep = "true", dont_touch = "true" *) reg [53:0] l2;
     (* keep = "true", dont_touch = "true" *) reg [7:0]  c1;
-    (* keep = "true", dont_touch = "true" *) reg [38:0] k1, k2, k3;
+    (* keep = "true", dont_touch = "true" *) reg [38:0] k1, k2, k3, k4;
     integer k;
     always @(posedge clk) begin
         e1 <= {4{s1}};
@@ -76,10 +76,11 @@ module ot_s81sl_xs4_rst (
         for (k = 0; k < 39; k = k + 1) k1[k] <= c1[k / 5];
         k2 <= k1;
         k3 <= k2;
+        k4 <= k3;
     end
     assign rst_e = e1;
     assign rst_l = l2;
-    assign rst_k = k3;
+    assign rst_k = k4;
 endmodule
 
 // ===================================================================================================================== calendar
