@@ -1,0 +1,131 @@
+{
+  "source": "91d1b58f1",
+  "mapped_sha256": "47a1431ba040c0c2c83fc6e2c9d0f55ba1ebc24ae22939903d0e9a17c158cd93",
+  "spec_sha256": "9c0bc15946a13d53fbd62251796222d9f2eedda5b283efc0c39cf674d83c402f",
+  "band": [
+    2.16,
+    259.2,
+    473.04,
+    298.08
+  ],
+  "band_area_um2": 18307.8144,
+  "macro_count": 20,
+  "excluded_exact_library_tie_cells": [
+    [
+      "_67299_",
+      "TIEHIx1_ASAP7_75t_R"
+    ],
+    [
+      "_67300_",
+      "TIELOx1_ASAP7_75t_R"
+    ]
+  ],
+  "macro_halo_um": 2.16,
+  "macro_halo_band_intersections": [],
+  "macro_signal_nets": 5041,
+  "cut_below_macro_nets": 1656,
+  "cut_above_macro_nets": 3385,
+  "cross_both_macro_nets": 0,
+  "macro_terminal_band_lowerbound_gt405": 0,
+  "worst_macro_terminal_band_lowerbounds": [
+    {
+      "bit": 6194,
+      "um": 325.68,
+      "endpoints": [
+        "u_ot_pr_core.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]",
+        "u_ot_pr_core.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]"
+      ]
+    },
+    {
+      "bit": 15645,
+      "um": 240.14399999999995,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/wd_in[57]"
+      ]
+    },
+    {
+      "bit": 15869,
+      "um": 240.14399999999995,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/wd_in[57]"
+      ]
+    },
+    {
+      "bit": 16093,
+      "um": 240.14399999999995,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/wd_in[57]"
+      ]
+    },
+    {
+      "bit": 16317,
+      "um": 240.14399999999995,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/wd_in[57]"
+      ]
+    },
+    {
+      "bit": 15647,
+      "um": 240.04799999999994,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/wd_in[56]"
+      ]
+    },
+    {
+      "bit": 15871,
+      "um": 240.04799999999994,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/wd_in[56]"
+      ]
+    },
+    {
+      "bit": 16095,
+      "um": 240.04799999999994,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/wd_in[56]"
+      ]
+    },
+    {
+      "bit": 16319,
+      "um": 240.04799999999994,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/wd_in[56]"
+      ]
+    },
+    {
+      "bit": 16631,
+      "um": 239.95199999999994,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/wd_in[55]"
+      ]
+    },
+    {
+      "bit": 16599,
+      "um": 239.95199999999994,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/wd_in[55]"
+      ]
+    },
+    {
+      "bit": 16567,
+      "um": 239.95199999999994,
+      "endpoints": [
+        "u_ot_pr_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/wd_in[55]"
+      ]
+    }
+  ],
+  "top_signal_bits": 5145,
+  "conservative_fullface_to_band_nearest_L1_upper_um": 265.68000000000006,
+  "top_macro_direct_signal_connections": [],
+  "missing_endpoints": [],
+  "qualified": false,
+  "still_required": [
+    "mapped WC32 census",
+    "all-cell band ownership incl newborn cells",
+    "net bbox upper bound inside band",
+    "routing cut capacity incl cell-to-cell signals",
+    "clock spread TT/FF",
+    "PG connectivity",
+    "SS setup and FF hold"
+  ]
+}
