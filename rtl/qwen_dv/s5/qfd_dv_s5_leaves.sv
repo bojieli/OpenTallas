@@ -429,10 +429,23 @@ module qfd_dv_s5_ctl #(parameter integer HARD = 1, parameter integer MUT = 0, pa
                          w16_we_c, w16_addr_c, w16_data_c, w1_we_c, w1_addr_c, w1_data_c, own_ch_c, ag_own_c};
     wire [OW-1:0] o_q;
     generate if (HARD != 0) begin : g_h
-        // valid / strobe bits reset, payload not (qualified by the valid)
+        // valid / strobe bits reset (VB: stn_cfg v, sc_cfg v, stm_cfg v, c_su, am_v, w16_we, w1_we, own AR v, own D2D v,
+        // ag_own), payload not (it follows o_c every edge, qualified by its valid): the async-reset net stays ~20 sinks
+        localparam integer P_STN = OW - 1, P_SC = OW - 30, P_STM = OW - 131, P_SU = OW - 162, P_AM = OW - 172,
+                           P_W16 = OW - 231, P_W1 = OW - 768, P_AR = 1094 + 10, P_DD = 547 + 10;
         reg [OW-1:0] oq;
-        always @(posedge ck or negedge rst) if (!rst) oq <= {OW{1'b0}}; else oq <= o_c;
-        assign o_q = oq;
+        always @(posedge ck) oq <= o_c;
+        reg [19:0] vq;
+        wire [19:0] vc = {o_c[P_STN], o_c[P_SC], o_c[P_STM], o_c[P_SU], o_c[P_AM], o_c[P_W16], o_c[P_W1], o_c[P_AR], o_c[P_DD],
+                          1'b0, o_c[9:0]};
+        always @(posedge ck or negedge rst) if (!rst) vq <= 20'd0; else vq <= vc;
+        reg [OW-1:0] om;
+        always @(*) begin
+            om = oq;
+            {om[P_STN], om[P_SC], om[P_STM], om[P_SU], om[P_AM], om[P_W16], om[P_W1], om[P_AR], om[P_DD]} = vq[19:11];
+            om[9:0] = vq[9:0];
+        end
+        assign o_q = om;
     end else begin : g_s
         assign o_q = o_c;
     end endgenerate

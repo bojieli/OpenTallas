@@ -29,7 +29,7 @@ VF="--binary --timing -O2 -j ${VJOBS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-T
 case $KIND in
   eq)
     D=""; G=""
-    case $M in 0) ;; d10) G="-GDMUT=10";; d12) G="-GDMUT=12";; d9) G="-GDMUT=9";; loff) D="+define+OT_S5_LOFF_MUT";;
+    case $M in 0) ;; d10) G="-GDMUT=10";; d11) G="-GDMUT=11";; d12) G="-GDMUT=12";; d9) G="-GDMUT=9";; loff) D="+define+OT_S5_LOFF_MUT";;
       lrly) D="+define+OT_S5_LRLY_MUT";; red) D="+define+OT_S5_RED_MUT";; sc) D="+define+OT_S5_SC_MUT";;
       xh) D="+define+OT_S5_XH_MUT";; btab) D="+define+OT_S5_BTAB_MUT";; *) echo "unknown M $M"; exit 2;; esac
     # random stimulus collides SRAM read/write by design: the bench links non-fatal copies of the three model files

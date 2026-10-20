@@ -1,0 +1,174 @@
+{
+ "name": "qfd_dv_s5_ctl",
+ "top": "qfd_dv_s5_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+  "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 259.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "r_v",
+   "r_idx",
+   "r_last",
+   "r_d",
+   "l9o_v",
+   "stn_fault",
+   "stn_cfg",
+   "cmd_q",
+   "pc_bad"
+  ],
+  "N": [
+   "vm_we",
+   "vm_waddr",
+   "vm_wdata",
+   "kv_we",
+   "kv_waddr",
+   "kv_wdata",
+   "su_nr",
+   "su_idle",
+   "su_fault",
+   "su_prog",
+   "su_rows",
+   "vm_fault",
+   "red_we",
+   "red_addr",
+   "red_data",
+   "su_cmd",
+   "w16_we",
+   "w16_addr",
+   "w16_data",
+   "w1_we",
+   "w1_addr",
+   "w1_data",
+   "ag_own"
+  ],
+  "E": [
+   "sc_w1_we",
+   "sc_w1_addr",
+   "sc_w1_data",
+   "tok_v",
+   "tok_idx",
+   "tok_own",
+   "tok_val",
+   "tok_user",
+   "sc_busy",
+   "sc_fault",
+   "sc_cfg",
+   "am_v",
+   "am_idx",
+   "am_val",
+   "am_u",
+   "own_ch"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "chd_q",
+   "stm_cfg",
+   "sid",
+   "stm_fault",
+   "tld_fault",
+   "hd_fault",
+   "st",
+   "cc_o"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "fill_reason": {
+  "pin_bound": "4,898 port bits (VM write merge, own chain word, station / SU / scalar buses all pass through ctl): the perimeter at <= 6 pins/um per face sets the outline 345.6 x 259.2, not the synthesized area"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every output is flop Q in RTL (HARD 1 out registers); every input is the landing-read register of its lp landing beside the leaf in r_ctl: a flow pin register would be a second, unpriced +1 edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in 2 registered stages (qfd_dv_s5_rst2)"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS (waiver on inputs, reason): every output is a flop Q (HARD 1: one out register on every combinational cut output -- stn_cfg, sc_cfg, stm_cfg, su_cmd, am_*, w16/w1, own_ch, ag_own; st, cc_o, sid are state flops); every input arrives from a flop: in the hardened slice each ctl input is the landing-read register of its lp landing in r_ctl beside this leaf (or a same-region flop), so a leaf input register would be a second, unpriced +1 edge (pin_regs off). No combinational in->out path. rst_n lands in 2 registered stages (qfd_dv_s5_rst2); the HARD out register resets only its 20 valid/strobe bits (payload follows o_c every edge).",
+  "2_reach": "PASS: leaf <= 345.6 um side; all slice-scale distances are lp landings in the parent.",
+  "3_fanout": "gate textbook_lint high_fanout decides; decode strobes c_* drive <= 26 enables each; cmd_q bits <= 4 loads",
+  "4_depth": "VM write merge (4:1 x 537 b) / own word (3:1 x 1095 b) / status OR before the HARD out register; argmax okey compare 32 b; gate logic_depth / --cts path classes confirm",
+  "5_storage": "PASS: no runtime-indexed flop array; amax_mu per-user running best NU 4 x 57 b = 228 b, gather best 56 b",
+  "6_floorplan": "pin-bound (4,898 port bits): outline set by <= 6 pins/um per face, not by area (fill_reason pin_bound); one std-cell band, no macros; aspect 1.33",
+  "7_clock": "one centre-fed TritonCTS root (~7.3k sinks); io_hold_margin 0.03",
+  "8_schedule": "static: HARD 1 adds +1 edge on stn_cfg, sc_cfg, stm_cfg, su_cmd (p_re and su_go both: SU issue relative timing unchanged), am_*, w16_*, w1_*, own_ch, ag_own vs qfd_dv_slice2 (flat0 HARD 0 == slice2 at offset 0); handed to the compiler NOTICE (lanes/QW-GEN3.md via QW-SLICE6)"
+ },
+ "structural_change": "QW-SLICE6 new leaf (Q.STA.SLICE.2 hardened one-level slice2, plan 961b2dafd): the slice2 glue cut out of the 173,895-flop soft core root of the failed slice2_e/_wh gates; 345.6 x 259.2, faces by neighbour (W station, N pass channel/SU, E scalar, S stream/tload + dn-face chain words)",
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:QW-SLICE6-CTL",
+  "branch": "claude/qw-slice6-ctl-1019",
+  "tag": "ctl1",
+  "purpose": "QW-SLICE6 Q.STA.SLICE.2: slice2 glue leaf qfd_dv_s5_ctl (decode, configs, VM write merge, own AR/D2D words, gather, amax, status) of the hardened one-level slice",
+  "extra_paths": [
+   "rtl",
+   "physical/asap7_memory_macros",
+   "physical/asap7_memory_macros_v2",
+   "tools/hdc_golden.py",
+   "tools/hdc_program.py",
+   "results/arch/qw_slice6_1019/witness"
+  ],
+  "benches": [
+   {
+    "name": "s5_eq",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/bench/eq eq 0",
+    "expect": "pass",
+    "pass_regex": "EQ M=0: S5_EQ PASS",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s5_ctl_mut",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/bench/eqm eq d11",
+    "expect": "fail",
+    "fail_regex": "S5_EQ FAIL",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice6_1019/witness/ctl_d11.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_s5_ctl/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s5_ctl"
+ }
+}

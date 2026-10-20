@@ -1,0 +1,445 @@
+{
+  "name": "qkd_kvs_attn_ba3",
+  "top": "qkd_kvs_attn_fl_ba3",
+  "sources": [
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+    "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
+    "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_service_root_b.sv",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_result_face_sb.sv",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/lib/ot_pin_land.sv",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_native_attention_static_ctl_ba3.sv",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_native_attention_programme_ba3.sv",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_ba3.sv",
+    "rtl/lib/face_land/qkd_kvs_attn_fl_ba3.sv"
+  ],
+  "params": {},
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "d2d__srx",
+      "d2d__rx_payload",
+      "d2d__att_tx_slot",
+      "d2d__att_tx_kind",
+      "d2d__att_tx_beat"
+    ],
+    "S": [
+      "ck",
+      "rst_n",
+      "ufs_WS",
+      "ufs_WN",
+      "ufs_ES",
+      "ufs_EN",
+      "ufh",
+      "ufp0",
+      "ufp1",
+      "uff",
+      "ufk_WS",
+      "ufk_WN",
+      "ufk_ES",
+      "ufk_EN",
+      "fin",
+      "pvst",
+      "pvfst",
+      "ahs",
+      "prg",
+      "acal_WS",
+      "acal_WN",
+      "acal_ES",
+      "acal_EN",
+      "arh"
+    ],
+    "E": [
+      "attn__tx_valid",
+      "attn__tx_payload",
+      "i_ctl"
+    ],
+    "W": []
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "Generated wires-only parent of the static join: every tile <-> tile / die-master hop is priced in the compiled join ages with the die relays only (kv_relays, die_ages.json); a recipe-3 pin register would add an unpriced edge to every crossing.  The children land / launch their boundary nets in their own flops."
+  },
+  "kind": "tile",
+  "clock_port": "ck",
+  "layer_cap": "M5",
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "keep_pin_regs": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_min_tracks": 4,
+    "m5_pg_pitch": 2.7,
+    "hold_margin_ns": 0.03,
+    "io_hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    }
+  },
+  "recipe": 3,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "outline": {
+    "w": 302.40000000000003,
+    "h": 302.40000000000003,
+    "exact": true
+  },
+  "structural_change": "KV-BOOTAGE 10-19 (coordinator decision, lanes/KVR-DERIVE.md re-harden spec): the attention tile with BOOT-PROGRAMMABLE static-schedule ages: attn_root qkd_attn_service_root_b (PV_LEAD; END = PV_START + LAST + 47 + F_DLY), attn_face qkd_attn_result_face_sb (F_DLY), attn_cal qkd_attn_cal_gen_b (D_QK, D_RL, F_DLY: R = SERVICE_END - 48 - F_DLY - PV_START keeps RESULT_AGE on the link slot) from the sealed die cfg word {D_RL, D_QK, F_DLY, PV_LEAD} riding the ctl -> attn bundle (i_ctl 77 -> 109 b; static, no handshake). Same face landing as fl1 (rst_n +3 release, fin +1, i_ctl +1), wrapper rtl/lib/face_land/qkd_kvs_attn_fl_ba.sv. Die-derived PV_LEAD 37 / F_DLY 49 / D_QK 57 vs the closed tile 0 / 1 / 28. Lockstep vs the closed modules: results/rtl/kv_bootage_1019. NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_attn of the KV die (5 children: qkd_attn_cal_gen, qkd_attn_fault_root, qkd_attn_result_face_s, qkd_attn_service_root, qkd_native_attention_programme; hard: none), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 77831bc28446) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 1546, 'N': 1080, 'E': 626} pins on 302.4 x 302.4 um (die frame record (302.4, 302.4) ASSUMED -> this outline for KV-PLAN3).; HKV-RSTCAP fl1 10-19: closed g3 native capture 383.3 ps > 190 on 58 pins: rst_n 383.3 (async clear of every child), fin[0] 372.4 (pvfin stream valid fan-out), i_ctl[2]/[0] 338.0/334.2 (issue / capability enables of the 400-b command capture), fin data bits 190-224 (pin -> far first flop). Shared face landing standard (tools/ref_tile/face_land.py, spec face_land): top qkd_kvs_attn_fl = generated wrapper, rst_n drives only ot_rst_relay (async assert, release +3 edges, zero steady-state cycles) + landed buses fin +1 edge, i_ctl +1 edge (rtl/lib/ot_pin_land.sv, one capture flop per bit at the face, anchored by io_flop_at_pins); core RTL unchanged. Die: rebind qkd_kvs_attn -> qkd_kvs_attn_fl, startup waits +3 edges, schedule prices fin +1, i_ctl +1 (lanes/HKV-RSTCAP.md). | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate ba1: the face-land rst_n relay drove 1,221 flops on one copy -> the wrapper rtl/lib/face_land/qkd_kvs_attn_fl_ba.sv is regenerated (face_land.wrapper reset_copies rst_n 8; copies=1 regen proven byte-identical) and reset_relay_split {256} spreads the core's reset loads over the 8 KEPT copies (pre-optimisation loads run 1.4-2.9x the final 1,221 on the prompt tile) in synthesis; release +3 unchanged. | ba3 structural redesign after b1 final TT -105.22 and b2 gate TT -40: move 493/507-bit record zero reductions into <=32-bit flags captured at the EXISTING RX landing edge. Combine registered flags in the next stage instead of reducing 500 landed data bits through request_valid/fault into root calendar enables. All token-cycle, fault and valid edges preserved; old closed RTL untouched. Eight reset copies retained.",
+  "job": {
+    "owner": "Codex:KV-RELAYGEN-ATTN",
+    "branch": "codex/kv-relaygen-attn-recovery-1019",
+    "tag": "b3",
+    "purpose": "KV-BOOTAGE 10-19 (coordinator decision, lanes/KVR-DERIVE.md re-harden spec): the attention tile with BOOT-PROGRAMMABLE static-schedule ages: attn_root qkd_attn_service_root_b (PV_LEAD; END = PV_START + LAST + 47 + F_DLY), attn_face qkd_attn_result_face_sb (F_DLY), attn_cal qkd_attn_cal_gen_b (D_QK, D_RL, F_DLY: R = SERVICE_END - 48 - F_DLY - PV_START keeps RESULT_AGE on the link slot) from the sealed die cfg word {D_RL, D_QK, F_DLY, PV_LEAD} riding the ctl -> attn bundle (i_ctl 77 -> 109 b; static, no handshake). Same face landing as fl1 (rst_n +3 release, fin +1, i_ctl +1), wrapper rtl/lib/fa",
+    "benches": [
+      {
+        "name": "lint",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn_fl_ba3 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv rtl/qwen_sys/kv_bootage_20261019/qkd_attn_service_root_b.sv rtl/qwen_sys/kv_bootage_20261019/qkd_attn_result_face_sb.sv rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_pin_land.sv rtl/qwen_sys/kv_bootage_20261019/qkd_native_attention_static_ctl_ba3.sv rtl/qwen_sys/kv_bootage_20261019/qkd_native_attention_programme_ba3.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_ba3.sv rtl/lib/face_land/qkd_kvs_attn_fl_ba3.sv && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "attn_pl0_fd1",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/attn_pl0_fd1 attn 0 PL=0 FD=1 FMUT=0",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_ATTN PASS",
+        "min_count_regex": "checks=(\\d+)"
+      },
+      {
+        "name": "attn_pl37_fd49",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/attn_pl37_fd49 attn 0 PL=37 FD=49 FMUT=0",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_ATTN PASS",
+        "min_count_regex": "checks=(\\d+)"
+      },
+      {
+        "name": "calgen_f1",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/calgen_f1 calgen 0 Q=28 R=76 F=1",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_CALGEN PASS",
+        "min_count_regex": "checks=(\\d+)"
+      },
+      {
+        "name": "calgen_f49",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/calgen_f49 calgen 0 Q=57 R=87 F=49",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_CALGEN PASS",
+        "min_count_regex": "checks=(\\d+)"
+      },
+      {
+        "name": "attn_mut_lead",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/attn_mut_lead attn 4 PL=37 FD=49 FMUT=0",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_ATTN PASS",
+        "fail_regex": "^KVBA_ATTN FAIL",
+        "fail_witness": "results/rtl/kv_bootage_1019/sim_attn_4_PL_37_FD_49_FMUT_0_.log"
+      },
+      {
+        "name": "attn_mut_lead_range",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/attn_mut_lead_range attn 5 PL=37 FD=49 FMUT=0",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_ATTN PASS",
+        "fail_regex": "^KVBA_ATTN FAIL",
+        "fail_witness": "results/rtl/kv_bootage_1019/sim_attn_5_PL_37_FD_49_FMUT_0_.log"
+      },
+      {
+        "name": "attn_mut_fdly",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/attn_mut_fdly attn 0 PL=37 FD=49 FMUT=6",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_ATTN PASS",
+        "fail_regex": "^KVBA_ATTN FAIL",
+        "fail_witness": "results/rtl/kv_bootage_1019/sim_attn_0_PL_37_FD_49_FMUT_6_.log"
+      },
+      {
+        "name": "attn_mut_fdly_range",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/attn_mut_fdly_range attn 0 PL=37 FD=49 FMUT=7",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_ATTN PASS",
+        "fail_regex": "^KVBA_ATTN FAIL",
+        "fail_witness": "results/rtl/kv_bootage_1019/sim_attn_0_PL_37_FD_49_FMUT_7_.log"
+      },
+      {
+        "name": "calgen_mut_r",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/calgen_mut_r calgen 6 Q=57 R=87 F=49",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_CALGEN PASS",
+        "fail_regex": "^KVBA_CALGEN FAIL",
+        "fail_witness": "results/rtl/kv_bootage_1019/sim_calgen_6_Q_57_R_87_F_49_.log"
+      },
+      {
+        "name": "calgen_mut_drl",
+        "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/calgen_mut_drl calgen 7 Q=57 R=87 F=49",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_CALGEN PASS",
+        "fail_regex": "^KVBA_CALGEN FAIL",
+        "fail_witness": "results/rtl/kv_bootage_1019/sim_calgen_7_Q_57_R_87_F_49_.log"
+      },
+      {
+        "name": "codec_ba3_exact",
+        "cmd": "bash tools/qwen_kv_die/attn_ba3_codec_bench.sh {RUN}/codec_ba3 0",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVBA_CODEC_BA3 PASS"
+      },
+      {
+        "name": "codec_ba3_fault_mutant",
+        "cmd": "bash tools/qwen_kv_die/attn_ba3_codec_bench.sh {RUN}/codec_mut4 4",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^CODEC_BA3_MISMATCH",
+        "fail_witness": "results/rtl/kv_bootage_1019/attn_b3/codec_mut4.log"
+      },
+      {
+        "name": "programme_pair_ba3",
+        "cmd": "bash tools/qwen_kv_die/attn_ba3_pair_bench.sh {RUN}/pair_ba3 0 0",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^KVS_LANDPAIR_ALL PASS"
+      }
+    ],
+    "extra_paths": [
+      "rtl",
+      "tools/qwen_kv_die/kv_bootage_bench.sh",
+      "rtl/test/kv_bootage_1019",
+      "results/rtl/kv_bootage_1019",
+      "tools/qwen_kv_die/attn_ba3_codec_bench.sh",
+      "tools/qwen_kv_die/attn_ba3_pair_bench.sh"
+    ],
+    "views_to": "physical/ref_tile/qkd_kvs_attn_ba3/views",
+    "record_to": "results/rtl/ref_tile/qkd_kvs_attn_ba3",
+    "reroute_reason": {
+      "kind": "rtl_change",
+      "why": "b1/b2 setup failure codec landed payload zero-reduction into root enables: registered per-32-bit legality flags at same landing edge, no schedule latency change"
+    }
+  },
+  "reroute_reason": {
+    "kind": "native_capture",
+    "source": "results/arch/qwen_kv_die/rstcap_1019/native_receipts.json",
+    "cell": "qkd_kvs_attn",
+    "fix": "input side: rst_n lands in ot_rst_relay (2 sync + 1 kept relay flop) so the pin has 3 flop sinks instead of the tile-wide async clear, and fin, i_ctl land in one face capture flop per bit (ot_pin_land, io_flop_at_pins anchors them at the pin); same outline / pin faces, core RTL unchanged"
+  },
+  "reset_landing": {
+    "enable": true,
+    "stages": 2
+  },
+  "reset_relay_split": {
+    "max_loads": 256
+  },
+  "pin_ranges": {
+    "d2d__srx": [
+      1.2,
+      146.0144
+    ],
+    "d2d__rx_payload": [
+      146.1104,
+      298.137778
+    ],
+    "d2d__att_tx_slot": [
+      298.233778,
+      298.5112
+    ],
+    "d2d__att_tx_kind": [
+      298.6072,
+      299.716889
+    ],
+    "d2d__att_tx_beat": [
+      299.812889,
+      301.2
+    ],
+    "ck": [
+      1.2,
+      1.392621
+    ],
+    "rst_n": [
+      1.488621,
+      1.681242
+    ],
+    "ufs_WS": [
+      1.777242,
+      1.969863
+    ],
+    "ufs_WN": [
+      2.065863,
+      2.258484
+    ],
+    "ufs_ES": [
+      2.354484,
+      2.547105
+    ],
+    "ufs_EN": [
+      2.643105,
+      2.835726
+    ],
+    "ufh": [
+      2.931726,
+      3.124347
+    ],
+    "ufp0": [
+      3.220347,
+      3.412968
+    ],
+    "ufp1": [
+      3.508968,
+      3.701589
+    ],
+    "uff": [
+      3.797589,
+      3.99021
+    ],
+    "ufk_WS": [
+      4.08621,
+      4.278831
+    ],
+    "ufk_WN": [
+      4.374831,
+      4.567451
+    ],
+    "ufk_ES": [
+      4.663451,
+      4.856072
+    ],
+    "ufk_EN": [
+      4.952072,
+      5.144693
+    ],
+    "fin": [
+      5.240693,
+      108.100285
+    ],
+    "pvst": [
+      108.196285,
+      114.167534
+    ],
+    "pvfst": [
+      114.263534,
+      126.783897
+    ],
+    "ahs": [
+      126.879897,
+      158.662354
+    ],
+    "prg": [
+      158.758354,
+      262.195809
+    ],
+    "acal_WS": [
+      262.291809,
+      271.537614
+    ],
+    "acal_WN": [
+      271.633614,
+      280.87942
+    ],
+    "acal_ES": [
+      280.97542,
+      290.221226
+    ],
+    "acal_EN": [
+      290.317226,
+      299.563032
+    ],
+    "arh": [
+      299.659032,
+      301.2
+    ],
+    "attn__tx_valid": [
+      1.2,
+      1.655635
+    ],
+    "attn__tx_payload": [
+      1.751635,
+      251.439757
+    ],
+    "i_ctl": [
+      251.535757,
+      301.2
+    ]
+  }
+}
