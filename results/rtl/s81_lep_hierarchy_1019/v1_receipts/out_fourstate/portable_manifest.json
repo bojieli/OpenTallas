@@ -1,0 +1,39 @@
+[
+  {
+    "source": "rtl/lib/ot_sram_oldread_wreg.sv",
+    "original_sha256": "67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0",
+    "portable_sha256": "1e688364fe9dde21aa5f902b83017276fb2fb556ab3b7f0af95d3b34bcddd265",
+    "replacements": [
+      [
+        "wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},wdata},raw;",
+        "wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},wdata}; wire [NB*128-1:0] raw;"
+      ]
+    ]
+  },
+  {
+    "source": "rtl/lib/ot_sram_showahead_1r1w.sv",
+    "original_sha256": "cb067488b429c3a51d3b04b2f7a2c25f01d2cfa1b5298a79dbc3865e991be721",
+    "portable_sha256": "6836a472323e949a8d5e2e96d1f537242d4507cea2b64d38329a34b3d0024022",
+    "replacements": [
+      [
+        "wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}, raw;",
+        "wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}; wire [NB*128-1:0] raw;"
+      ]
+    ]
+  },
+  {
+    "source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+    "original_sha256": "c3701dd3a23e9571327b564f0304b3db2bafe04548f6e45ab5b2cdaf1db6fafe",
+    "portable_sha256": "5aec5b5cf3052a227760380c9e6680089ebc0562d651df8cf8f8af793803d7a0",
+    "replacements": [
+      [
+        "wire [79:0] old_host={3'd0,pd},new_host={3'd0,thq},next_host;",
+        "wire [79:0] old_host={3'd0,pd},new_host={3'd0,thq}; wire [79:0] next_host;"
+      ],
+      [
+        "wire [55:0] old_key={2'd0,kd},new_key={2'd0,tkq},next_key;",
+        "wire [55:0] old_key={2'd0,kd},new_key={2'd0,tkq}; wire [55:0] next_key;"
+      ]
+    ]
+  }
+]

@@ -47,7 +47,7 @@ module tb_lmh_link (
 endmodule
 
 module tb_s81sl_lep_muh #(parameter integer NB = 80, parameter integer RXSRAM = 0, parameter integer SEED = 1, parameter integer WAIT = 8000,
-                          parameter integer INPIPE = 0);   // LEPCAP: M with IN_PIPE 1 vs R fed through one TB face register
+                          parameter integer HIER = 0, parameter integer INPIPE = 0);   // LEPCAP: M with IN_PIPE 1 vs R fed through one TB face register
     localparam integer TG = 1045;
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
@@ -60,7 +60,7 @@ module tb_s81sl_lep_muh #(parameter integer NB = 80, parameter integer RXSRAM = 
     wire m_mwv, m_mrv; wire [1103:0] m_mwd, m_mrd;
     wire [1:0] mlv, mlr, miv, mir, mrxv, rlv, rlr, riv_, rir, rrxv; wire [2*553-1:0] mld, mid, rld, rid_;
     wire [2:0] mf0, mf1, rf0, rf1; wire [1:0] mst0, mst1, rst0, rst1;
-    ot_s81sl_lep_mu_h #(.RX_SRAM(RXSRAM), .SRAM(1), .NB(NB), .IN_PIPE(INPIPE)) lm (.clk(clk), .rst_n(rst_n), .ro(d_ro | m_ro_x), .ri(m_ri),
+    ot_s81sl_lep_mu_h #(.RX_SRAM(RXSRAM), .SRAM(1), .NB(NB), .IN_PIPE(INPIPE), .HIER_LANES(HIER)) lm (.clk(clk), .rst_n(rst_n), .ro(d_ro | m_ro_x), .ri(m_ri),
         .lo0_v(mlv[0]), .lo0_r(mlr[0]), .lo0_d(mld[0 +: 553]), .lo1_v(mlv[1]), .lo1_r(mlr[1]), .lo1_d(mld[553 +: 553]),
         .li0_v(miv[0]), .li0_r(mir[0]), .li0_d(mid[0 +: 553]), .li1_v(miv[1]), .li1_r(mir[1]), .li1_d(mid[553 +: 553]),
         .rxv(mrxv), .sl_f(1'b0), .l0_f(mf0), .l1_f(mf1), .l0_st(mst0), .l1_st(mst1),

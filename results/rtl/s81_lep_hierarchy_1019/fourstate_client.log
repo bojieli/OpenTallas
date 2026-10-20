@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits   970 GB (avail 792, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 41 disk 316 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-lep-hierarchy-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-lep-hierarchy-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-lep-hierarchy-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-lep-hierarchy-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-lep-hierarchy-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-lep-hierarchy-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4159639-1792456845 after 0 s
+rtl/lib/ot_sram_oldread_wreg.sv:17: syntax error
+rtl/lib/ot_sram_oldread_wreg.sv:17: error: Invalid module item.
+rtl/lib/ot_sram_showahead_1r1w.sv:35: syntax error
+rtl/lib/ot_sram_showahead_1r1w.sv:35: error: Invalid module item.
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:265: syntax error
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:265: error: Invalid module item.
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:266: syntax error
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:266: error: Invalid module item.
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4159639-1792456845): exit 8
