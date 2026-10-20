@@ -1,0 +1,70 @@
+{
+  "status": "MODEL_ONLY_NO_GATE",
+  "source": "2882c6196",
+  "outline_um": [
+    216,
+    216
+  ],
+  "port_identity_preserved": true,
+  "moved_pins": {
+    "y[0:191]": "E->N",
+    "y[192:383]": "E->S",
+    "y[384:511]": "stayE"
+  },
+  "counts": {
+    "S": 1216,
+    "W": 1031,
+    "N": 1216,
+    "E": 1158
+  },
+  "margin_um": 4.32,
+  "density_total_per_um": {
+    "S": 5.864197530864197,
+    "W": 4.972029320987654,
+    "N": 5.864197530864197,
+    "E": 5.5844907407407405
+  },
+  "all_pin_names_unique": true,
+  "pin_count": 4621,
+  "max_diagonal_um": 305.47012947258855,
+  "core_um2": 44808.4224,
+  "placed_std_area_um2": 14127,
+  "utilization": 0.31527554962524185,
+  "utilization_note": "PIN_BOUND31.53%,explicitexceptionstillneeded;betterthan24.14%fixedfaces",
+  "leaf_cycles_added": 0,
+  "boot_delta_legacy": 2,
+  "tile_area_delta_mm2_64": 1.0749542399999998,
+  "parent": {
+    "new_block_um": [
+      604.8,
+      604.8
+    ],
+    "new_frame_um_lower_bound": [
+      1641.6,
+      12700.8
+    ],
+    "frame_area_delta_mm2_bothpairs": 4.344606719999991,
+    "pvw0_origin": [
+      5917.536,
+      56.16
+    ],
+    "pvw0_top": 12756.96,
+    "ahub_proposed_origin": [
+      6150.816,
+      12929.76
+    ],
+    "ahub_size": [
+      1175.016,
+      760.296
+    ],
+    "pvw1_proposed_origin": [
+      5917.536,
+      13862.88
+    ],
+    "pvw1_top": 26563.68,
+    "serdes_host_y": 26846.91,
+    "top_gap_host_y_um": 283.23,
+    "status": "UNVERIFIED neighbor+fullfaceproducerconsumerreach; bind_chainownsactualreplan",
+    "latency": "0leafdelta;trunkrelayadditionunpriceduntilactualhopaudit"
+  }
+}
