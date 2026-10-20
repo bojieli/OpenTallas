@@ -91,12 +91,12 @@
   "io_hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "ROOT4-S81POST 10-19: FIRST xr3 kit (no earlier xr3 route). C3 variant of the closed xr1 (s81sl_xr1f-12b616b54; same XR2..XR7 structure, FOREG 1) plus the band port B: bi input flops, the bo 513-b {pk, valid} register, and the S81-SMWIRE SO assembler (main 0408184bd). SAFE checklist: 1 pins PASS (source-registered: every input a flop at the pin, every output a flop; reset_landing 2 stages); 2 reach PASS (pin flops anchored at the faces by io_flop_at_pins, 16 regional clock roots km16; longest flop->flop span is inside a 570 x 395 tile with registered classify stage); 3 fanout FIXED: the SO lo/hi capture enables (b_so && so_n == 0 / 1, 512 loads each) are now KEPT registered copies one per 8 bits (sol_c / soh_c 64 + 64) over a staged word so_w (verified: flow keep hook ot_keep_regs.tcl keeps 64/64 + 64/64 on the paramod, sos_r 69, cis_c 69); the SO ci select sos_c is a kept copy per 16 bits; every XR5 kept copy as xr1; 4 depth PASS (as xr1; SO beat select is a registered one-hot); 5 storage PASS (no runtime-indexed flop arrays; so_lo / so_hi / so_w are 512-b registers, not delay lines); 6 floorplan waived-with-reason (pin-bound, util ~7%, see outline_why; no macros; aspect 1.44); 7 clock PASS (km16 regional roots, pin-flop spread checked by the --cts gate, io_hold_margin 0.03); 8 schedule PASS (static; the enable fix adds 0 cycles: lo / hi are captured one edge after their B word and both are valid in the so_go cycle as before).",
+ "structural_change": "S81-XR3 10-20 (XR3-CLS): structural redesign after the first xr3 route s81sl_xr3-6585bf71d failed TT -144.7 ps (913 reg->reg D pins; worst eb[25] -> 3 wire buffers -> mine_e -> ce -> cp mux -> tgt0/lmask0 decode -> wire -> rwr[2] = REACH + DEPTH of the one-cycle stage-1 classify across the 570-um outline). C3 (HB != 0) now classifies in TWO registered stages: stage 1a per SOURCE (E / N(W) / V / B, beside its input flops): own mine / kind flags, target one-hot, per-leaf row-write and RD enables, RD leaf > 4, pairs/row, raw words eb1/wb1/vb1/bb1 + the SO B header, per-face sid one-hot (2 hops) -- KEPT reset-free copies (<= 17 stage-1b loads each); stage 1b = the XR7 stage-1 registers fed by OR / priority of the registered one-hots (<= 3 levels), so every long E->W wire carries a registered one-hot only. C1 (closed s81sl_xr1f) keeps the single stage (CLS 0: same expressions). SAFE checklist: 1 pins PASS (source-registered; reset_landing 2 stages); 2 reach FIXED (no cross-source logic on a tile-spanning wire: E/N face -> 1a -> 1b -> W face consumers = 3 hops over <= 570 um; sid strap 2 hops; data words 4 hops pin->eb1->eb2->ud->sw_d); 3 fanout FIXED (1a copies sized <= ~17 loads; 1b kept copies as XR7; SO enables 64+64 as ROOT4); 4 depth FIXED (stage 1a <= ~8 levels per source, stage 1b <= 3); 5 storage PASS (no runtime-indexed flop arrays); 6 floorplan waived-with-reason (pin-bound, outline 570.24 x 395.28 unchanged, aspect 1.44, no macros); 7 clock PASS (km16 regional roots, pin-flop spread by the --cts gate, io_hold_margin 0.03); 8 schedule FIXED: one contract -- C3 == C1 with every ring / V / band input (incl. the SO gather words) landing 1 edge later, leaf-side inputs undelayed, so the whole C3 slice timeline moves +1 edge and all in-slice relative timing is unchanged; handed to the die schedule (S-tier V CTL inject 8 vs 7) and priced (<= 0.009 % AR/MTP) in results/rtl/s81_xr3_1020/SCHEDULE.json.",
  "job": {
-  "owner": "Claude:ROOT4-S81POST",
-  "branch": "claude/root4-s81post-1019",
+  "owner": "Claude:S81-XR3",
+  "branch": "claude/s81-xr3-1020",
   "tag": "s81sl_xr3",
-  "purpose": "S81 C3 control-plane sub-leaf ot_s81sl_xr3 (HB 1: band port B, S81-SMWIRE SO assembler) -- first hardened view; SAFE item 3 fix on the SO lo/hi capture enables (KEPT copies 64+64).",
+  "purpose": "S81 C3 control-plane sub-leaf ot_s81sl_xr3: XR3-CLS two-stage classify (reach + depth fix of route 6585bf71d); C3 = C1 + 1 edge on ring/V/band inputs.",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv",
    "rtl/dsrom_sys/s81_suhc",
@@ -105,7 +105,8 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
    "tools/s81_slice",
    "tools/s81_dv/sm_target",
-   "results/rtl/root4_s81post_1019"
+   "results/rtl/root4_s81post_1019",
+   "results/rtl/s81_xr3_1020"
   ],
   "benches": [
    {
@@ -117,11 +118,19 @@
     "peak_ram_gb": 4
    },
    {
+    "name": "slxr1_exact",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr1_exact base 1 0 6000",
+    "expect": "pass",
+    "pass_regex": "^PASS xr base hb=0 seed=1$",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
     "name": "slxr3_muthops",
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_muthops hops 1 1 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_hops/run.log",
+    "fail_witness": "results/rtl/s81_xr3_1020/witness/xr3_hops/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -130,7 +139,7 @@
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutrow row 1 1 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_row/run.log",
+    "fail_witness": "results/rtl/s81_xr3_1020/witness/xr3_row/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -139,7 +148,7 @@
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutporder porder 1 1 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_porder/run.log",
+    "fail_witness": "results/rtl/s81_xr3_1020/witness/xr3_porder/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -148,7 +157,34 @@
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutnocol nocol 1 1 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRILL missed=[1-9][0-9]* of 14",
-    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_nocol/run.log",
+    "fail_witness": "results/rtl/s81_xr3_1020/witness/xr3_nocol/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutbwide",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutbwide bwide 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRILL missed=[1-9][0-9]* of 14",
+    "fail_witness": "results/rtl/s81_xr3_1020/witness/xr3_bwide/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutxhold",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutxhold xhold 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/s81_xr3_1020/witness/xr3_xhold/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutcls",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutcls cls 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/s81_xr3_1020/witness/xr3_cls/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -165,7 +201,7 @@
     "cmd": "bash tools/s81_dv/sm_target/run_e2e.sh {RUN}/smwire_soen OT_S81SL_XR_MUT_SOEN; head -3 {RUN}/smwire_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log; grep -q '^SMWIRE PASS' {RUN}/smwire_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log",
     "expect": "fail",
     "fail_regex": "^SMWIRE MISMATCH gather data",
-    "fail_witness": "results/rtl/root4_s81post_1019/witness/e2e_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log",
+    "fail_witness": "results/rtl/s81_xr3_1020/witness/e2e_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log",
     "threads": 16,
     "peak_ram_gb": 24
    }

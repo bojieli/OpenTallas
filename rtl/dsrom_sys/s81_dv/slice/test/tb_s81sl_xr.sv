@@ -13,6 +13,7 @@
 //   RD pair j n+2+j;  packed send (last lo beat) n+2;  partial j to xfin n+2+j;  rstd fan n+1.
 // S81U-XR2 (10-17) adds the classify stage: check() compares ci / bo / c / sw / x_go / is / cfg one slot later (XL = 1),
 //   i.e. CTL n+2, V re-inject / SC relay n+2, RD pair j n+3+j, packed send n+3; partials and rstd are unchanged.
+// XR3-CLS (S81-XR3 10-20): on C3 (HB = 1) the classify is two registered stages: XL = 2 (CTL n+3, RD pair j n+4+j, send n+4).
 // Checks every cycle: ci_dir, ci_b[0], c_v, sw_v, x_go, x_sv, rb_v, is_v, cfg_v, fault (= 0), bo (HB: whole word); payloads
 // whenever their valid is up (ci_b / bo: the unused pack words of a short send are stale don't-care).
 // Then 13 illegal programs (14 on C3: BIND mu4 10-19 adds a dir-B send config with pairs > 2), each from reset, must raise
@@ -20,6 +21,11 @@
 // Prints XRB ... err=<n> and PASS / FAIL.  Mutants (RTL): +define+OT_S81SL_XR_MUT_{HOPS,ROW,PORDER,NOCOL,XHOLD} must FAIL.
 module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, parameter integer NC = 6000);
     localparam integer W = 1104, V = 276, BW = 513, NS = NC + 16;
+    // XR3-CLS (S81-XR3 10-20): C3 (HB = 1) == C1 with every ring / V / band input landing one edge later (two-stage
+    // classify); the leaf-side inputs (lo, partials, rstd) are not delayed.  The bench plays the same C1 program into C3
+    // with its leaf-side inputs lagged one edge (tb flops, below): the whole C3 timeline is the C1 model's + 1 edge, so
+    // ring-side outputs compare at XL = 2 and partial / rstd outputs at PL = 1 (C1: XL = 1, PL = 0).
+    localparam integer XL = (HB != 0) ? 2 : 1, PL = (HB != 0) ? 1 : 0;
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
     // ---------------------------------------------------------------- DUT
@@ -34,12 +40,17 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     reg [4:0] e_v = 0; reg [9:0] e_c = 0; reg [479:0] e_d = 0; reg eg_v = 0; reg [1:0] eg_c = 0; reg [31:0] eg_d = 0;
     wire g_v; wire [1:0] g_c; wire [31:0] g_d; wire x_mode; wire [31:0] x_scale;   // XR3: g_* one copy (slice glue fan-out)
     generate if (HB != 0) begin : g3
+        // XR3-CLS: leaf-side inputs lagged one edge (C3 == C1 + 1 on the ring / V / band inputs)
+        reg [4:0] lo_v_q = 0, p_v_q = 0; reg [1279:0] lo_d_q = 0; reg [159:0] p_d_q = 0; reg x_rbv_q = 0; reg [31:0] x_rbd_q = 0;
+        always @(posedge clk) begin
+            lo_v_q <= lo_v; lo_d_q <= lo_d; p_v_q <= p_v; p_d_q <= p_d; x_rbv_q <= x_rbv; x_rbd_q <= x_rbd;
+        end
         ot_s81sl_xr3 u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d),
-            .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d),
+            .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v_q), .lo_d(lo_d_q), .p_v(p_v_q), .p_d(p_d_q),
             .rb_v(rb_v), .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v),
-            .g_c(g_c), .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_scale(x_scale), .x_eps(x_eps), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv),
-            .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
+            .g_c(g_c), .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_scale(x_scale), .x_eps(x_eps), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv_q),
+            .x_rbd(x_rbd_q), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
     end else begin : g1
         ot_s81sl_xr1 u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .c_v(c_v), .c_d(c_d),
@@ -270,9 +281,10 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
         end
     endtask
     task automatic check(input integer s);
-        integer d;
+        integer d, sp;
         begin
-            d = (s > 0) ? s - 1 : 0;      // XL = 1: the classify stage (S81U-XR2) delays every CTL / RD / lo / V / SC output
+            sp = (s >= PL) ? s - PL : 0;  // PL: the C3 bench lags the leaf-side inputs one edge (partials / rstd)
+            d = (s >= XL) ? s - XL : 0;   // XL: the classify stage(s) (S81U-XR2; C3 XR3-CLS 2) delay every CTL / RD / lo / V / SC output
             if (ci_dir !== x_cidir[d]) bad("ci_dir", d);
             if (ci_b[0] !== x_civ[d]) bad("ci_v", d);
             if (x_civ[d] && ((ci_b ^ x_cib[d]) & x_cim[d]) != 0) bad("ci_b", d);
@@ -289,8 +301,8 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
             if (g_v !== 1'b0) bad("g_v", s);
             if (is_v !== x_isv[d] || (x_isv[d] && is_d !== x_isd[d])) bad("is", d);
             if (cfg_v !== x_cfgv[d] || (x_cfgv[d] && cfg_d !== x_cfgd[d])) bad("cfg", d);
-            if (x_sv !== x_xsv[s] || (x_xsv[s] && (x_si !== x_xsi[s] || x_s !== x_xs[s]))) bad("x_s", s);
-            if (rb_v !== x_rbv_e[s] || (x_rbv_e[s] && rb_d !== x_rbd_e[s])) bad("rb", s);
+            if (x_sv !== x_xsv[sp] || (x_xsv[sp] && (x_si !== x_xsi[sp] || x_s !== x_xs[sp]))) bad("x_s", sp);
+            if (rb_v !== x_rbv_e[sp] || (x_rbv_e[sp] && rb_d !== x_rbd_e[sp])) bad("rb", sp);
             if (fault !== 1'b0) bad("fault", s);
         end
     endtask

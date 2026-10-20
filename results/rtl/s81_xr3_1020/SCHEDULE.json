@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.s81.cycle_handoff.v1",
+ "lane": "S81-XR3",
+ "date": "2026-10-20",
+ "element": "ot_s81sl_xr3 (C3 slice control plane, HB 1)",
+ "change": "XR3-CLS: stage-1 classify split into stage 1a (per source) + stage 1b on C3 only; C1 ot_s81sl_xr1 unchanged",
+ "added_edges": {
+  "C3_ring_V_band_input_landing": 1,
+  "C3_leaf_side_inputs": 0,
+  "C1_any": 0
+ },
+ "slot_model": "tb_s81sl_xr HB 1: the C1 program with the leaf-side inputs lagged one edge; ring-side outputs at XL = 2, partial / rstd outputs at PL = 1 (HB 0: XL 1, PL 0 unchanged)",
+ "schedule_consumers": [
+  "tools/s81_dv/xr_timing.py + dv_layer_compile.ctl_path: v_ctl_inject must become per entry slice -- the S tier enters through u_s_4S (C3): 8 edges; the N tier u_s_4N (C1): 7 edges. (xr_timing.QUALIFIED holds only the historical XR2 SHA; current main RTL is already unqualified there.)",
+  "every compiled event AT a C3 slice ring / V / band input (u_s_3S, u_s_4S: CTL, RD, SC, SO gather words) is consumed 1 edge later: add 1 to the arrival edge (or issue 1 edge earlier); nothing else changes",
+  "MU.S81.CAL / S81-SMWIRE: the SO gather latency (head-0 beat -> gather port) on C3 routes is +1 edge (constant per route; tb_smwire_e2e checks constancy)",
+  "tools/s81_dv/layer_prog/qf_producer tb_qf_config: SOURCE / CONSUMER ages +1 (112 -> 113, 212 -> 213); NOTE this bench already FAILS on main 360c64320 (CONFIG_SOURCE_MISMATCH, errors=6 at tag 0 with the unmodified xr) -- pre-existing, not this change"
+ ],
+ "price": {
+  "basis": "static schedule: CTL issues are computed backwards from their consumer edge (dv_layer_compile need = land + 1 - lat), so the +1 on CTL is absorbed by issuing 1 edge earlier; only a serial data crossing INTO a C3 slice ring / band input adds 1 edge (attention P.V / q path and an RD into C3: <= 2 per layer)",
+  "serial_c3_crossings_per_layer_upper_bound": 2,
+  "layers_upper_bound": 64,
+  "edges_per_token_upper_bound": 128,
+  "edges_per_token_at_834_ar": 1438849,
+  "ar_rate_cost_upper_bound_pct": 0.009,
+  "mtp_rate_cost_upper_bound_pct": 0.009,
+  "ledger": "accepted-performance-cost: <= 5 % per unit, <= 15 % total; this unit <= 0.009 %"
+ },
+ "owner_rule": "static-cycle-scheduled-no-backpressure-1014: no credits / ready; the added edge is a fixed latency",
+ "contract": "C3 (ot_s81sl_xr3) == C1 with every ring / V / band input (dl_e, dl_w, dl_vb, bi incl. the SO gather words) landing ONE edge later; leaf-side inputs (lo_*, p_*, e_*, x_rb*) are not delayed. The whole C3 slice timeline moves +1 edge; every compiled RELATIVE timing inside the slice (send config vs its lo beats, ci slots of V re-inject / send / SC relay / SO) is unchanged."
+}

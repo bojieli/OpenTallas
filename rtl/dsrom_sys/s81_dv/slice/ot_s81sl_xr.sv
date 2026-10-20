@@ -189,35 +189,167 @@ module ot_s81sl_xr #(
     // rwe_c = rwe per 8 bits of a leaf's 1024-b unpacker, rwr_c = rwr per 8 bits of a leaf's 256-b sw_d, tg1_c = tg[1] per
     // 8 bits of x_eps / x_scale, tg4_c = tg[4] per 8 bits of the send config.  Same D as the masters -> function unchanged.
     (* keep *) reg [5*128-1:0] rwe_c; (* keep *) reg [5*32-1:0] rwr_c; (* keep *) reg [7:0] tg1_c; (* keep *) reg [5:0] tg4_c;
+    // XR3-CLS (S81-XR3 10-20, SAFE items 2 / 3 / 4 after the first xr3 route s81sl_xr3-6585bf71d: TT -144.7, 913 reg->reg D
+    // pins; worst eb[25] -> 3 wire buffers -> mine_e -> ce -> cp mux -> tgt0 / lmask0 decode -> wire -> rwr[2]: the C3
+    // outline is 570 um wide (band port B pins), so the one-cycle stage-1 classify spans E face -> W face = REACH + DEPTH).
+    // C3 (HB != 0) splits the classify into two registered stages; C1 (HB == 0, closed s81sl_xr1f) keeps the single stage
+    // (CLS = 0: every d_* below is the XR7 expression, the C1 netlist is unchanged).
+    //   stage 1a (per SOURCE, beside its input flops; KEPT copies, reset-free): a source's own one-hot flags only --
+    //     mine CTL / mine RD / SC / V-CTL, the target one-hot (target 0..5, > 5), leaf mask, the per-leaf row-write and RD
+    //     enables (rwr / rwe one-hot per leaf), RD leaf > 4, RD pairs / row; the raw words (eb1 / wb1 / vb1 / bb1, and the
+    //     B header bits for the SO assembler); a per-source sid one-hot (sid strap copied per face, 2 hops).  No
+    //     cross-source logic.
+    //   stage 1b (the XR7 stage-1 registers): OR / priority of the three sources' registered one-hots (<= 3 levels), so
+    //     the long E -> W wires carry registered one-hots only.  Legal programs have at most one mine CTL and one RD per
+    //     cycle (two are the sticky f1 fault), so the wide enables are the OR of the source one-hots; the word selects keep
+    //     the XR7 priority (rse ? eb : rsw ? wb : bb).
+    // Cycles (one contract): C3 == C1 with every RING / V / BAND input (dl_e, dl_w, dl_vb, bi incl. the SO gather words)
+    // landing ONE edge later.  The leaf-side inputs (lo, partials, ENG, rstd) are NOT delayed: they are consequences of CTL
+    // commands this xr issued, so the whole C3 slice timeline moves +1 edge and every compiled relative timing (send
+    // config vs its lo beats, V re-inject / send / SC / SO ci slots) is unchanged.  Handed to the die schedule (C3 entry
+    // s_4S: V CTL inject 8 edges vs 7 on C1) and priced in results/rtl/s81_xr3_1020/SCHEDULE.json.
+    localparam integer CLS = (HB != 0) ? 1 : 0;
+    wire d_cvld, d_vct, d_esc, d_wsc, d_rdv, d_f1; wire [5:0] d_tg; wire [4:0] d_rwe, d_rwr, d_lov1;
+    wire [5*128-1:0] d_rwe_c; wire [5*32-1:0] d_rwr_c; wire [7:0] d_tg1_c; wire [5:0] d_tg4_c;
+    wire [127:0] d_rse, d_rsw; wire [19:0] d_bse, d_bsw; wire [34:0] d_cvc, d_cse;
+    wire [4:0] d_lmask; wire [1:0] d_rnp; wire [9:0] d_rrow; wire [255:0] d_lo_sel;
+    wire [W-2:0] s_eb, s_wb; wire [V-2:0] s_vb; wire [1023:0] s_bb;
+    wire nx_lov, nx_vct, nx_sc;                // next-state terms of the stage-1 registers (kept-copy D's below)
+    wire so_x_v; wire [6:0] so_x_h; wire [511:0] so_x_d;   // the SO assembler's B word: valid kind 2, header bits [6:0], lo 512
+    generate if (CLS == 0) begin : g_cls1
+        wire any_c = ce || cw || cv;
+        genvar g;
+        for (g = 0; g < 6; g = g + 1) begin : g_tg assign d_tg[g] = any_c && tgt0 == g; end
+        for (g = 0; g < 5; g = g + 1) begin : g_lf
+            assign d_rwe[g] = rdv0 && rl0 == g;
+            assign d_rwr[g] = any_c && tgt0 == 5'd5 && lmask0[g];
+        end
+        for (g = 0; g < 640; g = g + 1) begin : g_rwec assign d_rwe_c[g] = rdv0 && rl0 == g / 128; end
+        for (g = 0; g < 160; g = g + 1) begin : g_rwrc assign d_rwr_c[g] = any_c && tgt0 == 5'd5 && lmask0[g / 32]; end
+        assign d_cvld = any_c; assign d_vct = v_ctl; assign d_esc = e_sc; assign d_wsc = w_sc; assign d_rdv = rdv0;
+        assign d_f1 = ((ce + cw + cv) > 2'd1) || ((re + rw_ + b_rd) > 2'd1) || (nlo0 > 3'd1) || (rdv0 && rl0 > 3'd4) ||
+                      (any_c && tgt0 > 5'd5);
+        assign d_lov1 = lov;
+        assign d_tg1_c = {8{any_c && tgt0 == 5'd1}}; assign d_tg4_c = {6{any_c && tgt0 == 5'd4}};
+        assign d_rse = {128{re}}; assign d_rsw = {128{!re && rw_}};
+        assign d_bse = {20{ce}}; assign d_bsw = {20{!ce && cw}};
+        assign d_cvc = {35{v_ctl}}; assign d_cse = {35{!v_ctl && e_sc}};
+        assign d_lmask = lmask0; assign d_rnp = rdb0[50 +: 2]; assign d_rrow = rdb0[40 +: 10]; assign d_lo_sel = lo_sel0;
+        assign s_eb = eb[W-1:1]; assign s_wb = wb[W-1:1]; assign s_vb = vb[V-1:1];
+        assign s_bb = (HB != 0) ? bb[52 +: 1024] : 1024'd0;
+        assign nx_lov = |lov; assign nx_vct = v_ctl; assign nx_sc = e_sc || w_sc;
+        assign so_x_v = b_so; assign so_x_h = bb[6:0]; assign so_x_d = bb[52 +: 512];
+    end else begin : g_cls2
+        // ---- stage 1a: per-source sid one-hot (strap; 2 hops so no single-cycle wire crosses the tile)
+        (* keep *) reg [3:0] sid_e, sid_w, sid_v; (* keep *) reg [15:0] soh_e, soh_w, soh_v;
+        always @(posedge clk) begin
+            sid_e <= sid_c; sid_w <= sid_c; sid_v <= sid_c;
+            soh_e <= 16'd1 << sid_e; soh_w <= 16'd1 << sid_w; soh_v <= 16'd1 << sid_v;
+        end
+        wire me = |(pe[15:0] & soh_e), mw = |(pw[15:0] & soh_w), mv = |(pvv[15:0] & soh_v);
+        wire ce3 = e_ctl && me, cw3 = w_ctl && mw, cv3 = v_ctl && mv;
+        wire re3 = e_rd && me, rw3 = w_rd && mw;
+        // flags (KEPT copies sized for <= ~17 stage-1b loads each; reset-free: the valids they decode are reset input
+        // flops, so every flag is 0 one clock into reset)
+        (* keep *) reg [1:0] ce_a, cw_a, cv_a, sce_a, scw_a; (* keep *) reg [8:0] re_a, rw_a; (* keep *) reg [5:0] vct_a;
+        reg brd_a;
+        reg [5:0] tge_a, tgw_a, tgv_a; reg tbe_a, tbw_a, tbv_a; reg [4:0] lme_a, lmw_a, lmv_a;
+        (* keep *) reg [9:0] rwre_a, rwrw_a, rwrv_a;             // [2 k + j]: leaf k row write, copy j (16 rwr_c each)
+        (* keep *) reg [39:0] rwee_a, rwew_a, rweb_a;            // [8 k + j]: leaf k RD enable, copy j (16 rwe_c each)
+        reg rbe_a, rbw_a, rbb_a; reg [1:0] npe_a, npw_a, npb_a; reg [9:0] rowe_a, roww_a, rowb_a;
+        reg nlo2_a;
+        reg [W-2:0] eb1, wb1; reg [V-2:0] vb1; reg [1023:0] bb1; reg [6:0] bbh1;
+        integer q, j;
+        always @(posedge clk) begin
+            ce_a <= {2{ce3}}; cw_a <= {2{cw3}}; cv_a <= {2{cv3}}; sce_a <= {2{e_sc}}; scw_a <= {2{w_sc}};
+            re_a <= {9{re3}}; rw_a <= {9{rw3}}; vct_a <= {6{v_ctl}}; brd_a <= b_rd;
+            for (q = 0; q < 6; q = q + 1) begin
+                tge_a[q] <= ce3 && pe[20:16] == q; tgw_a[q] <= cw3 && pw[20:16] == q; tgv_a[q] <= cv3 && pvv[20:16] == q;
+            end
+            tbe_a <= ce3 && pe[20:16] > 5'd5; tbw_a <= cw3 && pw[20:16] > 5'd5; tbv_a <= cv3 && pvv[20:16] > 5'd5;
+            lme_a <= pe[25:21]; lmw_a <= pw[25:21]; lmv_a <= pvv[25:21];
+            for (q = 0; q < 5; q = q + 1) for (j = 0; j < 2; j = j + 1) begin
+                rwre_a[2 * q + j] <= ce3 && pe[20:16] == 5'd5 && pe[21 + q];
+                rwrw_a[2 * q + j] <= cw3 && pw[20:16] == 5'd5 && pw[21 + q];
+                rwrv_a[2 * q + j] <= cv3 && pvv[20:16] == 5'd5 && pvv[21 + q];
+            end
+            for (q = 0; q < 5; q = q + 1) for (j = 0; j < 8; j = j + 1) begin
+                rwee_a[8 * q + j] <= re3 && eb[39:37] == q;
+                rwew_a[8 * q + j] <= rw3 && wb[39:37] == q;
+                rweb_a[8 * q + j] <= b_rd && bb[39:37] == q;
+            end
+            rbe_a <= re3 && eb[39:37] > 3'd4; rbw_a <= rw3 && wb[39:37] > 3'd4; rbb_a <= b_rd && bb[39:37] > 3'd4;
+            npe_a <= eb[51:50]; npw_a <= wb[51:50]; npb_a <= bb[51:50];
+            rowe_a <= eb[49:40]; roww_a <= wb[49:40]; rowb_a <= bb[49:40];
+            nlo2_a <= nlo0 > 3'd1;                   // two lo beats in a cycle (sticky fault; visible 1 edge later)
+            eb1 <= eb[W-1:1]; wb1 <= wb[W-1:1]; vb1 <= vb[V-1:1]; bb1 <= bb[52 +: 1024]; bbh1 <= bb[6:0];
+        end
+        // ---- stage 1b D's: OR / priority of the registered source one-hots
+        genvar g;
+        for (g = 0; g < 6; g = g + 1) begin : g_tg assign d_tg[g] = tge_a[g] | tgw_a[g] | tgv_a[g]; end
+        for (g = 0; g < 5; g = g + 1) begin : g_lf
+            assign d_rwe[g] = rwee_a[8 * g] | rwew_a[8 * g] | rweb_a[8 * g];
+            assign d_rwr[g] = rwre_a[2 * g] | rwrw_a[2 * g] | rwrv_a[2 * g];
+        end
+        for (g = 0; g < 640; g = g + 1) begin : g_rwec           // leaf g / 128, copy (g % 128) / 16
+`ifdef OT_S81SL_XR_MUT_CLS
+            // mutant: the leaf-2 copy-5 RD enables take only the E source (W / B RDs lose 8 B of their row pair)
+            if (g / 128 == 2 && (g % 128) / 16 == 5) begin : g_m assign d_rwe_c[g] = rwee_a[8 * 2 + 5]; end
+            else begin : g_n
+`else
+            begin : g_n
+`endif
+            assign d_rwe_c[g] = rwee_a[8 * (g / 128) + (g % 128) / 16] | rwew_a[8 * (g / 128) + (g % 128) / 16] |
+                                rweb_a[8 * (g / 128) + (g % 128) / 16];
+            end
+        end
+        for (g = 0; g < 160; g = g + 1) begin : g_rwrc           // leaf g / 32, copy (g % 32) / 16
+            assign d_rwr_c[g] = rwre_a[2 * (g / 32) + (g % 32) / 16] | rwrw_a[2 * (g / 32) + (g % 32) / 16] |
+                                rwrv_a[2 * (g / 32) + (g % 32) / 16];
+        end
+        for (g = 0; g < 128; g = g + 1) begin : g_rs assign d_rse[g] = re_a[1 + g / 16]; assign d_rsw[g] = rw_a[1 + g / 16]; end
+        for (g = 0; g < 35; g = g + 1) begin : g_cx assign d_cvc[g] = vct_a[1 + g / 9]; end
+        assign d_cvld = ce_a[0] | cw_a[0] | cv_a[0]; assign d_vct = vct_a[0]; assign d_esc = sce_a[0]; assign d_wsc = scw_a[0];
+        assign d_rdv = re_a[0] | rw_a[0] | brd_a;
+        assign d_f1 = ((ce_a[0] + cw_a[0] + cv_a[0]) > 2'd1) || ((re_a[0] + rw_a[0] + brd_a) > 2'd1) || nlo2_a ||
+                      rbe_a || rbw_a || rbb_a || tbe_a || tbw_a || tbv_a;
+        assign d_lov1 = lov;                                               // lo is not delayed (see above)
+        assign d_tg1_c = {8{tge_a[1] | tgw_a[1] | tgv_a[1]}}; assign d_tg4_c = {6{tge_a[4] | tgw_a[4] | tgv_a[4]}};
+        assign d_bse = {20{ce_a[1]}}; assign d_bsw = {20{cw_a[1]}};        // word priority kept by the body mux (bse first)
+        assign d_cse = {35{sce_a[1]}};                                     // cix priority: cvc first, then cse
+        assign d_lmask = ce_a[0] ? lme_a : cw_a[0] ? lmw_a : lmv_a;
+        assign d_rnp = re_a[0] ? npe_a : rw_a[0] ? npw_a : npb_a; assign d_rrow = re_a[0] ? rowe_a : rw_a[0] ? roww_a : rowb_a;
+        assign d_lo_sel = lo_sel0;
+        assign s_eb = eb1; assign s_wb = wb1; assign s_vb = vb1; assign s_bb = bb1;
+        assign nx_lov = |lov; assign nx_vct = vct_a[5]; assign nx_sc = sce_a[0] | scw_a[0];
+        assign so_x_v = bbh1[0] && bbh1[3:1] == 3'd2; assign so_x_h = bbh1; assign so_x_d = bb1[511:0];   // SO +1 edge
+    end endgenerate
     always @(posedge clk or negedge rs_c1)
         if (!rs_c1) begin cvld <= 1'b0; vct <= 1'b0; esc <= 1'b0; wsc <= 1'b0; rdv <= 1'b0; f1 <= 1'b0; tg <= 6'd0; end
         else begin
-            cvld <= ce || cw || cv; vct <= v_ctl; esc <= e_sc; wsc <= w_sc; rdv <= rdv0;
-            for (k = 0; k < 6; k = k + 1) tg[k] <= (ce || cw || cv) && tgt0 == k;
+            cvld <= d_cvld; vct <= d_vct; esc <= d_esc; wsc <= d_wsc; rdv <= d_rdv;
+            tg <= d_tg;
             // input-only faults: two CTLs / two RDs / two lo beats in a cycle, an RD to leaf > 4, a CTL target > 5
-            f1 <= ((ce + cw + cv) > 2'd1) || ((re + rw_ + b_rd) > 2'd1) || (nlo0 > 3'd1) || (rdv0 && rl0 > 3'd4) ||
-                  ((ce || cw || cv) && tgt0 > 5'd5);
+            f1 <= d_f1;
         end
     always @(posedge clk or negedge rs_c2)
         if (!rs_c2) begin rwe <= 5'd0; rwr <= 5'd0; lov1 <= 5'd0; end
         else begin
-            lov1 <= lov;
-            for (k = 0; k < 5; k = k + 1) begin
-                rwe[k] <= rdv0 && rl0 == k;
-                rwr[k] <= (ce || cw || cv) && tgt0 == 5'd5 && lmask0[k];
-            end
+            lov1 <= d_lov1;
+            rwe <= d_rwe;
+            rwr <= d_rwr;
         end
     always @(posedge clk) begin
-        for (k = 0; k < 640; k = k + 1) rwe_c[k] <= rdv0 && rl0 == k / 128;
-        for (k = 0; k < 160; k = k + 1) rwr_c[k] <= (ce || cw || cv) && tgt0 == 5'd5 && lmask0[k / 32];
-        for (k = 0; k < 8; k = k + 1) tg1_c[k] <= (ce || cw || cv) && tgt0 == 5'd1;
-        for (k = 0; k < 6; k = k + 1) tg4_c[k] <= (ce || cw || cv) && tgt0 == 5'd4;
-        for (k = 0; k < 128; k = k + 1) begin rse_c[k] <= re; rsw_c[k] <= !re && rw_; end
-        for (k = 0; k < 20; k = k + 1) begin bse_c[k] <= ce; bsw_c[k] <= !ce && cw; end
-        for (k = 0; k < 35; k = k + 1) begin cvc_c[k] <= v_ctl; cse_c[k] <= !v_ctl && e_sc; end
-        eb2 <= eb[W-1:1]; wb2 <= wb[W-1:1]; vb2 <= vb[V-1:1]; bb2 <= (HB != 0) ? bb[52 +: 1024] : 1024'd0;
-        lmask <= lmask0; rnp <= rdb0[50 +: 2]; rrow <= rdb0[40 +: 10];
-        lo_sel <= lo_sel0;
+        rwe_c <= d_rwe_c;
+        rwr_c <= d_rwr_c;
+        tg1_c <= d_tg1_c;
+        tg4_c <= d_tg4_c;
+        rse_c <= d_rse; rsw_c <= d_rsw;
+        bse_c <= d_bse; bsw_c <= d_bsw;
+        cvc_c <= d_cvc; cse_c <= d_cse;
+        eb2 <= s_eb; wb2 <= s_wb; vb2 <= s_vb; bb2 <= s_bb;
+        lmask <= d_lmask; rnp <= d_rnp; rrow <= d_rrow;
+        lo_sel <= d_lo_sel;
     end
     reg [1023:0] rdat; reg [159:0] body; reg [V-2:0] cix;
     always @(*) begin
@@ -250,19 +382,19 @@ module ot_s81sl_xr #(
     wire [1:0] pn_nx = tg[4] ? 2'd0 : (|lov1) ? ((pn == s_np) ? 2'd0 : pn + 2'd1) : pn;
     wire pk_go_nx = !tg[4] && (|lov1) && pn == s_np;
     always @(posedge clk) begin
-        for (k = 0; k < 128; k = k + 1) pkw_c[k] <= (|lov) && pn_nx == k / 32;
-        for (k = 0; k < NCI; k = k + 1) cis_c[k] <= pk_go_nx && !v_ctl;
+        for (k = 0; k < 128; k = k + 1) pkw_c[k] <= nx_lov && pn_nx == k / 32;
+        for (k = 0; k < NCI; k = k + 1) cis_c[k] <= pk_go_nx && !nx_vct;
     end
     // S81-SMWIRE x XR7: sos_c[g] = so_go && !vct && !sc_rel && !pk_go (the SO beat owns ci_r), registered from next state;
     // reset-free (so_n is reset, so so_go_nx is 0 one clock into reset).
     // C1 (HB = 0) has no B port, so no SO beat: no sos_c flops there (the C1 netlist keeps its closed XR7 structure).
     wire [NCI-1:0] sos_c;
     wire so_go_nx;
-    wire sc_rel_nx = (tg[4] ? body[43] : s_scv) && (e_sc || w_sc);
+    wire sc_rel_nx = (tg[4] ? body[43] : s_scv) && nx_sc;
     generate if (HB != 0) begin : g_sos
         (* keep *) reg [NCI-1:0] sos_r;
         always @(posedge clk)
-            for (k = 0; k < NCI; k = k + 1) sos_r[k] <= so_go_nx && !v_ctl && !sc_rel_nx && !pk_go_nx;
+            for (k = 0; k < NCI; k = k + 1) sos_r[k] <= so_go_nx && !nx_vct && !sc_rel_nx && !pk_go_nx;
         assign sos_c = sos_r;
     end else begin : g_nosos
         assign sos_c = {NCI{1'b0}};
@@ -299,18 +431,18 @@ module ot_s81sl_xr #(
         if (!rs_s) begin so_n <= 2'd0; so_go <= 1'b0; so_f <= 1'b0; end
         else begin
             so_go <= 1'b0;
-            if (b_so) begin
+            if (so_x_v) begin
                 if (so_n == 2'd2) begin
                     so_n <= 2'd0;
-                    if (!bb[4] || bb[52 + 32 +: 8] != 8'h5A || bb[6:5] == 2'd0 || bb[6:5] == 2'd3) so_f <= 1'b1;
+                    if (!so_x_h[4] || so_x_d[32 +: 8] != 8'h5A || so_x_h[6:5] == 2'd0 || so_x_h[6:5] == 2'd3) so_f <= 1'b1;
                     else so_go <= 1'b1;
                 end else begin
                     so_n <= so_n + 2'd1;
-                    if (bb[4]) so_f <= 1'b1;
+                    if (so_x_h[4]) so_f <= 1'b1;
                 end
             end
         end
-    always @(posedge clk) if (b_so && so_n == 2'd2) begin so_idx <= bb[52 +: 7]; so_rt <= bb[6:5]; end
+    always @(posedge clk) if (so_x_v && so_n == 2'd2) begin so_idx <= so_x_d[6:0]; so_rt <= so_x_h[6:5]; end
     // ROOT4-S81POST (10-19, SAFE item 3): the lo / hi capture enables (b_so && so_n == 0 / 1) drove 512 loads each.  Now the
     // word is staged one edge (so_w, no enable) and so_lo / so_hi capture so_w under KEPT registered enable copies, one per
     // 8 bits (64 + 64 flops, D = the decode's next state, <= ~24 pins each).  lo is captured one edge after its B word,
@@ -320,11 +452,11 @@ module ot_s81sl_xr #(
         reg [511:0] so_w, so_lo_r, so_hi_r;
         (* keep *) reg [63:0] sol_c; (* keep *) reg [63:0] soh_c;
         always @(posedge clk) begin
-            so_w <= bb[52 +: 512];
+            so_w <= so_x_d;
 `ifdef OT_S81SL_XR_MUT_SOEN
-            for (k = 0; k < 64; k = k + 1) begin sol_c[k] <= b_so && so_n == 2'd0; soh_c[k] <= b_so && so_n == 2'd0; end
+            for (k = 0; k < 64; k = k + 1) begin sol_c[k] <= so_x_v && so_n == 2'd0; soh_c[k] <= so_x_v && so_n == 2'd0; end
 `else
-            for (k = 0; k < 64; k = k + 1) begin sol_c[k] <= b_so && so_n == 2'd0; soh_c[k] <= b_so && so_n == 2'd1; end
+            for (k = 0; k < 64; k = k + 1) begin sol_c[k] <= so_x_v && so_n == 2'd0; soh_c[k] <= so_x_v && so_n == 2'd1; end
 `endif
             for (i = 0; i < 512; i = i + 1) begin
                 if (sol_c[i / 8]) so_lo_r[i] <= so_w[i];
@@ -335,7 +467,8 @@ module ot_s81sl_xr #(
     end else begin : g_nosoc
         assign so_lo = 512'd0; assign so_hi = 512'd0;
     end endgenerate
-    assign so_go_nx = b_so && so_n == 2'd2 && bb[4] && bb[52 + 32 +: 8] == 8'h5A && bb[6:5] != 2'd0 && bb[6:5] != 2'd3;
+    assign so_go_nx = so_x_v && so_n == 2'd2 && so_x_h[4] && so_x_d[32 +: 8] == 8'h5A && so_x_h[6:5] != 2'd0 &&
+                      so_x_h[6:5] != 2'd3;
     wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_c, 5'd0, 3'd2, 1'b1};
     // V-from-G-unit CTL re-injection on the tier line (both sides, hops 0 = line default), SC relay to V
     wire sc_rel = s_scv && (esc || wsc);
