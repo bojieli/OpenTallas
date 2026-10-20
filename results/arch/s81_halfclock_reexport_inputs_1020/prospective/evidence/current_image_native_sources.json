@@ -1,0 +1,5857 @@
+{
+  "scope": "CURRENT_FROZEN_IMAGE_PROSPECTIVE_NOT_HISTORICAL_IMAGE_PROOF",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "exe": {
+    "path": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+    "sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846"
+  },
+  "Liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+      "sha256": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+      "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+      "sha256": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+      "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+      "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "LEF": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef",
+      "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef",
+      "sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1"
+    }
+  ],
+  "flavours": [
+    "R"
+  ],
+  "cell_roles": {
+    "A2O1A1Ixp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B) + (!A2 * !B) + (!C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "A2O1A1O1Ixp25_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B * !D) + (!A2 * !B * !D) + (!C * !D)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO211x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2) + (B) + (C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2) + (B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO21x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2) + (B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO221x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2) + (B1 * B2) + (C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO221x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2) + (B1 * B2) + (C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO222x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2) + (B1 * B2) + (C1 * C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO22x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2) + (B1 * B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO22x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2) + (B1 * B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO31x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO322x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2) + (C1 * C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO32x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO32x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO331x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2 * B3) + (C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO331x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2 * B3) + (C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO332x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2 * B3) + (C1 * C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO332x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2 * B3) + (C1 * C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO333x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2 * B3) + (C1 * C2 * C3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO333x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2 * B3) + (C1 * C2 * C3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AO33x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * A2 * A3) + (B1 * B2 * B3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI211x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B * !C) + (!A2 * !B * !C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI211xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B * !C) + (!A2 * !B * !C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI21x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B) + (!A2 * !B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI21xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B) + (!A2 * !B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI21xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B) + (!A2 * !B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI221x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1 * !C) + (!A1 * !B2 * !C) + (!A2 * !B1 * !C) + (!A2 * !B2 * !C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI221xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1 * !C) + (!A1 * !B2 * !C) + (!A2 * !B1 * !C) + (!A2 * !B2 * !C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI222xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1 * !C1) + (!A1 * !B1 * !C2) + (!A1 * !B2 * !C1) + (!A1 * !B2 * !C2) + (!A2 * !B1 * !C1) + (!A2 * !B1 * !C2) + (!A2 * !B2 * !C1) + (!A2 * !B2 * !C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI22x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1) + (!A1 * !B2) + (!A2 * !B1) + (!A2 * !B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI22xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1) + (!A1 * !B2) + (!A2 * !B1) + (!A2 * !B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI22xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1) + (!A1 * !B2) + (!A2 * !B1) + (!A2 * !B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI311xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B * !C) + (!A2 * !B * !C) + (!A3 * !B * !C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI31xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B) + (!A2 * !B) + (!A3 * !B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI31xp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B) + (!A2 * !B) + (!A3 * !B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI321xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1 * !C) + (!A1 * !B2 * !C) + (!A2 * !B1 * !C) + (!A2 * !B2 * !C) + (!A3 * !B1 * !C) + (!A3 * !B2 * !C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI322xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1 * !C1) + (!A1 * !B1 * !C2) + (!A1 * !B2 * !C1) + (!A1 * !B2 * !C2) + (!A2 * !B1 * !C1) + (!A2 * !B1 * !C2) + (!A2 * !B2 * !C1) + (!A2 * !B2 * !C2) + (!A3 * !B1 * !C1) + (!A3 * !B1 * !C2) + (!A3 * !B2 * !C1) + (!A3 * !B2 * !C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI32xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1) + (!A1 * !B2) + (!A2 * !B1) + (!A2 * !B2) + (!A3 * !B1) + (!A3 * !B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI331xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1 * !C1) + (!A1 * !B2 * !C1) + (!A1 * !B3 * !C1) + (!A2 * !B1 * !C1) + (!A2 * !B2 * !C1) + (!A2 * !B3 * !C1) + (!A3 * !B1 * !C1) + (!A3 * !B2 * !C1) + (!A3 * !B3 * !C1)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI332xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1 * !C1) + (!A1 * !B1 * !C2) + (!A1 * !B2 * !C1) + (!A1 * !B2 * !C2) + (!A1 * !B3 * !C1) + (!A1 * !B3 * !C2) + (!A2 * !B1 * !C1) + (!A2 * !B1 * !C2) + (!A2 * !B2 * !C1) + (!A2 * !B2 * !C2) + (!A2 * !B3 * !C1) + (!A2 * !B3 * !C2) + (!A3 * !B1 * !C1) + (!A3 * !B1 * !C2) + (!A3 * !B2 * !C1) + (!A3 * !B2 * !C2) + (!A3 * !B3 * !C1) + (!A3 * !B3 * !C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI333xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1 * !C1) + (!A1 * !B1 * !C2) + (!A1 * !B1 * !C3) + (!A1 * !B2 * !C1) + (!A1 * !B2 * !C2) + (!A1 * !B2 * !C3) + (!A1 * !B3 * !C1) + (!A1 * !B3 * !C2) + (!A1 * !B3 * !C3) + (!A2 * !B1 * !C1) + (!A2 * !B1 * !C2) + (!A2 * !B1 * !C3) + (!A2 * !B2 * !C1) + (!A2 * !B2 * !C2) + (!A2 * !B2 * !C3) + (!A2 * !B3 * !C1) + (!A2 * !B3 * !C2) + (!A2 * !B3 * !C3) + (!A3 * !B1 * !C1) + (!A3 * !B1 * !C2) + (!A3 * !B1 * !C3) + (!A3 * !B2 * !C1) + (!A3 * !B2 * !C2) + (!A3 * !B2 * !C3) + (!A3 * !B3 * !C1) + (!A3 * !B3 * !C2) + (!A3 * !B3 * !C3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AOI33xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !B1) + (!A1 * !B2) + (!A1 * !B3) + (!A2 * !B1) + (!A2 * !B2) + (!A2 * !B3) + (!A3 * !B1) + (!A3 * !B2) + (!A3 * !B3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx10_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx12_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx12f_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx16f_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx24_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx3_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx4_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx4f_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx6f_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "BUFx8_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx10_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx11_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx12_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx14_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx16_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx20_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx5p33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx6p67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx8_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "CKINVDCx9p33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "HB1xp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "HB2xp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "HB3xp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "HB4xp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx11_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx13_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx3_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx4_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx6_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVx8_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVxp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "INVxp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "!A"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "O2A1O1Ixp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !C) + (!B * !C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "O2A1O1Ixp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !C) + (!B * !C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA211x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B * C) + (A2 * B * C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B) + (A2 * B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA221x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1 * C) + (A1 * B2 * C) + (A2 * B1 * C) + (A2 * B2 * C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA222x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B2 * C1) + (A2 * B2 * C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA22x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1) + (A1 * B2) + (A2 * B1) + (A2 * B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA31x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1) + (A2 * B1) + (A3 * B1)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA331x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1 * C1) + (A1 * B2 * C1) + (A1 * B3 * C1) + (A2 * B1 * C1) + (A2 * B2 * C1) + (A2 * B3 * C1) + (A3 * B1 * C1) + (A3 * B2 * C1) + (A3 * B3 * C1)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA331x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1 * C1) + (A1 * B2 * C1) + (A1 * B3 * C1) + (A2 * B1 * C1) + (A2 * B2 * C1) + (A2 * B3 * C1) + (A3 * B1 * C1) + (A3 * B2 * C1) + (A3 * B3 * C1)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA332x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A1 * B3 * C1) + (A1 * B3 * C2) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B2 * C1) + (A2 * B2 * C2) + (A2 * B3 * C1) + (A2 * B3 * C2) + (A3 * B1 * C1) + (A3 * B1 * C2) + (A3 * B2 * C1) + (A3 * B2 * C2) + (A3 * B3 * C1) + (A3 * B3 * C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA332x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A1 * B3 * C1) + (A1 * B3 * C2) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B2 * C1) + (A2 * B2 * C2) + (A2 * B3 * C1) + (A2 * B3 * C2) + (A3 * B1 * C1) + (A3 * B1 * C2) + (A3 * B2 * C1) + (A3 * B2 * C2) + (A3 * B3 * C1) + (A3 * B3 * C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA333x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B1 * C3) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A1 * B2 * C3) + (A1 * B3 * C1) + (A1 * B3 * C2) + (A1 * B3 * C3) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B1 * C3) + (A2 * B2 * C1) + (A2 * B2 * C2) + (A2 * B2 * C3) + (A2 * B3 * C1) + (A2 * B3 * C2) + (A2 * B3 * C3) + (A3 * B1 * C1) + (A3 * B1 * C2) + (A3 * B1 * C3) + (A3 * B2 * C1) + (A3 * B2 * C2) + (A3 * B2 * C3) + (A3 * B3 * C1) + (A3 * B3 * C2) + (A3 * B3 * C3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA333x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B1 * C3) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A1 * B2 * C3) + (A1 * B3 * C1) + (A1 * B3 * C2) + (A1 * B3 * C3) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B1 * C3) + (A2 * B2 * C1) + (A2 * B2 * C2) + (A2 * B2 * C3) + (A2 * B3 * C1) + (A2 * B3 * C2) + (A2 * B3 * C3) + (A3 * B1 * C1) + (A3 * B1 * C2) + (A3 * B1 * C3) + (A3 * B2 * C1) + (A3 * B2 * C2) + (A3 * B2 * C3) + (A3 * B3 * C1) + (A3 * B3 * C2) + (A3 * B3 * C3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OA33x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A1 * B1) + (A1 * B2) + (A1 * B3) + (A2 * B1) + (A2 * B2) + (A2 * B3) + (A3 * B1) + (A3 * B2) + (A3 * B3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI211xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B) + (!C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI21x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI21xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI21xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI221xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B1 * !B2) + (!C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI222xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B1 * !B2) + (!C1 * !C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI22x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B1 * !B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI22xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B1 * !B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI22xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2) + (!B1 * !B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI311xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B1) + (!C1)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI31xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI31xp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI321xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B1 * !B2) + (!C)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI322xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B1 * !B2) + (!C1 * !C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI32xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B1 * !B2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI331xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B1 * !B2 * !B3) + (!C1)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI332xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B1 * !B2 * !B3) + (!C1 * !C2)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI333xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B1 * !B2 * !B3) + (!C1 * !C2 * !C3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OAI33xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A1 * !A2 * !A3) + (!B1 * !B2 * !B3)"
+        },
+        "A1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "A3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B1": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B2": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B3": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "RESETN": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SETN": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DFFHQNx2_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DFFHQNx3_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DFFHQx4_ASAP7_75t_R": {
+      "pins": {
+        "Q": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQ"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DFFLQNx1_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DFFLQNx2_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DFFLQNx3_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DFFLQx4_ASAP7_75t_R": {
+      "pins": {
+        "Q": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQ"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DHLx1_ASAP7_75t_R": {
+      "pins": {
+        "Q": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQ"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DHLx2_ASAP7_75t_R": {
+      "pins": {
+        "Q": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQ"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DHLx3_ASAP7_75t_R": {
+      "pins": {
+        "Q": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQ"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DLLx1_ASAP7_75t_R": {
+      "pins": {
+        "Q": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQ"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DLLx2_ASAP7_75t_R": {
+      "pins": {
+        "Q": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQ"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "DLLx3_ASAP7_75t_R": {
+      "pins": {
+        "Q": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQ"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "ICGx1_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx2_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx2p67DC_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx3_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx4DC_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx4_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx5_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx5p33DC_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx6p67DC_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "ICGx8DC_ASAP7_75t_R": {
+      "pins": {
+        "IQ": {
+          "direction": "internal",
+          "clock": false,
+          "function": null
+        },
+        "GCLK": {
+          "direction": "output",
+          "clock": false,
+          "function": null
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "ENA": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "SDFHx1_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "SDFHx2_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "SDFHx3_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "SDFHx4_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "SDFLx1_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "SDFLx2_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "SDFLx3_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "SDFLx4_ASAP7_75t_R": {
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "clock": false,
+          "function": "IQN"
+        },
+        "CLK": {
+          "direction": "input",
+          "clock": true,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SE": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "SI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": true,
+      "bus_order": {}
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND2x4_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND2x6_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B * C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND3x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B * C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND3x4_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B * C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B * C * D)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND4x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B * C * D)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND5x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B * C * D * E)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "E": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "AND5x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B * C * D * E)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "E": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "FAx1_ASAP7_75t_R": {
+      "pins": {
+        "CON": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B) + (!A * !CI) + (!B * !CI)"
+        },
+        "SN": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B * !CI) + (A * !B * CI) + (!A * B * CI) + (!A * !B * !CI)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "CI": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "HAxp5_ASAP7_75t_R": {
+      "pins": {
+        "CON": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B)"
+        },
+        "SN": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B) + (!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "MAJIxp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B) + (!A * !C) + (!B * !C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "MAJx2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B) + (A * C) + (B * C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "MAJx3_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B) + (A * C) + (B * C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND2x1p5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND2x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND2xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND2xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND2xp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND3x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B) + (!C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND3x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B) + (!C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND3xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B) + (!C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND4xp25_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B) + (!C) + (!D)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND4xp75_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B) + (!C) + (!D)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NAND5xp2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A) + (!B) + (!C) + (!D) + (!E)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "E": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR2x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR2x1p5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR2x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR2xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR2xp67_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR3x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B * !C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR3x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B * !C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR3xp33_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B * !C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR4xp25_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B * !C * !D)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR4xp75_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B * !C * !D)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "NOR5xp2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(!A * !B * !C * !D * !E)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "E": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR2x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR2x4_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR2x6_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B) + (C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR3x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B) + (C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR3x4_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B) + (C)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B) + (C) + (D)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR4x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B) + (C) + (D)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B) + (C) + (D) + (E)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "E": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "OR5x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A) + (B) + (C) + (D) + (E)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "C": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "D": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "E": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "TIEHIx1_ASAP7_75t_R": {
+      "pins": {
+        "H": {
+          "direction": "output",
+          "clock": false,
+          "function": "1"
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "TIELOx1_ASAP7_75t_R": {
+      "pins": {
+        "L": {
+          "direction": "output",
+          "clock": false,
+          "function": "0"
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "XNOR2x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B) + (!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "XNOR2x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B) + (!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "XNOR2xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * B) + (!A * !B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "XOR2x1_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * !B) + (!A * B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "XOR2x2_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * !B) + (!A * B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    },
+    "XOR2xp5_ASAP7_75t_R": {
+      "pins": {
+        "Y": {
+          "direction": "output",
+          "clock": false,
+          "function": "(A * !B) + (!A * B)"
+        },
+        "A": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "B": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        }
+      },
+      "sequential": false,
+      "bus_order": {}
+    }
+  }
+}

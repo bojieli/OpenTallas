@@ -1,0 +1,3537 @@
+{
+  "scope": "NEW PROSPECTIVE current image only; no historical route or image requalification",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "exporter_source_commit": "6586b0856 (truthful exporter publication1b69058ed, source35 bytes)",
+  "exporter_sha256": "578418117d3547dc46dcf08c119533d1fc36db122a7a8c22f44cf6d4ae7b82b3",
+  "unit": "oth-ubuntu-273977-1792507859",
+  "terminal_rc": 0,
+  "native_exports_launched": 0,
+  "original_inputs_unchanged": true,
+  "classification_basis": "actual ODB MTerm sigtypes, no master-name exemptions; PG unbound signal clockbuffers remain real",
+  "cases": [
+    {
+      "master": "dsfd_dvrlyh_276_SN",
+      "admission": "REFUSED_NATIVE_PG_UNBOUND_NO_EXPORT",
+      "missing_role_classification": "all missing roles have only native POWER/GROUND MTerms; no timing signal pins",
+      "physical_only_without_signal_pins": [
+        {
+          "master": "DECAPx10_ASAP7_75t_R",
+          "instances": 59,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx1_ASAP7_75t_R",
+          "instances": 164,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx2_ASAP7_75t_R",
+          "instances": 168,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx4_ASAP7_75t_R",
+          "instances": 80,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx6_ASAP7_75t_R",
+          "instances": 94,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLER_ASAP7_75t_R",
+          "instances": 348,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLERxp5_ASAP7_75t_R",
+          "instances": 485,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "TAPCELL_ASAP7_75t_R",
+          "instances": 96,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        }
+      ],
+      "unknown_signal_role_masters": [],
+      "unboundPG": 54,
+      "unboundPG_instances": 27,
+      "unboundPG_masters": {
+        "BUFx8_ASAP7_75t_R": 48,
+        "BUFx4_ASAP7_75t_R": 6
+      },
+      "nativePG_evidence": [
+        {
+          "instance": "clkbuf_leaf_0_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.562,
+            6.75
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_0_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.562,
+            6.48
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_1_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.778,
+            8.91
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_1_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.778,
+            8.64
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_9_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            19.332,
+            8.91
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_9_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            19.332,
+            8.64
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_8_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            17.01,
+            5.13
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_8_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            17.01,
+            5.4
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_7_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            15.984,
+            8.37
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_7_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            15.984,
+            8.64
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_6_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            20.682,
+            7.83
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_6_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            20.682,
+            7.56
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_5_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            21.006,
+            10.53
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_5_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            21.006,
+            10.8
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_2_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.964,
+            7.29
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_2_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.964,
+            7.02
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_4_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            21.654,
+            11.07
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_4_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            21.654,
+            11.34
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_3_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            10.26,
+            8.91
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_3_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            10.26,
+            9.18
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_10_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            21.762,
+            6.21
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_10_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            21.762,
+            5.94
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_11_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            19.98,
+            5.13
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_11_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            19.98,
+            5.4
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_12_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            21.276,
+            4.59
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_12_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            21.276,
+            4.32
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_13_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            18.198,
+            2.97
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_13_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            18.198,
+            2.7
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_14_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            16.308,
+            3.51
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_14_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            16.308,
+            3.24
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_15_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            13.554,
+            2.97
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_15_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            13.554,
+            3.24
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_16_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            14.634,
+            5.67
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_16_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            14.634,
+            5.94
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_17_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            12.636,
+            6.21
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_17_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            12.636,
+            5.94
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_18_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            10.26,
+            4.05
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_18_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            10.26,
+            4.32
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_19_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            11.502,
+            5.13
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_19_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            11.502,
+            5.4
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_20_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            9.396,
+            4.59
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_20_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            9.396,
+            4.86
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_21_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.778,
+            2.97
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_21_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.778,
+            3.24
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_22_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            3.132,
+            3.51
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_22_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            3.132,
+            3.78
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_23_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            3.024,
+            5.67
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_23_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            3.024,
+            5.4
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            11.853,
+            8.37
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            11.853,
+            8.1
+          ]
+        },
+        {
+          "instance": "clkbuf_1_0__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.667,
+            4.59
+          ]
+        },
+        {
+          "instance": "clkbuf_1_0__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.667,
+            4.86
+          ]
+        },
+        {
+          "instance": "clkbuf_1_1__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            16.875,
+            7.29
+          ]
+        },
+        {
+          "instance": "clkbuf_1_1__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            16.875,
+            7.56
+          ]
+        }
+      ],
+      "forward": {
+        "root": "ck",
+        "root_count": 1,
+        "driver_count": 0,
+        "parity": 1,
+        "path": [
+          {
+            "instance": "output556",
+            "master": "BUFx2_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "u_st.g_half.u_ck0/_0_",
+            "master": "INVx3_ASAP7_75t_R",
+            "output": "Y",
+            "function": "!A",
+            "inverted": 1
+          },
+          {
+            "instance": "clkbuf_leaf_3_ck",
+            "master": "BUFx8_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_1_0__f_ck",
+            "master": "BUFx4_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_0_ck",
+            "master": "BUFx4_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          }
+        ]
+      },
+      "clockpins": 277,
+      "clockerrors": 0,
+      "direct_reach_over405": []
+    },
+    {
+      "master": "dsfd_dvrlyh_276_WE",
+      "admission": "REFUSED_NATIVE_PG_UNBOUND_NO_EXPORT",
+      "missing_role_classification": "all missing roles have only native POWER/GROUND MTerms; no timing signal pins",
+      "physical_only_without_signal_pins": [
+        {
+          "master": "DECAPx10_ASAP7_75t_R",
+          "instances": 213,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx1_ASAP7_75t_R",
+          "instances": 254,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx2_ASAP7_75t_R",
+          "instances": 242,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx4_ASAP7_75t_R",
+          "instances": 142,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx6_ASAP7_75t_R",
+          "instances": 150,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLER_ASAP7_75t_R",
+          "instances": 383,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLERxp5_ASAP7_75t_R",
+          "instances": 539,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "TAPCELL_ASAP7_75t_R",
+          "instances": 208,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        }
+      ],
+      "unknown_signal_role_masters": [],
+      "unboundPG": 26,
+      "unboundPG_instances": 13,
+      "unboundPG_masters": {
+        "BUFx16f_ASAP7_75t_R": 20,
+        "BUFx8_ASAP7_75t_R": 6
+      },
+      "nativePG_evidence": [
+        {
+          "instance": "clkbuf_leaf_8_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            7.182,
+            5.67
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_8_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            7.182,
+            5.4
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_0_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.86,
+            13.77
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_0_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.86,
+            13.5
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_7_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.208,
+            11.61
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_7_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.208,
+            11.88
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_1_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.94,
+            19.17
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_1_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.94,
+            19.44
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_6_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.424,
+            13.77
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_6_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.424,
+            14.04
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_2_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            3.996,
+            21.87
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_2_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            3.996,
+            22.14
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_5_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.586,
+            23.49
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_5_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.586,
+            23.76
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_3_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.4,
+            28.35
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_3_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.4,
+            28.08
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_4_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            7.074,
+            24.57
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_4_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            7.074,
+            24.84
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_9_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.212,
+            7.83
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_9_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.212,
+            7.56
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.21,
+            16.47
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.21,
+            16.74
+          ]
+        },
+        {
+          "instance": "clkbuf_1_0__f_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.372,
+            11.07
+          ]
+        },
+        {
+          "instance": "clkbuf_1_0__f_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.372,
+            11.34
+          ]
+        },
+        {
+          "instance": "clkbuf_1_1__f_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.156,
+            22.41
+          ]
+        },
+        {
+          "instance": "clkbuf_1_1__f_ck",
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.156,
+            22.14
+          ]
+        }
+      ],
+      "forward": {
+        "root": "ck",
+        "root_count": 1,
+        "driver_count": 0,
+        "parity": 1,
+        "path": [
+          {
+            "instance": "output556",
+            "master": "BUFx2_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "u_st.g_half.u_ck0/_0_",
+            "master": "INVx3_ASAP7_75t_R",
+            "output": "Y",
+            "function": "!A",
+            "inverted": 1
+          },
+          {
+            "instance": "clkbuf_leaf_6_ck",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_1_0__f_ck",
+            "master": "BUFx8_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_0_ck",
+            "master": "BUFx8_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          }
+        ]
+      },
+      "clockpins": 277,
+      "clockerrors": 0,
+      "direct_reach_over405": []
+    },
+    {
+      "master": "dsfd_dvrlyh_512_EW",
+      "admission": "REFUSED_NATIVE_PG_UNBOUND_NO_EXPORT",
+      "missing_role_classification": "all missing roles have only native POWER/GROUND MTerms; no timing signal pins",
+      "physical_only_without_signal_pins": [
+        {
+          "master": "DECAPx10_ASAP7_75t_R",
+          "instances": 393,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx1_ASAP7_75t_R",
+          "instances": 469,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx2_ASAP7_75t_R",
+          "instances": 530,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx4_ASAP7_75t_R",
+          "instances": 308,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx6_ASAP7_75t_R",
+          "instances": 377,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLER_ASAP7_75t_R",
+          "instances": 851,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLERxp5_ASAP7_75t_R",
+          "instances": 1116,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "TAPCELL_ASAP7_75t_R",
+          "instances": 400,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        }
+      ],
+      "unknown_signal_role_masters": [],
+      "unboundPG": 40,
+      "unboundPG_instances": 20,
+      "unboundPG_masters": {
+        "BUFx24_ASAP7_75t_R": 34,
+        "BUFx16f_ASAP7_75t_R": 6
+      },
+      "nativePG_evidence": [
+        {
+          "instance": "clkbuf_leaf_16_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.046,
+            36.99
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_16_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.046,
+            36.72
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_0_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            9.288,
+            38.61
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_0_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            9.288,
+            38.88
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_1_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            9.504,
+            45.63
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_1_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            9.504,
+            45.36
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_2_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            9.288,
+            53.19
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_2_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            9.288,
+            52.92
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_15_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.91,
+            16.47
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_15_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.91,
+            16.74
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_3_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            11.34,
+            49.41
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_3_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            11.34,
+            49.68
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_4_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            13.446,
+            48.33
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_4_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            13.446,
+            48.6
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_5_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            13.122,
+            36.99
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_5_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            13.122,
+            37.26
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_14_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            9.18,
+            20.25
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_14_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            9.18,
+            19.98
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_6_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            11.34,
+            34.83
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_6_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            11.34,
+            35.1
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_7_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            9.99,
+            28.35
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_7_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            9.99,
+            28.08
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_8_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            11.502,
+            22.41
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_8_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            11.502,
+            22.68
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_13_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            9.882,
+            12.15
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_13_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            9.882,
+            11.88
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_9_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            13.122,
+            22.95
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_9_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            13.122,
+            22.68
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_10_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            12.528,
+            11.61
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_10_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            12.528,
+            11.34
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_11_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            12.042,
+            7.29
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_11_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            12.042,
+            7.02
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_12_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            9.774,
+            7.29
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_12_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            9.774,
+            7.56
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            10.314,
+            29.97
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            10.314,
+            30.24
+          ]
+        },
+        {
+          "instance": "clkbuf_1_0__f_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            10.422,
+            18.63
+          ]
+        },
+        {
+          "instance": "clkbuf_1_0__f_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            10.422,
+            18.9
+          ]
+        },
+        {
+          "instance": "clkbuf_1_1__f_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            11.286,
+            39.69
+          ]
+        },
+        {
+          "instance": "clkbuf_1_1__f_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            11.286,
+            39.96
+          ]
+        }
+      ],
+      "forward": {
+        "root": "ck",
+        "root_count": 1,
+        "driver_count": 0,
+        "parity": 1,
+        "path": [
+          {
+            "instance": "output1028",
+            "master": "BUFx2_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "u_st.g_half.u_ck0/_0_",
+            "master": "INVx3_ASAP7_75t_R",
+            "output": "Y",
+            "function": "!A",
+            "inverted": 1
+          },
+          {
+            "instance": "clkbuf_leaf_16_ck",
+            "master": "BUFx24_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_1_1__f_ck",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_0_ck",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          }
+        ]
+      },
+      "clockpins": 513,
+      "clockerrors": 0,
+      "direct_reach_over405": []
+    },
+    {
+      "master": "dsfd_dvrlyh_562_WE",
+      "admission": "REFUSED_NATIVE_PG_UNBOUND_NO_EXPORT",
+      "missing_role_classification": "all missing roles have only native POWER/GROUND MTerms; no timing signal pins",
+      "physical_only_without_signal_pins": [
+        {
+          "master": "DECAPx10_ASAP7_75t_R",
+          "instances": 465,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx1_ASAP7_75t_R",
+          "instances": 427,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx2_ASAP7_75t_R",
+          "instances": 547,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx4_ASAP7_75t_R",
+          "instances": 346,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx6_ASAP7_75t_R",
+          "instances": 340,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLER_ASAP7_75t_R",
+          "instances": 912,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLERxp5_ASAP7_75t_R",
+          "instances": 1189,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "TAPCELL_ASAP7_75t_R",
+          "instances": 432,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        }
+      ],
+      "unknown_signal_role_masters": [],
+      "unboundPG": 44,
+      "unboundPG_instances": 22,
+      "unboundPG_masters": {
+        "BUFx16f_ASAP7_75t_R": 6,
+        "BUFx24_ASAP7_75t_R": 38
+      },
+      "nativePG_evidence": [
+        {
+          "instance": "clkbuf_1_0__f_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.426,
+            18.63
+          ]
+        },
+        {
+          "instance": "clkbuf_1_0__f_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.426,
+            18.9
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.426,
+            32.13
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.426,
+            32.4
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_0_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.266,
+            13.77
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_0_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.266,
+            13.5
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_1_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.32,
+            25.65
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_1_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.32,
+            25.38
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_2_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.994,
+            23.49
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_2_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.994,
+            23.76
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_18_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.968,
+            7.83
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_18_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.968,
+            8.1
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_3_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            7.128,
+            30.51
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_3_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            7.128,
+            30.24
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_4_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.562,
+            39.15
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_4_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.562,
+            39.42
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_5_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.158,
+            38.61
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_5_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.158,
+            38.88
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_6_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.212,
+            51.57
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_6_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.212,
+            51.84
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_17_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.642,
+            8.37
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_17_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.642,
+            8.1
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_7_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.508,
+            55.89
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_7_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.508,
+            55.62
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_8_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            7.128,
+            56.43
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_8_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            7.128,
+            56.7
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_9_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            7.128,
+            46.17
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_9_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            7.128,
+            45.9
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_10_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.532,
+            37.53
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_10_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.532,
+            37.26
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_16_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            7.83,
+            8.37
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_16_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            7.83,
+            8.64
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_11_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.748,
+            48.33
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_11_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.748,
+            48.6
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_12_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            10.368,
+            58.59
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_12_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            10.368,
+            58.32
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_13_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.856,
+            12.69
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_13_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.856,
+            12.96
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_14_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.802,
+            25.11
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_14_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.802,
+            25.38
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_15_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            7.506,
+            20.25
+          ]
+        },
+        {
+          "instance": "clkbuf_leaf_15_ck",
+          "master": "BUFx24_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            7.506,
+            19.98
+          ]
+        },
+        {
+          "instance": "clkbuf_1_1__f_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.318,
+            44.01
+          ]
+        },
+        {
+          "instance": "clkbuf_1_1__f_ck",
+          "master": "BUFx16f_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.318,
+            44.28
+          ]
+        }
+      ],
+      "forward": {
+        "root": "ck",
+        "root_count": 1,
+        "driver_count": 0,
+        "parity": 1,
+        "path": [
+          {
+            "instance": "output1128",
+            "master": "BUFx2_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "u_st.g_half.u_ck0/_0_",
+            "master": "INVx3_ASAP7_75t_R",
+            "output": "Y",
+            "function": "!A",
+            "inverted": 1
+          },
+          {
+            "instance": "clkbuf_leaf_12_ck",
+            "master": "BUFx24_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_1_1__f_ck",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_0_ck",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          }
+        ]
+      },
+      "clockpins": 563,
+      "clockerrors": 0,
+      "direct_reach_over405": []
+    },
+    {
+      "master": "dsfd_dvrlyh_70_NS",
+      "admission": "REFUSED_NATIVE_PG_UNBOUND_NO_EXPORT",
+      "missing_role_classification": "all missing roles have only native POWER/GROUND MTerms; no timing signal pins",
+      "physical_only_without_signal_pins": [
+        {
+          "master": "DECAPx10_ASAP7_75t_R",
+          "instances": 110,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx1_ASAP7_75t_R",
+          "instances": 54,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx2_ASAP7_75t_R",
+          "instances": 54,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx4_ASAP7_75t_R",
+          "instances": 35,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx6_ASAP7_75t_R",
+          "instances": 38,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLER_ASAP7_75t_R",
+          "instances": 120,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLERxp5_ASAP7_75t_R",
+          "instances": 148,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "TAPCELL_ASAP7_75t_R",
+          "instances": 96,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        }
+      ],
+      "unknown_signal_role_masters": [],
+      "unboundPG": 18,
+      "unboundPG_instances": 9,
+      "unboundPG_masters": {
+        "BUFx4_ASAP7_75t_R": 18
+      },
+      "nativePG_evidence": [
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.453,
+            9.99
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.453,
+            10.26
+          ]
+        },
+        {
+          "instance": "clkbuf_3_0__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.181,
+            11.61
+          ]
+        },
+        {
+          "instance": "clkbuf_3_0__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.181,
+            11.88
+          ]
+        },
+        {
+          "instance": "clkbuf_3_1__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.613,
+            14.85
+          ]
+        },
+        {
+          "instance": "clkbuf_3_1__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.613,
+            14.58
+          ]
+        },
+        {
+          "instance": "clkbuf_3_2__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.883,
+            8.91
+          ]
+        },
+        {
+          "instance": "clkbuf_3_2__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.883,
+            8.64
+          ]
+        },
+        {
+          "instance": "clkbuf_3_3__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.775,
+            12.69
+          ]
+        },
+        {
+          "instance": "clkbuf_3_3__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.775,
+            12.96
+          ]
+        },
+        {
+          "instance": "clkbuf_3_4__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            3.429,
+            11.61
+          ]
+        },
+        {
+          "instance": "clkbuf_3_4__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            3.429,
+            11.88
+          ]
+        },
+        {
+          "instance": "clkbuf_3_5__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.103,
+            12.69
+          ]
+        },
+        {
+          "instance": "clkbuf_3_5__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.103,
+            12.96
+          ]
+        },
+        {
+          "instance": "clkbuf_3_6__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.237,
+            11.61
+          ]
+        },
+        {
+          "instance": "clkbuf_3_6__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.237,
+            11.34
+          ]
+        },
+        {
+          "instance": "clkbuf_3_7__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.723,
+            14.31
+          ]
+        },
+        {
+          "instance": "clkbuf_3_7__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.723,
+            14.58
+          ]
+        }
+      ],
+      "forward": {
+        "root": "ck",
+        "root_count": 1,
+        "driver_count": 0,
+        "parity": 1,
+        "path": [
+          {
+            "instance": "output144",
+            "master": "BUFx2_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "u_st.g_half.u_ck0/_0_",
+            "master": "INVx3_ASAP7_75t_R",
+            "output": "Y",
+            "function": "!A",
+            "inverted": 1
+          },
+          {
+            "instance": "clkbuf_3_2__f_ck",
+            "master": "BUFx4_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_0_ck",
+            "master": "BUFx4_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          }
+        ]
+      },
+      "clockpins": 71,
+      "clockerrors": 0,
+      "direct_reach_over405": []
+    },
+    {
+      "master": "dsfd_dvrlyh_70_SN",
+      "admission": "REFUSED_NATIVE_PG_UNBOUND_NO_EXPORT",
+      "missing_role_classification": "all missing roles have only native POWER/GROUND MTerms; no timing signal pins",
+      "physical_only_without_signal_pins": [
+        {
+          "master": "DECAPx10_ASAP7_75t_R",
+          "instances": 106,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx1_ASAP7_75t_R",
+          "instances": 49,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx2_ASAP7_75t_R",
+          "instances": 54,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx4_ASAP7_75t_R",
+          "instances": 34,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "DECAPx6_ASAP7_75t_R",
+          "instances": 50,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLER_ASAP7_75t_R",
+          "instances": 99,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "FILLERxp5_ASAP7_75t_R",
+          "instances": 133,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        },
+        {
+          "master": "TAPCELL_ASAP7_75t_R",
+          "instances": 96,
+          "mterms": [
+            {
+              "name": "VDD",
+              "io": "INOUT",
+              "sig": "POWER"
+            },
+            {
+              "name": "VSS",
+              "io": "INOUT",
+              "sig": "GROUND"
+            }
+          ]
+        }
+      ],
+      "unknown_signal_role_masters": [],
+      "unboundPG": 18,
+      "unboundPG_instances": 9,
+      "unboundPG_masters": {
+        "BUFx4_ASAP7_75t_R": 18
+      },
+      "nativePG_evidence": [
+        {
+          "instance": "clkbuf_3_0__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.239,
+            5.67
+          ]
+        },
+        {
+          "instance": "clkbuf_3_0__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.239,
+            5.94
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.561,
+            6.21
+          ]
+        },
+        {
+          "instance": "clkbuf_0_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.561,
+            6.48
+          ]
+        },
+        {
+          "instance": "clkbuf_3_1__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            6.183,
+            5.67
+          ]
+        },
+        {
+          "instance": "clkbuf_3_1__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            6.183,
+            5.94
+          ]
+        },
+        {
+          "instance": "clkbuf_3_2__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            5.049,
+            6.21
+          ]
+        },
+        {
+          "instance": "clkbuf_3_2__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            5.049,
+            5.94
+          ]
+        },
+        {
+          "instance": "clkbuf_3_3__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            4.131,
+            6.21
+          ]
+        },
+        {
+          "instance": "clkbuf_3_3__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            4.131,
+            5.94
+          ]
+        },
+        {
+          "instance": "clkbuf_3_4__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.289,
+            2.97
+          ]
+        },
+        {
+          "instance": "clkbuf_3_4__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.289,
+            2.7
+          ]
+        },
+        {
+          "instance": "clkbuf_3_5__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            7.587,
+            6.75
+          ]
+        },
+        {
+          "instance": "clkbuf_3_5__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            7.587,
+            7.02
+          ]
+        },
+        {
+          "instance": "clkbuf_3_6__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.721,
+            6.21
+          ]
+        },
+        {
+          "instance": "clkbuf_3_6__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.721,
+            5.94
+          ]
+        },
+        {
+          "instance": "clkbuf_3_7__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VDD",
+          "net": null,
+          "io": "INOUT",
+          "sig": "POWER",
+          "xy_um": [
+            8.559,
+            7.83
+          ]
+        },
+        {
+          "instance": "clkbuf_3_7__f_ck",
+          "master": "BUFx4_ASAP7_75t_R",
+          "pin": "VSS",
+          "net": null,
+          "io": "INOUT",
+          "sig": "GROUND",
+          "xy_um": [
+            8.559,
+            8.1
+          ]
+        }
+      ],
+      "forward": {
+        "root": "ck",
+        "root_count": 1,
+        "driver_count": 0,
+        "parity": 1,
+        "path": [
+          {
+            "instance": "output144",
+            "master": "BUFx2_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "u_st.g_half.u_ck0/_0_",
+            "master": "INVx3_ASAP7_75t_R",
+            "output": "Y",
+            "function": "!A",
+            "inverted": 1
+          },
+          {
+            "instance": "clkbuf_3_7__f_ck",
+            "master": "BUFx4_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          },
+          {
+            "instance": "clkbuf_0_ck",
+            "master": "BUFx4_ASAP7_75t_R",
+            "output": "Y",
+            "function": "A",
+            "inverted": 0
+          }
+        ]
+      },
+      "clockpins": 71,
+      "clockerrors": 0,
+      "direct_reach_over405": []
+    }
+  ]
+}

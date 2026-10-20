@@ -1,0 +1,11 @@
+# Current-image prospective native preflight — 2026-10-20 07:59 PT
+
+Scope authorized by ROOT: six original frozen route inputs, mounted read-only, under current frozen image `sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29` and truthful exporter published at `1b69058ed` / runtime source `6586b0856`. Exporter exact SHA256 is `578418117d3547dc46dcf08c119533d1fc36db122a7a8c22f44cf6d4ae7b82b3`. This is a new prospective current-clock-model check; historical image provenance remains absent. No route retroqualification.
+
+`run_preflight.py` executed by unpinned 8GB/2thread unit `oth-ubuntu-273977-1792507859` on ot-agidock128, own remote directory `/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020`. Both capture and native ODB graph steps returned zero. Every original input SHA is identical before and after. Actual image inspect, OpenROAD executable, loaded Liberty/LEF SHA and role records are in `evidence/`.
+
+**All six exports refused before timing measurement:** unbound native clockbuffer power/ground ITerms: 276_SN 54pins/27instances; 276_WE 26/13; 512_EW 40/20; 562_WE 44/22; 70_NS 18/9; 70_SN 18/9. These are signal clockbuffer masters with disconnected VDD/VSS. No binding operation or ODB mutation was attempted. No private ETM or reSTA launched. Old OT_WS values are retained in the parent input packet but have not been replayed under current image.
+
+The raw native preflight initially lists every missing timing Liberty role. `classified_admission.json` classifies those using actual ODB MTerms, with no name exemptions: every such master has only POWER/GROUND MTerms and no signal pins. There are zero unknown signal-role masters. Raw JSONs remain byte-preserved with lossless deterministic gzip and checksums.
+
+All six ck_o chains trace through actual loaded Liberty unary functions to unique ck root with odd inversion; every actual Liberty clock pin similarly traces without graph errors. Direct-net terminal Manhattan checks found no >405um net. This limited reach scope is not a full combinational-stage, routed-detour or signoff proof. Native PG failure independently prevents admission. No main view publication, automatic discovery, native-family completeness, or macro eligibility is claimed. Missing eight families including 276_EW remain blocked; mu6 waiter PID3852152 remains ROOT-held T.
