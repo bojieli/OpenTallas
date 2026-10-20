@@ -2,7 +2,7 @@
  "source": "11bf17f45",
  "basis": "actual ot_hbm3e_phy_rc_e8p5 LEF / die_case_v16 per-PC weighted pin-centroid formula",
  "phy_origin_x_um": 5600.8,
- "phy_width_um": 8500.056,
+ "phy_width_um": 8500.032,
  "pc_centres_local_x_um": [
   57.03599999999997,
   322.62,
@@ -842,5 +842,6 @@
  "supersedes_outline_um": [
   388.8,
   345.6
- ]
+ ],
+ "phy_width_note": "Corrected to actualLEF SIZE; older8500.056 was maxpinextent, not outline"
 }

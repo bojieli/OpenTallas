@@ -17,6 +17,7 @@ PORTS = [('row_v',1),('row_op',3),('row_bank',5),('row_row',19),
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('phy_lef'); ap.add_argument('pin_plan'); ap.add_argument('manifest'); ap.add_argument('out')
+    ap.add_argument('--relay-dir', help='Unqualified template LEFs for bounded upper-row corridor model')
     a = ap.parse_args()
     phy = next(iter(lef(a.phy_lef).values()))
     plan = json.loads(Path(a.pin_plan).read_text())
@@ -61,6 +62,49 @@ def main():
         reservations='Alternating parity two rows; same-rank pitch531.168, clearance142.368; gap10.8 toPHY and21.6 betweenrows',
         max_um=max(r['max_um'] for r in rows), over405=sum(r['over405'] for r in rows), rows=rows,
         qualification='Child pins intended only, not native; no corridor/relay escape/nonoverlap with other die children proof. Lower bound hop counts do not prove legal relay placement. Exact equal-age padding/calendar price, reset and clock producers still OPEN.')
+    if a.relay_dir:
+        relays = {f:next(iter(lef(Path(a.relay_dir)/f'hbfd_rly_624_{f}.lef').values())) for f in ('NS','SN')}
+        costs, boxes = [], []
+        for r in rows:
+            if r['rank'] != 1:
+                continue
+            q, pc = r['instance'].split('_')[1], int(r['instance'][-2:])
+            base = manifest['placement']['phy_'+q]
+            pp = dict(x=base['x'],y=base['y'],orient=base['o'])
+            for direction, flow, height in [('command','NS',194.4),('return','SN',248.4)]:
+                v = relays[flow]
+                x = round(round((r['placement']['x']+w/2-v['w']/2)/0.216)*0.216,3)
+                y = base['y']+phy['h']+height if q=='SW' else base['y']-height-v['h']
+                rp = dict(x=x,y=y,orient='R0' if q=='SW' else 'MX')
+                packed = 0; segments = []
+                for port, width in PORTS:
+                    if port.startswith('dram_') != (direction=='return'):
+                        continue
+                    for bit in range(width):
+                        c = xf(r['placement'],w,h,*plan['pins'][port if width==1 else f'{port}[{bit}]']['at'])
+                        ph = xf(pp,phy['w'],phy['h'],*phy['pins'][f'{port}[{pc*width+bit}]'])
+                        ip = xf(rp,v['w'],v['h'],*v['pins'][f'i[{packed}]'])
+                        op = xf(rp,v['w'],v['h'],*v['pins'][f'o[{packed}]'])
+                        source, sink = (c, ph) if direction=='command' else (ph,c)
+                        segments.extend([abs(source[0]-ip[0])+abs(source[1]-ip[1]),abs(op[0]-sink[0])+abs(op[1]-sink[1])])
+                        packed += 1
+                name = r['instance']+'_'+direction
+                boxes.append((name,x,y,x+v['w'],y+v['h']))
+                costs.append(dict(instance=name,placement=rp,bits=packed,max_segment_um=max(segments),over405=sum(s>405 for s in segments)))
+        # Exact nonoverlap against these relay templates, all64 intended children and two actual PHYs only.
+        obstacles = [(r['instance'],r['placement']['x'],r['placement']['y'],r['placement']['x']+w,r['placement']['y']+h) for r in rows]
+        obstacles += [('phy_'+q,v['x'],v['y'],v['x']+phy['w'],v['y']+phy['h']) for q in ('SW','NW') for v in [manifest['placement']['phy_'+q]]]
+        conflicts = []
+        for i,(name,x0,y0,x1,y1) in enumerate(boxes):
+            for other,a0,b0,a1,b1 in obstacles+boxes[:i]:
+                # 5.4um halo on BOTH objects (10.8um separation).
+                if x0-5.4 < a1+5.4 and x1+5.4 > a0-5.4 and y0-5.4 < b1+5.4 and y1+5.4 > b0-5.4:
+                    conflicts.append([name,other])
+        report['upper_corridor_model'] = dict(templates='Unqualified legacy624NS/SN; not final relay source/native/clock closure',
+            template_sha256={f:hashlib.sha256((Path(a.relay_dir)/f'hbfd_rly_624_{f}.lef').read_bytes()).hexdigest() for f in relays},
+            max_segment_um=max(c['max_segment_um'] for c in costs),over405=sum(c['over405'] for c in costs),
+            known_object_conflicts=conflicts,rows=costs,
+            open='All other die children/corridors, native relay fanout/storage, reset/clock, escapes, lower-row parity compensation and static calendar price remain OPEN.')
     Path(a.out).write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k not in ('inputs','rows')}))
 

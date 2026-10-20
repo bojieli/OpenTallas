@@ -6238,5 +6238,722 @@
       ]
     }
   ],
-  "qualification": "Child pins intended only, not native; no corridor/relay escape/nonoverlap with other die children proof. Lower bound hop counts do not prove legal relay placement. Exact equal-age padding/calendar price, reset and clock producers still OPEN."
+  "qualification": "Child pins intended only, not native; no corridor/relay escape/nonoverlap with other die children proof. Lower bound hop counts do not prove legal relay placement. Exact equal-age padding/calendar price, reset and clock producers still OPEN.",
+  "upper_corridor_model": {
+    "templates": "Unqualified legacy624NS/SN; not final relay source/native/clock closure",
+    "template_sha256": {
+      "NS": "db66c4270ba7ff6a515c37d699efeb5d075483095691f199061b317f64eb4f1b",
+      "SN": "90e39279c816cc32f7c246e4741186fd3fbc552733393e48aff4bf99dd63e6a4"
+    },
+    "max_segment_um": 331.25400000000036,
+    "over405": 0,
+    "known_object_conflicts": [],
+    "rows": [
+      {
+        "instance": "ctl_SW_p01_command",
+        "placement": {
+          "x": 5890.968,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25399999999945,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p01_return",
+        "placement": {
+          "x": 5890.968,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.86600000000044,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p03_command",
+        "placement": {
+          "x": 6422.112,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25399999999945,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p03_return",
+        "placement": {
+          "x": 6422.112,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.8900000000008,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p05_command",
+        "placement": {
+          "x": 6953.256,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25399999999945,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p05_return",
+        "placement": {
+          "x": 6953.256,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.9140000000002,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p07_command",
+        "placement": {
+          "x": 7484.616,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25399999999945,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p07_return",
+        "placement": {
+          "x": 7484.616,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7220000000002,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p09_command",
+        "placement": {
+          "x": 8015.76,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25399999999945,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p09_return",
+        "placement": {
+          "x": 8015.76,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.74599999999964,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p11_command",
+        "placement": {
+          "x": 8546.904,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p11_return",
+        "placement": {
+          "x": 8546.904,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7700000000018,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p13_command",
+        "placement": {
+          "x": 9078.048,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p13_return",
+        "placement": {
+          "x": 9078.048,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7939999999994,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p15_command",
+        "placement": {
+          "x": 9609.192,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p15_return",
+        "placement": {
+          "x": 9609.192,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.8180000000025,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p17_command",
+        "placement": {
+          "x": 10140.336,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p17_return",
+        "placement": {
+          "x": 10140.336,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.8420000000001,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p19_command",
+        "placement": {
+          "x": 10671.48,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p19_return",
+        "placement": {
+          "x": 10671.48,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.86600000000135,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p21_command",
+        "placement": {
+          "x": 11202.624,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p21_return",
+        "placement": {
+          "x": 11202.624,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.8900000000026,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p23_command",
+        "placement": {
+          "x": 11733.768,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p23_return",
+        "placement": {
+          "x": 11733.768,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.9140000000002,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p25_command",
+        "placement": {
+          "x": 12265.128,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p25_return",
+        "placement": {
+          "x": 12265.128,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7220000000011,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p27_command",
+        "placement": {
+          "x": 12796.272,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p27_return",
+        "placement": {
+          "x": 12796.272,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.74599999999873,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p29_command",
+        "placement": {
+          "x": 13327.416,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p29_return",
+        "placement": {
+          "x": 13327.416,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7700000000018,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p31_command",
+        "placement": {
+          "x": 13858.56,
+          "y": 1393.2,
+          "orient": "R0"
+        },
+        "bits": 328,
+        "max_segment_um": 331.25400000000036,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_SW_p31_return",
+        "placement": {
+          "x": 13858.56,
+          "y": 1447.2,
+          "orient": "R0"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7939999999994,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p01_command",
+        "placement": {
+          "x": 5890.968,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.2539999999981,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p01_return",
+        "placement": {
+          "x": 5890.968,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.86600000000453,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p03_command",
+        "placement": {
+          "x": 6422.112,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.2539999999981,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p03_return",
+        "placement": {
+          "x": 6422.112,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.8900000000049,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p05_command",
+        "placement": {
+          "x": 6953.256,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.2539999999981,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p05_return",
+        "placement": {
+          "x": 6953.256,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.9140000000043,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p07_command",
+        "placement": {
+          "x": 7484.616,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.2539999999981,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p07_return",
+        "placement": {
+          "x": 7484.616,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7220000000043,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p09_command",
+        "placement": {
+          "x": 8015.76,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.2539999999981,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p09_return",
+        "placement": {
+          "x": 8015.76,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.74600000000373,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p11_command",
+        "placement": {
+          "x": 8546.904,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p11_return",
+        "placement": {
+          "x": 8546.904,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7700000000059,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p13_command",
+        "placement": {
+          "x": 9078.048,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p13_return",
+        "placement": {
+          "x": 9078.048,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7940000000035,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p15_command",
+        "placement": {
+          "x": 9609.192,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p15_return",
+        "placement": {
+          "x": 9609.192,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.8180000000066,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p17_command",
+        "placement": {
+          "x": 10140.336,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p17_return",
+        "placement": {
+          "x": 10140.336,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.8420000000042,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p19_command",
+        "placement": {
+          "x": 10671.48,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p19_return",
+        "placement": {
+          "x": 10671.48,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.86600000000544,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p21_command",
+        "placement": {
+          "x": 11202.624,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p21_return",
+        "placement": {
+          "x": 11202.624,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.8900000000067,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p23_command",
+        "placement": {
+          "x": 11733.768,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p23_return",
+        "placement": {
+          "x": 11733.768,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.9140000000043,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p25_command",
+        "placement": {
+          "x": 12265.128,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p25_return",
+        "placement": {
+          "x": 12265.128,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7220000000052,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p27_command",
+        "placement": {
+          "x": 12796.272,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p27_return",
+        "placement": {
+          "x": 12796.272,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7460000000028,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p29_command",
+        "placement": {
+          "x": 13327.416,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p29_return",
+        "placement": {
+          "x": 13327.416,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7700000000059,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p31_command",
+        "placement": {
+          "x": 13858.56,
+          "y": 30356.56,
+          "orient": "MX"
+        },
+        "bits": 328,
+        "max_segment_um": 331.253999999999,
+        "over405": 0
+      },
+      {
+        "instance": "ctl_NW_p31_return",
+        "placement": {
+          "x": 13858.56,
+          "y": 30302.56,
+          "orient": "MX"
+        },
+        "bits": 257,
+        "max_segment_um": 320.7940000000035,
+        "over405": 0
+      }
+    ],
+    "open": "All other die children/corridors, native relay fanout/storage, reset/clock, escapes, lower-row parity compensation and static calendar price remain OPEN."
+  }
 }
