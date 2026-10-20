@@ -1,0 +1,36 @@
+{
+  "status": "NOT ELIGIBLE: structural source/layout continuation required",
+  "source_start_commit": "80dcf3e3fb593deca0d734b4848e799d8ec6fbf7",
+  "kit": "/home/ubuntu/wt/hbm-idx6-score-1020/physical/ref_tile/hidx_score_qw4n_648_w432",
+  "gate_verdict": "WARN",
+  "native_status": "not independently collected yet",
+  "pngs_reviewed": [
+    "/home/ubuntu/wt/hbm-idx6-score-1020/physical/ref_tile/hidx_score_qw4n_648_w432/gate_layout/floorplan.png",
+    "/home/ubuntu/wt/hbm-idx6-score-1020/physical/ref_tile/hidx_score_qw4n_648_w432/gate_layout/density.png"
+  ],
+  "outline_um": [
+    43.2,
+    1296
+  ],
+  "aspect": 30,
+  "std_util_percent": 11,
+  "clock": {
+    "tt_insertion_ps": 567.4,
+    "ff_insertion_ps": 466.8,
+    "tt_pin_spread_ps": 74.1,
+    "ff_pin_spread_ps": 70.1
+  },
+  "trial_grt_overflow": 0,
+  "checklist": {
+    "lattice": "no macros",
+    "std_cell_band": "long skinny standard-cell strip, sparse 11% area, no safe compact mass",
+    "pin_spread": "long full-face placement requires source/physical reach proof",
+    "clock_entry": "clock near middle W; TT/FF spread passes but parent boundary matching owed",
+    "shape": "FAIL 30:1 exceeds approx2:1",
+    "timing": "gate pathfinding only; not routed signoff",
+    "reach": "UNPROVEN, 1296um span",
+    "storage": "source inventory not yet independently verified"
+  },
+  "review_json_written": false,
+  "submitted": false
+}
