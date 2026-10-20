@@ -80,9 +80,12 @@ EXEC_ORDER = ['attn.wq_b', 'attn.idx.q', 'attn.cmp.wk', 'attn.wo_a', 'attn.wo_b'
 
 # S81-ROMOPT-A (10-20): measured span tails (spine go0 -> last frame-root RET beyond (n - 1) P) with the release defaults,
 # max over the frames u_f_0L00 / u_f_2L00 / u_f_3L01 / u_f_3L02 (8-, 7-, 6-, 6-frame slices; h9 / h9 / h10 / h9_MX release FSEQ
-# exes, Verilator 5.050): results/rtl/s81_romopt_1020/a/fseq_{o1o2,o1}; keyed by OT_XS_QPAIRS (O1+O2 = 12, O1 only = 10)
-ROMOPT_TAIL = {12: {'attn.wq_b': 304, 'attn.wo_b': 320, 'ffn.shared_gu': 363, 'ffn.experts_gu': 346, 'ffn.down': 296},
-               10: {'attn.wq_b': 296, 'attn.wo_b': 320, 'ffn.shared_gu': 361, 'ffn.experts_gu': 346, 'ffn.down': 292}}
+# exes, Verilator 5.050): results/rtl/s81_romopt_1020/a/fseq_<cfg>; keyed by (OT_XS_QPAIRS, OT_XS_COMPACT_TAILS):
+# (12, 1) = O1 + O2 release default (fseq_o1o2c), (12, 0) = O1 + O2 without compact tails (fseq_o1o2), (10, 0) = O1 only (fseq_o1)
+ROMOPT_TAIL = {(12, 1): {'attn.wq_b': 306, 'attn.wo_b': 322, 'ffn.shared_gu': 363, 'ffn.experts_gu': 346, 'ffn.down': 296},
+               (12, 0): {'attn.wq_b': 304, 'attn.wo_b': 320, 'ffn.shared_gu': 363, 'ffn.experts_gu': 346, 'ffn.down': 296},
+               (10, 0): {'attn.wq_b': 296, 'attn.wo_b': 320, 'ffn.shared_gu': 361, 'ffn.experts_gu': 346, 'ffn.down': 292}}
+ROMOPT_DIR = {(12, 1): 'fseq_o1o2c', (12, 0): 'fseq_o1o2', (10, 0): 'fseq_o1'}
 
 
 class CalendarFault(AssertionError):
@@ -130,14 +133,15 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
         cal['span_tail'] = tail
         cal['span_evidence'] = 'results/rtl/s81_rate3_1020/fseq3/*/{down,experts_gu}/check_P*.json'
     import xs_place as XP
-    mt = ROMOPT_TAIL.get(XP.NPAIRS, {}).get(op) if TP.ENABLED and XP.GU_MERGE else None
+    rk = (XP.NPAIRS, int(XO.on('OT_XS_COMPACT_TAILS')))
+    mt = ROMOPT_TAIL.get(rk, {}).get(op) if TP.ENABLED and XP.GU_MERGE else None
     if mt is not None:
         # S81-ROMOPT-A (10-20): release defaults (TOPO + PROP + GU_MERGE pair-preserving deal), tail = the slowest of the
         # 8- / 7- / 6-frame slice frames u_f_0L00 / u_f_2L00 (h9) u_f_3L01 (h10) u_f_3L02 (h9_MX) on the release FSEQ exes
         tail = mt
         cal['span_tail'] = tail
         cal['span_metric'] = 'spine_go0_to_last_frame_root_ret_edges'
-        cal['span_evidence'] = f'results/rtl/s81_romopt_1020/a/fseq_{"o1o2" if XP.NPAIRS == 12 else "o1"}/*/{op.split(".")[-1]}/check_P{P}.json'
+        cal['span_evidence'] = f'results/rtl/s81_romopt_1020/a/{ROMOPT_DIR[rk]}/*/{op.split(".")[-1]}/check_P{P}.json'
     cal['predicted_span'] = (len(per) - 1) * P + tail
     return cal
 

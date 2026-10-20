@@ -7,14 +7,16 @@ Release default (env unset):
   OT_XS_CAL_SEGMENT=1   reused / rebased calendar intervals in the one 4096-row calendar ROM pair (S81-ROM12)
   OT_XS_TOPO=1          rows dealt over the PHYSICAL frames of each slice (122-frame p4l-MU die; S81-RATE3)
   OT_XS_PROP=1          free-ownership ops (wo_b, down, wo_a groups) dealt in proportion to the frames (S81-RATE3)
-  OT_XS_COMPACT_TAILS=0 not adopted (see results/rtl/s81_romopt_1020/a/README.md)
-Any variable set in the environment wins ('=0' selects the legacy behaviour of that option; OT_XS_QPAIRS=10 = O1 only).
+  OT_XS_COMPACT_TAILS=1 short tails allocate only their real super rows (no wholly-SENT ROM words; O2 capacity):
+                        qualified on all 5 FP ops x 4 frames, +2 edges on wq_b / wo_b (results/rtl/s81_romopt_1020/a)
+Any variable set in the environment wins ('=0' selects the legacy behaviour of that option).  O1 only (the O1
+measurement) = OT_XS_QPAIRS=10 OT_XS_COMPACT_TAILS=0.
 OT_XS_LEGACY=1 makes the legacy values (all 0, QPAIRS 10) the defaults, which reproduces every pre-10-20 record.
 """
 import os
 
 RELEASE = dict(OT_XS_GU_MERGE='1', OT_XS_QPAIRS='12', OT_XS_CAL_SEGMENT='1', OT_XS_TOPO='1', OT_XS_PROP='1',
-               OT_XS_COMPACT_TAILS='0')
+               OT_XS_COMPACT_TAILS='1')
 LEGACY = dict(OT_XS_GU_MERGE='0', OT_XS_QPAIRS='10', OT_XS_CAL_SEGMENT='0', OT_XS_TOPO='0', OT_XS_PROP='0',
               OT_XS_COMPACT_TAILS='0')
 
