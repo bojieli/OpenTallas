@@ -4,8 +4,8 @@
 // appear before the line is primed; >= 150 valid words must be checked (a bench that checks nothing FAILS).
 // RTL mutant: DUT built with DM != DX (wrong delay) must FAIL.
 module tb_s81sl_cap_ed;
-    parameter integer DX = 23;
-    parameter integer DM = 23;
+    parameter integer DX = 24;
+    parameter integer DM = 24;
     reg clk = 0, rst_n = 0;
     always #0.417 clk = ~clk;
     reg iv, ie, ifl; reg [31:0] it, id;

@@ -1,6 +1,6 @@
 #!/bin/bash
-# cap_ed_bench.sh <outdir> <DM>  -- LEAD2-S81/TOK2 10-19: ot_s81sl_cap_ed bench (tb_s81sl_cap_ed, DX = 23); DM != 23 = RTL mutant
-set -u; O=$1; DM=${2:-23}; mkdir -p $O
+# cap_ed_bench.sh <outdir> <DM>  -- LEAD2-S81/TOK2 10-19: ot_s81sl_cap_ed bench (tb_s81sl_cap_ed, DX = 24); DM != 24 = RTL mutant
+set -u; O=$1; DM=${2:-24}; mkdir -p $O
 V=~/.local/opentallas-tools/verilator-5.050/bin/verilator; [ -x $V ] || V=verilator
 $V --version > $O/verilator.version
 $V --binary --timing -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -GDM=$DM --top-module tb_s81sl_cap_ed -Mdir $O/obj \
