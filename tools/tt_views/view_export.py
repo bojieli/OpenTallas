@@ -113,7 +113,60 @@ if {[llength [get_ports -quiet clk_in]] && [llength [get_ports -quiet clk_out]]}
 """
 
 
-def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256):
+
+def forwarded_clock_tcl(inp='clk_in', outp='clk_out', max_cells=16):
+    """Default clk_in/clk_out keeps the historical one-buffer TCL byte for byte.
+
+    Any other declared forwarding pair (e.g. a relay ck -> ck_o through its kept
+    inverter pair after the CTS leaf) is walked back from the output port through
+    single-input cells only, until the declared input port net; anything else
+    (a multi-input cell, a flop, no driver, > max_cells) refuses the receipt.
+    The positive_unate check on the merged native arc still decides polarity.
+    """
+    if (inp, outp) == ('clk_in', 'clk_out'):
+        return FORWARDED_CLOCK_TCL
+    for n in (inp, outp):
+        if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', n):
+            raise VerdictError(f'forwarded-clock port {n!r} is not a plain port name')
+    head = f"""
+if {{[llength [get_ports -quiet {inp}]] && [llength [get_ports -quiet {outp}]]}} {{
+  set ot_fc_block [ord::get_db_block]
+  set ot_fc_in [[$ot_fc_block findBTerm {inp}] getNet]
+  set ot_fc_net [[$ot_fc_block findBTerm {outp}] getNet]
+  set ot_fc_chain {{}}
+  set ot_fc_it {{}}
+  while {{1}} {{
+    set ot_fc_drivers {{}}
+    foreach it [$ot_fc_net getITerms] {{
+      if {{[$it getIoType] eq "OUTPUT"}} {{lappend ot_fc_drivers $it}}
+    }}
+    if {{[llength $ot_fc_drivers] != 1}} {{error "forwarded {outp} chain net [$ot_fc_net getName] must have exactly one physical driver"}}
+    set ot_fc_d [lindex $ot_fc_drivers 0]
+    if {{$ot_fc_it eq {{}}}} {{set ot_fc_it $ot_fc_d}}
+    set ot_fc_ci [$ot_fc_d getInst]
+    set ot_fc_ins {{}}
+    foreach it [$ot_fc_ci getITerms] {{
+      if {{[$it getIoType] eq "INPUT" && [$it getNet] ne "NULL"}} {{lappend ot_fc_ins $it}}
+    }}
+    if {{[llength $ot_fc_ins] != 1}} {{error "forwarded {outp} chain cell [$ot_fc_ci getName] must have one input"}}
+    lappend ot_fc_chain $ot_fc_ci
+    puts "OT_FC_CHAIN [[$ot_fc_ci getMaster] getName] [$ot_fc_ci getName]"
+    set ot_fc_net [[lindex $ot_fc_ins 0] getNet]
+    if {{$ot_fc_net eq $ot_fc_in}} {{break}}
+    if {{[llength $ot_fc_chain] >= {max_cells}}} {{error "forwarded {outp} chain longer than {max_cells} cells"}}
+  }}
+  set ot_fc_inst [$ot_fc_it getInst]
+  puts "OT_FC_DRIVER [[$ot_fc_inst getMaster] getName] [$ot_fc_inst getName]"
+"""
+    tail = FORWARDED_CLOCK_TCL[FORWARDED_CLOCK_TCL.index('  set ot_fc_root {}'):]
+    tail = tail.replace('"clk_in"', f'"{inp}"').replace('"clk_out"', f'"{outp}"')
+    tail = tail.replace('[get_ports clk_in]', f'[get_ports {inp}]').replace('[get_ports clk_out]', f'[get_ports {outp}]')
+    tail = tail.replace('forwarded clk_in', f'forwarded {inp}').replace('OT_FC_ROOT clk_in', f'OT_FC_ROOT {inp}')
+    assert 'clk_in' not in tail and 'clk_out' not in tail, tail
+    return head + tail
+
+
+def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256, inp='clk_in', outp='clk_out'):
     """Parse native propagated STA; absence is ordinary for non-forwarded tiles."""
     driver = re.findall(r"^OT_FC_DRIVER (\S+) (.+)$", log, re.M)
     if not driver:
@@ -125,7 +178,8 @@ def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256):
     required = ('arrival_max_rise', 'arrival_min_rise', 'arrival_max_fall',
                 'arrival_min_fall', 'slew_max_rise', 'slew_max_fall')
     import math
-    if len(driver) != 1 or len(raw_values) != len(required) or 'OT_FC_ROOT clk_in' not in log or set(values) != set(required):
+    roots = re.findall(r'^OT_FC_ROOT (\S+)$', log, re.M)
+    if len(driver) != 1 or len(raw_values) != len(required) or roots != [inp] or set(values) != set(required):
         raise VerdictError('incomplete native forwarded-clock measurement')
     values = {k: float(v) for k, v in values.items()}
     if not all(math.isfinite(v) and v >= 0 for v in values.values()):
@@ -140,13 +194,19 @@ def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256):
     driver_values = {k: float(v) for k, v in driver_values.items()}
     if not all(math.isfinite(v) and v >= 0 for v in driver_values.values()):
         raise VerdictError('nonphysical forwarded-clock driver measurement')
-    return dict(corner=corner, input_pin='clk_in', output_pin='clk_out',
+    chain = re.findall(r"^OT_FC_CHAIN (\S+) (.+)$", log, re.M)
+    if (inp, outp) != ('clk_in', 'clk_out') and (not chain or chain[0] != driver[0]):
+        raise VerdictError('forwarded-clock chain does not start at the boundary driver')
+    rec = dict(corner=corner, input_pin=inp, output_pin=outp,
                 driver_cell=driver[0][0], driver_instance=driver[0][1],
-                direct_root_buffer=True, units='ps', clk_in_to_clk_out_ps=values,
+                direct_root_buffer=len(chain) <= 1, units='ps', clk_in_to_clk_out_ps=values,
                 driver_y_ps=driver_values,
                 output_net_delta_ps={k: values[k]-driver_values[k] for k in required},
                 measured_at='physical clk_out STA terminal including output-net routed SPEF; propagated primary clock',
                 odb_sha256=odb_sha256, spef_sha256=spef_sha256)
+    if chain:
+        rec['chain_out_to_in'] = [dict(cell=c, instance=i) for c, i in chain]
+    return rec
 
 
 def liberty_pin_group(text, pin):
@@ -170,20 +230,20 @@ def liberty_pin_group(text, pin):
     raise VerdictError('unterminated native forwarded-clock Liberty group')
 
 
-def merge_forwarded_clock_model(main, combinational):
+def merge_forwarded_clock_model(main, combinational, inp='clk_in', outp='clk_out'):
     """Use the native clock-free characterization for the one combinational path.
 
     Main ETM registers/setup/hold remain byte-identical. OpenSTA's sequential
     extraction invents cross-polarity clock arcs; a clock-free second extraction
     naturally characterizes the actual buffer as clk_in -> clk_out instead.
     """
-    a, b = liberty_pin_group(main, 'clk_out')
-    x, y = liberty_pin_group(combinational, 'clk_out')
+    a, b = liberty_pin_group(main, outp)
+    x, y = liberty_pin_group(combinational, outp)
     group = combinational[x:y]
     related = re.findall(r'related_pin\s*:\s*"([^";]+)"', group)
     types = re.findall(r'timing_type\s*:\s*(\w+)\s*;', group)
-    if related != ['clk_in'] or types != ['combinational']:
-        raise VerdictError('native forwarding characterization is not one clk_in combinational arc')
+    if related != [inp] or types != ['combinational']:
+        raise VerdictError(f'native forwarding characterization is not one {inp} combinational arc')
     if not re.search(r'timing_sense\s*:\s*positive_unate\s*;', group):
         raise VerdictError('native forwarding characterization is not a noninverting buffer')
     for table in ('cell_rise', 'cell_fall', 'rise_transition', 'fall_transition'):
@@ -644,7 +704,14 @@ def main():
     ap.add_argument("--signal-max-layer", help="optional stricter signal/clock ceiling, independent of PG")
     ap.add_argument("--pg-max-layer", help="PG ceiling for the final routed net-type audit")
     ap.add_argument("--signal-audit-tcl", type=Path, help="source-pinned actual OpenDB net-type audit helper")
+    ap.add_argument("--forwarded-clock", default="clk_in:clk_out", metavar="IN:OUT",
+                    help="forwarded clock port pair (default clk_in:clk_out = historical one-buffer check); any other "
+                         "pair is walked back through single-input cells (e.g. a relay ck:ck_o kept-inverter pair)")
     a = ap.parse_args()
+    fc_ports = tuple(a.forwarded_clock.split(':'))
+    if len(fc_ports) != 2 or fc_ports[0] == fc_ports[1]:
+        ap.error('--forwarded-clock wants IN:OUT')
+    forwarded_clock_tcl(*fc_ports)   # validates the names
     strict = a.signal_max_layer is not None
     if strict:
         if (not re.fullmatch(r"M[2-9]", a.signal_max_layer)
@@ -773,7 +840,7 @@ def main():
         tcl = "\n".join([f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef",
                          f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef", *lefs, *libs, *seq, *audit,
                          "puts \"OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]\"",
-                         FORWARDED_CLOCK_TCL,
+                         forwarded_clock_tcl(*fc_ports),
                          f"write_timing_model -library_name {a.name}_{c} /out/{a.name}_{c}.lib",
                          f"write_abstract_lef /out/{a.name}.lef" if c == "ss" else "",
                          f"file copy -force {PLAT}/lef/asap7_tech_1x_201209.lef /out/pin_only_tech.lef"
@@ -805,13 +872,13 @@ def main():
         try:
             fc = forwarded_clock_receipt(log, c,
                 sha(base / '6_final.odb') if 'OT_FC_DRIVER ' in log else '',
-                sha(base / '6_final.spef') if 'OT_FC_DRIVER ' in log else '')
+                sha(base / '6_final.spef') if 'OT_FC_DRIVER ' in log else '', *fc_ports)
             if fc is not None:
                 main_lib = out / f'{a.name}_{c}.lib'
                 comb_lib = out / f'forwarded_{c}.lib.raw'
                 fc['native_combinational_lib_sha256'] = sha(comb_lib)
                 fc['sequential_etm_before_merge_sha256'] = sha(main_lib)
-                merged = merge_forwarded_clock_model(main_lib.read_text(), comb_lib.read_text())
+                merged = merge_forwarded_clock_model(main_lib.read_text(), comb_lib.read_text(), *fc_ports)
                 # Docker writes the native ETM as root; replace through our output
                 # directory, rather than trying to truncate its root-owned file.
                 with tempfile.NamedTemporaryFile(mode='w', dir=out, delete=False) as tmp:
