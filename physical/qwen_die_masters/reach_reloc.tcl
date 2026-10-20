@@ -26,7 +26,8 @@ set ot_rr_n 0
 set fh [open $ot_rr_tsv r]
 foreach ln [split [read $fh] "\n"] {
   if {$ln eq ""} continue
-  lassign $ln nm x y
+  # names carry literal backslashes (u_x.dvf\[2\]$_DFFE_): split on spaces, never Tcl list parsing
+  if {![regexp {^(\S+) (\S+) (\S+)$} $ln -> nm x y]} { error "OT_REACH_RELOC: bad line $ln" }
   set i [$ot_rr_blk findInst $nm]
   if {$i eq "NULL" || $i eq ""} { error "OT_REACH_RELOC: instance $nm not found" }
   $i setLocation [expr {round($x * $ot_rr_dbu)}] [expr {round($y * $ot_rr_dbu)}]

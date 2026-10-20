@@ -1,0 +1,63 @@
+{
+ "reach_um": 390.0,
+ "edges": 300010,
+ "gt405_before": 284,
+ "gt405_after": 0,
+ "moved": 279,
+ "unknown_masters": [
+  "TAPCELL_ASAP7_75t_R"
+ ],
+ "worst_before": [
+  [
+   518.238,
+   "ot_rrs__rst_n__ot_rlv__c25$_DFF_P_",
+   "ot_rrs__u_ot_pr_core_rst_cp_pin__c53$_DFF_PN0_"
+  ],
+  [
+   517.212,
+   "ot_rrs__rst_n__ot_rlv__c25$_DFF_P_",
+   "ot_rrs__u_ot_pr_core_rst_cp_pin__c54$_DFF_PN0_"
+  ],
+  [
+   511.866,
+   "ot_rrs__rst_n__ot_rlv__c25$_DFF_P_",
+   "ot_rrs__u_ot_pr_core_rst_cp_pin__c55$_DFF_PN0_"
+  ],
+  [
+   495.261,
+   "rst_n__ot_rl0$_DFF_P_",
+   "ot_rrs__rst_n__ot_rlv__c4$_DFF_P_"
+  ],
+  [
+   495.072,
+   "u_ot_pr_core.dvf\\[0\\]$_DFFE_PN0P_",
+   "fault$_DFF_PN0_"
+  ],
+  [
+   484.434,
+   "u_ot_pr_core.dvf\\[2\\]$_DFFE_PN0P_",
+   "u_ot_pr_core.g_slot\\[1\\].u_service.g_q_payload32.g_vmw\\[4\\].q$_DFF_PN0_"
+  ],
+  [
+   483.678,
+   "u_ot_pr_core.dvf\\[2\\]$_DFFE_PN0P_",
+   "u_ot_pr_core.g_slot\\[0\\].u_service.g_q_payload32.g_vmw\\[4\\].q$_DFF_PN0_"
+  ],
+  [
+   483.29999999999995,
+   "u_ot_pr_core.dvf\\[2\\]$_DFFE_PN0P_",
+   "u_ot_pr_core.g_slot\\[1\\].u_service.g_q_payload32.g_vmw\\[3\\].q$_DFF_PN0_"
+  ],
+  [
+   483.192,
+   "u_ot_pr_core.dvf\\[2\\]$_DFFE_PN0P_",
+   "u_ot_pr_core.g_slot\\[0\\].u_service.g_q_payload32.g_vmw\\[3\\].q$_DFF_PN0_"
+  ],
+  [
+   483.13800000000003,
+   "u_ot_pr_core.dvf\\[2\\]$_DFFE_PN0P_",
+   "u_ot_pr_core.g_slot\\[1\\].u_service.g_q_payload32.g_vmw\\[2\\].q$_DFF_PN0_"
+  ]
+ ],
+ "residual_after": []
+}
