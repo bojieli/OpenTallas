@@ -20,6 +20,39 @@ class ReplicationFrontier(AssertionError):
         super().__init__(report['reason']+' '+json.dumps(report))
 
 
+def cyclic_cells(inputs,drivers):
+    """Conservative state/logic feedback frontier, linear iterative SCC walk.
+
+    DFF copies on a feedback cycle need an initialization/state proof beyond
+    the feed-forward capture induction. Never clone that graph speculatively.
+    """
+    adj={n:{drivers[b] for bs in ports.values() for b,_ in bs if b in drivers}
+         for n,ports in inputs.items()}
+    rev={n:[] for n in adj}
+    for n,ps in adj.items():
+        for p in ps:rev[p].append(n)
+    visited=set();order=[]
+    for start in adj:
+        if start in visited:continue
+        visited.add(start);stack=[(start,iter(adj[start]))]
+        while stack:
+            n,it=stack[-1]
+            nxt=next(it,None)
+            if nxt is None:order.append(n);stack.pop()
+            elif nxt not in visited:
+                visited.add(nxt);stack.append((nxt,iter(adj[nxt])))
+    visited=set();cyclic=set()
+    for start in reversed(order):
+        if start in visited:continue
+        component=[];stack=[start];visited.add(start)
+        while stack:
+            n=stack.pop();component.append(n)
+            for p in rev[n]:
+                if p not in visited:visited.add(p);stack.append(p)
+        if len(component)>1 or start in adj[start]:cyclic.update(component)
+    return cyclic
+
+
 def bound(data, top, limit=24, clock_ports=('clk',)):
     m=deepcopy(data['modules'][top])
     original=deepcopy(m['cells'])
@@ -56,6 +89,7 @@ def bound(data, top, limit=24, clock_ports=('clk',)):
                    if c['port_directions'][p]=='input'}
     outputs={p:[norm(b) for b in v['bits']] for p,v in m['ports'].items()
              if v['direction']=='output'}
+    cyclic=cyclic_cells(inputs,drivers)
     nextbit=max([b for c in cells.values() for bs in c['connections'].values()
                  for b in bs if isinstance(b,int)]+[1])+1
     clock={b for p in clock_ports for b in m['ports'].get(p,{}).get('bits',[])}
@@ -80,6 +114,11 @@ def bound(data, top, limit=24, clock_ports=('clk',)):
                 net=b,ports=ports,loads=len(sinks),limit=limit,clones_so_far=clones,
                 cells_so_far=len(cells),original_cells=len(original)))
         src=drivers[b];cell=cells[src]
+        if origins[src] in cyclic:
+            raise ReplicationFrontier(dict(reason='feedback state/logic needs explicit initialization proof',
+                cell=src,type=cell['type'],net=b,loads=len(sinks),limit=limit,
+                cyclic_cells=len(cyclic),clones_so_far=clones,cells_so_far=len(cells),
+                original_cells=len(original)))
         outbits=[ob for p,bs in cell['connections'].items()
                  if cell['port_directions'][p]=='output' for ob in bs]
         if len(outbits)!=1:

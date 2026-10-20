@@ -58,5 +58,18 @@ class GraphTests(unittest.TestCase):
         _,cells,_,_,_,_=bound(d,'top',4)
         self.assertEqual(sum(c['type']=='DFF_TEST' for c in cells.values()),7)
 
+    def test_self_feedback_fails_before_unbounded_cloning(self):
+        d=design();d['modules']['top']['cells']['pin']['connections']['D']=[4]
+        with self.assertRaisesRegex(AssertionError,'feedback') as caught:
+            bound(d,'top',4)
+        self.assertEqual(caught.exception.report['clones_so_far'],0)
+
+    def test_feedback_through_logic_also_refuses(self):
+        d=design();m=d['modules']['top']
+        m['cells']['feed']=cell('AND_TEST',dict(A=4,B=5),400)
+        m['cells']['pin']['connections']['D']=[400]
+        with self.assertRaisesRegex(AssertionError,'feedback'):
+            bound(d,'top',4)
+
 
 if __name__=='__main__':unittest.main()
