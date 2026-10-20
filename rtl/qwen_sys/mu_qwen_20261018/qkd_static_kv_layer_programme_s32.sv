@@ -372,6 +372,9 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  wire hit=start_q&&start_ok&&fire_u==us;
  wire[3:0]fs={fire_u==2'd3,fire_u==2'd2,fire_u==2'd1,fire_u==2'd0};
  wire[3:0]os={owner==2'd3,owner==2'd2,owner==2'd1,owner==2'd0};
+ // KV-CTL3 census: the slice selects read the priority one-hot of e_any (= fs whenever |e_any, the only time they are
+ // used) instead of fs: fs[k] also feeds the control process's fire_u muxes (one net, 36 loads)
+ wire[3:0]fsp={e_any[3]&&!(|e_any[2:0]),e_any[2]&&!(|e_any[1:0]),e_any[1]&&!e_any[0],e_any[0]};
  wire ebf=|(fs&e_begin);
  wire aw=|(os&c_act&~c_wait),ao=|(os&c_act);
  wire[67:0]mq={gen_q,14'(pos_q+1),pos_q,token_q,epoch_q};
@@ -380,10 +383,10 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
   localparam integer LO=16*gs,W=(gs==4)?4:16,J=(gs+168)%RS;
   wire r=rs_s[J];
   wire[W-1:0]m0,m1,m2,m3,v;
-  ot_s32_and #(.W(W)) u_a0(.s(fs[0]&&r),.a(meta_f[68*0+LO+:W]),.y(m0));
-  ot_s32_and #(.W(W)) u_a1(.s(fs[1]&&r),.a(meta_f[68*1+LO+:W]),.y(m1));
-  ot_s32_and #(.W(W)) u_a2(.s(fs[2]&&r),.a(meta_f[68*2+LO+:W]),.y(m2));
-  ot_s32_and #(.W(W)) u_a3(.s(fs[3]&&r),.a(meta_f[68*3+LO+:W]),.y(m3));
+  ot_s32_and #(.W(W)) u_a0(.s(fsp[0]&&r),.a(meta_f[68*0+LO+:W]),.y(m0));
+  ot_s32_and #(.W(W)) u_a1(.s(fsp[1]&&r),.a(meta_f[68*1+LO+:W]),.y(m1));
+  ot_s32_and #(.W(W)) u_a2(.s(fsp[2]&&r),.a(meta_f[68*2+LO+:W]),.y(m2));
+  ot_s32_and #(.W(W)) u_a3(.s(fsp[3]&&r),.a(meta_f[68*3+LO+:W]),.y(m3));
   ot_s32_sel #(.W(W)) u_h(.s(hit&&r),.a(mq[LO+:W]),.b(m0|m1|m2|m3),.y(v));
   ot_s32_sel #(.W(W)) u_e(.s(any&&!fault_f[J%FC]&&r),.a(v),.b(om[LO+:W]),.y(omx[LO+:W]));
  end
@@ -391,10 +394,10 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
   localparam integer LO=16*gs,J=(gs+173)%RS,K=(gs+175)%RS;
   wire r=rs_s[J],q=rs_s[K];
   wire[15:0]f0,f1,f2,f3,o0,o1,o2,o3,fz,va,t0,t1,t2,t3,u0,u1,u2,u3,tz,vt;
-  ot_s32_and #(.W(16)) u_f0(.s(fs[0]&&r),.a(ag1_f[32*0+LO+:16]),.y(f0));
-  ot_s32_and #(.W(16)) u_f1(.s(fs[1]&&r),.a(ag1_f[32*1+LO+:16]),.y(f1));
-  ot_s32_and #(.W(16)) u_f2(.s(fs[2]&&r),.a(ag1_f[32*2+LO+:16]),.y(f2));
-  ot_s32_and #(.W(16)) u_f3(.s(fs[3]&&r),.a(ag1_f[32*3+LO+:16]),.y(f3));
+  ot_s32_and #(.W(16)) u_f0(.s(fsp[0]&&r),.a(ag1_f[32*0+LO+:16]),.y(f0));
+  ot_s32_and #(.W(16)) u_f1(.s(fsp[1]&&r),.a(ag1_f[32*1+LO+:16]),.y(f1));
+  ot_s32_and #(.W(16)) u_f2(.s(fsp[2]&&r),.a(ag1_f[32*2+LO+:16]),.y(f2));
+  ot_s32_and #(.W(16)) u_f3(.s(fsp[3]&&r),.a(ag1_f[32*3+LO+:16]),.y(f3));
   ot_s32_and #(.W(16)) u_o0(.s(os[0]&&r),.a(ag1_f[32*0+LO+:16]),.y(o0));
   ot_s32_and #(.W(16)) u_o1(.s(os[1]&&r),.a(ag1_f[32*1+LO+:16]),.y(o1));
   ot_s32_and #(.W(16)) u_o2(.s(os[2]&&r),.a(ag1_f[32*2+LO+:16]),.y(o2));
@@ -402,10 +405,10 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
   ot_s32_and #(.W(16)) u_fz(.s(!(ebf&&r)),.a(f0|f1|f2|f3),.y(fz));
   ot_s32_sel #(.W(16)) u_va(.s(any&&r),.a(fz),.b(o0|o1|o2|o3),.y(va));
   ot_s32_sel #(.W(16)) u_ea(.s((any||aw)&&!fault_f[J%FC]&&r),.a(va),.b(oag[LO+:16]),.y(oax[LO+:16]));
-  ot_s32_and #(.W(16)) u_t0(.s(fs[0]&&q),.a(tc1_f[32*0+LO+:16]),.y(t0));
-  ot_s32_and #(.W(16)) u_t1(.s(fs[1]&&q),.a(tc1_f[32*1+LO+:16]),.y(t1));
-  ot_s32_and #(.W(16)) u_t2(.s(fs[2]&&q),.a(tc1_f[32*2+LO+:16]),.y(t2));
-  ot_s32_and #(.W(16)) u_t3(.s(fs[3]&&q),.a(tc1_f[32*3+LO+:16]),.y(t3));
+  ot_s32_and #(.W(16)) u_t0(.s(fsp[0]&&q),.a(tc1_f[32*0+LO+:16]),.y(t0));
+  ot_s32_and #(.W(16)) u_t1(.s(fsp[1]&&q),.a(tc1_f[32*1+LO+:16]),.y(t1));
+  ot_s32_and #(.W(16)) u_t2(.s(fsp[2]&&q),.a(tc1_f[32*2+LO+:16]),.y(t2));
+  ot_s32_and #(.W(16)) u_t3(.s(fsp[3]&&q),.a(tc1_f[32*3+LO+:16]),.y(t3));
   ot_s32_and #(.W(16)) u_u0(.s(os[0]&&q),.a(tc1_f[32*0+LO+:16]),.y(u0));
   ot_s32_and #(.W(16)) u_u1(.s(os[1]&&q),.a(tc1_f[32*1+LO+:16]),.y(u1));
   ot_s32_and #(.W(16)) u_u2(.s(os[2]&&q),.a(tc1_f[32*2+LO+:16]),.y(u2));
