@@ -829,6 +829,14 @@ TIM_PC7 = [
       ot_kvpc5_and2 u_l (.a(wab_oh_lo[q & 3]), .b(wab_oh_hi[q >> 2]), .y(wab_oh_d[q]));
     end'''),
     ('''wab_oh <= 32'b1 << wab_n;''', '''wab_oh <= wab_oh_d;'''),
+    ('''    wire [31:0] rd_oh_d = 32'b1 << {first_sector[9:7],first_sector[1:0]};''',
+     '''    // KV-PC7 (census sr9 r4: a head_first copy drove 28 rd_oh_d decode pins): predecode + 32 kept AND leaves
+    wire [3:0] rd_ohd_lo = 4'b1 << first_sector[1:0];
+    wire [7:0] rd_ohd_hi = 8'b1 << first_sector[9:7];
+    wire [31:0] rd_oh_d;                                      // == 32'b1 << {first_sector[9:7], first_sector[1:0]}
+    for (genvar q = 0; q < 32; q = q + 1) begin : g_rd_oh_d
+      ot_kvpc5_and2 u_l (.a(rd_ohd_lo[q & 3]), .b(rd_ohd_hi[q >> 2]), .y(rd_oh_d[q]));
+    end'''),
     ('''wq_ne_qv <= {3{wq_n_nx != 1, wq_n_nx != 0}};''',
      '''wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}};'''),
 ]
@@ -1494,7 +1502,7 @@ CLONES = [
      [('rp', 3, 2),
       ('col_bank', 5, 11, ('output reg [4:0] col_bank,col_col,', 'output wire [4:0] col_bank,output reg [4:0] col_col,')),
       ('col_col', 5, 3, ('output reg [4:0] col_col,', 'output wire [4:0] col_col,')),
-      ('row_row', 19, 2, ('output reg [18:0] row_row,', 'output wire [18:0] row_row,')), ('head_first', 10, 3)]),   # KV-PC7: 3 copies (census sr9 r4: a copy drove 34 rd_oh / koh pins)
+      ('row_row', 19, 2, ('output reg [18:0] row_row,', 'output wire [18:0] row_row,')), ('head_first', 10, 2)]),
     (TIM, 'ot_qkd_static_kv_timing', 'ot_qkd_static_kv_timing_kvpc_s',
      [("    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;",
        "    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;\n"

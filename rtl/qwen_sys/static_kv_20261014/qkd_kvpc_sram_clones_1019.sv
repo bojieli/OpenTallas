@@ -1833,7 +1833,7 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  end
 endmodule
 
-// ---- ot_qkd_static_ctrl_pc_emb_kvpc_s: clone of ot_qkd_static_ctrl_pc_emb (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv) with 10 substitution(s); kept copy families rp[3]x2(2), col_bank[5]x11(1), col_col[5]x3(1), row_row[19]x2(1), head_first[10]x3(1) ----
+// ---- ot_qkd_static_ctrl_pc_emb_kvpc_s: clone of ot_qkd_static_ctrl_pc_emb (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv) with 10 substitution(s); kept copy families rp[3]x2(2), col_bank[5]x11(1), col_col[5]x3(1), row_row[19]x2(1), head_first[10]x2(1) ----
 module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0,PULLIN=0,PROFILE=0,CONTEXT_DESC=0,STATIC_REFRESH=0)(   // PULLIN: qwen-1010/b
  input wire clk,rst_n,
  input wire cmd_v,input wire [31:0] cmd,
@@ -1861,7 +1861,7 @@ module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer ENABLE=0,PC=0,PHASE=
  (* keep *) reg [31:0] cmd_q;
  (* keep *) reg [9:0] first_q;
  (* keep *) reg rdslot_q,srslot_q,wrslot_q;
- reg [9:0] first_fifo[0:7];(* keep, ot_rst_split = 10 *) reg [29:0] head_first__qv;   // KV-PC SAFE: 3 kept copies of head_first
+ reg [9:0] first_fifo[0:7];(* keep, ot_rst_split = 10 *) reg [19:0] head_first__qv;   // KV-PC SAFE: 2 kept copies of head_first
     function [9:0] head_first__f; input [9:0] v; head_first__f = v; endfunction
 wire [9:0] head_first = head_first__qv[9:0];
  reg [31:0] fifo[0:7];
@@ -1951,7 +1951,7 @@ wire [9:0] head_first = head_first__qv[9:0];
           ((ctl_hf_qv[28] && ctl_push_c[3]) ? cmd_q[31:28] : head[31:28]);
   // KV-PC6: head_first (2 kept copies; i4 census bits 35 loads) loads under an enable, the same cases as _hg
   if (ctl_pop_c[3] ? (ctl_hf_qv[29] || ctl_push_c[3]) : (ctl_hf_qv[28] && ctl_push_c[3]))
-    head_first__qv <= {3{head_first__f((ctl_pop_c[3] && ctl_hf_qv[29]) ? ctl_a1_2[9:0] : first_q)}};
+    head_first__qv <= {2{head_first__f((ctl_pop_c[3] && ctl_hf_qv[29]) ? ctl_a1_2[9:0] : first_q)}};
 
   // Equal output delay on every row/column preserves all JEDEC spacings.
   row_op<=rop;row_bank<=rb;row_row__qv <= {2{row_row__f(rr)}};col_bank__qv <= {11{col_bank__f(cb)}};col_col__qv <= {3{col_col__f(cc)}};
@@ -1978,7 +1978,7 @@ wire [9:0] head_first = head_first__qv[9:0];
  end
 endmodule
 
-// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 54 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x3(4) ----
+// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 55 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x3(4) ----
 module ot_qkd_static_kv_timing_kvpc_s #(
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
@@ -2460,7 +2460,13 @@ module ot_qkd_static_kv_timing_kvpc_s #(
       ot_kvpc5_and2 u_l (.a(desc_v), .b(!streaming && !fault_r), .y(desc_acc_c[q]));
     end
     wire desc_acc = desc_acc_c[0];
-    wire [31:0] rd_oh_d = 32'b1 << {first_sector[9:7],first_sector[1:0]};
+    // KV-PC7 (census sr9 r4: a head_first copy drove 28 rd_oh_d decode pins): predecode + 32 kept AND leaves
+    wire [3:0] rd_ohd_lo = 4'b1 << first_sector[1:0];
+    wire [7:0] rd_ohd_hi = 8'b1 << first_sector[9:7];
+    wire [31:0] rd_oh_d;                                      // == 32'b1 << {first_sector[9:7], first_sector[1:0]}
+    for (genvar q = 0; q < 32; q = q + 1) begin : g_rd_oh_d
+      ot_kvpc5_and2 u_l (.a(rd_ohd_lo[q & 3]), .b(rd_ohd_hi[q >> 2]), .y(rd_oh_d[q]));
+    end
     wire [31:0] rd_oh_j = 32'b1 << {j_p1[9:7], j_p1[1:0]};
     wire k_step = rd_ok_c[2] && (j[6:0] == 7'h7f);
     wire v_set_flip=v_consumer_order && rd_ok_c[2] && j[2:0]==3'd7;
