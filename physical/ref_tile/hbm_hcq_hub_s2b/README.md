@@ -1,4 +1,4 @@
-# hbm_hcq_hub_s2b (PARALLEL variant of hbm_hcq_hub_s1): safe successor of the d4g HC quarter hub (hbm_hcq_hub_1017)
+# hbm_hcq_hub_s2b (PARALLEL variant of hbm_hcq_hub_s2): safe successor of the d4g HC quarter hub (hbm_hcq_hub_1017)
 
 Lane HBM-ELEMOWN3/QHUB, 2026-10-19. Branch `claude/hcq-hub-s1-1019`. Spec source: `physical/hbm_hc_hub/specs/hbm_hcq_hub_s2b.json`.
 THIS kit is the PARALLEL variant: the same RTL as `hbm_hcq_hub_s2`, but a wider band (432.0 um at 151.2..583.2, PD 0.45; face pin <= ~302 um from the band).
