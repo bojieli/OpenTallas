@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "hbfd_pad_r17x115",
+ "enable": false,
+ "reason": "the RTL lands it: rs -> rs_s1 (stage 1, async assert) -> kept hbfd_pad_rst_land copies g_rl_* (stage 2, <=16 loads each); the 2 release edges are paid inside the pad by face0/face1 so the exact-N contract sees reset_release_cycles 0. A flow landing would add 2 more release edges the bench golden does not have."
+}

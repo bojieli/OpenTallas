@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hbfd_pad_r17x115",
+ "top": "hbfd_pad_r17x115",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  64.8,
+  64.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  62.64,
+  62.64
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "ck",
+   "rs",
+   "i"
+  ],
+  "E": [
+   "o"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/die_glue/hbfd_pad.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/ref_tile/hbfd_pad_r17x115/kit.env",
+  "physical/ref_tile/hbfd_pad_r17x115/clock.sdc",
+  "physical/ref_tile/hbfd_pad_r17x115/signoff.sdc",
+  "physical/ref_tile/hbfd_pad_r17x115/pdn.tcl",
+  "physical/ref_tile/hbfd_pad_r17x115/pre_cts.tcl",
+  "physical/ref_tile/hbfd_pad_r17x115/post_cts.tcl",
+  "physical/ref_tile/hbfd_pad_r17x115/post_grt.tcl",
+  "physical/ref_tile/hbfd_pad_r17x115/pre_drt.tcl",
+  "physical/ref_tile/hbfd_pad_r17x115/pre_fill.tcl",
+  "physical/ref_tile/hbfd_pad_r17x115/post_fill.tcl",
+  "physical/ref_tile/hbfd_pad_r17x115/pre_grt.tcl",
+  "physical/ref_tile/hbfd_pad_r17x115/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}
