@@ -93,7 +93,7 @@ wire [OW-1:0] g_out = {g_nb_o, g_bt_re, g_bt_word, g_r_v, g_r_idx, g_r_last, g_r
 localparam integer FW = 514 + 1 + 9, RW = OW - FW, RSTW = 8;
 reg [OW-1:0] m_out_d = 0, m_out_d2 = 0;
 integer rel = 0;
-reg [OW-1:0] m_exp = 0;
+reg [OW-1:0] m_exp = 0, g_cmp = 0;
 reg [FLT_LAG+1:0] m_hist = 0;
 integer mism = 0, rv_n = 0, flt_m_n = 0, nb_n = 0, bt_n = 0;
 always @(posedge ck) begin
@@ -101,12 +101,15 @@ always @(posedge ck) begin
     if (!rst_n) m_hist = 0; else m_hist = {m_hist[FLT_LAG:0], m_fault};
     rel = rst_n ? rel + 1 : 0;
     m_exp = (PIN == 0) ? m_out : {m_out_d[OW-1:RW], m_out_d2[RW-1:0]};
+    // r_idx / r_last / r_d are qualified by r_v (unreset data pipeline, DRST=0): compared only on valid edges
+    g_cmp = g_out;
+    if (!m_exp[RW-1]) begin m_exp[RW-2:0] = 0; g_cmp[RW-2:0] = 0; end
     if (rst_n && rel > RSTW) begin
-        if (m_exp !== g_out) begin
+        if (m_exp !== g_cmp) begin
             mism = mism + 1;
             if (mism <= 5) $display("REGIONAL_MISMATCH edge%0d front%0d r_v%0d r_idx%0d r_last%0d r_d%0d", cycle,
-                m_exp[OW-1:RW] !== g_out[OW-1:RW], m_exp[RW-1] !== g_out[RW-1], m_exp[RW-2:RW-9] !== g_out[RW-2:RW-9],
-                m_exp[512] !== g_out[512], m_exp[511:0] !== g_out[511:0]);
+                m_exp[OW-1:RW] !== g_cmp[OW-1:RW], m_exp[RW-1] !== g_cmp[RW-1], m_exp[RW-2:RW-9] !== g_cmp[RW-2:RW-9],
+                m_exp[512] !== g_cmp[512], m_exp[511:0] !== g_cmp[511:0]);
             if (mism == 5) $fatal(1, "REGIONAL_STATION_MISMATCH");
         end
         if (g_fault && !m_hist[PIN]) $fatal(1, "REGIONAL_FAULT_EARLY edge%0d", cycle);
@@ -124,6 +127,7 @@ always @(posedge ck) begin
 end
 initial begin
     repeat (NCYC) @(negedge ck);
+    if (mism != 0) $fatal(1, "REGIONAL_STATION_MISMATCH %0d edges", mism);
     if (rv_n < 20 || bt_n < 20) $fatal(1, "REGIONAL_COVERAGE_LOW r_v%0d bt_re%0d", rv_n, bt_n);
     $display("STATION_REGIONAL_EQ PASS PIN%0d MUT%0d edges%0d tworesets r_v%0d bt_re%0d nb_v%0d fault_rises%0d all outputs exact, fault lag<=%0d",
         PIN, MUT, NCYC, rv_n, bt_n, nb_n, flt_m_n, FLT_LAG);
