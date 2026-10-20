@@ -335,9 +335,9 @@ ot_assigned_pin_exact {desc_loops[8]} M4 E 515.724000
 ot_assigned_pin_exact {desc_loops[9]} M4 E 517.308000
 ot_assigned_pin_exact {desc_v} M4 E 461.196000
 ot_assigned_pin_exact {launch_v} M4 E 528.540000
-ot_assigned_pin_exact {mv_done} M4 E 536.556000
-ot_assigned_pin_exact {mv_fault} M4 E 538.188000
-ot_assigned_pin_exact {mv_src} M4 E 534.972000
+ot_assigned_pin_exact {mv_done} M4 E 322.428000
+ot_assigned_pin_exact {mv_fault} M4 E 324.012000
+ot_assigned_pin_exact {mv_src} M4 E 320.844000
 ot_assigned_pin_exact {quiet} M4 E 315.036000
 ot_assigned_pin_exact {rq[0]} M4 W 252.492000
 ot_assigned_pin_exact {rq[100]} M4 W 283.020000

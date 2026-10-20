@@ -7,7 +7,7 @@ column-0 wd order, child_pocket_guard. This kit binds the CLOSED rt80 controller
 
 ## SAFE-DESIGN checklist
 1 Pins: PASS - children own their pin flops (bank/controller/collar); parent = wires + reset relays; reset_landing 2 stages on clk_rst.
-2 Reach: FIXED - worst controller->bank leg ~343 um (< 405) after per-face copies; wd column order fixed.
+2 Reach: FIXED - worst controller->bank leg ~343 um (< 405) after per-face copies; wd column order fixed. HBM-DMABACK 10-19: gate 163741 FAIL mv_src/mv_done/mv_fault controller->E-face-top 544-547 um (pins at y 535-538, controller at y 259-328) -> the three pins moved beside busy/quiet/stk at the controller row (E y 320.8/322.4/324.0, ~280 um), wires only, 0 cycles. Gate GRT_RC=1 was infra (ot-epyc8 "No space left on device"); measured GRT overflow 0 on M2-M6.
 3 Fanout: PASS - parent has no datapath registers; reset via ot_rst_relay copies (u_rst_bk 9 regions).
 4 Depth: PASS - wires only between child pin flops (child clk->q ~310 ps + ~350 ps wire).
 5 Storage: PASS - storage in bank SRAMs (hard children).
