@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81sl_capc5b",
+ "enable": false,
+ "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_core) -> u_lpr_core / u_lpr_cw / u_lpr_rt (1 stage each, own region) -> children (u_rt +3); the port net has ONE sink"
+}

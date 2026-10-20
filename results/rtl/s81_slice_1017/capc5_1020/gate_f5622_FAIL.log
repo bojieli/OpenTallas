@@ -1,0 +1,54 @@
+GATE WARN fill: fill 37% = (macros/children 50239 + std 2000) / outline 139744 um2 < 50%
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_s81sl_cap_rt': 'M5', 'ot_s81sl_cap_tr': 'M5', 'ot_s81sl_cap_ed': 'M5', 'ot_s81sl_cap_ld': 'M5'}
+GATE INFO remote: ot-run selected ot-pve1 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81sl_capc5_20261020-024829.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81sl_capc5_20261020-024829.log; host dir ot-pve1:/srv/opentallas-scratch/claude/ref_gate/s81sl_capc5-20261020-024829
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=26
+GATE INFO remote: synth + floorplan + PDN OK on ot-pve1 in 204 s (gate total 956 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1175, 'pin_rectangles': 1175, 'pin_track_checked': 1175, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ff68b682eae2c3330c514716acdab2deb6b3d99e160286fc5f5a3027e639a92f
+GATE INFO util: synthesized std area 1543 um2 + macros 50239 in core 136515: util 2% (std-cell density 2.0% of placeable 75802 um2; total fill 37.9%)
+GATE INFO textbook: PASS ot_s81sl_capc5 cells 10,831 flops 3,093 depth 121.7 ps util 0.3792 reach 0.0 um (0.7 s)
+GATE INFO cts_calibration: ss insertion all 339.9..686.0 ps (spread 346.1), boundary mean 570.8; tt insertion all 266.0..543.3 ps (spread 277.3), boundary mean 444.2; ff insertion all 220.2..454.2 ps (spread 234.0), boundary mean 365.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81sl_capc5/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->reg       298 paths, worst slack 229.3 ps (e.g. u_fcd.q[13]$_DFF_P_/D)
+GATE INFO path_classes: reg->macro      2 paths, worst slack 247.9 ps (e.g. u_tw/rt[0])
+GATE INFO path_classes: reg->reg      209 paths, worst slack 279.1 ps (e.g. u_lpr_rt.q$_DFF_P_/D)
+GATE INFO path_classes: reg->out      300 paths, worst slack 376.9 ps (e.g. cw_s_d[83])
+GATE INFO path_classes: macro->reg     91 paths, worst slack 439.3 ps (e.g. u_lpo_cw_n_d.q[78]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS 2.2929691478879022e-10 hold WNS 5.2743087675111155e-11
+GATE INFO cross_clock: ot_entry_0->ot_entry_1 max: 1 undeclared timed path(s), worst 279.1 ps (uncertainty 210.0 ps); 295 declared (multicycle) not counted
+GATE INFO cross_clock: ot_entry_0->ot_entry_1 min: 1 undeclared timed path(s), worst 175.7 ps (uncertainty 100.0 ps); 295 declared (multicycle) not counted
+GATE INFO cross_clock: 2 register clocks (ot_entry_0,ot_entry_1): no undeclared cross-clock reg->reg setup violation under signoff.sdc
+GATE INFO clock_root_child_flop: root ck_core (u_ed, u_ld3, u_te, u_tw + soft): TT 183.1 ps root_child_pair span 360.2..543.3, FF 160.2 ps root_child_pair span 294.0..454.2; REFUSE (limit 80)
+GATE INFO clock_child_pair: TT root ck_core linked soft-u_ed: boundary-flop arrival difference 183.1 ps (soft 398.8..543.3, u_ed 360.2..369.1; limit 80)
+GATE INFO clock_child_pair: TT root ck_core linked soft-u_ld3: boundary-flop arrival difference 155.1 ps (soft 398.8..543.3, u_ld3 388.2..405.0; limit 80)
+GATE INFO clock_child_pair: TT root ck_core linked soft-u_te: boundary-flop arrival difference 128.3 ps (soft 398.8..543.3, u_te 415.0..439.8; limit 80)
+GATE INFO clock_child_pair: TT root ck_core linked soft-u_tw: boundary-flop arrival difference 149.7 ps (soft 398.8..543.3, u_tw 393.6..418.4; limit 80)
+GATE INFO clock_child_pair: TT root ck_core linked u_ed-u_te: boundary-flop arrival difference 79.6 ps (u_ed 360.2..369.1, u_te 415.0..439.8; limit 80)
+GATE INFO clock_child_pair: TT root ck_core linked u_ld3-u_tw: boundary-flop arrival difference 30.2 ps (u_ld3 388.2..405.0, u_tw 393.6..418.4; limit 80)
+GATE INFO clock_child_pair: FF root ck_core linked soft-u_ed: boundary-flop arrival difference 160.2 ps (soft 324.2..454.2, u_ed 294.0..303.1; limit 80)
+GATE INFO clock_child_pair: FF root ck_core linked soft-u_ld3: boundary-flop arrival difference 139.4 ps (soft 324.2..454.2, u_ld3 314.8..332.1; limit 80)
+GATE INFO clock_child_pair: FF root ck_core linked soft-u_te: boundary-flop arrival difference 110.7 ps (soft 324.2..454.2, u_te 343.5..366.7; limit 80)
+GATE INFO clock_child_pair: FF root ck_core linked soft-u_tw: boundary-flop arrival difference 132.2 ps (soft 324.2..454.2, u_tw 322.0..345.2; limit 80)
+GATE INFO clock_child_pair: FF root ck_core linked u_ed-u_te: boundary-flop arrival difference 72.7 ps (u_ed 294.0..303.1, u_te 343.5..366.7; limit 80)
+GATE INFO clock_child_pair: FF root ck_core linked u_ld3-u_tw: boundary-flop arrival difference 30.4 ps (u_ld3 314.8..332.1, u_tw 322.0..345.2; limit 80)
+GATE INFO clock_root_child_flop: root ck_rt (u_rt + soft): TT 126.8 ps root_child_pair span 387.1..513.9, FF 112.0 ps root_child_pair span 316.7..428.7; REFUSE (limit 80)
+GATE INFO clock_child_pair: TT root ck_rt linked soft-u_rt: boundary-flop arrival difference 126.8 ps (soft 405.3..513.9, u_rt 387.1..450.8; limit 80)
+GATE INFO clock_child_pair: FF root ck_rt linked soft-u_rt: boundary-flop arrival difference 112.0 ps (soft 333.4..428.7, u_rt 316.7..377.2; limit 80)
+GATE INFO clock_landed_link: u_ed -> u_rt crosses regions through landing u_lpl_5_w/_r
+GATE INFO clock_landed_link: u_ed -> u_rt crosses regions through landing u_lpl_6_w/_r
+GATE INFO clock_landed_link: u_ed -> u_rt crosses regions through landing u_lpl_7_w/_r
+GATE INFO clock_landed_link: u_ed -> u_rt crosses regions through landing u_lpl_8_w/_r
+GATE INFO clock_landed_link: u_ed -> u_rt crosses regions through landing u_lpl_9_w/_r
+GATE INFO clock_landed_link: u_tw -> u_rt crosses regions through landing u_lpl_0_w/_r
+GATE INFO clock_landed_link: u_tw -> u_rt crosses regions through landing u_lpl_1_w/_r
+GATE INFO clock_landed_link: u_tw -> u_rt crosses regions through landing u_lpl_2_w/_r
+GATE INFO clock_landed_link: u_tw -> u_rt crosses regions through landing u_lpl_3_w/_r
+GATE INFO clock_landed_link: u_tw -> u_rt crosses regions through landing u_lpl_4_w/_r
+GATE FAIL clock_rule: ck_core: 2,149 sinks on the largest root; measured TT insertion 543.3 ps, FF insertion 454.2 ps, TT pin-flop spread 183.1 ps, FF pin-flop spread 160.2 ps; TT pin-flop spread 183.1 ps > 80 and FF pin-flop spread 160.2 ps > 80; ck_rt: 949 sinks on the largest root; measured TT insertion 513.9 ps, FF insertion 428.7 ps, TT pin-flop spread 126.8 ps, FF pin-flop spread 112.0 ps; TT pin-flop spread 126.8 ps > 80 and FF pin-flop spread 112.0 ps > 80 (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/claude-s81-capc4-1020/physical/ref_tile/s81sl_capc5/gate_layout/floorplan.png; density /home/ubuntu/wt/claude-s81-capc4-1020/physical/ref_tile/s81sl_capc5/gate_layout/density.png
+GATE WARN fill: fill 37% = (hard macros 50239.2 + synthesized std cells 1522.6) / outline 139744.1 um2; pin demand per face: S 274 pins over 323.8/337.0 um (96%), N 341 pins over 323.4/337.0 um (96%), W 311 pins over 405.7/414.7 um (98%), E 311 pins over 364.8/414.7 um (88%) (< 50%)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M3 10.32% used; GRT 219 s
+PRE_ROUTE_GATE: FAIL (1 fail, 2 warn)
+GATE: s81sl_capc5/gate_result.json written (exact staged source binding; commit it with the kit)
