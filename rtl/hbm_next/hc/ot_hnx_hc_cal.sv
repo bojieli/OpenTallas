@@ -38,8 +38,8 @@ module ot_hnx_hc_cal #(
     output wire [3*8*8-1:0] st_sel,      // [(j*8+b)*8+g]: sector j -> bank b, copy for data lane group g (gated)
     output wire [15:0] gp_c,             // KEPT copies of calendar[21] (gather_phase): [b] lg_rq address select of bank b,
                                          // [8+b] its request-valid select + return-valid gates (HUB-SAFE3: was 8, 37 loads)
-    output wire [9:0] lc_c               // HUB-SAFE3: KEPT copies of the action bits on the calendar edge:
-                                         // [3:0] residual_launch (calendar[0]), [9:4] gather_launch (calendar[22])
+    output wire [12:0] lc_c              // HUB-SAFE3: KEPT copies of the action bits on the calendar edge:
+                                         // [3:0] residual_launch (calendar[0]), [12:4] gather_launch (calendar[22])
 );
 // HUB-SAFE3 2026-10-20 (census safe2, zero added edges): valid1 has 3 kept copies (the gate fans out per consumer group:
 // st routing / gp+lc copies / calendar action bits; word_ok drove 47), start_v_q 3 kept copies (start acceptance per
@@ -69,7 +69,7 @@ module ot_hnx_hc_cal #(
     (* keep = "true", dont_touch = "true" *) reg run_d;           // = running (loops_left[15:8] decrement)
     reg [9:0] pc0,pc1;
     reg [31:0] ord0,ord1;
-    reg [255:0] captured;
+    (* keep = "true", dont_touch = "true" *) reg [255:0] captured;   // kept: cap_k (identical D) must not absorb it
     wire [255:0] macro_data;
     wire busy=running|valid0|valid1;
     wire legal_start=start_limit_q>{1'b0,start_base_q} && start_limit_q<=11'd1024 && start_loops_q!=0;
@@ -134,8 +134,8 @@ module ot_hnx_hc_cal #(
     (* keep = "true", dont_touch = "true" *) reg [15:0] gp_r;
     always @(posedge clk)gp_r<={16{gate_c && captured[21]}};
     assign gp_c=gp_r;
-    (* keep = "true", dont_touch = "true" *) reg [9:0] lc_r;
-    always @(posedge clk)lc_r<={{6{gate_c && captured[22]}},{4{gate_c && captured[0]}}};
+    (* keep = "true", dont_touch = "true" *) reg [12:0] lc_r;
+    always @(posedge clk)lc_r<={{9{gate_c && captured[22]}},{4{gate_c && captured[0]}}};
     assign lc_c=lc_r;
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin
