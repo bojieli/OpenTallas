@@ -295,6 +295,7 @@ def main():
     ap.add_argument('--pin-group-span', type=float, default=200.0, help='maximum Manhattan span of port centroids within a row')
     ap.add_argument('--plan-um', type=float, default=380.0)
     ap.add_argument('--report')
+    ap.add_argument('--macro-transit-cost', type=float, default=4.0, help='path cost in occupied macro shell; high cost prefers real station-bearing channels without changing reach or obstacles')
     ap.add_argument('--grid', type=float, default=10.0)
     ap.add_argument('--jobs', type=int, default=8)
     ap.add_argument('--root-keepouts', help='DIE-CLOCK root sites (keepout boxes are station-free)')
@@ -373,7 +374,7 @@ def main():
     import relay_router as RR, die_relay_stations as DS
     keep = [s_['keepout'] for s_ in load(a.root_keepouts)['sites']] if a.root_keepouts else None
     global _ROUTER
-    _ROUTER = RR.Router(man['placement'], man['die_um'], R, G=a.grid, carved=man.get('carved_feedthrough'), keepouts=keep)
+    _ROUTER = RR.Router(man['placement'], man['die_um'], R, G=a.grid, macro_cost=a.macro_transit_cost, carved=man.get('carved_feedthrough'), keepouts=keep)
     rep = collections.Counter(); delta = collections.Counter(); jobs = {}
     for bi, r in enumerate(st['rows']):
         di, ports = r['driver'].split('.', 1); ports = ports.split('+')
