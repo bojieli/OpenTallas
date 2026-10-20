@@ -28,6 +28,18 @@ Path(sys.argv[2]).write_text(s.replace(a,'always @(posedge clk)'))
 MUTANT
  CORE="$W/core_mut12.sv"
 fi
+if [ "$M" = 13 ]; then
+ # r4 causal mutant: the c_sr/c_q role counters lose their asynchronous reset (STOPCLK REASSERT 2 must fail).
+ python3 - "$CORE" "$W/core_mut13.sv" <<'MUTANT'
+import sys
+from pathlib import Path
+s=Path(sys.argv[1]).read_text()
+a='always @(posedge clk or negedge rst_core_n[14]) if(!rst_core_n[14]) begin c_sr<=0; c_q<=0; end'
+if s.count(a)!=1: raise SystemExit('MUT13 REFUSED: role counter source shape differs')
+Path(sys.argv[2]).write_text(s.replace(a,'always @(posedge clk) if(1\'b0) begin c_sr<=0; c_q<=0; end'))
+MUTANT
+ CORE="$W/core_mut13.sv"
+fi
 verilator --version
 verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSTIM="\"$W/stim.hex\"" \
   -GMUT=$M -GFAN32=$FAN -GSAFE=$S -GTIGHT=$TI -GPUBEARLY=$PE -GREASSERT=$RA -GXRAND=$XR $XF ${PVM_VFLAGS:-} --top-module tb_pv_merge_distributed --Mdir "$W/obj" -o tb \

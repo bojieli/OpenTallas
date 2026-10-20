@@ -119,6 +119,9 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     reg  [2:0]  bp;                                   // entry whose turn it is
     always @(posedge clk or negedge rst_n) if (!rst_n) bp <= 3'd0; else bp <= bp + 3'd1;
     wire [2:0]  nb = bp + 3'd1;
+    // PVMD r4 (HBM-SMATT5 2026-10-20, r3 native census: 8 decode roots of bp, 41..43 loads each): every remaining bp
+    // reader takes its own kept same-edge barrel counter (FAN32 only; FAN32 0 = bp/nb exactly as before).
+    wire [2:0]  r_ent, r_tag, r_sw, r_nt, nb_sr, q_src;
     reg  [7:0]  e_busy, e_fl, e_fin;                  // busy / flushing / flush after chain
     reg  [KW:0] e_k   [0:7];                          // level of the next turn (chain: carry level; flush: fold level)
     reg  [7:0]  e_c   [0:7];                          // chunk index being merged (chain)
@@ -126,8 +129,8 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     reg  [TAGW-1:0] e_tag [0:7];
     // events of this cycle (lane chunk sums of a PV beat)
     // stack read for entry nb, landing at its turn (next cycle)
-    wire [KW:0] rk = e_busy[nb] ? e_k[nb] : {(KW+1){1'b0}};
-    wire [5:0]  sr_a = {nb, rk[2:0] + ((MUT == 1) ? 3'd1 : 3'd0)};
+    wire [KW:0] rk = e_busy[nb_sr] ? e_k[nb_sr] : {(KW+1){1'b0}};
+    wire [5:0]  sr_a = {nb_sr, rk[2:0] + ((MUT == 1) ? 3'd1 : 3'd0)};
     wire [L*32-1:0] st_rd;
     reg         sw_ce;
     reg  [5:0]  sw_a;
@@ -183,8 +186,8 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     always @(posedge clk or negedge rst_core_n[0])
         if (!rst_core_n[0]) begin q_busy<=1'b0;q_fl<=1'b0;q_klt<=1'b1;q_k0<=1'b1;q_kl1<=(LV==1);q_ck<=1'b0;q_nk<=1'b0;q_n8<=8'd0; end
         else begin
-            q_busy<=e_busy[qe]; q_fl<=e_fl[qe]; q_klt<=(e_k[qe]<LV); q_k0<=(e_k[qe]==0); q_kl1<=(e_k[qe]==LV-1);
-            q_ck<=e_c[qe][e_k[qe][2:0]]; q_nk<=e_n[qe][e_k[qe][2:0]]; q_n8<=e_n[qe][7:0];
+            q_busy<=e_busy[q_src]; q_fl<=e_fl[q_src]; q_klt<=(e_k[q_src]<LV); q_k0<=(e_k[q_src]==0); q_kl1<=(e_k[q_src]==LV-1);
+            q_ck<=e_c[q_src][e_k[q_src][2:0]]; q_nk<=e_n[q_src][e_k[q_src][2:0]]; q_n8<=e_n[q_src][7:0];
         end
     wire       t_busy = TURNREG ? q_busy : e_busy[r];
     wire       t_fl   = TURNREG ? q_fl   : e_fl[r];
@@ -201,7 +204,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
         $fatal(1, "pv_merge TURNREG copy differs from entry %0d state", r);
 `endif
     assign finish=t_busy && t_fl && !t_klt && !ev;
-    assign finish_slot=e_tag[r][2:0];
+    assign finish_slot=e_tag[r_nt][2:0];
     assign stack_read_addr=publish_request ? {pub_slot,3'd7} : fold_request ? {((MUT==4) ? fold_b : fold_a),3'd7} : fd0 ? {fb0,3'd7} : sr_a;
     assign stack_write_en=sw_ce || (PUBLISH && finish) || fold_write;
     assign stack_write_addr=fold_write ? {fold_waddr,3'd7} : (PUBLISH && finish) ? {finish_slot,3'd7} : sw_a;
@@ -215,14 +218,14 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     reg        m_fault;
     always @(*) begin
         mv = 1'b0; ma = {L*32{1'b0}}; mb = {L*32{1'b0}};
-        sw_ce = 1'b0; sw_a = {r, 3'd0}; sw_d = sum;
+        sw_ce = 1'b0; sw_a = {r_sw, 3'd0}; sw_d = sum;
         if (fd1) begin mv = 1'b1; ma = fold_a_data; mb = st_rd; end
         else if (ev) begin
             if (ev_c[0]) begin mv = 1'b1; ma = st_rd; mb = sum; end
-            else begin sw_ce = 1'b1; sw_a = {r, 3'd0}; sw_d = sum; end
+            else begin sw_ce = 1'b1; sw_a = {r_sw, 3'd0}; sw_d = sum; end
         end else if (t_busy && !t_fl) begin
             if (t_ck) begin mv = 1'b1; ma = st_rd; mb = vres; end
-            else begin sw_ce = 1'b1; sw_a = {r, e_k[r][2:0]}; sw_d = vres; end
+            else begin sw_ce = 1'b1; sw_a = {r_sw, e_k[r_sw][2:0]}; sw_d = vres; end
         end else if (t_busy && t_fl && t_klt) begin
             mv = 1'b1;
             if (t_nk) begin ma = st_rd; mb = t_k0 ? {L*32{1'b0}} : vres; end
@@ -247,6 +250,24 @@ module ot_hbm_sm_pv_merge_distributed_core #(
         end else begin:g_original
             assign bp_operand[cg]=bp;
         end
+    end endgenerate
+    // r4 role counters (reset groups 10/11/12/14 hold 21/21/21/19 terminals before: +3 or +6 each, all <= 27).
+    generate if (FAN32 != 0) begin:g_bp_roles
+        (* keep *) reg [2:0] c_ent, c_tag, c_sw, c_nt, c_sr, c_q;
+        always @(posedge clk or negedge rst_core_n[10]) if(!rst_core_n[10]) c_ent<=0; else c_ent<=c_ent+3'd1;
+        always @(posedge clk or negedge rst_core_n[11]) if(!rst_core_n[11]) c_tag<=0; else c_tag<=c_tag+3'd1;
+        always @(posedge clk or negedge rst_core_n[12]) if(!rst_core_n[12]) begin c_sw<=0; c_nt<=0; end
+            else begin c_sw<=c_sw+3'd1; c_nt<=c_nt+3'd1; end
+        always @(posedge clk or negedge rst_core_n[14]) if(!rst_core_n[14]) begin c_sr<=0; c_q<=0; end
+            else begin c_sr<=c_sr+3'd1; c_q<=c_q+3'd1; end
+        assign r_ent=c_ent; assign r_tag=c_tag; assign r_sw=c_sw; assign r_nt=c_nt;
+        assign nb_sr=c_sr+3'd1; assign q_src=c_q+((MUT==5)?3'd0:3'd1);
+`ifndef SYNTHESIS
+        always @(posedge clk) if (rst_n && {c_ent,c_tag,c_sw,c_nt,c_sr,c_q} !== {6{bp}})
+            $fatal(1, "pv_merge PVMD r4 role counter differs from bp");
+`endif
+    end else begin:g_bp_original
+        assign r_ent=bp; assign r_tag=bp; assign r_sw=bp; assign r_nt=bp; assign nb_sr=nb; assign q_src=qe;
     end endgenerate
 
     genvar s;
@@ -295,16 +316,16 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             pv_v <= 1'b0;
             if (|mf) m_fault <= 1'b1;
             if (ev) begin
-                if (e_busy[r]) m_fault <= 1'b1;                       // chunk arrived while the entry still merges
+                if (e_busy[r_ent]) m_fault <= 1'b1;                       // chunk arrived while the entry still merges
                 if (ev_c >= (8'd1 << (LV - 1))) m_fault <= 1'b1;      // run longer than the stack
-            end else if (e_busy[r] && e_fl[r] && !(e_k[r] < LV)) pv_v <= 1'b1;
+            end else if (e_busy[r_ent] && e_fl[r_ent] && !(e_k[r_ent] < LV)) pv_v <= 1'b1;
         end
     end
     generate for(genvar ei=0;ei<8;ei=ei+1) begin:g_entry_state
         // the original per-entry busy / flush / finish recurrence on the entry's own ev copy (group 13: 24 flops + 2)
         always @(posedge clk or negedge rst_core_n[13]) begin
             if (!rst_core_n[13]) begin e_busy[ei] <= 1'b0; e_fl[ei] <= 1'b0; e_fin[ei] <= 1'b0; end
-            else if (r == ei) begin
+            else if (r_ent == ei) begin
                 if (ev_entry[ei]) begin
                     if (ev_c[0]) begin e_busy[ei] <= 1'b1; e_fl[ei] <= 1'b0; e_fin[ei] <= ev_last; end
                     else if (ev_last) begin e_busy[ei] <= 1'b1; e_fl[ei] <= 1'b1; end
@@ -376,7 +397,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
         end
         for(genvar ft=0;ft<TAGW;ft=ft+1) begin:g_tag
             wire local_finish=qb_k[ft/4] && qf_k[ft/4] && !qklt_k[ft/4] && !ev_operand[ft/4];
-            always @(posedge clk) if(local_finish) pv_tag[ft]<=e_tag[r][ft];
+            always @(posedge clk) if(local_finish) pv_tag[ft]<=e_tag[r_tag][ft];
         end
     end else begin:g_original_finish
     always @(posedge clk) if (finish) begin pv_y <= vres; pv_tag <= e_tag[r]; end
@@ -462,7 +483,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
         end
     // registers without a reset value (PVMD: plain process; every enable below is a reset register or a reset capture)
     always @(posedge clk) begin
-        if(PUBLISH && finish) node_tag[finish_slot]<=e_tag[r];
+        if(PUBLISH && finish) node_tag[finish_slot]<=e_tag[r_nt];
         if(pub_d1)begin
             pub_data_r<=pub_buffer[((MUT==3)?32:0)+:32];
         end else if(pub_active)begin
