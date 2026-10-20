@@ -6,3 +6,5 @@ export SYNTH_CANONICALIZE_TCL = /work/physical/common_flow/ot_keep_regs.tcl
 export NUM_CORES = 4
 export SYNTH_HIERARCHICAL = 0
 export ADDITIONAL_LIBS = /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib
+export ADDITIONAL_LEFS = /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef
+export VERILOG_TOP_PARAMS = SKEW 1 ADD_LAT 7 MUL_LAT 6 MUT 0

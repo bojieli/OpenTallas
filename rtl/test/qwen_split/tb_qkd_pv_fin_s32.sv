@@ -97,7 +97,7 @@ module tb_qkd_pv_fin_s32;
      rst_n=0;start=0;p0v=0;p1v=0;rv=0;s0v=0;s1v=0;drv=0;
      repeat(3)@(negedge ck);rst_n=1;repeat(6)@(negedge ck);
      $display("ABORT RESET PASS: SRAM partially written, command interrupted before result");
-     disable one;
+     return;
     end
     if(ov&&ref_out<0)begin ref_out=k;OA=oda;OB=odb;end
     if(dv)begin
