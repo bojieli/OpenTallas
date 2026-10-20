@@ -59,7 +59,7 @@ module ot_hbm_svc_pc_ctrl_leaf_safe #(
 `endif
     wire[5:0]owner_fault_split;assign owner_fault=|owner_fault_split;
     ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(.MRKEY(MRKEY),.OREG(OREG),.KREG(KREG),.KRREG(KRREG),.RREG(RREG),.WPAY(WPAY),
-      .PURE_FACE(MC3),.RST_FOREST(MC3),.PCID_LOCAL(MC3)) u_cfg(
+      .PURE_FACE(MC3),.RST_FOREST(MC3),.PCID_LOCAL(MC3),.WROK_COPIES(MC3),.RST_LEAVES(MC3!=0?256:192)) u_cfg(
         .pc_id(5'(PC_STRAP)),.refresh_reload(8'(REF_STRAP)),
         .k_v(k_v),
         .k_rdy(k_rdy),

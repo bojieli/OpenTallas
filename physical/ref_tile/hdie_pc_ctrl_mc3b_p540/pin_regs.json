@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face",
+ "enable": false,
+ "reason": "Every port is a flop D/Q in RTL (L2H-BW SAFE face): K pure capture (k_v 22 pure region D pins, kp_* captures), k_rdy=k_rdy_q, KR skid head flops on the native RL1 ABI, kr_rdy 18 pure region D pins, OREG PHY output flops, RREG PHY return capture, registered pc_fault; tool wrappers would add a second stage and break the RL1 contract."
+}
