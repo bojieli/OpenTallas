@@ -166,7 +166,7 @@
  "job": {
   "owner": "Claude:S81-BKG-CLK",
   "branch": "claude/s81-bkg-clk-1019",
-  "tag": "g2km",
+  "tag": "g2km2",
   "purpose": "S81-DV bk glue leaf, vertical cut (shared by dsdv_bk_sel / dsdv_bk_col; lane S81U-BK3): closure (TT setup / FF hold / DRC 0 + native audit).",
   "benches": [
    {
@@ -252,6 +252,7 @@
   "physical/common_flow/clock_split_km.tcl"
  ],
  "orfs_vars": {
-  "OT_CKKM_K": "12"
+  "OT_CKKM_K": "12",
+  "OT_CKKM_PORT": "clk[0]"
  }
 }
