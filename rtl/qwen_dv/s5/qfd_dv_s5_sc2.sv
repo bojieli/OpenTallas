@@ -15,7 +15,7 @@
 //   root argmax merge -> tok_* and the TOK broadcast word: +1 (candidate stage)
 //   root total -> w1 (fuse 0): +5 (LA - 3)                       (LA 4)
 //   root fused r -> RB broadcast word + w1: +5(LA-3) + (LM-3) + (LA-3) + 3 (3(LM-3) + (LA-3))   (LA 4, LM 4: 19)
-//   boot only: ring phase reset release +2.
+//   boot only: reset release +1 (third reset stage rc) and ring phase reset release +2.
 // OT_S5_SC2_MUT (bench witness, must FAIL): the broadcast scalar tap reads window 10.
 // =====================================================================================================================
 
@@ -347,8 +347,13 @@ module qfd_dv_s5_sc2 #(parameter integer MU_NU = 4, parameter integer LA = 4, pa
     output reg            busy,
     output reg            fault
 );
-    wire rst;
-    qfd_dv_s5_rst2 u_rl (.ck(ck), .rst_n(rst_n), .rst(rst));
+    wire rst_f;
+    qfd_dv_s5_rst2 u_rl (.ck(ck), .rst_n(rst_n), .rst(rst_f));
+    // third reset stage (as qfd_dv_s5_red's rc): the landed reset drives ONE register, which the fanout constructor
+    // replicates into <= 32-load relays (assertion async, release +1 edge, boot only)
+    reg rc;
+    always @(posedge ck or negedge rst_f) if (!rst_f) rc <= 1'b0; else rc <= 1'b1;
+    wire rst = rc;
     // face input registers: valid / strobe bits reset, data plain
     reg [100:0] f_cfg; reg [47:0] f_dn, f_up; reg f_rwe; reg [23:0] f_raddr; reg [31:0] f_rdata;
     reg [7:0] f_vwe; reg [1:0] f_vwin; reg [31:0] f_vwd; reg f_amv; reg [23:0] f_ami; reg [31:0] f_amval; reg [1:0] f_amu;
