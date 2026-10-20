@@ -2,6 +2,7 @@
 # HBM-IDXPIPE 2026-10-18: pipelined topk link die master (ot_hbm_idx_topk_link_static_p) vs the historical die master,
 # fixed-latency (+5) miter + gold records + fault path (tb_idx_link_pipe.sv). Verilator 5.050 (the closure daemon's).
 # Usage: run_link_pipe.sh OUT [MUT]   (no MUT: 0 must PASS, 1..4 must FAIL; with MUT: run only that one, exit = its rc)
+# SAFE=1 (env) selects the bounded-fanout compact-carry core (HBM-E86-5 10-20).
 # MUT 1 record halves, 2 flit sequence, 3 carry slots from the beat (not the ring W), 4 emit read tap one edge early.
 set -euo pipefail
 root=$(cd "$(dirname "$0")/../../.." && pwd);cd "$root"
@@ -12,7 +13,7 @@ src=(rtl/test/hbm_idx_static/tb_idx_link_pipe.sv rtl/hbm_accel/index/ot_hbm_idx_
 sha256sum "${src[@]}" "$0" > "$out/sources.sha256"
 single=${2:-}
 for m in ${single:-0 1 2 3 4};do
- "$vl" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_idx_link_pipe -GMUT="$m" --Mdir "$out/obj$m" "${src[@]}" > "$out/build$m.log" 2>&1 || { tail -30 "$out/build$m.log"; exit 2; }
+ "$vl" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_idx_link_pipe -GMUT="$m" -GSAFE="${SAFE:-0}" --Mdir "$out/obj$m" "${src[@]}" > "$out/build$m.log" 2>&1 || { tail -30 "$out/build$m.log"; exit 2; }
  set +e
  (cd "$out"&&"$out/obj$m/Vtb_idx_link_pipe") > "$out/run$m.log" 2>&1
  rc=$?
