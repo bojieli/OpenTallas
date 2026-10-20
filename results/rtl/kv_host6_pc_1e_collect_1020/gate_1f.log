@@ -1,0 +1,22 @@
+GATE WARN fill: fill 37% = (macros/children 114050 + std 2932) / outline 315395 um2 < 50%
+GATE INFO pin_regs: pin registers on every data input and output (+1 cycle each; kit pin_regs.json)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO pin_fit: pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)
+GATE INFO remote: ot-run selected ot-epyc7 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_hr_cdc_pc_sram1f_20261020-030933.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_hr_cdc_pc_sram1f_20261020-030933.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_hr_cdc_pc_sram1f-20261020-030933
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 223 s (gate total 2438 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2163, 'pin_rectangles': 2163, 'pin_track_checked': 2163, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4aaebb9889c3168cda2e2b5e4e5b67022e824a354e5c02a7859df638b57de019
+GATE INFO util: synthesized std area 2931 um2 + macros 114050 in core 310561: util 2% (std-cell density 1.8% of placeable 165427 um2; total fill 37.7%)
+GATE INFO port_latency: elaborated pin registers: 3 input / 4 output ports +1 edge; 10 ports pass through (clock/reset/excluded/inout)
+GATE INFO textbook: PASS qkd_hr_cdc_pc_sram cells 18,412 flops 7,826 depth 276.7 ps util 0.3769 reach 0.0 um (0.7 s)
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN cross_clock: multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)  -> FIX: fix the signoff SDC read and re-gate with --cts
+GATE FAIL clock_rule: actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/kv-host6-1020/physical/ref_tile/qkd_hr_cdc_pc_sram1f/gate_layout/floorplan.png
+GATE WARN fill: fill 37% = (hard macros 114050.3 + synthesized std cells 3011.3) / outline 315394.6 um2; pin demand per face: S 0 pins over 0.0/561.6 um (0%), N 1 pins over 0.0/561.6 um (0%), W 1203 pins over 517.5/561.6 um (92%), E 1167 pins over 517.5/561.6 um (92%) (< 50%)
+PRE_ROUTE_GATE: FAIL (2 fail, 4 warn)
+GATE: qkd_hr_cdc_pc_sram1f/gate_result.json written (exact staged source binding; commit it with the kit)

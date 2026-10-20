@@ -1,0 +1,7 @@
+# PC CDC1e collected failure
+
+The layout gate itself returned WARN/0fail with native32PASS, TTsetup+40.15ps/FFhold+46.37ps and GRT0. It does not qualify the design: the subsequent actual placed wire audit FAILS 285of19707 driver-terminal pairs against405um. The exact ODB SHA is 57183af793a58610e4eada0a1f9027f1861c7a2fe23b368a86ed791a114ab1b2. Maximum pair is597.82um (reset); real data wr_data71→wq_data71 is550.6um and receivevalid→rawreceivevalid479.216um. All285pairs retained. Clock/tie/PG exclusion is explicit; BUF/INV networks traverse transparently. Manhattan distance is a lower bound on physical wire length. This is a per-net terminal diagnostic, not a complete multi-gate STA path-distance proof.
+
+Images in the preserved kit were inspected. Four lattice macros/fullwidth central band are geometrically present, but internal standard cells and unrestricted control pins sprawled outside it. Two dual-clock SRAM write faces also oppose their domains: TXAFleftR0 while core writer isE, RXAFrightMY while PHYwriter isW. Next structural kit must align those domains, constrain all cells/control pins, and center the final reset landing. No timing mask/false path/multicycle/waiver or repeat of1e is authorized by this record.
+
+1f remains a separate CTSspread failure80.8ps>80. Old gate results, source binding and PNGs are unchanged. Future canonical checker adoption does not waive this physical reach failure.
