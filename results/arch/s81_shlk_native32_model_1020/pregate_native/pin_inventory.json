@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.native_pin_boundary_inventory.v1",
+ "odb_sha256": "29367ee6f0ae102d71e50d9456189937dab41701229147374a6c76abf7ad25fe",
+ "scope": "Preserved SHLK s10d pre-route GRT ODB; all17source SHA match actual routed87bd source; NOT final routed geometry actual first nonBUF/INV sink/root; reset included, clock excluded; no tied-input intent inferred",
+ "input_bits": 1245,
+ "input_bits_with_nonflop_first_sinks": 8,
+ "input_violations": [
+  {
+   "driver": "PORT/f_host[0]",
+   "sinks": [
+    "_113977_/A"
+   ]
+  },
+  {
+   "driver": "PORT/f_ks[52]",
+   "sinks": [
+    "_113978_/A"
+   ]
+  },
+  {
+   "driver": "PORT/j_i[32]",
+   "sinks": [
+    "_113983_/A"
+   ]
+  },
+  {
+   "driver": "PORT/kd_i[53]",
+   "sinks": [
+    "_113982_/A"
+   ]
+  },
+  {
+   "driver": "PORT/s_jd_e[0]",
+   "sinks": [
+    "_114196_/A"
+   ]
+  },
+  {
+   "driver": "PORT/s_jd_e[1]",
+   "sinks": [
+    "_113980_/A"
+   ]
+  },
+  {
+   "driver": "PORT/s_jd_w[0]",
+   "sinks": [
+    "_114195_/A"
+   ]
+  },
+  {
+   "driver": "PORT/s_jd_w[1]",
+   "sinks": [
+    "_113979_/A"
+   ]
+  }
+ ],
+ "outputs_without_flop_root": 0,
+ "output_violations": []
+}

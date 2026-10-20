@@ -1,0 +1,4781 @@
+{
+  "odb": "/work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/5_1_grt.odb",
+  "odb_sha256": "29367ee6f0ae102d71e50d9456189937dab41701229147374a6c76abf7ad25fe",
+  "roots": 57197,
+  "roles": {
+    "ff": 14716,
+    "comb": 40143,
+    "macro": 1092,
+    "input": 1246
+  },
+  "max_count_by_role": {
+    "ff": 526,
+    "macro": 10,
+    "comb": 512,
+    "input": 14726
+  },
+  "over32_nonclock": [
+    {
+      "driver": {
+        "pin": "_064196_/Y",
+        "master": "AND5x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          157.178,
+          73.305
+        ],
+        "net": "_024871_"
+      },
+      "count": 39,
+      "reach_um": 148.187
+    },
+    {
+      "driver": {
+        "pin": "_064254_/Y",
+        "master": "AO21x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.2605,
+          157.8205
+        ],
+        "net": "_024923_"
+      },
+      "count": 209,
+      "reach_um": 53.26900000000001
+    },
+    {
+      "driver": {
+        "pin": "_064312_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          98.966,
+          97.857
+        ],
+        "net": "_024971_"
+      },
+      "count": 43,
+      "reach_um": 110.92299999999999
+    },
+    {
+      "driver": {
+        "pin": "_065026_/Y",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          105.084,
+          111.375
+        ],
+        "net": "_025671_"
+      },
+      "count": 33,
+      "reach_um": 49.724999999999994
+    },
+    {
+      "driver": {
+        "pin": "_065027_/Y",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          105.878,
+          115.947
+        ],
+        "net": "_025672_"
+      },
+      "count": 286,
+      "reach_um": 92.15500000000002
+    },
+    {
+      "driver": {
+        "pin": "_065766_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          98.102,
+          112.437
+        ],
+        "net": "_025765_"
+      },
+      "count": 43,
+      "reach_um": 78.203
+    },
+    {
+      "driver": {
+        "pin": "_065767_/Y",
+        "master": "AND2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          66.2985,
+          118.665
+        ],
+        "net": "_025766_"
+      },
+      "count": 42,
+      "reach_um": 30.118499999999997
+    },
+    {
+      "driver": {
+        "pin": "_065814_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          98.4555,
+          111.9145
+        ],
+        "net": "_025813_"
+      },
+      "count": 34,
+      "reach_um": 77.36800000000001
+    },
+    {
+      "driver": {
+        "pin": "_065818_/Y",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          96.968,
+          113.553
+        ],
+        "net": "_025817_"
+      },
+      "count": 66,
+      "reach_um": 82.784
+    },
+    {
+      "driver": {
+        "pin": "_065830_/Y",
+        "master": "AO221x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          99.3645,
+          114.075
+        ],
+        "net": "_025829_"
+      },
+      "count": 47,
+      "reach_um": 45.877500000000005
+    },
+    {
+      "driver": {
+        "pin": "_065841_/Y",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          99.684,
+          113.805
+        ],
+        "net": "_025840_"
+      },
+      "count": 40,
+      "reach_um": 46.520999999999994
+    },
+    {
+      "driver": {
+        "pin": "_065846_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          88.328,
+          114.057
+        ],
+        "net": "_025845_"
+      },
+      "count": 40,
+      "reach_um": 31.29500000000001
+    },
+    {
+      "driver": {
+        "pin": "_066124_/Y",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          91.622,
+          114.867
+        ],
+        "net": "_026102_"
+      },
+      "count": 425,
+      "reach_um": 202.937
+    },
+    {
+      "driver": {
+        "pin": "_066125_/Y",
+        "master": "AO21x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          90.7665,
+          114.3395
+        ],
+        "net": "_026103_"
+      },
+      "count": 54,
+      "reach_um": 36.888999999999996
+    },
+    {
+      "driver": {
+        "pin": "_066144_/Y",
+        "master": "OA21x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          88.976,
+          114.075
+        ],
+        "net": "_026122_"
+      },
+      "count": 34,
+      "reach_um": 35.125499999999995
+    },
+    {
+      "driver": {
+        "pin": "_066156_/Y",
+        "master": "AND2x4_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          100.073,
+          113.265
+        ],
+        "net": "_026134_"
+      },
+      "count": 408,
+      "reach_um": 187.66600000000003
+    },
+    {
+      "driver": {
+        "pin": "_066181_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          99.425,
+          111.897
+        ],
+        "net": "_026152_"
+      },
+      "count": 35,
+      "reach_um": 46.87399999999999
+    },
+    {
+      "driver": {
+        "pin": "_066324_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          98.6715,
+          111.6455
+        ],
+        "net": "_026287_"
+      },
+      "count": 45,
+      "reach_um": 41.3445
+    },
+    {
+      "driver": {
+        "pin": "_069358_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          108.6075,
+          115.9655
+        ],
+        "net": "_027107_"
+      },
+      "count": 143,
+      "reach_um": 63.59799999999999
+    },
+    {
+      "driver": {
+        "pin": "_069361_/Y",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          109.118,
+          116.253
+        ],
+        "net": "_027110_"
+      },
+      "count": 141,
+      "reach_um": 66.16299999999998
+    },
+    {
+      "driver": {
+        "pin": "_070518_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          117.1935,
+          115.9655
+        ],
+        "net": "_028043_"
+      },
+      "count": 157,
+      "reach_um": 85.04299999999999
+    },
+    {
+      "driver": {
+        "pin": "_070524_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          116.791,
+          116.775
+        ],
+        "net": "_028049_"
+      },
+      "count": 239,
+      "reach_um": 84.03200000000001
+    },
+    {
+      "driver": {
+        "pin": "_071138_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          117.1395,
+          116.5055
+        ],
+        "net": "_028461_"
+      },
+      "count": 157,
+      "reach_um": 82.937
+    },
+    {
+      "driver": {
+        "pin": "_071142_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          116.575,
+          115.695
+        ],
+        "net": "_028465_"
+      },
+      "count": 239,
+      "reach_um": 84.57199999999999
+    },
+    {
+      "driver": {
+        "pin": "_071202_/Y",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          144.812,
+          89.253
+        ],
+        "net": "_028500_"
+      },
+      "count": 66,
+      "reach_um": 71.90749999999997
+    },
+    {
+      "driver": {
+        "pin": "_071798_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          117.1935,
+          115.6945
+        ],
+        "net": "_028877_"
+      },
+      "count": 280,
+      "reach_um": 84.666
+    },
+    {
+      "driver": {
+        "pin": "_071827_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          116.521,
+          116.505
+        ],
+        "net": "_028899_"
+      },
+      "count": 116,
+      "reach_um": 83.81600000000002
+    },
+    {
+      "driver": {
+        "pin": "_072322_/Y",
+        "master": "AND3x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          117.4365,
+          116.775
+        ],
+        "net": "_029186_"
+      },
+      "count": 221,
+      "reach_um": 80.7885
+    },
+    {
+      "driver": {
+        "pin": "_072379_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          116.737,
+          116.235
+        ],
+        "net": "_029227_"
+      },
+      "count": 175,
+      "reach_um": 69.922
+    },
+    {
+      "driver": {
+        "pin": "_073563_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          187.8795,
+          41.7145
+        ],
+        "net": "_029937_"
+      },
+      "count": 60,
+      "reach_um": 139.324
+    },
+    {
+      "driver": {
+        "pin": "_073635_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          196.031,
+          59.823
+        ],
+        "net": "_029980_"
+      },
+      "count": 39,
+      "reach_um": 22.605999999999987
+    },
+    {
+      "driver": {
+        "pin": "_073686_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          189.7385,
+          68.157
+        ],
+        "net": "_030011_"
+      },
+      "count": 60,
+      "reach_um": 217.48450000000003
+    },
+    {
+      "driver": {
+        "pin": "_073756_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          189.5225,
+          61.677
+        ],
+        "net": "_030052_"
+      },
+      "count": 60,
+      "reach_um": 211.67049999999998
+    },
+    {
+      "driver": {
+        "pin": "_073826_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          198.8645,
+          67.383
+        ],
+        "net": "_030093_"
+      },
+      "count": 60,
+      "reach_um": 185.9305
+    },
+    {
+      "driver": {
+        "pin": "_073896_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          194.3285,
+          64.377
+        ],
+        "net": "_030134_"
+      },
+      "count": 60,
+      "reach_um": 180.3505
+    },
+    {
+      "driver": {
+        "pin": "_073966_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          191.1965,
+          60.363
+        ],
+        "net": "_030175_"
+      },
+      "count": 60,
+      "reach_um": 152.8645
+    },
+    {
+      "driver": {
+        "pin": "_074036_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          203.4545,
+          66.303
+        ],
+        "net": "_030216_"
+      },
+      "count": 60,
+      "reach_um": 20.528500000000008
+    },
+    {
+      "driver": {
+        "pin": "_074106_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          200.0525,
+          59.283
+        ],
+        "net": "_030257_"
+      },
+      "count": 60,
+      "reach_um": 19.808499999999988
+    },
+    {
+      "driver": {
+        "pin": "_074176_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          203.5625,
+          59.823
+        ],
+        "net": "_030298_"
+      },
+      "count": 60,
+      "reach_um": 25.83849999999999
+    },
+    {
+      "driver": {
+        "pin": "_074241_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          188.7435,
+          41.9855
+        ],
+        "net": "_030334_"
+      },
+      "count": 60,
+      "reach_um": 146.966
+    },
+    {
+      "driver": {
+        "pin": "_074377_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          157.0995,
+          120.5545
+        ],
+        "net": "_030410_"
+      },
+      "count": 258,
+      "reach_um": 147.683
+    },
+    {
+      "driver": {
+        "pin": "_074381_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          167.5485,
+          121.365
+        ],
+        "net": "_030414_"
+      },
+      "count": 190,
+      "reach_um": 141.55449999999996
+    },
+    {
+      "driver": {
+        "pin": "_074383_/Y",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          155.9885,
+          120.303
+        ],
+        "net": "_030416_"
+      },
+      "count": 512,
+      "reach_um": 149.24400000000003
+    },
+    {
+      "driver": {
+        "pin": "_074400_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          162.146,
+          120.537
+        ],
+        "net": "_030432_"
+      },
+      "count": 512,
+      "reach_um": 142.801
+    },
+    {
+      "driver": {
+        "pin": "_076072_/Y",
+        "master": "OR5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          134.4095,
+          95.715
+        ],
+        "net": "_031783_"
+      },
+      "count": 64,
+      "reach_um": 24.348500000000016
+    },
+    {
+      "driver": {
+        "pin": "_076401_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          134.449,
+          94.905
+        ],
+        "net": "_032081_"
+      },
+      "count": 64,
+      "reach_um": 26.40400000000001
+    },
+    {
+      "driver": {
+        "pin": "_076475_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          136.6335,
+          95.9855
+        ],
+        "net": "_032123_"
+      },
+      "count": 64,
+      "reach_um": 20.605000000000004
+    },
+    {
+      "driver": {
+        "pin": "_076547_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          138.1725,
+          95.175
+        ],
+        "net": "_032163_"
+      },
+      "count": 64,
+      "reach_um": 35.23049999999999
+    },
+    {
+      "driver": {
+        "pin": "_076620_/Y",
+        "master": "OR5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          137.4335,
+          95.175
+        ],
+        "net": "_032204_"
+      },
+      "count": 64,
+      "reach_um": 47.12949999999998
+    },
+    {
+      "driver": {
+        "pin": "_076692_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          136.771,
+          94.905
+        ],
+        "net": "_032244_"
+      },
+      "count": 64,
+      "reach_um": 56.82800000000002
+    },
+    {
+      "driver": {
+        "pin": "_076767_/Y",
+        "master": "OR3x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          137.6865,
+          95.445
+        ],
+        "net": "_032287_"
+      },
+      "count": 64,
+      "reach_um": 83.6145
+    },
+    {
+      "driver": {
+        "pin": "_076839_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          138.2805,
+          94.635
+        ],
+        "net": "_032327_"
+      },
+      "count": 64,
+      "reach_um": 78.75450000000002
+    },
+    {
+      "driver": {
+        "pin": "_076911_/Y",
+        "master": "OR5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          134.3555,
+          94.905
+        ],
+        "net": "_032367_"
+      },
+      "count": 64,
+      "reach_um": 23.700500000000005
+    },
+    {
+      "driver": {
+        "pin": "_076982_/Y",
+        "master": "OR5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          134.2475,
+          95.175
+        ],
+        "net": "_032407_"
+      },
+      "count": 64,
+      "reach_um": 26.238500000000002
+    },
+    {
+      "driver": {
+        "pin": "_077054_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          137.6055,
+          95.9855
+        ],
+        "net": "_032447_"
+      },
+      "count": 64,
+      "reach_um": 20.551000000000002
+    },
+    {
+      "driver": {
+        "pin": "_077126_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          137.8755,
+          95.1745
+        ],
+        "net": "_032487_"
+      },
+      "count": 64,
+      "reach_um": 34.375000000000014
+    },
+    {
+      "driver": {
+        "pin": "_077198_/Y",
+        "master": "OR5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          137.4875,
+          94.905
+        ],
+        "net": "_032527_"
+      },
+      "count": 64,
+      "reach_um": 47.633499999999984
+    },
+    {
+      "driver": {
+        "pin": "_077270_/Y",
+        "master": "OR5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          137.2715,
+          95.445
+        ],
+        "net": "_032567_"
+      },
+      "count": 64,
+      "reach_um": 56.147499999999994
+    },
+    {
+      "driver": {
+        "pin": "_077342_/Y",
+        "master": "OR3x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          137.4705,
+          94.635
+        ],
+        "net": "_032607_"
+      },
+      "count": 64,
+      "reach_um": 85.8105
+    },
+    {
+      "driver": {
+        "pin": "_077414_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          137.8755,
+          94.9055
+        ],
+        "net": "_032647_"
+      },
+      "count": 64,
+      "reach_um": 81.03200000000001
+    },
+    {
+      "driver": {
+        "pin": "_080211_/Y",
+        "master": "AND4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          98.7715,
+          110.295
+        ],
+        "net": "_035074_"
+      },
+      "count": 35,
+      "reach_um": 76.5685
+    },
+    {
+      "driver": {
+        "pin": "_082077_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          152.2395,
+          131.3545
+        ],
+        "net": "_036823_"
+      },
+      "count": 44,
+      "reach_um": 66.72199999999998
+    },
+    {
+      "driver": {
+        "pin": "_082090_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          152.1855,
+          131.6255
+        ],
+        "net": "_036836_"
+      },
+      "count": 44,
+      "reach_um": 66.32500000000002
+    },
+    {
+      "driver": {
+        "pin": "_082106_/Y",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          151.832,
+          131.913
+        ],
+        "net": "_036852_"
+      },
+      "count": 42,
+      "reach_um": 66.33699999999999
+    },
+    {
+      "driver": {
+        "pin": "_089531_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          19.1565,
+          94.365
+        ],
+        "net": "_043923_"
+      },
+      "count": 34,
+      "reach_um": 25.186499999999988
+    },
+    {
+      "driver": {
+        "pin": "_089675_/Y",
+        "master": "AND2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          142.0605,
+          96.255
+        ],
+        "net": "_044037_"
+      },
+      "count": 260,
+      "reach_um": 80.4465
+    },
+    {
+      "driver": {
+        "pin": "_089717_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          21.5865,
+          85.185
+        ],
+        "net": "_044079_"
+      },
+      "count": 64,
+      "reach_um": 22.216499999999996
+    },
+    {
+      "driver": {
+        "pin": "_090098_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          23.8005,
+          75.735
+        ],
+        "net": "_044429_"
+      },
+      "count": 64,
+      "reach_um": 21.3885
+    },
+    {
+      "driver": {
+        "pin": "_090473_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          152.9685,
+          76.815
+        ],
+        "net": "_044773_"
+      },
+      "count": 64,
+      "reach_um": 31.639500000000012
+    },
+    {
+      "driver": {
+        "pin": "_090846_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          156.4785,
+          77.355
+        ],
+        "net": "_045115_"
+      },
+      "count": 64,
+      "reach_um": 26.167500000000004
+    },
+    {
+      "driver": {
+        "pin": "_091221_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          147.7305,
+          88.695
+        ],
+        "net": "_045459_"
+      },
+      "count": 64,
+      "reach_um": 31.83750000000002
+    },
+    {
+      "driver": {
+        "pin": "_091599_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          172.6245,
+          84.375
+        ],
+        "net": "_045806_"
+      },
+      "count": 64,
+      "reach_um": 22.16249999999998
+    },
+    {
+      "driver": {
+        "pin": "_091972_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          191.7405,
+          90.045
+        ],
+        "net": "_046148_"
+      },
+      "count": 64,
+      "reach_um": 49.00050000000002
+    },
+    {
+      "driver": {
+        "pin": "_092317_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          196.5465,
+          80.595
+        ],
+        "net": "_046462_"
+      },
+      "count": 64,
+      "reach_um": 24.430499999999995
+    },
+    {
+      "driver": {
+        "pin": "_092494_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          19.9125,
+          94.095
+        ],
+        "net": "_046607_"
+      },
+      "count": 34,
+      "reach_um": 23.494500000000002
+    },
+    {
+      "driver": {
+        "pin": "_092559_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          22.0725,
+          85.725
+        ],
+        "net": "_046642_"
+      },
+      "count": 64,
+      "reach_um": 23.026499999999995
+    },
+    {
+      "driver": {
+        "pin": "_092629_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          22.1805,
+          75.465
+        ],
+        "net": "_046681_"
+      },
+      "count": 64,
+      "reach_um": 23.332500000000007
+    },
+    {
+      "driver": {
+        "pin": "_092699_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          152.5365,
+          76.005
+        ],
+        "net": "_046720_"
+      },
+      "count": 64,
+      "reach_um": 30.487499999999976
+    },
+    {
+      "driver": {
+        "pin": "_092769_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          156.9105,
+          77.355
+        ],
+        "net": "_046759_"
+      },
+      "count": 64,
+      "reach_um": 24.54750000000002
+    },
+    {
+      "driver": {
+        "pin": "_092839_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          148.5945,
+          88.695
+        ],
+        "net": "_046798_"
+      },
+      "count": 64,
+      "reach_um": 32.827500000000015
+    },
+    {
+      "driver": {
+        "pin": "_092909_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          172.5165,
+          83.565
+        ],
+        "net": "_046837_"
+      },
+      "count": 64,
+      "reach_um": 21.784499999999994
+    },
+    {
+      "driver": {
+        "pin": "_092979_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          192.1725,
+          89.775
+        ],
+        "net": "_046876_"
+      },
+      "count": 64,
+      "reach_um": 51.89849999999997
+    },
+    {
+      "driver": {
+        "pin": "_093049_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          196.5465,
+          79.785
+        ],
+        "net": "_046915_"
+      },
+      "count": 64,
+      "reach_um": 25.132499999999993
+    },
+    {
+      "driver": {
+        "pin": "_093124_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          20.2365,
+          94.095
+        ],
+        "net": "_046958_"
+      },
+      "count": 34,
+      "reach_um": 24.1605
+    },
+    {
+      "driver": {
+        "pin": "_093189_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          20.3445,
+          85.995
+        ],
+        "net": "_046993_"
+      },
+      "count": 64,
+      "reach_um": 25.384500000000006
+    },
+    {
+      "driver": {
+        "pin": "_093259_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          24.1245,
+          75.465
+        ],
+        "net": "_047032_"
+      },
+      "count": 64,
+      "reach_um": 21.082500000000007
+    },
+    {
+      "driver": {
+        "pin": "_093329_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          152.8605,
+          76.005
+        ],
+        "net": "_047071_"
+      },
+      "count": 64,
+      "reach_um": 32.773500000000006
+    },
+    {
+      "driver": {
+        "pin": "_093399_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          156.1545,
+          79.515
+        ],
+        "net": "_047110_"
+      },
+      "count": 64,
+      "reach_um": 28.34550000000001
+    },
+    {
+      "driver": {
+        "pin": "_093469_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          150.0525,
+          88.425
+        ],
+        "net": "_047149_"
+      },
+      "count": 64,
+      "reach_um": 32.1075
+    },
+    {
+      "driver": {
+        "pin": "_093539_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          172.3005,
+          83.835
+        ],
+        "net": "_047188_"
+      },
+      "count": 64,
+      "reach_um": 19.93050000000001
+    },
+    {
+      "driver": {
+        "pin": "_093609_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          193.3605,
+          89.775
+        ],
+        "net": "_047227_"
+      },
+      "count": 64,
+      "reach_um": 49.918499999999995
+    },
+    {
+      "driver": {
+        "pin": "_093679_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          193.7925,
+          80.055
+        ],
+        "net": "_047266_"
+      },
+      "count": 64,
+      "reach_um": 26.788500000000013
+    },
+    {
+      "driver": {
+        "pin": "_093754_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          19.4805,
+          94.365
+        ],
+        "net": "_047309_"
+      },
+      "count": 34,
+      "reach_um": 23.620499999999993
+    },
+    {
+      "driver": {
+        "pin": "_093819_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          20.0205,
+          85.185
+        ],
+        "net": "_047344_"
+      },
+      "count": 64,
+      "reach_um": 24.9705
+    },
+    {
+      "driver": {
+        "pin": "_093889_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          24.1245,
+          75.735
+        ],
+        "net": "_047383_"
+      },
+      "count": 64,
+      "reach_um": 21.6765
+    },
+    {
+      "driver": {
+        "pin": "_093959_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          153.1845,
+          77.085
+        ],
+        "net": "_047422_"
+      },
+      "count": 64,
+      "reach_um": 33.6375
+    },
+    {
+      "driver": {
+        "pin": "_094029_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          156.4785,
+          79.515
+        ],
+        "net": "_047461_"
+      },
+      "count": 64,
+      "reach_um": 29.137500000000003
+    },
+    {
+      "driver": {
+        "pin": "_094099_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          149.8365,
+          88.695
+        ],
+        "net": "_047500_"
+      },
+      "count": 64,
+      "reach_um": 30.5955
+    },
+    {
+      "driver": {
+        "pin": "_094169_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          169.8165,
+          83.565
+        ],
+        "net": "_047539_"
+      },
+      "count": 64,
+      "reach_um": 22.972500000000025
+    },
+    {
+      "driver": {
+        "pin": "_094239_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          192.3885,
+          90.045
+        ],
+        "net": "_047578_"
+      },
+      "count": 64,
+      "reach_um": 47.54250000000002
+    },
+    {
+      "driver": {
+        "pin": "_094309_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          192.4425,
+          80.055
+        ],
+        "net": "_047617_"
+      },
+      "count": 64,
+      "reach_um": 28.696500000000015
+    },
+    {
+      "driver": {
+        "pin": "_094380_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          167.5755,
+          120.5545
+        ],
+        "net": "_047657_"
+      },
+      "count": 512,
+      "reach_um": 141.36450000000002
+    },
+    {
+      "driver": {
+        "pin": "_094392_/Y",
+        "master": "AND3x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          158.5305,
+          120.825
+        ],
+        "net": "_047668_"
+      },
+      "count": 323,
+      "reach_um": 149.5365
+    },
+    {
+      "driver": {
+        "pin": "_095516_/Y",
+        "master": "AND2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          168.5745,
+          120.555
+        ],
+        "net": "_048538_"
+      },
+      "count": 512,
+      "reach_um": 137.018
+    },
+    {
+      "driver": {
+        "pin": "_095520_/Y",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          161.12,
+          120.807
+        ],
+        "net": "_048542_"
+      },
+      "count": 257,
+      "reach_um": 144.45499999999998
+    },
+    {
+      "driver": {
+        "pin": "_096679_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          165.3075,
+          121.0945
+        ],
+        "net": "_049446_"
+      },
+      "count": 512,
+      "reach_um": 138.7185
+    },
+    {
+      "driver": {
+        "pin": "_096683_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          168.5745,
+          121.365
+        ],
+        "net": "_049450_"
+      },
+      "count": 189,
+      "reach_um": 135.0205
+    },
+    {
+      "driver": {
+        "pin": "_096692_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          168.248,
+          121.077
+        ],
+        "net": "_049458_"
+      },
+      "count": 323,
+      "reach_um": 134.56300000000005
+    },
+    {
+      "driver": {
+        "pin": "_097816_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          164.9835,
+          120.8255
+        ],
+        "net": "_050328_"
+      },
+      "count": 512,
+      "reach_um": 143.84949999999998
+    },
+    {
+      "driver": {
+        "pin": "_097821_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          164.7135,
+          121.3655
+        ],
+        "net": "_050333_"
+      },
+      "count": 189,
+      "reach_um": 143.796
+    },
+    {
+      "driver": {
+        "pin": "_097830_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          165.1995,
+          121.3655
+        ],
+        "net": "_050341_"
+      },
+      "count": 323,
+      "reach_um": 142.81400000000002
+    },
+    {
+      "driver": {
+        "pin": "_098954_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          164.2275,
+          120.8255
+        ],
+        "net": "_051211_"
+      },
+      "count": 512,
+      "reach_um": 145.4155
+    },
+    {
+      "driver": {
+        "pin": "_098958_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          167.1435,
+          121.3655
+        ],
+        "net": "_051215_"
+      },
+      "count": 189,
+      "reach_um": 142.986
+    },
+    {
+      "driver": {
+        "pin": "_098967_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          163.7955,
+          121.0945
+        ],
+        "net": "_051223_"
+      },
+      "count": 324,
+      "reach_um": 145.351
+    },
+    {
+      "driver": {
+        "pin": "_100091_/Y",
+        "master": "AND3x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          167.1705,
+          121.095
+        ],
+        "net": "_052093_"
+      },
+      "count": 324,
+      "reach_um": 139.11449999999996
+    },
+    {
+      "driver": {
+        "pin": "_100093_/Y",
+        "master": "OA21x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          168.68,
+          121.095
+        ],
+        "net": "_052095_"
+      },
+      "count": 512,
+      "reach_um": 140.5305
+    },
+    {
+      "driver": {
+        "pin": "_100097_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          164.4975,
+          120.5545
+        ],
+        "net": "_052099_"
+      },
+      "count": 189,
+      "reach_um": 141.90500000000003
+    },
+    {
+      "driver": {
+        "pin": "_101228_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          166.4415,
+          121.0945
+        ],
+        "net": "_052975_"
+      },
+      "count": 512,
+      "reach_um": 140.079
+    },
+    {
+      "driver": {
+        "pin": "_101232_/Y",
+        "master": "OR3x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          164.8485,
+          120.555
+        ],
+        "net": "_052979_"
+      },
+      "count": 189,
+      "reach_um": 140.85250000000002
+    },
+    {
+      "driver": {
+        "pin": "_101241_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          163.6875,
+          120.5545
+        ],
+        "net": "_052987_"
+      },
+      "count": 323,
+      "reach_um": 141.841
+    },
+    {
+      "driver": {
+        "pin": "_102369_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          102.427,
+          171.855
+        ],
+        "net": "_053860_"
+      },
+      "count": 267,
+      "reach_um": 114.19250000000002
+    },
+    {
+      "driver": {
+        "pin": "_102666_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          103.556,
+          172.143
+        ],
+        "net": "_053891_"
+      },
+      "count": 37,
+      "reach_um": 43.665499999999994
+    },
+    {
+      "driver": {
+        "pin": "_102667_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          112.6035,
+          172.1255
+        ],
+        "net": "_053892_"
+      },
+      "count": 203,
+      "reach_um": 245.119
+    },
+    {
+      "driver": {
+        "pin": "_102913_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          112.2795,
+          172.1255
+        ],
+        "net": "_053937_"
+      },
+      "count": 36,
+      "reach_um": 35.149000000000015
+    },
+    {
+      "driver": {
+        "pin": "_104054_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          126.8865,
+          120.285
+        ],
+        "net": "_054562_"
+      },
+      "count": 34,
+      "reach_um": 114.17850000000001
+    },
+    {
+      "driver": {
+        "pin": "_104066_/Y",
+        "master": "AND2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          145.0305,
+          89.505
+        ],
+        "net": "_054572_"
+      },
+      "count": 190,
+      "reach_um": 144.8175
+    },
+    {
+      "driver": {
+        "pin": "_105174_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          39.5955,
+          114.6145
+        ],
+        "net": "_055329_"
+      },
+      "count": 40,
+      "reach_um": 46.71600000000001
+    },
+    {
+      "driver": {
+        "pin": "_105178_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          39.9735,
+          113.8055
+        ],
+        "net": "_055333_"
+      },
+      "count": 40,
+      "reach_um": 46.07899999999999
+    },
+    {
+      "driver": {
+        "pin": "_105302_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          39.679,
+          114.615
+        ],
+        "net": "_055418_"
+      },
+      "count": 40,
+      "reach_um": 47.07
+    },
+    {
+      "driver": {
+        "pin": "_105305_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          40.5135,
+          114.3455
+        ],
+        "net": "_055421_"
+      },
+      "count": 40,
+      "reach_um": 48.13100000000001
+    },
+    {
+      "driver": {
+        "pin": "_105392_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          39.4875,
+          114.0745
+        ],
+        "net": "_055469_"
+      },
+      "count": 80,
+      "reach_um": 48.712
+    },
+    {
+      "driver": {
+        "pin": "_105488_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          39.458,
+          113.517
+        ],
+        "net": "_055526_"
+      },
+      "count": 80,
+      "reach_um": 46.666999999999994
+    },
+    {
+      "driver": {
+        "pin": "_105584_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          40.1355,
+          114.0745
+        ],
+        "net": "_055583_"
+      },
+      "count": 62,
+      "reach_um": 45.81399999999999
+    },
+    {
+      "driver": {
+        "pin": "_105670_/Y",
+        "master": "OR4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          39.787,
+          114.345
+        ],
+        "net": "_055630_"
+      },
+      "count": 40,
+      "reach_um": 48.906
+    },
+    {
+      "driver": {
+        "pin": "_105672_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          40.5675,
+          113.8055
+        ],
+        "net": "_055632_"
+      },
+      "count": 40,
+      "reach_um": 49.102999999999994
+    },
+    {
+      "driver": {
+        "pin": "_105759_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          39.5415,
+          113.8055
+        ],
+        "net": "_055680_"
+      },
+      "count": 58,
+      "reach_um": 47.69899999999999
+    },
+    {
+      "driver": {
+        "pin": "_105854_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          39.728,
+          114.057
+        ],
+        "net": "_055736_"
+      },
+      "count": 80,
+      "reach_um": 48.12500000000001
+    },
+    {
+      "driver": {
+        "pin": "_105957_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          28.5795,
+          139.9945
+        ],
+        "net": "_055800_"
+      },
+      "count": 48,
+      "reach_um": 31.52199999999998
+    },
+    {
+      "driver": {
+        "pin": "_105958_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          26.4735,
+          139.1855
+        ],
+        "net": "_055801_"
+      },
+      "count": 44,
+      "reach_um": 29.544000000000015
+    },
+    {
+      "driver": {
+        "pin": "_105964_/Y",
+        "master": "NOR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          26.568,
+          140.823
+        ],
+        "net": "_055807_"
+      },
+      "count": 86,
+      "reach_um": 30.285000000000004
+    },
+    {
+      "driver": {
+        "pin": "_106103_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.0655,
+          139.9945
+        ],
+        "net": "_055904_"
+      },
+      "count": 46,
+      "reach_um": 32.711000000000006
+    },
+    {
+      "driver": {
+        "pin": "_106104_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          27.0675,
+          138.9145
+        ],
+        "net": "_055905_"
+      },
+      "count": 42,
+      "reach_um": 32.67699999999999
+    },
+    {
+      "driver": {
+        "pin": "_106206_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          27.9315,
+          141.0745
+        ],
+        "net": "_055965_"
+      },
+      "count": 42,
+      "reach_um": 32.891999999999996
+    },
+    {
+      "driver": {
+        "pin": "_106210_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          27.0675,
+          141.6145
+        ],
+        "net": "_055969_"
+      },
+      "count": 42,
+      "reach_um": 32.523999999999994
+    },
+    {
+      "driver": {
+        "pin": "_106304_/Y",
+        "master": "AND4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          26.9515,
+          139.995
+        ],
+        "net": "_056021_"
+      },
+      "count": 42,
+      "reach_um": 34.34249999999998
+    },
+    {
+      "driver": {
+        "pin": "_106308_/Y",
+        "master": "OR4x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          28.42,
+          139.185
+        ],
+        "net": "_056025_"
+      },
+      "count": 42,
+      "reach_um": 36.36099999999999
+    },
+    {
+      "driver": {
+        "pin": "_106444_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          28.658,
+          139.743
+        ],
+        "net": "_056119_"
+      },
+      "count": 84,
+      "reach_um": 42.473
+    },
+    {
+      "driver": {
+        "pin": "_106580_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          28.982,
+          139.743
+        ],
+        "net": "_056213_"
+      },
+      "count": 84,
+      "reach_um": 39.70100000000001
+    },
+    {
+      "driver": {
+        "pin": "_106716_/Y",
+        "master": "OR2x4_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.6325,
+          140.535
+        ],
+        "net": "_056307_"
+      },
+      "count": 42,
+      "reach_um": 41.613500000000016
+    },
+    {
+      "driver": {
+        "pin": "_106719_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.306,
+          139.743
+        ],
+        "net": "_056310_"
+      },
+      "count": 42,
+      "reach_um": 42.521
+    },
+    {
+      "driver": {
+        "pin": "_106812_/Y",
+        "master": "AND5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          27.2195,
+          140.805
+        ],
+        "net": "_056361_"
+      },
+      "count": 43,
+      "reach_um": 36.61550000000001
+    },
+    {
+      "driver": {
+        "pin": "_106816_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.2815,
+          140.5345
+        ],
+        "net": "_056364_"
+      },
+      "count": 41,
+      "reach_um": 38.46400000000001
+    },
+    {
+      "driver": {
+        "pin": "_106909_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          25.958,
+          139.203
+        ],
+        "net": "_056416_"
+      },
+      "count": 84,
+      "reach_um": 38.260999999999996
+    },
+    {
+      "driver": {
+        "pin": "_107045_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          25.634,
+          139.203
+        ],
+        "net": "_056510_"
+      },
+      "count": 84,
+      "reach_um": 33.32900000000001
+    },
+    {
+      "driver": {
+        "pin": "_107181_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          28.4985,
+          138.375
+        ],
+        "net": "_056604_"
+      },
+      "count": 42,
+      "reach_um": 40.425499999999985
+    },
+    {
+      "driver": {
+        "pin": "_107184_/Y",
+        "master": "NOR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          27.972,
+          138.357
+        ],
+        "net": "_056607_"
+      },
+      "count": 42,
+      "reach_um": 40.62899999999999
+    },
+    {
+      "driver": {
+        "pin": "_107276_/Y",
+        "master": "AND5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          26.5715,
+          139.995
+        ],
+        "net": "_056657_"
+      },
+      "count": 42,
+      "reach_um": 35.5285
+    },
+    {
+      "driver": {
+        "pin": "_107278_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          28.6875,
+          138.6455
+        ],
+        "net": "_056659_"
+      },
+      "count": 42,
+      "reach_um": 35.224999999999994
+    },
+    {
+      "driver": {
+        "pin": "_107372_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.576,
+          139.437
+        ],
+        "net": "_056711_"
+      },
+      "count": 84,
+      "reach_um": 41.91499999999998
+    },
+    {
+      "driver": {
+        "pin": "_107509_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.144,
+          139.203
+        ],
+        "net": "_056805_"
+      },
+      "count": 84,
+      "reach_um": 35.921
+    },
+    {
+      "driver": {
+        "pin": "_107645_/Y",
+        "master": "OR2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          28.2825,
+          139.185
+        ],
+        "net": "_056899_"
+      },
+      "count": 42,
+      "reach_um": 39.18350000000001
+    },
+    {
+      "driver": {
+        "pin": "_107648_/Y",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.252,
+          138.897
+        ],
+        "net": "_056902_"
+      },
+      "count": 42,
+      "reach_um": 40.07299999999999
+    },
+    {
+      "driver": {
+        "pin": "_107740_/Y",
+        "master": "AND5x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          26.7875,
+          140.265
+        ],
+        "net": "_056952_"
+      },
+      "count": 42,
+      "reach_um": 34.13149999999999
+    },
+    {
+      "driver": {
+        "pin": "_107742_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          29.6595,
+          138.9145
+        ],
+        "net": "_056954_"
+      },
+      "count": 42,
+      "reach_um": 36.57500000000001
+    },
+    {
+      "driver": {
+        "pin": "_109054_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          11.4075,
+          169.1545
+        ],
+        "net": "_058178_"
+      },
+      "count": 90,
+      "reach_um": 40.44199999999998
+    },
+    {
+      "driver": {
+        "pin": "_109159_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          12.1635,
+          169.4255
+        ],
+        "net": "_058238_"
+      },
+      "count": 84,
+      "reach_um": 37.183
+    },
+    {
+      "driver": {
+        "pin": "_109266_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          11.1915,
+          168.6145
+        ],
+        "net": "_058300_"
+      },
+      "count": 90,
+      "reach_um": 40.91
+    },
+    {
+      "driver": {
+        "pin": "_109367_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          12.1095,
+          169.6945
+        ],
+        "net": "_058356_"
+      },
+      "count": 52,
+      "reach_um": 36.77000000000001
+    },
+    {
+      "driver": {
+        "pin": "_109380_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          11.7855,
+          168.6145
+        ],
+        "net": "_058365_"
+      },
+      "count": 38,
+      "reach_um": 23.898999999999987
+    },
+    {
+      "driver": {
+        "pin": "_109488_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          12.1095,
+          168.8855
+        ],
+        "net": "_058432_"
+      },
+      "count": 90,
+      "reach_um": 36.264999999999986
+    },
+    {
+      "driver": {
+        "pin": "_109589_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          11.7855,
+          169.4255
+        ],
+        "net": "_058488_"
+      },
+      "count": 88,
+      "reach_um": 37.34500000000001
+    },
+    {
+      "driver": {
+        "pin": "_109694_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          11.7315,
+          169.1545
+        ],
+        "net": "_058547_"
+      },
+      "count": 90,
+      "reach_um": 33.241999999999976
+    },
+    {
+      "driver": {
+        "pin": "_109795_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          11.7855,
+          169.6945
+        ],
+        "net": "_058603_"
+      },
+      "count": 38,
+      "reach_um": 38.534
+    },
+    {
+      "driver": {
+        "pin": "_109809_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          12.1095,
+          168.6145
+        ],
+        "net": "_058613_"
+      },
+      "count": 52,
+      "reach_um": 25.592000000000002
+    },
+    {
+      "driver": {
+        "pin": "_110091_/Y",
+        "master": "OR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          31.0095,
+          180.2255
+        ],
+        "net": "_058734_"
+      },
+      "count": 102,
+      "reach_um": 38.25800000000001
+    },
+    {
+      "driver": {
+        "pin": "_110160_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          172.8675,
+          65.4745
+        ],
+        "net": "_058785_"
+      },
+      "count": 58,
+      "reach_um": 28.34349999999999
+    },
+    {
+      "driver": {
+        "pin": "_110167_/Y",
+        "master": "AO21x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          22.3485,
+          115.4195
+        ],
+        "net": "_058791_"
+      },
+      "count": 87,
+      "reach_um": 23.32249999999999
+    },
+    {
+      "driver": {
+        "pin": "_110172_/Y",
+        "master": "AND2x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          41.7285,
+          119.205
+        ],
+        "net": "_058795_"
+      },
+      "count": 37,
+      "reach_um": 32.811499999999995
+    },
+    {
+      "driver": {
+        "pin": "_110287_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          165.3075,
+          65.2055
+        ],
+        "net": "_058882_"
+      },
+      "count": 58,
+      "reach_um": 14.626499999999993
+    },
+    {
+      "driver": {
+        "pin": "_110309_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          164.2815,
+          63.8545
+        ],
+        "net": "_058898_"
+      },
+      "count": 58,
+      "reach_um": 25.006
+    },
+    {
+      "driver": {
+        "pin": "_110455_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          174.7035,
+          68.9855
+        ],
+        "net": "_058988_"
+      },
+      "count": 58,
+      "reach_um": 27.100499999999997
+    },
+    {
+      "driver": {
+        "pin": "_110574_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          175.1355,
+          68.7145
+        ],
+        "net": "_059076_"
+      },
+      "count": 58,
+      "reach_um": 23.483499999999992
+    },
+    {
+      "driver": {
+        "pin": "_110617_/Y",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          19.694,
+          180.207
+        ],
+        "net": "_059105_"
+      },
+      "count": 45,
+      "reach_um": 11.87300000000001
+    },
+    {
+      "driver": {
+        "pin": "_110638_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          13.8915,
+          168.6145
+        ],
+        "net": "_059123_"
+      },
+      "count": 35,
+      "reach_um": 28.076
+    },
+    {
+      "driver": {
+        "pin": "_110657_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          166.2255,
+          63.8545
+        ],
+        "net": "_059134_"
+      },
+      "count": 58,
+      "reach_um": 10.900499999999987
+    },
+    {
+      "driver": {
+        "pin": "_110861_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          169.5735,
+          63.5855
+        ],
+        "net": "_059197_"
+      },
+      "count": 58,
+      "reach_um": 17.357
+    },
+    {
+      "driver": {
+        "pin": "_111257_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          27.8235,
+          182.3855
+        ],
+        "net": "_059492_"
+      },
+      "count": 49,
+      "reach_um": 19.929999999999986
+    },
+    {
+      "driver": {
+        "pin": "_112175_/Y",
+        "master": "AO21x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          106.9125,
+          115.9595
+        ],
+        "net": "_060224_"
+      },
+      "count": 61,
+      "reach_um": 58.556
+    },
+    {
+      "driver": {
+        "pin": "_113624_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          175.1355,
+          67.0945
+        ],
+        "net": "_061130_"
+      },
+      "count": 56,
+      "reach_um": 15.923500000000004
+    },
+    {
+      "driver": {
+        "pin": "_113649_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          166.8735,
+          67.3655
+        ],
+        "net": "_061143_"
+      },
+      "count": 58,
+      "reach_um": 23.428500000000014
+    },
+    {
+      "driver": {
+        "pin": "_113779_/Y",
+        "master": "AND3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          174.5955,
+          64.3945
+        ],
+        "net": "_061222_"
+      },
+      "count": 58,
+      "reach_um": 12.629500000000007
+    },
+    {
+      "driver": {
+        "pin": "_114156_/Y",
+        "master": "OA21x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          147.08,
+          121.905
+        ],
+        "net": "_024358_"
+      },
+      "count": 34,
+      "reach_um": 90.18799999999997
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c11$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          41.321,
+          110.835
+        ],
+        "net": "_013808_"
+      },
+      "count": 33,
+      "reach_um": 34.827000000000005
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c13$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          56.711,
+          117.585
+        ],
+        "net": "_013810_"
+      },
+      "count": 35,
+      "reach_um": 103.899
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c14$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          48.557,
+          114.885
+        ],
+        "net": "_013811_"
+      },
+      "count": 35,
+      "reach_um": 44.121999999999986
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c15$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          55.307,
+          120.825
+        ],
+        "net": "_013812_"
+      },
+      "count": 35,
+      "reach_um": 36.646
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c16$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          51.635,
+          119.205
+        ],
+        "net": "_013813_"
+      },
+      "count": 35,
+      "reach_um": 45.60999999999999
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c17$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          53.795,
+          119.475
+        ],
+        "net": "_013814_"
+      },
+      "count": 35,
+      "reach_um": 42.39299999999999
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c18$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          51.527,
+          120.555
+        ],
+        "net": "_013815_"
+      },
+      "count": 35,
+      "reach_um": 46.744000000000014
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c19$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          50.717,
+          114.075
+        ],
+        "net": "_013816_"
+      },
+      "count": 34,
+      "reach_um": 70.041
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c26$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          39.539,
+          120.825
+        ],
+        "net": "_013823_"
+      },
+      "count": 34,
+      "reach_um": 167.05599999999998
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c27$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          157.907,
+          86.805
+        ],
+        "net": "_013824_"
+      },
+      "count": 35,
+      "reach_um": 117.42999999999998
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c28$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          46.829,
+          121.095
+        ],
+        "net": "_013825_"
+      },
+      "count": 34,
+      "reach_um": 109.83899999999998
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c29$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          153.641,
+          72.225
+        ],
+        "net": "_013826_"
+      },
+      "count": 34,
+      "reach_um": 155.463
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c30$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          29.873,
+          96.795
+        ],
+        "net": "_013827_"
+      },
+      "count": 35,
+      "reach_um": 183.81900000000002
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c31$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          29.711,
+          98.145
+        ],
+        "net": "_013828_"
+      },
+      "count": 35,
+      "reach_um": 180.016
+    },
+    {
+      "driver": {
+        "pin": "ot_rrs__u_ot_pr_core_rr__ot_rlv__c10$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          14.969,
+          158.625
+        ],
+        "net": "_013847_"
+      },
+      "count": 71,
+      "reach_um": 84.62100000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.fi\\[2\\]$_DFF_P_/QN",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          5.3575,
+          2.295
+        ],
+        "net": "_012494_"
+      },
+      "count": 206,
+      "reach_um": 522.0875
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.fence.g_on.rp\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          12.161,
+          173.475
+        ],
+        "net": "_000120_"
+      },
+      "count": 216,
+      "reach_um": 34.792000000000016
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.fence.g_on.rp\\[1\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          18.317,
+          173.475
+        ],
+        "net": "_001449_"
+      },
+      "count": 152,
+      "reach_um": 27.1685
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.fence.g_on.rp\\[2\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          13.079,
+          173.745
+        ],
+        "net": "_001448_"
+      },
+      "count": 150,
+      "reach_um": 31.605999999999995
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.mk_d2$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          136.523,
+          105.435
+        ],
+        "net": "_013692_"
+      },
+      "count": 102,
+      "reach_um": 136.9425
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[113\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          11.405,
+          137.295
+        ],
+        "net": "_001279_"
+      },
+      "count": 33,
+      "reach_um": 8.85450000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[13\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          11.783,
+          125.685
+        ],
+        "net": "_001179_"
+      },
+      "count": 33,
+      "reach_um": 8.345500000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[17\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          27.065,
+          127.035
+        ],
+        "net": "_001183_"
+      },
+      "count": 33,
+      "reach_um": 17.746
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[1\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          22.961,
+          126.225
+        ],
+        "net": "_001167_"
+      },
+      "count": 33,
+      "reach_um": 9.209500000000013
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[21\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          30.575,
+          124.605
+        ],
+        "net": "_001187_"
+      },
+      "count": 33,
+      "reach_um": 15.360500000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[25\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          12.809,
+          154.305
+        ],
+        "net": "_001191_"
+      },
+      "count": 33,
+      "reach_um": 11.338499999999993
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[29\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          19.613,
+          125.685
+        ],
+        "net": "_001195_"
+      },
+      "count": 33,
+      "reach_um": 17.57
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[33\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          19.451,
+          152.685
+        ],
+        "net": "_001199_"
+      },
+      "count": 33,
+      "reach_um": 10.80149999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[37\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          16.049,
+          154.575
+        ],
+        "net": "_001203_"
+      },
+      "count": 33,
+      "reach_um": 9.23550000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[41\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          14.537,
+          147.285
+        ],
+        "net": "_001207_"
+      },
+      "count": 33,
+      "reach_um": 15.712499999999993
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[45\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          24.257,
+          125.685
+        ],
+        "net": "_001211_"
+      },
+      "count": 33,
+      "reach_um": 24.355499999999996
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[49\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          21.719,
+          124.335
+        ],
+        "net": "_001215_"
+      },
+      "count": 33,
+      "reach_um": 8.399499999999989
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[53\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          13.403,
+          152.415
+        ],
+        "net": "_001219_"
+      },
+      "count": 33,
+      "reach_um": 11.261500000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[57\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          13.295,
+          147.825
+        ],
+        "net": "_001223_"
+      },
+      "count": 33,
+      "reach_um": 8.5305
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[5\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          29.009,
+          127.575
+        ],
+        "net": "_001171_"
+      },
+      "count": 33,
+      "reach_um": 12.336499999999987
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[61\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          25.877,
+          154.305
+        ],
+        "net": "_001227_"
+      },
+      "count": 33,
+      "reach_um": 8.263500000000022
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[81\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          22.421,
+          137.025
+        ],
+        "net": "_001247_"
+      },
+      "count": 33,
+      "reach_um": 13.177500000000009
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[85\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          20.855,
+          139.185
+        ],
+        "net": "_001251_"
+      },
+      "count": 33,
+      "reach_um": 17.821999999999996
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[89\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          20.153,
+          142.695
+        ],
+        "net": "_001255_"
+      },
+      "count": 33,
+      "reach_um": 6.211500000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[93\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          22.205,
+          134.595
+        ],
+        "net": "_001259_"
+      },
+      "count": 33,
+      "reach_um": 11.4495
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[9\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          14.051,
+          130.545
+        ],
+        "net": "_001175_"
+      },
+      "count": 33,
+      "reach_um": 13.097500000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[0\\]$_DFFE_PN_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          73.289,
+          107.865
+        ],
+        "net": "_008369_"
+      },
+      "count": 42,
+      "reach_um": 20.461499999999987
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[1\\]$_DFFE_PN_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          78.959,
+          107.055
+        ],
+        "net": "_008370_"
+      },
+      "count": 36,
+      "reach_um": 20.902500000000018
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[2\\]$_DFFE_PN_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          79.985,
+          107.865
+        ],
+        "net": "_008371_"
+      },
+      "count": 37,
+      "reach_um": 22.352000000000004
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[3\\]$_DFFE_PN_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          81.497,
+          107.055
+        ],
+        "net": "_008372_"
+      },
+      "count": 57,
+      "reach_um": 18.680000000000007
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[4\\]$_DFFE_PN_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          78.149,
+          106.245
+        ],
+        "net": "_001131_"
+      },
+      "count": 57,
+      "reach_um": 14.846000000000004
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          50.501,
+          113.265
+        ],
+        "net": "_013763_"
+      },
+      "count": 194,
+      "reach_um": 47.51800000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok0$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          84.197,
+          110.295
+        ],
+        "net": "_013762_"
+      },
+      "count": 360,
+      "reach_um": 38.516
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok1$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          60.707,
+          107.325
+        ],
+        "net": "_013761_"
+      },
+      "count": 254,
+      "reach_um": 38.014
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_okb$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          50.015,
+          113.535
+        ],
+        "net": "_013759_"
+      },
+      "count": 161,
+      "reach_um": 27.741999999999997
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_okx$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          52.013,
+          105.165
+        ],
+        "net": "_013760_"
+      },
+      "count": 210,
+      "reach_um": 28.564
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[11\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          127.343,
+          106.785
+        ],
+        "net": "_000735_"
+      },
+      "count": 33,
+      "reach_um": 8.988499999999988
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[13\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          127.073,
+          113.265
+        ],
+        "net": "_000737_"
+      },
+      "count": 33,
+      "reach_um": 8.461999999999989
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[15\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          131.339,
+          112.995
+        ],
+        "net": "_000739_"
+      },
+      "count": 33,
+      "reach_um": 11.364499999999992
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[17\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          108.119,
+          96.795
+        ],
+        "net": "_000741_"
+      },
+      "count": 33,
+      "reach_um": 11.0
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[19\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          106.931,
+          97.065
+        ],
+        "net": "_000743_"
+      },
+      "count": 33,
+      "reach_um": 13.537999999999997
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[29\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          127.829,
+          101.385
+        ],
+        "net": "_000753_"
+      },
+      "count": 33,
+      "reach_um": 9.844000000000008
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[31\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          107.363,
+          99.225
+        ],
+        "net": "_000755_"
+      },
+      "count": 33,
+      "reach_um": 9.488000000000014
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[33\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          120.431,
+          101.655
+        ],
+        "net": "_000757_"
+      },
+      "count": 33,
+      "reach_um": 22.379000000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[35\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          121.673,
+          112.995
+        ],
+        "net": "_000759_"
+      },
+      "count": 33,
+      "reach_um": 14.686499999999995
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[37\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          92.945,
+          118.395
+        ],
+        "net": "_000761_"
+      },
+      "count": 33,
+      "reach_um": 9.618500000000012
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[39\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          89.327,
+          122.715
+        ],
+        "net": "_000763_"
+      },
+      "count": 33,
+      "reach_um": 13.421499999999995
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[3\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          88.625,
+          121.905
+        ],
+        "net": "_000601_"
+      },
+      "count": 33,
+      "reach_um": 39.31049999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[41\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          92.297,
+          123.795
+        ],
+        "net": "_000765_"
+      },
+      "count": 33,
+      "reach_um": 23.866500000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[43\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          110.549,
+          121.365
+        ],
+        "net": "_000767_"
+      },
+      "count": 33,
+      "reach_um": 10.32050000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[45\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          109.037,
+          121.635
+        ],
+        "net": "_000769_"
+      },
+      "count": 33,
+      "reach_um": 9.718500000000006
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[47\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          101.099,
+          122.715
+        ],
+        "net": "_000771_"
+      },
+      "count": 33,
+      "reach_um": 9.340499999999992
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[49\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          78.743,
+          122.715
+        ],
+        "net": "_000773_"
+      },
+      "count": 33,
+      "reach_um": 17.95749999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[57\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          121.133,
+          119.745
+        ],
+        "net": "_000781_"
+      },
+      "count": 33,
+      "reach_um": 8.394500000000008
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[5\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          113.141,
+          112.455
+        ],
+        "net": "_000603_"
+      },
+      "count": 33,
+      "reach_um": 13.844000000000008
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[61\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          131.231,
+          171.585
+        ],
+        "net": "_000785_"
+      },
+      "count": 33,
+      "reach_um": 15.29249999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[63\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          119.297,
+          171.315
+        ],
+        "net": "_000787_"
+      },
+      "count": 33,
+      "reach_um": 24.216500000000025
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[7\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          113.951,
+          108.675
+        ],
+        "net": "_000731_"
+      },
+      "count": 33,
+      "reach_um": 6.828500000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[9\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          112.169,
+          105.165
+        ],
+        "net": "_000733_"
+      },
+      "count": 33,
+      "reach_um": 9.073999999999998
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_rd\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          24.527,
+          114.075
+        ],
+        "net": "_000127_"
+      },
+      "count": 163,
+      "reach_um": 31.412
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_rd\\[1\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          26.255,
+          113.535
+        ],
+        "net": "_000691_"
+      },
+      "count": 322,
+      "reach_um": 33.74849999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_rd\\[2\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          26.201,
+          114.345
+        ],
+        "net": "_000690_"
+      },
+      "count": 81,
+      "reach_um": 31.682000000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_nz$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          95.429,
+          107.865
+        ],
+        "net": "_013756_"
+      },
+      "count": 74,
+      "reach_um": 124.648
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[0\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          201.701,
+          86.805
+        ],
+        "net": "_000465_"
+      },
+      "count": 34,
+      "reach_um": 15.608000000000018
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[10\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          174.593,
+          83.835
+        ],
+        "net": "_000475_"
+      },
+      "count": 34,
+      "reach_um": 17.899500000000018
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[11\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          173.621,
+          82.215
+        ],
+        "net": "_000476_"
+      },
+      "count": 34,
+      "reach_um": 17.052999999999983
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[12\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          164.495,
+          85.185
+        ],
+        "net": "_000477_"
+      },
+      "count": 34,
+      "reach_um": 48.35850000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[13\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          161.795,
+          84.105
+        ],
+        "net": "_000478_"
+      },
+      "count": 34,
+      "reach_um": 46.93699999999998
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[14\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          162.497,
+          84.915
+        ],
+        "net": "_000479_"
+      },
+      "count": 34,
+      "reach_um": 49.060500000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[15\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          162.713,
+          85.455
+        ],
+        "net": "_000480_"
+      },
+      "count": 34,
+      "reach_um": 48.935
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[16\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          152.993,
+          82.485
+        ],
+        "net": "_000481_"
+      },
+      "count": 34,
+      "reach_um": 29.563499999999998
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[17\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          153.803,
+          83.835
+        ],
+        "net": "_000482_"
+      },
+      "count": 34,
+      "reach_um": 30.358999999999995
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[18\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          156.611,
+          84.375
+        ],
+        "net": "_000483_"
+      },
+      "count": 34,
+      "reach_um": 31.672499999999978
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[19\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          157.043,
+          81.405
+        ],
+        "net": "_000484_"
+      },
+      "count": 34,
+      "reach_um": 29.33300000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[1\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          201.809,
+          87.075
+        ],
+        "net": "_000466_"
+      },
+      "count": 34,
+      "reach_um": 17.165499999999994
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[20\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          149.375,
+          79.515
+        ],
+        "net": "_000485_"
+      },
+      "count": 34,
+      "reach_um": 35.017500000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[21\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          148.457,
+          78.705
+        ],
+        "net": "_000486_"
+      },
+      "count": 34,
+      "reach_um": 34.927000000000014
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[22\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          150.077,
+          78.975
+        ],
+        "net": "_000487_"
+      },
+      "count": 34,
+      "reach_um": 33.45149999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[23\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          150.293,
+          79.785
+        ],
+        "net": "_000488_"
+      },
+      "count": 34,
+      "reach_um": 33.84699999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[24\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          22.745,
+          74.655
+        ],
+        "net": "_000489_"
+      },
+      "count": 34,
+      "reach_um": 22.7595
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[25\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          23.717,
+          75.465
+        ],
+        "net": "_000490_"
+      },
+      "count": 34,
+      "reach_um": 22.399000000000008
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[26\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          25.769,
+          75.465
+        ],
+        "net": "_000491_"
+      },
+      "count": 34,
+      "reach_um": 20.491500000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[27\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          26.471,
+          74.925
+        ],
+        "net": "_000492_"
+      },
+      "count": 34,
+      "reach_um": 19.051
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[28\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          31.223,
+          82.485
+        ],
+        "net": "_000493_"
+      },
+      "count": 34,
+      "reach_um": 14.878499999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[29\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          31.331,
+          83.025
+        ],
+        "net": "_000494_"
+      },
+      "count": 34,
+      "reach_um": 15.725000000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[2\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          199.649,
+          86.265
+        ],
+        "net": "_000467_"
+      },
+      "count": 34,
+      "reach_um": 16.144000000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[30\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          32.249,
+          84.105
+        ],
+        "net": "_000495_"
+      },
+      "count": 34,
+      "reach_um": 18.87450000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[31\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          32.033,
+          83.565
+        ],
+        "net": "_000496_"
+      },
+      "count": 34,
+      "reach_um": 18.317000000000004
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[32\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          25.553,
+          86.805
+        ],
+        "net": "_000497_"
+      },
+      "count": 34,
+      "reach_um": 16.381999999999998
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[33\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          22.853,
+          87.615
+        ],
+        "net": "_000498_"
+      },
+      "count": 34,
+      "reach_um": 17.548000000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[34\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          24.203,
+          86.265
+        ],
+        "net": "_000499_"
+      },
+      "count": 34,
+      "reach_um": 16.367
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[35\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          24.689,
+          85.995
+        ],
+        "net": "_000500_"
+      },
+      "count": 34,
+      "reach_um": 17.446999999999996
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[3\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          198.677,
+          86.535
+        ],
+        "net": "_000468_"
+      },
+      "count": 34,
+      "reach_um": 16.720000000000013
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[4\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          198.137,
+          92.475
+        ],
+        "net": "_000469_"
+      },
+      "count": 34,
+      "reach_um": 39.966499999999996
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[5\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          200.081,
+          91.935
+        ],
+        "net": "_000470_"
+      },
+      "count": 34,
+      "reach_um": 40.336
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[6\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          199.541,
+          91.665
+        ],
+        "net": "_000471_"
+      },
+      "count": 34,
+      "reach_um": 41.260999999999996
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[7\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          199.703,
+          91.125
+        ],
+        "net": "_000472_"
+      },
+      "count": 34,
+      "reach_um": 39.03999999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[8\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          175.511,
+          82.755
+        ],
+        "net": "_000473_"
+      },
+      "count": 34,
+      "reach_um": 15.68549999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[9\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          174.863,
+          83.295
+        ],
+        "net": "_000474_"
+      },
+      "count": 34,
+      "reach_um": 16.674999999999997
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_kind\\[1\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          111.845,
+          98.145
+        ],
+        "net": "_013197_"
+      },
+      "count": 513,
+      "reach_um": 112.78599999999999
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_wv$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          34.517,
+          103.815
+        ],
+        "net": "_013757_"
+      },
+      "count": 83,
+      "reach_um": 186.082
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.ra_wp\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          154.829,
+          120.285
+        ],
+        "net": "u_ot_pr_core.u_h.host.u_hi.u_eng.ra_wq\\[0\\]"
+      },
+      "count": 526,
+      "reach_um": 149.75799999999998
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.sr_hold$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          57.467,
+          113.535
+        ],
+        "net": "_013766_"
+      },
+      "count": 97,
+      "reach_um": 35.260000000000005
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_act$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          106.121,
+          117.585
+        ],
+        "net": "_013767_"
+      },
+      "count": 38,
+      "reach_um": 44.626999999999995
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d\\[216\\]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          83.495,
+          112.725
+        ],
+        "net": "_013207_"
+      },
+      "count": 61,
+      "reach_um": 24.967999999999996
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d\\[217\\]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          87.113,
+          111.915
+        ],
+        "net": "_010160_"
+      },
+      "count": 63,
+      "reach_um": 25.147999999999996
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d\\[232\\]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          82.145,
+          109.215
+        ],
+        "net": "_010169_"
+      },
+      "count": 61,
+      "reach_um": 17.988
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d\\[233\\]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          81.767,
+          109.755
+        ],
+        "net": "_001410_"
+      },
+      "count": 58,
+      "reach_um": 17.048000000000002
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_mode\\[0\\]$_DFFE_PP_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          99.425,
+          110.835
+        ],
+        "net": "_010170_"
+      },
+      "count": 85,
+      "reach_um": 82.334
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.u_h.host.u_hi.u_rsc.reset_pipe\\[0\\]$_DFF_PN0_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          49.745,
+          121.365
+        ],
+        "net": "_013388_"
+      },
+      "count": 46,
+      "reach_um": 181.259
+    }
+  ],
+  "over405_nonclock": 225,
+  "macros": 4,
+  "macro_masters": {
+    "ot_sram_1r1w2c_16x257_m1": 2,
+    "ot_sram_1r1w2c_16x289_m1": 2
+  },
+  "scope": "Exact saved GRT ODB, uncapped logical sink pins through BUF/INV; Manhattan endpoint reach is a geometric lower bound, not stage path or routed wire length; macro contacts report MPin objects, not detailed escape/PG connectivity qualification"
+}

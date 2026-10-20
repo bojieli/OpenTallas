@@ -1,0 +1,41 @@
+ot-run: ot-epyc5       admits   944 GB (avail 774, growth 113, headroom 0, waiters 0/0 GB) load 64/128 running 32 disk 67 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-shlk-model-pregate-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-shlk-model-pregate-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-shlk-model-pregate-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-shlk-model-pregate-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-shlk-model-pregate-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2661110-1792486723 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "odb": "/work/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/5_1_grt.odb",
+  "odb_sha256": "29367ee6f0ae102d71e50d9456189937dab41701229147374a6c76abf7ad25fe",
+  "roots": 57197,
+  "roles": {
+    "ff": 14716,
+    "comb": 40143,
+    "macro": 1092,
+    "input": 1246
+  },
+  "max_count_by_role": {
+    "ff": 526,
+    "macro": 10,
+    "comb": 512,
+    "input": 14726
+  },
+  "over405_nonclock": 225,
+  "macros": 4,
+  "macro_masters": {
+    "ot_sram_1r1w2c_16x257_m1": 2,
+    "ot_sram_1r1w2c_16x289_m1": 2
+  },
+  "scope": "Exact saved GRT ODB, uncapped logical sink pins through BUF/INV; Manhattan endpoint reach is a geometric lower bound, not stage path or routed wire length; macro contacts report MPin objects, not detailed escape/PG connectivity qualification"
+}
+OVER32 317
+BOUNDARY {"schema": "opentallas.native_pin_boundary_inventory.v1", "odb_sha256": "29367ee6f0ae102d71e50d9456189937dab41701229147374a6c76abf7ad25fe", "scope": "Preserved SHLK s10d pre-route GRT ODB; all17source SHA match actual routed87bd source; NOT final routed geometry actual first nonBUF/INV sink/root; reset included, clock excluded; no tied-input intent inferred", "input_bits": 1245, "input_bits_with_nonflop_first_sinks": 8, "input_violations": [{"driver": "PORT/f_host[0]", "sinks": ["_113977_/A"]}, {"driver": "PORT/f_ks[52]", "sinks": ["_113978_/A"]}, {"driver": "PORT/j_i[32]", "sinks": ["_113983_/A"]}, {"driver": "PORT/kd_i[53]", "sinks": ["_113982_/A"]}, {"driver": "PORT/s_jd_e[0]", "sinks": ["_114196_/A"]}, {"driver": "PORT/s_jd_e[1]", "sinks": ["_113980_/A"]}, {"driver": "PORT/s_jd_w[0]", "sinks": ["_114195_/A"]}, {"driver": "PORT/s_jd_w[1]", "sinks": ["_113979_/A"]}], "outputs_without_flop_root": 0, "output_violations": []}
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2661110-1792486723): exit 0
