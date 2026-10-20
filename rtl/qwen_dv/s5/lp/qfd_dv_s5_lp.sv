@@ -68,7 +68,7 @@ module qfd_dv_s5_lp #(
     wire [3:0] sid; wire [28:0] stn_cfg; wire [100:0] sc_cfg; wire [30:0] stm_cfg; wire [9:0] su_cmd;
     wire am_v; wire [23:0] am_idx; wire [31:0] am_val; wire [1:0] am_u;
     wire w16_we; wire [23:0] w16_addr; wire [511:0] w16_data; wire w1_we; wire [23:0] w1_addr; wire [31:0] w1_data;
-    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r;
+    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; wire [131:0] rss_r0, rsn_r0, rss_r1, rsn_r1, rss_r2, rsn_r2, rss_r3, rsn_r3, rss_r4, rsn_r4, rss_r5, rsn_r5, rss_r6, rsn_r6, rss_r7, rsn_r7; wire [65:0] nb_r0, nb_r1, nb_r2, nb_r3, nb_r4, nb_r5, nb_r6, nb_r7;
     wire su_nr, su_idle, su_fault, vm_fault; wire [15:0] su_prog, su_rows;
     wire red_we, rd_v, red_busy, red_fault; wire [23:0] red_addr; wire [31:0] red_data;
     wire sc_w1_we, tok_v, tok_own, sc_busy, sc_fault; wire [23:0] sc_w1_addr, tok_idx; wire [31:0] sc_w1_data, tok_val;
@@ -120,6 +120,7 @@ module qfd_dv_s5_lp #(
     wire [3:0] flt_b7, flt_v7; wire [1:0] oc7; wire bre7, rv7, rl7, fl7; wire [8:0] bw7; wire [7:0] ri7;
     wire [63:0] l9d7, r_d7; wire [31:0] bt_q7; assign bt_q7 = bt_q[255:224];
     wire [7:0] lqb0, lqb1, lqb2, lqb3; wire [515:0] cs0, cs1, cs2, cs3;
+    assign rss_r = {rss_r7, rss_r6, rss_r5, rss_r4, rss_r3, rss_r2, rss_r1, rss_r0}; assign rsn_r = {rsn_r7, rsn_r6, rsn_r5, rsn_r4, rsn_r3, rsn_r2, rsn_r1, rsn_r0}; assign nb_r = {nb_r7, nb_r6, nb_r5, nb_r4, nb_r3, nb_r2, nb_r1, nb_r0};
     wire h0_rst; wire e0_v, e0_vo, e0_f, r0_v, r0_vo, r0_f, q0_v, q0_vo, q0_f;
     wire [31:0] e0_x, e0_y, r0_x, r0_y, q0_x, q0_y;
     wire [0:0] c0_emit0;
@@ -1219,16 +1220,16 @@ module qfd_dv_s5_lp #(
     ot_pl_land_w #(.W(((28) - (0) + 1)), .D(4)) u_lpl_107_w (.ck(ck_r_ctl), .rsi(lpr_r_ctl), .i(stn_cfg), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld));
     ot_pl_land_r #(.W(((28) - (0) + 1)), .D(4), .K(2)) u_lpl_107_r (.ck(ck_r_st0), .rsi(lpr_r_st0), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld), .o(lpl_107_o));
     assign stn_cfg__l_r_st0 = lpl_107_o;
-    // ---- LANDING 108: rsn_r r_hc1 -> r_st0, 1056 b (u_r0.rs_n_lo_p, u_r0.rs_n_hi_p, u_r0.rs_n_c_p)
-    wire [4*((8*132-1) - (0) + 1)-1:0] lpl_108_bank;  wire [11:0] lpl_108_epo;  wire [3:0] lpl_108_vld;  wire [8*132-1:0] rsn_r__l_r_st0, lpl_108_o;
-    ot_pl_land_w #(.W(((8*132-1) - (0) + 1)), .D(4)) u_lpl_108_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld));
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_108_r (.ck(ck_r_st0), .rsi(lpr_r_st0), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_108_o));
-    assign rsn_r__l_r_st0 = lpl_108_o;
-    // ---- LANDING 109: nb_r r_fw -> r_st0, 528 b (u_r0.nb_d_p, u_r0.nb_c_p)
-    wire [4*((8*66-1) - (0) + 1)-1:0] lpl_109_bank;  wire [11:0] lpl_109_epo;  wire [3:0] lpl_109_vld;  wire [8*66-1:0] nb_r__l_r_st0, lpl_109_o;
-    ot_pl_land_w #(.W(((8*66-1) - (0) + 1)), .D(4)) u_lpl_109_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld));
-    ot_pl_land_r #(.W(((8*66-1) - (0) + 1)), .D(4), .K(2)) u_lpl_109_r (.ck(ck_r_st0), .rsi(lpr_r_st0), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_109_o));
-    assign nb_r__l_r_st0 = lpl_109_o;
+    // ---- LANDING 108: rsn_r0 r_hc1 -> r_st0, 132 b (u_r0.rs_n_lo_p, u_r0.rs_n_hi_p, u_r0.rs_n_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_108_bank;  wire [11:0] lpl_108_epo;  wire [3:0] lpl_108_vld;  wire [131:0] rsn_r0__l_r_st0, lpl_108_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_108_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r0), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_108_r (.ck(ck_r_st0), .rsi(lpr_r_st0), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_108_o));
+    assign rsn_r0__l_r_st0 = lpl_108_o;
+    // ---- LANDING 109: nb_r0 r_fw -> r_st0, 66 b (u_r0.nb_d_p, u_r0.nb_c_p)
+    wire [4*((65) - (0) + 1)-1:0] lpl_109_bank;  wire [11:0] lpl_109_epo;  wire [3:0] lpl_109_vld;  wire [65:0] nb_r0__l_r_st0, lpl_109_o;
+    ot_pl_land_w #(.W(((65) - (0) + 1)), .D(4)) u_lpl_109_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r0), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld));
+    ot_pl_land_r #(.W(((65) - (0) + 1)), .D(4), .K(2)) u_lpl_109_r (.ck(ck_r_st0), .rsi(lpr_r_st0), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_109_o));
+    assign nb_r0__l_r_st0 = lpl_109_o;
     // ---- LANDING 110: flt_b2 r_st2 -> r_st0, 4 b (u_r0.flt_bank_i)
     wire [4*((3) - (0) + 1)-1:0] lpl_110_bank;  wire [11:0] lpl_110_epo;  wire [3:0] lpl_110_vld;  wire [3:0] flt_b2__l_r_st0, lpl_110_o;
     ot_pl_land_w #(.W(((3) - (0) + 1)), .D(4)) u_lpl_110_w (.ck(ck_r_st2), .rsi(lpr_r_st2), .i(flt_b2), .bank(lpl_110_bank), .epo(lpl_110_epo), .vld(lpl_110_vld));
@@ -1243,19 +1244,21 @@ module qfd_dv_s5_lp #(
     wire [28:0] stn_cfg__l_r_st1, lpl_112_o;
     ot_pl_land_r #(.W(((28) - (0) + 1)), .D(4), .K(2)) u_lpl_112_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld), .o(lpl_112_o));
     assign stn_cfg__l_r_st1 = lpl_112_o;
-    // ---- LANDING 113: rss_r r_st0 -> r_st1, 1056 b (u_r1.rs_s_lo_p, u_r1.rs_s_hi_p, u_r1.rs_s_c_p)
-    wire [4*((8*132-1) - (0) + 1)-1:0] lpl_113_bank;  wire [11:0] lpl_113_epo;  wire [3:0] lpl_113_vld;  wire [8*132-1:0] rss_r__l_r_st1, lpl_113_o;
-    ot_pl_land_w #(.W(((8*132-1) - (0) + 1)), .D(4)) u_lpl_113_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(rss_r), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld));
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_113_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_113_o));
-    assign rss_r__l_r_st1 = lpl_113_o;
-    // ---- LANDING 114: rsn_r r_hc1 -> r_st1, 1056 b (u_r1.rs_n_lo_p, u_r1.rs_n_hi_p, u_r1.rs_n_c_p) -- reads ring 108
-    wire [8*132-1:0] rsn_r__l_r_st1, lpl_114_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_114_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_114_o));
-    assign rsn_r__l_r_st1 = lpl_114_o;
-    // ---- LANDING 115: nb_r r_fw -> r_st1, 528 b (u_r1.nb_d_p, u_r1.nb_c_p) -- reads ring 109
-    wire [8*66-1:0] nb_r__l_r_st1, lpl_115_o;
-    ot_pl_land_r #(.W(((8*66-1) - (0) + 1)), .D(4), .K(2)) u_lpl_115_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_115_o));
-    assign nb_r__l_r_st1 = lpl_115_o;
+    // ---- LANDING 113: rss_r1 r_st0 -> r_st1, 132 b (u_r1.rs_s_lo_p, u_r1.rs_s_hi_p, u_r1.rs_s_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_113_bank;  wire [11:0] lpl_113_epo;  wire [3:0] lpl_113_vld;  wire [131:0] rss_r1__l_r_st1, lpl_113_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_113_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(rss_r1), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_113_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_113_o));
+    assign rss_r1__l_r_st1 = lpl_113_o;
+    // ---- LANDING 114: rsn_r1 r_hc1 -> r_st1, 132 b (u_r1.rs_n_lo_p, u_r1.rs_n_hi_p, u_r1.rs_n_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_114_bank;  wire [11:0] lpl_114_epo;  wire [3:0] lpl_114_vld;  wire [131:0] rsn_r1__l_r_st1, lpl_114_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_114_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r1), .bank(lpl_114_bank), .epo(lpl_114_epo), .vld(lpl_114_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_114_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_114_bank), .epo(lpl_114_epo), .vld(lpl_114_vld), .o(lpl_114_o));
+    assign rsn_r1__l_r_st1 = lpl_114_o;
+    // ---- LANDING 115: nb_r1 r_fw -> r_st1, 66 b (u_r1.nb_d_p, u_r1.nb_c_p)
+    wire [4*((65) - (0) + 1)-1:0] lpl_115_bank;  wire [11:0] lpl_115_epo;  wire [3:0] lpl_115_vld;  wire [65:0] nb_r1__l_r_st1, lpl_115_o;
+    ot_pl_land_w #(.W(((65) - (0) + 1)), .D(4)) u_lpl_115_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r1), .bank(lpl_115_bank), .epo(lpl_115_epo), .vld(lpl_115_vld));
+    ot_pl_land_r #(.W(((65) - (0) + 1)), .D(4), .K(2)) u_lpl_115_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_115_bank), .epo(lpl_115_epo), .vld(lpl_115_vld), .o(lpl_115_o));
+    assign nb_r1__l_r_st1 = lpl_115_o;
     // ---- LANDING 116: bt_q1 r_st0 -> r_st1, 32 b (u_r1.bt_q_p)
     wire [4*((31) - (0) + 1)-1:0] lpl_116_bank;  wire [11:0] lpl_116_epo;  wire [3:0] lpl_116_vld;  wire [31:0] bt_q1__l_r_st1, lpl_116_o;
     ot_pl_land_w #(.W(((31) - (0) + 1)), .D(4)) u_lpl_116_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(bt_q1), .bank(lpl_116_bank), .epo(lpl_116_epo), .vld(lpl_116_vld));
@@ -1275,18 +1278,21 @@ module qfd_dv_s5_lp #(
     wire [28:0] stn_cfg__l_r_st2, lpl_119_o;
     ot_pl_land_r #(.W(((28) - (0) + 1)), .D(4), .K(2)) u_lpl_119_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld), .o(lpl_119_o));
     assign stn_cfg__l_r_st2 = lpl_119_o;
-    // ---- LANDING 120: rss_r r_st0 -> r_st2, 1056 b (u_r2.rs_s_lo_p, u_r2.rs_s_hi_p, u_r2.rs_s_c_p) -- reads ring 113
-    wire [8*132-1:0] rss_r__l_r_st2, lpl_120_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_120_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_120_o));
-    assign rss_r__l_r_st2 = lpl_120_o;
-    // ---- LANDING 121: rsn_r r_hc1 -> r_st2, 1056 b (u_r2.rs_n_lo_p, u_r2.rs_n_hi_p, u_r2.rs_n_c_p) -- reads ring 108
-    wire [8*132-1:0] rsn_r__l_r_st2, lpl_121_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_121_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_121_o));
-    assign rsn_r__l_r_st2 = lpl_121_o;
-    // ---- LANDING 122: nb_r r_fw -> r_st2, 528 b (u_r2.nb_d_p, u_r2.nb_c_p) -- reads ring 109
-    wire [8*66-1:0] nb_r__l_r_st2, lpl_122_o;
-    ot_pl_land_r #(.W(((8*66-1) - (0) + 1)), .D(4), .K(2)) u_lpl_122_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_122_o));
-    assign nb_r__l_r_st2 = lpl_122_o;
+    // ---- LANDING 120: rss_r2 r_st0 -> r_st2, 132 b (u_r2.rs_s_lo_p, u_r2.rs_s_hi_p, u_r2.rs_s_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_120_bank;  wire [11:0] lpl_120_epo;  wire [3:0] lpl_120_vld;  wire [131:0] rss_r2__l_r_st2, lpl_120_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_120_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(rss_r2), .bank(lpl_120_bank), .epo(lpl_120_epo), .vld(lpl_120_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_120_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_120_bank), .epo(lpl_120_epo), .vld(lpl_120_vld), .o(lpl_120_o));
+    assign rss_r2__l_r_st2 = lpl_120_o;
+    // ---- LANDING 121: rsn_r2 r_hc1 -> r_st2, 132 b (u_r2.rs_n_lo_p, u_r2.rs_n_hi_p, u_r2.rs_n_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_121_bank;  wire [11:0] lpl_121_epo;  wire [3:0] lpl_121_vld;  wire [131:0] rsn_r2__l_r_st2, lpl_121_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_121_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r2), .bank(lpl_121_bank), .epo(lpl_121_epo), .vld(lpl_121_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_121_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_121_bank), .epo(lpl_121_epo), .vld(lpl_121_vld), .o(lpl_121_o));
+    assign rsn_r2__l_r_st2 = lpl_121_o;
+    // ---- LANDING 122: nb_r2 r_fw -> r_st2, 66 b (u_r2.nb_d_p, u_r2.nb_c_p)
+    wire [4*((65) - (0) + 1)-1:0] lpl_122_bank;  wire [11:0] lpl_122_epo;  wire [3:0] lpl_122_vld;  wire [65:0] nb_r2__l_r_st2, lpl_122_o;
+    ot_pl_land_w #(.W(((65) - (0) + 1)), .D(4)) u_lpl_122_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r2), .bank(lpl_122_bank), .epo(lpl_122_epo), .vld(lpl_122_vld));
+    ot_pl_land_r #(.W(((65) - (0) + 1)), .D(4), .K(2)) u_lpl_122_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_122_bank), .epo(lpl_122_epo), .vld(lpl_122_vld), .o(lpl_122_o));
+    assign nb_r2__l_r_st2 = lpl_122_o;
     // ---- LANDING 123: bt_q2 r_st0 -> r_st2, 32 b (u_r2.bt_q_p)
     wire [4*((31) - (0) + 1)-1:0] lpl_123_bank;  wire [11:0] lpl_123_epo;  wire [3:0] lpl_123_vld;  wire [31:0] bt_q2__l_r_st2, lpl_123_o;
     ot_pl_land_w #(.W(((31) - (0) + 1)), .D(4)) u_lpl_123_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(bt_q2), .bank(lpl_123_bank), .epo(lpl_123_epo), .vld(lpl_123_vld));
@@ -1306,18 +1312,21 @@ module qfd_dv_s5_lp #(
     wire [28:0] stn_cfg__l_r_st3, lpl_126_o;
     ot_pl_land_r #(.W(((28) - (0) + 1)), .D(4), .K(2)) u_lpl_126_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld), .o(lpl_126_o));
     assign stn_cfg__l_r_st3 = lpl_126_o;
-    // ---- LANDING 127: rss_r r_st0 -> r_st3, 1056 b (u_r3.rs_s_lo_p, u_r3.rs_s_hi_p, u_r3.rs_s_c_p) -- reads ring 113
-    wire [8*132-1:0] rss_r__l_r_st3, lpl_127_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_127_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_127_o));
-    assign rss_r__l_r_st3 = lpl_127_o;
-    // ---- LANDING 128: rsn_r r_hc1 -> r_st3, 1056 b (u_r3.rs_n_lo_p, u_r3.rs_n_hi_p, u_r3.rs_n_c_p) -- reads ring 108
-    wire [8*132-1:0] rsn_r__l_r_st3, lpl_128_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_128_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_128_o));
-    assign rsn_r__l_r_st3 = lpl_128_o;
-    // ---- LANDING 129: nb_r r_fw -> r_st3, 528 b (u_r3.nb_d_p, u_r3.nb_c_p) -- reads ring 109
-    wire [8*66-1:0] nb_r__l_r_st3, lpl_129_o;
-    ot_pl_land_r #(.W(((8*66-1) - (0) + 1)), .D(4), .K(2)) u_lpl_129_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_129_o));
-    assign nb_r__l_r_st3 = lpl_129_o;
+    // ---- LANDING 127: rss_r3 r_st0 -> r_st3, 132 b (u_r3.rs_s_lo_p, u_r3.rs_s_hi_p, u_r3.rs_s_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_127_bank;  wire [11:0] lpl_127_epo;  wire [3:0] lpl_127_vld;  wire [131:0] rss_r3__l_r_st3, lpl_127_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_127_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(rss_r3), .bank(lpl_127_bank), .epo(lpl_127_epo), .vld(lpl_127_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_127_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_127_bank), .epo(lpl_127_epo), .vld(lpl_127_vld), .o(lpl_127_o));
+    assign rss_r3__l_r_st3 = lpl_127_o;
+    // ---- LANDING 128: rsn_r3 r_hc1 -> r_st3, 132 b (u_r3.rs_n_lo_p, u_r3.rs_n_hi_p, u_r3.rs_n_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_128_bank;  wire [11:0] lpl_128_epo;  wire [3:0] lpl_128_vld;  wire [131:0] rsn_r3__l_r_st3, lpl_128_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_128_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r3), .bank(lpl_128_bank), .epo(lpl_128_epo), .vld(lpl_128_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_128_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_128_bank), .epo(lpl_128_epo), .vld(lpl_128_vld), .o(lpl_128_o));
+    assign rsn_r3__l_r_st3 = lpl_128_o;
+    // ---- LANDING 129: nb_r3 r_fw -> r_st3, 66 b (u_r3.nb_d_p, u_r3.nb_c_p)
+    wire [4*((65) - (0) + 1)-1:0] lpl_129_bank;  wire [11:0] lpl_129_epo;  wire [3:0] lpl_129_vld;  wire [65:0] nb_r3__l_r_st3, lpl_129_o;
+    ot_pl_land_w #(.W(((65) - (0) + 1)), .D(4)) u_lpl_129_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r3), .bank(lpl_129_bank), .epo(lpl_129_epo), .vld(lpl_129_vld));
+    ot_pl_land_r #(.W(((65) - (0) + 1)), .D(4), .K(2)) u_lpl_129_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_129_bank), .epo(lpl_129_epo), .vld(lpl_129_vld), .o(lpl_129_o));
+    assign nb_r3__l_r_st3 = lpl_129_o;
     // ---- LANDING 130: bt_q3 r_st0 -> r_st3, 32 b (u_r3.bt_q_p)
     wire [4*((31) - (0) + 1)-1:0] lpl_130_bank;  wire [11:0] lpl_130_epo;  wire [3:0] lpl_130_vld;  wire [31:0] bt_q3__l_r_st3, lpl_130_o;
     ot_pl_land_w #(.W(((31) - (0) + 1)), .D(4)) u_lpl_130_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(bt_q3), .bank(lpl_130_bank), .epo(lpl_130_epo), .vld(lpl_130_vld));
@@ -1337,18 +1346,21 @@ module qfd_dv_s5_lp #(
     wire [28:0] stn_cfg__l_r_st4, lpl_133_o;
     ot_pl_land_r #(.W(((28) - (0) + 1)), .D(4), .K(2)) u_lpl_133_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld), .o(lpl_133_o));
     assign stn_cfg__l_r_st4 = lpl_133_o;
-    // ---- LANDING 134: rss_r r_st0 -> r_st4, 1056 b (u_r4.rs_s_lo_p, u_r4.rs_s_hi_p, u_r4.rs_s_c_p) -- reads ring 113
-    wire [8*132-1:0] rss_r__l_r_st4, lpl_134_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_134_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_134_o));
-    assign rss_r__l_r_st4 = lpl_134_o;
-    // ---- LANDING 135: rsn_r r_hc1 -> r_st4, 1056 b (u_r4.rs_n_lo_p, u_r4.rs_n_hi_p, u_r4.rs_n_c_p) -- reads ring 108
-    wire [8*132-1:0] rsn_r__l_r_st4, lpl_135_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_135_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_135_o));
-    assign rsn_r__l_r_st4 = lpl_135_o;
-    // ---- LANDING 136: nb_r r_fw -> r_st4, 528 b (u_r4.nb_d_p, u_r4.nb_c_p) -- reads ring 109
-    wire [8*66-1:0] nb_r__l_r_st4, lpl_136_o;
-    ot_pl_land_r #(.W(((8*66-1) - (0) + 1)), .D(4), .K(2)) u_lpl_136_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_136_o));
-    assign nb_r__l_r_st4 = lpl_136_o;
+    // ---- LANDING 134: rss_r4 r_st0 -> r_st4, 132 b (u_r4.rs_s_lo_p, u_r4.rs_s_hi_p, u_r4.rs_s_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_134_bank;  wire [11:0] lpl_134_epo;  wire [3:0] lpl_134_vld;  wire [131:0] rss_r4__l_r_st4, lpl_134_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_134_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(rss_r4), .bank(lpl_134_bank), .epo(lpl_134_epo), .vld(lpl_134_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_134_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_134_bank), .epo(lpl_134_epo), .vld(lpl_134_vld), .o(lpl_134_o));
+    assign rss_r4__l_r_st4 = lpl_134_o;
+    // ---- LANDING 135: rsn_r4 r_hc1 -> r_st4, 132 b (u_r4.rs_n_lo_p, u_r4.rs_n_hi_p, u_r4.rs_n_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_135_bank;  wire [11:0] lpl_135_epo;  wire [3:0] lpl_135_vld;  wire [131:0] rsn_r4__l_r_st4, lpl_135_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_135_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r4), .bank(lpl_135_bank), .epo(lpl_135_epo), .vld(lpl_135_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_135_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_135_bank), .epo(lpl_135_epo), .vld(lpl_135_vld), .o(lpl_135_o));
+    assign rsn_r4__l_r_st4 = lpl_135_o;
+    // ---- LANDING 136: nb_r4 r_fw -> r_st4, 66 b (u_r4.nb_d_p, u_r4.nb_c_p)
+    wire [4*((65) - (0) + 1)-1:0] lpl_136_bank;  wire [11:0] lpl_136_epo;  wire [3:0] lpl_136_vld;  wire [65:0] nb_r4__l_r_st4, lpl_136_o;
+    ot_pl_land_w #(.W(((65) - (0) + 1)), .D(4)) u_lpl_136_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r4), .bank(lpl_136_bank), .epo(lpl_136_epo), .vld(lpl_136_vld));
+    ot_pl_land_r #(.W(((65) - (0) + 1)), .D(4), .K(2)) u_lpl_136_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_136_bank), .epo(lpl_136_epo), .vld(lpl_136_vld), .o(lpl_136_o));
+    assign nb_r4__l_r_st4 = lpl_136_o;
     // ---- LANDING 137: bt_q4 r_st0 -> r_st4, 32 b (u_r4.bt_q_p)
     wire [4*((31) - (0) + 1)-1:0] lpl_137_bank;  wire [11:0] lpl_137_epo;  wire [3:0] lpl_137_vld;  wire [31:0] bt_q4__l_r_st4, lpl_137_o;
     ot_pl_land_w #(.W(((31) - (0) + 1)), .D(4)) u_lpl_137_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(bt_q4), .bank(lpl_137_bank), .epo(lpl_137_epo), .vld(lpl_137_vld));
@@ -1368,18 +1380,21 @@ module qfd_dv_s5_lp #(
     wire [28:0] stn_cfg__l_r_st5, lpl_140_o;
     ot_pl_land_r #(.W(((28) - (0) + 1)), .D(4), .K(2)) u_lpl_140_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld), .o(lpl_140_o));
     assign stn_cfg__l_r_st5 = lpl_140_o;
-    // ---- LANDING 141: rss_r r_st0 -> r_st5, 1056 b (u_r5.rs_s_lo_p, u_r5.rs_s_hi_p, u_r5.rs_s_c_p) -- reads ring 113
-    wire [8*132-1:0] rss_r__l_r_st5, lpl_141_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_141_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_141_o));
-    assign rss_r__l_r_st5 = lpl_141_o;
-    // ---- LANDING 142: rsn_r r_hc1 -> r_st5, 1056 b (u_r5.rs_n_lo_p, u_r5.rs_n_hi_p, u_r5.rs_n_c_p) -- reads ring 108
-    wire [8*132-1:0] rsn_r__l_r_st5, lpl_142_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_142_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_142_o));
-    assign rsn_r__l_r_st5 = lpl_142_o;
-    // ---- LANDING 143: nb_r r_fw -> r_st5, 528 b (u_r5.nb_d_p, u_r5.nb_c_p) -- reads ring 109
-    wire [8*66-1:0] nb_r__l_r_st5, lpl_143_o;
-    ot_pl_land_r #(.W(((8*66-1) - (0) + 1)), .D(4), .K(2)) u_lpl_143_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_143_o));
-    assign nb_r__l_r_st5 = lpl_143_o;
+    // ---- LANDING 141: rss_r5 r_st0 -> r_st5, 132 b (u_r5.rs_s_lo_p, u_r5.rs_s_hi_p, u_r5.rs_s_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_141_bank;  wire [11:0] lpl_141_epo;  wire [3:0] lpl_141_vld;  wire [131:0] rss_r5__l_r_st5, lpl_141_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_141_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(rss_r5), .bank(lpl_141_bank), .epo(lpl_141_epo), .vld(lpl_141_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_141_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_141_bank), .epo(lpl_141_epo), .vld(lpl_141_vld), .o(lpl_141_o));
+    assign rss_r5__l_r_st5 = lpl_141_o;
+    // ---- LANDING 142: rsn_r5 r_hc1 -> r_st5, 132 b (u_r5.rs_n_lo_p, u_r5.rs_n_hi_p, u_r5.rs_n_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_142_bank;  wire [11:0] lpl_142_epo;  wire [3:0] lpl_142_vld;  wire [131:0] rsn_r5__l_r_st5, lpl_142_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_142_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r5), .bank(lpl_142_bank), .epo(lpl_142_epo), .vld(lpl_142_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_142_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_142_bank), .epo(lpl_142_epo), .vld(lpl_142_vld), .o(lpl_142_o));
+    assign rsn_r5__l_r_st5 = lpl_142_o;
+    // ---- LANDING 143: nb_r5 r_fw -> r_st5, 66 b (u_r5.nb_d_p, u_r5.nb_c_p)
+    wire [4*((65) - (0) + 1)-1:0] lpl_143_bank;  wire [11:0] lpl_143_epo;  wire [3:0] lpl_143_vld;  wire [65:0] nb_r5__l_r_st5, lpl_143_o;
+    ot_pl_land_w #(.W(((65) - (0) + 1)), .D(4)) u_lpl_143_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r5), .bank(lpl_143_bank), .epo(lpl_143_epo), .vld(lpl_143_vld));
+    ot_pl_land_r #(.W(((65) - (0) + 1)), .D(4), .K(2)) u_lpl_143_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_143_bank), .epo(lpl_143_epo), .vld(lpl_143_vld), .o(lpl_143_o));
+    assign nb_r5__l_r_st5 = lpl_143_o;
     // ---- LANDING 144: bt_q5 r_st0 -> r_st5, 32 b (u_r5.bt_q_p)
     wire [4*((31) - (0) + 1)-1:0] lpl_144_bank;  wire [11:0] lpl_144_epo;  wire [3:0] lpl_144_vld;  wire [31:0] bt_q5__l_r_st5, lpl_144_o;
     ot_pl_land_w #(.W(((31) - (0) + 1)), .D(4)) u_lpl_144_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(bt_q5), .bank(lpl_144_bank), .epo(lpl_144_epo), .vld(lpl_144_vld));
@@ -1399,18 +1414,21 @@ module qfd_dv_s5_lp #(
     wire [28:0] stn_cfg__l_r_st6, lpl_147_o;
     ot_pl_land_r #(.W(((28) - (0) + 1)), .D(4), .K(2)) u_lpl_147_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld), .o(lpl_147_o));
     assign stn_cfg__l_r_st6 = lpl_147_o;
-    // ---- LANDING 148: rss_r r_st0 -> r_st6, 1056 b (u_r6.rs_s_lo_p, u_r6.rs_s_hi_p, u_r6.rs_s_c_p) -- reads ring 113
-    wire [8*132-1:0] rss_r__l_r_st6, lpl_148_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_148_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_148_o));
-    assign rss_r__l_r_st6 = lpl_148_o;
-    // ---- LANDING 149: rsn_r r_hc1 -> r_st6, 1056 b (u_r6.rs_n_lo_p, u_r6.rs_n_hi_p, u_r6.rs_n_c_p) -- reads ring 108
-    wire [8*132-1:0] rsn_r__l_r_st6, lpl_149_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_149_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_149_o));
-    assign rsn_r__l_r_st6 = lpl_149_o;
-    // ---- LANDING 150: nb_r r_fw -> r_st6, 528 b (u_r6.nb_d_p, u_r6.nb_c_p) -- reads ring 109
-    wire [8*66-1:0] nb_r__l_r_st6, lpl_150_o;
-    ot_pl_land_r #(.W(((8*66-1) - (0) + 1)), .D(4), .K(2)) u_lpl_150_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_150_o));
-    assign nb_r__l_r_st6 = lpl_150_o;
+    // ---- LANDING 148: rss_r6 r_st0 -> r_st6, 132 b (u_r6.rs_s_lo_p, u_r6.rs_s_hi_p, u_r6.rs_s_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_148_bank;  wire [11:0] lpl_148_epo;  wire [3:0] lpl_148_vld;  wire [131:0] rss_r6__l_r_st6, lpl_148_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_148_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(rss_r6), .bank(lpl_148_bank), .epo(lpl_148_epo), .vld(lpl_148_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_148_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_148_bank), .epo(lpl_148_epo), .vld(lpl_148_vld), .o(lpl_148_o));
+    assign rss_r6__l_r_st6 = lpl_148_o;
+    // ---- LANDING 149: rsn_r6 r_hc1 -> r_st6, 132 b (u_r6.rs_n_lo_p, u_r6.rs_n_hi_p, u_r6.rs_n_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_149_bank;  wire [11:0] lpl_149_epo;  wire [3:0] lpl_149_vld;  wire [131:0] rsn_r6__l_r_st6, lpl_149_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_149_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r6), .bank(lpl_149_bank), .epo(lpl_149_epo), .vld(lpl_149_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_149_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_149_bank), .epo(lpl_149_epo), .vld(lpl_149_vld), .o(lpl_149_o));
+    assign rsn_r6__l_r_st6 = lpl_149_o;
+    // ---- LANDING 150: nb_r6 r_fw -> r_st6, 66 b (u_r6.nb_d_p, u_r6.nb_c_p)
+    wire [4*((65) - (0) + 1)-1:0] lpl_150_bank;  wire [11:0] lpl_150_epo;  wire [3:0] lpl_150_vld;  wire [65:0] nb_r6__l_r_st6, lpl_150_o;
+    ot_pl_land_w #(.W(((65) - (0) + 1)), .D(4)) u_lpl_150_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r6), .bank(lpl_150_bank), .epo(lpl_150_epo), .vld(lpl_150_vld));
+    ot_pl_land_r #(.W(((65) - (0) + 1)), .D(4), .K(2)) u_lpl_150_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_150_bank), .epo(lpl_150_epo), .vld(lpl_150_vld), .o(lpl_150_o));
+    assign nb_r6__l_r_st6 = lpl_150_o;
     // ---- LANDING 151: bt_q6 r_st0 -> r_st6, 32 b (u_r6.bt_q_p)
     wire [4*((31) - (0) + 1)-1:0] lpl_151_bank;  wire [11:0] lpl_151_epo;  wire [3:0] lpl_151_vld;  wire [31:0] bt_q6__l_r_st6, lpl_151_o;
     ot_pl_land_w #(.W(((31) - (0) + 1)), .D(4)) u_lpl_151_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(bt_q6), .bank(lpl_151_bank), .epo(lpl_151_epo), .vld(lpl_151_vld));
@@ -1430,18 +1448,21 @@ module qfd_dv_s5_lp #(
     wire [28:0] stn_cfg__l_r_st7, lpl_154_o;
     ot_pl_land_r #(.W(((28) - (0) + 1)), .D(4), .K(2)) u_lpl_154_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_107_bank), .epo(lpl_107_epo), .vld(lpl_107_vld), .o(lpl_154_o));
     assign stn_cfg__l_r_st7 = lpl_154_o;
-    // ---- LANDING 155: rss_r r_st0 -> r_st7, 1056 b (u_r7.rs_s_lo_p, u_r7.rs_s_hi_p, u_r7.rs_s_c_p) -- reads ring 113
-    wire [8*132-1:0] rss_r__l_r_st7, lpl_155_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_155_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_155_o));
-    assign rss_r__l_r_st7 = lpl_155_o;
-    // ---- LANDING 156: rsn_r r_hc1 -> r_st7, 1056 b (u_r7.rs_n_lo_p, u_r7.rs_n_hi_p, u_r7.rs_n_c_p) -- reads ring 108
-    wire [8*132-1:0] rsn_r__l_r_st7, lpl_156_o;
-    ot_pl_land_r #(.W(((8*132-1) - (0) + 1)), .D(4), .K(2)) u_lpl_156_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_108_bank), .epo(lpl_108_epo), .vld(lpl_108_vld), .o(lpl_156_o));
-    assign rsn_r__l_r_st7 = lpl_156_o;
-    // ---- LANDING 157: nb_r r_fw -> r_st7, 528 b (u_r7.nb_d_p, u_r7.nb_c_p) -- reads ring 109
-    wire [8*66-1:0] nb_r__l_r_st7, lpl_157_o;
-    ot_pl_land_r #(.W(((8*66-1) - (0) + 1)), .D(4), .K(2)) u_lpl_157_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_109_bank), .epo(lpl_109_epo), .vld(lpl_109_vld), .o(lpl_157_o));
-    assign nb_r__l_r_st7 = lpl_157_o;
+    // ---- LANDING 155: rss_r7 r_st0 -> r_st7, 132 b (u_r7.rs_s_lo_p, u_r7.rs_s_hi_p, u_r7.rs_s_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_155_bank;  wire [11:0] lpl_155_epo;  wire [3:0] lpl_155_vld;  wire [131:0] rss_r7__l_r_st7, lpl_155_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_155_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(rss_r7), .bank(lpl_155_bank), .epo(lpl_155_epo), .vld(lpl_155_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_155_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_155_bank), .epo(lpl_155_epo), .vld(lpl_155_vld), .o(lpl_155_o));
+    assign rss_r7__l_r_st7 = lpl_155_o;
+    // ---- LANDING 156: rsn_r7 r_hc1 -> r_st7, 132 b (u_r7.rs_n_lo_p, u_r7.rs_n_hi_p, u_r7.rs_n_c_p)
+    wire [4*((131) - (0) + 1)-1:0] lpl_156_bank;  wire [11:0] lpl_156_epo;  wire [3:0] lpl_156_vld;  wire [131:0] rsn_r7__l_r_st7, lpl_156_o;
+    ot_pl_land_w #(.W(((131) - (0) + 1)), .D(4)) u_lpl_156_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1), .i(rsn_r7), .bank(lpl_156_bank), .epo(lpl_156_epo), .vld(lpl_156_vld));
+    ot_pl_land_r #(.W(((131) - (0) + 1)), .D(4), .K(2)) u_lpl_156_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_156_bank), .epo(lpl_156_epo), .vld(lpl_156_vld), .o(lpl_156_o));
+    assign rsn_r7__l_r_st7 = lpl_156_o;
+    // ---- LANDING 157: nb_r7 r_fw -> r_st7, 66 b (u_r7.nb_d_p, u_r7.nb_c_p)
+    wire [4*((65) - (0) + 1)-1:0] lpl_157_bank;  wire [11:0] lpl_157_epo;  wire [3:0] lpl_157_vld;  wire [65:0] nb_r7__l_r_st7, lpl_157_o;
+    ot_pl_land_w #(.W(((65) - (0) + 1)), .D(4)) u_lpl_157_w (.ck(ck_r_fw), .rsi(lpr_r_fw), .i(nb_r7), .bank(lpl_157_bank), .epo(lpl_157_epo), .vld(lpl_157_vld));
+    ot_pl_land_r #(.W(((65) - (0) + 1)), .D(4), .K(2)) u_lpl_157_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_157_bank), .epo(lpl_157_epo), .vld(lpl_157_vld), .o(lpl_157_o));
+    assign nb_r7__l_r_st7 = lpl_157_o;
     // ---- LANDING 158: bt_q7 r_st0 -> r_st7, 32 b (u_r7.bt_q_p)
     wire [4*((31) - (0) + 1)-1:0] lpl_158_bank;  wire [11:0] lpl_158_epo;  wire [3:0] lpl_158_vld;  wire [31:0] bt_q7__l_r_st7, lpl_158_o;
     ot_pl_land_w #(.W(((31) - (0) + 1)), .D(4)) u_lpl_158_w (.ck(ck_r_st0), .rsi(lpr_r_st0), .i(bt_q7), .bank(lpl_158_bank), .epo(lpl_158_epo), .vld(lpl_158_vld));
@@ -1652,10 +1673,10 @@ module qfd_dv_s5_lp #(
     wire lpr_c_u_xl3_6;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xl3_6 (.ck(ck_r_hc3), .d(lpr_r_hc3), .q(lpr_c_u_xl3_6));   // t(u_xl3_6) = 0
     wire lpr_c_u_xl3_7;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xl3_7 (.ck(ck_r_hc3), .d(lpr_r_hc3), .q(lpr_c_u_xl3_7));   // t(u_xl3_7) = 0
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    qfd_dv_s5_fdn u_fdn (.ck(ck_r_fw), .rst_n(lpr_c_u_fdn), .cmd_i(cmd_i), .hr_i(hr_i), .st_up_i(st_up_i), .sc_up_i(sc_up_i), .ch_dn_i(ch_dn_i), .treq_i(treq_i), .cmd_q(cmd_q), .hr_q(hr_q), .sw_q(sw_q), .scu_q(scu_q), .chd_q(chd_q), .treq_q(treq_q), .chu_q(chu_q__l_r_fw), .own_ch(own_ch__l_r_fw), .ch_dn_o(ch_dn_o), .pc_bad(pc_bad), .agu_q(agu_q__l_r_fw), .ag_own(ag_own__l_r_fw), .ag_dn_o(ag_dn_o), .st_dn_c(so_w__l_r_fw), .st_dn_o(st_dn_o), .sc_dn_c(sc_dn_c__l_r_fw), .sc_dn_o(sc_dn_o), .st_c(st_c__l_r_fw), .st(st), .cc_c(cc_c__l_r_fw), .cc_o(cc_o), .l9_i(l9_i), .l9_r(nb_r), .treq_c(treq_c));   // region r_fw, t = 0
+    qfd_dv_s5_fdn u_fdn (.ck(ck_r_fw), .rst_n(lpr_c_u_fdn), .cmd_i(cmd_i), .hr_i(hr_i), .st_up_i(st_up_i), .sc_up_i(sc_up_i), .ch_dn_i(ch_dn_i), .treq_i(treq_i), .cmd_q(cmd_q), .hr_q(hr_q), .sw_q(sw_q), .scu_q(scu_q), .chd_q(chd_q), .treq_q(treq_q), .chu_q(chu_q__l_r_fw), .own_ch(own_ch__l_r_fw), .ch_dn_o(ch_dn_o), .pc_bad(pc_bad), .agu_q(agu_q__l_r_fw), .ag_own(ag_own__l_r_fw), .ag_dn_o(ag_dn_o), .st_dn_c(so_w__l_r_fw), .st_dn_o(st_dn_o), .sc_dn_c(sc_dn_c__l_r_fw), .sc_dn_o(sc_dn_o), .st_c(st_c__l_r_fw), .st(st), .cc_c(cc_c__l_r_fw), .cc_o(cc_o), .l9_i(l9_i), .l9_r0(nb_r0), .l9_r1(nb_r1), .l9_r2(nb_r2), .l9_r3(nb_r3), .l9_r4(nb_r4), .l9_r5(nb_r5), .l9_r6(nb_r6), .l9_r7(nb_r7), .treq_c(treq_c));   // region r_fw, t = 0
     qfd_dv_s5_fup u_fup (.ck(ck_r_fe), .rst_n(lpr_c_u_fup), .st_dn_i(st_dn_i), .sc_dn_i(sc_dn_i), .ch_up_i(ch_up_i), .ag_up_i(ag_up_i), .se_q(se_q), .scd_q(scd_q), .chu_q(chu_q), .agu_q(agu_q), .cmd_q(cmd_q__l_r_fe), .cmd_o(cmd_o), .st_up_c(so_e__l_r_fe), .st_up_o(st_up_o), .sc_up_c(sc_up_c__l_r_fe), .sc_up_o(sc_up_o), .hr_c(hr_q__l_r_fe), .hr_o(hr_o), .chr_c(chd_q__l_r_fe), .ch_up_o(ch_up_o), .treq_c(treq_q__l_r_fe), .treq_o(treq_o), .l9_c({oc0__l_r_fe, l9d7__l_r_fe, l9d6__l_r_fe, l9d5__l_r_fe, l9d4__l_r_fe, l9d3__l_r_fe, l9d2__l_r_fe, l9d1__l_r_fe, l9d0__l_r_fe}), .l9_o(l9_o));   // region r_fe, t = 0
-    qfd_dv_s5_fn u_fn (.ck(ck_r_hc1), .rs_n(rs_n), .rs_n_r(rsn_r));   // region r_hc1, t = 0
-    qfd_dv_s5_frs u_frs (.ck(ck_r_st0), .rs_s(rs_s), .rs_s_r(rss_r));   // region r_st0, t = 0
+    qfd_dv_s5_fn u_fn (.ck(ck_r_hc1), .rs_n(rs_n), .rs_n_r0(rsn_r0), .rs_n_r1(rsn_r1), .rs_n_r2(rsn_r2), .rs_n_r3(rsn_r3), .rs_n_r4(rsn_r4), .rs_n_r5(rsn_r5), .rs_n_r6(rsn_r6), .rs_n_r7(rsn_r7));   // region r_hc1, t = 0
+    qfd_dv_s5_frs u_frs (.ck(ck_r_st0), .rs_s(rs_s), .rs_s_r0(rss_r0), .rs_s_r1(rss_r1), .rs_s_r2(rss_r2), .rs_s_r3(rss_r3), .rs_s_r4(rss_r4), .rs_s_r5(rss_r5), .rs_s_r6(rss_r6), .rs_s_r7(rss_r7));   // region r_st0, t = 0
     qfd_dv_s5_fs u_fs (.ck(ck_r_stm), .cs0(cs0__l_r_stm), .cs1(cs1__l_r_stm), .cs2(cs2__l_r_stm), .cs3(cs3__l_r_stm), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));   // region r_stm, t = 0
     qfd_dv_s5_ctl u_ctl (.ck(ck_r_ctl), .rst_n(lpr_c_u_ctl), .cmd_q(cmd_q__l_r_ctl), .chd_q(chd_q__l_r_ctl), .r_v(rv0__l_r_ctl), .r_idx(ri0__l_r_ctl), .r_last(rl0__l_r_ctl), .r_d({r_d7__l_r_ctl, r_d6__l_r_ctl, r_d5__l_r_ctl, r_d4__l_r_ctl, r_d3__l_r_ctl, r_d2__l_r_ctl, r_d1__l_r_ctl, r_d0__l_r_ctl}), .l9o_v(oc0__l_r_ctl[0]), .stn_fault(fl0__l_r_ctl), .vm_we(L_vm_we__l_r_ctl), .vm_waddr(L_vm_waddr__l_r_ctl), .vm_wdata(L_vm_wdata__l_r_ctl), .kv_we(L_kv_we__l_r_ctl), .kv_waddr(L_kv_waddr__l_r_ctl), .kv_wdata(L_kv_wdata__l_r_ctl), .su_nr(su_nr__l_r_ctl), .su_idle(su_idle__l_r_ctl), .su_fault(su_fault__l_r_ctl), .su_prog(su_prog__l_r_ctl), .su_rows(su_rows__l_r_ctl), .vm_fault(vm_fault__l_r_ctl), .red_we(red_we__l_r_ctl), .red_addr(red_addr__l_r_ctl), .red_data(red_data__l_r_ctl), .sc_w1_we(sc_w1_we__l_r_ctl), .sc_w1_addr(sc_w1_addr__l_r_ctl), .sc_w1_data(sc_w1_data__l_r_ctl), .tok_v(tok_v__l_r_ctl), .tok_idx(tok_idx__l_r_ctl), .tok_own(tok_own__l_r_ctl), .tok_val(tok_val__l_r_ctl), .tok_user(tok_user__l_r_ctl), .sc_busy(sc_busy__l_r_ctl), .sc_fault(sc_fault__l_r_ctl), .stm_fault(stm_fault__l_r_ctl), .tld_fault(tld_fault__l_r_ctl), .hd_fault(fch0__l_r_ctl), .pc_bad(pc_bad__l_r_ctl), .sid(sid), .stn_cfg(stn_cfg), .sc_cfg(sc_cfg), .stm_cfg(stm_cfg), .su_cmd(su_cmd), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u), .w16_we(w16_we), .w16_addr(w16_addr), .w16_data(w16_data), .w1_we(w1_we), .w1_addr(w1_addr), .w1_data(w1_data), .own_ch(own_ch), .ag_own(ag_own), .st(st_c), .cc_o(cc_c));   // region r_ctl, t = 0
     qfd_dv_s5_suvm u_suvm (.ck(ck_r_su), .rst_n(lpr_c_u_suvm), .su_cmd(su_cmd__l_r_su), .gb(gb), .gv(gv), .lv1(lv1), .pd1(pd1), .va_re(L_va_re), .vb_re(L_vb_re), .vc_re(L_vc_re), .cr_re(L_crom_re), .vm_we(L_vm_we), .kv_we(L_kv_we), .l_retire(L_retire), .l_last(L_l_last), .l_fault(L_l_fault), .l_wrom_re(L_wrom_re), .va_addr(L_va_addr), .vb_addr(L_vb_addr), .vc_addr(L_vc_addr), .cr_addr(L_crom_addr), .vm_waddr(L_vm_waddr), .l_wrom_addr(L_wrom_addr), .vm_wdata(L_vm_wdata), .va_q(va_q), .vb_q(vb_q), .vc_q(vc_q), .cr_q(cr_q), .rd_v(rd_v), .red_busy(red_busy), .red_fault(red_fault), .w16_we(w16_we__l_r_su), .w16_addr(w16_addr__l_r_su), .w16_data(w16_data__l_r_su), .w1_we(w1_we__l_r_su), .w1_addr(w1_addr__l_r_su), .w1_data(w1_data__l_r_su), .tw_we(tw_we__l_r_su), .tw_kind(tw_kind__l_r_su), .tw_addr(tw_addr__l_r_su), .tw_data(tw_data__l_r_su), .su_nr(su_nr), .su_idle(su_idle), .su_fault(su_fault), .su_prog(su_prog), .su_rows(su_rows), .vm_fault(vm_fault));   // region r_su, t = 0
@@ -1703,14 +1724,14 @@ module qfd_dv_s5_lp #(
     qfd_dv_s5_sc u_sc (.ck(ck_r_sc), .rst_n(lpr_c_u_sc), .sc_cfg(sc_cfg__l_r_sc), .dn_i(scd_q__l_r_sc), .dn_o(sc_dn_c), .up_i(scu_q__l_r_sc), .up_o(sc_up_c), .red_we(red_we__l_r_sc), .red_addr(red_addr__l_r_sc), .red_data(red_data__l_r_sc), .vm_we(L_vm_we__l_r_sc), .vm_win0(sc_win0__l_r_sc), .vm_wdata0(sc_wd0__l_r_sc), .am_v(am_v__l_r_sc), .am_idx(am_idx__l_r_sc), .am_val(am_val__l_r_sc), .am_u(am_u__l_r_sc), .w1_we(sc_w1_we), .w1_addr(sc_w1_addr), .w1_data(sc_w1_data), .tok_v(tok_v), .tok_idx(tok_idx), .tok_own(tok_own), .tok_val(tok_val), .tok_user(tok_user), .busy(sc_busy), .fault(sc_fault));   // region r_sc, t = 0
     qfd_dv_s5_stm u_stm (.ck(ck_r_stm), .rst_n(lpr_c_u_stm), .sid(sid__l_r_stm), .stm_cfg(stm_cfg__l_r_stm), .sw_i(sw_q__l_r_stm), .se_i(se_q__l_r_stm), .so_e(so_e), .so_w(so_w), .vm_we(L_vm_we__l_r_stm), .vm_waddr(L_vm_waddr__l_r_stm), .vm_wdata(L_vm_wdata__l_r_stm), .treq_i(treq_c__l_r_stm), .tw_we(tw_we), .tw_kind(tw_kind), .tw_addr(tw_addr), .tw_data(tw_data), .xt_v(xt_v), .xt_a(xt_a), .xt_d(xt_d), .xt_bad(xt_bad), .stm_fault(stm_fault), .tld_fault(tld_fault));   // region r_stm, t = 0
     qfd_dv_s5_btab u_btab (.ck(ck_r_st0), .bt_re(bre0), .bt_word(bw0), .bt_q(bt_q), .tw_we(tw_we__l_r_st0), .tw_kind(tw_kind__l_r_st0), .tw_addr(tw_addr__l_r_st0), .tw_data(tw_data__l_r_st0));   // region r_st0, t = 0
-    qfd_dv_redstn2_region u_r0 (.ck(ck_r_st0), .rst_n(lpr_c_u_r0), .cfg_v_p(stn_cfg__l_r_st0[28]), .cfg_mode_p(stn_cfg__l_r_st0[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st0[25]), .cfg_nwords_p(stn_cfg__l_r_st0[24:17]), .cfg_sbase_p(stn_cfg__l_r_st0[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st0[7:0]), .rs_s_lo_p(rss_r[63:0]), .rs_s_hi_p(rss_r[127:64]), .rs_n_lo_p(rsn_r__l_r_st0[63:0]), .rs_n_hi_p(rsn_r__l_r_st0[127:64]), .rs_s_c_p(rss_r[131:128]), .rs_n_c_p(rsn_r__l_r_st0[131:128]), .nb_d_p(nb_r__l_r_st0[63:0]), .nb_c_p(nb_r__l_r_st0[65:64]), .nb_od(l9d0), .nb_oc(oc0), .bt_re(bre0), .bt_word(bw0), .bt_q_p(bt_q0), .r_v(rv0), .r_idx(ri0), .r_last(rl0), .r_d(r_d0), .flt_bank_i(flt_b2__l_r_st0), .flt_vld_i(flt_v2__l_r_st0), .flt_bank_o(flt_b0), .flt_vld_o(flt_v0), .fault(fl0));   // region r_st0, t = 0
-    qfd_dv_redstn2_region u_r1 (.ck(ck_r_st1), .rst_n(lpr_c_u_r1), .cfg_v_p(stn_cfg__l_r_st1[28]), .cfg_mode_p(stn_cfg__l_r_st1[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st1[25]), .cfg_nwords_p(stn_cfg__l_r_st1[24:17]), .cfg_sbase_p(stn_cfg__l_r_st1[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st1[7:0]), .rs_s_lo_p(rss_r__l_r_st1[195:132]), .rs_s_hi_p(rss_r__l_r_st1[259:196]), .rs_n_lo_p(rsn_r__l_r_st1[195:132]), .rs_n_hi_p(rsn_r__l_r_st1[259:196]), .rs_s_c_p(rss_r__l_r_st1[263:260]), .rs_n_c_p(rsn_r__l_r_st1[263:260]), .nb_d_p(nb_r__l_r_st1[129:66]), .nb_c_p(nb_r__l_r_st1[131:130]), .nb_od(l9d1), .nb_oc(oc1), .bt_re(bre1), .bt_word(bw1), .bt_q_p(bt_q1__l_r_st1), .r_v(rv1), .r_idx(ri1), .r_last(rl1), .r_d(r_d1), .flt_bank_i(flt_b0__l_r_st1), .flt_vld_i(flt_v0__l_r_st1), .flt_bank_o(flt_b1), .flt_vld_o(flt_v1), .fault(fl1));   // region r_st1, t = 0
-    qfd_dv_redstn2_region u_r2 (.ck(ck_r_st2), .rst_n(lpr_c_u_r2), .cfg_v_p(stn_cfg__l_r_st2[28]), .cfg_mode_p(stn_cfg__l_r_st2[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st2[25]), .cfg_nwords_p(stn_cfg__l_r_st2[24:17]), .cfg_sbase_p(stn_cfg__l_r_st2[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st2[7:0]), .rs_s_lo_p(rss_r__l_r_st2[327:264]), .rs_s_hi_p(rss_r__l_r_st2[391:328]), .rs_n_lo_p(rsn_r__l_r_st2[327:264]), .rs_n_hi_p(rsn_r__l_r_st2[391:328]), .rs_s_c_p(rss_r__l_r_st2[395:392]), .rs_n_c_p(rsn_r__l_r_st2[395:392]), .nb_d_p(nb_r__l_r_st2[195:132]), .nb_c_p(nb_r__l_r_st2[197:196]), .nb_od(l9d2), .nb_oc(oc2), .bt_re(bre2), .bt_word(bw2), .bt_q_p(bt_q2__l_r_st2), .r_v(rv2), .r_idx(ri2), .r_last(rl2), .r_d(r_d2), .flt_bank_i(flt_b4__l_r_st2), .flt_vld_i(flt_v4__l_r_st2), .flt_bank_o(flt_b2), .flt_vld_o(flt_v2), .fault(fl2));   // region r_st2, t = 0
-    qfd_dv_redstn2_region u_r3 (.ck(ck_r_st3), .rst_n(lpr_c_u_r3), .cfg_v_p(stn_cfg__l_r_st3[28]), .cfg_mode_p(stn_cfg__l_r_st3[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st3[25]), .cfg_nwords_p(stn_cfg__l_r_st3[24:17]), .cfg_sbase_p(stn_cfg__l_r_st3[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st3[7:0]), .rs_s_lo_p(rss_r__l_r_st3[459:396]), .rs_s_hi_p(rss_r__l_r_st3[523:460]), .rs_n_lo_p(rsn_r__l_r_st3[459:396]), .rs_n_hi_p(rsn_r__l_r_st3[523:460]), .rs_s_c_p(rss_r__l_r_st3[527:524]), .rs_n_c_p(rsn_r__l_r_st3[527:524]), .nb_d_p(nb_r__l_r_st3[261:198]), .nb_c_p(nb_r__l_r_st3[263:262]), .nb_od(l9d3), .nb_oc(oc3), .bt_re(bre3), .bt_word(bw3), .bt_q_p(bt_q3__l_r_st3), .r_v(rv3), .r_idx(ri3), .r_last(rl3), .r_d(r_d3), .flt_bank_i(flt_b1__l_r_st3), .flt_vld_i(flt_v1__l_r_st3), .flt_bank_o(flt_b3), .flt_vld_o(flt_v3), .fault(fl3));   // region r_st3, t = 0
-    qfd_dv_redstn2_region u_r4 (.ck(ck_r_st4), .rst_n(lpr_c_u_r4), .cfg_v_p(stn_cfg__l_r_st4[28]), .cfg_mode_p(stn_cfg__l_r_st4[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st4[25]), .cfg_nwords_p(stn_cfg__l_r_st4[24:17]), .cfg_sbase_p(stn_cfg__l_r_st4[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st4[7:0]), .rs_s_lo_p(rss_r__l_r_st4[591:528]), .rs_s_hi_p(rss_r__l_r_st4[655:592]), .rs_n_lo_p(rsn_r__l_r_st4[591:528]), .rs_n_hi_p(rsn_r__l_r_st4[655:592]), .rs_s_c_p(rss_r__l_r_st4[659:656]), .rs_n_c_p(rsn_r__l_r_st4[659:656]), .nb_d_p(nb_r__l_r_st4[327:264]), .nb_c_p(nb_r__l_r_st4[329:328]), .nb_od(l9d4), .nb_oc(oc4), .bt_re(bre4), .bt_word(bw4), .bt_q_p(bt_q4__l_r_st4), .r_v(rv4), .r_idx(ri4), .r_last(rl4), .r_d(r_d4), .flt_bank_i(flt_b6__l_r_st4), .flt_vld_i(flt_v6__l_r_st4), .flt_bank_o(flt_b4), .flt_vld_o(flt_v4), .fault(fl4));   // region r_st4, t = 0
-    qfd_dv_redstn2_region u_r5 (.ck(ck_r_st5), .rst_n(lpr_c_u_r5), .cfg_v_p(stn_cfg__l_r_st5[28]), .cfg_mode_p(stn_cfg__l_r_st5[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st5[25]), .cfg_nwords_p(stn_cfg__l_r_st5[24:17]), .cfg_sbase_p(stn_cfg__l_r_st5[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st5[7:0]), .rs_s_lo_p(rss_r__l_r_st5[723:660]), .rs_s_hi_p(rss_r__l_r_st5[787:724]), .rs_n_lo_p(rsn_r__l_r_st5[723:660]), .rs_n_hi_p(rsn_r__l_r_st5[787:724]), .rs_s_c_p(rss_r__l_r_st5[791:788]), .rs_n_c_p(rsn_r__l_r_st5[791:788]), .nb_d_p(nb_r__l_r_st5[393:330]), .nb_c_p(nb_r__l_r_st5[395:394]), .nb_od(l9d5), .nb_oc(oc5), .bt_re(bre5), .bt_word(bw5), .bt_q_p(bt_q5__l_r_st5), .r_v(rv5), .r_idx(ri5), .r_last(rl5), .r_d(r_d5), .flt_bank_i(flt_b3__l_r_st5), .flt_vld_i(flt_v3__l_r_st5), .flt_bank_o(flt_b5), .flt_vld_o(flt_v5), .fault(fl5));   // region r_st5, t = 0
-    qfd_dv_redstn2_region u_r6 (.ck(ck_r_st6), .rst_n(lpr_c_u_r6), .cfg_v_p(stn_cfg__l_r_st6[28]), .cfg_mode_p(stn_cfg__l_r_st6[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st6[25]), .cfg_nwords_p(stn_cfg__l_r_st6[24:17]), .cfg_sbase_p(stn_cfg__l_r_st6[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st6[7:0]), .rs_s_lo_p(rss_r__l_r_st6[855:792]), .rs_s_hi_p(rss_r__l_r_st6[919:856]), .rs_n_lo_p(rsn_r__l_r_st6[855:792]), .rs_n_hi_p(rsn_r__l_r_st6[919:856]), .rs_s_c_p(rss_r__l_r_st6[923:920]), .rs_n_c_p(rsn_r__l_r_st6[923:920]), .nb_d_p(nb_r__l_r_st6[459:396]), .nb_c_p(nb_r__l_r_st6[461:460]), .nb_od(l9d6), .nb_oc(oc6), .bt_re(bre6), .bt_word(bw6), .bt_q_p(bt_q6__l_r_st6), .r_v(rv6), .r_idx(ri6), .r_last(rl6), .r_d(r_d6), .flt_bank_i(flt_b7__l_r_st6), .flt_vld_i(flt_v7__l_r_st6), .flt_bank_o(flt_b6), .flt_vld_o(flt_v6), .fault(fl6));   // region r_st6, t = 0
-    qfd_dv_redstn2_region u_r7 (.ck(ck_r_st7), .rst_n(lpr_c_u_r7), .cfg_v_p(stn_cfg__l_r_st7[28]), .cfg_mode_p(stn_cfg__l_r_st7[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st7[25]), .cfg_nwords_p(stn_cfg__l_r_st7[24:17]), .cfg_sbase_p(stn_cfg__l_r_st7[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st7[7:0]), .rs_s_lo_p(rss_r__l_r_st7[987:924]), .rs_s_hi_p(rss_r__l_r_st7[1051:988]), .rs_n_lo_p(rsn_r__l_r_st7[987:924]), .rs_n_hi_p(rsn_r__l_r_st7[1051:988]), .rs_s_c_p(rss_r__l_r_st7[1055:1052]), .rs_n_c_p(rsn_r__l_r_st7[1055:1052]), .nb_d_p(nb_r__l_r_st7[525:462]), .nb_c_p(nb_r__l_r_st7[527:526]), .nb_od(l9d7), .nb_oc(oc7), .bt_re(bre7), .bt_word(bw7), .bt_q_p(bt_q7__l_r_st7), .r_v(rv7), .r_idx(ri7), .r_last(rl7), .r_d(r_d7), .flt_bank_i(flt_b5__l_r_st7), .flt_vld_i(flt_v5__l_r_st7), .flt_bank_o(flt_b7), .flt_vld_o(flt_v7), .fault(fl7));   // region r_st7, t = 0
+    qfd_dv_redstn2_region u_r0 (.ck(ck_r_st0), .rst_n(lpr_c_u_r0), .cfg_v_p(stn_cfg__l_r_st0[28]), .cfg_mode_p(stn_cfg__l_r_st0[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st0[25]), .cfg_nwords_p(stn_cfg__l_r_st0[24:17]), .cfg_sbase_p(stn_cfg__l_r_st0[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st0[7:0]), .rs_s_lo_p(rss_r0[63:0]), .rs_s_hi_p(rss_r0[127:64]), .rs_n_lo_p(rsn_r0__l_r_st0[63:0]), .rs_n_hi_p(rsn_r0__l_r_st0[127:64]), .rs_s_c_p(rss_r0[131:128]), .rs_n_c_p(rsn_r0__l_r_st0[131:128]), .nb_d_p(nb_r0__l_r_st0[63:0]), .nb_c_p(nb_r0__l_r_st0[65:64]), .nb_od(l9d0), .nb_oc(oc0), .bt_re(bre0), .bt_word(bw0), .bt_q_p(bt_q0), .r_v(rv0), .r_idx(ri0), .r_last(rl0), .r_d(r_d0), .flt_bank_i(flt_b2__l_r_st0), .flt_vld_i(flt_v2__l_r_st0), .flt_bank_o(flt_b0), .flt_vld_o(flt_v0), .fault(fl0));   // region r_st0, t = 0
+    qfd_dv_redstn2_region u_r1 (.ck(ck_r_st1), .rst_n(lpr_c_u_r1), .cfg_v_p(stn_cfg__l_r_st1[28]), .cfg_mode_p(stn_cfg__l_r_st1[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st1[25]), .cfg_nwords_p(stn_cfg__l_r_st1[24:17]), .cfg_sbase_p(stn_cfg__l_r_st1[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st1[7:0]), .rs_s_lo_p(rss_r1__l_r_st1[63:0]), .rs_s_hi_p(rss_r1__l_r_st1[127:64]), .rs_n_lo_p(rsn_r1__l_r_st1[63:0]), .rs_n_hi_p(rsn_r1__l_r_st1[127:64]), .rs_s_c_p(rss_r1__l_r_st1[131:128]), .rs_n_c_p(rsn_r1__l_r_st1[131:128]), .nb_d_p(nb_r1__l_r_st1[63:0]), .nb_c_p(nb_r1__l_r_st1[65:64]), .nb_od(l9d1), .nb_oc(oc1), .bt_re(bre1), .bt_word(bw1), .bt_q_p(bt_q1__l_r_st1), .r_v(rv1), .r_idx(ri1), .r_last(rl1), .r_d(r_d1), .flt_bank_i(flt_b0__l_r_st1), .flt_vld_i(flt_v0__l_r_st1), .flt_bank_o(flt_b1), .flt_vld_o(flt_v1), .fault(fl1));   // region r_st1, t = 0
+    qfd_dv_redstn2_region u_r2 (.ck(ck_r_st2), .rst_n(lpr_c_u_r2), .cfg_v_p(stn_cfg__l_r_st2[28]), .cfg_mode_p(stn_cfg__l_r_st2[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st2[25]), .cfg_nwords_p(stn_cfg__l_r_st2[24:17]), .cfg_sbase_p(stn_cfg__l_r_st2[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st2[7:0]), .rs_s_lo_p(rss_r2__l_r_st2[63:0]), .rs_s_hi_p(rss_r2__l_r_st2[127:64]), .rs_n_lo_p(rsn_r2__l_r_st2[63:0]), .rs_n_hi_p(rsn_r2__l_r_st2[127:64]), .rs_s_c_p(rss_r2__l_r_st2[131:128]), .rs_n_c_p(rsn_r2__l_r_st2[131:128]), .nb_d_p(nb_r2__l_r_st2[63:0]), .nb_c_p(nb_r2__l_r_st2[65:64]), .nb_od(l9d2), .nb_oc(oc2), .bt_re(bre2), .bt_word(bw2), .bt_q_p(bt_q2__l_r_st2), .r_v(rv2), .r_idx(ri2), .r_last(rl2), .r_d(r_d2), .flt_bank_i(flt_b4__l_r_st2), .flt_vld_i(flt_v4__l_r_st2), .flt_bank_o(flt_b2), .flt_vld_o(flt_v2), .fault(fl2));   // region r_st2, t = 0
+    qfd_dv_redstn2_region u_r3 (.ck(ck_r_st3), .rst_n(lpr_c_u_r3), .cfg_v_p(stn_cfg__l_r_st3[28]), .cfg_mode_p(stn_cfg__l_r_st3[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st3[25]), .cfg_nwords_p(stn_cfg__l_r_st3[24:17]), .cfg_sbase_p(stn_cfg__l_r_st3[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st3[7:0]), .rs_s_lo_p(rss_r3__l_r_st3[63:0]), .rs_s_hi_p(rss_r3__l_r_st3[127:64]), .rs_n_lo_p(rsn_r3__l_r_st3[63:0]), .rs_n_hi_p(rsn_r3__l_r_st3[127:64]), .rs_s_c_p(rss_r3__l_r_st3[131:128]), .rs_n_c_p(rsn_r3__l_r_st3[131:128]), .nb_d_p(nb_r3__l_r_st3[63:0]), .nb_c_p(nb_r3__l_r_st3[65:64]), .nb_od(l9d3), .nb_oc(oc3), .bt_re(bre3), .bt_word(bw3), .bt_q_p(bt_q3__l_r_st3), .r_v(rv3), .r_idx(ri3), .r_last(rl3), .r_d(r_d3), .flt_bank_i(flt_b1__l_r_st3), .flt_vld_i(flt_v1__l_r_st3), .flt_bank_o(flt_b3), .flt_vld_o(flt_v3), .fault(fl3));   // region r_st3, t = 0
+    qfd_dv_redstn2_region u_r4 (.ck(ck_r_st4), .rst_n(lpr_c_u_r4), .cfg_v_p(stn_cfg__l_r_st4[28]), .cfg_mode_p(stn_cfg__l_r_st4[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st4[25]), .cfg_nwords_p(stn_cfg__l_r_st4[24:17]), .cfg_sbase_p(stn_cfg__l_r_st4[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st4[7:0]), .rs_s_lo_p(rss_r4__l_r_st4[63:0]), .rs_s_hi_p(rss_r4__l_r_st4[127:64]), .rs_n_lo_p(rsn_r4__l_r_st4[63:0]), .rs_n_hi_p(rsn_r4__l_r_st4[127:64]), .rs_s_c_p(rss_r4__l_r_st4[131:128]), .rs_n_c_p(rsn_r4__l_r_st4[131:128]), .nb_d_p(nb_r4__l_r_st4[63:0]), .nb_c_p(nb_r4__l_r_st4[65:64]), .nb_od(l9d4), .nb_oc(oc4), .bt_re(bre4), .bt_word(bw4), .bt_q_p(bt_q4__l_r_st4), .r_v(rv4), .r_idx(ri4), .r_last(rl4), .r_d(r_d4), .flt_bank_i(flt_b6__l_r_st4), .flt_vld_i(flt_v6__l_r_st4), .flt_bank_o(flt_b4), .flt_vld_o(flt_v4), .fault(fl4));   // region r_st4, t = 0
+    qfd_dv_redstn2_region u_r5 (.ck(ck_r_st5), .rst_n(lpr_c_u_r5), .cfg_v_p(stn_cfg__l_r_st5[28]), .cfg_mode_p(stn_cfg__l_r_st5[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st5[25]), .cfg_nwords_p(stn_cfg__l_r_st5[24:17]), .cfg_sbase_p(stn_cfg__l_r_st5[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st5[7:0]), .rs_s_lo_p(rss_r5__l_r_st5[63:0]), .rs_s_hi_p(rss_r5__l_r_st5[127:64]), .rs_n_lo_p(rsn_r5__l_r_st5[63:0]), .rs_n_hi_p(rsn_r5__l_r_st5[127:64]), .rs_s_c_p(rss_r5__l_r_st5[131:128]), .rs_n_c_p(rsn_r5__l_r_st5[131:128]), .nb_d_p(nb_r5__l_r_st5[63:0]), .nb_c_p(nb_r5__l_r_st5[65:64]), .nb_od(l9d5), .nb_oc(oc5), .bt_re(bre5), .bt_word(bw5), .bt_q_p(bt_q5__l_r_st5), .r_v(rv5), .r_idx(ri5), .r_last(rl5), .r_d(r_d5), .flt_bank_i(flt_b3__l_r_st5), .flt_vld_i(flt_v3__l_r_st5), .flt_bank_o(flt_b5), .flt_vld_o(flt_v5), .fault(fl5));   // region r_st5, t = 0
+    qfd_dv_redstn2_region u_r6 (.ck(ck_r_st6), .rst_n(lpr_c_u_r6), .cfg_v_p(stn_cfg__l_r_st6[28]), .cfg_mode_p(stn_cfg__l_r_st6[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st6[25]), .cfg_nwords_p(stn_cfg__l_r_st6[24:17]), .cfg_sbase_p(stn_cfg__l_r_st6[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st6[7:0]), .rs_s_lo_p(rss_r6__l_r_st6[63:0]), .rs_s_hi_p(rss_r6__l_r_st6[127:64]), .rs_n_lo_p(rsn_r6__l_r_st6[63:0]), .rs_n_hi_p(rsn_r6__l_r_st6[127:64]), .rs_s_c_p(rss_r6__l_r_st6[131:128]), .rs_n_c_p(rsn_r6__l_r_st6[131:128]), .nb_d_p(nb_r6__l_r_st6[63:0]), .nb_c_p(nb_r6__l_r_st6[65:64]), .nb_od(l9d6), .nb_oc(oc6), .bt_re(bre6), .bt_word(bw6), .bt_q_p(bt_q6__l_r_st6), .r_v(rv6), .r_idx(ri6), .r_last(rl6), .r_d(r_d6), .flt_bank_i(flt_b7__l_r_st6), .flt_vld_i(flt_v7__l_r_st6), .flt_bank_o(flt_b6), .flt_vld_o(flt_v6), .fault(fl6));   // region r_st6, t = 0
+    qfd_dv_redstn2_region u_r7 (.ck(ck_r_st7), .rst_n(lpr_c_u_r7), .cfg_v_p(stn_cfg__l_r_st7[28]), .cfg_mode_p(stn_cfg__l_r_st7[27:26]), .cfg_wsrc_p(stn_cfg__l_r_st7[25]), .cfg_nwords_p(stn_cfg__l_r_st7[24:17]), .cfg_sbase_p(stn_cfg__l_r_st7[16:8]), .cfg_kcm1_p(stn_cfg__l_r_st7[7:0]), .rs_s_lo_p(rss_r7__l_r_st7[63:0]), .rs_s_hi_p(rss_r7__l_r_st7[127:64]), .rs_n_lo_p(rsn_r7__l_r_st7[63:0]), .rs_n_hi_p(rsn_r7__l_r_st7[127:64]), .rs_s_c_p(rss_r7__l_r_st7[131:128]), .rs_n_c_p(rsn_r7__l_r_st7[131:128]), .nb_d_p(nb_r7__l_r_st7[63:0]), .nb_c_p(nb_r7__l_r_st7[65:64]), .nb_od(l9d7), .nb_oc(oc7), .bt_re(bre7), .bt_word(bw7), .bt_q_p(bt_q7__l_r_st7), .r_v(rv7), .r_idx(ri7), .r_last(rl7), .r_d(r_d7), .flt_bank_i(flt_b5__l_r_st7), .flt_vld_i(flt_v5__l_r_st7), .flt_bank_o(flt_b7), .flt_vld_o(flt_v7), .fault(fl7));   // region r_st7, t = 0
     qfd_dv_s5_tap u_tap (.ck(ck_r_tap), .rst_n(lpr_c_u_tap), .sid(sid__l_r_tap), .hr_q(hr_q__l_r_tap), .xt_v(xt_v__l_r_tap), .xt_a(xt_a__l_r_tap), .xt_d(xt_d__l_r_tap), .xt_bad(xt_bad__l_r_tap), .lq_bad({lqb3__l_r_tap, lqb2__l_r_tap, lqb1__l_r_tap, lqb0__l_r_tap}), .hw(hw), .cid(cid), .tap_fault(tap_fault));   // region r_tap, t = 0
     qfd_dv_s5_xhead u_xh0 (.ck(ck_r_hc0), .rst_n(lpr_c_u_xh0), .cid(cid__l_r_hc0[5:0]), .fault_i(fch1__l_r_hc0), .a_d(hw__l_r_hc0), .n_d(cw_n0), .s_d(cs0), .lw_v(lw_v0), .lw_ep(lw_ep0), .lc_v(lc_v0), .lc_ep(lc_ep0), .lw_off(lw_off0), .lw_m(lw_m0), .lw_d(lw_d0), .lw_ctl(lw_ctl0), .lr_v(lr_v0), .lr_t(lr_t0), .lr_ep(lr_ep0), .lr_p(lr_p0), .lq(lq0), .lq_v(lq_v0), .lq_bad(lqb0), .l_rst_n(lrst0), .fault(fch0));   // region r_hc0, t = 0
     ot_qfd_xs_leaf u_xl0_0 (.clk(ck_r_hc0), .rst_n(lpr_c_u_xl0_0), .w_v(x00wv0), .w_ep(x00wep0), .w_off(x00woff0), .w_m(x00wm0), .w_d(x00wd0), .w_ctl(x00wc0), .c_v(x00cv0), .c_ep(x00cep0), .wo_v(x00wv1), .wo_ep(x00wep1), .wo_off(x00woff1), .wo_m(x00wm1), .wo_d(x00wd1), .wo_ctl(x00wc1), .co_v(x00cv1), .co_ep(x00cep1), .r_v(lr_v0[0]), .r_t(lr_t0[0]), .r_ep(lr_ep0[0]), .r_p(lr_p0[27:0]), .q_v(lq_v0[0]), .q(lq0[63:0]), .q_bad(lqb0[0]));   // region r_hc0, t = 0

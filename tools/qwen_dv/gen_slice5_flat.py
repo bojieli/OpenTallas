@@ -104,7 +104,7 @@ def gen(hard):
     w("    wire [3:0] sid; wire [28:0] stn_cfg; wire [100:0] sc_cfg; wire [30:0] stm_cfg; wire [9:0] su_cmd;")
     w("    wire am_v; wire [23:0] am_idx; wire [31:0] am_val; wire [1:0] am_u;")
     w("    wire w16_we; wire [23:0] w16_addr; wire [511:0] w16_data; wire w1_we; wire [23:0] w1_addr; wire [31:0] w1_data;")
-    w("    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; ")
+    w("    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; wire [131:0] " + ", ".join(f"rss_r{k}, rsn_r{k}" for k in range(8)) + "; wire [65:0] " + ", ".join(f"nb_r{k}" for k in range(8)) + ";")
     w("    wire su_nr, su_idle, su_fault, vm_fault; wire [15:0] su_prog, su_rows;")
     w("    wire red_we, rd_v, red_busy, red_fault; wire [23:0] red_addr; wire [31:0] red_data;")
     w("    wire sc_w1_we, tok_v, tok_own, sc_busy, sc_fault; wire [23:0] sc_w1_addr, tok_idx; wire [31:0] sc_w1_data, tok_val;")
@@ -129,15 +129,16 @@ def gen(hard):
     w("        .ch_dn_i(ch_dn_i), .treq_i(treq_i), .cmd_q(cmd_q), .hr_q(hr_q), .sw_q(sw_q), .scu_q(scu_q), .chd_q(chd_q),")
     w("        .treq_q(treq_q), .chu_q(chu_q), .own_ch(own_ch), .ch_dn_o(ch_dn_o), .pc_bad(pc_bad), .agu_q(agu_q),")
     w("        .ag_own(ag_own), .ag_dn_o(ag_dn_o), .st_dn_c(so_w), .st_dn_o(st_dn_o), .sc_dn_c(sc_dn_c), .sc_dn_o(sc_dn_o),")
-    w("        .st_c(st_c), .st(st), .cc_c(cc_c), .cc_o(cc_o), .l9_i(l9_i), .l9_r(nb_r), .treq_c(treq_c));")
+    w("        .st_c(st_c), .st(st), .cc_c(cc_c), .cc_o(cc_o), .l9_i(l9_i), " + ", ".join(f".l9_r{k}(nb_r{k})" for k in range(8)) + ", .treq_c(treq_c));")
     fm = "" if hard else " #(.MUT(MUT))"
     w(f"    qfd_dv_s5_fup{fm} u_fup (.ck(ck), .rst_n({R('rst_n')}), .st_dn_i(st_dn_i), .sc_dn_i(sc_dn_i), .ch_up_i(ch_up_i),")
     w("        .ag_up_i(ag_up_i), .se_q(se_q), .scd_q(scd_q), .chu_q(chu_q), .agu_q(agu_q), .cmd_q(cmd_q), .cmd_o(cmd_o),")
     w("        .st_up_c(so_e), .st_up_o(st_up_o), .sc_up_c(sc_up_c), .sc_up_o(sc_up_o), .hr_c(hr_q), .hr_o(hr_o),")
     w("        .chr_c(chd_q), .ch_up_o(ch_up_o), .treq_c(treq_q), .treq_o(treq_o),")
     w("        .l9_c({oc0, l9d7, l9d6, l9d5, l9d4, l9d3, l9d2, l9d1, l9d0}), .l9_o(l9_o));")
-    w("    qfd_dv_s5_fn u_fn (.ck(ck), .rs_n(rs_n), .rs_n_r(rsn_r));")
-    w("    qfd_dv_s5_frs u_frs (.ck(ck), .rs_s(rs_s), .rs_s_r(rss_r));")
+    w("    qfd_dv_s5_fn u_fn (.ck(ck), .rs_n(rs_n), " + ", ".join(f".rs_n_r{k}(rsn_r{k})" for k in range(8)) + ");")
+    w("    qfd_dv_s5_frs u_frs (.ck(ck), .rs_s(rs_s), " + ", ".join(f".rs_s_r{k}(rss_r{k})" for k in range(8)) + ");")
+    w("    assign rss_r = {" + ", ".join(f"rss_r{k}" for k in range(7, -1, -1)) + "}; assign rsn_r = {" + ", ".join(f"rsn_r{k}" for k in range(7, -1, -1)) + "}; assign nb_r = {" + ", ".join(f"nb_r{k}" for k in range(7, -1, -1)) + "};")
     w("    qfd_dv_s5_fs u_fs (.ck(ck), .cs0(cs0), .cs1(cs1), .cs2(cs2), .cs3(cs3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));")
     if not hard:
         w("    qfd_dv_s5_spin u_spin (.ck(ck), .rst_n(rst_n), .rs_s(rss_r), .rs_n(rsn_r), .l9_i(nb_r), .rss_q(rss_q), .rsn_q(rsn_q),")
@@ -208,19 +209,21 @@ def gen(hard):
     w("        .tw_addr(tw_addr), .tw_data(tw_data));")
     # ---------------------------------------------------------------- station: 8 closed regions
     w("    // ---- station: 8 x qfd_dv_redstn2_region (closed stnrgc), fault ring 0<-2<-4<-6<-7<-5<-3<-1<-0")
-    rs, rn, nb = ("rss_r", "rsn_r", "nb_r") if hard else ("rss_q", "rsn_q", "nb_q")
     sp = "" if hard else " #(.PIN_IN(0), .BT_LAT(0))"
     srst = "rst_n" if hard else "stn_rst"
     for r in range(8):
         u = up_of(r)
-        a = 132 * r
+        if hard:
+            S, N, B = (f"rss_r{r}", 0), (f"rsn_r{r}", 0), (f"nb_r{r}", 0)
+        else:
+            S, N, B = ("rss_q", 132 * r), ("rsn_q", 132 * r), ("nb_q", 66 * r)
+        sl = lambda x, lo, hi: f"{x[0]}[{x[1]+hi}:{x[1]+lo}]"
         w(f"    qfd_dv_redstn2_region{sp} u_r{r} (.ck(ck), .rst_n({srst}),")
         w("        .cfg_v_p(stn_cfg[28]), .cfg_mode_p(stn_cfg[27:26]), .cfg_wsrc_p(stn_cfg[25]), .cfg_nwords_p(stn_cfg[24:17]),")
         w("        .cfg_sbase_p(stn_cfg[16:8]), .cfg_kcm1_p(stn_cfg[7:0]),")
-        w(f"        .rs_s_lo_p({rs}[{a+63}:{a}]), .rs_s_hi_p({rs}[{a+127}:{a+64}]), .rs_n_lo_p({rn}[{a+63}:{a}]),"
-          f" .rs_n_hi_p({rn}[{a+127}:{a+64}]),")
-        w(f"        .rs_s_c_p({rs}[{a+131}:{a+128}]), .rs_n_c_p({rn}[{a+131}:{a+128}]),")
-        w(f"        .nb_d_p({nb}[{66*r+63}:{66*r}]), .nb_c_p({nb}[{66*r+65}:{66*r+64}]), .nb_od(l9d{r}), .nb_oc(oc{r}),")
+        w(f"        .rs_s_lo_p({sl(S,0,63)}), .rs_s_hi_p({sl(S,64,127)}), .rs_n_lo_p({sl(N,0,63)}), .rs_n_hi_p({sl(N,64,127)}),")
+        w(f"        .rs_s_c_p({sl(S,128,131)}), .rs_n_c_p({sl(N,128,131)}),")
+        w(f"        .nb_d_p({sl(B,0,63)}), .nb_c_p({sl(B,64,65)}), .nb_od(l9d{r}), .nb_oc(oc{r}),")
         w(f"        .bt_re(bre{r}), .bt_word(bw{r}), .bt_q_p(bt_q{r}), .r_v(rv{r}), .r_idx(ri{r}), .r_last(rl{r}),")
         w(f"        .r_d(r_d{r}), .flt_bank_i(flt_b{u}), .flt_vld_i(flt_v{u}), .flt_bank_o(flt_b{r}),"
           f" .flt_vld_o(flt_v{r}), .fault(fl{r}));")

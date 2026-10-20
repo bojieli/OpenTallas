@@ -40,7 +40,7 @@ module qfd_dv_s5_flat0 #(parameter integer MUT = 0) (
     wire [3:0] sid; wire [28:0] stn_cfg; wire [100:0] sc_cfg; wire [30:0] stm_cfg; wire [9:0] su_cmd;
     wire am_v; wire [23:0] am_idx; wire [31:0] am_val; wire [1:0] am_u;
     wire w16_we; wire [23:0] w16_addr; wire [511:0] w16_data; wire w1_we; wire [23:0] w1_addr; wire [31:0] w1_data;
-    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; 
+    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; wire [131:0] rss_r0, rsn_r0, rss_r1, rsn_r1, rss_r2, rsn_r2, rss_r3, rsn_r3, rss_r4, rsn_r4, rss_r5, rsn_r5, rss_r6, rsn_r6, rss_r7, rsn_r7; wire [65:0] nb_r0, nb_r1, nb_r2, nb_r3, nb_r4, nb_r5, nb_r6, nb_r7;
     wire su_nr, su_idle, su_fault, vm_fault; wire [15:0] su_prog, su_rows;
     wire red_we, rd_v, red_busy, red_fault; wire [23:0] red_addr; wire [31:0] red_data;
     wire sc_w1_we, tok_v, tok_own, sc_busy, sc_fault; wire [23:0] sc_w1_addr, tok_idx; wire [31:0] sc_w1_data, tok_val;
@@ -97,14 +97,15 @@ module qfd_dv_s5_flat0 #(parameter integer MUT = 0) (
         .ch_dn_i(ch_dn_i), .treq_i(treq_i), .cmd_q(cmd_q), .hr_q(hr_q), .sw_q(sw_q), .scu_q(scu_q), .chd_q(chd_q),
         .treq_q(treq_q), .chu_q(chu_q), .own_ch(own_ch), .ch_dn_o(ch_dn_o), .pc_bad(pc_bad), .agu_q(agu_q),
         .ag_own(ag_own), .ag_dn_o(ag_dn_o), .st_dn_c(so_w), .st_dn_o(st_dn_o), .sc_dn_c(sc_dn_c), .sc_dn_o(sc_dn_o),
-        .st_c(st_c), .st(st), .cc_c(cc_c), .cc_o(cc_o), .l9_i(l9_i), .l9_r(nb_r), .treq_c(treq_c));
+        .st_c(st_c), .st(st), .cc_c(cc_c), .cc_o(cc_o), .l9_i(l9_i), .l9_r0(nb_r0), .l9_r1(nb_r1), .l9_r2(nb_r2), .l9_r3(nb_r3), .l9_r4(nb_r4), .l9_r5(nb_r5), .l9_r6(nb_r6), .l9_r7(nb_r7), .treq_c(treq_c));
     qfd_dv_s5_fup #(.MUT(MUT)) u_fup (.ck(ck), .rst_n(rst_n), .st_dn_i(st_dn_i), .sc_dn_i(sc_dn_i), .ch_up_i(ch_up_i),
         .ag_up_i(ag_up_i), .se_q(se_q), .scd_q(scd_q), .chu_q(chu_q), .agu_q(agu_q), .cmd_q(cmd_q), .cmd_o(cmd_o),
         .st_up_c(so_e), .st_up_o(st_up_o), .sc_up_c(sc_up_c), .sc_up_o(sc_up_o), .hr_c(hr_q), .hr_o(hr_o),
         .chr_c(chd_q), .ch_up_o(ch_up_o), .treq_c(treq_q), .treq_o(treq_o),
         .l9_c({oc0, l9d7, l9d6, l9d5, l9d4, l9d3, l9d2, l9d1, l9d0}), .l9_o(l9_o));
-    qfd_dv_s5_fn u_fn (.ck(ck), .rs_n(rs_n), .rs_n_r(rsn_r));
-    qfd_dv_s5_frs u_frs (.ck(ck), .rs_s(rs_s), .rs_s_r(rss_r));
+    qfd_dv_s5_fn u_fn (.ck(ck), .rs_n(rs_n), .rs_n_r0(rsn_r0), .rs_n_r1(rsn_r1), .rs_n_r2(rsn_r2), .rs_n_r3(rsn_r3), .rs_n_r4(rsn_r4), .rs_n_r5(rsn_r5), .rs_n_r6(rsn_r6), .rs_n_r7(rsn_r7));
+    qfd_dv_s5_frs u_frs (.ck(ck), .rs_s(rs_s), .rs_s_r0(rss_r0), .rs_s_r1(rss_r1), .rs_s_r2(rss_r2), .rs_s_r3(rss_r3), .rs_s_r4(rss_r4), .rs_s_r5(rss_r5), .rs_s_r6(rss_r6), .rs_s_r7(rss_r7));
+    assign rss_r = {rss_r7, rss_r6, rss_r5, rss_r4, rss_r3, rss_r2, rss_r1, rss_r0}; assign rsn_r = {rsn_r7, rsn_r6, rsn_r5, rsn_r4, rsn_r3, rsn_r2, rsn_r1, rsn_r0}; assign nb_r = {nb_r7, nb_r6, nb_r5, nb_r4, nb_r3, nb_r2, nb_r1, nb_r0};
     qfd_dv_s5_fs u_fs (.ck(ck), .cs0(cs0), .cs1(cs1), .cs2(cs2), .cs3(cs3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
     qfd_dv_s5_spin u_spin (.ck(ck), .rst_n(rst_n), .rs_s(rss_r), .rs_n(rsn_r), .l9_i(nb_r), .rss_q(rss_q), .rsn_q(rsn_q),
         .nb_q(nb_q), .stn_rst_n(stn_rst));

@@ -61,14 +61,18 @@ module qfd_dv_s5_fdn #(parameter integer HARD = 1) (
     input  wire [49:0]    cc_c,           // collective command (ctl)
     output wire [49:0]    cc_o,
     input  wire [513:0]   l9_i,           // neighbour L9 word -> station regions
-    output wire [8*66-1:0] l9_r,          // per station region k: {nb_c 2, nb_d 64}
+    output wire [65:0]    l9_r0, l9_r1, l9_r2, l9_r3, l9_r4, l9_r5, l9_r6, l9_r7,   // per station region k: {nb_c 2, nb_d 64}
     output wire [8:0]     treq_c          // PRIVATE_CALR request lane -> tload (raw, its own face register)
 );
     assign st_dn_o = st_dn_c; assign sc_dn_o = sc_dn_c; assign st = st_c; assign cc_o = cc_c;
-    genvar k;
-    generate for (k = 0; k < 8; k = k + 1) begin : g_l9
-        assign l9_r[66*k +: 66] = {l9_i[513:512], l9_i[64*k +: 64]};
-    end endgenerate
+    assign l9_r0 = {l9_i[513:512], l9_i[63:0]};
+    assign l9_r1 = {l9_i[513:512], l9_i[127:64]};
+    assign l9_r2 = {l9_i[513:512], l9_i[191:128]};
+    assign l9_r3 = {l9_i[513:512], l9_i[255:192]};
+    assign l9_r4 = {l9_i[513:512], l9_i[319:256]};
+    assign l9_r5 = {l9_i[513:512], l9_i[383:320]};
+    assign l9_r6 = {l9_i[513:512], l9_i[447:384]};
+    assign l9_r7 = {l9_i[513:512], l9_i[511:448]};
     assign treq_c = treq_i;
     wire rst;
     qfd_dv_s5_rst2 u_rl (.ck(ck), .rst_n(rst_n), .rst(rst));
@@ -142,23 +146,33 @@ endmodule
 module qfd_dv_s5_fn (
     input  wire           ck,             // region membership (the landing halves of this entry run on it); no logic here
     input  wire [1027:0]  rs_n,
-    output wire [8*132-1:0] rs_n_r          // per station region k: {c 4, hi 64, lo 64}
+    output wire [131:0]   rs_n_r0, rs_n_r1, rs_n_r2, rs_n_r3, rs_n_r4, rs_n_r5, rs_n_r6, rs_n_r7   // per station region k: {c 4, hi 64, lo 64}
 );
-    genvar k;
-    generate for (k = 0; k < 8; k = k + 1) begin : g_r
-        assign rs_n_r[132*k +: 132] = {rs_n[1027:1026], rs_n[513:512], rs_n[514+64*k +: 64], rs_n[64*k +: 64]};
-    end endgenerate
+    assign rs_n_r0 = {rs_n[1027:1026], rs_n[513:512], rs_n[577:514], rs_n[63:0]};
+    assign rs_n_r1 = {rs_n[1027:1026], rs_n[513:512], rs_n[641:578], rs_n[127:64]};
+    assign rs_n_r2 = {rs_n[1027:1026], rs_n[513:512], rs_n[705:642], rs_n[191:128]};
+    assign rs_n_r3 = {rs_n[1027:1026], rs_n[513:512], rs_n[769:706], rs_n[255:192]};
+    assign rs_n_r4 = {rs_n[1027:1026], rs_n[513:512], rs_n[833:770], rs_n[319:256]};
+    assign rs_n_r5 = {rs_n[1027:1026], rs_n[513:512], rs_n[897:834], rs_n[383:320]};
+    assign rs_n_r6 = {rs_n[1027:1026], rs_n[513:512], rs_n[961:898], rs_n[447:384]};
+    assign rs_n_r7 = {rs_n[1027:1026], rs_n[513:512], rs_n[1025:962], rs_n[511:448]};
+
 endmodule
 // the S-face entry of rs_s (directly under the station row): the same per-region split
 module qfd_dv_s5_frs (
     input  wire           ck,             // region membership (the landing halves of this entry run on it); no logic here
     input  wire [1027:0]  rs_s,
-    output wire [8*132-1:0] rs_s_r
+    output wire [131:0]   rs_s_r0, rs_s_r1, rs_s_r2, rs_s_r3, rs_s_r4, rs_s_r5, rs_s_r6, rs_s_r7
 );
-    genvar k;
-    generate for (k = 0; k < 8; k = k + 1) begin : g_r
-        assign rs_s_r[132*k +: 132] = {rs_s[1027:1026], rs_s[513:512], rs_s[514+64*k +: 64], rs_s[64*k +: 64]};
-    end endgenerate
+    assign rs_s_r0 = {rs_s[1027:1026], rs_s[513:512], rs_s[577:514], rs_s[63:0]};
+    assign rs_s_r1 = {rs_s[1027:1026], rs_s[513:512], rs_s[641:578], rs_s[127:64]};
+    assign rs_s_r2 = {rs_s[1027:1026], rs_s[513:512], rs_s[705:642], rs_s[191:128]};
+    assign rs_s_r3 = {rs_s[1027:1026], rs_s[513:512], rs_s[769:706], rs_s[255:192]};
+    assign rs_s_r4 = {rs_s[1027:1026], rs_s[513:512], rs_s[833:770], rs_s[319:256]};
+    assign rs_s_r5 = {rs_s[1027:1026], rs_s[513:512], rs_s[897:834], rs_s[383:320]};
+    assign rs_s_r6 = {rs_s[1027:1026], rs_s[513:512], rs_s[961:898], rs_s[447:384]};
+    assign rs_s_r7 = {rs_s[1027:1026], rs_s[513:512], rs_s[1025:962], rs_s[511:448]};
+
 endmodule
 module qfd_dv_s5_fs (
     input  wire           ck,             // region membership (the landing halves of this entry run on it); no logic here
