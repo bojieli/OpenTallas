@@ -1,0 +1,131 @@
+{
+ "top": "qkd_ahub_static_dw_g2",
+ "why": "KV-AHUB3 10-19 (LEAD2-KV, tree K.STA.AHUB): the SAFE attention hub as a LANDED-REGION parent. Both single-root SAFE kits failed the clock rule (sfa pin-flop spread 86.5 TT / 97.3 FF, sfb 116.3 / 123.2): one insertion-aware spine over 734.4 x 540 um padded every hub flop to the hard children's insertion (ot_nhb_zh 246.5, ot_qkh_recip_leaf 238.7). Regions: c = io / core / pin flops / relays / reciprocal leaf (centre-right logic band), z0..z3 = one Z tree each (its macro + landing halves). The core <-> Z tree buses are a cross-region LOOP (the core commands each tree and collects its root), so schedule 'reference': every landing +3 edges, the reference is the flat parent with ZW_RLY = ZR_RLY = 3 (the sealed hub's own relay parameters) and the compiler moves HUB_RECIP / HUB_PUB +6 (Z_LAND 6 keeps the core's RECIP > Z_START + 77 + Z_RT calendar check on the same law).",
+ "sources": [
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_g2.sv"
+ ],
+ "child_sources": [
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv",
+  "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+  "rtl/hdc/nearhbm/ot_nhb_tiles.sv",
+  "rtl/hdc/nearhbm/ot_qkh_recip_leaf.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv"
+ ],
+ "out_dir": "rtl/hdc/nearhbm/lp",
+ "record_dir": "results/arch/kv_ahub3_1019",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck",
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "params": {
+  "Z_LAND": 6
+ },
+ "ref_params": {
+  "ZW_RLY": 3,
+  "ZR_RLY": 3,
+  "Z_LAND": 0
+ },
+ "schedule": "reference",
+ "landing_chunk_bits": 8,
+ "landing_reset_forest": true,
+ "regions": [
+  {
+   "name": "c",
+   "insts": [
+    "u_apq",
+    "u_rw",
+    "u_io",
+    "u_core",
+    "u_eq",
+    "u_ri*",
+    "u_rx",
+    "u_recip",
+    "u_ry"
+   ],
+   "centre": [
+    453.6,
+    270.0
+   ]
+  },
+  {
+   "name": "z0",
+   "insts": [
+    "u_zh0",
+    "u_ro0"
+   ],
+   "centre": [
+    118.8,
+    118.8
+   ]
+  },
+  {
+   "name": "z1",
+   "insts": [
+    "u_zh1",
+    "u_ro1"
+   ],
+   "centre": [
+    334.8,
+    118.8
+   ]
+  },
+  {
+   "name": "z2",
+   "insts": [
+    "u_zh2",
+    "u_ro2"
+   ],
+   "centre": [
+    118.8,
+    421.2
+   ]
+  },
+  {
+   "name": "z3",
+   "insts": [
+    "u_zh3",
+    "u_ro3"
+   ],
+   "centre": [
+    334.8,
+    421.2
+   ]
+  }
+ ],
+ "mut_child": "u_core",
+ "bench": {
+  "cycles": 9000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "child_lockstep": [
+   "u_zh*",
+   "u_recip"
+  ],
+  "expr": {
+   "hs_start": "((cyc % 2000) == 40)",
+   "hs_ctx": "14'd1000",
+   "hs_layer": "6'd4",
+   "hs_ep": "16'(cyc / 2000 + 1)",
+   "hs_cal_lo": "{16'd676, 16'd1002, 16'd927, 16'd840, 16'd267, 16'd579, 16'd260}",
+   "hs_cal_r": "16'd1054"
+  }
+ }
+}

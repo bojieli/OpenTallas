@@ -1,0 +1,25 @@
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: NO_RESULT (see /srv/opentallas-scratch/claude/kv-ahub3-1019/run1/lp/build_0.log)
+MUT 1: NO_RESULT (see /srv/opentallas-scratch/claude/kv-ahub3-1019/run1/lp/build_1.log)
+MUT 2: NO_RESULT (see /srv/opentallas-scratch/claude/kv-ahub3-1019/run1/lp/build_2.log)
+MUT 4: NO_RESULT (see /srv/opentallas-scratch/claude/kv-ahub3-1019/run1/lp/build_4.log)
+BENCH_EXIT 1
+G2 MUT 0: AHUB_DW PASS mut=0 passes=7 Z_IN_STRIDE=4 zwords=680 fr=1/1/1/1/1/1/1 beats=32/32/32/32/32/32/32 am=28 FR_OFS=-7 AP_OFS=ffd9ffdaffd8ffd8
+G2 MUT 1: AHUB_DW FAIL mut=1 errors=11935
+G2 MUT 2: AHUB_DW FAIL mut=2 errors=121
+G2 MUT 3: AHUB_DW FAIL mut=3 errors=11935
+G2 MUT 4: AHUB_DW FAIL mut=4 errors=11876
+G2 MUT 5: AHUB_DW FAIL mut=5 errors=9079
+G2 MUT 6: AHUB_DW FAIL mut=6 errors=9173
+G2 MUT 7: AHUB_DW FAIL mut=7 errors=8938
+G2 MUT 8: AHUB_DW FAIL mut=8 errors=23580
+G2 MUT 9: AHUB_DW FAIL mut=9 errors=11935
+G2 MUT 10: AHUB_DW FAIL mut=10 errors=11761
+G2 MUT 11: AHUB_DW FAIL mut=11 errors=235
+G2 MUT 12: AHUB_DW FAIL mut=12 errors=11936
+G2 MUT 13: AHUB_DW FAIL mut=13 errors=13640
+G2 MUT 14: AHUB_DW PASS mut=14 passes=7 Z_IN_STRIDE=4 zwords=680 fr=1/1/1/1/1/1/1 beats=32/32/32/32/32/32/32 am=28 FR_OFS=-7 AP_OFS=ffd9ffdaffd8ffd8
+G2 MUT 15: AHUB_DW FAIL mut=15 errors=19
+G2 MUT 16: AHUB_DW PASS mut=16 passes=7 Z_IN_STRIDE=4 zwords=680 fr=1/1/1/1/1/1/1 beats=32/32/32/32/32/32/32 am=28 FR_OFS=-7 AP_OFS=ffd9ffdaffd8ffd8
+RUN_ALL rc=1

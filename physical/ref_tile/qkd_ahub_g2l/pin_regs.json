@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_ahub_static_dw_g2_lp",
+ "enable": false,
+ "reason": "the RTL registers every pin itself: hs -> u_io pin flops (start / epoch / layer / T / cal_q / cal_r_q), ap0..3 -> u_apq (ot_qkd_drly N 1), am = u_core am registers, fr = u_rw relay register (WF_RLY 1), hf = u_io fault register; a recipe pin register would add an unpriced edge to AP_OFS / FR_OFS (GEN7 binding AP[-40,-40,-38,-39], FR -7). The four am copies per bit are kept and split per face by keep_pin_regs + pin_reg_split (the 105 face copies of 4b05445f7, now at source level)."
+}
