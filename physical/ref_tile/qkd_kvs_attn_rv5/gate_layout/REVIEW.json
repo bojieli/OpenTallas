@@ -1,0 +1,19 @@
+{
+  "reviewer": "coordinator claude (KV-ATTN6 sub-lane of LEAD9-KV; PNGs personally viewed)",
+  "verdict": "APPROVED",
+  "gate_commit": "82c1bd9d2",
+  "scope": "r17 = rv3 r16 + calendar S1 landed reset + S2..S9 clear-on-not-valid (kept v1c..v8c copy families); same ports/edges/slot (216 sq). Gate WARN only util (pin-limited) + insertion guidance.",
+  "checklist": {
+    "lattice": "N/A no macros",
+    "std_cell_band": "PASS full-core rows, no islands; WAIVED util (pin-limited slot, 3,284 pins); mass at W/N faces as rv3",
+    "pin_spread": "PASS 3,284 pins on-track/accessible (pin_geometry PASS), full faces",
+    "clock_entry": "PASS S-centre ck + local spine; TT/FF pin-flop spread 44.1/39.0 ps; insertion 397.6/322.0 ps (guidance)",
+    "shape": "PASS 216 square 1:1"
+  },
+  "timing": "TT placement RC reg->reg +70.6 ps; trial GRT overflow 0 (M2 16.2%); depth 481.8 ps; reach 84.6 um",
+  "fanout_evidence": "in-gate native census mapped dynamic load limit 32 PASS max=32",
+  "behavior_evidence": [
+    "results/rtl/kv_attn4_1020/r17rs_m0/verdict.log", "results/rtl/kv_attn4_1020/calrst_m0/verdict.log"
+  ],
+  "time": "2026-10-20T13:35:00-07:00"
+}
