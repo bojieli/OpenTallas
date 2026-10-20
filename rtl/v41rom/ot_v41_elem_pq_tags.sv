@@ -48,6 +48,7 @@ module ot_v41_elem_pq_tags #(
     output reg               fault,
     input  wire [NB*TRW-1:0] t_tree,
     input  wire [NB*3-1:0]   t_pos,
+    input  wire [NB*4*NSEG-1:0] t_sel,     // NP: per macro two kept copies of the one-hot {bank, segment} of t_tree / t_pos
     output wire [NB-1:0]     q_idle,
     output wire [NB*16-1:0]  q_row,
     output wire [NB*5-1:0]   q_idx,
@@ -61,7 +62,25 @@ module ot_v41_elem_pq_tags #(
     reg        wbank;
     reg [1:0]  otag [0:1];
     wire       wb = wbank & (PQ != 0);
-    if (WP == 0) begin : g_w0
+    if (WP != 0 && NP != 0) begin : g_w2
+    // NP: the write stage holds per-BANK entry enables (no shared bank register driving every entry's address decode)
+    reg [NB*NSEG-1:0] e_row [0:1];
+    reg [NSEG-1:0]    e_seg [0:1];
+    reg [25:0]        e_d;
+    always @(posedge clk) begin
+        for (int b = 0; b < 2; b++) begin
+            for (int k = 0; k < NB * NSEG; k++)
+                e_row[b][k] <= cfg_v && (wb == b[0]) && (({27'd0, cfg_a} < NSEG && {27'd0, cfg_a} == k)
+                                  || ({27'd0, cfg_a} > 2 * NSEG && RW'(NSEG + cfg_a[SW-1:0] - 1) == RW'(k)));
+            for (int k = 0; k < NSEG; k++) e_seg[b][k] <= cfg_v && (wb == b[0]) && {27'd0, cfg_a} == k;
+        end
+        e_d <= cfg_d;
+    end
+    always @(posedge clk) for (int b = 0; b < NBK; b++) begin
+        for (int k = 0; k < NB * NSEG; k++) if (e_row[b][k]) s_row[{b[0], RW'(k)}] <= e_d[15:0];
+        for (int k = 0; k < NSEG; k++) if (e_seg[b][k]) begin s_idx[{b[0], SW'(k)}] <= e_d[20:16]; s_n[{b[0], SW'(k)}] <= e_d[25:21]; end
+    end
+    end else if (WP == 0) begin : g_w0
     always @(posedge clk) if (cfg_v) begin
         if ({27'd0, cfg_a} < NSEG) begin
             s_row[{wb, RW'(cfg_a[SW-1:0])}] <= cfg_d[15:0];
@@ -94,11 +113,32 @@ module ot_v41_elem_pq_tags #(
         wire [TRW-1:0] tt = t_tree[TRW*mb +: TRW];
         wire [SW-1:0]  ts = tt[SW-1:0];
         wire           bk = (PQ != 0) && ((MTP != 0) ? (tt[TRW-1] ^ t_pos[3*mb]) : 1'b0);
+        if (NP != 0) begin : g_np
+            // NP: AND-OR over the registered one-hot copies (copy 0: the row, copy 1: index / count), entry k = {bank, segment}
+            wire [2*NSEG-1:0] s0 = t_sel[4*NSEG*mb +: 2*NSEG], s1 = t_sel[4*NSEG*mb + 2*NSEG +: 2*NSEG];
+            reg [15:0] r; reg [4:0] ix, nn;
+            always @* begin
+                r = '0; ix = '0; nn = '0;
+                for (int k = 0; k < 2 * NSEG; k++) begin
+`ifdef OT_NP_PQ_MUT
+                    if (s0[k]) r = r | s_row[{k[SW] & (PQ != 0), RW'(mb * NSEG) + RW'(k[SW-1:0] ^ 1'b1)}];   // negative control: wrong segment
+`else
+                    if (s0[k]) r = r | s_row[{k[SW] & (PQ != 0), RW'(mb * NSEG) + RW'(k[SW-1:0])}];
+`endif
+                    if (s1[k]) begin ix = ix | s_idx[{k[SW] & (PQ != 0), SW'(k[SW-1:0])}]; nn = nn | s_n[{k[SW] & (PQ != 0), SW'(k[SW-1:0])}]; end
+                end
+            end
+            assign q_idle[mb] = r[15];
+            assign q_row[16*mb +: 16] = (PQ != 0) ? {otag[bk], r[13:0]} : r;
+            assign q_idx[5*mb +: 5] = ix;
+            assign q_n[5*mb +: 5] = nn;
+        end else begin : g_o
         wire [15:0]    r = s_row[{bk, RW'(mb * NSEG) + RW'(ts)}];
         assign q_idle[mb] = r[15];
         assign q_row[16*mb +: 16] = (PQ != 0) ? {otag[bk], r[13:0]} : r;
         assign q_idx[5*mb +: 5] = s_idx[{bk, ts}];
         assign q_n[5*mb +: 5] = s_n[{bk, ts}];
+        end
     end endgenerate
     reg [7:0] gcnt [0:1];
     // a go starting this cycle switches the load bank to ~wbank (and makes wbank live): judge the bank the load

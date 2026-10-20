@@ -5,6 +5,8 @@
 // ...), same ROM contents, same random stimulus as tb_qxpq_cpr (configuration loads, go / go_tag, x beats, resets in
 // mid-run).  NP adds no cycle: every output incl. busy / fault must be identical every cycle (=== incl. X), and the local
 // reset release stays 2 edges after the pin.  RTL mutants (+define+<NAME> from qxpq_np_bench.sh mut:<NAME>) must FAIL.
+`define TBQV(m) (av[m] ? {ad[32*m +: 32], ar[16*m +: 16], asg[5*m +: 5], an[5*m +: 5], ae[m], ap[3*m +: 3]} : 62'd0)
+`define TBQD(m) (av[m] ? {bd[32*m +: 32], br[16*m +: 16], bsg[5*m +: 5], bn[5*m +: 5], be[m], bp[3*m +: 3]} : 62'd0)
 module tb_qxpq_np;
  parameter integer NCYC = 60000;
  integer SEED = 1;
@@ -63,7 +65,10 @@ module tb_qxpq_np;
  end
  always @(negedge clk) begin
    cyc = cyc + 1;
-   if (ro !== dov) begin
+   // control outputs (walking, bank_free, sh_free, pv) every cycle; each macro half's partial (value, row, segment,
+   // count, error, position) in the cycles its pv is set -- the die consumes a partial only with its pv (data
+   // registers are not reset and NP's SRAM / kept copies may hold a different value while pv is low)
+   if ({awk, abf, ash, av} !== {bwk, bbf, bsh, bv} || (`TBQV(0) !== `TBQD(0)) || (`TBQV(1) !== `TBQD(1))) begin
      mism = mism + 1;
      if (first_mism < 0) first_mism = cyc;
      if (mism <= 4) $display("MISMATCH cyc %0d ref %h dut %h", cyc, ro, dov);

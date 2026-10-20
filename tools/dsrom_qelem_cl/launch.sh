@@ -96,6 +96,15 @@ for s in rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv rtl/v41rom/ot_v41_rom_elem_qx_
   rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_bterm2_w10.sv rtl/v41rom/ot_v41_chain2.sv \
   rtl/v41rom/ot_v41_segtree2.sv rtl/v41rom/ot_v41_bf16_lanes2.sv rtl/v41rom/ot_v41_bterm3_w10.sv rtl/v41rom/ot_v41_bterm4_w10.sv rtl/v41rom/ot_v41_bterm5_w10.sv rtl/v41rom/ot_v41_segtree3.sv rtl/v41rom/ot_v41_segtree4.sv rtl/v41rom/ot_v41_segtree5.sv rtl/v41rom/ot_v41_segtree6.sv \
   physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v; do SRCS="$SRCS --source $s"; done
+# NP=1 (S81-QXPQ3 2026-10-20, unset / 0 = unchanged): the native-partition modules and the segment trees' held-operand
+# SRAM macro (one ot_sram_1r1w_128x64_m1_p192 per macro half)
+NPX=(); MPH=physical/abi3/dsrom_qtiming_D_place.tcl
+if [ "${NP:-0}" != 0 ]; then
+  for s in rtl/v41rom/ot_v41_fadd_np.sv rtl/v41rom/ot_v41_segtree7.sv rtl/v41rom/ot_v41_chain5.sv \
+    physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v; do SRCS="$SRCS --source $s"; done
+  NPX=(--macro-view ot_sram_1r1w_128x64_m1_p192=physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192)
+  MPH=physical/abi3/dsrom_qtiming_D_place_np.tcl
+fi
 # RSTP (QXPQ-RST 2026-10-17, unset = unchanged): the synchronous reset relay flop at the rst_n pin (RTL param RSTP).
 EXTRA=(); [ -n "${CTSA:-}" ] && EXTRA=(--orfs-var "CTS_ARGS=$CTSA")
 # OT_Q_EF_SOUTH=1 (cont-takeover 2026-10-09, default off): the PQ loader handshake outputs bank_free / sh_free go to the
@@ -116,10 +125,10 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --die-area 0 0 510.84 ${FH:?frame height} --core-area 0 0.27 510.84 $(python3 -c "print(round(${FH}-0.27,3))") --place-density ${PD:-0.6} --macro-place-halo 2 2 \
  --pin-region "^(p|busy|fault|walking${QEF_TOP}).*=top:136.08-374.76" "${CKN[@]}" --pin-region "^(${CKS}rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0|xs_q1|xs_e1${QEF_BOT}).*=bottom:${XLO:-136.08}-${XHI:-374.76}" \
  --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \
- --step-tcl POST_MACRO_PLACE=physical/abi3/dsrom_qtiming_D_place.tcl --step-tcl POST_DETAIL_PLACE=${PDH:-physical/abi3/dsrom_q_pin_keepout2.tcl} \
+ --step-tcl POST_MACRO_PLACE=${MPH} --step-tcl POST_DETAIL_PLACE=${PDH:-physical/abi3/dsrom_q_pin_keepout2.tcl} \
  --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl --nickname-tag dsrom_qx10qm_${RUN}_20261006 \
  --output $J/out --sdc-append physical/abi3/dsrom_qy_elem_io.sdc \
- --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 \
+ --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 "${NPX[@]}" \
  --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param QTIMING_FIX=1 \
  --param QPIPE=1 --param QP_XS=1 --param QP_CAP=$CAP --param QP_P1=1 --param QP_CSAM=10 \
  --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=${QX:-5} --param PQ=${PQ:-1} --param QW=${QW:-0} --param QM=${QM:-1} --param QS=${QS:-0} ${RSTP:+--param RSTP=$RSTP} ${CPR:+--param CPR=$CPR} ${NP:+--param NP=$NP} --orfs-var ROUTING_LAYER_ADJUSTMENT=${RLA:-0.22} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --orfs-var CTS_CLUSTER_SIZE=${CS:-30} --orfs-var CTS_CLUSTER_DIAMETER=${CD:-50} --orfs-var CTS_BUF_DISTANCE=${BD:-60} --hold-corners WC,BC \

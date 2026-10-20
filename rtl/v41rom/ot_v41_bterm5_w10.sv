@@ -482,18 +482,62 @@ module ot_v41_bterm5_w10 #(
 
     // -- S15: subnormal shift, sticky; normal / zero / inf pack --------------------------------------------------------
     wire [49:0] sw = {1'b1, p7a_f, 26'd0} >> p7a_rs;
+    // NP-LANE: the subnormal shift from kept copies of the shift amount (one per 5-bit slice of the kept result
+    // bits 49:25, MSB-first layers, plus one for the sticky window), bit-identical to sw / |sw[24:0]
+    wire [49:0] swn;
+    wire        swn_st;
+    if (NP != 0) begin : g_np_s15
+        wire [4:0] rk [0:5];
+        for (genvar g = 0; g < 6; g = g + 1) begin : g_k
+            ot_v41_kreg #(.W(5)) u_k (.clk(clk), .arst_n(1'b1), .d((p6_b < -12'sd24) ? 5'd26 : rsh[4:0]), .q(rk[g]));
+        end
+        wire [49:0] x = {1'b1, p7a_f, 26'd0};
+        for (genvar g = 0; g < 5; g = g + 1) begin : g_s
+            wire [4:0]  c = rk[g];
+            wire [49:0] a16 = c[4] ? {16'd0, x[49:16]} : x;
+            wire [49:0] a8  = c[3] ? {8'd0, a16[49:8]} : a16;
+            wire [49:0] a4  = c[2] ? {4'd0, a8[49:4]} : a8;
+            wire [49:0] a2  = c[1] ? {2'd0, a4[49:2]} : a4;
+            wire [49:0] a1  = c[0] ? {1'd0, a2[49:1]} : a2;
+            assign swn[25 + 5*g +: 5] = a1[25 + 5*g +: 5];
+        end
+        assign swn[24:0] = '0;
+        // |(x >> r)[24:0]: g = {1, f} (g[k] = x[26 + k]) has a set bit k with r - 26 <= k <= r - 2
+        wire [23:0] gx = {1'b1, p7a_f};
+        reg st;
+        always @* begin
+            st = 1'b0;
+            for (int k = 0; k < 24; k++)
+`ifdef OT_NP_LANE_MUT_ST
+                if (gx[k] && k + 1 <= rk[5] && k + 26 >= rk[5]) st = 1'b1;     // negative control: window one too wide
+`else
+                if (gx[k] && k + 2 <= rk[5] && k + 26 >= rk[5]) st = 1'b1;
+`endif
+        end
+        assign swn_st = st;
+    end else begin : g_o_s15
+        assign swn = '0; assign swn_st = 1'b0;
+    end
     reg               p7_nan, p7_sub, p7_ovf, p7_s;
     reg [31:0]        p7_n;
     reg [23:0]        p7_t;
     reg               p7_g, p7_st;
+    wire [1:0]        p7_subk;        // NP-LANE: kept copies of p7_sub (the pack select halves)
+    if (NP != 0) begin : g_np_sk
+        for (genvar g = 0; g < 2; g = g + 1) begin : g_k
+            ot_v41_kreg #(.W(1)) u_k (.clk(clk), .arst_n(1'b1), .d(p7a_sub), .q(p7_subk[g]));
+        end
+    end else begin : g_o_sk
+        assign p7_subk = '0;
+    end
     always @(posedge clk) begin
         p7_nan <= p7a_nan; p7_s <= p7a_s; p7_sub <= p7a_sub; p7_ovf <= p7a_ovf;
         if (p7a_z)        p7_n <= 32'd0;
         else if (p7a_ovf) p7_n <= {p7a_s, 8'hFF, 23'd0};
         else              p7_n <= {p7a_s, p7a_b, p7a_f};
-        p7_t <= sw[49:26];
-        p7_g <= sw[25];
-        p7_st <= (sw[24:0] != 25'd0);
+        p7_t <= (NP != 0) ? swn[49:26] : sw[49:26];
+        p7_g <= (NP != 0) ? swn[25] : sw[25];
+        p7_st <= (NP != 0) ? swn_st : (sw[24:0] != 25'd0);
     end
 
     // -- S16: subnormal round and pack -----------------------------------------------------------------------------------
@@ -505,11 +549,23 @@ module ot_v41_bterm5_w10 #(
     reg [31:0]  p8_y;
     always @(posedge clk) begin
         p8_f <= p7_nan | p7_ovf;
-        p8_y <= p7_sub ? {p7_s, 7'd0, tr} : p7_n;
+        p8_y <= (NP != 0) ? {p7_subk[1] ? {p7_s, 7'd0, tr[23:16]} : p7_n[31:16], p7_subk[0] ? tr[15:0] : p7_n[15:0]}
+                          : (p7_sub ? {p7_s, 7'd0, tr} : p7_n);
     end
 
     assign ov = vs[LATENCY-1];
     assign y = p8_y;
     assign f = p8_f;
     ot_hdc_delay #(.W(TW), .D(LATENCY)) u_tag (.clk(clk), .rst_n(rst_n), .d(tag), .q(otag));
+    // NP-LANE: OK kept copies of the last tag stage's slot field (a parallel line one stage shorter, whose flops equal
+    // u_tag's and merge with them, then the copies): each consumer slice loads its own copy
+    if (NP != 0) begin : g_np_tk
+        wire [OKW-1:0] tk1;
+        ot_hdc_delay #(.W(OKW), .D(LATENCY - 1)) u_tk (.clk(clk), .rst_n(rst_n), .d(tag[TW-1 -: OKW]), .q(tk1));
+        for (genvar j = 0; j < OK; j = j + 1) begin : g_k
+            ot_v41_kreg #(.W(OKW)) u_k (.clk(clk), .arst_n(1'b1), .d(tk1), .q(otag_k[j*OKW +: OKW]));
+        end
+    end else begin : g_o_tk
+        assign otag_k = '0;
+    end
 endmodule

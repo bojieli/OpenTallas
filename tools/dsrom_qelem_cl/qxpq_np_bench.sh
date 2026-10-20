@@ -17,7 +17,8 @@ RTL="rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv rtl/v41rom/ot_v41_rom_elem_qx_pq_w
  rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_bterm2_w10.sv rtl/v41rom/ot_v41_chain2.sv
  rtl/v41rom/ot_v41_segtree2.sv rtl/v41rom/ot_v41_bf16_lanes2.sv rtl/v41rom/ot_v41_bterm3_w10.sv rtl/v41rom/ot_v41_bterm4_w10.sv
  rtl/v41rom/ot_v41_bterm5_w10.sv rtl/v41rom/ot_v41_segtree3.sv rtl/v41rom/ot_v41_segtree4.sv rtl/v41rom/ot_v41_segtree5.sv
- rtl/v41rom/ot_v41_segtree6.sv ${NP_EXTRA:-}"
+ rtl/v41rom/ot_v41_segtree6.sv rtl/v41rom/ot_v41_fadd_np.sv rtl/v41rom/ot_v41_segtree7.sv rtl/v41rom/ot_v41_chain5.sv
+ physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v ${NP_EXTRA:-}"
 F=""; for f in $RTL; do F="$F $S/$f"; done
 build() { # name defines...
   local n=$1; shift
@@ -35,6 +36,8 @@ run() { # name expect seed
 MODE=${3:-pass}
 case "$MODE" in
   pass) build pass || exit 2; rc=0; for s in 1 2 3; do run pass pass $s || rc=1; done; echo "BENCH_RC $rc"; exit $rc ;;
+  chk:*)
+    M=${MODE#chk:}; build chk +define+$M || exit 2; rc=0; for s in 1 2 3; do run chk pass $s || rc=1; done; echo "BENCH_RC $rc"; exit $rc ;;
   mut:*)
     M=${MODE#mut:}; build $M +define+$M || exit 2
     if run $M fail 1; then echo "MUTANT_DETECTED $M"; exit 1; fi

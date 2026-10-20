@@ -85,6 +85,18 @@ module ot_v41_rom_elem_q_qxpq_w10 #(
     output wire         fault
 );
     wire rst_n_e;                      // the element's reset: the pin (RSTP = 0) or the pin relay flop (RSTP = 1)
+    wire [2:0] rst_n_pk;               // NP: three kept copies of the pin relay (same edge), one per reset-leaf region
+    if (RSTP != 0 && NP != 0) begin : g_rpk
+        for (genvar k = 0; k < 3; k = k + 1) begin : g_k
+`ifdef OT_QXPQ_RSTP_MUT_BYPASS
+            assign rst_n_pk[k] = rst_n;
+`else
+            ot_v41_kreg #(.W(1)) u_r (.clk(clk), .arst_n(1'b1), .d(rst_n), .q(rst_n_pk[k]));
+`endif
+        end
+    end else begin : g_nrpk
+        assign rst_n_pk = {3{rst_n_e}};
+    end
     if (RSTP != 0) begin : g_rstp
         (* keep, dont_touch = "true" *) reg rst_pf;
         always @(posedge clk) rst_pf <= rst_n;
@@ -119,7 +131,7 @@ module ot_v41_rom_elem_q_qxpq_w10 #(
         assign go_e = go; assign go_tag_e = go_tag; assign busy = busy_e; assign fault = fault_e;
     end
     ot_v41_rom_elem_qx_pq_w10 #(.PQ(PQ), .QW(QW), .QM(QM), .QS(QS), .QX(QX), .QY(QY), .QZ(QZ), .QZ_NS(QZ_NS), .QZ_NE(QZ_NE), .QTIMING_FIX(QTIMING_FIX), .QPIPE(QPIPE), .QP_XS(QP_XS), .QP_CAP(QP_CAP), .QP_P1(QP_P1), .QP_CSAM(QP_CSAM), .BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .NP(NP), .INSTANCE(INSTANCE)) u_e (
-        .clk(clk), .rst_n_pin(rst_n_e), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go_e), .go_bf_pin(1'b0), .go_tag_pin(go_tag_e), .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
+        .clk(clk), .rst_n_pin(rst_n_e), .rst_n_pk(rst_n_pk), .cfg_v_pin(cfg_v), .cfg_a_pin(cfg_a), .cfg_d_pin(cfg_d), .go_pin(go_e), .go_bf_pin(1'b0), .go_tag_pin(go_tag_e), .walking(walking), .bank_free(bank_free), .sh_free(sh_free),
         .xs_v_pin(xs_v), .xs_p_pin(xs_p), .xs_b_pin(xs_b), .xs_sv_pin(xs_sv), .xs_q0_pin(xs_q0), .xs_e0_pin(xs_e0), .xs_q1_pin(xs_q1),
         .xs_e1_pin(xs_e1), .xs_pos_pin(xs_pos), .xb_pos_pin(3'd0), .ppos(ppos), .xb_v_pin(1'b0), .xb_b_pin(3'd0), .xb_sv_pin(4'd0),
         .xb_u_pin(32'd0), .xb_d_pin(1024'd0),
