@@ -2123,7 +2123,7 @@ proc ot_ce_forwarded_visit {corner} {
         }
         if {![llength $local]} {puts "OT_FORWARDED UNMEASURED $corner $bit $full $edge pre-CTS";continue}
         lassign $local early late
-        if {$early < 0 || $early > $late} {error "OT_FORWARDED: invalid local early/late transfer $full $edge"}
+        if {![ot_ce_finite $early] || ![ot_ce_finite $late] || $early < 0 || $early > $late} {error "OT_FORWARDED: invalid local early/late transfer $full $edge"}
         dict lappend groups [list $bit $input_edge] [list [expr {$early+$clo}] [expr {$late+$chi}]]
         puts "OT_FORWARDED SINK $corner $bit $full clock=$cn root=$root parity=$parity edge=$edge input_edge=$input_edge local=$early..$late child=$clo..$chi"
       }
@@ -2158,6 +2158,7 @@ proc ot_ce_forwarded_visit {corner} {
     set lo [lindex [lindex $rows 0] 0]; set hi [lindex [lindex $rows 0] 1]
     foreach row $rows {set lo [expr {min($lo,[lindex $row 0])}];set hi [expr {max($hi,[lindex $row 1])}]}
     set span [expr {$hi-$lo}]
+    if {![ot_ce_finite $lo] || ![ot_ce_finite $hi] || ![ot_ce_finite $span]} {error "OT_FORWARDED: nonfinite child-flop interval"}
     puts "OT_FORWARDED SPREAD $corner $bit input_edge=$edge sinks=[llength $rows] span=$span limit=80 judged=$judged"
     if {$judged && $corner in {tt ff} && $span > 80.0} {error "OT_FORWARDED: $bit/$edge child-flop span $span exceeds80ps"}
   }

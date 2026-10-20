@@ -110,10 +110,28 @@ class ForwardedSpec(unittest.TestCase):
         with self.assertRaises(ValueError):
             CE.generate(tile, ROOT)
 
+    def test_native_contract_refusals(self):
+        for mutant in ('missing', 'duplicate_owner', 'foreign_bit', 'unsafe_clock', 'foreign_field'):
+            with tempfile.TemporaryDirectory() as d, self.subTest(mutant=mutant):
+                root = Path(d)
+                s = fixture(root)
+                if mutant == 'missing':
+                    s.pop('forwarded_clock_bindings')
+                elif mutant == 'duplicate_owner':
+                    s['forwarded_clock_bindings']['xk[1]']['pins']['f0/CLK'] = 'fwd'
+                elif mutant == 'foreign_bit':
+                    s['forwarded_clock_bindings']['other[0]'] = s['forwarded_clock_bindings'].pop('xk[0]')
+                elif mutant == 'unsafe_clock':
+                    s['forwarded_clock_bindings']['xk[0]']['clock'] = 'fwd; exec bad'
+                else:
+                    s['forwarded_clock_bindings']['xk[0]']['phase_override'] = 0
+                with self.assertRaises((RT.SpecError, ValueError)):
+                    CE.generate(K.load(root, s), root)
+
 
 @unittest.skipUnless(K.available(), 'real OpenROAD ORFS image required')
 class ForwardedOpenroad(unittest.TestCase):
-    """Real clock_entries.tcl + TritonCTS on the two region roots; xk stays a data input (no create_clock); routed
+    """Real clock_entries.tcl + TritonCTS with explicitly declared original coupon clocks;
     require-wire scene (judged)."""
 
     def run_flow(self, mutant=''):
