@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hidx_score_qw4s_562_w432",
+ "top": "ot_hbm_idx_score_qw_r4s",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  43.2,
+  1123.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  41.040000000000006,
+  1121.04
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "ql_v",
+   "ql_head",
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "beat_v",
+   "key_lines0",
+   "keep_bitmap",
+   "beat_index",
+   "nkeys",
+   "first_ord",
+   "rank",
+   "half",
+   "keep_en",
+   "key_lines1"
+  ],
+  "E": [
+   "o_qv0",
+   "o_q0",
+   "o_kv0",
+   "o_kkv0",
+   "o_key0",
+   "o_aux0",
+   "o_bus0",
+   "o_qv1",
+   "o_q1",
+   "o_kv1",
+   "o_kkv1",
+   "o_key1",
+   "o_aux1",
+   "o_bus1",
+   "rst_c0",
+   "rst_c1"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "43.2 x 1123.2 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
+ "referenced": [
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_qwe_r4s.sv",
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_wo2.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_score_leaf_c1.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_l.sv",
+  "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_rst_relay_l.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_delay_auto.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/kit.env",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/clock.sdc",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/signoff.sdc",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/pdn.tcl",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/pre_cts.tcl",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/post_cts.tcl",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/post_grt.tcl",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/pre_drt.tcl",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/pre_fill.tcl",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/post_fill.tcl",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/pre_grt.tcl",
+  "physical/ref_tile/hidx_score_qw4s_562_w432/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}
