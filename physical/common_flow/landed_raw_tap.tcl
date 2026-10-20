@@ -101,26 +101,70 @@ proc ot_lrt_tap {} {
         want [dict get $t $corner] x $x y $y n 0 prev "" d 0 last {} made {} active 1]
     }
   }
+  # ANCHOR (L2H-PGVM 2026-10-19, gate_lg3): the targets are relative to a co-timed pin that is never tapped (clk_ws of
+  # the bank6 child), but a buffer can only ADD delay: when another pin of the same child already arrives later than
+  # its target (u_bk_r*_1/clk_rd raw-ref 190 vs 66 -> +124 ps), the whole child is mis-timed against the verdict's
+  # CTS-root pin.  Per (child, ref) group: a_p = propagated pin arrival, t_p = target (t_ref = 0); common offset
+  # C = max(a_ref, max_p(a_p - t_p)); every pin, the ref included, is tapped to its ABSOLUTE goal C + t_p.  Same per-pin
+  # chain rule, limit, errors and overshoot drop; the relative residual (vs the ref) is what is reported.
+  estimate_parasitics -placement
+  set groups [dict create]
+  set nr0 [llength $recs]
+  for {set i 0} {$i < $nr0} {incr i} {
+    set r [lindex $recs $i]
+    set g "[dict get $r iname]|[get_full_name [dict get $r fpin]]"
+    dict lappend groups $g $i
+  }
+  dict for {g idx} $groups {
+    set r0 [lindex $recs [lindex $idx 0]]
+    set fpin [dict get $r0 fpin]
+    set aref [ot_lrt_wire $fpin]
+    set c $aref
+    foreach i $idx {
+      set r [lindex $recs $i]
+      set a [ot_lrt_wire [dict get $r rpin]]
+      if {$a - [dict get $r want] > $c} { set c [expr {$a - [dict get $r want]}] }
+    }
+    foreach i $idx {
+      set r [lindex $recs $i]
+      dict set r goal [expr {$c + [dict get $r want]}]
+      dict set r refpin $fpin
+      lset recs $i $r
+    }
+    if {$c - $aref >= 0.5} {
+      # the ref itself must arrive later: tap it as an ordinary pin of the group (want 0 relative to itself)
+      set inst [$block findInst [dict get $r0 iname]]
+      set rlib [get_property $fpin lib_pin_name]
+      set fit [$inst findITerm $rlib]
+      if {$fit eq "NULL" || [$fit getNet] eq "NULL"} { error "OT_LRT: [dict get $r0 iname]/$rlib: anchor pin unconnected" }
+      lappend recs [dict create it $fit iname [dict get $r0 iname] mterm $rlib rpin $fpin fpin $fpin \
+        corner [dict get $r0 corner] want 0.0 goal $c refpin $fpin x [dict get $r0 x] y [dict get $r0 y] n 0 prev "" d 0 \
+        last {} made {} active 1 anchor 1]
+      puts [format "OT_LRT ANCHOR %s/%s +%.1f ps (a pin of the child arrives later than its target)" [dict get $r0 iname] $rlib [expr {$c - $aref}]]
+    }
+  }
   set nr [llength $recs]
   set round 0
+  set first 1
   while 1 {
     set any 0
     for {set i 0} {$i < $nr} {incr i} { if {[dict get [lindex $recs $i] active]} { set any 1; break } }
     if {!$any} break
-    estimate_parasitics -placement
+    if {!$first} { estimate_parasitics -placement }
+    set first 0
     incr round
     for {set i 0} {$i < $nr} {incr i} {
       set r [lindex $recs $i]
       if {![dict get $r active]} continue
       dict with r {
-        set d [expr {[ot_lrt_wire $rpin] - [ot_lrt_wire $fpin]}]
-        puts [format "OT_LRT %s %s/%s %s buffers=%d raw-ref=%.1f target=%.1f" $corner $iname $mterm $bufname $n $d $want]
+        set d [ot_lrt_wire $rpin]
+        puts [format "OT_LRT %s %s/%s %s buffers=%d arrival=%.1f goal=%.1f" $corner $iname $mterm $bufname $n $d $goal]
         if {$prev ne "" && $d - $prev < 0.5} { error "OT_LRT: $iname/$mterm: a buffer adds no delay" }
-        if {$d >= $want || $n >= $lim} {
+        if {$d >= $goal - 0.05 || $n >= $lim} {
           set active 0
         } else {
           set prev $d
-          # one more buffer in front of the raw pin: (net) -> buf -> new net -> raw pin
+          # one more buffer in front of the pin: (net) -> buf -> new net -> pin
           set old [$it getNet]
           set b [odb::dbInst_create $block $bm "ot_lrt_${iname}_${mterm}_$n"]
           if {$b eq "NULL"} { error "OT_LRT: cannot create tap buffer" }
@@ -132,7 +176,7 @@ proc ot_lrt_tap {} {
           [$b findITerm $ain] connect $old
           [$b findITerm $aout] connect $nn
           $it connect $nn
-          # Bind before the next placement estimate and raw/ref arrival measurement.
+          # Bind before the next placement estimate and arrival measurement.
           if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_bind_before_protect [ot_pg_prepare_targets $block [list $b]] $b}
           set last [list $b $nn $old]
           lappend made $b $nn
@@ -143,14 +187,13 @@ proc ot_lrt_tap {} {
     }
   }
   puts "OT_LRT batched: $nr raw pins, $round parasitics rounds"
-  # the last buffer overshoots by < one buffer delay: drop it when n-1 buffers were nearer the target (all pins, then
-  # one estimate and a re-measure of the dropped pins)
+  # the last buffer overshoots by < one buffer delay: drop it when n-1 buffers were nearer the goal
   set dropped {}
   for {set i 0} {$i < $nr} {incr i} {
     set r [lindex $recs $i]
     dict with r {
-      if {$d < $want} { error "OT_LRT: $iname/$mterm: $lim buffers reach [format %.1f $d] < target $want" }
-      if {$n > 0 && $prev ne "" && $want - $prev < $d - $want} {
+      if {$d < $goal - 0.05} { error "OT_LRT: $iname/$mterm: $lim buffers reach [format %.1f $d] < goal [format %.1f $goal]" }
+      if {$n > 0 && $prev ne "" && $goal - $prev < $d - $goal} {
         lassign $last b nn old
         set made [lrange $made 0 end-2]
         $it disconnect
@@ -163,13 +206,12 @@ proc ot_lrt_tap {} {
     }
     lset recs $i $r
   }
-  if {[llength $dropped]} {
-    estimate_parasitics -placement
-    foreach i $dropped {
-      set r [lindex $recs $i]
-      dict with r { set d [expr {[ot_lrt_wire $rpin] - [ot_lrt_wire $fpin]}] }
-      lset recs $i $r
-    }
+  # final relative measure (raw - ref, what the OT_LANDED verdict judges)
+  estimate_parasitics -placement
+  for {set i 0} {$i < $nr} {incr i} {
+    set r [lindex $recs $i]
+    dict with r { set d [expr {[ot_lrt_wire $rpin] - [ot_lrt_wire $refpin]}] }
+    lset recs $i $r
   }
   set done 0
   foreach r $recs {
@@ -182,7 +224,7 @@ proc ot_lrt_tap {} {
         foreach o $pg_instances {ot_pg_bind_before_protect $pg_mapping $o}
       }
       foreach o $made { $o setDoNotTouch 1 }
-      puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname $mterm $n $d $want [expr {$d - $want}]]
+      puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f%s" $corner $iname $mterm $n $d $want [expr {$d - $want}] [expr {[dict exists $r anchor] ? " (anchor)" : ""}]]
     }
     incr done
   }
