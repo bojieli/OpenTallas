@@ -106,7 +106,10 @@ class Occ:
     def find(self, cx, cy, w, h, halo=0.0, region=None, rmax=None):
         """lower-left (x, y) of a free w x h rect (+halo) nearest to centre (cx, cy); region = (x0, y0, x1, y1) limits it."""
         nw = int(math.ceil((w + 2 * halo) / CELL)); nh = int(math.ceil((h + 2 * halo) / CELL))
-        ii = self.ii()
+        # Most free homes lie within a few cells. Recomputing a full-die summed
+        # area image for each placed tile costs minutes. Keep the exact original
+        # spiral and tie order, but build only the requested occupancy window.
+        window = None
         ci = int((cx - w / 2 - halo) / CELL); cj = int((cy - h / 2 - halo) / CELL)
         lo_i, lo_j, hi_i, hi_j = 0, 0, self.nx - nw, self.ny - nh
         if region:
@@ -126,7 +129,24 @@ class Occ:
                     return None
                 continue
             i, j = ii_[ok], jj_[ok]
-            s = ii[j + nh, i + nw] - ii[j, i + nw] - ii[j + nh, i] + ii[j, i]
+            if self._ii is not None:
+                ii = self._ii
+                s = ii[j + nh, i + nw] - ii[j, i + nw] - ii[j + nh, i] + ii[j, i]
+            else:
+                x0, y0, x1, y1 = int(i.min()), int(j.min()), int(i.max()) + nw, int(j.max()) + nh
+                if window is None or x0 < window[0] or y0 < window[1] or x1 > window[2] or y1 > window[3]:
+                    if window is not None:
+                        wx0, wy0, wx1, wy1, _ = window
+                        x0 = min(x0, wx0 - (wx1-wx0)//2); y0 = min(y0, wy0 - (wy1-wy0)//2)
+                        x1 = max(x1, wx1 + (wx1-wx0)//2); y1 = max(y1, wy1 + (wy1-wy0)//2)
+                    x0, y0 = max(0, x0-32), max(0, y0-32)
+                    x1, y1 = min(self.nx, x1+32), min(self.ny, y1+32)
+                    ii = np.zeros((y1-y0+1, x1-x0+1), np.int32)
+                    ii[1:,1:] = self.g[y0:y1,x0:x1].cumsum(0).cumsum(1)
+                    window = (x0,y0,x1,y1,ii)
+                x0,y0,_,_,ii = window
+                ix,jy = i-x0,j-y0
+                s = ii[jy+nh,ix+nw]-ii[jy,ix+nw]-ii[jy+nh,ix]+ii[jy,ix]
             free = np.nonzero(s == 0)[0]
             if len(free):
                 d = (i[free] - ci) ** 2 + (j[free] - cj) ** 2
