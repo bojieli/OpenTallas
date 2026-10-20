@@ -151,7 +151,8 @@ def layer_calendar(cals, starts=None, gap=0):
     edges unique, delay line <= ND over the layer.  Returns the packed rows, absolute issuers and per-op windows."""
     order = [c for o in EXEC_ORDER for c in cals if c['op'] == o]
     nrows = sum(len(c['packed']) for c in order)
-    if nrows > 4096:      # ot_s81sl_xs pq_calendar ROM = one ot_rom_4096x72_m8 pair; is_d base field 12 b
+    segmented = os.environ.get('OT_XS_CAL_SEGMENT', '0') == '1'
+    if nrows > 4096 and not segmented:      # ot_s81sl_xs pq_calendar ROM = one ot_rom_4096x72_m8 pair; is_d base field 12 b
         raise CalendarFault(('layer calendar compile fault', [('layer_rows_le_4096', nrows,
                              {c['op']: len(c['packed']) for c in order})]))
     packed, iss, win, bad = [], {}, [], []
@@ -180,13 +181,20 @@ def layer_calendar(cals, starts=None, gap=0):
         win.append(dict(op=c['op'], start=S, base=base, rows=len(c['packed']), first_accept=abs_a0, last_retire=abs_r1,
                         nphases=c['nphases'], period=c['period']))
         t_free, t_free_abs = S + r1, abs_r1
-    if len(packed) > 4096:
+    if len(packed) > 4096 and not segmented:
         bad.append(('layer_rows_le_4096', len(packed)))
     its = sorted(iss)
     if not all(len([j for j in its if j <= i < j + XC.OFF + 2]) <= XC.ND for i in its):
         bad.append(('layer_isd_delay_line_le_ND',))
     if bad:
         raise CalendarFault(('layer calendar compile fault', bad))
+    if segmented:
+        from xs_calendar_pack import pack_layer
+        try:
+            result = pack_layer(order, {w['op']: w['start'] for w in win})
+        except AssertionError as e:
+            raise CalendarFault(('segmented calendar compile fault', str(e))) from e
+        return dict(result, windows=win)
     return dict(packed=packed, iss=iss, windows=win, rows=len(packed), PASS=True)
 
 
@@ -249,10 +257,15 @@ def frame_field(die, frame, fixd, ops, iters=None):
         phase = []
         for ph in field.phases:
             phase += list(I.phase_words(ph))
+        if os.environ.get('OT_XS_CAL_SEGMENT', '0') == '1':
+            from xs_calendar_pack import dedup_stream
+            phase, stream = dedup_stream(phase, list(field.stream))
+        else:
+            stream = list(field.stream)
         by_op = {}
         for p in rec['phases']:
             by_op.setdefault(p['op'], []).append(p['phase'])
-        _FIELD[key] = (phase, list(field.stream), by_op, rec)
+        _FIELD[key] = (phase, stream, by_op, rec)
     return _FIELD[key]
 
 
