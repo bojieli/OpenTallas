@@ -1,0 +1,122 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ff.lib
+read_db /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_io_flop_at_pins.tcl
+OT_IOFLOP extra capture ev -> g_event_first\[0\].u/q$_DFF_PN0_ at (269190, 299970) DBU
+OT_IOFLOP extra capture ev -> g_event_first\[1\].u/q$_DFF_PN0_ at (269190, 299700) DBU
+OT_IOFLOP extra capture ev -> g_event_first\[2\].u/q$_DFF_PN0_ at (269190, 299430) DBU
+OT_IOFLOP extra capture ev -> g_event_first\[3\].u/q$_DFF_PN0_ at (270594, 299970) DBU
+OT_IOFLOP extra capture ev -> g_event_first\[4\].u/q$_DFF_PN0_ at (267786, 299970) DBU
+OT_IOFLOP extra capture tag_d[14] -> g_first_tag1\[0\].u/q$_DFF_P_ at (268110, 299700) DBU
+OT_IOFLOP extra capture tag_d[14] -> g_first_tag1\[1\].u/q$_DFF_P_ at (268110, 299430) DBU
+OT_IOFLOP extra capture tag_d[14] -> tag1\[14\]$_DFF_P_ at (267030, 299700) DBU
+OT_ANCHOR_PACK: legally packed 1132 owned anchors; maximum Manhattan displacement 4894.0 DBU
+OT_IOFLOP fixed 586 output-port and 546 input-port flops at their pins (4 ports not single-flop)
+Took 20 seconds: source /work/hooks/pre_global_place_io_flop_at_pins.tcl
+[INFO RSZ-0026] Removed 1063 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 541 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 586 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 343.440 300.240 ) um
+[INFO GPL-0016] Core area:                  101728.742 um^2
+[INFO GPL-0036] Movable instances area:       9255.792 um^2
+[INFO GPL-0037] Total instances area:        36242.993 um^2
+[INFO GPL-0035] Pin density area adjust:       923.222 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             91690
+[INFO GPL-0007] Movable instances:               80868
+[INFO GPL-0008] Fixed instances:                  9664
+[INFO GPL-0009] Dummy instances:                  1158
+[INFO GPL-0010] Number of nets:                  83054
+[INFO GPL-0011] Number of pins:                 268143
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 345.600 302.400 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 343.440 300.240 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                101728.742 um^2
+[INFO GPL-0017] Fixed instances area:        29781.195 um^2
+[INFO GPL-0018] Movable instances area:      10179.014 um^2
+[INFO GPL-0019] Utilization:                    14.148 %
+[INFO GPL-0020] Standard cells area:         10179.014 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 80868	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00171663 HPWL: 1232386162
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00006341 HPWL: 846001110
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00006282 HPWL: 816175729
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00007513 HPWL: 798120996
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00002608 HPWL: 787556047
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00000891 HPWL: 779580249
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.126 um^2
+[INFO GPL-0025] Ideal bin area:                  0.252 um^2
+[INFO GPL-0026] Ideal bin count:                404099
+[INFO GPL-0027] Total bin area:             101728.742 um^2
+[INFO GPL-0028] Bin count (X, Y):         512 ,    512
+[INFO GPL-0029] Bin size (W * H):       0.667 *  0.582 um
+[INFO GPL-0030] Number of bins:                 262144
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9787 |  3.234156e+05 |   +0.00% |  6.73e-14 |      
+       10 |   0.9497 |  3.766630e+05 |  +16.46% |  1.09e-13 |      
+       20 |   0.9341 |  3.864254e+05 |   +2.59% |  1.77e-13 |      
+       30 |   0.9213 |  3.894039e+05 |   +0.77% |  2.88e-13 |      
+       40 |   0.9116 |  3.904150e+05 |   +0.26% |  4.69e-13 |      
+       50 |   0.9051 |  3.921633e+05 |   +0.45% |  7.64e-13 |      
+       60 |   0.9003 |  3.914250e+05 |   -0.19% |  1.24e-12 |      
+       70 |   0.8930 |  3.879860e+05 |   -0.88% |  2.03e-12 |      
+       80 |   0.8870 |  3.828138e+05 |   -1.33% |  3.30e-12 |      
+       90 |   0.8814 |  3.773843e+05 |   -1.42% |  5.38e-12 |      
+      100 |   0.8767 |  3.725798e+05 |   -1.27% |  8.76e-12 |      
+      110 |   0.8716 |  3.687114e+05 |   -1.04% |  1.43e-11 |      
+      120 |   0.8661 |  3.657692e+05 |   -0.80% |  2.32e-11 |      
+      130 |   0.8620 |  3.639320e+05 |   -0.50% |  3.79e-11 |      
+      140 |   0.8598 |  3.631778e+05 |   -0.21% |  6.17e-11 |      
+      150 |   0.8573 |  3.631340e+05 |   -0.01% |  1.00e-10 |      
+      160 |   0.8554 |  3.636624e+05 |   +0.15% |  1.64e-10 |      
+      170 |   0.8516 |  3.658133e+05 |   +0.59% |  2.66e-10 |      
+      180 |   0.8452 |  3.709249e+05 |   +1.40% |  4.34e-10 |      
+      190 |   0.8350 |  3.799417e+05 |   +2.43% |  7.06e-10 |      
+      200 |   0.8180 |  4.005089e+05 |   +5.41% |  1.15e-09 |      
+      210 |   0.7915 |  4.278284e+05 |   +6.82% |  1.86e-09 |      
+      220 |   0.7666 |  4.420512e+05 |   +3.32% |  3.03e-09 |      
+      230 |   0.7433 |  4.457526e+05 |   +0.84% |  4.93e-09 |      
+      240 |   0.7224 |  4.495948e+05 |   +0.86% |  8.03e-09 |      
+      250 |   0.6899 |  4.734757e+05 |   +5.31% |  1.30e-08 |      
+      260 |   0.6540 |  4.834693e+05 |   +2.11% |  2.12e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 269, overflow: 0.635, keep resizer changes at: 1, HPWL: 472848122
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     83054
+[WARNING ODB-1211] InsertBufferBeforeLoads: Load pin 'u_core.g_safe.g_madd\[9\].g_fan32.u_m.genblk1.g_native7.u_native.c886/B1' is dont_touch. Cannot insert a buffer.
+[ERROR RSZ-3006] Failed to insert buffer before loads for net u_core.g_safe.g_madd\[9\].g_fan32.u_m.genblk1.g_native7.u_native.n1957
+write_db /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/3_3_place_gp-failed.odb
+Error: global_place.tcl, 69 RSZ-3006
+Elapsed time: 1:03.72[h:]min:sec. CPU time: user 220.44 sys 6.52 (356%). Peak memory: 1091204KB.
+make[1]: *** [Makefile:499: do-3_3_place_gp] Error 1
+make: *** [Makefile:499: /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/3_3_place_gp.odb] Error 2
