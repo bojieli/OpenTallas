@@ -1,0 +1,409 @@
+{
+  "scope": "MODEL ONLY: translate only FFs with uniquely proven direct data-port membership by exact prospective pin displacement, preserving original FF-to-port pin offset. This is an explicit anchored-FF placement assumption, not a generated layout or measured new gate. FF bit/clock/reset and source stages unchanged. Full-cone endpoint metric; individual native wire reach differs. No added-stage or coordinate waiver.",
+  "identity_sha256": "1bc54a6a7433e69f3beddfa478bfebe2efa0a82f9ecfd6c29bc28444167a07a0",
+  "pinmodel_sha256": "c7bfa040808740b8c1ff81ed6250c127a8c24d8a829c5004a6b331a961691b68",
+  "outline_um": [
+    388.8,
+    475.2
+  ],
+  "direct_input_to_direct_output_pairs": 397,
+  "unresolved_membership": 1,
+  "over405_pairs": 397,
+  "violations_by_portbase": {
+    "i_up -> o_ctl": 126,
+    "i_ctl -> o_dn": 271
+  },
+  "max_projected_L1_um": 735.2370000000001,
+  "worst10": [
+    {
+      "input_port": "i_up[89]",
+      "output_port": "o_ctl[107]",
+      "root": {
+        "name": "u36520_c0/u_cell/QN",
+        "instance": "u36520_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          85.725,
+          3.645
+        ],
+        "net": "n41510_c0",
+        "net_id": 39009
+      },
+      "endpoint": {
+        "name": "u36541_c0/u_cell/D",
+        "instance": "u36541_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          352.782,
+          385.425
+        ],
+        "net": "u36541_c0/net30401",
+        "net_id": 66228
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 735.2370000000001
+    },
+    {
+      "input_port": "i_up[69]",
+      "output_port": "o_ctl[87]",
+      "root": {
+        "name": "u36498_c0/u_cell/QN",
+        "instance": "u36498_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          66.879,
+          3.375
+        ],
+        "net": "n41470_c0",
+        "net_id": 38989
+      },
+      "endpoint": {
+        "name": "u36658_c0/u_cell/D",
+        "instance": "u36658_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          333.504,
+          385.425
+        ],
+        "net": "u36658_c0/net26313",
+        "net_id": 63730
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 735.075
+    },
+    {
+      "input_port": "i_up[77]",
+      "output_port": "o_ctl[95]",
+      "root": {
+        "name": "u36507_c0/u_cell/QN",
+        "instance": "u36507_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          75.303,
+          3.375
+        ],
+        "net": "n41486_c0",
+        "net_id": 38997
+      },
+      "endpoint": {
+        "name": "u36666_c0/u_cell/D",
+        "instance": "u36666_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          341.658,
+          385.425
+        ],
+        "net": "u36666_c0/net30354",
+        "net_id": 66433
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 734.8050000000001
+    },
+    {
+      "input_port": "i_up[64]",
+      "output_port": "o_ctl[82]",
+      "root": {
+        "name": "u36493_c0/u_cell/QN",
+        "instance": "u36493_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          62.559,
+          3.105
+        ],
+        "net": "n41460_c0",
+        "net_id": 38984
+      },
+      "endpoint": {
+        "name": "u36653_c0/u_cell/D",
+        "instance": "u36653_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          328.86,
+          385.155
+        ],
+        "net": "u36653_c0/net26328",
+        "net_id": 63720
+      },
+      "root_delta_um": [
+        -7.105427357601002e-15,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 734.751
+    },
+    {
+      "input_port": "i_up[76]",
+      "output_port": "o_ctl[94]",
+      "root": {
+        "name": "u36506_c0/u_cell/QN",
+        "instance": "u36506_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          73.845,
+          3.375
+        ],
+        "net": "n41484_c0",
+        "net_id": 38996
+      },
+      "endpoint": {
+        "name": "u36665_c0/u_cell/D",
+        "instance": "u36665_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          340.416,
+          385.155
+        ],
+        "net": "u36665_c0/net26290",
+        "net_id": 63744
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 734.751
+    },
+    {
+      "input_port": "i_up[52]",
+      "output_port": "o_ctl[70]",
+      "root": {
+        "name": "u36480_c0/u_cell/QN",
+        "instance": "u36480_c0/u_cell",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          51.462,
+          3.645
+        ],
+        "net": "n41436_c0",
+        "net_id": 38972
+      },
+      "endpoint": {
+        "name": "u36640_c0/u_cell/D",
+        "instance": "u36640_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          317.736,
+          385.695
+        ],
+        "net": "u36640_c0/net26351",
+        "net_id": 63277
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 734.7239999999999
+    },
+    {
+      "input_port": "i_up[116]",
+      "output_port": "o_ctl[134]",
+      "root": {
+        "name": "u36425_c0/u_cell/QN",
+        "instance": "u36425_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          111.051,
+          3.105
+        ],
+        "net": "n41564_c0",
+        "net_id": 39036
+      },
+      "endpoint": {
+        "name": "u36570_c0/u_cell/D",
+        "instance": "u36570_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          376.974,
+          385.425
+        ],
+        "net": "u36570_c0/net26187",
+        "net_id": 63704
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 734.643
+    },
+    {
+      "input_port": "i_up[96]",
+      "output_port": "o_ctl[114]",
+      "root": {
+        "name": "u36528_c0/u_cell/QN",
+        "instance": "u36528_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          92.583,
+          3.105
+        ],
+        "net": "n41524_c0",
+        "net_id": 39016
+      },
+      "endpoint": {
+        "name": "u36549_c0/u_cell/D",
+        "instance": "u36549_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          358.452,
+          385.425
+        ],
+        "net": "u36549_c0/net30394",
+        "net_id": 66242
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 734.5889999999999
+    },
+    {
+      "input_port": "i_up[80]",
+      "output_port": "o_ctl[98]",
+      "root": {
+        "name": "u36511_c0/u_cell/QN",
+        "instance": "u36511_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          78.165,
+          2.835
+        ],
+        "net": "n41492_c0",
+        "net_id": 39000
+      },
+      "endpoint": {
+        "name": "u36669_c0/u_cell/D",
+        "instance": "u36669_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          344.034,
+          385.155
+        ],
+        "net": "u36669_c0/net30352",
+        "net_id": 66436
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 734.5889999999999
+    },
+    {
+      "input_port": "i_up[120]",
+      "output_port": "o_ctl[138]",
+      "root": {
+        "name": "u36430_c0/u_cell/QN",
+        "instance": "u36430_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          115.155,
+          3.645
+        ],
+        "net": "n41572_c0",
+        "net_id": 39040
+      },
+      "endpoint": {
+        "name": "u36574_c0/u_cell/D",
+        "instance": "u36574_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          381.24,
+          385.695
+        ],
+        "net": "u36574_c0/net30375",
+        "net_id": 66399
+      },
+      "root_delta_um": [
+        0.0,
+        0.0
+      ],
+      "endpoint_delta_um": [
+        0.0,
+        86.39999999999998
+      ],
+      "projected_L1_um": 734.5350000000001
+    }
+  ]
+}
