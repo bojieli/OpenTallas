@@ -1,0 +1,45 @@
+{
+  "reviewer": "codex delegated coordinator S81",
+  "time": "2026-10-20T01:54:05-07:00",
+  "gate_commit": "2026-10-20T01:46:38-0700",
+  "geometry_sha256": "d1962783cb0442242a6d943fcde23f64da20751b557aadbe81cec35a097ff1c9",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "d1962783cb0442242a6d943fcde23f64da20751b557aadbe81cec35a097ff1c9",
+    "components": {
+      "outline": "111cac037f43696249ed7ca3aaf2883972d8a4fec53b78705cff5e9265f90dd9",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "2d17fd69b4e385d278f3921e4e3eec7c168f1bd77b676f97a760a58df3c005a4",
+      "clock_entry": "67eaf6b3eb234555d8c5d04231f1662ffdd778653faa4076212b65c905427c9a"
+    }
+  },
+  "verdict": "APPROVED",
+  "delegation": "Codex full coordinator delegated critical-tile review to S81 takeover lead with actual PNG and checklist evidence. Leaf author is a separate agent.",
+  "checklist": {
+    "lattice": "PASS: no hard macros; stock standard-cell rows, outline64.8x54.",
+    "std_cell_band": "PASS: personally viewed floorplan+density PNGs; one contiguous broad standard-cell mass, no trapped islands. Actual GRT functional1470.36384/3004.6464 legalrowarea=48.94%; source sizing51.26%.",
+    "pin_spread": "PASS:359signal/clock rectangles and24PG=383total, all actual signal pins ontrack/inoutline and fullfaces<=6/um; no point-anchor substitution.",
+    "clock_entry": "PASS: South clock beside actual cell mass. Single core_clk full-root extrema TT9.5/FF9.4ps (boundary7.2/7.4), no child mean aggregation. Hold0.03ns.",
+    "shape": "PASS:64.8x54 aspect1.2; zero macro obstacles, trialroute0overflow/M2usage34.45%."
+  },
+  "native_and_behavior": {
+    "census": "Current mandatory actual-Lib mapped max25; actualGRT11263cells/max25/zero>32 includingreset/unknown0.",
+    "reach": "Actual transparentBUF/INV bbox87.76um/zero>405; finalroute audit still required.",
+    "reset": "Two rawreset face sinks; first release2stage requirement met; startup5edges explicit.",
+    "storage": "Actual32fixedparallel11bit counter bins=352bits; bounded hardened bank, not parentwide indexed flop store.",
+    "behavior": "Leaf and soft8bank composition1159checks each PASS;4causal mutants fail. Gate source6361cb93b, source-equivalence receipt frozen.",
+    "logic_depth_ps": 376.7
+  },
+  "approval_scope": "Authorize submit_exact dry-run and, if current binding/evidence checks pass, route submission of this exact BANK0 leaf only. No complete TOPKquarter adoption.",
+  "final_obligations": [
+    "Routed TT/FF/SS setup+hold and DRC closure.",
+    "Native final6_final PG unbound0 (GRT350 ordinary birth iterms are not final signoff).",
+    "Final native fanout/reach/registered ports and source identity.",
+    "Parent controller/packer/hardbank composition and compiler latency remain unqualified."
+  ],
+  "personally_viewed_pngs": {
+    "floorplan.png": "52d3133f0d3f497beff672dfd8810c97c2b27ee5461df4df38f0e372c3876a41",
+    "density.png": "d2d0917566a01da42ec115a1682fa10c2cbd0118544b6c50016bcccdb3bc2218"
+  },
+  "review_packet_commit": "b9e61990f"
+}
