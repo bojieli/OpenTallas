@@ -363,6 +363,9 @@ module ot_s81ph_native_sel_pack #(
     input  wire            i_fl,
     input  wire [W-1:0]    i_sel,
     input  wire [W*PW-1:0] i_p,
+`ifdef OT_S81PH_SEL_HQ
+    input  wire [W-1:0]    i_selg,      // S81-TOPK7 HQ: identical kept copy of i_sel for the lane gating (i_sel: prefix)
+`endif
     output reg             o_v,
     output reg  [W-1:0]    o_lv,
     output reg  [W*PW-1:0] o_line,
@@ -371,6 +374,9 @@ module ot_s81ph_native_sel_pack #(
 );
     localparam integer LW  = (W > 1) ? $clog2(W) : 1;
     localparam integer CE  = 1 + LW + PW;           // {v, z, payload}
+`ifndef OT_S81PH_SEL_HQ
+    wire [W-1:0] i_selg = i_sel;
+`endif
     localparam integer RE  = 1 + PW;                // {v, payload}
     localparam integer NCR = (LW + 1) / 2;
 
@@ -390,7 +396,7 @@ module ot_s81ph_native_sel_pack #(
                 assign below = inc[(LW+1)*(gl-1) +: LW+1];
             end
             wire [LW:0] zz = LANE - below;
-            assign e_d[CE*gl +: CE] = i_sel[gl] ? {1'b1, zz[LW-1:0], i_p[PW*gl +: PW]} : {CE{1'b0}};
+            assign e_d[CE*gl +: CE] = i_selg[gl] ? {1'b1, zz[LW-1:0], i_p[PW*gl +: PW]} : {CE{1'b0}};
         end
     endgenerate
     reg          s1_v, s1_fl;
@@ -438,7 +444,11 @@ module ot_s81ph_native_sel_pack #(
     wire [W*CE-1:0] cp = crf[W*CE*(NCR-1) +: W*CE];
     wire            cp_v = cr_v[NCR-1], cp_fl = cr_fl[NCR-1];
     wire [LW:0]     cp_cnt = crc[(LW+1)*(NCR-1) +: LW+1];
+`ifdef OT_S81PH_SEL_HQ
+    wire [LW-1:0]   frun;          // S81-TOPK7 HQ: = lane copy 0 of the FAN32 frun copies (frun_d drives exactly 2W copies)
+`else
     reg  [LW-1:0]   frun;
+`endif
     reg  [NCR-1:0]  ro_v, ro_fl;
     wire [NCR*2*W*RE-1:0] rof;
     wire [NCR*LW-1:0]     rff;
@@ -454,12 +464,20 @@ module ot_s81ph_native_sel_pack #(
         end
     endgenerate
     always @(posedge clk or negedge rst_n) begin
+`ifdef OT_S81PH_SEL_HQ
+        if (!rst_n) begin ro_v <= 0; ro_fl <= 0; end
+        else begin
+            ro_v  <= (NCR > 1) ? {ro_v[(NCR > 1 ? NCR-2 : 0):0], cp_v} : cp_v;
+            ro_fl <= (NCR > 1) ? {ro_fl[(NCR > 1 ? NCR-2 : 0):0], cp_fl} : cp_fl;
+        end
+`else
         if (!rst_n) begin ro_v <= 0; ro_fl <= 0; frun <= 0; end
         else begin
             ro_v  <= (NCR > 1) ? {ro_v[(NCR > 1 ? NCR-2 : 0):0], cp_v} : cp_v;
             ro_fl <= (NCR > 1) ? {ro_fl[(NCR > 1 ? NCR-2 : 0):0], cp_fl} : cp_fl;
             if (cp_v) frun <= cp_fl ? {LW{1'b0}} : frun + cp_cnt[LW-1:0];
         end
+`endif
     end
 `ifdef OT_S81PH_SEL_FAN32
     // S81-TOPK FAN32 (10-19, SAFE item 3): the rotate shift amounts (qf 1600 / sh 1413 loads) get one KEPT identical
@@ -474,6 +492,9 @@ module ot_s81ph_native_sel_pack #(
             if (!rst_n) r <= {LW{1'b0}}; else r <= frun_d;
         assign frc[LW*gl +: LW] = r;
     end
+`ifdef OT_S81PH_SEL_HQ
+    assign frun = frc[0 +: LW];
+`endif
 `endif
     generate
         for (gr = 0; gr < NCR; gr = gr + 1) begin : g_rst
@@ -611,6 +632,32 @@ module ot_s81ph_native_sel_pack #(
         wire [LW:0]   ct = {1'b0, cf} + cc;
 `endif
         wire [RE-1:0] wl = a[RE-1] ? a : rq[RE*gl +: RE];
+`ifdef OT_S81PH_SEL_HQ
+        // S81-TOPK7 HQ: the same update; only the lane-valid bit a[RE-1] is reset (the payload a[RE-2:0] is read only
+        // when a[RE-1] or cof is set, and every such state writes the whole lane first): no reset on datapath bits.
+        reg [RE-1:0] a_n;
+        reg          cof_n;
+        always @(*) begin
+            a_n = a; cof_n = cof;
+            if (cof) begin
+                a_n = {RE{1'b0}}; cof_n = 1'b0;
+            end else if (cv) begin
+                if (ct[LW]) begin
+                    a_n = rq[RE*(W+gl) +: RE];
+                    if (cfl) begin
+                        if (ct[LW-1:0] != 0) cof_n = 1'b1;
+                        else a_n = {RE{1'b0}};
+                    end
+                end else if (cfl) a_n = {RE{1'b0}};
+                else a_n = wl;
+            end
+        end
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin cv <= 1'b0; cfl <= 1'b0; cof <= 1'b0; a[RE-1] <= 1'b0; end
+            else begin cv <= rv_d; cfl <= rfl_d; cof <= cof_n; a[RE-1] <= a_n[RE-1]; end
+        end
+        always @(posedge clk) a[RE-2:0] <= a_n[RE-2:0];
+`else
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin
                 cv <= 1'b0; cfl <= 1'b0; cof <= 1'b0; a <= {RE{1'b0}};
@@ -630,6 +677,7 @@ module ot_s81ph_native_sel_pack #(
                 end
             end
         end
+`endif
         always @(posedge clk) begin cf <= rf_d; cc <= rc_d; end
         assign acc[RE*gl +: RE] = a;
         assign ol[RE*gl +: RE] = cof ? a : wl;
