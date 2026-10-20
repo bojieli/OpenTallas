@@ -1,0 +1,4 @@
+Verilator 5.050 2026-07-01 rev v5.050
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 332, landed 80, replayed 80) host 19/19 ks 27/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 0 tx 0 hostplane 0 | faults 000
+PASS lep_muh: host-plane MU endpoint == single-user lep: 412 H->die ring beats (332 cut-through same cycle+bits with mu_rt, 80 landed + replayed), 19 HOST + 27 KS identical every cycle; die->H 644 frames same cycles (521 ring incl. 160 stamped, 62 THOST, 61 TKD); F1 faulted
+BENCH_PASS lepmuh MUT=none seed 1
