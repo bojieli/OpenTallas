@@ -1,0 +1,14 @@
+FAIL cyc 148 token 0 item 2: got tok 00000 w 1 lo 29e38d8a99622763 exp tok 00000 w 1 lo 99b00d821c390390
+FAIL cyc 149 token 0 item 3: got tok 00000 w 2 lo 99b00d821c390390 exp tok 00000 w 2 lo 512d561e03bedb7b
+FAIL cyc 150 token 0 item 4: got tok 00000 w 3 lo 512d561e03bedb7b exp tok 00000 w 3 lo 2660a44f26a4ce35
+FAIL cyc 151 token 0 item 5: got tok 00000 w 4 lo 2660a44f26a4ce35 exp tok 00000 w 4 lo 9857bed2ba9486e3
+FAIL cyc 152 token 0 item 6: got tok 00000 w 5 lo 9857bed2ba9486e3 exp tok 00000 w 5 lo 8b555a652e2d0532
+POSITIVE tokens=24 items=1560 headers_ok=24 words_ok=24 fault=0
+FAIL item counts
+ROW_OPEN high_samples=5675 falls=24
+NEGATIVE cases=6 faulted=6
+FAIL kvjc row_tx_ctx errors=1513
+- rtl/test/qwen_static_kv/tb_qkd_embedding_row_tx_ctx.sv:185: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.011 s; speed 511.162 us/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB

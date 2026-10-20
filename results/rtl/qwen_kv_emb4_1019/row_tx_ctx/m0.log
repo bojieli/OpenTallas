@@ -1,0 +1,8 @@
+POSITIVE tokens=24 items=1560 headers_ok=24 words_ok=1536 fault=0
+ROW_OPEN high_samples=5675 falls=24
+NEGATIVE cases=6 faulted=6
+PASS kvjc row_tx_ctx row_open=armed tokens=24 items=1560 (header + 64 words each, sys_face layout, v = slot + 1 edge) negatives=6/6
+- rtl/test/qwen_static_kv/tb_qkd_embedding_row_tx_ctx.sv:185: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.014 s; speed 408.118 us/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 7 MB
