@@ -32,6 +32,31 @@ def contract(rows):
                 issuer_start_separation=busy_clear_nba + 2)
 
 
+def verify_sector_prefixes(rows):
+    """Prove gather availability and circular buffer capacity for the schedule.
+
+    This checks integer producer/consumer prefix inequalities independently of
+    RTL payload values, using the fixed slot positions declared above.
+    """
+    timing = contract(rows)
+    received = consumed = 0
+    writes = {3 + (r // 4) * 5 + r % 4: r for r in range(rows)}
+    max_occupancy = 0
+    for edge in range(1, max(timing['sector_edges'], max(writes)) + 1):
+        incoming = min(timing['sectors'] - received, 1 if (edge - 1) % 5 == 4 else 4)
+        # The RTL reads present[] before this edge's sector NBA updates.
+        if edge in writes:
+            assert received - consumed >= 5, (rows, edge, received, consumed)
+        assert received - consumed + incoming <= 16, (rows, edge)
+        max_occupancy = max(max_occupancy, received - consumed + incoming)
+        received += incoming
+        if edge in writes:
+            consumed += 5 if writes[edge] % 4 == 3 else 4
+    assert received == timing['sectors']
+    assert consumed == (rows * 17) // 4
+    return max_occupancy
+
+
 def verify_recorded_witnesses(root):
     import re
     log = (root / 'results/rtl/hbm_smxl_cache_1020/minimum/m0.log').read_text()
@@ -55,5 +80,5 @@ def verify_recorded_witnesses(root):
 
 if __name__ == '__main__':
     root = Path(__file__).resolve().parents[3]
-    print(json.dumps(dict(scope=__doc__, rows=[contract(n) for n in range(1, 65)],
+    print(json.dumps(dict(scope=__doc__, rows=[dict(contract(n), max_sector_occupancy=verify_sector_prefixes(n)) for n in range(1, 65)],
                           evidence=verify_recorded_witnesses(root)), indent=2))
