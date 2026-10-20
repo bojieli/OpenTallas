@@ -85,6 +85,24 @@ def test_constant_output_requires_independent_functional_contract_audit(tmp_path
     assert r['constant_output_bits']==[{'port_bit':'y', 'source':{'kind':'liberty_function','instance':'t','master':'CONSTANT','pin':'Y','function':'0'}, 'transparent_path':['b']}]
 
 
+def test_indexed_constant_output_reports_actual_child_pin_function(tmp_path):
+    lib=tmp_path/'bus.lib'
+    lib.write_text('''library(L) {type(T) {bit_from:17; bit_to:18;}
+      cell(K) {bus(Y) {bus_type:T; direction:output;
+        pin(Y[17]) {function:"0";} pin(Y[18]) {function:"1";}
+      }} }''')
+    roles,_=N.liberty_roles([str(lib)])
+    g=N.TL.Graph();a=g.net('out_a');b=g.net('out_b')
+    g.ports={'a':('output',a),'b':('output',b)}
+    g.cells=[('K','tie_bus',{'Y':[a,b]})]
+    r=N.census(g,roles)
+    assert r['status']=='PASS' and not r['driver_counts']
+    sources={x['port_bit']:x['source'] for x in r['constant_output_bits']}
+    assert sources['a']['pin']=='Y[17]' and sources['a']['function']=='0'
+    assert sources['b']['pin']=='Y[18]' and sources['b']['function']=='1'
+    assert r['functional_pin_contract']=='NOT_EVALUATED'
+
+
 def test_nested_attributes_never_become_pin_roles_and_bus_bits_are_explicit(tmp_path):
     assert N.attr('timing() { clock:true; function:"0"; direction:output; }', 'clock') is None
     assert N.attr('timing() { function:"0"; } function:"!A";', 'function') == '!A'
