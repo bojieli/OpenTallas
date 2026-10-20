@@ -24,3 +24,17 @@ kit spec `tools/ref_tile/specs/s81lk_serdes_col_lp5.json`. Same slot (518.4 x 38
 7. Clock: 9 regional roots unchanged; gate judges per-region TT/FF spread <= 80; io_hold_margin 0.03.
 8. Schedule: static; landing edges unchanged (record compiler block); rate matcher (the only elastic element, off-die boundary)
    sees fill/empty one edge later and releases reset 2 edges later -- no scheduled-path change.
+
+## lpk5b (S81-SERDES5 10-20): fix of the lpk5 mapped native census FAIL (ep9 ref_gate/s81lk_serdes_col_lp5-20261020-030200)
+lpk5 census: 301 drivers > 32, max 219. Fixes (same regions, pins, children, outline, SDCs):
+- 155 landing writer nets (u_lpl_*_w.g_chunk[*].u_local, 88-120 loads): the ring reset rq gated every slot bit.
+  lp spec `landing_reg_we: true` -> writer `ot_pl_land_vector_reset_we_w` / `ot_pl_land_local_we_w`
+  (rtl/common/landed_parent/ot_pl_land_regwe.sv, NEW private opt-in file; shared ot_pl_land*.sv untouched, default lp
+  generation byte-identical): registered per-slot write enables we[s] = next(rsi && write_oh_next[s]) == rq && write_oh[s]
+  (assertion in the module); each we drives <= 24 enables. +4 flops per writer chunk (priced in the record), no edge change.
+- rate matcher u_rm (q_v 219, idle 49, slice nets 42-45, slice e 37-38): per slice a KEPT write control ot_s81_rm_wctl
+  (push + one-hot write pointer, row enables) and KEPT read control ot_s81_rm_rctl (registered empty + one-hot read
+  pointer, read enables 0 when empty); the IDLE output value is ORed by e only on IV one-bits. w_v / idle -> 1 gate per
+  slice (~26 loads), row/read enables 22, slice read reset 31. Same function and cycle timing as lpk5.
+Checklist delta: 3 Fanout FIXED (pre-gate census of lpk5b by the gate's native_census before floorplan; numbers in the lane
+file); 1, 2, 4-8 unchanged from lpk5.

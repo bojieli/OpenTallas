@@ -120,6 +120,8 @@ ROOT = Path(__file__).resolve().parents[2]
 LIB_RTL = "rtl/common/landed_parent/ot_pl_land.sv"
 RESET_FOREST_RTL = ["rtl/common/landed_parent/ot_pl_land_field_copies.sv",
                     "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"]
+# S81-SERDES5 10-20: opt-in registered per-slot write enables (spec "landing_reg_we": true, needs landing_reset_forest)
+REG_WE_RTL = ["rtl/common/landed_parent/ot_pl_land_regwe.sv"]
 KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always", "always_ff",
       "always_comb", "initial", "generate", "endgenerate", "parameter", "localparam", "if", "else", "for", "begin", "end",
       "case", "endcase", "function", "endfunction", "genvar", "integer", "signed", "unsigned", "default_nettype"}
@@ -132,6 +134,7 @@ LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
+LIB_PORTS['ot_pl_land_vector_reset_we_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 
 
 
@@ -538,6 +541,11 @@ class Parent:
             raise SystemExit("landing_mcp must be an explicit boolean")
         if type(self.reset_forest) is not bool:
             raise SystemExit("landing_reset_forest must be an explicit boolean")
+        self.reg_we = spec.get("landing_reg_we", False)
+        if type(self.reg_we) is not bool:
+            raise SystemExit("landing_reg_we must be an explicit boolean")
+        if self.reg_we and not self.reset_forest:
+            raise SystemExit("landing_reg_we is implemented only with landing_reset_forest")
         if self.reset_forest and not self.chunk_bits:
             raise SystemExit("landing_reset_forest requires explicit landing_chunk_bits")
         if self.chunk_bits and not 1 <= self.chunk_bits <= 24:
@@ -916,7 +924,7 @@ class Parent:
             raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited')
         return dict(regional_stages=depth, root_D_loads=root_loads, regions=regions,
                     incremental_FFs=sum(v['FFs']-depth for v in regions.values()),
-                    required_rtl_sources=RESET_FOREST_RTL,
+                    required_rtl_sources=RESET_FOREST_RTL + (REG_WE_RTL if self.reg_we else []),
                     scope='Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified.')
 
     def emit(self, P, top_lp, mut=True):
@@ -1015,7 +1023,8 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
+                wprim = f"{primitive}_we" if self.reg_we else primitive
+                w(f"    {wprim}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
                 w(f"    wire {decl} {out}, lpl_{n}_o;")
@@ -1207,6 +1216,10 @@ class Parent:
                               for L in P["lands"])
             flops_land += sum(math.ceil(L["width"] / self.chunk_bits) * self.D *
                               (2 if L.get("ring_of", L["name"]) == L["name"] else 1) for L in P["lands"])
+        if self.reg_we:
+            # landing_reg_we: D registered slot write enables per kept writer chunk (no schedule change)
+            flops_land += sum(math.ceil(L["width"] / self.chunk_bits) * self.D
+                              for L in P["lands"] if L.get("ring_of", L["name"]) == L["name"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
         flops_oreg = sum(eval_width(self.ports[p]["range"], self.env) * k for p, k in (P.get("oregs") or {}).items())
         flops_rst = (len(self.regions) * rt["RB"] if self.rports is not None else 1 + len(self.regions) * (rt["RB"] - 1)) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
@@ -1469,7 +1482,7 @@ class Parent:
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
         srcs = " ".join(dict.fromkeys(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +   # each file once
-                        (RESET_FOREST_RTL if self.reset_forest else []) +
+                        (RESET_FOREST_RTL if self.reset_forest else []) + (REG_WE_RTL if self.reg_we else []) +
                         ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else [])))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
@@ -1582,7 +1595,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_vector_reset_we_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):

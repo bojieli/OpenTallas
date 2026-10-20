@@ -49,6 +49,40 @@ module ot_s81_rm_rtree #(parameter integer N = 25) (
     endgenerate
 endmodule
 
+// SERDES5 10-20 (lpk5 mapped census: q_v 219, idle 49, slice nets 42-45, slice e 37-38): the push decision, the
+// one-hot write pointer and the read empty / one-hot read pointer are KEPT control modules per slice, so w_v and idle
+// see one gate per slice and synthesis cannot fold the broadcast decision into every storage bit; each row enable
+// (push & woh[r]) and read enable (roh[r] & !e) is one gate driving the slice's SW <= 22 bits.  Same function.
+(* keep_hierarchy = "yes" *)
+module ot_s81_rm_wctl (
+    input  wire       wclk,
+    input  wire       wrn,
+    input  wire       w_v, idle, full, ge6,
+    output wire [7:0] wr                  // row write enables (one-hot or 0)
+);
+    (* keep *) reg [7:0] woh;            // one-hot write pointer replica (== binary wp of the central logic)
+    wire push = w_v && !full && !(idle && ge6);
+    always @(posedge wclk or negedge wrn) if (!wrn) woh <= 8'b0000_0001; else if (push) woh <= {woh[6:0], woh[7]};
+    assign wr = woh & {8{push}};
+endmodule
+
+(* keep_hierarchy = "yes" *)
+module ot_s81_rm_rctl (
+    input  wire       rclk,
+    input  wire       rrn,
+    input  wire       nempty,             // precomputed empty for the NEXT read edge
+    output wire [7:0] ren,                // read row enables (one-hot, 0 when empty)
+    output wire       e
+);
+    (* keep *) reg       e_q;
+    (* keep *) reg [7:0] roh;
+    always @(posedge rclk or negedge rrn)
+        if (!rrn) begin e_q <= 1'b1; roh <= 8'b0000_0001; end
+        else begin e_q <= nempty; if (!e_q) roh <= {roh[6:0], roh[7]}; end
+    assign ren = roh & {8{!e_q}};
+    assign e = e_q;
+endmodule
+
 (* keep_hierarchy = "yes" *)
 module ot_s81_rm_slice #(parameter integer SW = 22, parameter [21:0] IV = 22'd0) (
     input  wire          wclk,
@@ -60,31 +94,29 @@ module ot_s81_rm_slice #(parameter integer SW = 22, parameter [21:0] IV = 22'd0)
     input  wire [SW-1:0] w_d,
     input  wire          rclk,
     input  wire          rrn,          // read-side reset leaf
-    input  wire          nempty,       // precomputed empty for the NEXT read edge (registered here)
+    input  wire          nempty,       // precomputed empty for the NEXT read edge (registered in u_rc)
     output reg  [SW-1:0] r_d
 );
-    // write: own replica of the write pointer (identical in every slice and in the central logic)
-    reg  [2:0] wp;
-    wire push = w_v && !full && !(idle && ge6);
-    always @(posedge wclk or negedge wrn) if (!wrn) wp <= 3'd0; else if (push) wp <= wp + 1'b1;
+    wire [7:0] wr, ren;
+    wire       e;
+    (* keep_hierarchy = "yes" *) ot_s81_rm_wctl u_wc (.wclk(wclk), .wrn(wrn), .w_v(w_v), .idle(idle), .full(full),
+                                                       .ge6(ge6), .wr(wr));
+    (* keep_hierarchy = "yes" *) ot_s81_rm_rctl u_rc (.rclk(rclk), .rrn(rrn), .nempty(nempty), .ren(ren), .e(e));
     reg [SW-1:0] mem [0:7];
-    always @(posedge wclk) if (push) mem[wp] <= w_d;
-    // read: own empty copy and one-hot read pointer replica
-    reg        e;
-    reg [7:0]  roh;
+    genvar g;
+    generate for (g = 0; g < 8; g = g + 1) begin : g_row
+        always @(posedge wclk) if (wr[g]) mem[g] <= w_d;
+    end endgenerate
+    // ren == 0 when empty, so pick == 0 then; the IDLE value IV is ORed in by e (only the IV one-bits read e)
     reg [SW-1:0] pick;
     integer r;
     always @* begin
         pick = {SW{1'b0}};
-        for (r = 0; r < 8; r = r + 1) pick = pick | ({SW{roh[r]}} & mem[r]);
+        for (r = 0; r < 8; r = r + 1) pick = pick | ({SW{ren[r]}} & mem[r]);
     end
     always @(posedge rclk or negedge rrn)
-        if (!rrn) begin e <= 1'b1; roh <= 8'b0000_0001; r_d <= IV[SW-1:0]; end
-        else begin
-            e <= nempty;
-            if (!e) begin r_d <= pick; roh <= {roh[6:0], roh[7]}; end
-            else r_d <= IV[SW-1:0];
-        end
+        if (!rrn) r_d <= IV[SW-1:0];
+        else      r_d <= pick | (IV[SW-1:0] & {SW{e}});
 endmodule
 
 module ot_s81_rate_match_n32 (

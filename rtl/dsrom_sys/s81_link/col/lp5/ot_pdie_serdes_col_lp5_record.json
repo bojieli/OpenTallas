@@ -808,14 +808,15 @@
    "incremental_FFs": 328,
    "required_rtl_sources": [
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
-    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+    "rtl/common/landed_parent/ot_pl_land_regwe.sv"
    ],
    "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
   },
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 21401,
+  "landing": 22045,
   "pads": 6,
   "reset": 389,
   "out_regs": 1028
