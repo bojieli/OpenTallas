@@ -125,6 +125,25 @@ proc ot_ck_macro_owned {p selected} {
     error "CK_INSERTION: macro clock pin '[get_full_name $p]' requires one timing clock, found $owners"
   }
   puts "OT_MC_SOURCE [get_full_name $p] [lindex $owners 0]"
+  # QW-CTLM5 10-19: a hard child's RAW clock entry (landed_raw: e.g. h16c ck_pm0/ck_pm1, the leaf's SRAM clock pins that
+  # its ETM exports with NO timing arcs at all -- no clock-to-Q, no setup/hold check) has no active edge to measure, so
+  # ot_cf_active (609270c0a) aborted the whole measurement on it (qfd_tt_ctlm_dv_safe3/4: 'missing unique active clock
+  # edge u_hr/ck_pm0', no GATE_CK_DOMAIN, clock_rule coverage FAIL).  Such a pin is judged by the landed body
+  # (OT_LANDED RAW_PIN: co-timed with its CTS-root pin per the leaf's closed record, fail-closed post-CTS), not here:
+  # recorded and skipped.  A pin with ANY arc, or a non-block cell, still goes through ot_cf_active (fails closed).
+  set ot_mc_master NULL
+  if {[llength [info commands ord::get_db]]} {
+    set ot_mc_master [[ord::get_db] findMaster [get_property [get_cells -of_objects $p] ref_name]]
+  }
+  if {$ot_mc_master ne "NULL" && [$ot_mc_master isBlock]} {
+    sta::redirect_string_begin
+    set ot_mc_failed [catch {report_edges -from $p} ot_mc_msg]
+    set ot_mc_rep [sta::redirect_string_end]
+    if {!$ot_mc_failed && ![regexp {\s[\^v]\s+->} $ot_mc_rep]} {
+      puts "OT_MC_RAW_NOARC [get_full_name $p] [lindex $owners 0]"
+      return 0
+    }
+  }
   set owner [lindex $owners 0]
   if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {set owner [ot_cf_root $owner]}
   return [expr {$owner eq [get_full_name $selected]}]
