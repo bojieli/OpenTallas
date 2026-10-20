@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/root6-native-reset-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root6-native-reset-1020
+ot-run: ot-epyc7       admits   935 GB (avail 746, growth 92, headroom 0, waiters 0/0 GB) load 34/96 running 21 disk 5442 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root6-native-reset-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root6-native-reset-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root6-native-reset-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3734437-1792497823 after 0 s
+......................... [ 65%]
+.............                                                            [100%]
+38 passed, 47 subtests passed in 0.81s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3734437-1792497823): exit 0

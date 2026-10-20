@@ -1,0 +1,43 @@
+{
+  "base_current_main": "a61bf2e1f",
+  "projected_original_commits": [
+    "32d85da53",
+    "c975ee4f1",
+    "d2279b996"
+  ],
+  "typed_guard_commit": "bdf2c09cf",
+  "prior_b38_code_byte_identical_in_projection": {
+    "tools/ref_tile/ref_tile.py": true,
+    "tools/ref_tile/tests/test_source_native_reset_landing.py": true
+  },
+  "current_pc_ktree_and_actual_reset_checkers_preserved": {
+    "tools/ref_tile/gray_fifo_cdc_constraints.py": true,
+    "tools/ref_tile/native_census.py": true,
+    "tools/ref_tile/pre_route_gate.py": true,
+    "tools/textbook_lint.py": true
+  },
+  "focused_fleet": {
+    "summary": "38 passed,47 subtests passed",
+    "exit": 0,
+    "host": "ot-epyc7",
+    "unit": "3734437-1792497823",
+    "suites": [
+      "test_source_native_reset_landing",
+      "test_reset_landing",
+      "test_balanced_reset_landing",
+      "test_textbook_execution",
+      "test_rc_ioref_balanced_reset_requirement"
+    ]
+  },
+  "typed_review": "Prior full reset_landing_plan already rejected bool/float counts; direct source_native helper equality could equate True/1.0 with1. Early exact-int admission guard now rejects those at both API boundaries. Malformed/duplicate source lists fail with SpecError. No default or accepted hardware plan changes.",
+  "mandatory_actual_brp": {
+    "profile": "ref_tile.gen writes enabled2stage reset_landing.json with exact first/final counts; source_native metadata does not disable the profile",
+    "invocation": "pre_route_gate.REMOTE_SH always invokes textbook_lint.py check --netlist $B/1_2_yosys.v --mode refuse --refuse-checks clock_domain,high_fanout,wire_reach,reset_landing --balanced-reset-profile $R/src/<kit>/reset_landing.json when requiredfirst_copies declared",
+    "hierarchy": "textbook_lint.run recursively flattens actual mapped modules then checks profiletop and balanced_reset_proof at actual reset input. No SYNTH_HIERARCHICAL/flowflatten option skips this invocation; opaque/unsupported first cells or changed copy counts fail.",
+    "execution": "Missing profile/lint error/nonunique verdict or nonzero unexpected process RC refuses gate."
+  },
+  "reused_full_proof": "b38c59569: matchedfull ref_tile baseline73F681P vs687P, exactsame73failure IDs/NEW0; no broad rerun for the narrow early-admission defensive guard.",
+  "source_scopes": "ONLY exactplain2stage ORDER12/288 and MU0PROMPT1/4 complete source closures. ProductionMU4/asyncPC/PEER/maturityaliases remain unapproved and outside registry.",
+  "peer_review": "Currentcanonicalgenericmax2PASS for rawroot2 each is preserved proof, but outerBRP mixedpublicationpolarityREFUSED is also preserved. Do not addPEER to plainregistry or relaxglobalBRP; future exactsource suppression ofduplicatewrapper requires ROOTexplicitadmission +wholeclosure/params/edgeledger approval and mandatory unchanged actualchecks.",
+  "remaining": "ROOTreview/cherry/publish/runtime decision; no source, physical, die or token qualification inferred."
+}
