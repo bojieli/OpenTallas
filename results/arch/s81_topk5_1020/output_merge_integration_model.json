@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.topk5.output_merge_integration_model.v1",
+  "status": "before opt-in slice RTL; no adoption",
+  "source_slice": "b6bba788c ot_s81ph_native_sel_slice",
+  "option": "OMERGE=1 defaultOFF, requiresPIPE2=1",
+  "word_bits": 592,
+  "leaf_master": "ot_s81ph_native_guarded_mux W148 CHUNK12",
+  "leaf_replicas": 4,
+  "input_cut_bits_per_cycle": 1192,
+  "output_cut_bits_per_cycle": 592,
+  "stage_edges": 3,
+  "old_capture_edges": 1,
+  "added_data_edges": 2,
+  "added_source_semantics": "emit priority over direct; zero payload ifneither, separate lastbit equals emit?tq_last:direct?d_fin_push:1 and follows same3edges",
+  "inflight_accounting": "occ=ocnt+sum(all3 outputvalid stages), replacingocnt+o0_v. em_issue/d_room include everynewstage; no credits/protocolportsadded. seg_clr clears allvalid stages.",
+  "storage_bits": {
+    "four_merge_masters": 3080,
+    "per_independent_master": 770,
+    "largest_per_stage_per_master": 322,
+    "metadata_and_valid": 6
+  },
+  "native_cone_target": "Remove original1184-load outputadmission mux by capturing sel onceperleaf. Otherwide r1_d mux still592-load risk; thispartialchange cannotqualifyquarter.",
+  "latency_handoff": "Fixed output publication+2edges; compiler physicalfullshape handoff required. Existinggoldenhostfixture may hide thisunderTAIL_BUDGET slack; passingitdoesnoterasecharge.",
+  "throughput_requirement": "One outputbeat/cycle with sufficientconsumerroom; pipeline depth3 counted againstOD4, no morethanOD totalFIFO+pipeline; producerneedseffectiveoccupationproof.",
+  "sizing": "Measured pilot269.46756um2/master, 1077.87024um2/word beforecanonicalbuffering;30.24square/master candidate40.1%pilotcore, canonicalnativearea neededbeforegate.",
+  "validation": [
+    "leaf1397positive+twofaultwitnesses alreadyPASS",
+    "Actualfullindexed13 production512candidates/quarter throughBK layer gold check, unchangeddefaultcontrol first",
+    "Freshnativewholequarter all-driver32 census classify residual r1_d/reset/packer, no gateuntilzero",
+    "Resetshort/inflight/firstuse+occupation assertion beforeadoption",
+    "Actualmasterhardening+abstracts/onelevelcomposition+reach/clock+compilerlatency beforequartergate"
+  ]
+}
