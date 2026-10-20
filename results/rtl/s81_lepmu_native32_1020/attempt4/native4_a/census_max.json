@@ -1,0 +1,150 @@
+{
+ "cells": 49711,
+ "flops": 18128,
+ "icgs": 0,
+ "macros": 20,
+ "findings": {
+  "clock_domain": [
+   "clock root port clk: 18,128 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. _61488_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+  ],
+  "high_fanout": [
+   "port lo1_r: 19 loads (19 flops, e.g. _75587_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port lo0_r: 19 loads (19 flops, e.g. _76182_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port ml_rd[0]: 10 loads (1 flops, e.g. _69508_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port ml_rd[1]: 10 loads (1 flops, e.g. _69509_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port ml_rd[2]: 10 loads (1 flops, e.g. _69510_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port ml_rd[3]: 10 loads (1 flops, e.g. _69511_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port ml_rd[1045]: 10 loads (1 flops, e.g. _70553_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "port ml_rv: 10 loads (1 flops, e.g. _66143_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast"
+  ],
+  "clock_guidance": [
+   "clock root port:clk: 18,148 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,148 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+  ]
+ },
+ "refuse": {},
+ "metrics": {
+  "clock_roots": [
+   {
+    "root": "port:clk",
+    "ff": 18128,
+    "icg": 0,
+    "macro_pins": 20,
+    "example": "_61488_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 18148,
+  "clock_max_root": "port:clk",
+  "high_fanout_top": [
+   {
+    "net": "_77539_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 32,
+    "flops": 32
+   },
+   {
+    "net": "_77544_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 32,
+    "flops": 32
+   },
+   {
+    "net": "_77541_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 32,
+    "flops": 32
+   },
+   {
+    "net": "_77548_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 32,
+    "flops": 32
+   },
+   {
+    "net": "_77533_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 32,
+    "flops": 32
+   },
+   {
+    "net": "_77538_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 32,
+    "flops": 32
+   },
+   {
+    "net": "_77536_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 32,
+    "flops": 32
+   },
+   {
+    "net": "_77532_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 32,
+    "flops": 32
+   }
+  ],
+  "hf_max_port": 19,
+  "hf_max_reset": 0,
+  "hf_max_net": 32,
+  "reset_landing": [
+   {
+    "port": "rst_n",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 2,
+  "reg_to_out_levels": 1,
+  "icg_enable_from_port": 0,
+  "depth_ps": 368.4,
+  "depth_path": [
+   "_61702_",
+   "_76507_/D"
+  ],
+  "depth_levels": 12
+ },
+ "top": "native_mu_top",
+ "netlist": "native4_a/mapped.v",
+ "seconds": 1.7,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 0,
+  "hf_max": 32,
+  "hf_port_refuse": 32,
+  "hf_reset_refuse": 32,
+  "hf_refuse": 32,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 405,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0
+ },
+ "clock_rule": {
+  "max_root_sinks": 18148,
+  "root": "port:clk",
+  "ok": true,
+  "text": "18,148 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,148 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "clock_domain: clock root port clk: 18,128 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. _61488_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | high_fanout: port lo1_r: 19 loads (19 flops, e.g. _75587_) > 0: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast | clock_guidance: clock root port:clk: 18,148 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,148 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+}

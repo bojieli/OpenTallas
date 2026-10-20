@@ -1,0 +1,6 @@
+LEPMUH_STATS H->die ring 418 (M cut 338 same-cycle 338, landed 80, replayed 80) host 20/20 ks 19/19 | die->H ring 537/537/537 thost 60/60/60 tkd 61/61/61 frames M 658 R 658 | mismatch rx 0 tx 0 hostplane 0 | faults 000
+PASS lep_muh: host-plane MU endpoint == single-user lep: 418 H->die ring beats (338 cut-through same cycle+bits with mu_rt, 80 landed + replayed), 20 HOST + 19 KS identical every cycle; die->H 658 frames same cycles (537 ring incl. 160 stamped, 60 THOST, 61 TKD); F1 faulted
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_muh.sv:315: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.412 s; speed 25.980 us/s
+- Verilator: cpu 0.412 s on 1 threads; allocated 16 MB
