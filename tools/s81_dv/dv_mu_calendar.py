@@ -463,7 +463,27 @@ def record(mode, m, st, d, cal, svc=None):
     return rec
 
 
-def build(mode, users=None, fillers=None, split=False):
+def apply_edge_deltas(st, d, ed, hop):
+    """S81-CAL1 (10-19): fold closed RTL / compiler edge deltas into the stage windows (static schedule: every added
+    edge lengthens the window that holds it).  ed = edge_deltas.json (results/token_pass/cal1_s81_1019): per_stage_edges
+    = the largest per-layer delta (one stage group holds <= one layer's attention + the next layer's FFN), added to
+    span and occ, x6 to the MTP step (6 verify positions, the model's step law); T_ar / T_mtp deltas = the summed
+    critical-path deltas of the token (they move the period).  Offsets t are re-accumulated from the new spans."""
+    dS = int(math.ceil(ed['per_stage_edges']))
+    t = 0
+    for g in st:
+        g['span'] += dS
+        g['occ'] += dS
+        g['step'] += 6 * dS
+        g['t'] = t
+        t += g['span'] + math.ceil(hop)
+    d['T_ar'] += ed['T_ar_edges']
+    d['T_mtp'] += ed['T_mtp_edges']
+    return dict(per_stage_edges=dS, T_ar_edges=ed['T_ar_edges'], T_mtp_edges=ed['T_mtp_edges'],
+                source=ed.get('source'), ledger=ed.get('ledger_digest'))
+
+
+def build(mode, users=None, fillers=None, split=False, edge_deltas=None):
     """split: False | True (SPLIT_L20) | a SPLIT_L20-shaped dict (e.g. with compiled helper windows)"""
     sp = (split if isinstance(split, dict) else SPLIT_L20) if split else None
     m = load_model()
@@ -471,12 +491,17 @@ def build(mode, users=None, fillers=None, split=False):
         apply_split(m, sp)
     st = stage_windows(m)
     d = design(m)
+    folded = None
+    if edge_deltas:
+        folded = apply_edge_deltas(st, d, edge_deltas, m.HOP)
     svc = None
     p = OUT / 'svc_bases.json'
     if p.exists():
         svc = {k: v for k, v in json.loads(p.read_text()).items() if k.endswith('_per_user')}
     cal = calendar_ar(m, st, d, users) if mode == 'ar' else calendar_mtp(m, st, d, users, fillers)
     rec = record(mode, m, st, d, cal, svc)
+    if folded:
+        rec['edge_deltas'] = folded
     if split:
         rec['l20_split'] = dict(config=sp, decision='coordinator 0li (HANDOFF 10-19 ~15:45)',
                                 check=split_check(m, st, cal['users'], cal['P'], cal['col'], mode, sp))
@@ -495,16 +520,20 @@ def main(argv=None):
     ap.add_argument('--phase-q', type=int, default=4, help='shift / period quantum (4 = ot_dsdv_fixed_issue start phase)')
     ap.add_argument('--l20-split', action='store_true', help='S81-L20SPLIT (0li): S029 keys over 20 dies (+ S030 '
                     'helpers, measured reader) -> calendar_<mode>_l20split.json with the helper-die check')
+    ap.add_argument('--edge-deltas', help='S81-CAL1: edge_deltas.json -> calendar_<mode>_cal1.json (deltas folded)')
     a = ap.parse_args(argv)
+    ed = json.loads(Path(a.edge_deltas).read_text()) if a.edge_deltas else None
     global PHASE_Q
     PHASE_Q = a.phase_q
     modes = [a.mode] if a.mode else ['ar', 'mtp']
     rc = 0
     for mode in modes:
-        rec = build(mode, a.users, a.fillers, split=split_config() if a.l20_split else False)
+        rec = build(mode, a.users, a.fillers, split=split_config() if a.l20_split else False, edge_deltas=ed)
         f = Path(a.out) / (f'calendar_{mode}.json' if PHASE_Q == 4 else f'calendar_{mode}_q{PHASE_Q}.json')
         if a.l20_split:
             f = f.with_name(f.stem + '_l20split.json')
+        if ed:
+            f = f.with_name(f.stem + '_cal1.json')
         txt = json.dumps(rec, indent=1) + '\n'
         if a.check:
             same = f.exists() and f.read_text() == txt
