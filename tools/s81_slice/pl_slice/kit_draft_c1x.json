@@ -743,13 +743,30 @@
    ]
   },
   {
-   "inst": "*u_xg",
-   "module": "ot_s81sl_xg",
+   "inst": "*u_xg.u_r",
+   "module": "ot_s81sl_rs",
    "region": "C",
    "view": null,
-   "status": "MISSING (no kit: rstop + xs; size TBD)",
+   "status": "MISSING (kit s81sl_rs 864x518.4 + variant s81sl_rs2 907.2x561.6: --cts gates running, S81-XG3)",
    "at": null,
-   "size": null
+   "size": [
+    864.0,
+    518.4
+   ],
+   "note": "S81-XG3 10-19: s81sl_xg split into two sibling hard leaves (ot_s81sl_xg is wiring only). Place xs DIRECTLY S of rs, same x origin, >= 21.6 um channel: rs S-face g_d [49.68, 583.2] faces xs N-face g_d [49.68, 583.2] (3 x 1,031-b registered abutment). rs W / E faces = ring line (put rs across the slice width toward the W / E ring neighbours); rs N = xr control plane (dl / ci) + V rung; rs S right part = own fragments xf from the leaves; xs W = issuer word is_d, xs S = frame word xw_d to the frames."
+  },
+  {
+   "inst": "*u_xg.u_s",
+   "module": "ot_s81sl_xs3",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (kit s81sl_xs3 864x475.2: --cts gate running, S81-XG3)",
+   "at": null,
+   "size": [
+    864.0,
+    475.2
+   ],
+   "note": "S81-XG3 10-19: s81sl_xg split into two sibling hard leaves (ot_s81sl_xg is wiring only). Place xs DIRECTLY S of rs, same x origin, >= 21.6 um channel: rs S-face g_d [49.68, 583.2] faces xs N-face g_d [49.68, 583.2] (3 x 1,031-b registered abutment). rs W / E faces = ring line (put rs across the slice width toward the W / E ring neighbours); rs N = xr control plane (dl / ci) + V rung; rs S right part = own fragments xf from the leaves; xs W = issuer word is_d, xs S = frame word xw_d to the frames."
   }
  ]
 }
