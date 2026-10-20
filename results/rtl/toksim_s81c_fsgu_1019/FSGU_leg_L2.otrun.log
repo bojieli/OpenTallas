@@ -1,0 +1,64 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81c-fsgu
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81c-fsgu
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81c-fsgu
+ot-run: ot-epyc9       admits   722 GB (avail 787, growth 281, headroom 0, waiters 0/0 GB) load 155/128 running 74 disk 288 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81c-fsgu
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81c-fsgu
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-694899-1792476808 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+TOKSIM_FSGU_GEN L2 u_f_0L00 89 {"phases": [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49], "rows": [4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1], "mats": ["exp33.w1", "exp33.w1", "exp33.w3", "exp33.w3", "exp36.w1", "exp36.w1", "exp36.w3", "exp36.w3", "exp59.w1", "exp59.w1", "exp59.w3", "exp59.w3", "exp182.w1", "exp182.w1", "exp182.w3", "exp182.w3", "exp279.w1", "exp279.w1", "exp279.w3", "exp279.w3", "exp352.w1", "exp352.w1", "exp352.w3", "exp352.w3"], "nseg": [5], "fmt": ["fp4"], "K": [5120]}
+u_f_0R00 gen rc=0
+u_f_0L00 gen rc=0
+u_f_0L03 gen rc=0
+u_f_0R02 gen rc=0
+u_f_0L02 gen rc=0
+u_f_0L01 gen rc=0
+u_f_0R01 gen rc=0
+FSGU_AP L2 u_f_0L00 exe s_h9nx_e5 rc=0 check_rc=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 403, "last_ret": 424, "words": 10} | XS_CHECK PASS u_f_0L00 mutant=None rows=4 fixture_rows=4 errors=0 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FSGU_AP L2 u_f_0L01 exe s_h10_e2 rc=0 check_rc=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 398, "last_ret": 424, "words": 10} | XS_CHECK PASS u_f_0L01 mutant=None rows=4 fixture_rows=4 errors=0 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FSGU_AP L2 u_f_0L02 exe s_h9MX_e1 rc=0 check_rc=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 399, "last_ret": 420, "words": 10} | XS_CHECK PASS u_f_0L02 mutant=None rows=4 fixture_rows=4 errors=0 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FSGU_AP L2 u_f_0L03 exe s_h9nx_e2 rc=0 check_rc=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 400, "last_ret": 421, "words": 10} | XS_CHECK PASS u_f_0L03 mutant=None rows=4 fixture_rows=4 errors=0 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FSGU_AP L2 u_f_0R00 exe s_h9nx_e5 rc=0 check_rc=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 403, "last_ret": 424, "words": 10} | XS_CHECK PASS u_f_0R00 mutant=None rows=4 fixture_rows=4 errors=0 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FSGU_AP L2 u_f_0R01 exe s_h10_e2 rc=0 check_rc=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 398, "last_ret": 424, "words": 10} | XS_CHECK PASS u_f_0R01 mutant=None rows=4 fixture_rows=4 errors=0 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FSGU_AP L2 u_f_0R02 exe s_h9MX_e1 rc=0 check_rc=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 399, "last_ret": 420, "words": 10} | XS_CHECK PASS u_f_0R02 mutant=None rows=4 fixture_rows=4 errors=0 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+TOKSIM_FGU_SEQW seq_experts_gu [10, 2, 10, 2, 10, 2, 10, 2, 10, 2, 10, 2, 10, 2, 10, 2, 10, 2, 10, 2, 10, 2, 10, 2]
+m_shift_p26 rc=1 XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 26 mutant=shift rows=4 fixture_rows=4 errors=1 END edges=1073 ret_words=10 xo_checked=1071 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+m_swap_p26 rc=1 XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 26 mutant=swap rows=4 fixture_rows=4 errors=5 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p26 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 26 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p27 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 27 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p28 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 28 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p29 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 29 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p30 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 30 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p31 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 31 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p32 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 32 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p33 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 33 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p34 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 34 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p35 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 35 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p36 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 36 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p37 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 37 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p38 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 38 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p39 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 39 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p40 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 40 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p41 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 41 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p42 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 42 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p43 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 43 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p44 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 44 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p45 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 45 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p46 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 46 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p47 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 47 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+p48 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 48 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1072 ret_words=10 xo_checked=1070 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 388, "last_ret": 409, "words": 10}
+p49 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 49 mutant=None rows=1 fixture_rows=1 errors=0 END edges=1071 ret_words=2 xo_checked=1069 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 391, "last_ret": 408, "words": 2}
+REF_GO 63
+seq_experts_gu_P141_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 141 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3651 span 3588 errors 26 ['FAULT edge 437 status 11 lx 0', 'FAULT edge 438 status 11 lx 0', 'FAULT edge 439 status 11 lx 0']
+seq_experts_gu_P142_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 142 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3674 span 3611 errors 26 ['FAULT edge 439 status 11 lx 0', 'FAULT edge 440 status 11 lx 0', 'FAULT edge 441 status 11 lx 0']
+seq_experts_gu_P143_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 143 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3697 span 3634 errors 26 ['FAULT edge 441 status 11 lx 0', 'FAULT edge 442 status 11 lx 0', 'FAULT edge 443 status 11 lx 0']
+seq_experts_gu_P144_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 144 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3720 span 3657 errors 4 ['FAULT edge 467 status 11 lx 0', 'FAULT edge 468 status 11 lx 0', 'FAULT edge 469 status 11 lx 0']
+seq_experts_gu_P145_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 145 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3743 span 3680 errors 0 []
+seq_experts_gu_P146_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 146 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3766 span 3703 errors 0 []
+seq_experts_gu_P147_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 147 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3789 span 3726 errors 0 []
+seq_experts_gu_P150_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 150 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3858 span 3795 errors 0 []
+seq_experts_gu_P160_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 160 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 4088 span 4025 errors 0 []
+seq_experts_gu_P200_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 200 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 5008 span 4945 errors 0 []
+TOKSIM_FSGU_LEG_DONE L2
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-694899-1792476808): exit 0

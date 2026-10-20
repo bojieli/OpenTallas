@@ -1,0 +1,301 @@
+{
+ "schema": "opentallas.s81_dv.layer_fixture.v1+reduced_fsgu",
+ "layer": "L1",
+ "layer_index": 1,
+ "kind": "engram+sliding",
+ "context": 1048576,
+ "position": 1048575,
+ "seed": 20260930,
+ "rank": 0,
+ "tp": 4,
+ "experts": [
+  15,
+  56,
+  72,
+  244,
+  276,
+  345
+ ],
+ "arith": "chunk8",
+ "fuse": [],
+ "checks": {
+  "experts_equal_shard": true
+ },
+ "shard": {
+  "path": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_L01.npz",
+  "sha256": "6c43fc6f1ec2b5317e5d767825caa351afcec865ea417da041eac50640265b03",
+  "input_sha256": "040dd8519ab683172dc14efc598fba3a7f863dc860ff464b74ed03fe186f10dd",
+  "output_sha256": "15e1920f142b1a5ed3cfd98ea09cd8f3e89511b7367dc08e0fef520c6f20dfa3"
+ },
+ "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "golden_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "sources": {
+  "tools/s81_dv/dv_layer_fixtures.py": "6d6b1582385afd748f9eb2d4170baf3147c768dec4acd233ab2f54f9039f8f21",
+  "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/rtl_v41_fullshape_layer_campaign.py": "1414f0850bef1197b9475076c5ce3c54a234297245f9a55e147bae1e045ff570",
+  "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+ },
+ "tp_split": {
+  "a_proj.wq_a_rows": [
+   [
+    0,
+    320
+   ],
+   [
+    320,
+    640
+   ],
+   [
+    640,
+    960
+   ],
+   [
+    960,
+    1280
+   ]
+  ],
+  "a_proj.wkv_rows": [
+   [
+    0,
+    128
+   ],
+   [
+    128,
+    256
+   ],
+   [
+    256,
+    384
+   ],
+   [
+    384,
+    512
+   ]
+  ],
+  "wq_b_rows": [
+   [
+    0,
+    8192
+   ],
+   [
+    8192,
+    16384
+   ],
+   [
+    16384,
+    24576
+   ],
+   [
+    24576,
+    32768
+   ]
+  ],
+  "heads": [
+   [
+    0,
+    16
+   ],
+   [
+    16,
+    32
+   ],
+   [
+    32,
+    48
+   ],
+   [
+    48,
+    64
+   ]
+  ],
+  "wo_a_rows": [
+   [
+    0,
+    2048
+   ],
+   [
+    2048,
+    4096
+   ],
+   [
+    4096,
+    6144
+   ],
+   [
+    6144,
+    8192
+   ]
+  ],
+  "wo_b_cols": [
+   [
+    0,
+    2048
+   ],
+   [
+    2048,
+    4096
+   ],
+   [
+    4096,
+    6144
+   ],
+   [
+    6144,
+    8192
+   ]
+  ],
+  "router_rows": [
+   [
+    0,
+    96
+   ],
+   [
+    96,
+    192
+   ],
+   [
+    192,
+    288
+   ],
+   [
+    288,
+    384
+   ]
+  ],
+  "expert_ff_rows": [
+   [
+    0,
+    576
+   ],
+   [
+    576,
+    1152
+   ],
+   [
+    1152,
+    1728
+   ],
+   [
+    1728,
+    2304
+   ]
+  ],
+  "expert_down_rows": [
+   [
+    0,
+    1280
+   ],
+   [
+    1280,
+    2560
+   ],
+   [
+    2560,
+    3840
+   ],
+   [
+    3840,
+    5120
+   ]
+  ],
+  "shared_ff_rows": [
+   [
+    0,
+    576
+   ],
+   [
+    576,
+    1152
+   ],
+   [
+    1152,
+    1728
+   ],
+   [
+    1728,
+    2304
+   ]
+  ],
+  "index_keys": "rank-contiguous quarter of the compressed positions",
+  "slice_rows": [
+   [
+    0,
+    320
+   ],
+   [
+    320,
+    640
+   ],
+   [
+    640,
+    960
+   ],
+   [
+    960,
+    1280
+   ],
+   [
+    1280,
+    1600
+   ],
+   [
+    1600,
+    1920
+   ],
+   [
+    1920,
+    2240
+   ],
+   [
+    2240,
+    2560
+   ],
+   [
+    2560,
+    2880
+   ],
+   [
+    2880,
+    3200
+   ],
+   [
+    3200,
+    3520
+   ],
+   [
+    3520,
+    3840
+   ],
+   [
+    3840,
+    4160
+   ],
+   [
+    4160,
+    4480
+   ],
+   [
+    4480,
+    4800
+   ],
+   [
+    4800,
+    5120
+   ]
+  ]
+ },
+ "op_order": [
+  "attn.norm.scale",
+  "attn.a_proj",
+  "ffn.norm.scale",
+  "ffn.experts.15.gu",
+  "ffn.experts.56.gu",
+  "ffn.experts.72.gu",
+  "ffn.experts.244.gu",
+  "ffn.experts.276.gu",
+  "ffn.experts.345.gu"
+ ],
+ "reduced": "a_proj + ffn.experts_gu inputs only (toksim_fsgu_ffnfix.py)",
+ "command": "HDC_V41_ARITH=chunk8 python3 tools/s81_dv/layer_prog/qf_producer/toksim_fsgu_ffnfix.py --layer 1 --out DIR"
+}

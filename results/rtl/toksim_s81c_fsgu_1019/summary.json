@@ -1,0 +1,226 @@
+[
+ {
+  "layer": "L1",
+  "kind": "engram+sliding",
+  "experts": [
+   15,
+   56,
+   72,
+   244,
+   276,
+   345
+  ],
+  "field_phases": 25,
+  "eg_phases": 1,
+  "P145": [
+   true,
+   3680,
+   60,
+   0
+  ],
+  "P144": [
+   false,
+   [
+    "FAULT edge 467 status 11 lx 0"
+   ]
+  ],
+  "ap_frames_pass": 7,
+  "ap_go_to_last": 361
+ },
+ {
+  "layer": "L2",
+  "kind": "ratio2+compressor+indexer",
+  "experts": [
+   33,
+   36,
+   59,
+   182,
+   279,
+   352
+  ],
+  "field_phases": 89,
+  "eg_phases": 26,
+  "P145": [
+   true,
+   3680,
+   60,
+   0
+  ],
+  "P144": [
+   false,
+   [
+    "FAULT edge 467 status 11 lx 0"
+   ]
+  ],
+  "ap_frames_pass": 7,
+  "ap_go_to_last": 361
+ },
+ {
+  "layer": "L3",
+  "kind": "ratio2",
+  "experts": [
+   128,
+   129,
+   142,
+   159,
+   160,
+   228
+  ],
+  "field_phases": 25,
+  "eg_phases": 1,
+  "P145": [
+   true,
+   3680,
+   60,
+   0
+  ],
+  "P144": [
+   false,
+   [
+    "FAULT edge 467 status 11 lx 0"
+   ]
+  ],
+  "ap_frames_pass": 7,
+  "ap_go_to_last": 361
+ },
+ {
+  "layer": "L14",
+  "kind": "engram+ratio2+compressor+indexer",
+  "experts": [
+   26,
+   29,
+   114,
+   155,
+   334,
+   352
+  ],
+  "field_phases": 114,
+  "eg_phases": 51,
+  "P145": [
+   true,
+   3680,
+   60,
+   0
+  ],
+  "P144": [
+   false,
+   [
+    "FAULT edge 467 status 11 lx 0"
+   ]
+  ],
+  "ap_frames_pass": 7,
+  "ap_go_to_last": 361
+ },
+ {
+  "layer": "L20",
+  "kind": "ratio1+compressor+indexer+candidates",
+  "experts": [
+   41,
+   65,
+   158,
+   164,
+   259,
+   266
+  ],
+  "field_phases": 89,
+  "eg_phases": 26,
+  "P145": [
+   true,
+   3680,
+   60,
+   0
+  ],
+  "P144": [
+   false,
+   [
+    "FAULT edge 467 status 11 lx 0"
+   ]
+  ],
+  "ap_frames_pass": 7,
+  "ap_go_to_last": 361
+ },
+ {
+  "layer": "L21",
+  "kind": "ratio1",
+  "experts": [
+   12,
+   36,
+   176,
+   224,
+   271,
+   331
+  ],
+  "field_phases": 25,
+  "eg_phases": 1,
+  "P145": [
+   true,
+   3680,
+   60,
+   0
+  ],
+  "P144": [
+   false,
+   [
+    "FAULT edge 467 status 11 lx 0"
+   ]
+  ],
+  "ap_frames_pass": 7,
+  "ap_go_to_last": 361
+ },
+ {
+  "layer": "L24",
+  "kind": "ratio1+indexer",
+  "experts": [
+   18,
+   143,
+   180,
+   218,
+   256,
+   271
+  ],
+  "field_phases": 25,
+  "eg_phases": 1,
+  "P145": [
+   true,
+   3680,
+   60,
+   0
+  ],
+  "P144": [
+   false,
+   [
+    "FAULT edge 467 status 11 lx 0"
+   ]
+  ],
+  "ap_frames_pass": 7,
+  "ap_go_to_last": 361
+ },
+ {
+  "layer": "L0r",
+  "kind": "sliding",
+  "experts": [
+   61,
+   69,
+   112,
+   170,
+   299,
+   357
+  ],
+  "field_phases": 25,
+  "eg_phases": 1,
+  "P145": [
+   true,
+   3680,
+   60,
+   0
+  ],
+  "P144": [
+   false,
+   [
+    "FAULT edge 467 status 11 lx 0"
+   ]
+  ],
+  "ap_frames_pass": 7,
+  "ap_go_to_last": 361
+ }
+]
