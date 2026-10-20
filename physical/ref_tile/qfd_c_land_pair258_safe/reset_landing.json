@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_c_land_pair_safe",
+ "enable": false,
+ "reason": "Native source already two writer/reader-domain registered reset stages with regional fanout<=30, same two-edge contract. Actual first reset FF anchored by physical hook; no extra reset edge."
+}

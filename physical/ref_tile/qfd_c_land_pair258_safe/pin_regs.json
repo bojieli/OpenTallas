@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_c_land_pair_safe",
+ "enable": false,
+ "reason": "Actual first writer-domain bank CE capture with locally registered select/reset and reader output FF, native32+source same-edge data proof; ROOT narrow enabledcapture contract. No new state/edge. Actual face/setuphold still require gate."
+}

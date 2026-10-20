@@ -1,0 +1,172 @@
+{
+ "name": "qfd_c_land_pair258_safe",
+ "top": "qfd_c_land_pair_safe",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qcluster/qfd_c_land_safe.sv",
+  "rtl/physical/qcluster/qfd_c_land_pair_safe.sv"
+ ],
+ "params": {
+  "W": 258,
+  "K": 2,
+  "G": 15
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_w",
+ "clock_ports": [
+  "ck_w",
+  "ck_r"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_w"
+   ],
+   "inputs": [
+    "i",
+    "rst_w"
+   ],
+   "outputs": []
+  },
+  "reader": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r"
+   ],
+   "inputs": [
+    "rst_r"
+   ],
+   "outputs": [
+    "o"
+   ]
+  }
+ },
+ "reset_ports": [
+  "rst_w",
+  "rst_r"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 51.84,
+  "exact": true
+ },
+ "std_area_um2": 964.81692,
+ "pins": {
+  "W": [
+   "i"
+  ],
+  "E": [
+   "o"
+  ],
+  "N": [
+   "ck_w",
+   "rst_w",
+   "ck_r",
+   "rst_r"
+  ]
+ },
+ "pin_ranges": {
+  "i": [
+   1,
+   50.84
+  ],
+  "o": [
+   1,
+   50.84
+  ],
+  "ck_w": [
+   9,
+   10.5
+  ],
+  "rst_w": [
+   12,
+   13.5
+  ],
+  "ck_r": [
+   32,
+   33.5
+  ],
+  "rst_r": [
+   35,
+   36.5
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual first writer-domain bank CE capture with locally registered select/reset and reader output FF, native32+source same-edge data proof; ROOT narrow enabledcapture contract. No new state/edge. Actual face/setuphold still require gate."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Native source already two writer/reader-domain registered reset stages with regional fanout<=30, same two-edge contract. Actual first reset FF anchored by physical hook; no extra reset edge."
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/qwen_cb16_pair_safe_1020/anchor_first_capture.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/qwen_die_masters/out_flop_release.tcl",
+  "OT_OFLOP_COLS": "4",
+  "OT_OFLOP_ALLOW_NONE": "0"
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 4,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "period_ps": 833.333,
+  "signoff_period_ps": 833.333,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "sizing_note": "Real257/258half of514/516crossing, D4bank1028/1032bits. W2581672FF/964.817um2,1269writer/403reader roots. Core38.88x47.52um52.22%; W/E258pins49.84um5.18/um. Two halves replacefour hardwriter/read macros, zeroedgevsclosednarrowreference. Fullparentcenter admission<=405stillowed; no gateapproval/adoption.",
+ "job": {
+  "owner": "QW-CB16FULL",
+  "branch": "codex/qw-cb16-pair-kit-1020",
+  "tag": "pair258",
+  "purpose": "Production-width paired crossing storage source/model candidate; zero added edges against narrowclosedreference; exactlocalenabledfirstcapture proof. Actualrootphase/face/setuphold/PNG+parentplacement prerequisite; no approval/submission.",
+  "benches": [
+   {
+    "name": "paired_half_exact",
+    "cmd": "bash tools/qwen_cluster/bench_cb16_land_pair.sh {RUN}/bench/paired_half_exact",
+    "expect": "pass",
+    "pass_regex": "PAIR_BENCH_PASS",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "tools/qwen_cluster/bench_cb16_land_pair.sh",
+   "tools/qwen_cluster/tb_cb16_land_pair.sv",
+   "results/arch/qw_cb16_storage_model_1020"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": []
+}
