@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020/h9bind_bench
+ot-run: ot-epyc6       admits   436 GB (avail 419, growth 113, headroom 0, waiters 0/0 GB) load 18/128 running 16 disk 3622 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020/h9bind_bench
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020/h9bind_bench
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020/h9bind_bench
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020/h9bind_bench
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-61113-1792527559 after 1 s
+aaf5bfa2e5baf5b1db29ddaf42e858e75666a93785436b898ddd64ca1aa2c5d5  rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv
+cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2  rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv
+H9B_TXN PASS reqs=6000 beats=12944 wcols=759 wdone=759 edges_h9=85966 edges_h9b=88750
+rtl/hbm_accel/loader/service_native/tb_hbm_pc_h9b_txn.sv:76: $finish called at 91084800000 (1fs)
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_h9b_txn.sv:74: H9B_TXN FAIL errors=2 RMUT=1
+H9B_RMUT1_REJECTED
+PC_REFCFG PASS pcs=32 checks=123424 writes=224 refreshes=1013 hbm_cycles=4000 boot_frames=4
+PC_REFCFG_BAD_ROW_RELEASED cycle=131 mut=1
+PC_REFCFG_MUTANT_REJECTED mut=1
+PC_REFCFG_RELEASED_WITHOUT_ROW cycle=3 mut=2
+PC_REFCFG_MUTANT_REJECTED mut=2
+PC_REFCFG_REWRITE_ACCEPTED cycle=136 mut=3
+PC_REFCFG_MUTANT_REJECTED mut=3
+PC_REFCFG_RELEASED_WITHOUT_ROW cycle=143 mut=4
+PC_REFCFG_MUTANT_REJECTED mut=4
+H9BIND_ABI_BENCHES_DONE
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-61113-1792527559): exit 0
