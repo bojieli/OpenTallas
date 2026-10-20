@@ -1,0 +1,83 @@
+{
+  "binding_scope": "native_master_pg_terminal_binding_only",
+  "checked": 51814,
+  "container_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "domain_rules_sha256": "5b77fdd21e4f39efb2ddf8605985ee3fd6f33bc531e3b0c71d9f622010bd56cc",
+  "failure_count": 0,
+  "input_odb": "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c/routes/s81dvbk_hist32_b0r3_hb0r3_bd6f52e8c/work/orfs/results/asap7/opentallas_ot_s81ph_native_sel_hist_bank_asap7_ref_s81dvbk_hist32_b0r3_hb0r3_bd6f52e8c/base/6_final.odb",
+  "input_spef": "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c/routes/s81dvbk_hist32_b0r3_hb0r3_bd6f52e8c/work/orfs/results/asap7/opentallas_ot_s81ph_native_sel_hist_bank_asap7_ref_s81dvbk_hist32_b0r3_hb0r3_bd6f52e8c/base/6_final.spef",
+  "native_audit": "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c/codex_native_audit/pg_receipts/audit-ku9m29_i/native_audit.json",
+  "native_audit_sha256": "6407ed8e29198facf6fc0e35ce84dae5dc1d179806d598f7ce07e971df76c7a9",
+  "native_exit": 0,
+  "native_result": {
+    "block": "ot_s81ph_native_sel_hist_bank",
+    "checked": 51814,
+    "domain_rules": [
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDD$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDDCE$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDDPE$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VSS",
+        "pin_pattern": "^VSS$",
+        "region": "",
+        "role": "GROUND"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VSS",
+        "pin_pattern": "^VSSE$",
+        "region": "",
+        "role": "GROUND"
+      }
+    ],
+    "failure_count": 0,
+    "failures": [],
+    "instance_count": 25907,
+    "mapping_error": "",
+    "pg_master_count": 75,
+    "regions": [],
+    "roles": {
+      "GROUND": 25907,
+      "POWER": 25907
+    },
+    "schema": "native_pg_audit.v1",
+    "status": "PASS"
+  },
+  "odb_sha256": "9462f6d232767ad83a1fdae5e3ff01e4da32075c4dd3a3979bbf386d547ad3ea",
+  "openroad_sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+  "parasitic_model": "routed_extracted",
+  "parasitic_qualification": "source_output_pair_hash_binding_not_independent_rc_equivalence",
+  "roles": {
+    "GROUND": 25907,
+    "POWER": 25907
+  },
+  "schema": "opentallas.native_pg_receipt.v1",
+  "source_dependencies": {
+    "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c/codex_native_audit/physical/common_flow/audit_native_pg.tcl": "5039f7899aee4140b5160ced4bc9792096d854b4edbb57d93184f268441d2a2a",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c/codex_native_audit/physical/common_flow/native_pg_binding.tcl": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c/codex_native_audit/tools/closure_loop/pg_receipt.py": "62540384f484100a7b37e7f4942cc65009de78395981d78439855ca23ab9edfe"
+  },
+  "spef_design": "ot_s81ph_native_sel_hist_bank",
+  "spef_sha256": "d350290457ae4fbd2c91fee200913359e712ea863558e6a524ff07d083f6dd59",
+  "status": "PASS",
+  "transaction": "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c/codex_native_audit/pg_receipts/audit-ku9m29_i"
+}
