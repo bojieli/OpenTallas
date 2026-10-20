@@ -177,7 +177,8 @@
    "incremental_FFs": 190,
    "required_rtl_sources": [
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
-    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+    "rtl/common/landed_parent/ot_pl_land_kept_enable.sv"
    ],
    "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
   },
@@ -233,7 +234,7 @@
    "tx0": 0,
    "tx1": 0,
    "tf": 0,
-   "fault": 0
+   "fault": 2
   },
   "reset_release_added_edges": 4,
   "status_flag_lag_edges": {},
@@ -272,7 +273,7 @@
    }
   ],
   "reschedule_note": "RESCHEDULE mode: cross-region loops; every child keeps its flat calendar (t = 0) and each landed net above arrives +3 edges later than in the flat parent: the compiler / the children's static calendars must absorb these",
-  "max_added_edges": 0
+  "max_added_edges": 2
  },
  "warnings": [],
  "landing_implementation": {

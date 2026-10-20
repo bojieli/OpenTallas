@@ -57,6 +57,10 @@
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc2.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
   "rtl/hdc/ot_hdc_delay_rf.sv",
@@ -157,5 +161,6 @@
  "out_regs": {
   "fault": 2
  },
- "_note_lepenh2_out": "fault (lep S face, interior) is >= 560 um from any parent face: 2 K-region register stages in front of the port (out_regs), status +2 edges"
+ "_note_lepenh2_out": "fault (lep S face, interior) is >= 560 um from any parent face: 2 K-region register stages in front of the port (out_regs), status +2 edges",
+ "landing_kept_enable": true
 }

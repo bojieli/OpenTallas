@@ -5,7 +5,7 @@ set -u; O=$1; M=${2:-none}; BV=${3:-lepe}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 D=""; [ $M = swap ] && D="+define+OT_S81SL_LEP_MUT_SWAP"; [ $BV = lepe_nh ] && D="$D +define+TB_SLEP_NH"; LPS=""
 # S81-SLICE3-LEPENH 10-19: B lepe_nh_lp = die B is the LANDED parent ot_s81sl_slice_lepe_nh_x_lp (regions S / K)
-[ $BV = lepe_nh_lp ] && { D="$D +define+TB_SLEP_NH_LP +define+OT_S81PH_LANE_CR"; LPS="rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/ot_s81sl_slice_lepe_nh_x_lp.sv"; }
+[ $BV = lepe_nh_lp ] && { D="$D +define+TB_SLEP_NH_LP +define+OT_S81PH_LANE_CR"; LPS="rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_kept_enable.sv rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/ot_s81sl_slice_lepe_nh_x_lp.sv"; }
 M0=$M; M=${M}_$BV
 MAC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
 CEN="rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
