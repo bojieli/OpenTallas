@@ -1,0 +1,7 @@
+# MU LOCAL_WA exact-source r5 receipts
+
+Sourceaad61c82c: default-off LOCAL_WA helper per128bitbank, MU NATIVE32 opt-in only. Adds40FF exactly each A/H:18168/19769, unchanged20SRAM. No new logical/capture/calendar edge; existing WREG age retained. Both fullproduction campaigns seeds1/5+allcausalmutants matched expectedregex, rawbuild/run/witness logs retained. Fleet epyc5 own codex-s81-lepmu-native32-r5-1020, all4native/productionjobs terminal0. Native sourcehook faithful OT_KEEP_PIN_REGS1/2stage resetlanding, but MANUAL TT ABC-D770 recipe is diagnostic for physical-flow parity; flowexactWC synthesis separate pending.
+
+Currentmain042aa171b native Lib-role authority PASS both: A41717roots,H45509,max32,0roleerrors/constantoutputbits. Actual5TTstandard+2TTmacro libraries and mappedV hashes in native5_{a,h}/authority042.json; source/pin/storage remain separate contracts. Firstauthority write failedpermission (Docker-owned outputdir), rerun changed ONLY outputpath toauthority/ (preserved local authority.otrun.log), source/netlist unchanged. This does not imply reach/clock/PG/layout admission.
+
+Band model actualhalo10.8 supersedes earlier2.16 assumption. New fullwidthband y259.2..291.6,h32.4,sourcecoupledmodel in ../band_model/mapped_cut_r5.json. Existing2fullrow n32physicaljobs DIAGNOSTIC ONLY, no freshgate. FlowexactWC native jobs use actualORFS synth/ABC/SDC recipe and current042nativehelper, no floorplan/placement/routing.

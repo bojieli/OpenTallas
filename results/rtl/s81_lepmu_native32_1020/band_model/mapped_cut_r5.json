@@ -1,0 +1,217 @@
+{
+  "source": "aad61c82c",
+  "kit": "8195e6e4a",
+  "native_fence_helper": "bf429e404b:physical/dscoll_cx/native_cell_fence.tcl",
+  "band": [
+    2.16,
+    259.2,
+    473.04,
+    291.6
+  ],
+  "native_connections_only": true,
+  "qualified": false,
+  "variants": {
+    "a": {
+      "mapped_sha256": "8446bec012d71d292ff6c7d54adbb4deded51ed474660bc345b1bc2d71904636",
+      "macro_count": 20,
+      "macro_signal_pin_bits": 5042,
+      "top_signal_pin_bits": 6715,
+      "unique_external_signal_nets": 11755,
+      "cut_below_nets": 3738,
+      "cut_above_nets": 7756,
+      "cross_both_nets": 0,
+      "terminal_band_lowerbound_max_um": 332.15999999999997,
+      "terminal_band_lowerbound_gt405": 0,
+      "worst": [
+        {
+          "um": 332.15999999999997,
+          "bit": 18887,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]",
+            "u_ot_pr_core.u.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]"
+          ]
+        },
+        {
+          "um": 271.0619999999999,
+          "bit": 4506,
+          "endpoints": [
+            "TOP/ml_wv"
+          ]
+        },
+        {
+          "um": 271.04400000000004,
+          "bit": 6716,
+          "endpoints": [
+            "TOP/ml_f"
+          ]
+        },
+        {
+          "um": 271.032,
+          "bit": 1107,
+          "endpoints": [
+            "TOP/ro[1103]"
+          ]
+        },
+        {
+          "um": 271.0319999999999,
+          "bit": 4432,
+          "endpoints": [
+            "TOP/rxv[0]",
+            "TOP/rxv[1]"
+          ]
+        },
+        {
+          "um": 270.864,
+          "bit": 5612,
+          "endpoints": [
+            "TOP/ml_rd[0]"
+          ]
+        },
+        {
+          "um": 270.84,
+          "bit": 5610,
+          "endpoints": [
+            "TOP/ml_wd[1103]"
+          ]
+        },
+        {
+          "um": 270.792,
+          "bit": 1106,
+          "endpoints": [
+            "TOP/ro[1102]"
+          ]
+        },
+        {
+          "um": 270.648,
+          "bit": 5613,
+          "endpoints": [
+            "TOP/ml_rd[1]"
+          ]
+        },
+        {
+          "um": 270.63,
+          "bit": 5609,
+          "endpoints": [
+            "TOP/ml_wd[1102]"
+          ]
+        },
+        {
+          "um": 270.55199999999996,
+          "bit": 1105,
+          "endpoints": [
+            "TOP/ro[1101]"
+          ]
+        },
+        {
+          "um": 270.5519999999999,
+          "bit": 2767,
+          "endpoints": [
+            "TOP/lo1_v"
+          ]
+        }
+      ],
+      "missing_endpoints": []
+    },
+    "h": {
+      "mapped_sha256": "542b4c5513d4f1ac1ea8af81dc91d6fb8e8379a06b3c4d8186b02c17773aa6f4",
+      "macro_count": 20,
+      "macro_signal_pin_bits": 5042,
+      "top_signal_pin_bits": 7422,
+      "unique_external_signal_nets": 12462,
+      "cut_below_nets": 4445,
+      "cut_above_nets": 7756,
+      "cross_both_nets": 0,
+      "terminal_band_lowerbound_max_um": 332.15999999999997,
+      "terminal_band_lowerbound_gt405": 0,
+      "worst": [
+        {
+          "um": 332.15999999999997,
+          "bit": 17410,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]",
+            "u_ot_pr_core.u.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]"
+          ]
+        },
+        {
+          "um": 271.0619999999999,
+          "bit": 5213,
+          "endpoints": [
+            "TOP/ml_wv"
+          ]
+        },
+        {
+          "um": 271.04400000000004,
+          "bit": 7423,
+          "endpoints": [
+            "TOP/ml_f"
+          ]
+        },
+        {
+          "um": 271.032,
+          "bit": 1107,
+          "endpoints": [
+            "TOP/ro[1103]"
+          ]
+        },
+        {
+          "um": 271.0319999999999,
+          "bit": 4432,
+          "endpoints": [
+            "TOP/rxv[0]",
+            "TOP/rxv[1]"
+          ]
+        },
+        {
+          "um": 270.864,
+          "bit": 6319,
+          "endpoints": [
+            "TOP/ml_rd[0]"
+          ]
+        },
+        {
+          "um": 270.84,
+          "bit": 6317,
+          "endpoints": [
+            "TOP/ml_wd[1103]"
+          ]
+        },
+        {
+          "um": 270.792,
+          "bit": 1106,
+          "endpoints": [
+            "TOP/ro[1102]"
+          ]
+        },
+        {
+          "um": 270.648,
+          "bit": 6320,
+          "endpoints": [
+            "TOP/ml_rd[1]"
+          ]
+        },
+        {
+          "um": 270.63,
+          "bit": 6316,
+          "endpoints": [
+            "TOP/ml_wd[1102]"
+          ]
+        },
+        {
+          "um": 270.55199999999996,
+          "bit": 1105,
+          "endpoints": [
+            "TOP/ro[1101]"
+          ]
+        },
+        {
+          "um": 270.5519999999999,
+          "bit": 2767,
+          "endpoints": [
+            "TOP/lo1_v"
+          ]
+        }
+      ],
+      "missing_endpoints": []
+    }
+  }
+}

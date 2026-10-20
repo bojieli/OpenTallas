@@ -1,0 +1,50 @@
+[
+  {
+    "name": "lint",
+    "expect": "pass",
+    "rc": 0,
+    "matched": true
+  },
+  {
+    "name": "lepmuh_exact_s1",
+    "expect": "pass",
+    "rc": 0,
+    "matched": true
+  },
+  {
+    "name": "lepmuh_exact_s5",
+    "expect": "pass",
+    "rc": 0,
+    "matched": true
+  },
+  {
+    "name": "lepmuh_mut_hstamp",
+    "expect": "fail",
+    "rc": 1,
+    "matched": true
+  },
+  {
+    "name": "lepmuh_mut_tagdrop",
+    "expect": "fail",
+    "rc": 1,
+    "matched": true
+  },
+  {
+    "name": "lepmuh_mut_landcut",
+    "expect": "fail",
+    "rc": 1,
+    "matched": true
+  },
+  {
+    "name": "lepmuh_mut_ksoff",
+    "expect": "fail",
+    "rc": 1,
+    "matched": true
+  },
+  {
+    "name": "lepmuh_mut_vskew",
+    "expect": "fail",
+    "rc": 1,
+    "matched": true
+  }
+]

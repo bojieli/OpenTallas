@@ -1,0 +1,13 @@
+MISMATCH A beat 9 cyc 8074: got 1af097fd84fa8e17.. rt 00000000 exp 1af097fd84fa8e17.. rt 00000000
+MISMATCH A beat 12 cyc 8082: got 7f45cead92fcbe47.. rt 00000000 exp 9aa4312a91a16a55.. rt 00000000
+MISMATCH A beat 13 cyc 8085: got 2480d764728abe25.. rt 00000000 exp 7f45cead92fcbe47.. rt 00000000
+MISMATCH A beat 14 cyc 8086: got 9d78da0e947b6e67.. rt 00000000 exp 2480d764728abe25.. rt 00000000
+MISMATCH A beat 15 cyc 8089: got 741aaf946e2bc435.. rt 00000000 exp 9d78da0e947b6e67.. rt 00000000
+MISMATCH A beat 16 cyc 8090: got dd2cf5beb1b8b067.. rt 00000000 exp 741aaf946e2bc435.. rt 00000000
+MISMATCH A beat 17 cyc 8094: got 05ae94fc9e245a67.. rt 00000000 exp dd2cf5beb1b8b067.. rt 00000000
+LEP_MU_STATS A recv 199/280 B recv 81/240 mismatches 549 | latency user identity 0 (A 118 beats, ref 120) | main faults 0110011 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 242/240 landed 158/160
+FAIL lep_mu: recv A 199/280 B 81/240 mismatches 549 identity 0 main faults 0110011 F1 1 F2 1 F3 1 return P 242/240 L 158/160
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_mu.sv:283: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 1.686 s; speed 7.621 us/s
+- Verilator: cpu 1.685 s on 1 threads; allocated 14 MB
