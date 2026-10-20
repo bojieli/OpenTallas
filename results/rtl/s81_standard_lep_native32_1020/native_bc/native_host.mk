@@ -1,0 +1,12 @@
+export DESIGN_NAME = ot_s81sl_lep
+export PLATFORM = asap7
+export VERILOG_FILES = /work/rtl/lib/ot_rst_relay_tree3.sv /work/rtl/lib/ot_sram_oldread_wreg.sv /work/rtl/lib/ot_sram_showahead_1r1w.sv /work/rtl/lib/ot_rst_relay.sv /work/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv /work/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v
+export ADDITIONAL_LIBS = /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+export SDC_FILE = /work/native.sdc
+export SYNTH_CANONICALIZE_TCL = /work/physical/common_flow/ot_keep_regs.tcl
+export NUM_CORES = 4
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_MEMORY_MAX_BITS = 4096
+export SYNTH_KEEP_MODULES = ot_sram_showahead_hit5 ot_s81sl_lep_rx_control ot_s81sl_lep_host_event ot_s81sl_lep_tx_push ot_s81sl_lep_stamp ot_s81sl_lep_vcopy ot_s81sl_lep_status_region ot_s81sl_lep_pair_ready ot_s81sl_lep_return8 ot_s81sl_lep_std_enable ot_sram_showahead_readptr ot_s81sl_std_tx_qualify
+export VERILOG_TOP_PARAMS = NATIVE32_STD 1
+export ADDITIONAL_LEFS = /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef

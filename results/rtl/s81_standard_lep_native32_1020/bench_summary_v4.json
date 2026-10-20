@@ -1,0 +1,79 @@
+[
+  {
+    "bench": "lep",
+    "mutant": "none",
+    "seed": 1,
+    "rc": 0,
+    "passed": true
+  },
+  {
+    "bench": "lep_host",
+    "mutant": "none",
+    "seed": 3,
+    "rc": 0,
+    "passed": true
+  },
+  {
+    "bench": "lep_nh",
+    "mutant": "none",
+    "seed": 5,
+    "rc": 0,
+    "passed": true
+  },
+  {
+    "bench": "lep_nhr",
+    "mutant": "none",
+    "seed": 7,
+    "rc": 0,
+    "passed": true
+  },
+  {
+    "bench": "lep",
+    "mutant": "stdsel",
+    "seed": 1,
+    "rc": 1,
+    "passed": false
+  },
+  {
+    "bench": "lep",
+    "mutant": "vskew",
+    "seed": 1,
+    "rc": 1,
+    "passed": false
+  },
+  {
+    "bench": "lep",
+    "mutant": "swap",
+    "seed": 1,
+    "rc": 1,
+    "passed": false
+  },
+  {
+    "bench": "lep",
+    "mutant": "nopair",
+    "seed": 1,
+    "rc": 1,
+    "passed": false
+  },
+  {
+    "bench": "lep_host",
+    "mutant": "ksoff",
+    "seed": 3,
+    "rc": 1,
+    "passed": false
+  },
+  {
+    "bench": "lep_host",
+    "mutant": "hdrop",
+    "seed": 3,
+    "rc": 1,
+    "passed": false
+  },
+  {
+    "bench": "lep_nh",
+    "mutant": "nhacc",
+    "seed": 5,
+    "rc": 1,
+    "passed": false
+  }
+]

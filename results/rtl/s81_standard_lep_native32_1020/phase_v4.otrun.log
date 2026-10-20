@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits   976 GB (avail 796, growth 113, headroom 0, waiters 0/0 GB) load 66/128 running 36 disk 81 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-standard-lep-native32-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-standard-lep-native32-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-standard-lep-native32-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-standard-lep-native32-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-standard-lep-native32-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2430977-1792485297 after 0 s
+{'host': 0, 'mut': 'none', 'rc': 0}
+{'host': 1, 'mut': 'vskew', 'rc': 1}
+{'host': 1, 'mut': 'stdsel', 'rc': 1}
+{'host': 1, 'mut': 'none', 'rc': 0}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2430977-1792485297): exit 0

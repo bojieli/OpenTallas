@@ -1,0 +1,3 @@
+LEPH_STATS H->A ring 233/233 host 84/84 ks 83/83 | A->H frames 592/592 (ring 489 thost 51 tkd 52) | mismatches 0 f_lf 0101 bad 0 fault 0
+PASS lep_host: H->A 233 ring + 84 HOST + 83 KS, A->H 592 frames (51 THOST incl. 1 merge, 52 TKD) bit-exact in order; f_lf live
+BENCH_PASS lep_host MUT=none seed 3
