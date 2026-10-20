@@ -1,0 +1,6 @@
+R3g 91db112bb (QW-N59-6 10-20) on R3f: q_open copies, MU user read split, per-consumer beat copies, formatter core split by
+kept eb copies, e3/k3 copies.  Six V5.050 legs PASS; eight causal mutants REJECTED (R3f set + qo0_zero / eba_zero):
+ qo0_zero: N59DV_FAIL SPLIT lockstep: 239 of 360 edges differ (split vs reference)
+ eba_zero: N59DV_FAIL SPLIT lockstep: 354 of 360 edges differ (split vs reference)
+Strict mapped census: REFUSE 71 > 32 (max 58): 55 formatter ht address decodes + qr_tag select 58/48 + tx_valid 39 x2 (all
+addressed in R3h) and a 33-36 tail of 32:1 check-mux beat bits (R3i).
