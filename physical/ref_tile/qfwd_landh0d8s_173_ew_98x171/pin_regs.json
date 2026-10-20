@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_landh0d8s_173_EW_98x171",
+ "enable": false,
+ "reason": "registered by construction: every input pin lands on one flop stage (a -> the a_q pin register of each SRAM bank, en -> en_s0, rs -> rs0, k -> k_q) and every output is a flop (o, fault); a flow pin register would add a stage the die calendar does not price (the landh0 opt-out, OWNER RULE 19:50)"
+}
