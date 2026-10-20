@@ -20,13 +20,13 @@
 `endif
 module tb_qfd_tt_ctlm_prog (input wire ck);
     // HARD_HR 0 = inline head; 1 = the h16c h17 hard leaf with the running-stage port (Q-H16C 10-18; bench --hard 1)
-    parameter integer MUT = 0, XPF_EDGES = 26, STAGE_ME = 1, HARD_HR = 0, HRA = 0;   // HRA: qfd_tt_ctlm_dv HR_ASBUILT (mutant)
+    parameter integer MUT = 0, XPF_EDGES = 26, SEG_CAL = 0, STAGE_ME = 1, HARD_HR = 0, HRA = 0;   // HRA: qfd_tt_ctlm_dv HR_ASBUILT (mutant)
     reg rst_n = 1'b0;
     reg [74:0] pw = 0; reg [186:0] dh = 0; reg [106:0] ss5 = 0; reg [9:0] ag5 = 0; reg [94:0] nret = 95'd1;
     reg kok = 0, kwd = 0;
     wire [452:0] hr; wire [115:0] cmd; wire emb_start; wire [17:0] emb_token; wire [55:0] dc; wire cf;
     wire [75:0] pobs, cobs; wire [68:0] dobs; wire csr, cir, lcv; wire [17:0] ntk, nps; wire [5:0] cst; wire [379:0] ncmd;
-    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(XPF_EDGES), .MUT(MUT), .STAGE_ME(STAGE_ME), .HARD_HR(HARD_HR), .HR_ASBUILT(HRA)) dut (.ck(ck), .rst_n(rst_n),
+    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(XPF_EDGES), .MUT(MUT), .STAGE_ME(STAGE_ME), .SEG_CAL(SEG_CAL), .HARD_HR(HARD_HR), .HR_ASBUILT(HRA)) dut (.ck(ck), .rst_n(rst_n),
         .pw(pw), .dh(dh), .kok(kok), .kwd(kwd), .fab(1'b0), .program_obs(pobs), .control_stores_ready(csr),
         .layer_context_v(lcv), .native_tok(ntk), .native_pos(nps), .command_stage(cst), .cal_program_obs(cobs),
         .cal_descriptor_obs(dobs), .cal_image_ready(cir), .dc(dc), .native_cmd(ncmd), .native_ret(nret), .hr(hr),

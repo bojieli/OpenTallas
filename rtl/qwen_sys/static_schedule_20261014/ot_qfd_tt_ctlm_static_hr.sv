@@ -35,7 +35,7 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
     parameter integer RSTREP = 1, parameter integer DSEL = 1,
     // h15 (Q-TTH15 10-17): PWCP / FQWE / OINC / DTIL / SLATE / AMWC / RRH, see qfd_tt_ctlm_head_static_rk (all exact, 0 edges)
     parameter integer H15 = 1,
-    parameter integer STAGE_ME = 0) (
+    parameter integer STAGE_ME = 0, parameter integer SEGCAL = 0) (
     input wire [94:0] rom_ret_i,
     input wire cp_active,output wire [55:0] cp,
     output wire me_image_ready,output wire [75:0] program_obs,
@@ -142,7 +142,7 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter intege
     ot_qfd_native_cmd_route u_native_route (
       .clk(ck_head),.rst_n(rsl),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
       .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
-    qfd_tt_ctlm_head_static_rk #(.SREG(SREG),.DPRE(DPRE),.DSEL(DSEL),.PWCP(H15),.FQWE(H15),.OINC(H15),.DTIL(H15),.SLATE(H15),
+    qfd_tt_ctlm_head_static_rk #(.SEGCAL(SEGCAL),.SREG(SREG),.DPRE(DPRE),.DSEL(DSEL),.PWCP(H15),.FQWE(H15),.OINC(H15),.DTIL(H15),.SLATE(H15),
         .AMWC(H15),.RRH(H15)) u_head (
         .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
         .me_image_ready(me_image_ready),.program_obs(program_obs),
