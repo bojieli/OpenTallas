@@ -163,14 +163,15 @@ def derive(tile, tag, variant):
         bt = f'physical/qkd_kvs_kits/qkd_kvs_{tile}_sr6_hck_boundary.tcl'
         s['boundary_tcl'] = list(s.get('boundary_tcl', [])) + [bt]
         pr = s['pin_regs']
-        pr['reason'] = pr['reason'].replace(
-            ', pc__fi (fault-chain sticky OR, 1 sink, fault-only; 0.8 T hck budget).',
-            '.  pc__fi lands in RTL (KV-PC3 sr6: face register fi_q before the sticky fo OR, +1 hclk edge on the '
-            'fault-only chain; gate pc_h_sr3 164813 showed the S-face pin -> 5 gates -> N-face fo clone at SS -437 ps).')
+        w = pr['reason'].index('  Waived (depth <= 3 or fault-only)')
+        pr['reason'] = pr['reason'][:w] + (
+            '  KV-PC3 sr6: no waiver left -- pc__fi (fault chain, hck), pc__ki (kc kick word, hck) and x__est__0_1 '
+            '(embedding boot-ready, ck) land in RTL face registers (fi_q / ki_q / ebr_q, +1 edge each, handed to the die '
+            'schedule): gate pc_h_sr3 164813 + its sr6-boundary CTS rerun measured those cones at SS -437 / -181 / -168 ps.')
         assert 'KV-PC3 sr6' in pr['reason'], 'pin_regs reason drifted'
         s['structural_change'] = s['purpose'] = j['purpose'] = (
-            'KV-PC3 sr6: (1) pc__fi lands in a face register (no S-face pin -> N-face output-clone cone; +1 fault-chain '
-            'edge per PC tile, priced on the STATUS fault path); (2) boundary_tcl re-applies the measured hck IO after '
+            'KV-PC3 sr6: (1) pc__fi / pc__ki / x__est__0_1 land in face registers (no S-face pin -> N-face output-clone '
+            'cone, no kick-word or boot-ready input cone; +1 edge each, handed to the die schedule); (2) boundary_tcl re-applies the measured hck IO after '
             'every io_ref switch (the post-CTS io_ref_skew put the 419 hck-only inputs on core_clk: 505 fake CDC setup '
             'endpoints + ODB-0373 on the pc__pi[0] hold pad).  ' + why)
     j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {VIEW, WIT, WIT_SR3, 'rtl', 'tools/qwen_kv_die'} | ({wit} if wit else set()))
