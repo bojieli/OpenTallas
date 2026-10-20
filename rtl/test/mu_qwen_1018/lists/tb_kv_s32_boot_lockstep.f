@@ -1,0 +1,5 @@
+rtl/lib/ot_s32_cells.sv
+rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv
+rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_boot.sv
+rtl/test/mu_qwen_1018/tb_kv_s32_boot_lockstep.sv

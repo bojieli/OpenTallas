@@ -1,0 +1,11 @@
+rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv
+rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv
+rtl/physical/ot_qkd_kv_static_writer_native.sv
+rtl/lib/ot_rst_relay.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv
+rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv
+physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v
+physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192.v
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+rtl/test/mu_qwen_1018/tb_kv_ctl_s32_a.sv

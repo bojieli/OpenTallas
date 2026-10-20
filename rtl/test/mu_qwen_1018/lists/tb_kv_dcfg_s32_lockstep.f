@@ -1,0 +1,3 @@
+rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv
+rtl/test/mu_qwen_1018/tb_kv_dcfg_s32_lockstep.sv
+rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_misc.sv

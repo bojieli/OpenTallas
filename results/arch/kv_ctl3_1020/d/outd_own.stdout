@@ -1,0 +1,5 @@
+PASS KV_OWN_S32_LOCKSTEP mismatches0 episodes3000 cycles394643 configured3000 dones724 native_cycles56902 fault_episodes2283
+- rtl/test/mu_qwen_1018/tb_kv_own_s32_lockstep.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4ms; walltime 0.291 s; speed 13.552 ms/s
+- Verilator: cpu 0.291 s on 1 threads; allocated 7 MB

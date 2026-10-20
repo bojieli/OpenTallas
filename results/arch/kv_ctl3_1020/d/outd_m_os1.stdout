@@ -1,0 +1,10 @@
+MISMATCH cyc 442 ref 3a0000000022 dut 7a0000000022
+MISMATCH cyc 443 ref 3a0000000023 dut 7a0000000023
+MISMATCH cyc 444 ref 3a0000000024 dut 7a0000000024
+MISMATCH cyc 445 ref 3a0000000025 dut 7a0000000025
+MISMATCH cyc 446 ref 3a0000000026 dut 7a0000000026
+FAIL KV_OWN_S32_LOCKSTEP mismatches32328 cycles394643
+- rtl/test/mu_qwen_1018/tb_kv_own_s32_lockstep.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4ms; walltime 0.265 s; speed 14.868 ms/s
+- Verilator: cpu 0.265 s on 1 threads; allocated 7 MB

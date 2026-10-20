@@ -1,0 +1,5 @@
+rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv
+rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_misc.sv
+rtl/lib/ot_s32_cells.sv
+rtl/test/mu_qwen_1018/tb_kv_own_s32_lockstep.sv

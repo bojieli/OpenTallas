@@ -1,0 +1,10 @@
+MISMATCH cyc 197 wprg 1 writer 0
+MISMATCH cyc 198 wprg 1 writer 0
+MISMATCH cyc 199 wprg 1 writer 0
+MISMATCH cyc 200 wprg 1 writer 0
+MISMATCH cyc 201 wprg 1 writer 0
+FAIL KV_S32_A_LOCKSTEP mismatches44883 copy0 dones490 slots2017 faults25 writes978 wfaults21
+- rtl/test/mu_qwen_1018/tb_kv_ctl_s32_a.sv:105: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 117us; walltime 0.081 s; speed 1.456 ms/s
+- Verilator: cpu 0.081 s on 1 threads; allocated 7 MB
