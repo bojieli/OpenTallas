@@ -60,15 +60,20 @@ def _free_near(insts, cx, cy, w, h, reach=40):
 
 def _face_xy(inst, master, port, bit=0):
     """die (x, y) of a 'pins' / 'face' port bit of a placed R0 / MX instance (approximate face point)."""
-    sp = master.ports[port]
-    if sp[0] == 'pins' and sp[4]:
+    sp = master.ports.get(port)
+    w, h = master.w, master.h
+    if sp is None:
+        raise ValueError(f'g5 clocking: {inst.name} ({master.name}) has no port {port}')
+    if sp[0] == 'xy' and sp[3]:
+        lx, ly = sp[3][bit]
+    elif sp[0] == 'pins' and sp[4]:
         face, z = sp[2], sp[4][bit]
+        lx, ly = {'W': (0.0, z), 'E': (w, z), 'S': (z, 0.0), 'N': (z, h)}[face]
     elif sp[0] == 'face':
         face, z = sp[2], sp[4]
+        lx, ly = {'W': (0.0, z), 'E': (w, z), 'S': (z, 0.0), 'N': (z, h)}[face]
     else:
-        return inst.cx, inst.cy
-    w, h = master.w, master.h
-    lx, ly = {'W': (0.0, z), 'E': (w, z), 'S': (z, 0.0), 'N': (z, h)}[face]
+        raise ValueError(f'g5 clocking: {inst.name}.{port} has no pin geometry ({sp[0]})')
     if inst.orient in ('MX', 'R180'):
         ly = h - ly
     if inst.orient in ('MY', 'R180'):
@@ -100,7 +105,13 @@ def apply(v, m):
             raise ValueError(f'g5 clocking: io_collective.rst_n on {len(jr)} buses')
         col = by['io_collective']
         cm = M[col.master]
-        px, py = _face_xy(col, cm, 'blk_ck', 0)
+        bp = eps[1][1]
+        bk = 0
+        if bp not in cm.ports:
+            # the die-level alias blk_ck<k> of the collective's blk_ck bus (port_join)
+            jn = m.get('port_join', {}).get(col.master, {}).get(bp)
+            bp, bk = (jn[0], (jn[1][0] if jn[1] else 0)) if jn else ('blk_ck', 0)
+        px, py = _face_xy(col, cm, bp, bk)
         w, h = DIV_WH
         x, y = _free_near(insts, px + w / 2 + HALO, py, w, h)
         q = v.Master(DIV[1], w, h, 3, 'QW-GEN5 real /6 clock divider (6 flops) of clk_coll -> coll_blk 5000 ps')
