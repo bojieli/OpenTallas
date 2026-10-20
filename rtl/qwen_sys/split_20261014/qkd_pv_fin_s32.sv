@@ -211,7 +211,7 @@ module qkd_pv_fin_s32 #(
   always @(posedge ck)if(product_land[oi]&&active)out_data[32*oi+:32]<=product[32*oi+:32];
  end
  for(genvar ri=0;ri<4;ri=ri+1)begin:g_rz_capture
-  always @(posedge ck)reciprocal_land[ri]<=active&&(n+16'd1==RA);
+  always @(posedge ck)reciprocal_land[ri]<=start_q?(!active&&!cal_bad&&cr==16'd1):(active&&(n+16'd1==RA));
   always @(posedge ck)if(reciprocal_land[ri]&&active)rzr[32*ri+:32]<=rz_q[32*ri+:32];
  end endgenerate
 endmodule
