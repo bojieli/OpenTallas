@@ -43,9 +43,12 @@
     "upstream_output": 344
   },
   "comparison_work": {
-    "comparisons_per_input_block": 272,
+    "position_comparators": 272,
+    "within_input_block_comparators": 144,
+    "source_comparator_instances": 416,
     "comparison_key_bits": 85,
-    "insertion_keys_per_block": 4
+    "insertion_keys_per_block": 4,
+    "MACs_per_edge": 0
   },
   "existing_model_contract": {
     "tile_replica_count": "unchanged; bind to existing release composition count",
