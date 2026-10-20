@@ -1,0 +1,46 @@
+{
+  "baseline": "5f6301507f8c163a0534980e69869d864feb1a0e",
+  "rtl_constraints_binary_change": "NONE",
+  "records": [
+    {
+      "file": "physical/ref_tile/qfd_d2d_static_sf7w/job.json",
+      "only_delta": [
+        {
+          "bench": "xsf7_mut_c0_late",
+          "old": "^XQ_FAIL errors=[1-9][0-9]*$",
+          "new": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$"
+        },
+        {
+          "bench": "xsf7_mut_bypass_age",
+          "old": "^XQ_FAIL errors=[1-9][0-9]*$",
+          "new": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$"
+        },
+        {
+          "bench": "xsf7_mut_ohtwin",
+          "old": "^XQ_FAIL errors=[1-9][0-9]*$",
+          "new": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$"
+        }
+      ]
+    },
+    {
+      "file": "physical/ref_tile/qfd_d2d_static_sf7w/spec.json",
+      "only_delta": [
+        {
+          "bench": "xsf7_mut_c0_late",
+          "old": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+          "new": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$"
+        },
+        {
+          "bench": "xsf7_mut_bypass_age",
+          "old": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+          "new": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$"
+        },
+        {
+          "bench": "xsf7_mut_ohtwin",
+          "old": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+          "new": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$"
+        }
+      ]
+    }
+  ]
+}

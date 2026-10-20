@@ -280,7 +280,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+    "fail_regex": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$",
     "fail_witness": "results/arch/qw_d2d_safe7_1019/receipts/functional/pair_mut_c0late/pair_gen_txdp/run.log"
    },
    {
@@ -292,7 +292,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+    "fail_regex": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$",
     "fail_witness": "results/arch/qw_d2d_safe7_1019/receipts/functional/pair_mut_bypass/pair_gen_txdp/run.log"
    },
    {
@@ -304,7 +304,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+    "fail_regex": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$",
     "fail_witness": "results/arch/qw_d2d_safe7_1019/receipts/functional/pair_mut_ohtwin/pair_gen_txdp/run.log"
    }
   ],

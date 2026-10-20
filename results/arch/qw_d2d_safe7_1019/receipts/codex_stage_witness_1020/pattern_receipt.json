@@ -1,0 +1,44 @@
+{
+  "status": "PASS_NARROW_HORIZONTAL_WHITESPACE_ONLY",
+  "actual_c0_stage_rc": 1,
+  "actual_c0_stage_sha256": "dcba22f4f3f1dea2ac4c70a2af04faa892aaed658a8b4866e8201bde49d1df9a",
+  "closure_script_sha256": "e248b74d7353f193b3cbd91d8706c40319c346ed09cdbe8d0ff21f35aee1d1dc",
+  "pattern": "^[\t ]*XQ_FAIL errors=[1-9][0-9]*$",
+  "records": [
+    {
+      "name": "xsf7_mut_c0_late",
+      "raw_sha256": "b8a817c8d9f2a33c82f3d12015e9a5236eb3982f8a9810d5653837c3015dac19",
+      "staged_sha256": "b990f51f0c574d323d38d61223fa1addfdfbc3cb7d797d9922b232e32d6b5d95",
+      "raw_and_staged_match": true,
+      "causal_first_errors": [
+        "XQ_ERR cyc 790 layer 1 rel 608: D2D end fault / epoch abort in a normal layer",
+        "XQ_ERR cyc 796 layer 1 rel 614: compute producer/consumer fault",
+        "XQ_ERR cyc 815 layer 1 rel 633: KV producer/consumer fault"
+      ]
+    },
+    {
+      "name": "xsf7_mut_bypass_age",
+      "raw_sha256": "5ec2bc7c55e1a4f6237432f01046e83fe601fa490ed449840205978706242c0f",
+      "staged_sha256": "a701732b311958469db5342c9bd088cbfeb1160cbd0c49bbdcb34fc49a5665de",
+      "raw_and_staged_match": true,
+      "causal_first_errors": [
+        "XQ_ERR cyc 815 layer 1 rel 633: KV producer/consumer fault",
+        "XQ_ERR cyc 839 layer 1 rel 657: KVN word at the KV end != the compute x3 word",
+        "XQ_ERR cyc 840 layer 1 rel 658: KVN word at the KV end != the compute x3 word"
+      ]
+    },
+    {
+      "name": "xsf7_mut_ohtwin",
+      "raw_sha256": "3a7b918f49697cb6cb8d7d2f7c1f4872f23f1cd8658e984136ab587a392fe020",
+      "staged_sha256": "1c12c3f108b4045d99de3268438212d0d1c37b846e237ab54079feafdb788896",
+      "raw_and_staged_match": true,
+      "causal_first_errors": [
+        "XQ_ERR cyc 821 layer 1 rel 639: compute producer/consumer fault",
+        "XQ_ERR cyc 836 layer 1 rel 654: D2D end fault / epoch abort in a normal layer",
+        "XQ_ERR cyc 2563 layer 1 rel 2381: KV producer/consumer fault"
+      ]
+    }
+  ],
+  "negative_fixtures_rejected": 8,
+  "other_two_stage_forms": "Exact recorded wrapper presentation replayed from committed raw witnesses; their daemon stages were not reached after c0stop. No new simulation claimed."
+}
