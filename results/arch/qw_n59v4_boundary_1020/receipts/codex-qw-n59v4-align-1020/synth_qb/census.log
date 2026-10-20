@@ -1,0 +1,8 @@
+textbook_lint: REFUSE qfd_native59_qbank cells 55,649 flops 7,852 depth 461.8 ps util None reach None um (1.1 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=7860 root=port:ck rule=PASS: 7,860 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: REFUSE high_fanout: net _68912_/Y (AOI21x1_ASAP7_75t_R): 278 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net _55719_/Y (OR2x2_ASAP7_75t_R): 278 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net _74445_/Y (NAND2x1_ASAP7_75t_R): 256 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net _88754_/Y (NAND2x1_ASAP7_75t_R): 241 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+TEXTBOOK_LINT: high_fanout: net _68912_/Y (AOI21x1_ASAP7_75t_R): 278 loads > 32; net _55719_/Y (OR2x2_ASAP7_75t_R): 278 loads > 32

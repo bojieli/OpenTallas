@@ -1,0 +1,17 @@
+%Error-MODMISSING: rtl/qwen_split/qfd_native59_svc.sv:313:3: Cannot find file containing module: 'qfd_native59_command_context_mu'
+  313 |   qfd_native59_command_context_mu #(.NU(NU)) u_context(
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        qfd_native59_command_context_mu
+                        qfd_native59_command_context_mu.v
+                        qfd_native59_command_context_mu.sv
+                        /srv/opentallas-scratch/claude/codex-qw-n59v4-diag-1020/pair0/out/obj/qfd_native59_command_context_mu
+                        /srv/opentallas-scratch/claude/codex-qw-n59v4-diag-1020/pair0/out/obj/qfd_native59_command_context_mu.v
+                        /srv/opentallas-scratch/claude/codex-qw-n59v4-diag-1020/pair0/out/obj/qfd_native59_command_context_mu.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/codex-qw-n59v4-diag-1020/pair0/src'
+%Error-MODMISSING: rtl/qwen_split/qfd_native59_svc.sv:463:3: Cannot find file containing module: 'qfd_native59_dr_landing'
+  463 |   qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES))u_land(
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 2 error(s)

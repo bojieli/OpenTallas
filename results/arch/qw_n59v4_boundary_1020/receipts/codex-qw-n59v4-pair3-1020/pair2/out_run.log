@@ -1,0 +1,9 @@
+N59PAIR_ERR cycle 24 internal diff 3
+N59PAIR_ERR cycle 25 internal diff 3
+N59PAIR_ERR cycle 27 internal diff 1
+N59PAIR_ERR cycle 31 internal diff 1
+N59PAIR_ACTIVITY compared 37200 output_mism 0 internal_mism 19047 qwords 9191 kvwrites 8050 changes 29882
+N59PAIR_FAIL MUT 2
+[0] %Fatal: tb_n59_boundary_pair.sv:194: Assertion failed in TOP.tb_n59_boundary_pair
+%Error: rtl/test/qwen_split/tb_n59_boundary_pair.sv:194: Verilog $stop
+Aborting...

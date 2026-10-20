@@ -1,0 +1,3 @@
+N59MU_PASS_SPLIT lockstep: 2458 edges, every output of the split == reference (SOFF 3 BOFF 0 ROFF 4)
+N59MU_PASS ops=14 users=4 CMD u0..3 6/3/2/3 Q 192/96/64/96 (every beat tagged {seq,user}); results 32/op matched, 1 completion/op, KVN identity tagged; user-0 == NU 1 on 533 edges
+- /srv/opentallas-scratch/claude/codex-qw-n59v4-align-1020/recv_mu/src/rtl/test/qwen_split/tb_qfd_native59_dv_mu.sv:237: Verilog $finish

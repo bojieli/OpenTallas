@@ -1,0 +1,11 @@
+N59RND_PROBE_ERR cycle 30 (ph 30): service internals != r1 3 edges earlier; diff bits 31, first diff bit 5202 of 5206
+N59RND_PROBE_ERR cycle 31 (ph 31): service internals != r1 3 edges earlier; diff bits 31, first diff bit 5202 of 5206
+N59RND_PROBE_ERR cycle 33 (ph 33): service internals != r1 3 edges earlier; diff bits 51, first diff bit 5202 of 5206
+N59RND_PROBE_ERR cycle 34 (ph 34): service internals != r1 3 edges earlier; diff bits 51, first diff bit 5202 of 5206
+N59RND_PROBE_ERR cycle 37 (ph 37): service internals != r1 3 edges earlier; diff bits 8, first diff bit 5202 of 5206
+N59RND_PROBE_ERR cycle 38 (ph 38): service internals != r1 3 edges earlier; diff bits 8, first diff bit 5202 of 5206
+N59RND activity: tx 0 x3 0 dr0 0 dr1 7379 done 0 fault-edges 37200 ret-changes 1 q-words 9068 kv-writes 7984 bad-dd 8126; compared 37200 mism 0 probes 15980/0 (svc/bank mism) of 37200
+N59RND_FAIL seed 1: 0 of 37200 edges differ (outputs), probes 15980/0
+[0] %Fatal: tb_n59_split_random.sv:121: Assertion failed in TOP.tb_n59_split_random
+%Error: /srv/opentallas-scratch/claude/codex-qw-n59v4-boundary-1020/base_rnd/src/rtl/test/qwen_split/tb_n59_split_random.sv:121: Verilog $stop
+Aborting...

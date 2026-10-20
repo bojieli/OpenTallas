@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+mu_ovl_positive UNEXPECTED FAIL rc=1
+N59SPLIT_ERR cycle 143: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 144: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 1)
+N59SPLIT_ERR cycle 145: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 146: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 1 fault 1)
+N59MU_FAIL SPLIT lockstep: 2327 of 2458 edges differ (split vs reference)
+N59SPLIT_FAIL mu_ovl_positive
+N59SPLIT_BENCH_EXIT 1
