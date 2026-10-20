@@ -1833,7 +1833,7 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  end
 endmodule
 
-// ---- ot_qkd_static_ctrl_pc_emb_kvpc_s: clone of ot_qkd_static_ctrl_pc_emb (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv) with 8 substitution(s); kept copy families rp[3]x2(2), col_bank[5]x11(1), col_col[5]x3(1), row_row[19]x2(1), head_first[10]x2(1) ----
+// ---- ot_qkd_static_ctrl_pc_emb_kvpc_s: clone of ot_qkd_static_ctrl_pc_emb (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv) with 10 substitution(s); kept copy families rp[3]x2(2), col_bank[5]x11(1), col_col[5]x3(1), row_row[19]x2(1), head_first[10]x2(1) ----
 module ot_qkd_static_ctrl_pc_emb_kvpc_s #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0,PULLIN=0,PROFILE=0,CONTEXT_DESC=0,STATIC_REFRESH=0)(   // PULLIN: qwen-1010/b
  input wire clk,rst_n,
  input wire cmd_v,input wire [31:0] cmd,
@@ -1896,10 +1896,20 @@ wire [9:0] head_first = head_first__qv[9:0];
  // lookahead (next-state pointers -> registered one-hot copies): free write slot per field group (ungated write: slot
  // wp is never live while count < 8), and per head group {count > 1, count == 0, onehot(rp + 1)}
  wire [3:0] ctl_count_nx = count + (push ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
+ wire [1:0] ctl_pop_s;   // KV-PC7: pop copies for the lookahead selects (0 = ws, 1 = hf)
+ for (genvar q = 0; q < 2; q = q + 1) begin : g_ctl_ps
+   ot_kvpc5_and2 u_pop (.a(live), .b(malformed || (descriptor_head ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1)), .y(ctl_pop_s[q]));
+ end
+ wire [3:0] ctl_cnt_p = count + (push ? 4'd1 : 4'd0);
+ wire [3:0] ctl_cnt_m = ctl_cnt_p - 4'd1;
  wire [2:0] ctl_wp_nx = push ? wp + 3'd1 : wp;
  wire [2:0] ctl_rp_nx = pop ? rp + 3'd1 : rp;
- wire [7:0] ctl_ws_nx = (ctl_count_nx != 4'd8) ? (8'b1 << ctl_wp_nx) : 8'b0;
- wire [9:0] ctl_hf_nx = {ctl_count_nx > 4'd1, ctl_count_nx == 4'd0, 8'b1 << 3'(ctl_rp_nx + 3'd1)};
+ wire [7:0] ctl_ws_p = (ctl_cnt_p != 4'd8) ? (8'b1 << ctl_wp_nx) : 8'b0;
+ wire [7:0] ctl_ws_m = (ctl_cnt_m != 4'd8) ? (8'b1 << ctl_wp_nx) : 8'b0;
+ wire [7:0] ctl_ws_nx = ctl_pop_s[0] ? ctl_ws_m : ctl_ws_p;
+ wire [9:0] ctl_hf_p = {ctl_cnt_p > 4'd1, ctl_cnt_p == 4'd0, 8'b1 << 3'(rp + 3'd1)};
+ wire [9:0] ctl_hf_m = {ctl_cnt_m > 4'd1, ctl_cnt_m == 4'd0, 8'b1 << 3'(rp + 3'd2)};
+ wire [9:0] ctl_hf_nx = ctl_pop_s[1] ? ctl_hf_m : ctl_hf_p;
  (* keep *) reg [23:0] ctl_ws_qv; (* keep *) reg [29:0] ctl_hf_qv;
  always @(posedge clk or negedge rst_n)
   if (!rst_n) begin ctl_ws_qv <= {3{8'b1}}; ctl_hf_qv <= {3{2'b01, 8'b10}}; end
@@ -1968,7 +1978,7 @@ wire [9:0] head_first = head_first__qv[9:0];
  end
 endmodule
 
-// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 49 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2) ----
+// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 50 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x2(4) ----
 module ot_qkd_static_kv_timing_kvpc_s #(
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
@@ -2050,7 +2060,9 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire context_accept=CONTEXT_DESC!=0 && desc_context;
     wire [10:0] first_sector=context_accept?context_sector(9'd0,desc_vpass,desc_k_order_b,desc_k_count0):{1'b0,desc_first};
     reg [31:0] open, done, stale, refreshed;
-    reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
+    reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; (* keep, ot_rst_split = 5 *) reg [9:0] rb__qv;   // KV-PC SAFE: 2 kept copies of rb
+    function [4:0] rb__f; input [4:0] v; rb__f = v; endfunction
+ wire [4:0] rb = rb__qv[4:0]; reg fault_r;
     reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
     (* keep, ot_rst_split *) reg [9:0] streaming__qv;   // KV-PC SAFE: 10 kept copies of streaming (KV-PC2: 7 -> 10, 264 loads = 38 / copy at 7)
     function streaming__f; input v; streaming__f = v; endfunction
@@ -2145,6 +2157,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     reg [4:0] sb, sc; reg [18:0] srw; reg swe, sfl, scm; reg [31:0] sb_oh;
     reg so_v; reg [4:0] so_b; reg [18:0] so_row;
     reg so_m_q;            // KV-PC7 (2): == so_v && so_b == sb && so_row == srw (registered lookahead, below)
+    reg so_o_q;            // KV-PC7 (2): == |(sb_oh & open) (registered lookahead, below)
     reg [7:0] swait;
     reg c_sp;
     (* keep, ot_rst_split *) reg [1:0] c_s__qv;   // KV-PC SAFE: 2 kept copies of c_s
@@ -2154,7 +2167,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     // KV-PC5: s_hit as kept leaf copies (KV-PC6: 1 / 2 = the shold mask lo / hi; i4 pc_h 33 loads on one copy)
     wire [2:0] s_hit_c;
     for (genvar q = 0; q < 3; q = q + 1) begin : g_s_hit_c
-      ot_kvpc5_and2 u_l (.a(sq_ne && so_m_q), .b(|(sb_oh & open)), .y(s_hit_c[q]));   // KV-PC7 (2)
+      ot_kvpc5_and2 u_l (.a(sq_ne && so_m_q), .b(so_o_q), .y(s_hit_c[q]));   // KV-PC7 (2)
     end
     wire s_hit = s_hit_c[0];
     wire [31:0] shold = {s_hit_c[2] ? sb_oh[31:16] : 16'b0, s_hit_c[1] ? sb_oh[15:0] : 16'b0};        // never precharge the bank the head is about to access
@@ -2448,11 +2461,12 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire [31:0] rd_oh_j = 32'b1 << {j_p1[9:7], j_p1[1:0]};
     wire k_step = rd_ok_c[2] && (j[6:0] == 7'h7f);
     wire v_set_flip=v_consumer_order && rd_ok_c[2] && j[2:0]==3'd7;
-    wire [2:0] k_n = desc_acc ? first_sector[9:7] : context_active&&rd_ok_c[2] ? j_p1[9:7] : v_set_flip ? (k^3'd1) : k_step ? k+3'd1 : k;
+    // KV-PC7 (5): k_n per case (the read-step candidate k_r1 shared with k1v; census s9: a duplicate j decode put 33 loads on j[9])
+    wire [2:0] k_r1 = context_active ? j_p1[9:7] : (v_consumer_order && j[2:0] == 3'd7) ? (k ^ 3'd1) : (j[6:0] == 7'h7f) ? k + 3'd1 : k;
+    wire [2:0] k_n = desc_acc ? first_sector[9:7] : (rd_ok_c[2] ? k_r1 : k);
     wire [2:0] last_n = desc_acc ? (context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7)) : last;
     // KV-PC7 (5): k1v_n == (desc_acc ? context_accept : context_active) || (k_n != 7 && k_n + 1 <= last_n) per case
     function automatic k1f(input [2:0] kk, input [2:0] ll); k1f = (kk != 3'd7) && (kk + 3'd1 <= ll); endfunction
-    wire [2:0] k_r1 = context_active ? j_p1[9:7] : (v_consumer_order && j[2:0] == 3'd7) ? (k ^ 3'd1) : (j[6:0] == 7'h7f) ? k + 3'd1 : k;
     wire k1v_d = context_accept || k1f(first_sector[9:7], context_accept ? (desc_vpass ? 3'd5 : 3'd1) : 3'((desc_n - 11'd1) >> 7));
     wire k1v_r1 = context_active || k1f(k_r1, last);
     wire k1v_r0 = context_active || k1f(k, last);
@@ -2603,12 +2617,25 @@ module ot_qkd_static_kv_timing_kvpc_s #(
       so_pick = g ? (ge2 ? e_a1 : e_sv) : (eq0 ? e_sv : (w ? e_tw : e_h));
     endfunction
     wire [4:0] so_bt = sb ^ 5'd2;
-    wire so_eb = so_fa ? so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], c_bank == sq_a1_bk, c_bank == s_bank, c_bank == so_bt, c_bank == sb)
-                       : so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], so_b == sq_a1_bk, so_b == s_bank, so_b == so_bt, so_b == sb);
-    wire so_el = so_fa ? so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], c_srow[9:0] == sq_a1_rl, c_srow[9:0] == s_row[9:0], c_srow[9:0] == srw_tw[9:0], c_srow[9:0] == srw[9:0])
-                       : so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], so_row[9:0] == sq_a1_rl, so_row[9:0] == s_row[9:0], so_row[9:0] == srw_tw[9:0], so_row[9:0] == srw[9:0]);
-    wire so_eh = so_fa ? so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], c_srow[18:10] == sq_a1_rh, c_srow[18:10] == s_row[18:10], c_srow[18:10] == srw_tw[18:10], c_srow[18:10] == srw[18:10])
-                       : so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], so_row[18:10] == sq_a1_rh, so_row[18:10] == s_row[18:10], so_row[18:10] == srw_tw[18:10], so_row[18:10] == srw[18:10]);
+    wire so_eb_n = so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], c_bank == sq_a1_bk, c_bank == s_bank, c_bank == so_bt, c_bank == sb);
+    wire so_eb_o = so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], so_b == sq_a1_bk, so_b == s_bank, so_b == so_bt, so_b == sb);
+    wire so_el_n = so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], c_srow[9:0] == sq_a1_rl, c_srow[9:0] == s_row[9:0], c_srow[9:0] == srw_tw[9:0], c_srow[9:0] == srw[9:0]);
+    wire so_el_o = so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], so_row[9:0] == sq_a1_rl, so_row[9:0] == s_row[9:0], so_row[9:0] == srw_tw[9:0], so_row[9:0] == srw[9:0]);
+    wire so_eh_n = so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], c_srow[18:10] == sq_a1_rh, c_srow[18:10] == s_row[18:10], c_srow[18:10] == srw_tw[18:10], c_srow[18:10] == srw[18:10]);
+    wire so_eh_o = so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], so_row[18:10] == sq_a1_rh, so_row[18:10] == s_row[18:10], so_row[18:10] == srw_tw[18:10], so_row[18:10] == srw[18:10]);
+    // the so-side select last, through kept leaves (the census saw synthesis mux the 24 operand bits on so_fa: 48 pins)
+    wire so_fa_l; wire [5:0] so_e_l;
+    ot_kvpc5_and2 u_so_fa (.a(S && row_fire && c_s), .b(c_op == ACT), .y(so_fa_l));
+    ot_kvpc5_and2 u_so_b1 (.a(so_fa_l), .b(so_eb_n), .y(so_e_l[0])); ot_kvpc5_and2 u_so_b0 (.a(!so_fa_l), .b(so_eb_o), .y(so_e_l[1]));
+    ot_kvpc5_and2 u_so_l1 (.a(so_fa_l), .b(so_el_n), .y(so_e_l[2])); ot_kvpc5_and2 u_so_l0 (.a(!so_fa_l), .b(so_el_o), .y(so_e_l[3]));
+    ot_kvpc5_and2 u_so_h1 (.a(so_fa_l), .b(so_eh_n), .y(so_e_l[4])); ot_kvpc5_and2 u_so_h0 (.a(!so_fa_l), .b(so_eh_o), .y(so_e_l[5]));
+    wire so_eb = so_e_l[0] | so_e_l[1], so_el = so_e_l[2] | so_e_l[3], so_eh = so_e_l[4] | so_e_l[5];
+    // so_o_q: the head's bank open next edge = |(sb_oh_nx & open_nx), per sb_oh head candidate (group 3 selects;
+    // the four sb_oh byte groups load from identical copies) against open_nx (the exact next open, EV block)
+    wire so_on = so_pick(s_go_c[13], sq_hf_qv[23], sq_hf_qv[22], s_sw_c[4], |(sq_a1_o & open_nx), |(sq_s_oh & open_nx),
+                         |(ab_oh & open_nx), |(sb_oh & open_nx));
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) so_o_q <= 1'b0; else so_o_q <= so_on;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) so_m_q <= 1'b0;
 `ifdef OT_KVPC7_MUT
@@ -2673,7 +2700,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
       if (!rst_n) begin
         v_consumer_order<=0;context_active__qv <= {5{context_active__f(0)}};context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last <= 0; nm1 <= 0;
         j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
-        rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb <= 0; fault_r <= 0;
+        rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb__qv <= {2{rb__f(0)}}; fault_r <= 0;
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
         c_v <= 0; c_prio <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_s__qv <= {2{c_s__f(0)}}; c_sp <= 0; c_srow <= 0;
         sq_n <= 0; sq_rp__qv <= {2{sq_rp__f(0)}}; sb <= 0; sc <= 0; srw <= 0; swe <= 0; swe_bk <= 8'b0; sb_oh <= 0; sfl <= 0; scm <= 0; swait <= 0;
@@ -2746,7 +2773,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
           else if (row_fire && (c_op == PREALL || (c_op == PRE && c_bank == so_b))) so_v <= 1'b0;
         end
         if (!PI) begin
-          if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb <= bsel; end
+          if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb__qv <= {2{rb__f(bsel)}}; end
           if (REF_MODE && lead_qv[3]) blk[15:0] <= bsel_oh[15:0];      // KV-PC6: blk lo / hi per lead copy
           if (REF_MODE && lead_qv[4]) blk[31:16] <= bsel_oh[31:16];
         end else begin
@@ -2754,8 +2781,8 @@ module ot_qkd_static_kv_timing_kvpc_s #(
           if (ref_c == RW'(LEAD)) begin
             if (ep) begin ref_pend <= 1; ep <= 0; end                 // a pending pull-in becomes this slot's REFpb
             else if (pin != 0 && !pi_idle) begin pin <= pin - 1'b1; skip <= 1; end  // paid ahead: skip (only while reading)
-            else begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
-          end else if (ep_start) begin ep <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
+            else begin ref_pend <= 1; rb__qv <= {2{rb__f(bsel)}}; blk <= 32'b1 << bsel; end
+          end else if (ep_start) begin ep <= 1; rb__qv <= {2{rb__f(bsel)}}; blk <= 32'b1 << bsel; end
           else if (ep && |(blk & open)) begin ep <= 0; blk <= 0; end   // the chosen bank opened meanwhile
           if (ref_due) skip <= 0;
         end

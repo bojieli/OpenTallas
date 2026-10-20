@@ -672,6 +672,27 @@ TIM_PC5 = [
     (SQ_BLOCK_OLD, SQ_BLOCK_NEW), (CASE_OLD, CASE_NEW), (DESC_OLD, DESC_NEW), (RD_OLD, RD_NEW),
 ]
 
+# KV-PC7 10-20 (textbook depth after sr9 r1: head -> pop leaf (233 raw) -> count arithmetic -> ctl_ws_qv 635 ps): the
+# command-FIFO lookahead for both values of pop, selected last by two new pop leaf copies (exact).
+UCTL_PC7 = [
+    (""" wire [3:0] ctl_count_nx = count + (push ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);""",
+     """ wire [3:0] ctl_count_nx = count + (push ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
+ wire [1:0] ctl_pop_s;   // KV-PC7: pop copies for the lookahead selects (0 = ws, 1 = hf)
+ for (genvar q = 0; q < 2; q = q + 1) begin : g_ctl_ps
+   ot_kvpc5_and2 u_pop (.a(live), .b(malformed || (descriptor_head ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1)), .y(ctl_pop_s[q]));
+ end
+ wire [3:0] ctl_cnt_p = count + (push ? 4'd1 : 4'd0);
+ wire [3:0] ctl_cnt_m = ctl_cnt_p - 4'd1;"""),
+    (""" wire [7:0] ctl_ws_nx = (ctl_count_nx != 4'd8) ? (8'b1 << ctl_wp_nx) : 8'b0;
+ wire [9:0] ctl_hf_nx = {ctl_count_nx > 4'd1, ctl_count_nx == 4'd0, 8'b1 << 3'(ctl_rp_nx + 3'd1)};""",
+     """ wire [7:0] ctl_ws_p = (ctl_cnt_p != 4'd8) ? (8'b1 << ctl_wp_nx) : 8'b0;
+ wire [7:0] ctl_ws_m = (ctl_cnt_m != 4'd8) ? (8'b1 << ctl_wp_nx) : 8'b0;
+ wire [7:0] ctl_ws_nx = ctl_pop_s[0] ? ctl_ws_m : ctl_ws_p;
+ wire [9:0] ctl_hf_p = {ctl_cnt_p > 4'd1, ctl_cnt_p == 4'd0, 8'b1 << 3'(rp + 3'd1)};
+ wire [9:0] ctl_hf_m = {ctl_cnt_m > 4'd1, ctl_cnt_m == 4'd0, 8'b1 << 3'(rp + 3'd2)};
+ wire [9:0] ctl_hf_nx = ctl_pop_s[1] ? ctl_hf_m : ctl_hf_p;"""),
+]
+
 # KV-PC7 10-20 (SAFE item 4, textbook logic_depth REFUSE on gates *-20261020-054430: PC 895 ps / 26 levels, PC_H 942 ps,
 # sb -> so_b == sb / so_row == srw -> s_hit -> s_sw -> s_pre_ok -> s_pblk -> legal_rd -> rd_ok -> k_n + 1 <= last_n ->
 # k1v; 1097 endpoints > 520 ps, every one behind the column decision).  Exact restructures, no added edge:
@@ -698,10 +719,11 @@ TIM_PC7 = [
       assign s_sw_c = 8'b0;
     end'''),
     ('''      ot_kvpc5_and2 u_l (.a(sq_ne && so_v && so_b == sb && so_row == srw), .b(|(sb_oh & open)), .y(s_hit_c[q]));''',
-     '''      ot_kvpc5_and2 u_l (.a(sq_ne && so_m_q), .b(|(sb_oh & open)), .y(s_hit_c[q]));   // KV-PC7 (2)'''),
+     '''      ot_kvpc5_and2 u_l (.a(sq_ne && so_m_q), .b(so_o_q), .y(s_hit_c[q]));   // KV-PC7 (2)'''),
     ('''    reg so_v; reg [4:0] so_b; reg [18:0] so_row;''',
      '''    reg so_v; reg [4:0] so_b; reg [18:0] so_row;
-    reg so_m_q;            // KV-PC7 (2): == so_v && so_b == sb && so_row == srw (registered lookahead, below)'''),
+    reg so_m_q;            // KV-PC7 (2): == so_v && so_b == sb && so_row == srw (registered lookahead, below)
+    reg so_o_q;            // KV-PC7 (2): == |(sb_oh & open) (registered lookahead, below)'''),
     ('''    wire swe_nx = s_go_c[10] ? (sq_hf_qv[5] ? sq_a1_we : s_we) : (sq_hf_qv[4] ? s_we : swe);''',
      '''    wire swe_nx = s_go_c[10] ? (sq_hf_qv[5] ? sq_a1_we : s_we) : (sq_hf_qv[4] ? s_we : swe);
     // KV-PC7 (2): so_m_q(t) == (so_v && so_b == sb && so_row == srw)(t).  Next state of each side exactly as the
@@ -714,12 +736,25 @@ TIM_PC7 = [
       so_pick = g ? (ge2 ? e_a1 : e_sv) : (eq0 ? e_sv : (w ? e_tw : e_h));
     endfunction
     wire [4:0] so_bt = sb ^ 5'd2;
-    wire so_eb = so_fa ? so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], c_bank == sq_a1_bk, c_bank == s_bank, c_bank == so_bt, c_bank == sb)
-                       : so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], so_b == sq_a1_bk, so_b == s_bank, so_b == so_bt, so_b == sb);
-    wire so_el = so_fa ? so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], c_srow[9:0] == sq_a1_rl, c_srow[9:0] == s_row[9:0], c_srow[9:0] == srw_tw[9:0], c_srow[9:0] == srw[9:0])
-                       : so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], so_row[9:0] == sq_a1_rl, so_row[9:0] == s_row[9:0], so_row[9:0] == srw_tw[9:0], so_row[9:0] == srw[9:0]);
-    wire so_eh = so_fa ? so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], c_srow[18:10] == sq_a1_rh, c_srow[18:10] == s_row[18:10], c_srow[18:10] == srw_tw[18:10], c_srow[18:10] == srw[18:10])
-                       : so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], so_row[18:10] == sq_a1_rh, so_row[18:10] == s_row[18:10], so_row[18:10] == srw_tw[18:10], so_row[18:10] == srw[18:10]);
+    wire so_eb_n = so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], c_bank == sq_a1_bk, c_bank == s_bank, c_bank == so_bt, c_bank == sb);
+    wire so_eb_o = so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], so_b == sq_a1_bk, so_b == s_bank, so_b == so_bt, so_b == sb);
+    wire so_el_n = so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], c_srow[9:0] == sq_a1_rl, c_srow[9:0] == s_row[9:0], c_srow[9:0] == srw_tw[9:0], c_srow[9:0] == srw[9:0]);
+    wire so_el_o = so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], so_row[9:0] == sq_a1_rl, so_row[9:0] == s_row[9:0], so_row[9:0] == srw_tw[9:0], so_row[9:0] == srw[9:0]);
+    wire so_eh_n = so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], c_srow[18:10] == sq_a1_rh, c_srow[18:10] == s_row[18:10], c_srow[18:10] == srw_tw[18:10], c_srow[18:10] == srw[18:10]);
+    wire so_eh_o = so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], so_row[18:10] == sq_a1_rh, so_row[18:10] == s_row[18:10], so_row[18:10] == srw_tw[18:10], so_row[18:10] == srw[18:10]);
+    // the so-side select last, through kept leaves (the census saw synthesis mux the 24 operand bits on so_fa: 48 pins)
+    wire so_fa_l; wire [5:0] so_e_l;
+    ot_kvpc5_and2 u_so_fa (.a(S && row_fire && c_s), .b(c_op == ACT), .y(so_fa_l));
+    ot_kvpc5_and2 u_so_b1 (.a(so_fa_l), .b(so_eb_n), .y(so_e_l[0])); ot_kvpc5_and2 u_so_b0 (.a(!so_fa_l), .b(so_eb_o), .y(so_e_l[1]));
+    ot_kvpc5_and2 u_so_l1 (.a(so_fa_l), .b(so_el_n), .y(so_e_l[2])); ot_kvpc5_and2 u_so_l0 (.a(!so_fa_l), .b(so_el_o), .y(so_e_l[3]));
+    ot_kvpc5_and2 u_so_h1 (.a(so_fa_l), .b(so_eh_n), .y(so_e_l[4])); ot_kvpc5_and2 u_so_h0 (.a(!so_fa_l), .b(so_eh_o), .y(so_e_l[5]));
+    wire so_eb = so_e_l[0] | so_e_l[1], so_el = so_e_l[2] | so_e_l[3], so_eh = so_e_l[4] | so_e_l[5];
+    // so_o_q: the head's bank open next edge = |(sb_oh_nx & open_nx), per sb_oh head candidate (group 3 selects;
+    // the four sb_oh byte groups load from identical copies) against open_nx (the exact next open, EV block)
+    wire so_on = so_pick(s_go_c[13], sq_hf_qv[23], sq_hf_qv[22], s_sw_c[4], |(sq_a1_o & open_nx), |(sq_s_oh & open_nx),
+                         |(ab_oh & open_nx), |(sb_oh & open_nx));
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) so_o_q <= 1'b0; else so_o_q <= so_on;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) so_m_q <= 1'b0;
 `ifdef OT_KVPC7_MUT
@@ -758,7 +793,6 @@ TIM_PC7 = [
     ('''    wire [7:0] koh_n = desc_acc ?''',
      '''    // KV-PC7 (5): k1v_n == (desc_acc ? context_accept : context_active) || (k_n != 7 && k_n + 1 <= last_n) per case
     function automatic k1f(input [2:0] kk, input [2:0] ll); k1f = (kk != 3'd7) && (kk + 3'd1 <= ll); endfunction
-    wire [2:0] k_r1 = context_active ? j_p1[9:7] : (v_consumer_order && j[2:0] == 3'd7) ? (k ^ 3'd1) : (j[6:0] == 7'h7f) ? k + 3'd1 : k;
     wire k1v_d = context_accept || k1f(first_sector[9:7], context_accept ? (desc_vpass ? 3'd5 : 3'd1) : 3'((desc_n - 11'd1) >> 7));
     wire k1v_r1 = context_active || k1f(k_r1, last);
     wire k1v_r0 = context_active || k1f(k, last);
@@ -772,6 +806,10 @@ TIM_PC7 = [
      '''    wire [3:0] wq_ws_p = (wq_n_p != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp + wq_n_p[WQW-1:0])) : 4'b0;
     wire [3:0] wq_ws_m = (wq_n_m != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp1 + wq_n_m[WQW-1:0])) : 4'b0;
     wire [3:0] wq_wsoh_nx = wr_ok_c[14] ? wq_ws_m : wq_ws_p;'''),
+    ('''    wire [2:0] k_n = desc_acc ? first_sector[9:7] : context_active&&rd_ok_c[2] ? j_p1[9:7] : v_set_flip ? (k^3'd1) : k_step ? k+3'd1 : k;''',
+     '''    // KV-PC7 (5): k_n per case (the read-step candidate k_r1 shared with k1v; census s9: a duplicate j decode put 33 loads on j[9])
+    wire [2:0] k_r1 = context_active ? j_p1[9:7] : (v_consumer_order && j[2:0] == 3'd7) ? (k ^ 3'd1) : (j[6:0] == 7'h7f) ? k + 3'd1 : k;
+    wire [2:0] k_n = desc_acc ? first_sector[9:7] : (rd_ok_c[2] ? k_r1 : k);'''),
     ('''wq_ne_qv <= {3{wq_n_nx != 1, wq_n_nx != 0}};''',
      '''wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}};'''),
 ]
@@ -1433,7 +1471,7 @@ CLONES = [
     # KV-PC5 10-20 native32: the calendar is a hand-written successor (lookahead copy families, same edges/state)
     ('TEXT', 'tools/qwen_kv_die/kvpc_native32/qkd_kvpc_s_calendar.sv'),
     (UCTL, 'ot_qkd_static_ctrl_pc_emb', 'ot_qkd_static_ctrl_pc_emb_kvpc_s',
-     [(' ot_qkd_static_kv_timing #(', ' ot_qkd_static_kv_timing_kvpc_s #(')] + UCTL_PC5,
+     [(' ot_qkd_static_kv_timing #(', ' ot_qkd_static_kv_timing_kvpc_s #(')] + UCTL_PC5 + UCTL_PC7,
      [('rp', 3, 2),
       ('col_bank', 5, 11, ('output reg [4:0] col_bank,col_col,', 'output wire [4:0] col_bank,output reg [4:0] col_col,')),
       ('col_col', 5, 3, ('output reg [4:0] col_col,', 'output wire [4:0] col_col,')),
@@ -1443,7 +1481,7 @@ CLONES = [
        "    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;\n"
        "    initial if (SQW != 2 || WQW != 2) $error(\"ot_qkd_static_kv_timing_kvpc_s: kept copy widths assume SQD 4, WQ 4\");")] + TIM_PC5 + TIM_PC7,
      [('sq_rp', 2, 2), ('wq_rp', 2, 2), ('wq_rp1', 2, 2), ('context_active', 1, 5), ('streaming', 1, 10),
-      ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2), ('bsel', 5, 2)]),
+      ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2), ('bsel', 5, 2), ('rb', 5, 2)]),
     ('REWRITE', 'qkd_kvpc_s_chain'),
     (ESM, 'qkd_static_kv_pc_es_merge_b', 'qkd_kvpc_s_esm', ESM_HQ + ESM_ERK, [('own', 1, 11)]),
     (STRAP, 'qkd_embedding_static_pc_strap', 'qkd_kvpc_s_emb_strap', STRAP_SUBS),
