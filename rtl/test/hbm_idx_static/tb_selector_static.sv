@@ -11,7 +11,8 @@ module tb_selector_static;
  parameter integer SHELL=0;
  reg clk_x=0;
  if(SHELL!=0)begin:g_shell
-  ot_hbm_idx_selector_static #(.MUT(MUT)) dut(.clk_ctl(clk),.clk_q({4{clk_x}}),.clk_mem({12{clk_x}}),.*);
+  // s2 (L2H-IDXSEL 10-19): clk_q[3:0] are the quadrant roots (loaded, same clock); clk_mem stays unloaded (clk_x)
+  ot_hbm_idx_selector_static #(.MUT(MUT)) dut(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk_x}}),.*);
  end else begin:g_core
   ot_hbm_idx_selector_static_core #(.MUT(MUT)) dut(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk}}),.*);
  end
