@@ -1,0 +1,393 @@
+{
+ "schema": "opentallas.grp_ring_layout_alternatives.v1",
+ "original_source": "8a3f5328c",
+ "actual_dump_sha256": "ae14929e03278adf7702babd49874998c28b52e6d1d1adbbbcbf5d7314f2e0a8",
+ "actual_row_macros": [
+  [
+   "u46128_c0/u_cell",
+   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   43.2,
+   43.2,
+   138.024,
+   123.672
+  ],
+  [
+   "u47569_c0/u_cell",
+   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   216.0,
+   43.2,
+   310.824,
+   123.672
+  ],
+  [
+   "u49010_c0/u_cell",
+   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   43.2,
+   172.8,
+   138.024,
+   253.272
+  ],
+  [
+   "u50451_c0/u_cell",
+   "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   216.0,
+   172.8,
+   310.824,
+   253.272
+  ]
+ ],
+ "actual_tiny_macro_count": 32,
+ "tiny_size_um": [
+  19.656,
+  14.328
+ ],
+ "tiny_signal_clock_pins_per_macro": 103,
+ "existing_anchors_um": [
+  [
+   163.2,
+   22.176
+  ],
+  [
+   335.52,
+   22.176
+  ],
+  [
+   163.2,
+   157.008
+  ],
+  [
+   335.52,
+   157.008
+  ]
+ ],
+ "existing_pitch_um": 14.352,
+ "existing_gap_um": 0.024,
+ "existing_stack_height_um": 114.792,
+ "actual_site": {
+  "w": 0.054,
+  "h": 0.27
+ },
+ "site_alignment": "Macro anchors are not on standard-cell site or row boundaries. All actual contact centres manufacturing-grid legal and all3296 M4 contacts exactly actual ODB track phase0.012+0.048k; grid.json. Macros need no standard-cell SITE but43.2 policy remains unresolved.",
+ "nearest_group_anchor_plan": {
+  "anchors": [
+   [
+    172.8,
+    43.2
+   ],
+   [
+    345.6,
+    43.2
+   ],
+   [
+    172.8,
+    172.8
+   ],
+   [
+    345.6,
+    172.8
+   ]
+  ],
+  "each_macro_origin_on43_2": false,
+  "max_group_anchor_L1_shift_um": 31.104,
+  "vertical_gap_between_groups_um": 14.808,
+  "top_stack_end_um": 287.592,
+  "qualification": "Group anchor only, not per-macro compliance. Pinless N/S gap14.808<20 policy requires decision. No route or reach proof."
+ },
+ "group_anchor_with20gap_plan": {
+  "anchors": [
+   [
+    172.8,
+    43.2
+   ],
+   [
+    345.6,
+    43.2
+   ],
+   [
+    172.8,
+    216.0
+   ],
+   [
+    345.6,
+    216.0
+   ]
+  ],
+  "max_group_anchor_L1_shift_um": 69.072,
+  "vertical_gap_between_groups_um": 58.008,
+  "top_stack_end_um": 330.792,
+  "remaining_full_width_above20halo_um": 38.008,
+  "outline_growth": 0,
+  "qualification": "Per-group origin compliant, per-macro origin still not. Fixed four row macros preserved;20um between groups,side channels>=23.544. Full pin/reach/clock qualification needed.",
+  "remaining_above20halo_inside_core_um": 35.848
+ },
+ "every_origin_lattice_fixed_rows20channel": {
+  "method": "Enumerate43.2 origin points,20um die margin and separation from every fixed actual row macro; tiny-to-tiny20um automatic from43.2 pitch minus tiny dimensions. This is fixed-row packing count, not global optimality proof.",
+  "existing388_8square_legal_positions": [
+   [
+    43.2,
+    302.4
+   ],
+   [
+    43.2,
+    345.6
+   ],
+   [
+    86.4,
+    302.4
+   ],
+   [
+    86.4,
+    345.6
+   ],
+   [
+    129.6,
+    302.4
+   ],
+   [
+    129.6,
+    345.6
+   ],
+   [
+    172.8,
+    43.2
+   ],
+   [
+    172.8,
+    86.4
+   ],
+   [
+    172.8,
+    129.6
+   ],
+   [
+    172.8,
+    172.8
+   ],
+   [
+    172.8,
+    216.0
+   ],
+   [
+    172.8,
+    259.2
+   ],
+   [
+    172.8,
+    302.4
+   ],
+   [
+    172.8,
+    345.6
+   ],
+   [
+    216.0,
+    302.4
+   ],
+   [
+    216.0,
+    345.6
+   ],
+   [
+    259.2,
+    302.4
+   ],
+   [
+    259.2,
+    345.6
+   ],
+   [
+    302.4,
+    302.4
+   ],
+   [
+    302.4,
+    345.6
+   ],
+   [
+    345.6,
+    43.2
+   ],
+   [
+    345.6,
+    86.4
+   ],
+   [
+    345.6,
+    129.6
+   ],
+   [
+    345.6,
+    172.8
+   ],
+   [
+    345.6,
+    216.0
+   ],
+   [
+    345.6,
+    259.2
+   ],
+   [
+    345.6,
+    302.4
+   ],
+   [
+    345.6,
+    345.6
+   ]
+  ],
+  "existing_count": 28,
+  "height432_legal_positions": [
+   [
+    43.2,
+    302.4
+   ],
+   [
+    43.2,
+    345.6
+   ],
+   [
+    43.2,
+    388.8
+   ],
+   [
+    86.4,
+    302.4
+   ],
+   [
+    86.4,
+    345.6
+   ],
+   [
+    86.4,
+    388.8
+   ],
+   [
+    129.6,
+    302.4
+   ],
+   [
+    129.6,
+    345.6
+   ],
+   [
+    129.6,
+    388.8
+   ],
+   [
+    172.8,
+    43.2
+   ],
+   [
+    172.8,
+    86.4
+   ],
+   [
+    172.8,
+    129.6
+   ],
+   [
+    172.8,
+    172.8
+   ],
+   [
+    172.8,
+    216.0
+   ],
+   [
+    172.8,
+    259.2
+   ],
+   [
+    172.8,
+    302.4
+   ],
+   [
+    172.8,
+    345.6
+   ],
+   [
+    172.8,
+    388.8
+   ],
+   [
+    216.0,
+    302.4
+   ],
+   [
+    216.0,
+    345.6
+   ],
+   [
+    216.0,
+    388.8
+   ],
+   [
+    259.2,
+    302.4
+   ],
+   [
+    259.2,
+    345.6
+   ],
+   [
+    259.2,
+    388.8
+   ],
+   [
+    302.4,
+    302.4
+   ],
+   [
+    302.4,
+    345.6
+   ],
+   [
+    302.4,
+    388.8
+   ],
+   [
+    345.6,
+    43.2
+   ],
+   [
+    345.6,
+    86.4
+   ],
+   [
+    345.6,
+    129.6
+   ],
+   [
+    345.6,
+    172.8
+   ],
+   [
+    345.6,
+    216.0
+   ],
+   [
+    345.6,
+    259.2
+   ],
+   [
+    345.6,
+    302.4
+   ],
+   [
+    345.6,
+    345.6
+   ],
+   [
+    345.6,
+    388.8
+   ]
+  ],
+  "height432_count": 36,
+  "extra_area_um2": 16796.16,
+  "area_growth_percent": 11.111,
+  "qualification": "32macro fit becomes possible on388.8x432 by choosing32 of available positions; connectivity grouping/reach/clock/model and parent slots not proven."
+ },
+ "census": "Actual copied four native_census JSONs: both grp roots45399/both grph44534, max32,0violations. These do not evaluate pin/storage/functional contracts. Pin primitive cert41694/41051PASS, finite coldcopy65976fd71 t12..32 under reset12/release20; sharedanyseqSRAM does not qualify firstread; fullmacroproductionrandominit prior sims required.",
+ "reach": "READONLY actual CTS ring macro terminal reaches via BUF/INV union now running sessions12067/16151; not yet qualified. Existing README330/375um are plans, not actual audits."
+}
