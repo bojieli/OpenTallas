@@ -3,7 +3,7 @@
 // LANDED PARENT (PARENTS-LANDED 10-18): 5 clock regions (ctl, q0, q1, q2, q3), 20 landed crossings (D 4, E = K = 2, +3 edges each), 0 alignment pads,
 // regional reset runs depth 2 (+ t(child) per child).  Record: results/rtl/hbm_idx_static/selector_s3/ot_hidx_s3_flat_lp_record.json
 // MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,
-//     4 = child reset run of 'u_ctl' 100 stage(s) long, 5 = landing rq released one edge late (pre-landing_reset_lead)
+//     4 = child reset run of 'u_ctl' 200 stage(s) long, 5 = landing rq released one edge late (pre-landing_reset_lead)
 module ot_hidx_s3_flat_lp #(
     parameter integer DMUT=0,
     parameter integer MUT = 0
@@ -148,7 +148,7 @@ module ot_hidx_s3_flat_lp #(
     ot_pl_land_w #(.W(((13) - (0) + 1)), .D(4)) u_lpl_19_w (.ck(ck_ctl), .rsi(lpr_ctl_lw), .i(ties_3), .bank(lpl_19_bank), .epo(lpl_19_epo), .vld(lpl_19_vld));
     ot_pl_land_r #(.W(((13) - (0) + 1)), .D(4), .K(2)) u_lpl_19_r (.ck(ck_q3), .rsi(lpr_q3_lw), .bank(lpl_19_bank), .epo(lpl_19_epo), .vld(lpl_19_vld), .o(lpl_19_o));
     assign ties_3__l_q3 = lpl_19_o;
-    wire lpr_c_u_ctl;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 100 : 0)) u_lprc_u_ctl (.ck(ck_ctl), .d(lpr_ctl), .q(lpr_c_u_ctl));   // t(u_ctl) = 0
+    wire lpr_c_u_ctl;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 200 : 0)) u_lprc_u_ctl (.ck(ck_ctl), .d(lpr_ctl), .q(lpr_c_u_ctl));   // t(u_ctl) = 0
     wire lpr_c_u_q0;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_q0 (.ck(ck_q0), .d(lpr_q0), .q(lpr_c_u_q0));   // t(u_q0) = 0
     wire lpr_c_u_q1;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_q1 (.ck(ck_q1), .d(lpr_q1), .q(lpr_c_u_q1));   // t(u_q1) = 0
     wire lpr_c_u_q2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_q2 (.ck(ck_q2), .d(lpr_q2), .q(lpr_c_u_q2));   // t(u_q2) = 0

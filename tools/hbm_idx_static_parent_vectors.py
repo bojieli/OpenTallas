@@ -24,7 +24,7 @@ import os
 if os.environ.get('IDX_VEC_CRAFT')=='1':
  # L2H-IDXSEL s3 (opt-in; unset = the legacy bytes): re-pick the n keys from a 3n pool of the same distribution so the
  # selector's two schedule margins are observable (scores are per-key, independent of the key's slot):
- #  T (the 512th score) is unique with pass-2 bin 0 (orderkey low 6 bits 0: found on the LAST op5 of pass 2, its tie
+ #  T (the 512th score; one copy of its value in the set) has pass-2 bin 0 (orderkey low 6 bits 0: found on the LAST op5 of pass 2, its tie
  #  budget 1 decided there) and sits in quadrant 0 line 0 (the first compaction line reads the fresh budget: an op6
  #  block one edge early takes the reset budget 0 and drops T); line 170 of quadrants 0..2 holds keys of T's pass-0 bin
  #  inside T's pass-1 bin with pass-2 bin 63 (the first op5 of pass 2: a drain one edge short misses them, rank_left stays
@@ -36,9 +36,9 @@ if os.environ.get('IDX_VEC_CRAFT')=='1':
  K=np.array([ok(int(x)) for x in pe],dtype=np.int64)
  order=np.argsort(-K,kind='stable')
  pick=None
- for r in range(300,4000):
+ for r in range(600,20000):
   t=int(K[order[r]])
-  if t&63 or int((K==t).sum())!=1:continue
+  if t&63:continue
   hi=np.where(((K>>6)==(t>>6))&((K&63)==63))[0]
   if len(hi)>=1:pick=(order[r],t,hi[:6]);break
  assert pick is not None,'no craftable threshold in the pool'

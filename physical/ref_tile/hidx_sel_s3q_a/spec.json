@@ -1,0 +1,271 @@
+{
+ "name": "hidx_sel_s3q_a",
+ "top": "ot_hidx_s3_q",
+ "sources": [
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "pins": {
+  "W": [
+   "in_line",
+   "cw",
+   "thr",
+   "ties",
+   "ret",
+   "qfault_o"
+  ],
+  "E": [
+   "selected_v_o",
+   "selected_line_o"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "in_line": [
+   8.0,
+   182.0
+  ],
+  "cw": [
+   184.0,
+   188.0
+  ],
+  "thr": [
+   188.0,
+   192.6
+  ],
+  "ties": [
+   192.6,
+   196.6
+  ],
+  "ret": [
+   196.6,
+   203.8
+  ],
+  "qfault_o": [
+   203.8,
+   204.2
+  ],
+  "selected_v_o": [
+   8.0,
+   8.4
+  ],
+  "selected_line_o": [
+   10.0,
+   206.0
+  ],
+  "clk": [
+   129.4,
+   129.6
+  ],
+  "rst_n": [
+   131.8,
+   132.0
+  ]
+ },
+ "outline": {
+  "w": 259.2,
+  "h": 216.0,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[0].mem",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[1].mem",
+   "at": [
+    43.2,
+    127.488
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[2].mem",
+   "at": [
+    43.2,
+    168.576
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_hidx_s3_rep"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: inputs land in kept pin flops (quadrant: cw -> two kept P1 copies, thr -> five kept threshold copies, ties -> ties_r, in_line -> in_p1; ctl: cw_r/k_r, a_ret/a_qf), outputs are registers (quadrant: selected_v_o/selected_line_o/ret/qfault_o; ctl: cw, threshold, ties, fault); every edge is in the IDX calendar (registered_s3). A synthesis wrapper would add a second, unpriced stage. clk / rst_n pass through."
+ },
+ "structural_change": "L2H-IDXSEL s3 (LEAD3-HBM route B 10-19): ONE hardened quadrant tile of the landed IDX selector cluster ot_hbm_idx_selector_s3 (x4), own clock region; replaces the quadrant blocks of the s1/s2 single tile (GATE_STALL in CTS hold repair, one 42,772-sink root / ~7k unlanded inter-root crossings). Geometry a: 259.2 x 216 (aspect 1.2), 3 x 256x256 SRAM R0 at x 43.2 (43.2 lattice), stack N, std band S (y 0-86.4), W channel 43.2 (in_line pin flops / relays), E channel 43.2 (macro pin face + output flops); clk / rst_n on the S face (band side).",
+ "slot_change_request": "new child of the s3 landed cluster (parent hidx_sel_s3p = the d4g idx_sel slot 600 x 450, 2 x 2 quadrants + centre ctl column)",
+ "job": {
+  "owner": "Claude LEAD3-HBM/L2H-IDXSEL-S3",
+  "branch": "claude/l2h-idxsel-s3-1019",
+  "tag": "s3qa",
+  "purpose": "L2H-IDXSEL s3 quadrant tile (a: macro stack N) of the landed IDX selector cluster; benches = the cluster's exact selector bench + mutants + lp lockstep (Verilator 5.050).",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/index/sel_s3",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_s3_selector_vectors.py",
+   "tools/landed_parent",
+   "results/rtl/hbm_idx_static/selector_s3"
+  ],
+  "benches": [
+   {
+    "name": "selector_s3_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/m0 m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "IDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN4 frame3 checked512 errors0 fault0",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_m0.log"
+   },
+   {
+    "name": "selector_s3_d1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/d1 d1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_d1.log",
+    "why": "tie compare >="
+   },
+   {
+    "name": "selector_s3_d3",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/d3 d3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_d3.log",
+    "why": "lane-5 SRAM write-data select copy one edge late"
+   },
+   {
+    "name": "selector_s3_d5",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/d5 d5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_d5.log",
+    "why": "histogram read one edge later than its op tags"
+   },
+   {
+    "name": "selector_s3_d6",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/d6 d6",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_d6.log",
+    "why": "ctl takes the op tags one edge early"
+   },
+   {
+    "name": "selector_s3_rt7",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/rt7 rt7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_rt7.log",
+    "why": "choose spacing one edge short (sel_choose_rt 7)"
+   },
+   {
+    "name": "selector_s3_dr3",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/dr3 dr3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_dr3.log",
+    "why": "scan drain one edge short"
+   },
+   {
+    "name": "selector_s3_l1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/l1 l1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_l1.log",
+    "why": "lp landing 0 bypassed"
+   },
+   {
+    "name": "selector_s3_l2",
+    "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/l2 l2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "fullshape exact selector mismatch",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/sel/vrun_l2.log",
+    "why": "lp landing 0 read K+1"
+   },
+   {
+    "name": "selector_s3_lp_lockstep",
+    "cmd": "LP_ROOT=$PWD SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp_bench.sh {RUN}/lp",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "BENCH_EXIT 0",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_s3/lp/bench.log"
+   }
+  ]
+ },
+ "kind": "tile",
+ "layer_cap": "M5",
+ "recipe": 4,
+ "clock": "cts",
+ "hold_budget": "die",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}
