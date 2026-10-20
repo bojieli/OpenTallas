@@ -1,0 +1,15 @@
+export DESIGN_NICKNAME = bf_s0_bound
+export DESIGN_NAME = ot_v41_fadd_s0
+export PLATFORM = asap7
+export VERILOG_FILES = /src/ot_v41_fadd2.sv /src/ot_prefix.sv
+export VERILOG_DEFINES = -DSYNTHESIS
+export CORNER = WC
+export ASAP7_USE_VT = RVT
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_REPEATABLE_BUILD = 1
+export SYNTH_MEMORY_MAX_BITS = 65536
+export DIE_AREA = 0 0 100 100
+export CORE_AREA = 2.16 2.16 97.84 97.84
+export CLOCK_PERIOD = 833
+export IO_PLACER_H = M4
+export IO_PLACER_V = M5

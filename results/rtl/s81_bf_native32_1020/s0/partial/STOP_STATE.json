@@ -1,0 +1,16 @@
+{
+  "status": "STOPPED BY CLAUDE RETURN; preserve live process; no source integration",
+  "source_candidate": "native.v partial artifact only",
+  "positive_sat": "PASS all105 output bits, arbitrary65 input bits, no assumptions/mask",
+  "negative_sat": "actual INV->BUF counterexample, expected -verify failure",
+  "prepared_state_cells": 0,
+  "prepared_storage_cells": 0,
+  "native_admission": "pending live unit3774246 at handback; inspect actual latest files",
+  "local_client_pid": 894456,
+  "remote_unit": "oth-ubuntu-3774246-1792487440",
+  "remote_docker_pid": 3774271,
+  "session": 98174,
+  "remote_dir": "/srv/opentallas-scratch/claude/codex-s81-bf-s0n32-1020",
+  "cloner": "cf32860cf",
+  "canonical_packet": "4b45be3c8"
+}
