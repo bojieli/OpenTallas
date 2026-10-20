@@ -66,7 +66,7 @@ module ot_hnx_coll_aq_mul13r (
     reg        s1_inv6, s1_byp, s1_sign;
     reg [1:0]  s1_err;
     reg [23:0] s1_a;
-    reg signed [11:0] s1_power;
+    (* keep = "true" *) reg signed [11:0] s1_pw [0:3];   // HNX-GQ s4: kept copies of s1_power
     always @(posedge clk or negedge rst_n)
         if (!rst_n) s1_v <= 1'b0; else s1_v <= valid_in;
     always @(posedge clk) begin
@@ -75,7 +75,7 @@ module ot_hnx_coll_aq_mul13r (
         s1_err <= s1_nonfinite ? E_NONFINITE : E_NONE;
         s1_sign <= a[31] ^ b[31];
         s1_a <= a_raw << a_shift;
-        s1_power <= a_power + b_power;
+        for (integer k = 0; k < 4; k = k + 1) s1_pw[k] <= a_power + b_power;
     end
 
     // -- stage 2: three 24x8 partial products; both exponent decisions, PRE-DECODED ------------------------------
@@ -119,6 +119,8 @@ module ot_hnx_coll_aq_mul13r (
     reg [1:0]  s2_err;
     reg [31:0] s2_pp0, s2_pp1, s2_pp2;
     reg [86:0] s2_d47, s2_d46;
+    wire [86:0] d47a = decide(s1_pw[0], 6'd47), d47b = decide(s1_pw[1], 6'd47);
+    wire [86:0] d46a = decide(s1_pw[2], 6'd46), d46b = decide(s1_pw[3], 6'd46);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) s2_v <= 1'b0; else s2_v <= s1_v;
     always @(posedge clk) begin
@@ -126,8 +128,9 @@ module ot_hnx_coll_aq_mul13r (
         s2_pp0 <= s1_inv6 ? ({8'd0,s1_ac[0]}*32'hAB) : ({8'd0,s1_ac[1]}*32'h25);
         s2_pp1 <= s1_inv6 ? ({8'd0,s1_ac[2]}*32'hAA) : ({8'd0,s1_ac[3]}*32'h49);
         s2_pp2 <= s1_inv6 ? ({8'd0,s1_ac[4]}*32'hAA) : ({8'd0,s1_ac[5]}*32'h92);
-        s2_d47 <= decide(s1_power, 6'd47);
-        s2_d46 <= decide(s1_power, 6'd46);
+        // HNX-GQ s4 (census s3: an s1_power net drove 52 loads): each half of each decision reads its own kept copy
+        s2_d47 <= {d47a[86:48], d47b[47:0]};
+        s2_d46 <= {d46a[86:48], d46b[47:0]};
     end
 
     // -- stage 3: the product, and the decision its top bit selects (as the closed pipe) -------------------------

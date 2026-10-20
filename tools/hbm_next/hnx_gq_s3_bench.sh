@@ -7,6 +7,7 @@
 #               (tb_hnx_aq14 vs ot_hdc_actquant one edge later, 1,024 blocks) -> COLLQ AQ14 AQ14_EXACT_PASS
 #  STAGE m2|m6|m7|m8|m9 : leaf mutant (2 exponent bias 126, 6 source ignores rs_A, 7 landing ignores rs_O, 8 row-local k
 #               never restarts, 9 quantiser SRAM ring one slot short) -> COLLQ FAIL
+#  STAGE all : main + m2 m8 m9 aqec aqrs aql in parallel (one job), verdicts concatenated in verdict_all.txt
 #  STAGE aqec|aqrs|aql : quantiser mutant on tb_hnx_aq14 (exponent copy, shift-count copy, ring slot) -> AQ14 FAIL
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
@@ -20,6 +21,7 @@ AQ=(rtl/hbm_next/coll/ot_hnx_coll_aq14.sv rtl/hbm_next/coll/ot_hnx_coll_aq_scale
 LIB=(rtl/hbm_next/coll/ot_hnx_coll_gq.sv "$P/ot_hgi_coll_ring_ag.sv" "$P/ot_hgi_coll_ring_ag_lane.sv" "$P/ot_hgi_coll_ring_b_stop.sv"
      "$P/ot_hgi_coll_pring_static_state_capture.sv" "$P/ot_hgi_coll_pring_static.sv"
      rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv
+     rtl/hbm_next/coll/ot_hnx_gq_prog_target.sv
      rtl/lib/ot_rst_relay.sv "${AQ[@]}" rtl/hdc/v41/ot_hdc_actquant.sv
      rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_cg.sv
      rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv)
@@ -48,6 +50,9 @@ aq(){ # tag defines... -> AQ14 lockstep
   else V "COLLQ $t FAIL $(grep -m1 -o 'AQ14_[A-Z_]*MISMATCH[^\"]*' $O/$t.log | head -1)"; fi; rm -rf $O/obj_$t
 }
 case "$ST" in
+all)  # HNX-GQ s4: main + every mutant in ONE fleet job (lane cap), each in its own sub-directory
+  for t in main m2 m8 m9 aqec aqrs aql; do bash "$0" "$O/$t" $t > "$O/$t.out" 2>&1 & done; wait
+  for t in main m2 m8 m9 aqec aqrs aql; do cat "$O/$t/verdict_$t.txt" >> "$O/verdict_all.txt"; done ;;
 main)
   python3 tools/hgi_sim/collq_gather_1018.py check > $O/check_d4g.log 2>&1; V "$(tail -1 $O/check_d4g.log)"
   python3 tools/hgi_sim/collq_gather_1018.py vectors $O/vec > $O/vec.log 2>&1 || V "vectors FAILED"

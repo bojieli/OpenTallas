@@ -60,6 +60,16 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
     // -- S1: magnitudes, 32 -> 8 ---------------------------------------------------------------------------------------
     reg        s1_v, s1_fp4, s1_nf;
     reg [30:0] s1_m [0:7];
+    // HNX-GQ s4 (census s3: a mx4 select of s0_x drove 60 loads): each 4:1 max is two kept-hierarchy halves (bits
+    // [15:0] / [30:16]), each with its own full-width compares (same value as mx4)
+    wire [30:0] s1_mx [0:7];
+    genvar gm;
+    generate for (gm = 0; gm < 8; gm = gm + 1) begin : g_s1mx
+        ot_hnx_coll_aq_mx4h #(.LO(0),  .W(16)) u_lo(.a(s0_x[128*gm+:31]), .b(s0_x[128*gm+32+:31]), .c(s0_x[128*gm+64+:31]),
+            .d(s0_x[128*gm+96+:31]), .q(s1_mx[gm][15:0]));
+        ot_hnx_coll_aq_mx4h #(.LO(16), .W(15)) u_hi(.a(s0_x[128*gm+:31]), .b(s0_x[128*gm+32+:31]), .c(s0_x[128*gm+64+:31]),
+            .d(s0_x[128*gm+96+:31]), .q(s1_mx[gm][30:16]));
+    end endgenerate
     reg        nf0;
     always @(*) begin
         nf0 = 1'b0;
@@ -68,25 +78,36 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
     always @(posedge clk or negedge rst_n) if (!rst_n) s1_v <= 1'b0; else s1_v <= s0_v;
     always @(posedge clk) begin
         s1_fp4 <= s0_fp4; s1_nf <= nf0;
-        for (i = 0; i < 8; i = i + 1) s1_m[i] <= mx4(s0_x[128*i+:31],s0_x[128*i+32+:31],s0_x[128*i+64+:31],s0_x[128*i+96+:31]);
+        for (i = 0; i < 8; i = i + 1) s1_m[i] <= s1_mx[i];
     end
 
     // -- S2: 8 -> 2 ------------------------------------------------------------------------------------------------------
     reg        s2a_v, s2a_fp4, s2a_nf;
     reg [30:0] s2a_m [0:1];
+    wire [30:0] s2a_mx [0:1];
+    generate for (gm = 0; gm < 2; gm = gm + 1) begin : g_s2mx
+        ot_hnx_coll_aq_mx4h #(.LO(0),  .W(16)) u_lo(.a(s1_m[4*gm]), .b(s1_m[4*gm+1]), .c(s1_m[4*gm+2]), .d(s1_m[4*gm+3]),
+            .q(s2a_mx[gm][15:0]));
+        ot_hnx_coll_aq_mx4h #(.LO(16), .W(15)) u_hi(.a(s1_m[4*gm]), .b(s1_m[4*gm+1]), .c(s1_m[4*gm+2]), .d(s1_m[4*gm+3]),
+            .q(s2a_mx[gm][30:16]));
+    end endgenerate
     always @(posedge clk or negedge rst_n) if (!rst_n) s2a_v <= 1'b0; else s2a_v <= s1_v;
     always @(posedge clk) begin
         s2a_fp4 <= s1_fp4; s2a_nf <= s1_nf;
-        for (i = 0; i < 2; i = i + 1) s2a_m[i] <= mx4(s1_m[4*i],s1_m[4*i+1],s1_m[4*i+2],s1_m[4*i+3]);
+        for (i = 0; i < 2; i = i + 1) s2a_m[i] <= s2a_mx[i];
     end
 
     // -- S2b: 2 -> 1 and the floor ---------------------------------------------------------------------------------------
     reg        s2_v, s2_fp4, s2_nf;
     reg [30:0] s2_amax;
+    // s4 (census s3: the s2a_m compare select drove 59 loads): mx(mx(m0, m1), floor) as two kept-hierarchy halves
+    wire [30:0] s2_mx;
+    ot_hnx_coll_aq_max3h #(.LO(0),  .W(16)) u_s2lo(.a(s2a_m[0]), .b(s2a_m[1]), .f(s2a_fp4 ? FLOOR_FP4 : FLOOR_FP8), .q(s2_mx[15:0]));
+    ot_hnx_coll_aq_max3h #(.LO(16), .W(15)) u_s2hi(.a(s2a_m[0]), .b(s2a_m[1]), .f(s2a_fp4 ? FLOOR_FP4 : FLOOR_FP8), .q(s2_mx[30:16]));
     always @(posedge clk or negedge rst_n) if (!rst_n) s2_v <= 1'b0; else s2_v <= s2a_v;
     always @(posedge clk) begin
         s2_fp4 <= s2a_fp4; s2_nf <= s2a_nf;
-        s2_amax <= mx(mx(s2a_m[0], s2a_m[1]), s2a_fp4 ? FLOOR_FP4 : FLOOR_FP8);
+        s2_amax <= s2_mx;
     end
 
     // -- S3-S7: amax * (1/448 or 1/6), one binary32 multiply ----------------------------------------------------------
@@ -152,7 +173,7 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
     reg signed [4:0] s10_g [0:31];
     reg [23:0]       s10_sig [0:31];
     reg [31:0]       s10_sgn;
-    wire [4:0]       s10_rs [0:31][0:2];
+    wire [6:0]       s10_rs [0:31][0:2];   // s4: one-hot of rs - 20 (rs_of is always in [20, 26])
     function automatic [4:0] rs_of(input signed [10:0] ev, input fp4);
         reg signed [10:0] mine, dd;
         begin
@@ -164,12 +185,17 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
     endfunction
     generate for (g = 0; g < 32; g = g + 1) begin : g_s10
         wire [4:0] rsd = rs_of(s9_ev[g], s9_fp4e[g]);
-        for (genvar c = 0; c < 3; c = c + 1) begin : g_c
-            ot_hnx_coll_aq_cff #(.W(5)) u_ff(.clk(clk),
 `ifdef OT_HNX_AQ_MUT_RS
-                .d((g == 9 && c == 0) ? (rsd ^ 5'd1) : rsd),
+        wire [4:0] rsm = rsd ^ 5'd1;
+        wire [6:0] ohm = (rsm >= 5'd20 && rsm <= 5'd26) ? 7'(7'd1 << (rsm - 5'd20)) : 7'd0;
+`endif
+        wire [6:0] ohd = 7'(7'd1 << (rsd - 5'd20));
+        for (genvar c = 0; c < 3; c = c + 1) begin : g_c
+            ot_hnx_coll_aq_cff #(.W(7)) u_ff(.clk(clk),
+`ifdef OT_HNX_AQ_MUT_RS
+                .d((g == 9 && c == 0) ? ohm : ohd),
 `else
-                .d(rsd),
+                .d(ohd),
 `endif
                 .q(s10_rs[g][c]));
         end
@@ -193,9 +219,9 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
     reg [31:0]       s11_sgn;
     wire [31:0]      wlo [0:31];        // wide[31:0] of {sig, 27'd0} >> rs (wide[31:27] = tq[4:0], [26] guard, [25:0] sticky)
     generate for (g = 0; g < 32; g = g + 1) begin : g_s11
-        ot_hnx_coll_aq_shift_chunk #(.LO(26), .W(6))  u_c0(.sig(s10_sig[g]), .shift(s10_rs[g][0]), .q(wlo[g][31:26]));
-        ot_hnx_coll_aq_shift_chunk #(.LO(13), .W(13)) u_c1(.sig(s10_sig[g]), .shift(s10_rs[g][1]), .q(wlo[g][25:13]));
-        ot_hnx_coll_aq_shift_chunk #(.LO(0),  .W(13)) u_c2(.sig(s10_sig[g]), .shift(s10_rs[g][2]), .q(wlo[g][12:0]));
+        ot_hnx_coll_aq_shoh_chunk #(.LO(26), .W(6))  u_c0(.sig(s10_sig[g]), .oh(s10_rs[g][0]), .q(wlo[g][31:26]));
+        ot_hnx_coll_aq_shoh_chunk #(.LO(13), .W(13)) u_c1(.sig(s10_sig[g]), .oh(s10_rs[g][1]), .q(wlo[g][25:13]));
+        ot_hnx_coll_aq_shoh_chunk #(.LO(0),  .W(13)) u_c2(.sig(s10_sig[g]), .oh(s10_rs[g][2]), .q(wlo[g][12:0]));
     end endgenerate
     // encode-stage {fp4, e} copies: 16 kept copies, 2 elements each
     wire signed [9:0] s11_ec [0:15];
@@ -298,4 +324,34 @@ module ot_hnx_coll_aq_shift_chunk #(parameter integer LO = 0, parameter integer 
     input wire [23:0] sig, input wire [4:0] shift, output wire [W-1:0] q);
     wire [50:0] xs = {sig, 27'd0} >> shift;
     assign q = xs[LO +: W];
+endmodule
+
+// HNX-GQ s4: bits [LO +: W] of {sig, 27'd0} >> (20 + v) for the one-hot oh[v] (v = 0..6; census s3: a 5-b shift-count copy
+// bit drove up to 71 shifter loads, a one-hot bit drives W <= 13 AND gates).  rs_of() only returns 20..26, so this equals
+// ot_hnx_coll_aq_shift_chunk for every reachable count.
+(* keep_hierarchy = "yes" *)
+module ot_hnx_coll_aq_shoh_chunk #(parameter integer LO = 0, parameter integer W = 13) (
+    input wire [23:0] sig, input wire [6:0] oh, output reg [W-1:0] q);
+    always @* begin : nb
+        reg [50:0] xs;
+        q = '0;
+        for (integer v = 0; v < 7; v = v + 1) begin xs = {sig, 27'd0} >> (20 + v); if (oh[v]) q = q | xs[LO +: W]; end
+    end
+endmodule
+
+// HNX-GQ s4: slice [LO +: W] of the 4:1 maximum (exactly mx4 of ot_hnx_coll_aq14), own compares per half
+(* keep_hierarchy = "yes" *)
+module ot_hnx_coll_aq_mx4h #(parameter integer LO = 0, parameter integer W = 16) (
+    input wire [30:0] a, b, c, d, output wire [W-1:0] q);
+    wire ab = a >= b, ac = a >= c, ad = a >= d, bc = b >= c, bd = b >= d, cd = c >= d;
+    wire wa = ab && ac && ad, wb = !ab && bc && bd, wc = !ac && !bc && cd, wd = !ad && !bd && !cd;
+    assign q = ({W{wa}} & a[LO +: W]) | ({W{wb}} & b[LO +: W]) | ({W{wc}} & c[LO +: W]) | ({W{wd}} & d[LO +: W]);
+endmodule
+
+// HNX-GQ s4: slice [LO +: W] of mx(mx(a, b), f) (mx(x, y) = x >= y ? x : y), own compares per half
+(* keep_hierarchy = "yes" *)
+module ot_hnx_coll_aq_max3h #(parameter integer LO = 0, parameter integer W = 16) (
+    input wire [30:0] a, b, f, output wire [W-1:0] q);
+    wire ab = a >= b, af = a >= f, bf = b >= f;
+    assign q = ab ? (af ? a[LO +: W] : f[LO +: W]) : (bf ? b[LO +: W] : f[LO +: W]);
 endmodule
