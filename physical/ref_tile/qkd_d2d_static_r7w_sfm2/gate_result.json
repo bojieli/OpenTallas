@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qkd_d2d_static_r7w_sfm2",
- "verdict": "FAIL",
- "generated": "2026-10-19T18:32:06-0700",
- "host": "ot-epyc7",
+ "verdict": "WARN",
+ "generated": "2026-10-19T19:42:17-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "0d832f6ba5d11d64918e3cd5e06b9b2f3f87f8a8",
+  "start_commit": "91bf42d769d4ba0337e5a4efca095645a0440f62",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "68eb78802869f01c9c127ec0f44a70e0b49814313ad9b6f9c198d65d05843eaf",
-  "manifest_sha256": "fd7a1407d95c25ceba668031552c54274625f34787f74dc9032361f679ed5e54",
+  "archive_sha256": "30e176d13ad68ab7afa2f5d1968657251fcb77b76817bdb97e1ae3110274c218",
+  "manifest_sha256": "77186dc3b27c2f55b54720397944e31af584d38b8bff127997d7e9f79a7c45f4",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.json",
@@ -17363,8 +17363,8 @@
    {
     "path": "physical/ref_tile/qkd_d2d_static_r7w_sfm2/README.md",
     "kind": "file",
-    "sha256": "679752ef41d482801a3b3b45379aea5aeb2d6326a4267e2787ee24610cdbcb92",
-    "git_blob": "abaaf5e5061b1dc7743574afff3391bf9d1bf507",
+    "sha256": "2636e300cb6de6413d6a25396fdaa0e980c2d2a84b88fd906341c5c7e1a4abcf",
+    "git_blob": "f3240fb277545cfc8909abe0ea5ee8aabaaf0f0b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17547,8 +17547,8 @@
    {
     "path": "physical/ref_tile/qkd_d2d_static_r7w_sfm2/spec.json",
     "kind": "file",
-    "sha256": "dbb3e4ff945e2d7c56348866922b855024c8e5d366e82ea5c3d8cd033647f02c",
-    "git_blob": "51b0d0cb0bdf6e864a2de69529290634774a2617",
+    "sha256": "36918a3ed51348bb3af50b1d901c417864b28d4c36c7c42ad0334506ea2eb819",
+    "git_blob": "8bf0e1ee7705f588de0ad36757fff64adfdbbc46",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -48875,8 +48875,8 @@
    {
     "path": "tools/qwen_split/kv_sram_d2d_kits_1019.py",
     "kind": "file",
-    "sha256": "eb0463598568333fd8fb9a9e90d2c7cb9dff9f40f28afb02ebbf77ae4f2536cc",
-    "git_blob": "a912d5c1d7d57092caf877fda4795e95fc192ddf",
+    "sha256": "3b52dedce4a03ec5afb96e9299548d617e28899e66473723e9da9c3e646e60fb",
+    "git_blob": "ce8e467cfb0d850d56c7f91bd954935ccb20fae2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -75763,14 +75763,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 82608964,
-   "unpacked_bytes": 567332864,
+   "archive_bytes": 82611574,
+   "unpacked_bytes": 567336960,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "f77a3184a21821a7b4453f69f4584f609a4d1c40",
+   "origin_main": "91f4e144649f6da0eb3e1985f5b67fde7f0bda39",
    "content_sha256": "72acb0e92fdd8e3380f47594602730a940f875afd26224756c568240f63cb39a",
    "files": [
     {
@@ -77507,7 +77507,7 @@
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
     "physical/qwen_die_masters/tile_pre_dpl.tcl": "c52a5c795e3b52596b1d96b298b82eba4e74b8b56f316065e85863d08caebbaa",
     "physical/qwen_die_masters/tile_pre_gpl.tcl": "96cba814a46e76cf8e8757090ee6ba1b40ce6eba2bb12487e31f9372103a16e6",
-    "physical/ref_tile/qkd_d2d_static_r7w_sfm2/README.md": "679752ef41d482801a3b3b45379aea5aeb2d6326a4267e2787ee24610cdbcb92",
+    "physical/ref_tile/qkd_d2d_static_r7w_sfm2/README.md": "2636e300cb6de6413d6a25396fdaa0e980c2d2a84b88fd906341c5c7e1a4abcf",
     "physical/ref_tile/qkd_d2d_static_r7w_sfm2/assigned_pins.tcl": "74acceee6174a01920afeedd9b44ca13f43af3a15c587d19ea1d0d6573f4f36c",
     "physical/ref_tile/qkd_d2d_static_r7w_sfm2/clock.sdc": "1415d7241f782d9923f5f78adc62caa9c51876e12ab1e802b96fe1d6c1f84a5e",
     "physical/ref_tile/qkd_d2d_static_r7w_sfm2/floorplan.json": "93732da5e13f55716c56d6ad6c41874f6d0d0d7919ddcca40af2faf74fbb654c",
@@ -77529,7 +77529,7 @@
     "physical/ref_tile/qkd_d2d_static_r7w_sfm2/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/qkd_d2d_static_r7w_sfm2/reset_landing.json": "dc9156ee7bce3c179be977558531e4ef51395e1047c69bda382a17506c6df9c5",
     "physical/ref_tile/qkd_d2d_static_r7w_sfm2/signoff.sdc": "447c5ed939221dd8e4878939f6c4040b91958cbeb6a6e124d51e107defcecf3f",
-    "physical/ref_tile/qkd_d2d_static_r7w_sfm2/spec.json": "dbb3e4ff945e2d7c56348866922b855024c8e5d366e82ea5c3d8cd033647f02c",
+    "physical/ref_tile/qkd_d2d_static_r7w_sfm2/spec.json": "36918a3ed51348bb3af50b1d901c417864b28d4c36c7c42ad0334506ea2eb819",
     "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
     "rtl/lib/ot_rst_pipe.sv": "29203f84edfc6009125d3b26330534d3c6af6900d2ad4c44bf7d490f2ee96664",
@@ -78551,7 +78551,7 @@
     "tools/qwen_split/hr_contract.py": "34bbff67525bc615b394da10ce9b3d06e13f9e9e0c79881de39b7b1af4e327d5",
     "tools/qwen_split/incident_pin_audit.py": "5110b91ca480711a46e668dae0a46cd4454562509244a3a4d159c448abbb8f0c",
     "tools/qwen_split/io_placement.py": "8f94629b35f789a891e07c832a24af69fa1aec058792430f0c0060f8b3771c9a",
-    "tools/qwen_split/kv_sram_d2d_kits_1019.py": "eb0463598568333fd8fb9a9e90d2c7cb9dff9f40f28afb02ebbf77ae4f2536cc",
+    "tools/qwen_split/kv_sram_d2d_kits_1019.py": "3b52dedce4a03ec5afb96e9299548d617e28899e66473723e9da9c3e646e60fb",
     "tools/qwen_split/land_lag_sim.py": "39d5d6cec35772f0e342f73e7baad8979b3694c586023eb5a4baec419c133e5e",
     "tools/qwen_split/lane_groups.py": "e5fb530c6a11afe603301b3be7000d46e996d713e915c0593be197e19f0cf8e7",
     "tools/qwen_split/lane_latency_audit.py": "3358999e85dfc7e5a69011e7dd6a48477ca840688a3fb6b7131f2bd6fdc1ed9b",
@@ -78767,16 +78767,16 @@
    },
    "digest": "ea36d019176349d53e33637fcc932efd77300779ff6c58bb6637110093dfda1e"
   },
-  "captured": "2026-10-19T17:02:24-0700",
+  "captured": "2026-10-19T18:42:21-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qkd_d2d_static_r7w_sfm2/signoff.sdc"
   },
-  "remote_script_sha256": "8de4da552e3d1bb495c3e53a05cd76b4be53e4d05069ec437d3253944772154d",
+  "remote_script_sha256": "d7103508b294b475e046909ae9bb27353902ab7cd883f583d13df290f54cfa57",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc7",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_d2d_static_r7w_sfm2-20261019-170159",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_d2d_static_r7w_sfm2-20261019-184158",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -79016,10 +79016,10 @@
    "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
   },
   {
-   "severity": "FAIL",
+   "severity": "WARN",
    "check": "fill",
-   "message": "fill 16% = (hard macros 15639.0 + synthesized std cells 6062.6) / outline 133436.2 um2; pin demand per face: S 2308 pins over 470.8/475.2 um (99%), N 1170 pins over 470.8/475.2 um (99%), W 1251 pins over 276.3/280.8 um (98%), E 333 pins over 276.3/280.8 um (98%) (< 35%)",
-   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+   "message": "fill 16% = (hard macros 15639.0 + synthesized std cells 6062.6) / outline 133436.2 um2; pin demand per face: S 2308 pins over 470.8/475.2 um (99%), N 1170 pins over 470.8/475.2 um (99%), W 1251 pins over 276.3/280.8 um (98%), E 333 pins over 276.3/280.8 um (98%) (pin-bound: pin-bound perimeter: 5,072 functional pins on full faces (gate pin demand S 2,308-2,312 pins over 470.8/475.2 um, N 1,170 over 470.8, W 1,251 over 276.3/280.8, E 333-339 over 276.3: 98-99% of every edge; S 4.9 pins/um, W 4.5/um, at the 4-5 M5-track pitch of the reviewed sf plan); the outline cannot shrink without exceeding the pin pitch. Right-sizing the slot store (64x512 -> 64x137, KV-SRAM-D2D) removed ~37k um2 of macro, so fill fell 45% -> 12-16% at the same pin-limited outline (KV-D2D-COLLECT 10-19).)",
+   "fix": ""
   }
  ],
  "trial_route": {
@@ -79028,7 +79028,7 @@
   "kind": "parent",
   "skip_incremental_repair": false,
   "rc": "0",
-  "grt_s": 1595,
+  "grt_s": 1167,
   "layers": [
    {
     "layer": "M1",
