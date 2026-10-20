@@ -1,0 +1,107 @@
+{
+ "beats": 12096,
+ "win": 3,
+ "early": 0,
+ "late": 0,
+ "land_minus_deadline": {
+  "-3": 3512,
+  "-2": 7004,
+  "-1": 1580
+ },
+ "users": {
+  "su": {
+   "argmax_merge": {
+    "E_sched": 565,
+    "E_meas": 563
+   },
+   "router_allgather": {
+    "E_sched": 568,
+    "E_meas": 566
+   },
+   "a_allgather": {
+    "E_sched": 575,
+    "E_meas": 573
+   },
+   "eng_rows_allgather": {
+    "E_sched": 582,
+    "E_meas": 580
+   },
+   "idx_topk_merge": {
+    "E_sched": 607,
+    "E_meas": 605
+   },
+   "cand_merge": {
+    "E_sched": 735,
+    "E_meas": 732
+   },
+   "rows_allgather": {
+    "E_sched": 740,
+    "E_meas": 739
+   },
+   "allreduce_20480": {
+    "E_sched": 1236,
+    "E_meas": 1230
+   },
+   "stage_hop": {
+    "E_sched": 993,
+    "E_meas": 991
+   },
+   "argmax_merge#r1": {
+    "E_sched": 573,
+    "E_meas": 572
+   },
+   "router_allgather#r1": {
+    "E_sched": 568,
+    "E_meas": 567
+   },
+   "a_allgather#r1": {
+    "E_sched": 575,
+    "E_meas": 573
+   },
+   "eng_rows_allgather#r1": {
+    "E_sched": 582,
+    "E_meas": 579
+   },
+   "idx_topk_merge#r1": {
+    "E_sched": 607,
+    "E_meas": 605
+   },
+   "cand_merge#r1": {
+    "E_sched": 735,
+    "E_meas": 733
+   },
+   "rows_allgather#r1": {
+    "E_sched": 740,
+    "E_meas": 738
+   },
+   "allreduce_20480#r1": {
+    "E_sched": 1236,
+    "E_meas": 1232
+   },
+   "stage_hop#r1": {
+    "E_sched": 993,
+    "E_meas": 991
+   }
+  }
+ },
+ "user_sched_equal_first": {
+  "su": true
+ },
+ "win_pass": true,
+ "inv_pass": true,
+ "dl_model": {
+  "model": "fluid",
+  "R": "4096/3069",
+  "flat": 563,
+  "guard": 2,
+  "window": 2
+ },
+ "functional_pass": false,
+ "functional_errors": [
+  "functional terminal verdict is not one PASS without FAIL",
+  "mismatches not zero"
+ ],
+ "coverage_pass": true,
+ "unassigned": 0,
+ "qualified": false
+}

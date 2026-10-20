@@ -36,6 +36,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import shutil
 import sys
@@ -349,7 +350,7 @@ def pack_msb(bits):
     return parts[0] if len(parts) == 1 else '{' + ', '.join(parts) + '}'
 
 
-def install(run, strict=False, dry=False):
+def install(run, strict=False, dry=False, profiles=None, diagnostic=False):
     die = Die(run)
     inv = inventory(die)
     tinv = dict(sources=inv['sources'], physical_obstacles=obstacles(die), consumer=inv['consumer'],
@@ -399,13 +400,46 @@ def install(run, strict=False, dry=False):
                            token_period_padded=257280, fits_reserved=dmax <= DMAX_RESERVED))
     if dry:
         return rep, plan, None
-    emitted = emit(die, inv, plan)
+    emitted = emit(die, inv, plan, profiles, diagnostic)
     rep['emitted'] = emitted
     return rep, plan, emitted
 
 
-def emit(die, inv, plan):
+def parameter_ledger(root, plan, profiles=None, diagnostic=False):
+    """Preserve every emitted health instance before mutating the run.
+
+    The health plane runs after frame expansion. Its parameterized leaves
+    therefore need the same source/view/profile ledger as expanded children.
+    Missing profiles remain fatal except for the existing explicit diagnostic
+    auto-profile protocol; this never grants native qualification.
+    """
+    import kv_expand_parameters as EP
+    rows, sidecar, seen = {}, {}, set()
+    for node in plan['nodes']:
+        binding = MASTERS[node['kind']]
+        module, inst = binding['master'], 'hp_' + node['id']
+        if inst in seen:
+            raise ValueError(f'{inst}: duplicate health instance')
+        seen.add(inst)
+        literals, profile = EP.preserve(root, module, {}, binding['rtl'],
+                                       binding['view'], profiles or {}, diagnostic)
+        if profile is not None:
+            rows[inst] = dict(module=module, literals=literals, profile=profile)
+            sidecar[inst] = literals
+    return rows, sidecar
+
+
+def emit(die, inv, plan, profiles=None, diagnostic=False):
     case, run = die.case, die.run
+    rows, sidecar = parameter_ledger(ROOT, plan, profiles, diagnostic)
+    param_path = case / 'die.v.params.json'
+    child_params = json.loads(param_path.read_text()) if param_path.exists() else {}
+    expanded_path = run / 'expand.json'
+    expanded = json.loads(expanded_path.read_text()) if expanded_path.exists() else dict(
+        schema='opentallas.qwen_kvsys_expand.v1', frames={})
+    for inst in sidecar:
+        if inst in child_params or inst in expanded.get('parameter_instances', {}):
+            raise ValueError(f'{inst}: health parameter ledger collision')
     lines = die.path.read_text().split('\n')
     sig = {}
     for s in inv['sources']:
@@ -558,9 +592,12 @@ def emit(die, inv, plan):
             vj['views'].setdefault(mst, dict(bound=True, view=d['view'], module=mst, cls='health_plane'))
         (libs / 'views.json').write_text(json.dumps(vj, indent=1) + '\n')
     ex = run / 'expand.json'
-    ej = json.loads(ex.read_text()) if ex.exists() else dict(schema='opentallas.qwen_kvsys_expand.v1', frames={})
+    ej = expanded
     for mst, d in views.items():
         ej.setdefault('leaves', {}).setdefault(mst, dict(view=d['view'], rtl=d['rtl'], rtl_deps=[]))
+    ej.setdefault('parameter_instances', {}).update(rows)
+    child_params.update(sidecar)
+    param_path.write_text(json.dumps(child_params, indent=1) + '\n')
     ex.write_text(json.dumps(ej, indent=1) + '\n')
     if missing_views:
         (case / 'HEALTH_NETLIST_ONLY').write_text('kv_health_plane --netlist-only: masters without closed views: '
@@ -639,12 +676,16 @@ def main(argv=None):
     i.add_argument('--run', type=Path, required=True)
     i.add_argument('--strict', action='store_true')
     i.add_argument('--dry-run', action='store_true')
+    i.add_argument('--parameter-profiles', type=Path, default=os.environ.get('OT_KV_PARAMETER_PROFILES'))
+    i.add_argument('--diagnostic-parameter-profiles', action='store_true',
+                   default=os.environ.get('OT_KV_PARAM_DIAG', '0') == '1')
     i.add_argument('--netlist-only', action='store_true', help='masters without closed views keep no LEF/libs (bench / '
                    'bind checks only, never a physical run)')
     a = ap.parse_args(argv)
     global NETLIST_ONLY
     NETLIST_ONLY = a.netlist_only
-    rep, plan, emitted = install(a.run, a.strict, a.dry_run)
+    profiles = json.loads(a.parameter_profiles.read_text()) if a.parameter_profiles else {}
+    rep, plan, emitted = install(a.run, a.strict, a.dry_run, profiles, a.diagnostic_parameter_profiles)
     if emitted is not None:
         rep['audit'] = au = audit(a.run)
         expect = {s for s in rep['leaf_latency'] if s != 'existing_ufh'} | {'kvs_attn.ufh_old'}

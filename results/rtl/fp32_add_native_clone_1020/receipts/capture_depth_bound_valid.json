@@ -1,0 +1,71 @@
+{
+  "status": "PASS_CLONE_VS_MAPPED_FEEDFORWARD_CONVERGENCE",
+  "source_sha256": "71d47de522994da6546fd9a8fc3f377f9630551b3f6aad32dc3f29899f7b8881",
+  "native_sha256": "5bd2448e4914cefa7b1d8dd8ffa294dd3c3e69e24910658d994a564b7593e5a7",
+  "clones": 35,
+  "cells": 2840,
+  "max_capture_depth": 7,
+  "output_capture_depth": {
+    "y": 7,
+    "err": 7,
+    "valid_out": 7
+  },
+  "actual_valid_chain": [
+    {
+      "cell": "$auto$ff.cc:337:slice$6034",
+      "origin": "$auto$ff.cc:337:slice$6034",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "reset": "actual rst_n async clear of observed valid",
+      "capture": "same rising clk"
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6678",
+      "origin": "$auto$ff.cc:337:slice$6678",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "reset": "actual rst_n async clear of observed valid",
+      "capture": "same rising clk"
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$5465",
+      "origin": "$auto$ff.cc:337:slice$5465",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "reset": "actual rst_n async clear of observed valid",
+      "capture": "same rising clk"
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$5392",
+      "origin": "$auto$ff.cc:337:slice$5392",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "reset": "actual rst_n async clear of observed valid",
+      "capture": "same rising clk"
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6677",
+      "origin": "$auto$ff.cc:337:slice$6677",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "reset": "actual rst_n async clear of observed valid",
+      "capture": "same rising clk"
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$5193",
+      "origin": "$auto$ff.cc:337:slice$5193",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "reset": "actual rst_n async clear of observed valid",
+      "capture": "same rising clk"
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6749",
+      "origin": "$auto$ff.cc:337:slice$6749",
+      "type": "DFFASRHQNx1_ASAP7_75t_R",
+      "reset": "actual rst_n async clear of observed valid",
+      "capture": "same rising clk"
+    }
+  ],
+  "actual_valid_semantics": "Seven actual async-cleared rising-edge pipeline stages from valid_in to valid_out; all7reset to0 at any asserted rst_n. Earliest post-reset valid needs7 captures, derived from source topology, no external warm mask.",
+  "register_types": [
+    "DFFASRHQNx1_ASAP7_75t_R",
+    "DFFHQNx1_ASAP7_75t_R"
+  ],
+  "invariant": "Reproduced native primitive inputs/outputs match original family functions, including reset and clock. Acyclic capture DAG converges in <=7 captures from arbitrary independent FF initialization.",
+  "scope": "Clone versus mapped graph only. Reset/first-valid and RTL arithmetic correspondence remain separate obligations."
+}

@@ -1,0 +1,121 @@
+{
+ "cls": "CAL1",
+ "written": "2026-10-20 01:00 PT",
+ "agent_branch": "codex/token-compose-source-ages-1020@5ad740ccf",
+ "note": "CAL1 per-node source-age budget; priced-edge only. Explicit included_by_record prevents double charging; SU qbank idx.q gets no CAP cost; inserted idx.q_field does. These are budget costs, not new measured eligibility.",
+ "edge_ledger": {
+  "CAPC2_PINPIPE": {
+   "edges": 2,
+   "per": "field op instance",
+   "src": "claude/s81-capc2-cal-1019 1e559612c (gate 1f4c80cf6)"
+  },
+  "CAP_EDLD": {
+   "edges": 24,
+   "per": "field op instance not measured on the L16/E24 cap",
+   "src": "claude/tok2-capld-1019 636f4c670"
+  },
+  "XDIE_GUARD2": {
+   "edges": 1,
+   "per": "crossing phase (AR = 2)",
+   "src": "claude/xdie-s81-mu-1019 eb0d31c63; guard 2 confirmed by out_u5 / out_g2"
+  },
+  "LEPCAP_INPIPE": {
+   "edges": 1,
+   "per": "crossing phase",
+   "src": "claude/s81-lepcap-1019 bb66563eb (RTL eec2dca41)"
+  },
+  "VPX_P6": {
+   "edges": 13,
+   "per": "attn.a_allgather instance",
+   "src": "Codex 73879e4d2 + claude/s81-tok4-1019 6ea6ea0a9"
+  }
+ },
+ "per_token": {
+  "LEPCAP_INPIPE": 2
+ },
+ "mu_calendar": {
+  "ar": {
+   "users": 46,
+   "period_cycles": 989260,
+   "record": "results/arch/mu_s81_1018/calendar_ar_cal1.json (claude/s81-cal1-1019@152d70002; lemma PASS 5,474 windows 0 collisions; fleet ep5 oth-ubuntu-548701-1792476636 byte-identical)",
+   "grade": "compiled MU calendar with CAL1 edges (dv_mu_calendar --edge-deltas); slot issue measured on release seq_host/fixed_issue RTL (HEADMU)"
+  },
+  "mtp": {
+   "users": 10,
+   "period_cycles": 1312908,
+   "record": "results/arch/mu_s81_1018/calendar_mtp_cal1.json (claude/s81-cal1-1019@152d70002; 10 users + 1 filler, lemma PASS 1,309 windows 0 collisions)",
+   "grade": "compiled MU calendar with CAL1 edges (dv_mu_calendar --edge-deltas); slot issue measured on release seq_host/fixed_issue RTL (HEADMU)"
+  }
+ },
+ "ops": [],
+ "included_by_record": {
+  "FWOA.json": {
+   "attn.wo_a": {
+    "CAPC2_PINPIPE": 2,
+    "CAP_EDLD": 24
+   },
+   "attn.wo_b": {
+    "CAPC2_PINPIPE": 2,
+    "CAP_EDLD": 24
+   }
+  },
+  "FDOWN.json": {
+   "ffn.down": {
+    "CAP_EDLD": 24
+   }
+  },
+  "FSDN.json": {
+   "ffn.down": {
+    "CAP_EDLD": 24
+   }
+  },
+  "WQBG.json": {
+   "attn.wq_b": {
+    "CAP_EDLD": 24
+   }
+  },
+  "WQBP.json": {
+   "attn.wq_b": {
+    "CAP_EDLD": 24
+   }
+  }
+ },
+ "source_age_evidence": {
+  "FWOA.json": "definition and edges_owed explicitly add26",
+  "FDOWN.json": "definition says priced tail195 as FIELD wq_b; edges_owed says CAP EDLY inside priced tail",
+  "FSDN.json": "inherits FDOWN definition and tail195",
+  "WQBG.json": "definition explicitly prices tail195=CAP_EDLY24+VP28+wire143",
+  "WQBP.json": "same measured boundary and tail195 as WQBG; P126 compiler/calendar only"
+ },
+ "prospective_not_selected": {
+  "LEP_NATIVE32_OUTWARD": {
+   "source": "codex/s81-lep-native32-1020@a64f8ee11 (depends MU84f)",
+   "edges": 1,
+   "per": "outward lo command beyond existing TXRP1",
+   "receive_edges": 0,
+   "selected": false,
+   "why": "native census/physical qualification pending; do not apply to current calendar"
+  },
+  "SVC4_KPV_DRAIN": {
+   "source": "claude/s81-svc5-sm-1019@5dd12f995 + SVC6 receipts",
+   "edges": 7,
+   "per": "P.V drain beyond old KPV55",
+   "selected": false,
+   "why": "component landing sweep58FAIL/62PASS; final bound SO+PIN+LP vehicle still pending"
+  },
+  "SVC4_SCORE_ENGINE": {
+   "source": "S81-SVC6",
+   "edges": 12,
+   "per": "production score engine",
+   "selected": false,
+   "why": "production component source differs from bound release; final vehicle/physical admission pending"
+  },
+  "RSTOP_RELAY1": {
+   "source": "claude/s81-xgr-1019 (see LEG.json)",
+   "edges": 14,
+   "per": "on-die crossing",
+   "selected": false,
+   "why": "successor not yet selected in release source of current measurement"
+  }
+ }
+}
