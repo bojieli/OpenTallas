@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import ref_tile as R
 
 HOOK = 'physical/common_flow/pin_reg_split.tcl'
-BASE = dict(name='probe',kind='tile',recipe=3,clock='cts',pins={},sources=[],macros=[],children=[],route={},io_flop_at_pins=True,inhold=True)
+BASE = dict(name='probe',kind='tile',recipe=3,clock='cts',pins={},sources=[],macros=[],children=[],route={},io_flop_at_pins={'through_frac':None},inhold=True)
 
 
 def test_runs_after_boundary_fixing_and_is_source_bound():
