@@ -90,4 +90,4 @@ def build(tag, ncol, nlow, nup, W, H, band_rows, band_lo_target, ck_lo, letter):
     (dst/'regen.py').write_text(rg)
     print(tag, 'W', W, 'H', H, 'band', lo, hi, 'util %.3f' % util, 'reach %.1f' % reach, 'upper0', upper0, 'empties', [(e[0], e[1]) for e in empties])
 build('dsdv_mu_hwin_c21d', 12, 3, 4, 561.6, 388.8, 130, 169.02, 178.8, 'main')
-build('dsdv_mu_hwin_c21e', 14, 3, 3, 648.0, 345.6, 120, 164.16, 172.4, 'fallback')
+build('dsdv_mu_hwin_c21e', 14, 3, 3, 648.0, 345.6, 120, 164.16, 172.4, 'fallback')  # gate 1 PPL-0086: ck/rst then narrowed to 192.4-196.4 in spec.json
