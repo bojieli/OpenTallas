@@ -21,7 +21,7 @@ base PASS, 6 mutants FAIL as expected (witnesses results/rtl/s81_slice_1019/xg5/
   on the merged netlist before floorplan.
 4 Depth: rs / xs4 cones unchanged (kept copies only).
 5 Storage: 24 x 128x256 x-buffer SRAMs, 7 ROMs, 6 exponent SRAMs (xs4).
-6 Floorplan: 37 macros, pins on L/R faces only -> columns abut vertically (x on the 43.2 lattice; ROM column pitch 64.8);
+6 Floorplan: 37 macros, pins on L/R faces only -> deliberate N-S abutted stacks (gap 0.024, bare faces; x on the 43.2 lattice);
   channels 34.8-78 um between columns, 108 um S / N face strips; util ~40% (std est. 30k + macros 115.8k in 363.9k);
   pins on full faces <= 5.8/um.
 7 Clock: k-means regional split K=16 (clock_split_km.tcl); spread judged by the --cts gate (TT/FF <= 80); io_hold 0.03.

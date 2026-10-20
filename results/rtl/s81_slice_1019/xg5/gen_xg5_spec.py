@@ -7,10 +7,11 @@ gives ~3.7%) and its placement TT was -313.8 ps; owner 10-20 09:09 REPARTITION r
 Outline = the original xg slot 648 x 561.6 (base spec base_s81sl_xg_spec_xg1019.json, claude/s81-xg-1019): estimated
 std ~30k um2 (rs4 synth 12.3k + xs4 synth 16.5k + XG5 copies) + 37 macros 115.8k um2 = 146k -> util ~40%; pins
 11,914 on full faces <= 5.8/um (W/E 4.5, N 5.8, S 4.7).
-Macro map (SRAM / ROM / exp-SRAM pins are on the L/R faces only -> columns abut vertically, channels between columns):
-  x 43.2   bank 1 (W ring source) 8 x 128x256 SRAM, y 108 + 43.2 k     | x 216.0 bank 0 (own) | x 432.0 bank 2 (E source)
-  x 345.6  7 x ROM 4096x72, y 86.4 + 64.8 k (pins at the ROM foot; 64.8 = 1.5 lattice rows: 7 ROMs fit only so)
-  x 561.6  6 x exponent SRAM 128x64 (source 0/1/2 x beat bit 2), y 108 + 43.2 k
+Macro map (SRAM / ROM / exp-SRAM pins are on the L/R faces only -> deliberate N-S abutted stacks, gap 0.024 um, bare
+touching faces; channels only between columns; stack origins on the 43.2 / 21.6 grid, as the original xg kit):
+  x 43.2   bank 1 (W ring source) 8 x 128x256 SRAM, y 108 + 41.088 k   | x 216.0 bank 0 (own) | x 432.0 bank 2 (E source)
+  x 345.6  7 x ROM 4096x72, y 64.8 + 62.976 k
+  x 561.6  6 x exponent SRAM 128x64 (source 0/1/2 x beat bit 2), y 108 + 27.6 k
 Channels: 34.8-78 um between macro columns, W edge 43.2, E edge 52.7, S strip 108 / N strip 108 for the face pin cells.
 """
 import copy, json
@@ -37,15 +38,15 @@ def main():
     for bank, x in ((1, 43.2), (0, 216.0), (2, 432.0)):
         for k in range(8):
             m.append({"view": SRAM, "count": 1, "inst": f"*u_s.g_bank?{bank}?.g_mac?{k}?.u_mem",
-                      "at": [x, round(108.0 + 43.2 * k, 4)], "orient": "R0", "at_exact": True})
+                      "at": [x, round(108.0 + 41.088 * k, 4)], "orient": "R0", "at_exact": True})
     for k, n in enumerate(["u_phase0", "u_cal_action", "u_cal_time", "u_stream0", "u_stream1", "u_stream2", "u_stream3"]):
-        m.append({"view": ROM, "count": 1, "inst": f"*u_s.{n}", "at": [345.6, round(86.4 + 64.8 * k, 4)], "orient": "R0",
+        m.append({"view": ROM, "count": 1, "inst": f"*u_s.{n}", "at": [345.6, round(64.8 + 62.976 * k, 4)], "orient": "R0",
                   "at_exact": True})
     k = 0
     for bank in range(3):
         for e in range(2):
             m.append({"view": EXP, "count": 1, "inst": f"*u_s.g_bank?{bank}?.g_ex?{e}?.u_em",
-                      "at": [561.6, round(108.0 + 43.2 * k, 4)], "orient": "R0", "at_exact": True})
+                      "at": [561.6, round(108.0 + 27.6 * k, 4)], "orient": "R0", "at_exact": True})
             k += 1
     s["macros"] = m
     s["std_area_um2"] = 30000.0
