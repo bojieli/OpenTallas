@@ -364,6 +364,37 @@ module ot_hgi_coll_static_program_target_s128 #(
             end
         end
     end endgenerate
+    wire [31:0] assembly_word;
+    generate if(ASSEMBLY_PIPE!=0)begin:g_drain_onehot
+        // Kept read selectors are prepared at the previous drain step, avoiding
+        // the runtime divide/modulo -> 48:1 word mux control broadcasts.
+        (* keep = "true" *) reg [5:0] step_copy[0:5];
+        (* keep = "true" *) reg [95:0] rd_select;
+        for(genvar cg=0;cg<6;cg=cg+1)begin:g_counter
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)step_copy[cg]<=0;
+                else if(frame && !frame_bad && ((seen|seg_q[6:0])==7'h7f))step_copy[cg]<=0;
+                else if(draining && step!=53)step_copy[cg]<=step+1'b1;
+        end
+        for(genvar wd=0;wd<48;wd=wd+1)begin:g_word
+            for(genvar half=0;half<2;half=half+1)begin:g_half
+                always @(posedge clk or negedge rst_n)
+                    if(!rst_n)rd_select[wd*2+half]<=0;
+                    else rd_select[wd*2+half]<=draining && step_copy[wd/8]==6'(wd+wd/16);
+            end
+        end
+        reg [31:0] word_or;
+        integer rw,rb;
+        always @* begin
+            word_or=0;
+            for(rw=0;rw<48;rw=rw+1)
+                for(rb=0;rb<32;rb=rb+1)
+                    word_or[rb]=word_or[rb] | (assembly[rw*32+rb] && rd_select[rw*2+rb/16]);
+        end
+        assign assembly_word=word_or;
+    end else begin:g_drain_binary
+        assign assembly_word=assembly[(step/17)*512+(step%17-1)*32+:32];
+    end endgenerate
     wire fw=frame && !frame_bad && seg_q[6];
     wire [FW-1:0] fwd={data_q[44],|data_q[43:12],data_q[52],data_q[11:6],data_q[51],data_q[5:0]};
 `ifdef OT_PT_MUT_LA_STALE
@@ -403,7 +434,7 @@ module ot_hgi_coll_static_program_target_s128 #(
             if(draining)begin
                 if(step<51)begin
                     if(step%17==0)issuer_cfg<={1'b1,4'd0,23'b0,row[PW-1],2'(step/17),row[5:0]};
-                    else issuer_cfg<={1'b1,4'd1,assembly[(step/17)*512+(step%17-1)*32+:32] ^ ((MUT_DATA!=0 && step==1)?32'b1:32'b0)};
+                    else issuer_cfg<={1'b1,4'd1,assembly_word ^ ((MUT_DATA!=0 && step==1)?32'b1:32'b0)};
                 end else if(step==51)issuer_cfg<={1'b1,4'd2,metadata[31:0]};
                 else if(step==52)issuer_cfg<={1'b1,4'd3,metadata[63:32]};
                 // step53 ensures the issuer has sampled its final metadata.
@@ -444,7 +475,7 @@ endmodule
 // every other user and as the v8x/v8g lockstep reference) with (1) the reset family rst__ot_rlv and (2) the programme target
 // ot_hgi_coll_static_program_target_s128 above.  Same pin capture rung, same fault join, same edges.  Instantiated by the
 // SAFE leaves ot_hgi_coll_fj_n2s1_r128 / ot_hgi_coll_fj_q2_r128 (ot_hgi_coll_safe_leaves.sv) as instance u.
-module ot_hgi_coll_fj_core_s128 #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,RC=12,PW=7)(
+module ot_hgi_coll_fj_core_s128 #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,RC=20,PW=7)(
  input wire clk,rst_n,
  input wire [1:0] qid,
  input wire cfg_v,
