@@ -66,6 +66,16 @@ def main():
                                input_loads={'D': [16]*66})
     _, _, weighted = run(design, soft)
     assert weighted['added_by_type']['$_DFF_PN0_'] == 65
+    # A pinned native inventory can prove declared input bits consume zero
+    # terminals. Preserve the real ABI connections; do not invent unit loads.
+    zero = copy.deepcopy(soft)
+    zero['real_memory']['input_loads']['D'] = [0]*66
+    rtl0, _, rec0 = run(design, zero)
+    assert rec0['added_by_type'].get('$_DFF_PN0_', 0) == 0
+    assert rec0['retained_macro_terminals'][0]['emitted_connections']['D'] == [10]*66
+    badzero = copy.deepcopy(zero)
+    badzero['real_memory']['input_loads']['D'][0] = -1
+    rejects(design, badzero, 'terminal loads')
     for mutate, phrase in [
         ('missing_direction', 'ports differ'), ('wrong_width', 'direction/width mismatch'),
         ('no_clock_role', 'boolean clock'), ('not_blackbox', 'not an actual declared blackbox'),
