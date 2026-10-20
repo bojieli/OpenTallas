@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "top": "ot_hnx_coll_gq_issue",
+ "status": "FAIL",
+ "limit": 32,
+ "roots_examined": 115826,
+ "max_dynamic_loads": 1351,
+ "functional_pin_contract": "NOT_EVALUATED",
+ "pin_registration_contract": "NOT_EVALUATED",
+ "storage_contract": "NOT_EVALUATED",
+ "independent_source_contract_audit_required": true,
+ "netlist": {
+  "path": "/work/results/asap7/opentallas_ot_hnx_coll_gq_issue_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "9e0850c7f374024b97e5108d1fda3afcb09285ce690b5168f10b73cff508c371"
+ },
+ "violations": 683,
+ "run": "ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/hnx_gq_issue_s3_1019-20261020-062947 (s3b identical netlist sha)"
+}

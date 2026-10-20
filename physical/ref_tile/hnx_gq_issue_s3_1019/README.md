@@ -52,3 +52,21 @@ Mutants FAIL with committed witnesses (results/arch/hbm_next_1019/units/coll/wit
 8 Schedule: PASS -- static, no credits; quantiser +1 edge absorbed (data calendar unchanged); +1 launch -> fire edge
   (FIRE_FROM_LAUNCH 3 -> 4, tools/hbm_next/hnx_coll_gq_train.py) and the rule "no descriptor row rewrite in the edge before its
   fire" handed to HNEXT.CMTP (lane L2H-P3.md); cost one edge per programme launch, not per gather.
+
+## PRE-GATE NATIVE CENSUS (HNX-UNITS/GQ 10-20 06:34) -- FAIL, kit NOT gateable until the RTL is rebuilt
+Gate 6f36e797b (tools/closure_loop, ref_tile, textbook_lint, common_flow from main 315a46596) refused at floorplan:
+PRE_GATE_NATIVE_CENSUS_REFUSED, mapped netlist sha 9e0850c7..., 115,826 roots, 683 drivers > 32 loads, max 1,351
+(evidence results/arch/hbm_next_1019/units/coll/census_s3/: census_summary.json, violations.tsv with source registers per net).
+Checklist item 3 (fanout) was NOT met by the s3 RTL; items 1/2/5/6/7/8 above are unchanged, item 3 -> FAIL. Classes:
+- A descriptor row-file write (p_we && p_wa < 16 decode): shared term 1,351, row enables 134-148 x16, B load 117-119, p_wa 53.
+- B fire (run, rv, cur < lim, tl == R[18:3]) 885 (+81/83); C wrap / wrap_ld (tl, per, lps, lq, run) 129/122/81.
+- D lq 246, p_sv 88; E ev_in_v (iss, iph) 167/110, i_adv (kx, g_kn, ir, g_n) 86/92/60/55; F sfv/scd 97/71/71.
+- G a1[290] (ra_lp_data select) 514, g_r2 155, g_rsa 100 (x11), qa 94, R 83, ev_k 74, g_src 44.
+- H lib ot_static_program_target (u_target): reset_live 293, scan_row 136-261, install_open 159, address/data_q match 133-151.
+- I ot_hnx_coll_aq14 x2: shift-count kept copies g_s10[].g_c[].u_ff 576 nets up to 71 loads (3 copies/element too few),
+  s0_x 60, s2a_m 59, u_scale s1_power 52/33.
+Fix plan (structural, next RTL agent): kept copies (ot_hnx_coll_aq_cff) of every listed register sized loads/32; replicated
+kept compare modules for fire / wrap / ev_in_v / i_adv per consumer group (or register them one edge early and price the
+edge); registered row-write one-hot x5 kept copies per row (config path only); HNX-local safe copy of the program target
+(do not edit the shared lib); aq14 shift count 1 kept copy per <= 32 shifter inputs. Then bench + mutant witnesses again,
+then the census-first gate.
