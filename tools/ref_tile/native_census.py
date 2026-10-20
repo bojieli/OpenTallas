@@ -72,10 +72,16 @@ def liberty_roles(paths):
         for typ, _, body in libs:
             if typ != 'library':
                 continue
-            for typ, name, body in groups(body):
+            members = list(groups(body))
+            types = {}
+            for typ, name, tb in members:
+                if typ == 'type' and attr(tb, 'bit_from') is not None and attr(tb, 'bit_to') is not None:
+                    hi, lo = int(attr(tb, 'bit_from')), int(attr(tb, 'bit_to'))
+                    types[name] = list(range(hi, lo + (1 if lo >= hi else -1), 1 if lo >= hi else -1))
+            for typ, name, body in members:
                 if typ != 'cell':
                     continue
-                pins, seq = {}, False
+                pins, bus_order, seq = {}, {}, False
                 for kind, pn, pb in groups(body):
                     seq |= kind in ('ff', 'latch', 'ff_bank', 'latch_bank')
                     if kind not in ('pin', 'bus'):
@@ -91,6 +97,9 @@ def liberty_roles(paths):
                     inherited = pin_role(pb)
                     pins[pn] = inherited
                     if kind == 'bus':
+                        order = types.get(attr(pb, 'bus_type'))
+                        if order is not None:
+                            bus_order[pn] = order
                         for child_kind, child_name, child_body in groups(pb):
                             if child_kind != 'pin':
                                 continue
@@ -104,7 +113,7 @@ def liberty_roles(paths):
                                 pins[child_name] = pr
                 if not pins:
                     continue
-                role = {'pins': pins, 'sequential': seq}
+                role = {'pins': pins, 'sequential': seq, 'bus_order': bus_order}
                 if name in cells and cells[name] != role:
                     raise ValueError(f'conflicting Liberty roles across corners: {name}')
                 cells[name] = role
@@ -131,8 +140,23 @@ def census(g, roles):
             continue
         ins, outs = [], []
         for pn, nets in pins.items():
+            order = role.get('bus_order', {}).get(pn)
+            if order is not None and len(order) != len(nets):
+                errors.append(f'Liberty bus width mismatch {master}/{pn}: {len(order)} vs {len(nets)}')
+                continue
+            if order is None and len(nets) > 1:
+                # Without an explicit Liberty bus type, varying indexed roles
+                # cannot be safely matched to a packed Verilog connection.
+                indexed = [p for name, p in role['pins'].items() if name == pn or name.startswith(pn + '[')]
+                def category(p):
+                    f = re.sub(r'[\s()]', '', p.get('function') or '')
+                    return p['direction'], p['clock'], f if f in ('0','1',"1'b0","1'b1") else 'dynamic'
+                if len({category(p) for p in indexed}) > 1:
+                    errors.append(f'ambiguous packed Liberty bus roles without type order {master}/{pn}')
+                    continue
             for bit, net in enumerate(nets):
-                p = (role['pins'].get(f'{pn}[{len(nets)-1-bit}]') if len(nets) > 1 else None) or role['pins'].get(pn) or role['pins'].get(TL._base(pn))
+                idx = order[bit] if order is not None else len(nets)-1-bit
+                p = (role['pins'].get(f'{pn}[{idx}]') if len(nets) > 1 or order is not None else None) or role['pins'].get(pn) or role['pins'].get(TL._base(pn))
                 if p is None:
                     errors.append(f'missing Liberty pin {master}/{pn}[{bit}] instance {name}')
                     continue
