@@ -151,8 +151,70 @@ COMB_PRIM = re.compile(r"^\$(_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX
 
 
 def comb_module_test(nl):
-    """name -> True when the module is defined in the netlist and purely combinational (recursively)"""
+    """Prove a defined, total combinational DAG, not merely absence of flop cells.
+
+    Every internal/output bit must have exactly one input/cell driver and every
+    cell input must reach a known constant or a formal input without a cycle.
+    Partial mux/shift operators need a separate selection/width proof; none is
+    inferred here. This proves leaf functions only, never equality of flop Qs
+    before their caller's common reset/update obligation has been established.
+    """
     memo = {}
+
+    def parameters(c, expected):
+        actual = c.get("parameters") or {}
+        return (isinstance(actual, dict) and isinstance(expected, dict)
+                and {k: (type(v), v) for k, v in actual.items()} ==
+                    {k: (type(v), v) for k, v in expected.items()})
+
+    def ports(c, mod):
+        ps = mod.get("ports") or {}
+        con = c.get("connections") or {}
+        dirs = {p: v.get("direction") for p, v in ps.items()}
+        return (isinstance(con, dict) and set(con) == set(ps)
+                and all(isinstance(con[p], list) and len(con[p]) == len(ps[p].get("bits", [])) for p in ps)
+                and (not c.get("port_directions") or c["port_directions"] == dirs))
+
+    def primitive(c):
+        t = c.get("type", "")
+        if not COMB_PRIM.fullmatch(t) or t in {
+                "$pmux", "$bmux", "$shiftx", "$shift", "$shl", "$shr", "$sshl", "$sshr"}:
+            return None
+        if t.startswith("$_"):
+            op = t[2:-1]
+            ins = ("A",) if op in {"BUF", "NOT"} else (
+                ("A", "B", "S") if op in {"MUX", "NMUX"} else
+                ("A", "B", "C", "D") if op in {"AOI4", "OAI4"} else
+                ("A", "B", "C") if op in {"AOI3", "OAI3"} else ("A", "B"))
+        else:
+            ins = (("A", "B", "S") if t == "$mux" else ("A",) if
+                   t in {"$buf", "$pos", "$neg", "$not", "$logic_not"} or t.startswith("$reduce_")
+                   else ("A", "B"))
+        con = c.get("connections") or {}
+        dirs = {p: "input" for p in ins}; dirs["Y"] = "output"
+        if set(con) != set(dirs) or (c.get("port_directions") and c["port_directions"] != dirs):
+            return None
+        if any(not isinstance(v, list) or not v for v in con.values()):
+            return None
+        if t.startswith("$_") and (any(len(v) != 1 for v in con.values()) or c.get("parameters")):
+            return None
+        if t == "$mux" and (len(con["S"]) != 1 or len(con["A"]) != len(con["B"]) or len(con["A"]) != len(con["Y"])):
+            return None
+        allowed = {"WIDTH"} if t == "$mux" else {"A_WIDTH", "B_WIDTH", "Y_WIDTH", "A_SIGNED", "B_SIGNED"}
+        for p, v in (c.get("parameters") or {}).items():
+            if p not in allowed or isinstance(v, bool):
+                return None
+            if isinstance(v, str) and v and set(v) <= {"0", "1"}:
+                value = int(v, 2)
+            elif type(v) is int:
+                value = v
+            else:
+                return None
+            if p.endswith("SIGNED"):
+                if value not in (0, 1): return None
+            elif value != len(con["Y"] if p == "WIDTH" else con.get(p[0], [])):
+                return None
+        return ins, ("Y",)
 
     def ok(name, stack=()):
         if name in memo:
@@ -161,16 +223,58 @@ def comb_module_test(nl):
         res = mod is not None and name not in stack
         if res:
             a = mod.get("attributes") or {}
-            if any(k in a for k in ("blackbox", "whitebox", "lib_whitebox")):
+            if any(k in a for k in ("blackbox", "whitebox", "lib_whitebox")) or mod.get("memories") or mod.get("processes"):
                 res = False
             elif any(p.get("direction") not in ("input", "output") for p in (mod.get("ports") or {}).values()):
                 res = False
             else:
-                for c in (mod.get("cells") or {}).values():
+                drivers, deps, outputs = {}, {}, []
+                def bit(b): return type(b) is int or b in ("0", "1")
+                def drive(b, origin):
+                    if type(b) is not int: return False
+                    drivers.setdefault(b, []).append(origin)
+                    return True
+                for pn, port in (mod.get("ports") or {}).items():
+                    bs = port.get("bits") or []
+                    if not bs or not all(bit(b) for b in bs): res = False; break
+                    if port["direction"] == "input":
+                        for i, b in enumerate(bs):
+                            if not drive(b, ("input", pn, i)): res = False
+                    else: outputs.extend(bs)
+                for cn, c in (mod.get("cells") or {}).items():
                     t = c.get("type", "")
-                    if not (COMB_PRIM.match(t) if t.startswith("$") else ok(t, stack + (name,))):
+                    if t.startswith("$"):
+                        io = primitive(c)
+                    else:
+                        sub = (nl.get("modules") or {}).get(t)
+                        io = None
+                        if sub is not None and ok(t, stack + (name,)) and ports(c, sub) and parameters(c, sub.get("parameter_default_values") or {}):
+                            ps = sub.get("ports") or {}
+                            io = (tuple(p for p in ps if ps[p]["direction"] == "input"),
+                                  tuple(p for p in ps if ps[p]["direction"] == "output"))
+                    if io is None:
                         res = False
                         break
+                    ins, outs = io
+                    con = c["connections"]
+                    deps[cn] = tuple(b for p in ins for b in con[p])
+                    if not all(bit(b) for b in deps[cn]): res = False; break
+                    for pn in outs:
+                        for b in con[pn]:
+                            if not drive(b, ("cell", cn)): res = False
+                seen, active = {}, set()
+                def defined(b):
+                    if b in ("0", "1"): return True
+                    if b in seen: return seen[b]
+                    ds = drivers.get(b, [])
+                    if b in active or len(ds) != 1: return False
+                    if ds[0][0] == "input": return True
+                    active.add(b)
+                    value = all(defined(x) for x in deps[ds[0][1]])
+                    active.remove(b); seen[b] = value
+                    return value
+                if res:
+                    res = bool(outputs) and all(defined(b) for b in outputs + list(drivers))
         memo[name] = res
         return res
     return ok
@@ -181,24 +285,44 @@ def leaf_canon(nl, cells, drv):
     bit is an output of a kept-hierarchy purely combinational leaf (see the module docstring)"""
     ok = comb_module_test(nl)
     memo = {}
+    counts = {}
+    for c in cells.values():
+        for p, bs in (c.get("connections") or {}).items():
+            if (c.get("port_directions") or {}).get(p) == "output":
+                for b in bs: counts[b] = counts.get(b, 0) + 1
 
     def canon(b, depth=0):
         if not isinstance(b, int):
             return b
-        if b in memo:
-            return memo[b]
+        key = (b, depth)
+        if key in memo:
+            return memo[key]
         r = b
         d = drv.get(b)
         if d is not None and depth < LEAF_DEPTH:
             cn, p, i = d
             c = cells[cn]
             t = c.get("type", "")
-            if not t.startswith("$") and ok(t):
+            mod = (nl.get("modules") or {}).get(t) or {}
+            kept = (mod.get("attributes") or {}).get("keep_hierarchy")
+            if isinstance(kept, str):
+                kept = kept in {"yes", "true"} or bool(kept and set(kept) <= {"0", "1"} and int(kept, 2))
+            ps = mod.get("ports") or {}
+            con = c.get("connections") or {}
+            expected = {pn: v.get("direction") for pn, v in ps.items()}
+            params = c.get("parameters") or {}
+            defaults = mod.get("parameter_default_values") or {}
+            same_params = ({k: (type(v), v) for k, v in params.items()} ==
+                           {k: (type(v), v) for k, v in defaults.items()})
+            if (not t.startswith("$") and kept and counts.get(b) == 1 and ok(t)
+                    and same_params and set(con) == set(ps) and c.get("port_directions") == expected
+                    and all(len(con[pn]) == len(ps[pn].get("bits", [])) for pn in ps)
+                    and p in ps and ps[p]["direction"] == "output"):
                 dirs = c.get("port_directions") or {}
                 ins = tuple((pn, tuple(canon(x, depth + 1) for x in pb))
                             for pn, pb in sorted((c.get("connections") or {}).items()) if dirs.get(pn) == "input")
                 r = ("leaf", t, tuple(sorted((k, str(v)) for k, v in (c.get("parameters") or {}).items())), p, i, ins)
-        memo[b] = r
+        memo[key] = r
         return r
     return canon
 

@@ -1,0 +1,10 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8 bench bench_coll_q2_fj_mut_latespc host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8 log cl/bench_coll_q2_fj_mut_latespc.a1b1.log captured 2026-10-20T04:46:41-07:00
+# fail_regex 'EQ_MUTANT m_latespc REJECTED'
+Verilator 5.050 2026-07-01 rev v5.050
+m_latespc EQ_MISMATCH port=program_fault cyc=2441
+m_latespc EQ_MISMATCH port=fault_cause cyc=2441
+m_latespc EQ_MISMATCH port=program_fault cyc=2442
+m_latespc EQ_MISMATCH port=hgi_busy cyc=2442
+EQ_MUTANT m_latespc REJECTED
+COLL_LP_ARS_PTMUT_EXIT 1
