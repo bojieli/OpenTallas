@@ -282,9 +282,56 @@ def audit(a):
         # the closed flow's reset landing (physical/common_flow/ot_pin_regs.tcl OT_RST_LAND): every declared reset port
         # lands in `stages` registered stages <port>__ot_rl<i> at the face; the core is u_ot_pr_core.  Gold rebuilds that
         # shell around the RTL at the profile parameters; the proof then covers shell AND core.
-        if rl.get('first_copies'):
-            raise SystemExit(f'{a.module}: reset_landing first_copies wrapper not modelled by this audit')
         ck, st = rl['clock'], int(rl['stages'])
+    if rl and rl.get('enable') and rl.get('first_copies'):
+        # KV-BIND4 10-19: the BALANCED landing (first_copies / copies, ROOT-RST a6d33cc98): gold is the flow's OWN
+        # wrapper -- physical/common_flow/ot_pin_regs.tcl (OT_RST_LAND=1) run under tclsh exactly as the gate run's
+        # synthesis does (stages, kept first-stage copies <port>__ot_rl0c, final copies <port>__ot_rlc), with the core
+        # <top>__ot_pr_core replaced by the RTL module at the profile parameters.  The flow script must be byte-identical
+        # to the closed commit's (else no proof: the shell would not be the one the routed netlist came from).
+        fl = root / 'physical/common_flow/ot_pin_regs.tcl'
+        closed_c = (arch / 'commit.txt').read_text().strip()
+        cb = subprocess.run(['git', '-C', str(root), 'rev-parse', f'{closed_c}:physical/common_flow/ot_pin_regs.tcl'],
+                            capture_output=True, text=True).stdout.strip()
+        hb = subprocess.run(['git', '-C', str(root), 'hash-object', str(fl)], capture_output=True, text=True).stdout.strip()
+        if not cb or cb != hb:
+            raise SystemExit(f'{a.module}: ot_pin_regs.tcl differs from the closed commit {closed_c[:9]} (balanced shell unproven)')
+        pl = []
+        for p_ in gmod.ports:
+            r_ = gmod.ranges.get(p_)
+            pl.append(f"{gmod.port_dirs[p_]} [{r_[0] if r_ else 0}:{r_[1] if r_ else 0}] {p_}")
+        rp = rl['reset_ports']
+        fc = ' '.join(f'{k}={v}' for k, v in sorted(rl['first_copies'].items()))
+        cp = ' '.join(f'{k}={v}' for k, v in sorted((rl.get('copies') or {}).items()))
+        pf = work / 'rl_ports.txt'
+        pf.write_text('\n'.join(pl) + '\n')
+        tcl = '\n'.join([
+            f'set ::env(DESIGN_NAME) {spec["top"]}', 'set ::env(OT_PIN_REGS) 0', 'set ::env(OT_RST_LAND) 1',
+            f'set ::env(OT_RST_LAND_STAGES) {st}', f'set ::env(OT_PIN_REGS_CLOCK) {ck}',
+            f'set ::env(OT_PIN_REGS_RESET_PORTS) {{{" ".join(rp)}}}', 'set ::env(OT_RST_COPIES_MAX) 32',
+            f'set ::env(OT_RST_LAND_COPIES) {{{cp}}}', f'set ::env(OT_RST_LAND_FIRST_COPIES) {{{fc}}}',
+            f'set ::env(RESULTS_DIR) {{{work}}}',
+            'proc yosys {args} { if {[lindex $args 0] eq "tee"} { file copy -force {' + str(pf) + '} [lindex $args 3] } }',
+            f'source {{{fl}}}', ''])
+        (work / 'rl_wrap.tcl').write_text(tcl)
+        p = subprocess.run(['tclsh', str(work / 'rl_wrap.tcl')], capture_output=True, text=True, cwd=work)
+        wf = work / 'ot_rst_land_wrapper.v'
+        if p.returncode or not wf.is_file():
+            raise SystemExit(f'{a.module}: flow reset-landing wrapper generation failed: {p.stderr[-800:]}')
+        wt = wf.read_text()
+        core = f'{spec["top"]}__ot_pr_core'
+        if wt.count(core + ' u_ot_pr_core') != 1:
+            raise SystemExit(f'{a.module}: flow wrapper has no unique {core} u_ot_pr_core')
+        wt = wt.replace(core + ' u_ot_pr_core', f'{a.module} #(' + ', '.join(f'.{k}({v})' for k, v in sorted(params.items()))
+                        + ') u_ot_pr_core', 1)
+        wt = re.sub(r'\bmodule\s+' + re.escape(spec['top']) + r'\b', 'module ot_kvp_wrap', wt, 1)
+        (work / 'gold_wrap.v').write_text(wt)
+        rd += ' ' + str(work / 'gold_wrap.v')
+        gtop, chp = 'ot_kvp_wrap', ''
+        res['wrapper'] = dict(kind='reset_landing_balanced', stages=st, clock=ck, reset_ports=rp,
+                              first_copies=rl['first_copies'], copies=rl.get('copies'), flow_script_blob=hb,
+                              reset_landing_sha256=sha(a.reset_landing))
+    elif rl and rl.get('enable'):
         W = ['module ot_kvp_wrap (' + ', '.join(gmod.ports) + ');']
         for p_ in gmod.ports:
             r_ = gmod.ranges.get(p_)
