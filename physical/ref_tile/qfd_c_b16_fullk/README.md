@@ -41,5 +41,5 @@ had reset / write-pointer drivers of 1,038-1,546 loads). One failed route = stru
    io_hold_margin 0.03.  No step cap (main gate tool).
 8. Schedule: PASS -- static; identical edge counts to the qc_gen fabric (no added cycle; reset copies are equal depth).
 
-Census numbers (gate PRE_GATE_NATIVE_CENSUS): PENDING (gate launched 10-20 by QW-CB16FULL2; see lanes/QW-CB16FULL2.md).
+Census numbers (gate PRE_GATE_NATIVE_CENSUS, mapped netlist, limit 32): fullk PASS max 31 / 730,293 roots / 0 violations (ep9 030948); fullkb PASS max 31 / 617,488 roots / 0 (ep9 031034). History: first form FAIL max 517 (024547 / 024710).
 Owed: full-parent lockstep bench vs qfd_c_b16_dv (tools/qwen_cluster/bench_full_lockstep.sh family); A0 regeneration on the qualified LEF.
