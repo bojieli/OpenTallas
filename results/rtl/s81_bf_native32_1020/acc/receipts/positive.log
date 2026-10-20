@@ -1,0 +1,7 @@
+ACC_SRAM PASS NCH=8 outputs=512 forward5=1538 forward6=0
+ACC_SRAM PASS NCH=9 outputs=576 forward5=0 forward6=1730
+ACC_SRAM PASS NCH=16 outputs=1024 forward5=0 forward6=0
+- tb.sv:43: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 58us; walltime 0.023 s; speed 2.539 ms/s
+- Verilator: cpu 0.023 s on 1 threads; allocated 7 MB
