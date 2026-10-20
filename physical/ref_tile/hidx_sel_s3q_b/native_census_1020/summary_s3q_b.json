@@ -1,0 +1,187 @@
+{
+ "schema": "hbm-idx5.native_census_summary.v1",
+ "tool": "origin/main tools/ref_tile/native_census.py (c952e97b0/042aa171b), ORFS asap7lock TT RVT+LVT libs + macro tt lib",
+ "status": "FAIL",
+ "max_dynamic_loads": 1788,
+ "violations": 497,
+ "roots_examined": 73914,
+ "netlist": {
+  "path": "/g/routes/gate/work/orfs/results/asap7/opentallas_ot_hidx_s3_q_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "0fc5d6ddba6430139c0cb40b22627f3e621f6b8ec05b322532b7acaa76f7d221"
+ },
+ "role_errors": [],
+ "by_driver": [
+  {
+   "driver": "combinational (see classify)",
+   "n": 277,
+   "max_loads": 644
+  },
+  {
+   "driver": "u_ot_pr_core.gl[].u_lc.q[]",
+   "n": 89,
+   "max_loads": 75
+  },
+  {
+   "driver": "u_ot_pr_core.gh[].u_hc.q[]",
+   "n": 32,
+   "max_loads": 56
+  },
+  {
+   "driver": "u_ot_pr_core.gha[].u_ha.q[]",
+   "n": 24,
+   "max_loads": 52
+  },
+  {
+   "driver": "u_ot_pr_core.last_id[]",
+   "n": 20,
+   "max_loads": 49
+  },
+  {
+   "driver": "u_ot_pr_core.rawr[]",
+   "n": 17,
+   "max_loads": 63
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[]",
+   "n": 15,
+   "max_loads": 1743
+  },
+  {
+   "driver": "u_ot_pr_core.u_f0.q[]",
+   "n": 12,
+   "max_loads": 1788
+  },
+  {
+   "driver": "u_ot_pr_core.sel_line[]",
+   "n": 5,
+   "max_loads": 102
+  },
+  {
+   "driver": "u_ot_pr_core.s1_pass[]",
+   "n": 2,
+   "max_loads": 172
+  },
+  {
+   "driver": "u_ot_pr_core.comp_started",
+   "n": 1,
+   "max_loads": 38
+  },
+  {
+   "driver": "u_ot_pr_core.s2_v",
+   "n": 1,
+   "max_loads": 36
+  },
+  {
+   "driver": "u_ot_pr_core.s3_v",
+   "n": 1,
+   "max_loads": 41
+  },
+  {
+   "driver": "u_ot_pr_core.u_rr.rst_n",
+   "n": 1,
+   "max_loads": 117
+  }
+ ],
+ "top20": [
+  {
+   "driver": "u_ot_pr_core.u_f0.q[12]$_DFF_P_/QN",
+   "loads": 1788,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[0]$_DFF_P_/QN",
+   "loads": 1743,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f0.q[9]$_DFF_P_/QN",
+   "loads": 1392,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[5]$_DFF_P_/QN",
+   "loads": 1271,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[1]$_DFF_P_/QN",
+   "loads": 1212,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f0.q[13]$_DFF_P_/QN",
+   "loads": 1203,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[8]$_DFF_P_/QN",
+   "loads": 1113,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[12]$_DFF_P_/QN",
+   "loads": 963,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f0.q[8]$_DFF_P_/QN",
+   "loads": 942,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f0.q[4]$_DFF_P_/QN",
+   "loads": 895,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[4]$_DFF_P_/QN",
+   "loads": 894,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[9]$_DFF_P_/QN",
+   "loads": 833,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f1.q[13]$_DFF_P_/QN",
+   "loads": 652,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.u_f0.q[5]$_DFF_P_/QN",
+   "loads": 647,
+   "role": "sequential"
+  },
+  {
+   "driver": "_100571_/Y",
+   "loads": 644,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_100692_/Y",
+   "loads": 644,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_100578_/Y",
+   "loads": 643,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_100610_/Y",
+   "loads": 633,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_100637_/Y",
+   "loads": 630,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_100781_/Y",
+   "loads": 630,
+   "role": "combinational_or_macro"
+  }
+ ]
+}

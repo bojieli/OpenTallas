@@ -1,0 +1,12 @@
+220 max 1788 | 
+138 max 49 | \u_ot_pr_core.sel_line[]
+64 max 629 | \u_ot_pr_core.fq1[]
+59 max 644 | \u_ot_pr_core.fq0[]
+3 max 38 | \u_ot_pr_core.lq[][]
+3 max 40 | \u_ot_pr_core.dcnt[] + \u_ot_pr_core.fill[] + \u_ot_pr_core.lq[][]
+3 max 93 | \u_ot_pr_core.dcnt[] + \u_ot_pr_core.fill[] + \u_ot_pr_core.fq1[]
+2 max 68 | \u_ot_pr_core.s1_pass[]
+2 max 349 | \u_ot_pr_core.dcnt[] + \u_ot_pr_core.fill[]
+1 max 60 | \u_ot_pr_core.s1_op[] + \u_ot_pr_core.s1_v
+1 max 54 | \u_ot_pr_core.qc[]
+1 max 40 | \u_ot_pr_core.comp_started + \u_ot_pr_core.tie_rem[] + \u_ot_pr_core.ties_r[]

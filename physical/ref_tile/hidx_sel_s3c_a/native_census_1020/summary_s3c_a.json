@@ -1,0 +1,37 @@
+{
+ "schema": "hbm-idx5.native_census_summary.v1",
+ "tool": "origin/main tools/ref_tile/native_census.py (c952e97b0/042aa171b), ORFS asap7lock TT RVT+LVT libs + macro tt lib",
+ "status": "FAIL",
+ "max_dynamic_loads": 115,
+ "violations": 2,
+ "roots_examined": 1747,
+ "netlist": {
+  "path": "/g/routes/gate/work/orfs/results/asap7/opentallas_ot_hidx_s3_ctl_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "9cd61a7abaf31a2f84d3ea099be07efbc1d3c7947792f399c6f6c81f71e533d7"
+ },
+ "role_errors": [],
+ "by_driver": [
+  {
+   "driver": "u_ot_pr_core.d_go",
+   "n": 1,
+   "max_loads": 61
+  },
+  {
+   "driver": "u_ot_pr_core.u_rr.rst_n",
+   "n": 1,
+   "max_loads": 115
+  }
+ ],
+ "top20": [
+  {
+   "driver": "u_ot_pr_core.u_rr.rst_n$_DFF_PN0_/QN",
+   "loads": 115,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.d_go$_DFF_PN0_/QN",
+   "loads": 61,
+   "role": "sequential"
+  }
+ ]
+}
