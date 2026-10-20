@@ -1,0 +1,109 @@
+{
+  "generated": "2026-10-20T01:42:38-0700",
+  "verdict": "FAIL",
+  "source_snapshot_start": "4cfb33b51c3d16a64f57a705b0e54699163cfb0f",
+  "failures": [
+    {
+      "severity": "FAIL",
+      "check": "textbook.wire_reach",
+      "message": "3 stage(s) beyond 500 um reach: insert relay flops",
+      "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+    },
+    {
+      "severity": "FAIL",
+      "check": "textbook.wire_reach",
+      "message": "combinational path u_hr/me_image_ready -> pin control_stores_ready: up to 592 um with no register (> 500 um)",
+      "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+    },
+    {
+      "severity": "FAIL",
+      "check": "textbook.wire_reach",
+      "message": "combinational path u_hr/me_image_ready -> pin control_stores_ready: up to 592 um with no register (> 500 um)",
+      "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+    },
+    {
+      "severity": "FAIL",
+      "check": "textbook.wire_reach",
+      "message": "combinational path u_hr/me_image_ready -> pin control_stores_ready: up to 592 um with no register (> 500 um)",
+      "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+    },
+    {
+      "severity": "FAIL",
+      "check": "clock_rule",
+      "message": "ck_core: 10,605 sinks on the largest root; measured TT insertion 1107.8 ps, FF insertion 924.7 ps, TT pin-flop spread 179.0 ps, FF pin-flop spread 152.6 ps; TT pin-flop spread 179.0 ps > 80 and FF pin-flop spread 152.6 ps > 80; ck_hr: 4,359 sinks on the largest root; measured TT insertion 720.8 ps, FF insertion 607.8 ps, TT pin-flop spread 262.6 ps, FF pin-flop spread 221.2 ps; TT pin-flop spread 262.6 ps > 80 and FF pin-flop spread 221.2 ps > 80 (declared clock 'multiple_cts_roots' does not waive it)",
+      "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+    }
+  ],
+  "trial_route": {
+    "schema": "opentallas.ref_tile.trial_route.v1",
+    "overflow": 0,
+    "kind": "parent",
+    "skip_incremental_repair": false,
+    "rc": "0",
+    "grt_s": 4256,
+    "layers": [
+      {
+        "layer": "M1",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      },
+      {
+        "layer": "M2",
+        "capacity": 6295442,
+        "usage": 755373,
+        "pct": 12.0,
+        "overflow": 0
+      },
+      {
+        "layer": "M3",
+        "capacity": 7661103,
+        "usage": 894444,
+        "pct": 11.68,
+        "overflow": 0
+      },
+      {
+        "layer": "M4",
+        "capacity": 6014889,
+        "usage": 250657,
+        "pct": 4.17,
+        "overflow": 0
+      },
+      {
+        "layer": "M5",
+        "capacity": 7912232,
+        "usage": 428593,
+        "pct": 5.42,
+        "overflow": 0
+      },
+      {
+        "layer": "M6",
+        "capacity": 6992155,
+        "usage": 960663,
+        "pct": 13.74,
+        "overflow": 0
+      },
+      {
+        "layer": "M7",
+        "capacity": 7593408,
+        "usage": 592318,
+        "pct": 7.8,
+        "overflow": 0
+      },
+      {
+        "layer": "M8",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      }
+    ],
+    "worst_layer_usage": [
+      "M6",
+      13.74
+    ],
+    "hotspot": null,
+    "congestion_png": null
+  }
+}
