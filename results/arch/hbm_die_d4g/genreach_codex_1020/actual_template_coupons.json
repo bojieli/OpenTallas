@@ -1,0 +1,32 @@
+{
+  "status": "MODEL COUPONS ONLY / actual candidate not qualified",
+  "actual_lef_sha256": {
+    "hbfd_rly_624_NS.lef": "db66c4270ba7ff6a515c37d699efeb5d075483095691f199061b317f64eb4f1b",
+    "hbfd_rly_624_WE.lef": "9cf335ed0891e3fca0d089cfdbc2584801dbcf49507c6638a555c7c11e59e087"
+  },
+  "rows": [
+    {
+      "flow": "WE",
+      "cost": {
+        "bits_checked": 626,
+        "max_span_um": 338.004,
+        "over_reach": [],
+        "feasible": true
+      },
+      "nonoverlap": true,
+      "note": "Actual template pins; clock/reset coupon costs included, clock source topology is synthetic, not production route qualification"
+    },
+    {
+      "flow": "NS",
+      "cost": {
+        "bits_checked": 626,
+        "max_span_um": 383.196,
+        "over_reach": [],
+        "feasible": true
+      },
+      "nonoverlap": true,
+      "note": "Actual template pins; clock/reset coupon costs included, clock source topology is synthetic, not production route qualification"
+    }
+  ],
+  "missing_authority": "Current full candidate actual bit endpoints and forwarded-clock LEFs/port mapping must be supplied; missing exact pins fail closed. No new fullGEN launched."
+}
