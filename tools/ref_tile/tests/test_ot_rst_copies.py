@@ -164,6 +164,59 @@ class T(unittest.TestCase):
         _, _, tsv = self.run_nl(nl)
         self.assertIn("REFUSED copies are not identical", tsv)
 
+    def test_leaf_requires_total_single_driver_dag(self):
+        cases = {
+            "undriven": {},
+            "cycle": {"u": {"type": "$not", "connections": {"A": [4], "Y": [4]}}},
+            "x_input": {"u": {"type": "$and", "connections": {"A": [2], "B": ["x"], "Y": [4]}}},
+            "multiple": {"u": {"type": "$and", "connections": {"A": [2], "B": [3], "Y": [4]}},
+                         "v": {"type": "$not", "connections": {"A": [2], "Y": [4]}}},
+        }
+        for op in ("$pmux", "$bmux", "$shiftx", "$shift", "$shl", "$shr", "$sshl", "$sshr"):
+            cases[op] = {"u": {"type": op, "connections": {"A": [2], "B": [3], "S": [2, 3], "Y": [4]}}}
+        for name, cells in cases.items():
+            with self.subTest(name=name):
+                nl = self.leaf_nl(leaf_cells=cells)
+                _, ys, tsv = self.run_nl(nl)
+                self.assertIn("REFUSED copies are not identical", tsv)
+                self.assertNotIn("connect -port", ys)
+
+    def test_leaf_exact_module_and_instance_shape(self):
+        def module(nl): return nl["modules"]["ot_kvpc5_and2"]
+        def inst(nl): return nl["modules"]["top"]["cells"]["u_m.g[0].u_go"]
+        changes = {
+            "x_output": lambda nl: module(nl)["ports"]["y"].update(bits=["x"]),
+            "z_output": lambda nl: module(nl)["ports"]["y"].update(bits=["z"]),
+            "missing_port": lambda nl: inst(nl)["connections"].pop("b"),
+            "extra_port": lambda nl: inst(nl)["connections"].update(extra=[6]),
+            "wrong_width": lambda nl: inst(nl)["connections"].update(a=[6, 6]),
+            "wrong_direction": lambda nl: inst(nl)["port_directions"].update(a="output"),
+            "wrong_parameter": lambda nl: inst(nl).update(parameters={"WIDTH": "1"}),
+            "wrong_inner_width": lambda nl: module(nl)["cells"]["$and$1"].update(parameters={"A_WIDTH": "10"}),
+            "wrong_inner_port": lambda nl: module(nl)["cells"]["$and$1"]["connections"].pop("B"),
+            "wrong_inner_direction": lambda nl: module(nl)["cells"]["$and$1"].update(port_directions={"A": "output", "B": "input", "Y": "output"}),
+            "no_keep": lambda nl: module(nl)["attributes"].clear(),
+            "process": lambda nl: module(nl).update(processes={"p": {}}),
+            "memory": lambda nl: module(nl).update(memories={"m": {}}),
+            "inout": lambda nl: module(nl)["ports"]["a"].update(direction="inout"),
+        }
+        for name, change in changes.items():
+            with self.subTest(name=name):
+                nl = self.leaf_nl(); change(nl)
+                _, ys, tsv = self.run_nl(nl)
+                self.assertIn("REFUSED copies are not identical", tsv)
+                self.assertNotIn("connect -port", ys)
+
+    def test_leaf_real_yosys_and2_metadata_accepted(self):
+        nl = self.leaf_nl()
+        nl["modules"]["ot_kvpc5_and2"]["attributes"]["keep_hierarchy"] = "yes"
+        cell = nl["modules"]["ot_kvpc5_and2"]["cells"]["$and$1"]
+        cell["parameters"] = {"A_SIGNED": "0", "B_SIGNED": "0", "A_WIDTH": "1", "B_WIDTH": "1", "Y_WIDTH": "1"}
+        cell["port_directions"] = {"A": "input", "B": "input", "Y": "output"}
+        _, ys, tsv = self.run_nl(nl, mx=100)
+        self.assertIn("100,100,100,100\tOK", tsv)
+        self.assertEqual(ys.count("connect -port"), 300)
+
     def test_single_bit_relay_untouched(self):
         nl = netlist(n_copies=1)
         _, ys, tsv = self.run_nl(nl)
