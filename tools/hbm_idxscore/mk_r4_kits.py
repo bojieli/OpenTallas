@@ -120,7 +120,7 @@ def qw(row, w, suffix, pd):
     s["io_flop_at_pins"] = {"cols": 2, "allow_none": True}
     s["pins"] = {"W": ["clk_w0", "clk_w1", "rst_n", "ql_v", "ql_head", "ql_codes", "ql_sc", "ql_w", "beat_v", "key_lines0",
                        "keep_bitmap", "beat_index", "nkeys", "first_ord", "rank", "half", "keep_en", "key_lines1"],
-                 "E": [f"o_{n}{e}" for e in (0, 1) for n, _ in ORDER] + ["rst_c0"], "N": ["rst_c1"]}
+                 "E": [f"o_{n}{e}" for e in (0, 1) for n, _ in ORDER] + ["rst_c0", "rst_c1"]}
     s["pin_regs"] = {"enable": False, "reason": "every input lands in an A-stage capture flop, every output launches from a "
                      "C-stage flop (RTL); o_bus0/1 are the head rows' constant zero sum-bus words"}
     q0, q1 = T["q"]; qs = (q1 - q0) / 568
@@ -135,7 +135,9 @@ def qw(row, w, suffix, pd):
     for e in (0, 1):
         for n, _ in ORDER:
             pr[f"o_{n}{e}"] = r(T[n][0] + e * row, T[n][1] + e * row)
-    pr["rst_c0"] = r(row - 1.62, row - 0.54); pr["rst_c1"] = r(w / 2 - 0.54, w / 2 + 0.54)
+    # both reset relay copies (clk_w0 domain) at the row seam on the E face: r4 gate 1 had rst_c1 on the N face, a clk_w0
+    # boundary flop 650 um from the rest of its domain (clk_w0 TT pin-flop spread 333.8 ps)
+    pr["rst_c0"] = r(row - 1.62, row - 0.54); pr["rst_c1"] = r(row, row + 1.08)
     s["pin_ranges"] = pr
     return s
 
