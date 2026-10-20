@@ -1,0 +1,6 @@
+GENERIC_DONE
+CTLM_CONSTRUCT 65875 67065 passes 5 macros 10 added {'$_AND_': 499, '$_DFF_P_': 197, '$_OR_': 92, '$_XOR_': 1, '$_DFF_PN0_': 264, '$_NOT_': 89, '$_DFF_PN1_': 32, '$_MUX_': 6, '$_AO21_': 9, '$_OA21_': 1}
+merged 211 cells
+native PASS 32 None
+textbook WARN None {'clock_roots': [{'root': 'port:ck_core[0]', 'ff': 11199, 'icg': 0, 'macro_pins': 9, 'example': 'u_0._2_'}, {'root': 'port:ck_hr[0]', 'ff': 4626, 'icg': 0, 'macro_pins': 3, 'example': 'u_10._2_'}], 'hier_subblocks': 1, 'clock_max_root_sinks': 11208, 'clock_max_root': 'port:ck_core[0]', 'high_fanout_top': [], 'hf_max_port': 0, 'hf_max_reset': 0, 'hf_max_net': 0, 'reset_landing': [{'port': 'rst_n[0]', 'sinks': 1, 'flops': 1, 'macros': 0}], 'in_to_out_bits': 0, 'in_to_reg_levels': 2, 'reg_to_out_levels': 3, 'icg_enable_from_port': 0, 'depth_ps': 686.8, 'depth_path': ['u_8070._2_', 'u_47084._2_/D'], 'depth_levels': 23}
+CHAIN_RC 0

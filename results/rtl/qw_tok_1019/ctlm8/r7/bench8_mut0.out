@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=186922 cycles=10000 repeated_resets=2 warm=38
+- tb_np7.sv:158: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.920 s; speed 10.872 us/s
+- Verilator: cpu 0.920 s on 1 threads; allocated 10 MB
