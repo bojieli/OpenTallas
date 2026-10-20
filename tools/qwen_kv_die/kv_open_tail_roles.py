@@ -60,7 +60,9 @@ SOURCES = {
 # PC / GRP chain-end text changed (GEN_ASSERT).
 # KV-FRAMEPINS 10-20: re-pinned (was dd154192...).  Change: default-off OBSX block in _die_joins (three kv_oneway buses
 # dcal dob/lay + d2d_kv rcy -> host odc/odl/odr); no PC / GRP chain-end text changed (GEN_ASSERT).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '79939e3d6fc1af2385be25af66b45d454d629082b6e97a4f7a0eb33436522a6c')
+# KV-BIND7 10-20: re-pinned (was 79939e3d...).  Change: default-off OT_KV_NATIVE_SLOTS (Codex 247c6bc58: 388.8 group
+# squares + 345.6x475.2 portrait CTL frame, placement only); no PC / GRP chain-end text changed (GEN_ASSERT).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '00db4b8a2a5980a96d5a555ecc0001576b5272be7899a0fbfe15de578125dbc8')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')

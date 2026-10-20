@@ -436,6 +436,12 @@ FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)] 
 PVFST = ['start_pv', 'ep', 'cal[175:128]']                                        # kvs_attn pvfst = pvfin fs (65 b)
 # per-tile frames (um, ASSUMED until kits close): see place()
 FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1123.2, 172.8), hroot=(302.4, 302.4))
+# Measured successor kit reservations, opt-in until the source/view/calendar epoch is coherent.
+# The SRAM CTL is portrait; the legacy 1123.2x172.8 strip cannot represent it.
+NATIVE_SLOTS = os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'
+if NATIVE_SLOTS:
+    FRAME['ctl'] = (345.6, 475.2)
+
 # Special bundles (die-port order = the existing master's binding order, LSB first)
 VREQ = [('vreq_valid', 1), ('vreq_t', 14)]                                         # qkd_pv16_vport vq<p>
 RSP = ['rsp_valid', 'rsp_v', 'rsp_t', 'rsp_epoch', 'rsp_data']                    # qkd_pv16_vport i<p> (R6)
@@ -2243,7 +2249,14 @@ def place(m, K, geo, F):
         for g in range(8):
             idx = ORDER.index(g)
             y0 = up(cy + PC_PITCH * 4 * idx + (PC_PITCH * 4 - GH) / 2, GY)
-            m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
+            x_slot, y_slot, slot_w, slot_h = x_g, y0, gw, GH
+            if NATIVE_SLOTS:
+                # Reserve the complete square before wires are planned. Never squeeze the
+                # hardened group into the legacy narrow/1188-um frame or ignore keepouts.
+                slot_w = slot_h = 388.8
+                x_slot, y_slot = free_spot(m, slot_w, slot_h,
+                                          (x_g + gw / 2, y0 + GH / 2), GX, GY)
+            m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_slot, 4), round(y_slot, 4), slot_w - SH, slot_h - SH,
                                      'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
         fh = 172.8                  # the stack fan: between groups at slots 3 and 4 (the stack middle)
         yf = up(cy + PC_PITCH * 16 - fh / 2, GY)
@@ -2291,6 +2304,12 @@ def place(m, K, geo, F):
         x, y = free_spot(m, w, h, anchors[nm], GX, GY)
         m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
+    if NATIVE_SLOTS:
+        m['geo']['native_slot_reservations'] = dict(
+            group_um=[388.8, 388.8], ctl_um=list(FRAME['ctl']),
+            geometry_only=True, qualified=False,
+            obligation='Replan physical relays and derive ages from the actual placed pins; '
+                       'no source/view/native-census or calendar qualification implied.')
     # KV-PLAN-FIN: the stream final join between the two PV pair strips (pvw_0 strip = its top, pvw_1 strip = its bottom),
     # W of the attention hub (the reciprocal source): both 512-b pair streams and rz are ~0.5-1.5 mm hops
     ah = by.get('ahub')
