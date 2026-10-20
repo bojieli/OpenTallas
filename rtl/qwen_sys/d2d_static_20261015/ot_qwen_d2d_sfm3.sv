@@ -14,7 +14,8 @@
 //      (152 pins) -> per-group KEPT header copies hk_c (static header predicate) and he_c (epoch field) registered from rf
 //      on the rx_flit edge (same D word, equal from the first edge); each group compares its own copy; NG2 10 -> 13 groups.
 //  (3) epoch_begin copies ebc[1] / [2] / [9] at 48..57 loads -> 17 external copies (slot link 12, end 4, STATUS/KVN 1),
-//      loaded from a KEPT begin_now copy bn_c (begin_now itself measured 36 in the first sfm3 gate census).
+//      (r3: 18, + end eb8b), loaded from a KEPT begin_now copy bn_c (ebc == epoch_begin from the second edge, any init) (begin_now itself measured 36 in the first sfm3 gate census).
+//  (5) r3: segment-1 base write registered like the image (8 strobes + 2 decoded-base copies, readers on the D side).
 //  (4) cal_seg pin copy 0 at 36 loads (first[17:0]) -> 5 copies per calendar (first[8:0] / first[17:9] split).
 module ot_qkvd_llr_replay_sram_leaf_sfm3 #(
     parameter integer W = 137, QD = 64,
@@ -347,7 +348,6 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
         assign tv[32*gi +: 32] = (MUTFO == 8) ? e : ed;
     end
     // ---- segment-1 base, one-hot.  Copy 0 is the master; copy 1 takes the SAME D net (sel1_d) ----
-    wire seg_we = cfg_we && !running && cfg_addr[AW];
     wire [NE-1:0] sel1_dec = {{(NE-1){1'b0}}, 1'b1} << cfg_base_c;
     // ---- FIRST-EPOCH GUARD (FEG; KV-SRAM-D2D 10-19).  Receipt of every ACCEPTED image write since local POR (the same
     // predicate as the image / base register writes: we && !running).  A start is authorised only with the complete receipt
@@ -394,12 +394,29 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
         else begin poison <= poison_d; ok_c <= {4{ok_d}}; end
     wire [3:0] st_a = FEGON ? (start_c & ok_c & {4{!fg_we}}) : start_c;
     wire [3:0] ht_a = FEGON ? (halt_c | {4{poison}}) : halt_c;
+    // KV-D2D3 r3: the base write is REGISTERED like the image (the sfm3 r2 gate census measured the shared seg_we / write
+    // predecode net at 36 / 38 pins): sq = 8 KEPT strobes (copy c, byte q of the one-hot) of seg_we, sdq0 / sdq1 = two KEPT
+    // copies of the decoded base, all from the accept edge; sel1_c0 (master) <= sel1_d0 = sq ? sdq0 : sel1_c0 one edge later,
+    // and every reader uses the D side sel1_d0 (low word half / pointer low half) / sel1_d1 (high halves) == the as-built
+    // base on every edge.  sel1_d1 holds from the MASTER's Q (sel1_c0), so sel1_c1 == sel1_c0 from the second edge for any
+    // initial state (MUTFO 1: copy holds itself = the non-convergent class).
     (* keep = "true", dont_touch = "true" *) reg [NE-1:0] sel1_c0;
     (* keep = "true", dont_touch = "true" *) reg [NE-1:0] sel1_c1;
-    wire [NE-1:0] sel1_d = seg_we ? sel1_dec : sel1_c0;
+    (* keep = "true", dont_touch = "true" *) reg [7:0] sq;
+    (* keep = "true", dont_touch = "true" *) reg [NE-1:0] sdq0, sdq1;
+    (* keep = "true", dont_touch = "true" *) reg run_s;
+    wire seg_we_s = cfg_we && !run_s && cfg_addr[AW];
     (* keep = "true", dont_touch = "true" *) always @(posedge ck) begin
-        sel1_c0 <= sel1_d;
-        sel1_c1 <= (MUTFO == 1) ? (seg_we ? sel1_dec : sel1_c1) : sel1_d;
+        sq <= {8{seg_we_s}}; sdq0 <= sel1_dec; sdq1 <= sel1_dec;
+    end
+    wire [NE-1:0] sel1_d0, sel1_d1;
+    for (gi = 0; gi < NE; gi = gi + 1) begin : g_s1
+        assign sel1_d0[gi] = sq[gi / 8] ? sdq0[gi] : sel1_c0[gi];
+        assign sel1_d1[gi] = sq[4 + gi / 8] ? sdq1[gi] : ((MUTFO == 1) ? sel1_c1[gi] : sel1_c0[gi]);
+    end
+    (* keep = "true", dont_touch = "true" *) always @(posedge ck) begin
+        sel1_c0 <= sel1_d0;
+        sel1_c1 <= sel1_d1;
     end
     // ---- AND-OR selects: bits [H-1:0]... of the selected word from copy 0, the upper word half from copy 1 ----
     reg [31:0] f1_lo, f1_hi, nx_lo, nx_hi;
@@ -410,8 +427,8 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
     always @* begin
         f1_lo = 32'd0; f1_hi = 32'd0; nx_lo = 32'd0; nx_hi = 32'd0;
         for (k = 0; k < NE; k = k + 1) begin
-            f1_lo = f1_lo | ({32{sel1_c0[k]}} & tv[32*k +: 32]);
-            f1_hi = f1_hi | ({32{sel1_c1[k]}} & tv[32*k +: 32]);
+            f1_lo = f1_lo | ({32{sel1_d0[k]}} & tv[32*k +: 32]);
+            f1_hi = f1_hi | ({32{sel1_d1[k]}} & tv[32*k +: 32]);
             nx_lo = nx_lo | ({32{pc0[k]}} & tv[32*k +: 32]);
             nx_hi = nx_hi | ({32{pc1[k]}} & tv[32*k +: 32]);
         end
@@ -435,12 +452,12 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
     (* keep = "true", dont_touch = "true" *) reg run_c;
     wire run_d = ht_a[3] ? 1'b0 : st_a[0] ? 1'b1 : (running && cnt == 14'd1 && rep == 5'd0 && cur[17]) ? 1'b0 : running;
     (* keep = "true", dont_touch = "true" *) always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin running <= 1'b0; run_c <= 1'b0; run_g <= 1'b0; run_w <= 8'd0; end
-        else begin running <= run_d; run_c <= run_d; run_g <= run_d; run_w <= {8{run_d}}; end
+        if (!rst_n) begin running <= 1'b0; run_c <= 1'b0; run_g <= 1'b0; run_w <= 8'd0; run_s <= 1'b0; end
+        else begin running <= run_d; run_c <= run_d; run_g <= run_d; run_w <= {8{run_d}}; run_s <= run_d; end
     wire adv   = running && cnt == 14'd1 && rep == 5'd0 && !cur[17];
     wire adv_h = run_c && cnt == 14'd1 && rep == 5'd0 && !cur[17];
     // ---- pointer: one-hot + lap bit, ONE D net for master and copy (ptr <= {0,sb}+1 / ptr+1 / hold) ----
-    wire [NE-1:0] sel1_h = {sel1_c1[NE-1:H], sel1_c0[H-1:0]};
+    wire [NE-1:0] sel1_h = {sel1_d1[NE-1:H], sel1_d0[H-1:0]};
     wire [NE-1:0] st_s1  = {sel1_h[NE-2:0], sel1_h[NE-1]};       // one-hot (seg1 + 1) mod NE
     wire [NE-1:0] rot    = {pc0[NE-2:0], pc0[NE-1]};
     reg  [NE-1:0] pd;
@@ -453,7 +470,7 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
             else pd[k] = pc0[k];
         end
         if (ht_a[1]) phd = ph;
-        else if (st_a[3]) phd = seg_c[3] & sel1_c1[NE-1];
+        else if (st_a[3]) phd = seg_c[3] & sel1_d1[NE-1];
         else if (adv_h) phd = ph ^ pc0[NE-1];
         else phd = ph;
     end
@@ -500,12 +517,13 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
         end
     end
 `ifdef OT_FO_CHECK
-    reg fo_armed = 1'b0;
+    reg fo_armed = 1'b0, fo_arm0 = 1'b0;   // r3: sel1_c1 converges on the SECOND edge (its D holds from the master's Q)
     always @(posedge ck) begin
+        fo_arm0 <= 1'b1;
         if (fo_armed && (sel1_c1 !== sel1_c0 || pc1 !== pc0 || run_c !== running || ok_c !== {4{ok_c[0]}} || run_g !== running ||
-                         run_w !== {8{running}} || seg_c !== {5{seg_c[0]}}))
+                         run_w !== {8{running}} || run_s !== running || sq !== {8{sq[0]}} || sdq1 !== sdq0 || seg_c !== {5{seg_c[0]}}))
             $display("FO_COPY_MISMATCH %m t=%0t sel1 %h/%h pc %h/%h", $time, sel1_c0, sel1_c1, pc0, pc1);
-        fo_armed <= 1'b1;
+        fo_armed <= fo_arm0;
     end
 `endif
 endmodule
@@ -531,7 +549,8 @@ module ot_qwen_d2d_static_end_sfm3 #(
     input  wire [11:0]      cfg_addr_c,   // [5:0] TX calendar, [11:6] RX calendar (pin copies)
     input  wire [127:0]     cfg_data_c,   // [63:0] TX calendar halves, [127:64] RX calendar halves (pin copies)
     input  wire [9:0]       cfg_base_c,   // [4:0] TX, [9:5] RX: pin copies of cfg_data[4:0] for the base decode
-    input  wire [15:0]      eb_c,         // KV-D2D3: [11:0] slot link, [12] eb8, [13] / [14] / [15] RX alignment groups
+    input  wire [16:0]      eb_c,         // KV-D2D3: [11:0] slot link, [12] eb8 (counters), [13] / [14] / [15] RX alignment
+                                          // groups, [16] eb8b (synchronous clears, rs2 / end_fault copies)
     input  wire             epoch_begin,
     input  wire [7:0]       epoch,
     input  wire             cal_start,    // OVL user tag only (the calendars use start_c)
@@ -646,6 +665,7 @@ module ot_qwen_d2d_static_end_sfm3 #(
     reg [5:0] wcnt, rslot; reg rd_v;
     wire [5:0] wslot = (MUT == 1) ? wcnt + 6'd1 : wcnt;
     wire eb8 = (MUTFO == 4) ? 1'b0 : eb_c[12];
+    wire eb8b = (MUTFO == 4) ? 1'b0 : eb_c[16];
     wire [5:0] wcnt_d = eb8 ? 6'd0 : (wr_v ? wcnt + 6'd1 : wcnt);
     wire [5:0] rslot_d = eb8 ? rslot : wslot;
     (* keep = "true", dont_touch = "true" *) reg [29:0] wc_c;
@@ -663,7 +683,7 @@ module ot_qwen_d2d_static_end_sfm3 #(
     always @(posedge ck[0] or negedge rst_cl) begin
         if (!rst_cl) begin
             rd_v <= 0; ecnt <= 0; end_fault <= 0; r1v <= 0; r2v <= 0; rx_slot <= 0;
-        end else if (eb8) begin
+        end else if (eb8b) begin
             rd_v <= 0; ecnt <= 0; end_fault <= 0; r1v <= 0; r2v <= 0; rx_slot <= 0;
         end else begin
             rd_v <= wr_v & ~halt;
@@ -673,7 +693,7 @@ module ot_qwen_d2d_static_end_sfm3 #(
             for (i = 0; i < NR; i = i + 1) rx_slot[i] <= r1v && r1p == i;
         end
     end
-    wire ef_d = eb8 ? 1'b0 : (end_fault | stray | multi | tf | rf | bad_port);
+    wire ef_d = eb8b ? 1'b0 : (end_fault | stray | multi | tf | rf | bad_port);
     (* keep = "true", dont_touch = "true" *) always @(posedge ck[0] or negedge rst_cl)
         if (!rst_cl) efc <= 9'd0; else efc <= {9{ef_d}};
     wire [2:0] r2p_n = (MUT == 2 && r1p < 2) ? r1p ^ 3'd1 : r1p;
@@ -690,7 +710,7 @@ module ot_qwen_d2d_static_end_sfm3 #(
     // STATUS (port 2) capture copies: rx_event[2] = rx_v && r2p == 2, rx_slot[2]; same D nets, same resets
     wire lrx_v, lrx_v_nx;
     wire ev2_d = !eb_c[15] && lrx_v_nx && r2p_n == 3'd2;
-    wire rs2_d = !eb8 && r1v && r1p == 3'd2;
+    wire rs2_d = !eb8b && r1v && r1p == 3'd2;
     (* keep = "true", dont_touch = "true" *) reg [NG2-1:0] ev2_c;
     (* keep = "true", dont_touch = "true" *) reg [NG2-1:0] rs2_c;
     (* keep = "true", dont_touch = "true" *) always @(posedge ck[0] or negedge rst_lk)
@@ -711,7 +731,7 @@ module ot_qwen_d2d_static_end_sfm3 #(
 `ifdef OT_FO_CHECK
     reg fo_armed = 1'b0;
     always @(posedge ck[0]) begin
-        if (fo_armed && (eb_c !== {16{eb_c[0]}})) $display("FO_COPY_MISMATCH %m eb t=%0t", $time);
+        if (fo_armed && (eb_c !== {17{eb_c[0]}})) $display("FO_COPY_MISMATCH %m eb t=%0t", $time);
         if (fo_armed && (wc_c !== {5{wcnt}} || rs_c !== {5{rslot}} || ev2_c !== {NG2{rx_event[2]}} ||
                          rs2_c !== {NG2{rx_slot[2]}} || efc !== {9{end_fault}} || ab_x !== {9{epoch_abort}}))
             $display("FO_COPY_MISMATCH %m t=%0t", $time);
@@ -840,11 +860,12 @@ module ot_qwen_d2d_recovery_sfm3 #(
         end
     end
 `ifdef OT_FO_CHECK
-    reg fo_armed = 1'b0;
+    reg fo_armed = 1'b0, fo_arm0 = 1'b0;   // ebc (D = bn_c) converges on the SECOND edge, bn_c on the first
     always @(posedge ck) begin
+        fo_arm0 <= 1'b1;
         if (fo_armed && (stc !== {2{st}} || cntc !== {2{counting}} || ebc !== {(NEB+3){epoch_begin}} || bn_c !== begin_now))
             $display("FO_COPY_MISMATCH %m t=%0t", $time);
-        fo_armed <= 1'b1;
+        fo_armed <= fo_arm0;
     end
 `endif
 endmodule
@@ -907,7 +928,7 @@ module qkd_d2d_static_core_sfm3 #(parameter integer MUT = 0, parameter integer N
     generate if (SAFE_RC != 1) begin : g_sfo_needs_rc
         QKD_D2D_SAFE_FO_NEEDS_SAFE_RC1 u_sfo_rc ();
     end endgenerate
-    localparam integer NEB = 17;   // epoch_begin copies (KV-D2D3): [11:0] slot link, [15:12] end, [16] STATUS / KVN
+    localparam integer NEB = 18;   // epoch_begin copies (KV-D2D3): [11:0] slot link, [16:12] end, [17] STATUS / KVN
     localparam integer RCP = 12;   // reset copies per region (ot_rst_pipe COPIES; OT_RST_COPIES_MAX spreads the loads)
     localparam integer NG2 = 13;   // STATUS capture groups (KV-D2D3: 13 x 12 b, own header copies)
     wire [NEB-1:0] ebc;
@@ -944,7 +965,7 @@ module qkd_d2d_static_core_sfm3 #(parameter integer MUT = 0, parameter integer N
         .epoch_begin(eb), .epoch(ep), .link_up(lu), .links_drained(dr), .link_reset_seen(seen), .retrained(rt),
         .transport_fault(tf), .recovering(rec), .recovery_cycles(recovery_cycles), .epoch_begin_c(ebc));
     ot_qwen_d2d_static_end_sfm3 #(.NT(NTX), .NR(4), .TXD(TXDP), .MUT(MUT), .OVL(OVL), .NRC(4), .NG2(NG2), .MUTFO(MUTFO), .SRAMV(SRAMV), .FEG(FEG)) u_end (.por_c({2{local_por_n[0]}}), .fg_we(fg_we), .fg_addr(fg_addr),
-        .ck({5{ck}}), .rst_n(end_rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr_c(sf_cfg_addr), .cfg_data_c(sf_cfg_data), .cfg_base_c(sf_cfg_base), .eb_c(ebc[15:0]),
+        .ck({5{ck}}), .rst_n(end_rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr_c(sf_cfg_addr), .cfg_data_c(sf_cfg_data), .cfg_base_c(sf_cfg_base), .eb_c(ebc[16:0]),
         .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .start_c(sf_start), .seg_c(sf_seg),
         .cal_start_rx(cal_start_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx),
         .tx_user(tx_user), .rx_user(rx_user),
@@ -972,8 +993,8 @@ module qkd_d2d_static_core_sfm3 #(parameter integer MUT = 0, parameter integer N
         .execution_active(s_ea), .admit_ready(s_ar), .status_fresh(s_fr), .result_v(engine_result_v),
         .result_done(engine_result_done), .result_fault(engine_result_fault), .result_cause(engine_result_cause),
         .result_tag(engine_result_tag), .result_gen(engine_result_gen), .result_token(engine_result_token),
-        .result_value(engine_result_value), .result_cycles(engine_result_cycles), .epoch_begin(ebc[16]), .fault(s_f));
-    ot_qwen_d2d_kvn_rx u_kvn (.ck(ck), .rst_n(local_rst_n[3] & ~ebc[16]), .rx_event(rxe[3]), .rx_slot(rxs[3]), .rx_beat(rb),
+        .result_value(engine_result_value), .result_cycles(engine_result_cycles), .epoch_begin(ebc[17]), .fault(s_f));
+    ot_qwen_d2d_kvn_rx u_kvn (.ck(ck), .rst_n(local_rst_n[3] & ~ebc[17]), .rx_event(rxe[3]), .rx_slot(rxs[3]), .rx_beat(rb),
         .rx_payload(rxp), .compiled_identity(kvn_compiled_identity), .compiled_generation(kvn_compiled_generation),
         .word_valid(kvn_word_valid), .word_tag(kvn_word_tag), .word_data(kvn_word_data),
         .word_identity(kvn_word_identity), .word_generation(kvn_word_generation), .word_slot(kvn_word_slot),
