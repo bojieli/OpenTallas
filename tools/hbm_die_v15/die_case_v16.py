@@ -735,6 +735,16 @@ def main():
         reach_rec.update(fails=LP.fails, not_inserted=LP.not_inserted[:5000], relaxed=LP.relaxed[:5000])
         print('lane rows (reach)', len(rows_), 'tiles', sum(len(v) for v in rows_.values()), dict(lane_stats),
               'REACH_FAIL rows', len(LP.fails), 'not_inserted hops', len(LP.not_inserted), flush=True)
+        if a.lane_reach == 'fail' and (LP.fails or LP.not_inserted):
+            # A failed bounded row must never enter the legacy unconstrained
+            # per-tile fallback. Preserve the full blocker packet immediately;
+            # diag mode may still finish the explicit unqualified audit case.
+            reach_rec.update(verdict='REACH_FAIL', stage='bounded_lane_rows',
+                             complete_placement=False, final_edge_audit_pending=True)
+            (out / 'reach_fail.json').write_text(json.dumps(reach_rec, indent=1))
+            raise SystemExit(f'GEN_REACH_FAIL: {len(LP.fails)} bounded lane rows fail; '
+                             f'{len(LP.not_inserted)} planned hops missing stations; '
+                             'stopped before unbounded fallback; see reach_fail.json')
         order_ = []
     for rid in order_:
         tl = [rows_[rid][t] for t in sorted(rows_[rid])]
