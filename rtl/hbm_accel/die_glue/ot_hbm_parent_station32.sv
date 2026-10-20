@@ -14,7 +14,7 @@ module ot_hbm_parent_station32 #(
 );
     localparam integer BANK = 24;
     localparam integer G = (W + BANK - 1) / BANK;
-    (* keep = "true", dont_touch = "true" *) reg face1;
+    (* keep = 1, dont_touch = 1 *) reg face1;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) face1 <= 1'b0;
         else face1 <= 1'b1;
@@ -27,9 +27,9 @@ module ot_hbm_parent_station32 #(
     generate for (g = 0; g < G; g = g + 1) begin : g_bank
         localparam integer LO = g * BANK;
         localparam integer N = (W - LO > BANK) ? BANK : W - LO;
-        (* keep = "true", dont_touch = "true" *) reg face2;
-        (* keep = "true", dont_touch = "true" *) reg [N-1:0] data_q;
-        (* keep = "true", dont_touch = "true" *) reg ready_q;
+        (* keep = 1, dont_touch = 1 *) reg face2;
+        (* keep = 1, dont_touch = 1 *) reg [N-1:0] data_q;
+        (* keep = 1, dont_touch = 1 *) reg ready_q;
         always @(posedge ck or negedge rst_n)
             if (!rst_n) face2 <= 1'b0;
 `ifdef OT_HBM_PARENT_STATION_MUT_RESET
@@ -59,7 +59,7 @@ endmodule
 
 module ot_hbm_parent_station_buf(input wire a, output wire y);
 `ifdef SYNTHESIS
-    (* keep = "true", dont_touch = "true" *) BUFx12f_ASAP7_75t_R u_cell (.A(a), .Y(y));
+    (* keep = 1, dont_touch = 1 *) BUFx12f_ASAP7_75t_R u_cell (.A(a), .Y(y));
 `else
     assign y = a;
 `endif
