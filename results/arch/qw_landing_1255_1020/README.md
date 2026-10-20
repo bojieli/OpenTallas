@@ -135,3 +135,11 @@ Exact fleet compiler CLI unit47471-1792526949 exited as expected: printed
 FACE_PROPOSAL_ONLY, emitted exactly one proposal JSON and NO deployment output;
 the harness verified this refusal and returned0. No additional RTL bench or
 gate was launched after discovering incomplete native ownership.
+
+Actual g5 geometry: dvs_E1 bbox[19396.800,10800,21859.176,13391.976]um,
+dvs_E2 bbox[21859.200,10800,24321.576,13391.976]um; external gap0.024um.
+There is no external die site for a landing. Both are mirrored E variants:
+the source wf and receiving ef meet across this seam. The successor therefore
+needs real internal receiver-face placement of43macro banks. No such region is
+reserved or placed yet; gross parent bbox capacity is not a free-space proof.
+`geometry_prerequisite.json` records the actual boxes and this outstanding cost.

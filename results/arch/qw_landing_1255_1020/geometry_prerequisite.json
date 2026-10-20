@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.qwen.face_geometry_prerequisite.v1",
+  "actual_source": "ot-epyc6:/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/chain/dieclk/geom/blocks.tsv",
+  "source": {
+    "inst": "dvs_E1",
+    "master": "qfd_dv_slice2_e",
+    "bbox_um": [
+      19396.8,
+      10800.0,
+      21859.176,
+      13391.976
+    ]
+  },
+  "receiver": {
+    "inst": "dvs_E2",
+    "master": "qfd_dv_slice2_e",
+    "bbox_um": [
+      21859.2,
+      10800.0,
+      24321.576,
+      13391.976
+    ]
+  },
+  "external_gap_um": 0.024,
+  "external_ring_site_exists": false,
+  "region_source_candidate": {
+    "transmit": "wf",
+    "receive": "ef"
+  },
+  "internal_macro_requirement": {
+    "count": 43,
+    "master": "ot_sram_1r1w2c_32x64_m1",
+    "size_um": [
+      31.992,
+      17.304
+    ],
+    "lattice_um": 43.2,
+    "total_macro_area_um2": 23804.351423999997
+  },
+  "internal_placement_reserved": false,
+  "placed_ring_macros": 0,
+  "parent_native_view_bound": false,
+  "physical_qualification_eligible": false,
+  "remaining": "actual regional parent internal macro/row/pin obstruction placement required; bbox capacity is not free-space proof"
+}
