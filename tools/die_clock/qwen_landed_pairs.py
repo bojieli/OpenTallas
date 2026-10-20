@@ -11,6 +11,9 @@ Classes per directed pair (launch A -> capture B, one net):
   RESET_ROOT cross-region reset/boot hop (n_rst_*): owes the die STA release window at TT + FF
   NEIGHBOUR  zero-stage cluster/slice -> cluster/slice hop across regions: allowed only neighbour-matched (v1 trim)
   GAP        any other cross-region data pair with no landing: violates the landed-regions standard (must be 0)
+  FEED       qfd_ckbump pll_ck -> qfd_clkrx pll_fwd (the clock feed; built as the 'feed' tree)
+  RESET_SYNC qfd_ckbump rs -> qfd_rstsync (async-assert / synchronised-release landing of the package reset)
+  BUMP       qfd_sigbump (off-die, forwarded with pll_fwd) -> a die-root capture: owes hop-0 on the feed clock + landing
   NO_ROOT    an endpoint has a clock pin with no die root (undriven trunk): a GEN gap, not a clocking verdict
 With measured arrivals (build.py arrivals_<c>.tsv) it also reports, per landed lane, the CLOCK part of the landing lag:
   dck_c = arrival(landing ck, dst root) - arrival(hop-0 ck / ck_s, src root) at TT and FF, and its corner drift; the
@@ -23,6 +26,7 @@ from pathlib import Path
 
 STATION = ('qfd_rlyh_', 'qfd_rlyr_')          # forwarded mid-lane stations: clocked by ckf only
 LANDING = ('qfd_landh_', 'qfd_landh0_', 'qfd_rlyrl_')
+BUMP = ('qfd_sigbump',)                        # off-die signal bumps (forwarded with the package clock pll_fwd)
 
 
 def arrivals(p):
@@ -69,6 +73,13 @@ def main():
             c = 'FWD'
         elif mB.startswith(LANDING) and RB:
             c = 'LANDED'
+        elif mA.startswith('qfd_ckbump') and mB.startswith('qfd_clkrx'):
+            c = 'FEED'        # QW-DIECLK4: the package clock bump -> clock receiver (the feed tree), not a data pair
+        elif mA.startswith('qfd_ckbump') and mB.startswith('qfd_rstsync') and RB:
+            c = 'RESET_SYNC'  # forwarded package reset into its 2-flop release synchroniser on the die root (async assert)
+        elif mA.startswith(BUMP) and not RA and RB:
+            c = 'BUMP'        # QW-DIECLK4: off-die input that arrives with the forwarded package clock (pll_fwd): the GEN
+            #                   owes a hop-0 on the feed clock beside the bump + a landing into the region root
         elif not RA or not RB:
             c = 'NO_ROOT'
         elif net.startswith('n_rst') or 'rst' in net:
@@ -79,7 +90,7 @@ def main():
         else:
             c = 'GAP'
         cnt[c] += 1
-        if c in ('GAP', 'NEIGHBOUR'):
+        if c in ('GAP', 'NEIGHBOUR', 'BUMP'):
             for ra in RA:
                 for rb in RB:
                     gap_rp[(ra, rb)] += 1
