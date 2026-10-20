@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+OK   mu_image: committed d2d_cal_image_mu.svh == compiler (D2D_MU=1)
+BAD  kvctx_pass (want MU_KVCTX_PASS): MU_KVCTX_FAIL kmut 0 rmut 0 cal cmut 0: kvctx_k0_r0_cal_c0 C10 filler native contexts (got 0 want 108; missing [(3209, 8465, 73716), (5396, 8738, 139246)]; extra []); user-0 contexts mu 0 vs solo 1 | kvctx_k0_r0_cal_c0 C8 mu native_pos user carrier: (bad, starts u1, u2, u3) = None
+MU_KVCTX BENCHES: FAIL
+# exit 1
