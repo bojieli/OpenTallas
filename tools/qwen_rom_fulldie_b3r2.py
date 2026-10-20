@@ -3818,6 +3818,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for idx in work:
             reservations.release(idx, plans[idx]['frames'], unplace)
             lifted0.add(idx)
+        # QW-G5F3 10-20 (Q.BIND.1, OT_SPLIT_FAULT_EMIT): the 1-bit fault-tree edges (flt_*, observation only) yield to
+        # every data bus: their pass-1 frames leave the grid with the repair set and they are re-searched LAST
+        # (dv2f20g5f: pass-1 fault frames held the end sites of dvw_st_wi 1088b -> 'end free 59 / reached 0', rc=4)
+        if _os.environ.get('OT_SPLIT_FAULT_EMIT', '0') == '1' and _os.environ.get('OT_RELAY_FAULT_LAST', '1') == '1':
+            _flt = [idx for idx, pl in sorted(plans.items()) if str(pl['bid']).startswith('flt_')]
+            for idx in _flt:
+                if idx not in lifted0:
+                    reservations.release(idx, plans[idx]['frames'], unplace)
+                    lifted0.add(idx)
+                    plans[idx]['frames'] = []   # off the grid: never emitted unless re-searched (needs_repair sees the bare hop)
+            _fs = set(_flt)
+            work = [idx for idx in work if idx not in _fs] + _flt
+            print(f'FAULT_EMIT relay order: {len(_flt)} fault-tree edges lifted and re-searched after the data buses', flush=True)
     ripped = set()
     rounds = 0
     RIP_ROUNDS = int(_os.environ.get('OT_RELAY_RIP_ROUNDS', '40'))   # QW-G5F2: rip-up budget (default the historical 40)
