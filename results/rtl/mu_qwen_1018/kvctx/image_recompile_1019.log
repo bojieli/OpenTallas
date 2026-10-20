@@ -1,0 +1,36 @@
+ot-run: ot-epyc8       admits  1282 GB (avail 954, growth 50, headroom 0, waiters 0/0 GB) load 18/128 running 14 disk 345 GB 
+ot-run: ot-epyc9       admits  1145 GB (avail 905, growth 103, headroom 0, waiters 0/0 GB) load 17/128 running 20 disk 638 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-571723-1792470568 after 0 s
++ for m in 1 0
++ D2D_MU=1
++ bash tools/qwen_split/d2d_cal_image_production.sh ../img_mu1
+image: ../img_mu1/d2d_cal_image.svh (die stages 2,2,2,3,2,2/11,11,9,9,9,9,9, kv codec 2)
++ for m in 1 0
++ D2D_MU=0
++ bash tools/qwen_split/d2d_cal_image_production.sh ../img_mu0
+image: ../img_mu0/d2d_cal_image.svh (die stages 2,2,2,3,2,2/11,11,9,9,9,9,9, kv codec 2)
++ D2D_MU=1
++ D2D_KV_CODEC=1
++ bash tools/qwen_split/d2d_cal_image_production.sh ../img_mu1_codec1
+image: ../img_mu1_codec1/d2d_cal_image.svh (die stages 2,2,2,3,2,2/11,11,9,9,9,9,9, kv codec 1)
++ cmp ../img_mu1/d2d_cal_image.svh rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh
++ echo MU_IMAGE_IDENTICAL
+MU_IMAGE_IDENTICAL
++ cmp ../img_mu0/d2d_cal_image.svh rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh
+SU_IMAGE_IDENTICAL
++ echo SU_IMAGE_IDENTICAL
++ grep -H TXDP ../img_mu0/d2d_cal_image.svh ../img_mu1/d2d_cal_image.svh ../img_mu1_codec1/d2d_cal_image.svh
+../img_mu0/d2d_cal_image.svh:localparam [31:0] D2D_TXDP_C = 32'h0a010308;   // compute TXDP ports 0..3 = [8, 3, 1, 10]; die stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 3, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 9, 'SK_TXP': 9}
+../img_mu0/d2d_cal_image.svh:localparam [31:0] D2D_TXDP_K = 32'h03030416;   // KV TXDP ports 0..3 = [22, 4, 3, 3]
+../img_mu1/d2d_cal_image.svh:localparam [31:0] D2D_TXDP_C = 32'h0a010308;   // compute TXDP ports 0..3 = [8, 3, 1, 10]; die stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 3, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 9, 'SK_TXP': 9}
+../img_mu1/d2d_cal_image.svh:localparam [31:0] D2D_TXDP_K = 32'h03030416;   // KV TXDP ports 0..3 = [22, 4, 3, 3]
+../img_mu1_codec1/d2d_cal_image.svh:localparam [31:0] D2D_TXDP_C = 32'h0a010308;   // compute TXDP ports 0..3 = [8, 3, 1, 10]; die stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 3, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 9, 'SK_TXP': 9}
+../img_mu1_codec1/d2d_cal_image.svh:localparam [31:0] D2D_TXDP_K = 32'h03030415;   // KV TXDP ports 0..3 = [21, 4, 3, 3]
++ sha256sum ../img_mu0/d2d_cal_image.svh ../img_mu1/d2d_cal_image.svh ../img_mu1_codec1/d2d_cal_image.svh rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh
+f9d7818c68fbb98300587bd0f5781de895aa432ab8cdede414188d5e30bfbff1  ../img_mu0/d2d_cal_image.svh
+e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae  ../img_mu1/d2d_cal_image.svh
+b68b9fb8422f648ffc8ce750bd01522f09687e033d301705c4dd9e2fe4bb7913  ../img_mu1_codec1/d2d_cal_image.svh
+f9d7818c68fbb98300587bd0f5781de895aa432ab8cdede414188d5e30bfbff1  rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh
+e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae  rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-571723-1792470568): exit 0
