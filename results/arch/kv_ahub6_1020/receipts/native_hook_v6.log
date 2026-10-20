@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc9       admits   813 GB (avail 687, growth 118, headroom 0, waiters 0/0 GB) load 76/128 running 38 disk 184 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-4169862-1792483031 after 0 s
+PRE_GATE_NATIVE_CENSUS FAIL report=/work/mandatory_native.json
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-4169862-1792483031): exit 1

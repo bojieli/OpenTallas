@@ -72,3 +72,43 @@ in the scratch overlay. No live Claude file was modified. Output is ep9
 `/srv/opentallas-scratch/codex/kv-ahub6/chunk2_work_v2`. Collect the new mapped
 netlist, count every driver, and complete the remaining source fixes before any
 gate. Exactness benches and mutant witnesses remain owed on the changed source.
+
+## Control/state structural successor, staged v3 through v9
+
+Private qkd_ahub6_controls.sv is generated from the unchanged g3 safe source.
+All new register copies capture on the existing edge. It distributes command,
+identity, calendar, export enables, core clears, and same-depth reset leaves.
+Z seen/write storage is split into sixteen-bit local components. LM and RZ
+capture words are split into eight-bit kept components. Decoder arithmetic is
+partitioned into nine semantic groups, with eight same-edge age copies.
+No added data/control cycle or timing-constraint relaxation is implemented.
+
+Source inspection found that ot_rst_pipe has two asynchronous-assert/release
+synchronizer stages PLUS two plain regional stages. The initial private v4-v6
+reset implementation had only the plain stages and is NOT eligible for adoption,
+even though its late-command miter passed. v7 restores all four stages. The
+stronger test drives commands during reset release and covers T=1/128/513/1024/
+4096/8192. It passes 11991 comparisons and rejects both a bad command copy and
+a mutant removing the synchronizer stages. This reset correction precedes any
+layout gate. The final v9 source additionally passes the ordinary core miter;
+full die-calendar exactness is running separately.
+
+Mandatory census tool source94de8573f reads the seven exact std/child Liberty
+files extracted from actual Yosys Executing Liberty frontend lines. It uses
+Liberty functional BUF/INV transparency and checks every dynamic driver/reset/
+macro data contact, without exceptions. v7 remains FAIL42/max133. All broad
+reset violations are gone; remaining mapped fanout is in control/arithmetic and
+wide capture cones. The133 root was traced to RZ128 capture and67 roots to LM32
+capture. v8/v9 partition these actual endpoint groups, rather than relabeling
+buffers. Native summaries preserve ALL violations, exact source/Liberty hashes,
+and full remote receipt hashes; driver_counts is omitted only to avoid a22MB
+inline file. The admission hook itself consumes full receipts.
+
+Measured cost: baseline mapped20527 flops/82607 cells; partial v5 mapped44389
+flops/168423 cells. Much of the increase is independent epoch/reset state for
+narrow landing chunks. These are intermediate measured counts, not final area
+or a closed view. Macro count, payload widths, D4/K2, seven clock regions and all
+compiler latency deltas remain inherited. Model cycle delta is0 at this stage.
+
+No source in this packet is approved for a layout gate until native count0,
+complete exactness witnesses, reset binding, and a new physical checklist.

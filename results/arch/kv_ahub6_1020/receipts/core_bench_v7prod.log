@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc9       admits   801 GB (avail 686, growth 125, headroom 0, waiters 0/0 GB) load 72/128 running 43 disk 184 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-4175511-1792483055 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+AHUB6_CORE_PASS checked=11991
+AHUB6_CORE_FAIL n=9 start=0 zh=f/0 fault=1/1
+AHUB6_CORE_FAIL n=9 start=0 zh=f/f fault=1/1
+AHUB6_CORE_SUITE_PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-4175511-1792483055): exit 0
