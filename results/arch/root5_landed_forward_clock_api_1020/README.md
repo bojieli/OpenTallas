@@ -1,0 +1,17 @@
+Private landed forwarded-clock API handback
+
+Source branch codex/landed-forward-clock-api-review-1020, source head 3fd3afb0a, based on dd875958b. Private and unmerged. The original 18e patch is an intermediate ancestor only; do not publish that ancestor independently. Published source35 exporter is a separate main change.
+
+The opt-in API requires explicit existing native clock/root and exact per-bit pin/master/output ownership. It never creates clocks or mutates phase. It derives BUF/INV parity from loaded physical Liberty, subtracts matched actual input edge arrivals, checks rise AND fall child-flop spans separately at TT/FF against80ps, freezes identities, and adds complete physical BTerm/child/seq/SRAM census. Clock output escapes require matching native source35 raw combinational extraction and unchanged other sequential ETM bytes. Existing ordinary/global raw-memory audits remain active.
+
+Completed native proof: native_two_sink_matrix.tar.gz contains actual source35 routed BUF macro Lib/LEF/ODB/SPEF, exact parent RTL/constraints/CTS recipe and complete logs. The minimum real source clock drives two native macros through actual BUF and INV branches with waveform23/377, source latency17, setup/hold60/25. SS/FF/TT all accept. Fourteen causal cases refuse. The fall-only82.19ps vs unchanged rise35.46ps probe explicitly corrupts a measured observation as a fault injection; it is NOT physically measured extra insertion or a physical qualification. Wrong generated-clock phase is refused by unchanged canonical clock-family guard before forwarded admission. No test claims a synthetic clock is a FRAME interface clock.
+
+Native SRAM supplement: native_sram_causal.tar.gz uses actual ot_sram_1r1w2c_32x64_m1 artifacts. Both active and inactive write-clock endpoints are physically refused as unbound; STA timing-mode pruning cannot hide them. Native matrices terminal0, ep9 units3878219 and3886186. Earlier final physical-census sourceec56 two-sink TT also terminal0 unit3876788.
+
+DEFAULT_IDENTITY.json proves entries/clocks/landed SDC and entire landed body byte-identical against baseline with absent and empty opt-in keys. Three focused source tests passed.
+
+The full affected ref_tile paired suite is STILL RUNNING at handback: ep9 unit oth-ubuntu-3888597-1792509028, remote /srv/opentallas-scratch/claude/codex-landed-forwarded-api-1020/pair1. Both sides had reached approximately42percent. Preserve this job. Inspect baseline.pytest.log, candidate.pytest.log and final baseline.pytest.xml/candidate.pytest.xml; compare failure/error IDs and classify every NEW failure. Initial pair invocation lacked pytest and failed immediately; its stale PAIR_RESULTS.json must not be confused with final results. A private target pytest installation is recorded in testdeps/install log. No suite PASS/NEW0 claimed yet.
+
+Remaining before publication: finish paired-suite comparison, review final source/model and Gate-Rule classification with ROOT/Claude, seal final suite evidence. No API admission, FRAME regate or promotion is authorized by this packet. Exact RF2 source evidence cdd062ba5/e28720cfd shows xk only DATA constraints and NO actual source clock. Its truthful original source-owner interface contract and native mapped clock/SRAM roles remain missing. Frozen old EW ODB/SPEF remains absent; no EW reexport.
+
+Claude returned; no further source edits, tests, jobs, submits, merges or deployment were launched after the stop instruction. In-hand evidence only was sealed.

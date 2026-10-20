@@ -1,0 +1,140 @@
+{
+  "source_head": "3fd3afb0a",
+  "baseline": "dd875958b0119c9739332101b4e19334f643fa66",
+  "private_branch": "codex/landed-forward-clock-api-review-1020",
+  "source_sha256": {
+    "tools/ref_tile/clock_entry_constraints.py": "0d614e94db9d4a48b4b66346458b82d42d9549d92d737e2e9bb178a6cb2ce732",
+    "physical/common_flow/clock_entries.tcl": "b4f6226ada64be84151e6f6e361286e4834168beb55c3b47d7be0205064725f9"
+  },
+  "native_cases": [
+    {
+      "case": "positive",
+      "corner": "ss",
+      "rc": 0,
+      "expected": "accept",
+      "outcome_matches": true
+    },
+    {
+      "case": "positive",
+      "corner": "ff",
+      "rc": 0,
+      "expected": "accept",
+      "outcome_matches": true
+    },
+    {
+      "case": "positive",
+      "corner": "tt",
+      "rc": 0,
+      "expected": "accept",
+      "outcome_matches": true
+    },
+    {
+      "case": "missing_clock",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "wrong_clock",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "wrong_root",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "ambiguous_clock",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "multi_source",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "wrong_master",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "unbound_pin",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "unbound_output",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "missing_proof",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "nonunary",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "unbound_seq",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "wrong_polarity",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "changed_ownership",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    },
+    {
+      "case": "fall_only_skew",
+      "corner": "tt",
+      "rc": 1,
+      "expected": "refuse",
+      "outcome_matches": true
+    }
+  ],
+  "paired_suite": {
+    "status": "RUNNING_AT_HANDBACK",
+    "host": "ot-epyc9",
+    "unit": "oth-ubuntu-3888597-1792509028",
+    "client_session": 47356,
+    "remote": "/srv/opentallas-scratch/claude/codex-landed-forwarded-api-1020/pair1",
+    "note": "PAIR_RESULTS.json still holds initial missing-pytest failure until current run finishes. Use *.pytest.log and *.pytest.xml for current full suite."
+  },
+  "publication": "PRIVATE_UNMERGED_NOT_ADMITTED",
+  "frame": "Original RF2 xk has no actual source clock; source-owner contract and native RF2 clock proof remain absent."
+}
