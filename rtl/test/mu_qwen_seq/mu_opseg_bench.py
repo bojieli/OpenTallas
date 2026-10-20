@@ -92,6 +92,16 @@ LP_SRCS = ('rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv', 'rtl/common/landed_parent/
 LANDED_RES = []
 
 
+def lp_offsets(root):
+    """QW-CTLM5 10-19: the landed cluster's port offsets from its lp record (not hard-coded): (out, tl, in)."""
+    import json as _j
+    c = _j.load(open(root / 'results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json'))['compiler']
+    ins = {v for v in c['input_port_offset_edges'].values() if v}
+    outs = {v for k, v in c['output_port_offset_edges'].items() if k != 'tl'}
+    assert len(ins) == 1 and len(outs) == 1 and c['reset_release_added_edges'] == 3, ('lp record offsets', ins, outs, c['reset_release_added_edges'])
+    return outs.pop(), c['output_port_offset_edges']['tl'], ins.pop()
+
+
 def build(work, vl, nu, opseg, mut, jobs):
     land = LANDED is not None and nu > 1
     d = work / (f'b_nu{nu}_o{opseg}_m{mut}' + (f'_l{LANDED}' if land else ''))
@@ -105,7 +115,7 @@ def build(work, vl, nu, opseg, mut, jobs):
     dmut, cxmut = (0, 1) if mut == 34 else (mut, 0)
     cmd = [vl, '--binary', '--timing', '-O2', '-j', str(jobs), '-Wno-fatal', '-Wno-lint', '-Wno-style', '-Wno-TIMESCALEMOD',
            '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_mu_opseg_dv',
-           f'-GNU={nu}', f'-GMUT={dmut}', f'-GOPSEG={opseg}', f'-GCTX_SRC={opseg}', f'-GFCTX={opseg}', f'-GCLMUT={cxmut}', *(['+define+TB_LANDED', f'-GLMUT={LANDED}'] if land else []), '-Mdir', str(d)] + srcs + [str(TB)]
+           f'-GNU={nu}', f'-GMUT={dmut}', f'-GOPSEG={opseg}', f'-GCTX_SRC={opseg}', f'-GFCTX={opseg}', f'-GCLMUT={cxmut}', *(['+define+TB_LANDED', f'-GLMUT={LANDED}', *(f'-G{n}={v}' for n, v in zip(('LOFF', 'LOFF_TL', 'LIN_PW'), lp_offsets(ROOT)))] if land else []), '-Mdir', str(d)] + srcs + [str(TB)]
     d.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(cmd, capture_output=True, text=True)
     (d / 'build.log').write_text(r.stdout + r.stderr)

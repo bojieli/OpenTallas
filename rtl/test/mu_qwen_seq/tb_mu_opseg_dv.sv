@@ -79,6 +79,10 @@ module tb_mu_opseg_dv;
             if ((dut.op_fault && !opf_l) || dut.l_fcode != lfc_l) $fdisplay(lg, "%0d OPF %b %0d", cyc, dut.l_fcode, dut.op_coll);
             if (lcv) $fdisplay(lg, "%0d LCV %h %h %0d", cyc, ntk, nps, cst);
             if (dut.x_ld && dut.ctx_ld) $fdisplay(lg, "%0d XLD %0d", cyc, dut.ctx_mask);
+            // QW-CTLM5 10-19: fresh-context guard trace (parsers ignore these keys): load mask, result write user + pending
+            if (dut.ctx_ld) $fdisplay(lg, "%0d GLD %0d %0d", cyc, dut.ctx_mask, dut.x_ld);
+            if (dut.r_fill) $fdisplay(lg, "%0d GRW %0d %b %0d", cyc, dut.r_wr, dut.u_ctx_guard.pending, dut.ctx_write_fault);
+            if (dut.c_emb || dut.c_seg) $fdisplay(lg, "%0d GCN %0d %0d %0d", cyc, dut.c_user, dut.c_emb, dut.c_seg);
             if ((rx_cf | lf_f) && !rxf_l) $fdisplay(lg, "%0d RXF %0d %0d", cyc, rx_cf, lf_f);
             rxf_l = rx_cf | lf_f;
             if (dut.st_h) begin
@@ -136,7 +140,9 @@ module tb_mu_opseg_dv;
     // except tl 3; inputs pw / kok / kwd / native_ret presented 6 edges later, dh / dh_user / fab / ss5 / ag5 on time ->
     // the landed copy is released 3 edges BEFORE dut, gets pw through a 6-stage delay, and its outputs are compared with
     // dut's 6 (tl: 3) edges later.  LMUT = lp MUT.
-    localparam integer LOFF = 6, LOFF_TL = 3, LIN_PW = 6;
+    // QW-CTLM5 10-19: the offsets come from the lp record (mu_opseg_bench.py passes -GLOFF/-GLOFF_TL/-GLIN_PW from
+    // results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/..._lp_record.json compiler offsets; QW-CTLM3 D2/K1: 4 / 2 / 4).
+    parameter integer LOFF = 6, LOFF_TL = 3, LIN_PW = 6;
     reg [74:0] pw_dl [0:LIN_PW-1];
     integer pj;
     always @(posedge ck) begin

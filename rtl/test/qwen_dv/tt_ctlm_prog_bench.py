@@ -31,6 +31,16 @@ ROOT = HERE.parents[2]
 LOAD0 = 10
 
 
+
+def lp_offsets(root):
+    """QW-CTLM5 10-19: the landed cluster's port offsets from its lp record (not hard-coded): (out, tl, in)."""
+    import json as _j
+    c = _j.load(open(root / 'results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json'))['compiler']
+    ins = {v for v in c['input_port_offset_edges'].values() if v}
+    outs = {v for k, v in c['output_port_offset_edges'].items() if k != 'tl'}
+    assert len(ins) == 1 and len(outs) == 1 and c['reset_release_added_edges'] == 3, ('lp record offsets', ins, outs, c['reset_release_added_edges'])
+    return outs.pop(), c['output_port_offset_edges']['tl'], ins.pop()
+
 def slice_fields(gi_hr):
     """hr[452:73] as qfd_dv_slice2 / the tiles decode it (tools/qwen_split/hr_contract.py FIELDS)"""
     sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
@@ -148,7 +158,7 @@ def run(a):
                '-Wno-TIMESCALEMOD', '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0',
                '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}', f'-GHRA={a.hra}',
                f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []),
-               *(['+define+TB_LANDED', f'-GLMUT={a.lmut}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
+               *(['+define+TB_LANDED', f'-GLMUT={a.lmut}', f'-GLOFF={lp_offsets(ROOT)[0]}', f'-GLIN={lp_offsets(ROOT)[2]}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
         p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
         (work / f'build_m{a.mut}.log').write_text(p.stdout + p.stderr)
         if p.returncode:

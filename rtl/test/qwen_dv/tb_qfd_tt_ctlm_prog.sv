@@ -87,7 +87,9 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
     // inputs on time.  So the landed copy is released 3 edges BEFORE dut, gets pw / kok / kwd / nret through a 6-stage
     // delay, and its outputs are compared with dut's 6 edges later.  LMUT = lp MUT.
     parameter integer LMUT = 0;
-    localparam integer LOFF = 6, LIN = 6;
+    // QW-CTLM5 10-19: offsets from the lp record (tt_ctlm_prog_bench.py passes -GLOFF/-GLIN from the record's compiler
+    // offsets; QW-CTLM3 D2/K1 rings made them 4 / 4 -- the hard-coded 6 / 6 gave LANDED_LOCKSTEP 1254/18068).
+    parameter integer LOFF = 6, LIN = 6;
     reg [74:0] pw_dl [0:LIN-1]; reg [94:0] nret_dl [0:LIN-1]; reg [1:0] kk_dl [0:LIN-1];
     integer pj;
     initial for (pj = 0; pj < LIN; pj = pj + 1) begin pw_dl[pj] = 75'd0; nret_dl[pj] = 95'd1; kk_dl[pj] = 2'd0; end
