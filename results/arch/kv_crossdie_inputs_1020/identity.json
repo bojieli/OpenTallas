@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.kv_compute_pair.v1",
+  "scope": "diagnostic",
+  "source_commit": "b9bf998e4e6e11f9bd94959fc632f9d34ffc250c",
+  "files": {
+    "die_v": {
+      "path": "/home/ubuntu/scratch/qw-grt5/dv2f20g4g/p2/die.v",
+      "sha256": "0768b5a6e728b2905ad6ade1a6b12935027d57548a3e883fcbe1eecbaaf49ce3"
+    },
+    "relay_stages": {
+      "path": "/home/ubuntu/scratch/qw-grt5/dv2f20g4g/p2/relay_stages_netlist.json",
+      "sha256": "e9370adace364f23e48bed3f676915602f11461bbf89e09c95e57466b3594469"
+    }
+  },
+  "plan_id": "dv2f20g4g-netlist",
+  "table_digest": "sha256:518ddccecba9f4e78867de8dd1591bb4c2d81c92f36a6fbf248805175b285cd2",
+  "qualification": "IDENTITY_ONLY; source/view/native/physical/age qualification remains separate"
+}

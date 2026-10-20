@@ -5,8 +5,8 @@
 #    RUN/port_bind_v2/die_bound.v (the generator-model export case_kv/relay_stages.json is not used: kvs14c never wrote
 #    one, and the netlist is what is built);
 # 2. schedule: $OT_RELAY_SCHEDULE when it names a table; else the calendar compiler against THIS die,
-#    tools/qwen_layerbench/layer_compile.py --kv-stages <1.> --compute-stages $OT_COMPUTE_RELAY_STAGES (default the
-#    committed dv2f14bn table) -> RUN/layer_compile/ (relay_schedule/kv_compiled.json*, d2d calendars, TXDP, KV programme);
+#    tools/qwen_layerbench/layer_compile.py --kv-stages <1.> --compute-stages / --compute-die-v from the explicit
+#    source-pinned OT_COMPUTE_PAIR_MANIFEST -> RUN/layer_compile/ (relay_schedule/kv_compiled.json*, d2d calendars, TXDP, KV programme);
 # 3. tools/die_relay_chain_step.sh: tools/die_relay_check.py -> RUN/relay_check.json (stage diffs + torn record bundles).
 # OT_RELAY_SCHEDULE=skip prints RELAY_CHECK SKIPPED (explicit, never by default).  Last line RELAY_CHECK PASS|FAIL|SKIPPED.
 set -u
@@ -33,9 +33,19 @@ python3 "$SRC/tools/qwen_layerbench/netlist_relay_stages.py" --die-v "$B/die_bou
 # fault latencies, the seq KVN bundle) recomputed on THIS netlist table (post lanes / pads / stations) and checked
 KSM=; [ -s "$C/static_model.json" ] && KSM=$C/static_model.json
 if [ -z "$SCHED" ]; then
-  CST=${OT_COMPUTE_RELAY_STAGES:-$SRC/results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/compute_dv2f14bn_relay_stages.json}
-  (cd "$SRC" && python3 tools/qwen_layerbench/layer_compile.py --out "$R/layer_compile" --compute-stages "$CST" \
+  # Selected cross-die inputs must be one explicit source-pinned pair; never a generic historical fixture.
+  [ -n "${OT_COMPUTE_PAIR_MANIFEST:-}" ] || { echo "RELAY_CHECK FAIL OT_COMPUTE_PAIR_MANIFEST required (exact compute die/table/source)"; exit 1; }
+  CPA=(); [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ] && CPA=(--diagnostic)
+  python3 "$SRC/tools/qwen_kv_die/kv_compute_pair.py" --manifest "$OT_COMPUTE_PAIR_MANIFEST" \
+    --out "$R/compute_pair_identity.json" "${CPA[@]}" > "$R/compute_pair_selected.txt" || { echo "RELAY_CHECK FAIL selected compute pair identity"; exit 1; }
+  mapfile -t CP < "$R/compute_pair_selected.txt"
+  CDV=${CP[0]}; CST=${CP[1]}; CCOMMIT=${CP[2]}
+  (cd "$SRC" && python3 tools/qwen_layerbench/layer_compile.py --out "$R/layer_compile" --compute-stages "$CST" --compute-die-v "$CDV" --compute-commit "$CCOMMIT" \
      --kv-stages "$RUNT" --kv-commit "$COMMIT" ${KSM:+--kv-static-model "$KSM" --kv-die-v "$B/die_bound.v" --kv-case-die-v "$C/die.v"} ${FWDL:+--kv-fwd-lanes "$FWDL"}) || { echo "RELAY_CHECK FAIL calendar compiler (layer_compile.py) failed on this die"; exit 1; }
+  # Refuse concurrent input drift before consuming the compiled calendars.
+  python3 "$SRC/tools/qwen_kv_die/kv_compute_pair.py" --manifest "$OT_COMPUTE_PAIR_MANIFEST" \
+    --out "$R/compute_pair_identity_after.json" "${CPA[@]}" > "$R/compute_pair_selected_after.txt" && \
+    cmp -s "$R/compute_pair_identity.json" "$R/compute_pair_identity_after.json" || { echo "RELAY_CHECK FAIL compute pair changed during calendar compilation"; exit 1; }
   SCHED=$(ls "$R"/layer_compile/relay_schedule/kv_compiled.json* | head -1)
 fi
 # QLB-KV 10-18 (QXF-LINK F4): the TXDP the die BINDS on d2d_kv (qkd_d2d_static #(.TXDP), kv_die.d2d_txdp_k) must equal
