@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.complete_native_gpl_group_archive.v1",
+  "before_gpl": {
+    "odb_sha256": "65ece2805fb20743ea1f013ddcae8f417a695e361f796ce6fc848de12a1b3bc4",
+    "complete_graph_sha256": "bf8c0dbaacb4de27cc5cfdd089b0ef282c6addc0074f669291664aeaf166e2af",
+    "graph_records": 376307,
+    "functional_rows": 46554,
+    "outside_band": 1369,
+    "bad_group_region": [],
+    "pg_unbound": [],
+    "full_graph_gzip_sha256": "68052718daf5f406d358f184dbdb75762c8a6f0b230abf4218b39053819801ba",
+    "full_membership_gzip_sha256": "62ae542eb88de51cf89e8404cdeb107172eecf83da5b4528e79d7bc25cc2d459"
+  },
+  "after_gpl": {
+    "odb_sha256": "f5b8b8968621af5e49f3026efc8360683a70cf8cdf7d194263019387e1764644",
+    "complete_graph_sha256": "bf8c0dbaacb4de27cc5cfdd089b0ef282c6addc0074f669291664aeaf166e2af",
+    "graph_records": 376307,
+    "functional_rows": 46554,
+    "outside_band": 0,
+    "bad_group_region": [],
+    "pg_unbound": [],
+    "full_graph_gzip_sha256": "68052718daf5f406d358f184dbdb75762c8a6f0b230abf4218b39053819801ba",
+    "full_membership_gzip_sha256": "bbeb39435a85c1c8ce2a771c58cb87cfed3d85fc0be75bd437b181d12cddb486"
+  },
+  "all_pin_net_pg_dnt_records_identical": true,
+  "scope": "PRIVATE_MODEL_ONLY"
+}
