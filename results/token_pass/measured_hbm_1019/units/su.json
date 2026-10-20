@@ -1,13 +1,13 @@
 {
  "group": "su",
- "branch": "claude/hbm-sufix-1019",
+ "branch": "codex/hbm-pretree-pickup-1020",
  "updated_utc": "2026-10-20T07:02:13Z",
  "designs": {
   "ds_ar": {
    "SU.VOP": {
     "law": "shape_table",
-    "ratio": 1.5227,
-    "grade": "measured-current-d4g",
+    "ratio": 1.2002,
+    "grade": "measured-pretree-bench (reductions on bound HH-6 pre-tree in static SU; die bind owed)",
     "pending": [],
     "where_model_wrong": "",
     "measured_model_sum": 157494.4,
@@ -115,19 +115,20 @@
       "mr18_golden": null
      },
      "{\"A\": [\"VM\", 160, 8, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
-      "cycles": 834.67,
+      "cycles": 322.67,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record ds_q_norm_ss",
-      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/vec_a3/ds_q_norm_ss",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} ds_q_norm_ss",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/vec_pt/ds_q_norm_ss",
       "verilator": "5.050",
-      "notes": "serial 626 edges (x4/3 = 833 ps stream); dispatch 4 -> retire 630 (last LG write + SWD 10); 3 issues / 384 emissions on 128 lanes/quarter, issue->write 28; profile mr10 = die-bound pgslice_lg MULTIRATE 10/7 (serial SRD 12 / SWD 10); reduction AS BUILT: 1 lane output / quarter / edge into the reducer (die.v has no pre-tree), 10 chains + pairwise tree + RF (stree L 32) quarter combine + RF sector drain; model 209.2",
+      "notes": "PRE-TREE measured: record ds_q_norm_ss, 10 issues, QPR 1; serial 242 edges (x4/3 stream); model csum8/ordered-max order; as-built 834.67; model 209.2; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 209.2,
       "n": 40,
       "mr18_cycles": null,
-      "mr18_golden": null
+      "mr18_golden": null,
+      "asbuilt_cycles": 834.67
      },
      "{\"A\": [\"VM\", 1280, 1, \"FP32\"], \"B\": [\"VM\", 1280, 1, \"FP32\"], \"C\": [\"VM\", 1280, 1, \"FP32\"], \"O\": [\"VM\", 1280, 1, \"FP32\"]}": {
       "cycles": 96.0,
@@ -145,19 +146,20 @@
       "mr18_golden": null
      },
      "{\"A\": [\"VM\", 64, 8, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
-      "cycles": 493.33,
+      "cycles": 290.67,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record ds_kv_norm_ss",
-      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/vec_a3/ds_kv_norm_ss",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} ds_kv_norm_ss",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/vec_pt/ds_kv_norm_ss",
       "verilator": "5.050",
-      "notes": "serial 370 edges (x4/3 = 833 ps stream); dispatch 4 -> retire 374 (last LG write + SWD 10); 1 issues / 128 emissions on 128 lanes/quarter, issue->write 28; profile mr10 = die-bound pgslice_lg MULTIRATE 10/7 (serial SRD 12 / SWD 10); reduction AS BUILT: 1 lane output / quarter / edge into the reducer (die.v has no pre-tree), 10 chains + pairwise tree + RF (stree L 32) quarter combine + RF sector drain; model 195.2",
+      "notes": "PRE-TREE measured: record ds_kv_norm_ss, 4 issues, QPR 1; serial 218 edges (x4/3 stream); model csum8/ordered-max order; as-built 493.33; model 195.2; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 195.2,
       "n": 40,
       "mr18_cycles": null,
-      "mr18_golden": null
+      "mr18_golden": null,
+      "asbuilt_cycles": 493.33
      },
      "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"B\": [\"VM\", 512, 1, \"FP32\"], \"C\": [\"VM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
       "cycles": 85.33,
@@ -220,19 +222,20 @@
       "mr18_golden": null
      },
      "{\"A\": [\"VM\", 6, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
-      "cycles": 273.33,
+      "cycles": 260.0,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record ds_route_total",
-      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/vec_a3/ds_route_total",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} ds_route_total",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/vec_pt/ds_route_total",
       "verilator": "5.050",
-      "notes": "serial 205 edges (x4/3 = 833 ps stream); dispatch 4 -> retire 209 (last LG write + SWD 10); 1 issues / 6 emissions on 128 lanes/quarter, issue->write 28; profile mr10 = die-bound pgslice_lg MULTIRATE 10/7 (serial SRD 12 / SWD 10); reduction AS BUILT: 1 lane output / quarter / edge into the reducer (die.v has no pre-tree), 10 chains + pairwise tree + RF (stree L 32) quarter combine + RF sector drain; model 159.2",
+      "notes": "PRE-TREE measured: record ds_route_total, 1 issues, QPR 1; serial 195 edges (x4/3 stream); model csum8/ordered-max order; as-built 273.33; model 159.2; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 159.2,
       "n": 40,
       "mr18_cycles": null,
-      "mr18_golden": null
+      "mr18_golden": null,
+      "asbuilt_cycles": 273.33
      },
      "{\"A\": [\"VM\", 6, 1, \"FP32\"], \"B\": [\"VM\", 6, 1, \"FP32\"], \"O\": [\"VM\", 6, 1, \"FP32\"]}": {
       "cycles": 100.0,
@@ -265,34 +268,36 @@
       "mr18_golden": null
      },
      "{\"A\": [\"VM\", 640, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
-      "cycles": 664.0,
+      "cycles": 304.0,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record ds_attend_max640",
-      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/vec_a3/ds_attend_max640",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} ds_attend_max640",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/vec_pt/ds_attend_max640",
       "verilator": "5.050",
-      "notes": "serial 498 edges (x4/3 = 833 ps stream); dispatch 4 -> retire 502 (last LG write + SWD 10); 2 issues / 256 emissions on 128 lanes/quarter, issue->write 28; profile mr10 = die-bound pgslice_lg MULTIRATE 10/7 (serial SRD 12 / SWD 10); reduction AS BUILT: 1 lane output / quarter / edge into the reducer (die.v has no pre-tree), 10 chains + pairwise tree + RF (stree L 32) quarter combine + RF sector drain; model 202.2",
+      "notes": "PRE-TREE measured: record ds_attend_max640, 5 issues, QPR 1; serial 228 edges (x4/3 stream); model csum8/ordered-max order; as-built 664.0; model 202.2; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 202.2,
       "n": 38,
       "mr18_cycles": null,
-      "mr18_golden": null
+      "mr18_golden": null,
+      "asbuilt_cycles": 664.0
      },
      "{\"A\": [\"VM\", 640, 1, \"FP32\"], \"B\": [\"VM\", 640, 1, \"FP32\"], \"O\": [\"VM\", 640, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
-      "cycles": 606.67,
+      "cycles": 410.67,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record ds_attend_exp_sum640",
-      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/vec_a3/ds_attend_exp_sum640",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} ds_attend_exp_sum640",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/vec_pt/ds_attend_exp_sum640",
       "verilator": "5.050",
-      "notes": "serial 455 edges (x4/3 = 833 ps stream); dispatch 114 -> retire 569 (last LG write + SWD 10); 5 issues / 160 emissions on 32 lanes/quarter, issue->write 84; profile mr10 = die-bound pgslice_lg MULTIRATE 10/7 (serial SRD 12 / SWD 10); reduction AS BUILT: 1 lane output / quarter / edge into the reducer (die.v has no pre-tree), 10 chains + pairwise tree + RF (stree L 32) quarter combine + RF sector drain; broadcast B from the RF (class-1, producer setup not counted); model 319.0",
+      "notes": "PRE-TREE measured: record ds_attend_exp_sum640, 20 issues, QPR 1; serial 308 edges (x4/3 stream); model csum8/ordered-max order; as-built 606.67; model 319.0; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 319.0,
       "n": 38,
       "mr18_cycles": null,
-      "mr18_golden": null
+      "mr18_golden": null,
+      "asbuilt_cycles": 606.67
      },
      "{\"A\": [\"VM\", 640, 1, \"FP32\"], \"O\": [\"VM\", 640, 1, \"FP32\"]}": {
       "cycles": 85.33,
@@ -360,34 +365,36 @@
       "mr18_golden": null
      },
      "{\"A\": [\"VM\", 128, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
-      "cycles": 453.33,
+      "cycles": 261.33,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record ds_attend_max128",
-      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/vec_a3/ds_attend_max128",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} ds_attend_max128",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/vec_pt/ds_attend_max128",
       "verilator": "5.050",
-      "notes": "serial 340 edges (x4/3 = 833 ps stream); dispatch 4 -> retire 344 (last LG write + SWD 10); 1 issues / 128 emissions on 128 lanes/quarter, issue->write 28; profile mr10 = die-bound pgslice_lg MULTIRATE 10/7 (serial SRD 12 / SWD 10); reduction AS BUILT: 1 lane output / quarter / edge into the reducer (die.v has no pre-tree), 10 chains + pairwise tree + RF (stree L 32) quarter combine + RF sector drain; model 183.2",
+      "notes": "PRE-TREE measured: record ds_attend_max128, 1 issues, QPR 1; serial 196 edges (x4/3 stream); model csum8/ordered-max order; as-built 453.33; model 183.2; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 183.2,
       "n": 2,
       "mr18_cycles": null,
-      "mr18_golden": null
+      "mr18_golden": null,
+      "asbuilt_cycles": 453.33
      },
      "{\"A\": [\"VM\", 128, 1, \"FP32\"], \"B\": [\"VM\", 128, 1, \"FP32\"], \"O\": [\"VM\", 128, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
-      "cycles": 438.67,
+      "cycles": 362.67,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record ds_attend_exp_sum128",
-      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/vec_a3/ds_attend_exp_sum128",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} ds_attend_exp_sum128",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/vec_pt/ds_attend_exp_sum128",
       "verilator": "5.050",
-      "notes": "serial 329 edges (x4/3 = 833 ps stream); dispatch 114 -> retire 443 (last LG write + SWD 10); 1 issues / 32 emissions on 32 lanes/quarter, issue->write 84; profile mr10 = die-bound pgslice_lg MULTIRATE 10/7 (serial SRD 12 / SWD 10); reduction AS BUILT: 1 lane output / quarter / edge into the reducer (die.v has no pre-tree), 10 chains + pairwise tree + RF (stree L 32) quarter combine + RF sector drain; broadcast B from the RF (class-1, producer setup not counted); model 299.0",
+      "notes": "PRE-TREE measured: record ds_attend_exp_sum128, 4 issues, QPR 1; serial 272 edges (x4/3 stream); model csum8/ordered-max order; as-built 438.67; model 299.0; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 299.0,
       "n": 2,
       "mr18_cycles": null,
-      "mr18_golden": null
+      "mr18_golden": null,
+      "asbuilt_cycles": 438.67
      },
      "{\"A\": [\"VM\", 128, 1, \"FP32\"], \"O\": [\"VM\", 128, 1, \"FP32\"]}": {
       "cycles": 82.67,
@@ -531,8 +538,8 @@
   "qwen": {
    "SU.VOP": {
     "law": "shape_table",
-    "ratio": 26.2011,
-    "grade": "measured-current-d4g",
+    "ratio": 2.2283,
+    "grade": "measured-pretree-bench (reductions on bound HH-6 pre-tree in static SU; die bind owed)",
     "pending": [],
     "where_model_wrong": "",
     "measured_model_sum": 63309.6,
@@ -597,33 +604,35 @@
       "mr18_golden": null
      },
      "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"R\": [\"VM\", 1, 8, \"FP32\"]}": {
-      "cycles": 22242.67,
+      "cycles": 504.0,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record qw_softmax_max",
-      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/vec_a3/qw_softmax_max",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} qw4_admission max_r4",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/codex_qw4/max_r4",
       "verilator": "5.050",
-      "notes": "serial 16682 edges (x4/3 = 833 ps stream); dispatch 4 -> retire 16686 (last LG write + SWD 10); 128 issues / 16384 emissions on 128 lanes/quarter, issue->write 28; profile mr10 = die-bound pgslice_lg MULTIRATE 10/7 (serial SRD 12 / SWD 10); reduction AS BUILT: 1 lane output / quarter / edge into the reducer (die.v has no pre-tree), 10 chains + pairwise tree + RF (stree L 32) quarter combine + RF sector drain; model 399.2",
+      "notes": "PRE-TREE measured: TP-8 die = 4 q heads: 4-row record max_r4 (MAX-mode tamper witness REJECTED); serial 378 edges (x4/3 stream); model csum8/ordered-max order; as-built 22242.67; model 399.2; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 399.2,
       "n": 36,
       "mr18_cycles": null,
-      "mr18_golden": null
+      "mr18_golden": null,
+      "asbuilt_cycles": 22242.67
      },
      "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"B\": [\"VM\", 1, 8, \"FP32\"], \"O\": [\"VM\", 8192, 8, \"FP32\"], \"R\": [\"VM\", 1, 8, \"FP32\"]}": {
-      "cycles": 22316.0,
+      "cycles": 1896.0,
       "golden": "PASS",
-      "rtl_master": "ot_hbm_su_static_top",
-      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
-      "bound_in_die": true,
-      "bench": "prod_compile.py record qw_softmax_exp_sum_r1",
-      "job": "ot-epyc5:.../vec_mr10/qw_softmax_exp_sum_r1",
+      "rtl_master": "ot_hbm_su_static_top PRETREE=1 (16 x ot_hbm_su_static_pgslice + ot_hbm_su_red_pretree_s [closed hbm_su_pretree_s_1018-p3-1dad69123] + 4 x ot_hbm_su_static_qcore + ot_hbm_su_red_pretree_j + ot_hbm_su_stree_net)",
+      "rtl_source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv PRETREE=1, prod_compile.py --pretree} phase4 exp_sum_r4_phased",
+      "job": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-pretree2/suvop/codex_qw4/exp_sum_r4_phased",
       "verilator": "5.050",
-      "notes": "law affine: measured 1-row record 2345 serial edges (2048 emissions) + 7 rows x 2048 emissions x 1.0039 edges/emission (slope from measured softmax.max 1 row 2290 / 8 rows 16682); the 8-row record needs 1,024 store rows on the 32 SFU lanes/quarter (> 512) -> split by the compiler; model 590.0",
+      "notes": "PRE-TREE measured: TP-8 die = 4 q heads: no-reset 2+2 phased exp_sum_r4 (4098 VM rd/wr, 16 scalars; source-alias + stale-scalar mutants FAIL); serial 1422 edges (x4/3 stream); model csum8/ordered-max order; as-built 22316.0; model 590.0; die bind owed (GEN2e4 has no su_pt slots)",
       "model_cost": 590.0,
       "n": 36,
-      "law": "affine_emissions"
+      "law": "affine_emissions",
+      "asbuilt_cycles": 22316.0
      },
      "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"O\": [\"VM\", 8192, 8, \"FP32\"]}": {
       "cycles": 721.33,
@@ -777,5 +786,6 @@
    }
   }
  },
- "note_sufix": "HBM-SUFIX: SU.VOP from prod_compile (fixed) on bound ot_hbm_su_static_top mr10; ROW_NORM kept as TOKSIM-HBM as-built lower bound (pre-tree variant in units_variants/su_rownorm_pretree.json)"
+ "note_sufix": "HBM-SUFIX: SU.VOP from prod_compile (fixed) on bound ot_hbm_su_static_top mr10; ROW_NORM kept as TOKSIM-HBM as-built lower bound (pre-tree variant in units_variants/su_rownorm_pretree.json)",
+ "note_pretree3": "HBM-PRETREE3 10-20: SU reduction records measured on PRETREE=1 static SU; Qwen softmax at the TP-8 4-row shape (variant m_pt3_8row keeps 8 rows); as-built table units_variants/su_asbuilt_1019.json"
 }
