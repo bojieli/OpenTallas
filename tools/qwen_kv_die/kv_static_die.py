@@ -92,11 +92,42 @@ DOMSPLIT = os.environ.get('OT_KV_DOMSPLIT', '0') == '1'
 DOMSPLIT_DIR = 'results/arch/qwen_kv_domsplit_1019'
 DOMSPLIT_TABLE = DOMSPLIT_DIR + '/producer_domains.json'
 LVL_LAND_RTL = 'rtl/qwen_sys/static_kv_20261014/qkd_kv_lvl_land.sv'
+# KV-PC 10-19 (OT_KV_PC_RLAND=1; default off: every existing tile file unchanged; suffix '_rl'): the PC kit tiles
+# (pc / pc_h, KIT_KINDS) land each reset input at the face in 2 registered stages ON ITS OWN DOMAIN before any fanout
+# (safe-design item 1; textbook.reset_landing): rst_n -> ot_reset_sync on ck (u_rland_ck), hrst_n -> ot_reset_sync on
+# hck (u_rland_hck); every child reset pin then takes the landed net.  The flow's OT_RST_LAND lands all resets on ONE
+# clock (it would move the hck reset release onto ck), so the landing is RTL.  Cost: reset release +2 ck / +2 hck edges
+# in the PC tiles only (boot-time; no token-schedule edge).  The die GEN must use the same flag (tile text = kit text).
+PC_RLAND = os.environ.get('OT_KV_PC_RLAND', '0') == '1'
+PC_RLAND_KINDS = ('pc', 'pc_h')
+RESET_SYNC_RTL = 'rtl/lib/ot_reset_sync.sv'
+# KV-PC 10-19 SAFE (OT_KV_PC_SRAM=1, needs OT_KV_PC_RLAND=1; default off; suffix '_sr'): the PC kit tiles take the clone
+# chain qkd_kvpc_s_fan_nc_b (tools/qwen_kv_die/kv_pc_sram_gen.py) whose five runtime-indexed flop arrays (elastic front
+# 32x297, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are native 32x64 dual-clock banks and
+# whose scheduler hr_q / hgo roots are kept copy families (safe-design items 5 and 3).  Same ports, 0 added edges.
+PC_SRAM = os.environ.get('OT_KV_PC_SRAM', '0') == '1'
+PC_SRAM_RTL = ('rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv',
+               'rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv')
+# KV-BIND4 10-19 (KV-PC4 21:55 / KV-PC3 18:10): the sr6 PC / PC_H tiles (kits qkd_kvs_pc_sr6 RTL stand-in until sr7 /
+# sr7b closes, qkd_kvs_pc_h_sr6 gated) land three more input pins in RTL face registers (kv_pc_sram_gen.POST: ki_q,
+# fi_q, ebr_q).  Their edges are tile RTL (kv_tile_views sees pin_regs off, 0 / 0), so the DIE SCHEDULE charges them
+# here, per PC / PC_H tile, and pc_chain_ages() folds them into the kc kick / fault chain ends (static, no credits):
+#   kick  : pc__ki -> ki_q -> u_tap -> pc__ko and -> the PC's own head   +1 hck a tile (kick chain, pre-ownership only:
+#           qkd_ctrl_pc_nc takes kc commands before static ownership, the calendar after; f_cmd faults a late kick)
+#   fault : pc__fi -> fi_q -> fo (sticky OR)                             +1 hck a tile (STATUS fault-path age via kc fi)
+#   ebr   : x__est__0_1 -> ebr_q (embedding boot-ready level)            +1 ck once (boot-time level, no token edge)
+# Plus pc__hfx[2:0] {embr, es_merge, chain}: registered sticky ck faults -> the health plane (K.STA.RETIRE.PCF,
+# kv_health_plane PC family).  OT_KV_PC_SRAM needs OT_KV_PC_RLAND and OT_KV_DOMSPLIT (the sr6 kits are DS tiles).
+PC_SR_EDGES = dict(kick_hck=1, fault_hck=1, boot_ready_ck=1) if PC_SRAM else dict(kick_hck=0, fault_hck=0, boot_ready_ck=0)
+PC_STATION_HCK = 1      # ot_qkvd_kcmd_tap o_v / o_d register (every tile); the sticky fo register (every tile)
+if PC_SRAM and not (PC_RLAND and DOMSPLIT):
+    raise ValueError('kv_static_die PC_SRAM: the sr6 PC kits are DOMSPLIT + RLAND tiles (set OT_KV_DOMSPLIT=1 OT_KV_PC_RLAND=1)')
 PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
             ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
-            ('_ds' if DOMSPLIT else '') + '.sv')   # KV-DOMSPLIT
+            ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
+            '.sv')   # KV-DOMSPLIT; KV-PC
 RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + '.sv'
 GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
@@ -847,6 +878,28 @@ def tile(die_inst):
     return dict(inst=die_inst, kind=kind, ports=ports, wires=wires, body=body, members=mem, loc=loc)
 
 
+def pc_chain_ages(m):
+    """KV-BIND4 10-19: kc kick / PC fault chain end ages per stack (hck edges) from the plan relay stages + the per-tile
+    station edges (PC_STATION_HCK) + the sr6 landings (PC_SR_EDGES).  kick_end = edges from kc_<st>.ko to the LAST PC's
+    head command (c_v); fault_end = edges from the FIRST PC's fault to kc_<st>.fi."""
+    st_ = m.get('relay_stages', {}) if m else {}
+    out = {}
+    for st in STACKS:
+        kr = [v for b, v in st_.items() if b.startswith(f'kck_{st}_')]
+        fr = [v for b, v in st_.items() if b.startswith(f'kcf_{st}_')]
+        base_k = sum(kr) + NPC * PC_STATION_HCK
+        base_f = sum(fr) + NPC * PC_STATION_HCK
+        out[st] = dict(kick_relays=sum(kr), fault_relays=sum(fr),
+                       kick_end_hck=base_k + NPC * PC_SR_EDGES['kick_hck'], kick_end_hck_pre_sr6=base_k,
+                       fault_end_hck=base_f + NPC * PC_SR_EDGES['fault_hck'], fault_end_hck_pre_sr6=base_f)
+    return dict(edges_per_tile=PC_SR_EDGES, station_hck=PC_STATION_HCK, npc=NPC, stacks=out,
+                worst_kick_end_hck=max((v['kick_end_hck'] for v in out.values()), default=None),
+                worst_fault_end_hck=max((v['fault_end_hck'] for v in out.values()), default=None),
+                boot_ready_ck=PC_SR_EDGES['boot_ready_ck'],
+                note='kick chain: pre-ownership only (qkd_ctrl_pc_nc); the ownership switch must follow the last kick '
+                     'by >= worst_kick_end_hck; fault chain end feeds kc fi -> kc kf (health source, K.STA.RETIRE.KC)')
+
+
 def rsp_expr(local, fields):
     """{last, ..., first} of a member's outputs (LSB first = fields[0])"""
     return '{' + ', '.join(f'w_{local}__{f}' for f in reversed(fields)) + '}'
@@ -1010,7 +1063,90 @@ def module_text(t, name):
             L.append(f'    assign {pn} = {v["expr"]};')
     L.append('endmodule')
     txt = '\n'.join(L) + '\n'
+    if PC_RLAND and KITS and t['kind'] in PC_RLAND_KINDS:
+        txt = pc_rland_text(txt)
+    if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
+        txt = pc_sram_text(txt)
     return txt
+
+
+def pc_sram_text(txt):
+    """OT_KV_PC_SRAM: the PC kit module's u_pc takes the SRAM-backed clone chain (same ports, same parameters)."""
+    if not PC_RLAND:
+        raise ValueError('kv_static_die PC_SRAM: needs OT_KV_PC_RLAND=1 (the safe PC tile lands its resets)')
+    old, new = 'qkd_static_kv_pc_path_fan_nc_b #(.MU(1)) u_pc (', 'qkd_kvpc_s_fan_nc_b #(.MU(1)) u_pc ('
+    if txt.count(old) != 1:
+        raise ValueError('kv_static_die PC_SRAM: PC kit module has no single MU fan_nc_b u_pc instance')
+    txt = txt.replace(old, new)
+    # the embedding return hop / head (u_embr): ts_q (597 loads, the 298-b transfer enable) as kept copies
+    n = 0
+    for o, w in (('qkd_embedding_static_return_hop u_embr (', 'qkd_kvpc_s_rhop u_embr ('),
+                 ('qkd_embedding_static_return_head #(.MUT(0)) u_embr (', 'qkd_kvpc_s_rhead #(.MUT(0)) u_embr (')):
+        n += txt.count(o)
+        txt = txt.replace(o, w)
+    if n != 1:
+        raise ValueError('kv_static_die PC_SRAM: PC kit module has no single u_embr return hop / head')
+    return pc_hfx_text(txt)
+
+
+PC_HFX_PORT = '    output wire [2:0] pc__hfx,'
+
+
+def pc_hfx_text(txt):
+    """KV-PC2 10-19: registered fault export to the health plane.  The PC kit module computed three sticky ck-domain
+    faults that reached no port (SAFE-MODEL 5cd55681e: 'selected GEN7 drops chain_fault in 124 PC + 4 PC_H'):
+    the boot chain station fault (w_pc__chain_fault), the embedding es-merge fault (w_pc__es_merge_fault) and the
+    embedding return hop / head fault (w_embr__fault).  They leave on pc__hfx[2:0] = {embr, es_merge, chain} through one
+    registered sticky stage on ck (landed reset w_rland__rst_n; cleared only by reset, never masked).  The die binds
+    pc__hfx into the KV health plane (lanes KV-HEALTH / KV-GEN9).  Idempotent pure text rewrite."""
+    if 'pc__hfx' in txt:
+        return txt
+    anchor = '    output wire [0:0] pc__fo,'
+    for need in (anchor, 'wire [0:0] w_pc__chain_fault;', 'wire [0:0] w_pc__es_merge_fault;', 'w_embr__fault',
+                 'wire w_rland__rst_n;'):
+        if txt.count(need) < 1:
+            raise ValueError(f'kv_static_die PC_HFX: PC kit module lacks {need!r}')
+    if txt.count(anchor) != 1:
+        raise ValueError('kv_static_die PC_HFX: PC kit module has no single pc__fo port')
+    txt = txt.replace(anchor, anchor + '\n' + PC_HFX_PORT)
+    body = ('    // KV-PC2 registered sticky fault export (pc__hfx = {embr, es_merge, chain}; health plane)\n'
+            '    reg [2:0] hfx_q;\n'
+            '    always @(posedge ck or negedge w_rland__rst_n)\n'
+            '        if (!w_rland__rst_n) hfx_q <= 3\'d0;\n'
+            '`ifdef OT_KVPC_HFX_MUT\n'
+            '        else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], 1\'b0};\n'
+            '`else\n'
+            '        else hfx_q <= hfx_q | {w_embr__fault[0], w_pc__es_merge_fault[0], w_pc__chain_fault[0]};\n'
+            '`endif\n'
+            '    assign pc__hfx = hfx_q;\n')
+    i = txt.rindex('endmodule')
+    return txt[:i] + body + txt[i:]
+
+
+def pc_rland_text(txt):
+    """OT_KV_PC_RLAND: land rst_n (on ck) and hrst_n (on hck) of ONE generated PC kit module in 2 registered stages
+    (ot_reset_sync) and hand every child reset pin the landed net.  Pure text rewrite of module_text's output, so a
+    committed tile file can be re-derived exactly (test_kv_pc_rland.py)."""
+    lines = txt.split('\n')
+    hdr_end = next(i for i, l in enumerate(lines) if l == ');')
+    head = '\n'.join(lines[:hdr_end])
+    for p_ in ('ck', 'hck', 'rst_n', 'hrst_n'):
+        if not re.search(rf'\b(input) wire {p_}\b', head):
+            raise ValueError(f'kv_static_die PC_RLAND: PC kit module has no scalar input {p_}')
+    body = '\n'.join(lines[hdr_end + 1:])
+    if 'u_rland_ck' in body:
+        raise ValueError('kv_static_die PC_RLAND: module already landed')
+    n0 = len(re.findall(r'\((h?rst_n)\)', body))
+    body = re.sub(r'\(rst_n\)', '(w_rland__rst_n)', body)
+    body = re.sub(r'\(hrst_n\)', '(w_rland__hrst_n)', body)
+    if n0 == 0 or re.search(r'(?<![.\w])h?rst_n\b', re.sub(r'w_rland__h?rst_n', '', body)):
+        raise ValueError('kv_static_die PC_RLAND: a reset port is used outside a plain child pin connection')
+    land = ['    // KV-PC 10-19 OT_KV_PC_RLAND: each reset lands at the face in 2 registered stages on its own domain',
+            '    wire w_rland__rst_n;',
+            '    wire w_rland__hrst_n;',
+            '    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_ck (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(w_rland__rst_n));',
+            '    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_hck (.clk(hck), .async_rst_n(hrst_n), .sync_rst_n(w_rland__hrst_n));']
+    return '\n'.join(lines[:hdr_end + 1] + land) + '\n' + body
 
 
 def rel(T, S):
@@ -1472,6 +1608,10 @@ def sources():
         s.update(K.MU_DEPS)
     if DOMSPLIT:
         s.add(LVL_LAND_RTL)
+    if PC_RLAND:
+        s.add(RESET_SYNC_RTL)
+    if PC_SRAM:
+        s.update(PC_SRAM_RTL)
     return sorted(s)
 
 
@@ -1488,6 +1628,8 @@ def bindings():
         ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
         source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else PUBLIC_RTL_FILE
+        if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
+            ports['pc__hfx'] = ['pc__hfx']      # KV-BIND4: pc_hfx_text port; read by the health plane (PC family)
         out[mst] = dict(module=mst, file=source_file, ports=ports, sliced={}, classed=cls)
     # ECTL frame re-bound to the fused A + K issuer composition (qkd_ectl3_kiss_s)
     out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_st' if ASTK_ST else 'qkd_ectl3_kiss_s',
@@ -2405,6 +2547,7 @@ def record(m):
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
                 **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
+                pc_chain=pc_chain_ages(m),
                 face_land=dict(enabled=FACE_LAND, selected=sorted(FACE_LAND_SEL),
                                tiles={k: v for k, v in FACE_LAND_TILES.items() if k in FACE_LAND_SEL},
                                note='views bound only when CLOSED (lanes/HKV-RSTCAP.md)'),
