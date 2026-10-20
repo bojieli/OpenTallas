@@ -18,10 +18,12 @@ set lprf_table {
   z3 {{518.4 302.4 669.6 345.6} {518.4 496.8 669.6 537.84}} {u_ro3 u_lpr_z3 u_lprc_u_zh3 u_lpl_10_w u_lpl_14_r}
 }
 proc lprf_on_port {inst} {
+  # a pin flop / pin hold stage: a NON-clock pin on a port net (before CTS every flop's clock pin sits on its port net)
   foreach it [$inst getITerms] {
+    if {[[$it getMTerm] getSigType] in {CLOCK POWER GROUND}} continue
     set n [$it getNet]
     if {$n eq "NULL" || $n eq ""} continue
-    if {[$n getSigType] in {POWER GROUND}} continue
+    if {[$n getSigType] in {POWER GROUND CLOCK}} continue
     if {[llength [$n getBTerms]]} { return 1 }
   }
   return 0
@@ -45,6 +47,35 @@ foreach inst [$lprf_block getInsts] {
   if {[lprf_on_port $inst]} { incr lprf_pin; continue }
   dict lappend lprf_members [lindex $hit 0] $inst
 }
+# ABC renames the flattened combinational cells (_123_): each joins the region it is wired to, breadth-first from the named
+# members (first region to reach it wins; port-net cells and fixed cells never join).  Without this the fenced flops'
+# own logic could not enter the fence during global placement.
+array set lprf_of {}
+set lprf_q {}
+dict for {reg insts} $lprf_members { foreach i $insts { set lprf_of([$i getName]) $reg; lappend lprf_q $i } }
+set lprf_qi 0; set lprf_walk 0
+while {$lprf_qi < [llength $lprf_q]} {
+  set i [lindex $lprf_q $lprf_qi]; incr lprf_qi
+  set reg $lprf_of([$i getName])
+  foreach it [$i getITerms] {
+    if {[[$it getMTerm] getSigType] in {CLOCK POWER GROUND}} continue
+    set n [$it getNet]
+    if {$n eq "NULL" || $n eq ""} continue
+    if {[$n getSigType] in {POWER GROUND CLOCK RESET}} continue
+    if {[llength [$n getBTerms]] || [llength [$n getITerms]] > 64} continue
+    foreach o [$n getITerms] {
+      set j [$o getInst]
+      set jn [$j getName]
+      if {[info exists lprf_of($jn)]} continue
+      if {[$j isFixed] || [[$j getMaster] isBlock]} continue
+      set nm [string map [list "\\" ""] $jn]
+      if {![regexp {^_[0-9]+_$} $nm] && ![string match {\$*} $nm]} continue
+      if {[lprf_on_port $j]} continue
+      set lprf_of($jn) $reg; dict lappend lprf_members $reg $j; lappend lprf_q $j; incr lprf_walk
+    }
+  }
+}
+puts "LP_FENCE walk: $lprf_walk unnamed cells joined the region they are wired to"
 set lprf_rep [open lp_region_fences.tsv w]
 puts $lprf_rep "region\tinsts\tcell_area_um2\tfence_area_um2\tfill"
 foreach {reg boxes pfx} $lprf_table {

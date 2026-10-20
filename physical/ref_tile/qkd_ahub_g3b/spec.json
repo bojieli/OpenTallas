@@ -561,5 +561,8 @@
  "cycle_cost": "vs g2: ap +3 (core input ages AP_OFS + 3, AP_OFS die meaning unchanged), am +3 at the ASTK pins, fr 0 (u_io leads by WF_RLY + 3), Z round trip +6 as g2; compiler deltas proven on the 7 HKV-DIE3 calendars in results/arch/kv_ahub4_1019/README.md (handed to lanes/KV-GEN9.md). Reset release +10 edges once.",
  "pin_hook_before_flops": [
   "physical/ref_tile/qkd_ahub_g3b/lp_fences.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/qkd_ahub_g3b/lp_fences_release.tcl"
  ]
 }
