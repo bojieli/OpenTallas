@@ -1,0 +1,360 @@
+[
+  {
+    "driver": "_185203_/Y",
+    "loads": 49,
+    "net": "_050228_",
+    "driver_master": "NAND2x1_ASAP7_75t_R",
+    "driver_pins": {
+      "A": [
+        "35549"
+      ],
+      "B": [
+        "35598"
+      ],
+      "Y": [
+        "35661"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_185204_",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "_185233_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1"
+      },
+      {
+        "instance": "_185329_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1"
+      },
+      {
+        "instance": "_185583_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1"
+      }
+    ]
+  },
+  {
+    "driver": "_185217_/Y",
+    "loads": 49,
+    "net": "_050242_",
+    "driver_master": "OR4x1_ASAP7_75t_R",
+    "driver_pins": {
+      "A": [
+        "35663"
+      ],
+      "B": [
+        "35664"
+      ],
+      "C": [
+        "35673"
+      ],
+      "D": [
+        "35674"
+      ],
+      "Y": [
+        "35675"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_185218_",
+        "master": "BUFx6f_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "_185233_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_185329_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_185583_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2"
+      }
+    ]
+  },
+  {
+    "driver": "_185280_/Y",
+    "loads": 43,
+    "net": "_050305_",
+    "driver_master": "NAND2x2_ASAP7_75t_R",
+    "driver_pins": {
+      "A": [
+        "35662"
+      ],
+      "B": [
+        "35676"
+      ],
+      "Y": [
+        "35749"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_185281_",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "_185321_",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "_185546_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_185586_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "B"
+      },
+      {
+        "instance": "_185597_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "B"
+      },
+      {
+        "instance": "_185610_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_185713_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1"
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.MUL_AGE[0]$_DFFE_PN1P_/QN",
+    "loads": 34,
+    "net": "_000188_",
+    "driver_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "driver_pins": {
+      "CLK": [
+        "4"
+      ],
+      "D": [
+        "90177"
+      ],
+      "QN": [
+        "59167"
+      ],
+      "RESETN": [
+        "227785"
+      ],
+      "SETN": [
+        "20342"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_203709_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "C"
+      },
+      {
+        "instance": "_203713_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2"
+      },
+      {
+        "instance": "_204706_",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.MUL_AGE[5]$_DFFE_PN1P_/QN",
+    "loads": 34,
+    "net": "_000355_",
+    "driver_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "driver_pins": {
+      "CLK": [
+        "4"
+      ],
+      "D": [
+        "90162"
+      ],
+      "QN": [
+        "90156"
+      ],
+      "RESETN": [
+        "227785"
+      ],
+      "SETN": [
+        "20342"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_228622_",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.MUL_AGE[6]$_DFFE_PN1P_/QN",
+    "loads": 33,
+    "net": "_000362_",
+    "driver_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "driver_pins": {
+      "CLK": [
+        "4"
+      ],
+      "D": [
+        "90155"
+      ],
+      "QN": [
+        "90150"
+      ],
+      "RESETN": [
+        "227785"
+      ],
+      "SETN": [
+        "20342"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_228618_",
+        "master": "BUFx2_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "_228676_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "C"
+      },
+      {
+        "instance": "_228697_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "B"
+      },
+      {
+        "instance": "_228738_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "B"
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.age[0]$_DFFE_PN0P_/QN",
+    "loads": 43,
+    "net": "u_ot_pr_core.n[0]",
+    "driver_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "driver_pins": {
+      "CLK": [
+        "4"
+      ],
+      "D": [
+        "95599"
+      ],
+      "QN": [
+        "35726"
+      ],
+      "RESETN": [
+        "20362"
+      ],
+      "SETN": [
+        "227785"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_185263_",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "_185398_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.age[1]$_DFFE_PN0P_/QN",
+    "loads": 45,
+    "net": "_002915_",
+    "driver_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "driver_pins": {
+      "CLK": [
+        "4"
+      ],
+      "D": [
+        "95597"
+      ],
+      "QN": [
+        "35728"
+      ],
+      "RESETN": [
+        "20362"
+      ],
+      "SETN": [
+        "227785"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_185264_",
+        "master": "BUFx4f_ASAP7_75t_R",
+        "pin": "A"
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.age[2]$_DFFE_PN0P_/QN",
+    "loads": 46,
+    "net": "_002916_",
+    "driver_master": "DFFASRHQNx1_ASAP7_75t_R",
+    "driver_pins": {
+      "CLK": [
+        "4"
+      ],
+      "D": [
+        "95594"
+      ],
+      "QN": [
+        "35717"
+      ],
+      "RESETN": [
+        "20362"
+      ],
+      "SETN": [
+        "227785"
+      ]
+    },
+    "load_pins": [
+      {
+        "instance": "_185258_",
+        "master": "BUFx3_ASAP7_75t_R",
+        "pin": "A"
+      },
+      {
+        "instance": "_185348_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "C"
+      },
+      {
+        "instance": "_185398_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "C"
+      }
+    ]
+  }
+]
