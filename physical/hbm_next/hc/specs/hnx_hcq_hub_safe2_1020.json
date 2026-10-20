@@ -1,0 +1,296 @@
+{
+ "name": "hnx_hcq_hub_safe2_1020",
+ "top": "ot_hnx_hc_qhub",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_next/hc/ot_hnx_prog_target.sv",
+  "rtl/hbm_next/hc/ot_hnx_hc_cal.sv",
+  "rtl/hbm_next/hc/ot_hnx_hgi_hc_residual_vm.sv",
+  "rtl/hbm_next/hc/ot_hnx_hgi_hc_result_vm.sv",
+  "rtl/hbm_next/hc/ot_hnx_hgi_hc_gathered_mix_reader.sv",
+  "rtl/hbm_next/hc/ot_hnx_hc_xbrep.sv",
+  "rtl/hbm_next/hc/ot_hnx_hc_q.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/hbm_next/hc/ot_hnx_hc_qhub.sv",
+  "rtl/hbm_next/hc/ot_hnx_hc_qcen.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "bd_v",
+   "bd_ss",
+   "bd_nv",
+   "bd_wa",
+   "bd_xa",
+   "s_i",
+   "xb_v",
+   "xb_beat",
+   "xb_d0",
+   "wc_w",
+   "rstb_w",
+   "wf_w"
+  ],
+  "N": [
+   "lg_rr",
+   "lg_w_done",
+   "xb_v_n",
+   "xb_beat_n",
+   "xb_d1",
+   "xb_d2",
+   "xb_d3",
+   "wc_n",
+   "rstb_n",
+   "wf_n"
+  ],
+  "E": [
+   "lg_wq",
+   "lg_rq",
+   "xb_v_e",
+   "xb_beat_e",
+   "xb_d4",
+   "wc_e",
+   "rstb_e",
+   "wf_e"
+  ],
+  "S": [
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "residual_done",
+   "gathered_mix_v",
+   "gathered_mix_row",
+   "gathered_mix_pos",
+   "gathered_mix_data",
+   "gather_done",
+   "result_v",
+   "result_position",
+   "result",
+   "program_active",
+   "program_done",
+   "hcq_fault",
+   "d_v",
+   "d_ss",
+   "d_nv",
+   "d_wa",
+   "d_xa",
+   "i_v",
+   "i_kind",
+   "i_slot",
+   "i_lo",
+   "i_w",
+   "i_cnt",
+   "i_word",
+   "ps_v",
+   "ps",
+   "ps_f",
+   "eng_fault",
+   "xb_v_s",
+   "xb_beat_s",
+   "xb_d5",
+   "xb_d6",
+   "xb_d7",
+   "wc_s",
+   "rstb_s",
+   "wf_s"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    259.2,
+    302.4
+   ],
+   "at_exact": true
+  }
+ ],
+ "outline": {
+  "w": 734.4,
+  "h": 734.4,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.55,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hnx_hc_qhub = ot_hnx_hc_q (every pin registered in RTL, see the d4g kit hbm_hcq_hub_1017) + ot_hnx_hc_qcen (descriptor/event/beat-control/s_i/wfault pin flops; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_d* leave hc_q's x_wave output register directly and xb_v*/xb_beat* leave a per-face copy of its beat-control register (ot_hnx_hc_xbrep, HUBFIX 10-19); a kit flop stage would shift the compiled schedule"
+ },
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:HNEXT-LEAD/HNX-UNITS",
+  "branch": "claude/hnx-hub-safe2-1020",
+  "tag": "s2",
+  "purpose": "HBM-NEXT HC quarter hub SAFE2 successor of hnx_hcq_hub_safe_1019 (gate FAIL: spread 136.6/128.3, CTS hold crawl, keep/reach, census 909>32): hc_q census fanout rebuild (0 edges), km32 regional clock roots, 388.8 band",
+  "views_to": "physical/ref_tile/hnx_hcq_hub_safe2_1020/views",
+  "record_to": "results/rtl/ref_tile/hnx_hcq_hub_safe2_1020",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/hbm_next/hc",
+   "results/arch/hbm_next_1019/units/hc/witness",
+   "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_next/hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/hbm_next/hnx_hc_bench.sh",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py"
+  ],
+  "benches": [
+   {
+    "name": "hnx_hcq_exact",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/q0 q0",
+    "expect": "pass",
+    "pass_regex": "HNX_HC_Q_BENCH PASS 2/2",
+    "min_count_regex": "TB_HNX_HC_Q PASS MUT=0 XWB=4 SPR=80 RNPOS=4 RSTRIDE=1024 SSTRIDE=64 waves=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_hcq_mut7",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/qm7 qm7",
+    "expect": "fail",
+    "pass_regex": "TB_HNX_HC_Q PASS MUT=7",
+    "fail_regex": "TB_HNX_HC_Q FAIL MUT=7 ",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "residual reader ignores the row stride",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/q_m7.log"
+   },
+   {
+    "name": "hnx_hcq_mut8",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/qm8 qm8",
+    "expect": "fail",
+    "pass_regex": "TB_HNX_HC_Q PASS MUT=8",
+    "fail_regex": "TB_HNX_HC_Q FAIL MUT=8 ",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "result store ignores the row stride",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/q_m8.log"
+   },
+   {
+    "name": "hnx_hcq_mut9",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/qm9 qm9",
+    "expect": "fail",
+    "pass_regex": "TB_HNX_HC_Q PASS MUT=9",
+    "fail_regex": "TB_HNX_HC_Q FAIL MUT=9 ",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "HUBFIX: the E face copy of the x_wave beat-control register is a relay one edge late (every copy is checked against the original each edge)",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/q_m9.log"
+   },
+   {
+    "name": "hnx_hc_ring_rows_sireg",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/s0 s0",
+    "expect": "pass",
+    "pass_regex": "HNX_HC_RING SIREG=1 MUT=0 PASS 6/6",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=4 mixes=(\\d+) mixbad=0",
+    "threads": 16,
+    "peak_ram_gb": 72,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_hc_ring_mut5_sireg",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/s5 s5",
+    "expect": "fail",
+    "pass_regex": "HNX_HC_RING SIREG=1 MUT=5 PASS",
+    "fail_regex": "HC_ENG FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "note": "HUB-SAFE: the s_i pin register without the leaf-valid delay (tree consumes the chunk sums one edge early)",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/s5_n4.log"
+   },
+   {
+    "name": "hnx_hc_ring_mut1",
+    "cmd": "bash tools/hbm_next/hnx_hc_bench.sh {RUN}/bench/e1 e1",
+    "expect": "fail",
+    "pass_regex": "HNX_HC_RING MUT=1 PASS",
+    "fail_regex": "HC_ENG FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "note": "quarter-0 bank 3 (ring corner) weight slice rotated",
+    "fail_witness": "results/arch/hbm_next_1019/units/hc/witness/e1_n4.log"
+   }
+  ]
+ },
+ "params": {
+  "DRLY": 2,
+  "SIREG": 1
+ },
+ "structural_change": "HUB-SAFE2 10-20 successor of hnx_hcq_hub_safe_1019 (gate 10-19 FAIL: one root over 47.5k sinks in the 345.6 band -> TT/FF pin-flop spread 136.6/128.3 and a 4.9 h CTS hold-repair crawl; keep_modules ot_hnx_hc_xbrep matched nothing -> per-face beat copies merged -> wire_reach 560 um; census 909 drivers > 32). Structural: (1) clock: 32 regional roots by k-means over the placed sinks (clock_split_km.tcl, as the closed XS ring kits: km16 125.6 -> km32 39.6 ps), one external root; (2) hc_q fanout rebuild with ZERO added schedule edges: store bank routing decoded on the calendar edge by the hc calendar copy (kept one-hot copies), gather issue/return one-hot copies + response copies + shift-register stream, residual 64 capture-valid copies, gather_phase kept copies, reset-free data registers, programme target copy with a row/col bitmap (init-only +2 scan edges); (3) xbrep copies as kept registers; (4) reset relays named u_rst_relay x16 for ot_rst_copies; (5) standard-cell band 388.8 um (172.8..561.6) for routability (safe1019 345.6 band: GPL congestion 1.15).",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/hbm_next/hc/hub_band_gpl.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/hbm_next/hc/hub_band_dpl.tcl",
+  "OT_HNX_BAND": "172.8,172.8,561.6,561.6",
+  "OT_CKKM_K": "32"
+ },
+ "fill_reason": {
+  "pin_bound": "10.1k literal face pins (N 2,854 / E 2,658 / W 2,354 / S 2,240) need faces >= 476 um at 6 pins/um and the die slot is the 734.4 um hole of the 3x3 HC bank ring (pins abut the banks); the ~50k um2 of logic + SRAM sits in ONE central 388.8 um standard-cell band at ~39% band utilisation, the collar carries only pin wires + repeaters"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ]
+}
