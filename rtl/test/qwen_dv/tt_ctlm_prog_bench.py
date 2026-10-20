@@ -14,6 +14,11 @@ Edges are relative to each stage's edge 0 (the dh pin register captures h_start)
 Mutants (all must FAIL; fail witnesses committed): --mut 1 (RTL: every calendar entry one edge late), --bmut 1 (the
 slices report the SU op before the gate/up matvec done DEP + 1 edges late: the head's chase is unmet on its fixed cycle),
 --bmut 2 (image: the first decode SU entry one edge late, the expectation unchanged).
+LM head (QLB-C4b; image compiled with ctlm_image.py --lm-head): stage 37 runs the LM-head programme at its nonzero base
+(LOCAL SEG -> segment-G calendar + G XPF schedule) and every head command / SEG / ISSUE / ROM go / XPF arm is checked on
+its compiled edge.  Mutants: --mut 9 (RTL: the head calendar armed at base 0 only = the pre-C4b gate), --mut 10 (RTL: the
+G XPF schedule never starts = the pre-C4b base-0-only XPF start), --bmut 3 (image: the first G row one cycle late),
+--defs OT_SEG_MUT (RTL: segment G reads the base-0 rows).
 
     python3 rtl/test/qwen_dv/tt_ctlm_prog_bench.py --img DIR [--mut N] [--bmut N] [--work DIR] [--decode 2]
 """
@@ -75,6 +80,20 @@ def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
                 exp.append((e0 + x['edge'], 'LOC', ('EMB', 0)))
             continue
         if stg == 37:
+            H = img.get('lm_head')
+            if H:       # QLB-C4b: the LM-head programme at base H['base'] (segment-G calendar + G XPF schedule)
+                HX = H['expected']
+                for x in HX['cmd_at_tt_ctlm']:
+                    exp.append((e0 + x['edge'], 'CMD', int(x['cmd'], 16)))
+                for x in HX['local_at_tt_ctlm']:
+                    exp.append((e0 + x['edge'], 'LOC', (x['kind'], x['base'])))
+                for x in HX['me_issue']:
+                    exp.append((e0 + x['edge'], 'ISSUE', (x['pc'], x['unit'])))
+                for x in HX['xpf_arm_at_tt_ctlm']:
+                    exp.append((e0 + x['edge'], 'XPF', int(x['xpf72'], 16)))
+                for x in HX['rom_go_at_tt_ctlm']:
+                    exp.append((e0 + x['edge'], 'ROM', x['pc']))
+                status_events(ev, e0, H['status'], None)
             continue
         for x in img['expected']['cmd_at_tt_ctlm']:
             exp.append((e0 + x['edge'], 'CMD', int(x['cmd'], 16)))
@@ -89,33 +108,39 @@ def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
         for x in X['native_go_at_tt_ctlm']:
             exp.append((e0 + x['edge'], 'NAT', x['pc']))
         # neighbour status at its compiled cycles (levels at the tt_ctlm pins)
-        ag = dict(su_busy=0, stn_busy=0)
-        ss = dict(su_prog=0)
-        nat = dict(native_idle=1)
         late = None
         if bmut == 1:   # the SU op that the gate/up chase waits on reports done DEP + 1 edges late
             gu = next(p for p in img['plan'] if p['kind'] == 'ME' and p['window'] == 'gate_up')
             prev = max((p for p in img['plan'] if p['kind'] == 'SU' and p['pc'] < gu['pc']), key=lambda p: p['pc'])
             late = (prev['done'], C['DEP'] + 1)
-        sts = []
-        for s in img['status']:
-            e = s['edge']
-            if late and e == late[0] and s['field'] in ('su_busy', 'su_prog'):
-                e += late[1]
-            sts.append((e, s['field'], s['value']))
-        sts.sort(key=lambda x: x[0])          # stable: the compiled order on one edge is kept
-        for e, f, v in sts:
-            if f in ag:
-                ag[f] = v
-                ev.append((e0 + e, 7, (ag['stn_busy'] << 9) | (ag['su_busy'] << 1)))
-            elif f in ss:
-                ss[f] = v
-                ev.append((e0 + e, 8, (v << 45) | (v << 29)))
-            else:
-                nat[f] = v
-                ev.append((e0 + e, 9, (v << 1) | 1))
+        status_events(ev, e0, img['status'], late)
     ncyc = stages[-1][0] + 200
+    if img.get('lm_head'):
+        ncyc = stages[-1][0] + img['lm_head']['expected']['me_issue'][-1]['edge'] + 200
     return ev, exp, ncyc, stages
+
+
+def status_events(ev, e0, status, late):
+    ag = dict(su_busy=0, stn_busy=0)
+    ss = dict(su_prog=0)
+    nat = dict(native_idle=1)
+    sts = []
+    for s in status:
+        e = s['edge']
+        if late and e == late[0] and s['field'] in ('su_busy', 'su_prog'):
+            e += late[1]
+        sts.append((e, s['field'], s['value']))
+    sts.sort(key=lambda x: x[0])          # stable: the compiled order on one edge is kept
+    for e, f, v in sts:
+        if f in ag:
+            ag[f] = v
+            ev.append((e0 + e, 7, (ag['stn_busy'] << 9) | (ag['su_busy'] << 1)))
+        elif f in ss:
+            ss[f] = v
+            ev.append((e0 + e, 8, (v << 45) | (v << 29)))
+        else:
+            nat[f] = v
+            ev.append((e0 + e, 9, (v << 1) | 1))
 
 
 def run(a):
@@ -128,16 +153,20 @@ def run(a):
         w = words[k] | (words[k + 1] << 64)
         w += 1 << 116
         words[k], words[k + 1] = w & ((1 << 64) - 1), w >> 64
+    if a.bmut == 3:     # image mutant (QLB-C4b): the LM-head segment-G calendar's first row one cycle late
+        if not img.get('lm_head'):
+            raise SystemExit('--bmut 3 needs an --lm-head image')
+        words[984] += 1
     ev, exp, ncyc, stages = events_and_expect(img, words, a.decode, a.bmut)
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
-    tag = f'm{a.mut}_b{a.bmut}' + (f'_hra{a.hra}' if a.hra else '')
+    tag = f'm{a.mut}_b{a.bmut}' + ''.join(f'_{d}' for d in a.defs) + (f'_hra{a.hra}' if a.hra else '')
     evf, lgf = work / f'ev_{tag}.txt', work / f'log_{tag}.txt'
     # stable sort: the image words first, then levels, in edge order
     with open(evf, 'w') as f:
         for cy, k, v in sorted(ev, key=lambda e: (e[0], e[1])):
             f.write(f'{cy} {k} {v:x}\n')
-    obj = work / (f'obj_m{a.mut}_h{a.hard}' + (f'_l{a.lmut}' if a.landed else '') + (f'_hra{a.hra}' if a.hra else ''))
+    obj = work / (f'obj_m{a.mut}_h{a.hard}_seg{a.segcal}' + ''.join(f'_{d}' for d in a.defs) + (f'_l{a.lmut}' if a.landed else '') + (f'_hra{a.hra}' if a.hra else ''))
     srcs = [str(ROOT / l.strip()) for l in open(HERE / 'tt_ctlm_dv_sources.f') if l.strip()]
     if a.landed:    # HF-4 10-18: + the landed cluster (lp.py) in lockstep, LMUT = its mutant
         srcs += [str(ROOT / f) for f in ('rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv', 'rtl/common/landed_parent/ot_pl_land.sv',
@@ -147,10 +176,10 @@ def run(a):
         cmd = ['verilator', '--cc', '--exe', '--build', '-O2', '-j', '8', '-Wno-fatal', '-Wno-lint', '-Wno-style',
                '-Wno-TIMESCALEMOD', '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0',
                '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}', f'-GHRA={a.hra}',
-               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []),
-               *(['+define+TB_LANDED', f'-GLMUT={a.lmut}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
+               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GSEG_CAL={a.segcal}', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []),
+               *(['+define+TB_LANDED', f'-GLMUT={a.lmut}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + [f'+define+{d}' for d in a.defs] + srcs
         p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-        (work / f'build_m{a.mut}.log').write_text(p.stdout + p.stderr)
+        (work / (f'build_m{a.mut}' + ''.join(f'_{d}' for d in a.defs) + '.log')).write_text(p.stdout + p.stderr)
         if p.returncode:
             print(p.stdout[-3000:], p.stderr[-3000:])
             raise SystemExit('verilator build failed')
@@ -243,6 +272,8 @@ def main():
     # HF-4 10-18: 1 = also run the landed cluster qfd_tt_ctlm_dv_lpf_lp in lockstep (needs --hard 1); --lmut = its mutant
     ap.add_argument('--landed', type=int, default=0)
     ap.add_argument('--lmut', type=int, default=0)
+    ap.add_argument('--defs', nargs='*', default=[])
+    ap.add_argument('--segcal', type=int, default=1)
     a = ap.parse_args()
     ok, n, errs, info = run(a)
     v = 'PASS' if ok == n and not errs else 'FAIL'
