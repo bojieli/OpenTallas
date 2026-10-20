@@ -13,7 +13,7 @@ head_safe32 plans (RW=50, reach 400; O = results/arch/qwen_kv_die/head_safe32):
   r4: head_native_plan_r4.py $O/head_r4_plan.json --safe32 --reach 400 --perm <PERM of '-'>
   ft: head_native_plan_r4.py $O/head_ft_plan.json --safe32 --channel 21.6,480.6,842.4 --reach 400 --perm <PERM of '21.6,480.6,842.4'>
   alt_5x4 (A = '{"cols":5,"rows":4,"ktree_cell":[1,2],"ktree_xy":null,"score":[518.4,54.0],"outline":[1123.2,777.6],
-               "outline_ft":[1123.2,820.8],"front_dx":21.6}', SAFE32_CFG=$A for the PERMs):
+               "outline_ft":[1123.2,804.6],"front_dx":21.6}', SAFE32_CFG=$A for the PERMs):
       --safe32 --safe32-cfg "$A" [--channel 21.6,372.6,734.4] -> $O/alt_5x4/head_{r4,ft}_plan.json
 """
 import sys, json, itertools, os

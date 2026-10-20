@@ -2139,6 +2139,20 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     # keeps the legal origin residues of its hard macros (kvs1 real case: phy_WN MY had no legal origin at a GY shift)
     LAT = 43.2
     sp = (stack_h + up(max(0.0, gh_ + 4 * CHAN - stack_h), LAT)) if split else stack_h
+    if split and V143['on'] and not V143_CENTER and QKH_SAFE32:
+        # KV-BIND12 10-20 (OT_KV_QKH_SAFE32): the bigger safe32 heads grow every engine column, so the v1.4.3 growth (S groups
+        # up, N groups down: gh - gh_ each) no longer fits the band slack; grow the stack pitch (the die height) until the S|N
+        # seam (sp + GY - gh - (gh - gh_), before OT_KV_SN_LIFT) is the one the v1.1 heads leave (706.3 um at sp = stack_h:
+        # the relay channel the allocator was tuned on is not squeezed)
+        def g_(h4, hf):
+            e2 = 4 * h4 + ECTL[1] + 4 * GY
+            e3 = 2 * h4 + 2 * hf + V143_NF_LO + V143_BAND_LO + ECTL[1] + V143_BAND_HI + V143_NF_HI
+            return 4 * e2 + 3 * GY, 4 * e3 + 3 * GY
+        g2, g3 = g_(492.48, 508.68)
+        seam = stack_h + GY - g3 - (g3 - g2)
+        g2, g3 = g_(HEAD[1], SPLIT_HEAD_FT[1])
+        assert abs(g2 - gh_) < 1e-6 and abs(g3 - (4 * RENG[1] + 3 * GY)) < 1e-6, (g2, gh_, g3)
+        sp = max(sp, stack_h + up(max(0.0, 2 * g3 - g2 - GY + seam - stack_h), LAT))
     if split and V143['on'] and V143_CENTER:
         # v1.4.3b: the grown groups leave the HOST tree / slice chains their N-apron and the S|N channel only with a taller
         # stack pitch (die height + 2 x this, measured by the relay allocator)

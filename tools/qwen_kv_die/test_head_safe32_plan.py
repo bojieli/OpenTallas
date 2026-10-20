@@ -45,8 +45,10 @@ class Safe32HeadPlans(unittest.TestCase):
     def check(self, ft, sub=''):
         plan = json.loads((PLANS / sub / ('head_ft_plan.json' if ft else 'head_r4_plan.json')).read_text())
         W, H = plan['slot_outline_um']
-        for v in (W, H):
-            self.assertAlmostEqual(v / 43.2, round(v / 43.2), 6, 'slot outline off the 43.2 lattice')
+        self.assertAlmostEqual(W / 43.2, round(W / 43.2), 6, 'slot width off the 43.2 lattice')
+        # r4 on the 43.2 lattice; ft keeps the v1.1 1.08 residue mod GY 2.16 (v1.4.3 engine bands on the 2.16 grid)
+        q = (H - (1.08 if ft else 0.)) / (2.16 if ft else 43.2)
+        self.assertAlmostEqual(q, round(q), 6)
         ch = dict(plan['children'])
         # the RTL's leaves: 4 front quarters, ktree, score4, 16 x (stin, stk, lane8_nc32c); no nb relays (static heads)
         want = {f'front{g}' for g in range(4)} | {'ktree', 'score'} | {f'{k}{t}' for k in ('stin', 'stk', 'lane') for t in range(16)}

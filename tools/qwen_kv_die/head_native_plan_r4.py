@@ -62,11 +62,12 @@ def region(points):
 # nc32c LEF sizes and pins: SAFE32 below (column pitch = lane + 43.2 gap for the stin / stk column, lattice x).
 # 6 x 3 lane slots (172.8 + 43.2 gap columns from x 43.2, rows from y 54 at 183.6 = 10.8-um row gaps); the ktree in row 1 at
 # x 658.8 (frees one slot), score4 in the row-0 slot under it (pack_fault / kt_rst_n / die s all short); the fronts move with
-# the centred control tile (front_dx = (1339.2 - 1080) / 2).  Outlines on the 43.2 lattice: r4 594 -> 604.8, ft (rows >= 1
-# up 21.6 for the 21.6-um T1 / S2 zone) 615.6 -> 648.  Reach: 2-hop chains of 16 lanes this size cannot all stay <= 400 in
+# the centred control tile (front_dx = (1339.2 - 1080) / 2).  Outlines: r4 594 -> 604.8 (43.2 lattice); ft (rows >= 1 up
+# 21.6 for the 21.6-um T1 / S2 zone) 615.6 + 5.4 = 621.0, which keeps the v1.1 1.08 residue mod GY 2.16 (508.68 did: the
+# v1.4.3 engine bands h1 + ft + BAND_LO must stay on the 2.16 grid, kv_die._set_geometry).  Reach: 2-hop chains of 16 lanes this size cannot all stay <= 400 in
 # any 6 x 3 (ideal-station bound 422); 5 x 4 (alt_5x4) meets ~400 but each head grows ~300 um in y (x 32 heads of die height).
 SAFE32 = dict(cols=6, rows=3, x0=43.2, col_pitch=216.0, y0=54.0, row_pitch=183.6, ktree_cell=(1, 3), ktree_xy=(658.8, 237.6),
-              front_dx=129.6, score=(604.8, 54.0), outline=(1339.2, 604.8), outline_ft=(1339.2, 648.0), channel_dy=21.6)
+              front_dx=129.6, score=(604.8, 54.0), outline=(1339.2, 604.8), outline_ft=(1339.2, 621.0), channel_dy=21.6)
 SAFE32_VIEWS = {'lane': ('ot_qkh_lane8_nc32c', 'ot_qkh_lane8_nc32c'), 'ktree': ('ot_qkh_ktree_lk_nc32c', 'ot_qkh_ktree_lk_nc32c'),
                 'score': ('qkh_r4_score4_1014', 'ot_qkh_head_score4_native')}
 
