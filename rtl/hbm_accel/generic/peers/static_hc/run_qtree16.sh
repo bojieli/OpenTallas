@@ -11,7 +11,10 @@ python3 tools/prepare_fp32_fan32_models.py --out "$out/cells.v"
   rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v "$out/cells.v" rtl/hdc/ot_hdc_fp32_add_lat.sv \
   rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/lib/ot_rst_relay.sv > "$out/build.log" 2>&1
 set +e; "$out/obj/Vqt" > "$out/run.log" 2>&1; rc=$?; set -e
-grep -E "QTREE16|MISMATCH" "$out/run.log" | head -6
+# Always expose the terminal verdict to the closure daemon's committed regex.
+# Mismatch detail is bounded independently so it cannot displace the verdict.
+grep -E '^QTREE16 (PASS|FAIL)' "$out/run.log"
+grep -m 6 '^MISMATCH' "$out/run.log" || true
 "$vl" --version
 rm -rf "$out/obj"
 grep -q "QTREE16 PASS" "$out/run.log"

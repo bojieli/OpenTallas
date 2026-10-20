@@ -1,0 +1,3 @@
+# Tree16 wrapper verdict repair
+
+Both original daemon jobs NEEDS_RTL because the mutant wrapper printed only six MISMATCH lines and its final grep-PASS returned1. The daemon correctly refused: its committed fail_regex was absent from the wrapper stdout. Original raw mutant QTREE16 FAIL MUT=4 bad=9134 checks=19986. No RTL or expected-failure rule changed. The wrapper now prints the terminal QTREE16 verdict independently and then up to six mismatch details. Replay against actual positive/mutant logs returns0/1 with both committed pass/fail regexes present. Existing failure evidence is retained. Current main helper overlay refreshed before new same-geometry gates.
