@@ -97,6 +97,23 @@ def dma_min_drain_lag(rr_rt=DMA_RR_RT_BUDGET):
     last chunk is written before its drain read; the controller faults a smaller lag)."""
     return int(rr_rt) + 3
 
+
+# HBM-VMEARLY-DMA 10-19 (bench tools/hbm_v15_harden/bench_dma_vmearly.sh, Verilator 5.050): the DMA-back controller
+# holds ONE move (busy from reload to end_at = drain_at + nchunk + 1; a command whose descriptor reaches stage b while
+# busy faults).  It does NOT accept move i+1's command during move i's drain (ISSUE_AHEAD 1 calendar -> mv_fault, witness
+# evidence/dma_vmearly_1019/mut_ahead1.log), so its static calendar is ISSUE_AHEAD 0:
+DMA_CMD_LEAD = 6        # issue_at >= command edge + 6 (descriptor stages a,p,q,b,c + registered issue match)
+DMA_NEXT_CMD_K = 3      # next command edge >= previous end_at - 3 (K 4 faults: mut_early.log)
+
+
+def dma_min_next_issue(prev_drain_at, prev_nchunk, producer_retire=None):
+    """compiler rule, back-to-back DMA-back moves on one hb_dbk_<q> (ISSUE_AHEAD 0, the only calendar the RTL takes):
+    issue_at(i+1) >= end_at(i) - K + LEAD = drain_at(i) + nchunk(i) + 1 - 3 + 6, and >= the retire edge of the producer
+    write of every VM sector it reads (RAW, bench pass vs mut_stale).  Measured: 87 exposed HBM-write edges between
+    back-to-back moves (drain lag 83 + 4), producer retire -> first / last HBM write beat +86 / +85+nchunk."""
+    t = int(prev_drain_at) + int(prev_nchunk) + 1 - DMA_NEXT_CMD_K + DMA_CMD_LEAD
+    return t if producer_retire is None else max(t, int(producer_retire))
+
 # masters whose RTL accepts a per-bank VECTOR (contract list) for the rule's param; a list on any other master FAILS
 VECTOR_OK = {('ot_hgi_sm_xload_cl2_ctlx', 'RD_LAT')}
 # LG tap chain: master -> {client request port: (far request port, near return port, far return port, req bits, ret bits)}

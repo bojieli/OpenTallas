@@ -1,0 +1,9 @@
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-618722-1792461682 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+VMEARLY FAIL payload cycle 771 move 5 bank0 off 0 (vm sector 0): got 9e3779b9 want c46ddc1c (stale: read before the producer's write)
+[7710000] %Fatal: tb_dma_vp4_vmearly.sv:97: Assertion failed in tb_dma_vp4_vmearly.unnamedblk9.BEAT
+%Error: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vmearly.sv:97: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-618722-1792461682): exit 1
+EXIT 1
