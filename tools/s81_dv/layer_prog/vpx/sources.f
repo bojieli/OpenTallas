@@ -72,3 +72,6 @@ rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv
 rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv
 rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg.sv
 tools/s81_dv/layer_prog/vpx/tb_vpx_ag.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv
+rtl/hdc/ot_hdc_delay_rf.sv
