@@ -1,0 +1,302 @@
+{
+ "name": "qfd_dv_slice_tload_ns3b",
+ "top": "qfd_dv_slice_tload",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_slice_tload.sv",
+  "rtl/qwen_dv/qfd_dv_table_rom_loader.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v"
+ ],
+ "params": {
+  "CAPTURE_STAGE": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 388.8,
+  "h": 259.2,
+  "exact": true
+ },
+ "slot_change_request": "QW-TLOAD2 structural successor of tload ns/ns2 (clock spread 107/95 + macro->reg -229 ps): CAPTURE_STAGE=1 RTL (ROM payload+metadata captured before grouped validation, 4 kept validation groups, local reset leaves), 2x2 ROM block on the 43.2 lattice, stream in W / joined out E full faces (<=6 pins/um), centre-fed clock spine through the inter-row channel beside the register mass; outline 388.8x259.2. +1 write/done/drain edge, +1 cold reset release edge (priced).",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*u_ld*m0",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*u_ld*m1",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*u_ld*m2",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*u_ld*m3",
+   "at": [
+    216.0,
+    172.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "s_we",
+   "s_kind",
+   "s_addr",
+   "s_data"
+  ],
+  "E": [
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_data",
+   "busy",
+   "done",
+   "fault"
+  ],
+  "N": [
+   "ck",
+   "rst_n",
+   "treq"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "orfs_vars": {
+  "OT_MEG_MASTER": "ot_rom_4096x266_m8",
+  "OT_MEG_EXPECT": 4,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
+ },
+ "job": {
+  "owner": "QW-TLOAD2",
+  "branch": "claude/qw-tload2-1019",
+  "tag": "ns3b",
+  "purpose": "QW-TLOAD2 10-19: private CALR table-ROM loader + VM join (CAPTURE_STAGE=1) structural successor of tload ns/ns2; TOK.QW.BENCH.1.STORE.",
+  "benches": [
+   {
+    "name": "f16_tload_capture",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_tload_capture.sh {RUN}/bench/f16_tload_capture pass",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "F16_TLOAD_CAPTURE_PASS"
+   },
+   {
+    "name": "f16_tload_mut1",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_tload_capture.sh {RUN}/bench/f16_tload_mut1 mut1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_COLLISION_WRITE_NOT_SUPPRESSED",
+    "fail_witness": "physical/ref_tile/qfd_dv_slice_tload_ns3b/bench_witness/f16_tload_mut1.log"
+   },
+   {
+    "name": "f16_tload_mut2",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_tload_capture.sh {RUN}/bench/f16_tload_mut2 mut2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_(EDGE_MISMATCH|UNEXPECTED_FAULT join=1)",
+    "fail_witness": "physical/ref_tile/qfd_dv_slice_tload_ns3b/bench_witness/f16_tload_mut2.log"
+   },
+   {
+    "name": "f16_tload_mut3",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_tload_capture.sh {RUN}/bench/f16_tload_mut3 mut3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_COLLISION_FAULT_AGE",
+    "fail_witness": "physical/ref_tile/qfd_dv_slice_tload_ns3b/bench_witness/f16_tload_mut3.log"
+   },
+   {
+    "name": "f16_tload_mut4",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_tload_capture.sh {RUN}/bench/f16_tload_mut4 mut4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_EDGE_MISMATCH",
+    "fail_witness": "physical/ref_tile/qfd_dv_slice_tload_ns3b/bench_witness/f16_tload_mut4.log"
+   },
+   {
+    "name": "f16_tload_mut5",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_tload_capture.sh {RUN}/bench/f16_tload_mut5 mut5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_(EDGE_MISMATCH|SHARED_HEAD_CLOBBER|BTAB_MISMATCH|UNEXPECTED_FAULT join=0 vm=1)",
+    "fail_witness": "physical/ref_tile/qfd_dv_slice_tload_ns3b/bench_witness/f16_tload_mut5.log"
+   },
+   {
+    "name": "f16_tload_cmut1",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_tload_capture.sh {RUN}/bench/f16_tload_cmut1 cmut1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_(EDGE_MISMATCH|DONE_AGE|UNEXPECTED_FAULT)",
+    "fail_witness": "physical/ref_tile/qfd_dv_slice_tload_ns3b/bench_witness/f16_tload_cmut1.log"
+   },
+   {
+    "name": "f16_tload_cmut2",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_tload_capture.sh {RUN}/bench/f16_tload_cmut2 cmut2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TLOAD_(EDGE_MISMATCH|DONE_AGE|UNEXPECTED_FAULT)",
+    "fail_witness": "physical/ref_tile/qfd_dv_slice_tload_ns3b/bench_witness/f16_tload_cmut2.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_dv/run_f16_tload_capture.sh",
+   "rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv",
+   "rtl/qwen_dv/qfd_dv_vm.sv",
+   "tools/qwen_layerbench/programme_store.py",
+   "tools/qwen_layerbench/table_rom_native_fixture.py",
+   "results/arch/qwen_programme_store_1019/table_manifest.json.gz",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "clock": "spine",
+ "pin_ranges": {
+  "ck": [
+   192.9,
+   195.9
+  ],
+  "rst_n": [
+   188.4,
+   191.4
+  ],
+  "treq": [
+   197.4,
+   200.4
+  ],
+  "s_data": [
+   5.4,
+   246.2
+  ],
+  "tw_data": [
+   5.4,
+   246.2
+  ],
+  "s_addr": [
+   247.2,
+   252.2
+  ],
+  "tw_addr": [
+   247.2,
+   252.2
+  ],
+  "s_kind": [
+   253.2,
+   254.2
+  ],
+  "tw_kind": [
+   253.2,
+   254.2
+  ],
+  "s_we": [
+   255.2,
+   256.2
+  ],
+  "tw_we": [
+   255.2,
+   256.2
+  ],
+  "busy": [
+   256.5,
+   256.8
+  ],
+  "done": [
+   257.1,
+   257.4
+  ],
+  "fault": [
+   257.7,
+   258.0
+  ]
+ },
+ "sizing_note": "Old measured synthesis1407.9um2 plus1210 source FF and actual new validation/reset mapping to measure. Original24GB gate resource budget retained for same4ROM/~14k native cells; source bench48GB upper reservation, not measured peak. New synthesis decides density; no claim of physical closure.",
+ "fill_reason": {
+  "pin_bound": "2,211 signal pins (1,051 W stream in + 1,054 E joined out + treq): W/E data faces at 4.26 pins/um; the 2x2 ROM block sets the width, outline is perimeter-bound, not area-bound"
+ }
+}
