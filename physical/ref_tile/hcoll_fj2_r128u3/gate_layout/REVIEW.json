@@ -1,0 +1,33 @@
+{
+ "reviewer": "codex coordinator /root/hbm_coord",
+ "recorded_by": "codex HBM-COLL-COLLECT, explicit coordinator approval relayed04:35PT",
+ "time": "2026-10-20T11:37:52.162908+00:00",
+ "gate_commit": "355bf2204",
+ "geometry_sha256": "67dd2a91b0599eac004020917ef56791e8b071ade420554e63121e6f3077c3ac",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "67dd2a91b0599eac004020917ef56791e8b071ade420554e63121e6f3077c3ac",
+  "components": {
+   "outline": "13e108b1229cb6aaabc919ebffa7dd1e81cbbcacbe9c1502b12f9ce78f579015",
+   "macros": "43e57cecc807688c66a2ee15f5498b93dab01826d8c681ca3b7b999f42089d98",
+   "pins": "82898c3085e07c682eae446852a2fa97424c388df0e2f507889d24a6e4f1ee3e",
+   "clock_entry": "4fbd19303047aea8380b265b94f658138ea9d364cccc14555556625f80c6cbcd"
+  }
+ },
+ "gate_generated": "2026-10-20T04:29:11-0700",
+ "source_archive_sha256": "9554b90fbfa8c3929df6ec0103ba4af19cf80c0a3f5e5021cc8860faf9045d7d",
+ "source_manifest_sha256": "791825c2cf2a4c3a0d4c54cdbbf531446660f469d6cde20eca046e1a08b70d35",
+ "verdict": "APPROVED",
+ "approval_scope": "exact fresh snapshots042441/042442; source355bf2204, packet76237b579; coordinator personally viewed all4PNGs",
+ "checklist": {
+  "lattice": "PASS: literal R0 macro origin43.2,43.2; size37.8x23.784",
+  "std_cell_band": "PASS: one continuous full-width bottom band; no islands",
+  "pin_spread": "PASS: SRAM busy-face115/23.784=4.835pins/um; full S face<=6pins/um",
+  "clock_entry": "PASS: S center beside register mass; TT/FF pin spread11.4/10.5(q3),18.6/17.1(q2)",
+  "shape": "PASS:103.68x71.28, aspect1.455; pin-bound33.9percent fill explicitly accepted",
+  "native": "PASS: actual post-GRT max32,0 role errors/violations",
+  "reach": "PASS: fullbuffertransparent source/capture max140.42(q3)/141.25(q2),0>405; all unreached literal tie drivers classified",
+  "pg": "PASS: protected-unbound0 in original ODB; existing-rule in-memory bind leaves0; no original ODB modification",
+  "timing_scope": "Gate +49.8/+50.1ps hold values are TT-library placement-RC diagnostics, not FF signoff. Final acceptance TTsetup>=0/FFhold>=0/DRC0/current uncertainties plus final native PG/source audit; SS sensitivity only."
+ }
+}
