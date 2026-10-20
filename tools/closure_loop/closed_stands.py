@@ -556,6 +556,60 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
                           f"closed {last['name']} (a moved outline / pin face is slot_change)")
         return admit(f"{rr['cell']} native audit FAIL: {'; '.join(over)} (receipt {rr['source']}); {rtl_note}, "
                      f"same outline, {pins_note}; fix: {rr['fix'].strip()[:200]}")
+    if kind == "pg_binding":
+        # (ROOT3 2026-10-19, KV-HOST2 / KV-CLOSED-PG-AUDIT; Gate-Rule: relaxing, submit-time only) a CLOSED view whose
+        # final ODB carries native VDD/VSS terminals with no net (hold_eco / vtswap_eco wrote it without global_connect
+        # before b670c1b4f): a COMMITTED native PG-binding audit records the unbound terminals, and the same RTL / outline
+        # is re-closed with the fixed flow.  The timing verdict stands; the re-route only re-makes a view that can bind.
+        if not txt("source", 3) or rr["source"].strip().startswith("/"):
+            return refuse("pg_binding needs \"source\": the COMMITTED native PG-binding audit summary JSON of the closed "
+                          "view (e.g. results/arch/kv_closed_pg_audit_1019/<leaf>/summary.json)")
+        src = rr["source"].strip()
+
+        def read(path):
+            for ref in (new_commit, "origin/main"):
+                try:
+                    t = show(ref, path) if ref else None
+                except Exception:  # noqa: BLE001
+                    t = None
+                if t:
+                    return t
+            return None
+        text = read(src)
+        if not text:
+            return refuse(f"pg_binding source {src!r} is not readable at the job's commit or origin/main")
+        try:
+            import json as _json
+            doc = _json.loads(text)
+        except ValueError:
+            return refuse(f"pg_binding source {src!r} is not a JSON audit summary")
+        st = doc.get("statuses") if isinstance(doc, dict) else None
+        unbound = 0
+        if isinstance(st, dict):
+            unbound = sum(int(v) for k, v in st.items() if k != "PASS" and _num(v))
+        for k in ("unbound", "missing_bindings", "unbound_pg_terminals"):
+            if isinstance(doc, dict) and _num(doc.get(k)):
+                unbound = max(unbound, int(doc[k]))
+        if unbound <= 0:
+            return refuse(f"pg_binding: the audit {src!r} records no unbound native PG terminal: the closed view stands")
+        names = text + (read(src.rsplit("/", 1)[0] + "/committed_verdict.json") or "" if "/" in src else "")
+        if not any(re.search(r"(?<![A-Za-z0-9_])" + re.escape(str(n)) + r"(?![A-Za-z0-9_])", names)
+                   for n in (last["name"], blk) if n):
+            return refuse(f"pg_binding: the audit {src!r} (and its committed_verdict.json) names neither closed "
+                          f"{last['name']} nor {blk}")
+        if not txt("fix", 20):
+            return refuse("pg_binding needs \"fix\": the flow change that binds every native PG terminal before the "
+                          "final artifacts (e.g. hold/vtswap ECO global_connect b670c1b4f)")
+        if rtl[last["name"]][0] == "differs":
+            return refuse(f"pg_binding re-closes the closed design, but the RTL differs from closed {last['name']} "
+                          f"({rtl[last['name']][1]}): that is rtl_change")
+        g_new, g_old = (new_rec or {}).get("geom") or {}, (recs[last["name"]] or {}).get("geom") or {}
+        moved = [k for k in ("FW", "FH") if g_new.get(k) != g_old.get(k)]
+        if g_new and g_old and moved:
+            return refuse(f"pg_binding keeps the closed outline, but {', '.join(moved)} differ from closed "
+                          f"{last['name']} (a moved outline is slot_change)")
+        return admit(f"closed {last['name']} has {unbound} unbound native PG terminals (audit {src}); "
+                     f"{rtl[last['name']][1]}, same outline; fix: {rr['fix'].strip()[:200]}")
     if kind == "pin_order":
         # (REFILL-0400/PO-LINK 2026-10-19, pin_order rule c81a8f458; Gate-Rule: relaxing, submit-time only) a CLOSED
         # view whose own bus bit order is chunk-scrambled on an abutted joint (PPL ordered groups do not keep chunk

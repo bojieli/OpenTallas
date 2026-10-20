@@ -1,0 +1,154 @@
+{
+ "name": "hbm_su_pslice_c5_lp9b-r9b-COMMIT",
+ "block": "ot_hbm_su_programme_pslice_c5_lp8",
+ "ref_tile": true,
+ "owner": "Claude:L2H-SU-FB",
+ "purpose": "landed per-quarter SU programme cluster pslice_c5 (pgp_<q>), r9 one sink cluster per leaf root",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/l2h-pslice-r9-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/landed_parent",
+   "rtl/common/landed_parent",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/adapters/static_su/programme",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/landed_parent_1018/pslice_c5_r8"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_programme_pslice_c5_lp8 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8.sv rtl/common/landed_parent/ot_pl_land.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_lockstep_mut0",
+    "cmd": "MUTS=0 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh {RUN}/bench/lp0",
+    "expect": "pass",
+    "pass_regex": "MUT 0: LP_LOCKSTEP PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_mut1_bypass",
+    "cmd": "MUTS=1 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh {RUN}/bench/lp1",
+    "expect": "fail",
+    "fail_regex": "MUT 1: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8/bench_v5050/bench_summary.log"
+   },
+   {
+    "name": "lp_mut2_read_k1",
+    "cmd": "MUTS=2 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh {RUN}/bench/lp2",
+    "expect": "fail",
+    "fail_regex": "MUT 2: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8/bench_v5050/bench_summary.log"
+   },
+   {
+    "name": "flat8_eq_mut0",
+    "cmd": "ONLY=0 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat8_eq_bench.sh {RUN}/bench/eq0",
+    "expect": "pass",
+    "pass_regex": "EQ MUT 0: FLAT_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "flat8_eq_mut1_phase",
+    "cmd": "ONLY=1 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat8_eq_bench.sh {RUN}/bench/eq1",
+    "expect": "fail",
+    "fail_regex": "EQ MUT 1: FLAT_EQ FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8/bench_v5050/bench_summary.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_pslice_c5_lp9b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_pslice_c5_lp9b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_pslice_c5_lp9b --out {RUN}/record/views/ot_hbm_su_programme_pslice_c5_lp8 --macro-view physical/ref_tile/hbm_su_pgcol_l_r5/views/ot_hbm_su_programme_pgcol_l --macro-view physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s --macro-view physical/ref_tile/hbm_su_pghead_r5/views/ot_hbm_su_programme_pghead > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_pslice_c5_lp9b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/hbm_su_pgcol_l_r5/views/ot_hbm_su_programme_pgcol_l",
+   "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "physical/ref_tile/hbm_su_pghead_r5/views/ot_hbm_su_programme_pghead"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_pslice_c5_lp9b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_su_pslice_c5_lp9b/hbm_su_pslice_c5_lp9b-r9b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "L2H-SU-FB 10-19 r9 (after r8 CTS FAIL: per-leaf soft vs child 114-535 ps; 4_1_cts sink census: unfenced regional reset chains 100-640 um from the landing boxes, r8a / r8b-L reads and status rings 260-470 um apart on one root; only the r8b S leaves with everything in one strip passed, 39 / 56 ps): ONE fence per root holds every soft sink of that root (reads + cones, status write rings, u_lpr_<r> + u_lprc_u_<r>). RTL, record, ports, pins, benches = r8. Variant b: every leaf in its cfg-face box beside the register mass"
+}

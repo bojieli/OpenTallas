@@ -1,0 +1,520 @@
+{
+ "name": "hbm_su_pslice_c5_lp9b",
+ "top": "ot_hbm_su_programme_pslice_c5_lp8",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_h",
+ "clock_ports": [
+  "ck_h",
+  "ck_c0",
+  "ck_c1",
+  "ck_c2",
+  "ck_c3",
+  "ck_c4",
+  "ck_c5",
+  "ck_c6",
+  "ck_c7",
+  "ck_c8",
+  "ck_c9"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_h"
+   ],
+   "inputs": [
+    "cfg_we",
+    "cfg_bank",
+    "cfg_row",
+    "cfg_data",
+    "start",
+    "length",
+    "rst_n_h"
+   ],
+   "outputs": [
+    "fault"
+   ]
+  },
+  "c0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c0"
+   ],
+   "inputs": [
+    "rst_n_c0"
+   ],
+   "outputs": [
+    "command_c0",
+    "busy",
+    "valid",
+    "done",
+    "edge_index"
+   ]
+  },
+  "c1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c1"
+   ],
+   "inputs": [
+    "rst_n_c1"
+   ],
+   "outputs": [
+    "command_c1"
+   ]
+  },
+  "c2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c2"
+   ],
+   "inputs": [
+    "rst_n_c2"
+   ],
+   "outputs": [
+    "command_c2"
+   ]
+  },
+  "c3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c3"
+   ],
+   "inputs": [
+    "rst_n_c3"
+   ],
+   "outputs": [
+    "command_c3"
+   ]
+  },
+  "c4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c4"
+   ],
+   "inputs": [
+    "rst_n_c4"
+   ],
+   "outputs": [
+    "command_c4"
+   ]
+  },
+  "c5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c5"
+   ],
+   "inputs": [
+    "rst_n_c5"
+   ],
+   "outputs": [
+    "command_c5"
+   ]
+  },
+  "c6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c6"
+   ],
+   "inputs": [
+    "rst_n_c6"
+   ],
+   "outputs": [
+    "command_c6"
+   ]
+  },
+  "c7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c7"
+   ],
+   "inputs": [
+    "rst_n_c7"
+   ],
+   "outputs": [
+    "command_c7"
+   ]
+  },
+  "c8": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c8"
+   ],
+   "inputs": [
+    "rst_n_c8"
+   ],
+   "outputs": [
+    "command_c8"
+   ]
+  },
+  "c9": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c9"
+   ],
+   "inputs": [
+    "rst_n_c9"
+   ],
+   "outputs": [
+    "command_c9"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/pslice_c5_r8/ot_hbm_su_programme_pslice_c5_lp8_record.json",
+ "reset_ports": [
+  "rst_n_h",
+  "rst_n_c0",
+  "rst_n_c1",
+  "rst_n_c2",
+  "rst_n_c3",
+  "rst_n_c4",
+  "rst_n_c5",
+  "rst_n_c6",
+  "rst_n_c7",
+  "rst_n_c8",
+  "rst_n_c9"
+ ],
+ "outline": {
+  "w": 1900.8,
+  "h": 950.4,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_su_pghead_r5/views/ot_hbm_su_programme_pghead",
+   "count": 1,
+   "inst": "u_h",
+   "at": [
+    43.2,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "count": 1,
+   "inst": "u_c0",
+   "at": [
+    1209.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_l_r5/views/ot_hbm_su_programme_pgcol_l",
+   "count": 1,
+   "inst": "u_c1",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_l_r5/views/ot_hbm_su_programme_pgcol_l",
+   "count": 1,
+   "inst": "u_c2",
+   "at": [
+    432.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_l_r5/views/ot_hbm_su_programme_pgcol_l",
+   "count": 1,
+   "inst": "u_c3",
+   "at": [
+    820.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "count": 1,
+   "inst": "u_c4",
+   "at": [
+    1555.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "count": 1,
+   "inst": "u_c5",
+   "at": [
+    129.6,
+    648.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "count": 1,
+   "inst": "u_c6",
+   "at": [
+    475.2,
+    648.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "count": 1,
+   "inst": "u_c7",
+   "at": [
+    820.8,
+    648.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "count": 1,
+   "inst": "u_c8",
+   "at": [
+    1166.4,
+    648.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "count": 1,
+   "inst": "u_c9",
+   "at": [
+    1512.0,
+    648.0
+   ],
+   "orient": "MX"
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "pins": {
+  "S": [
+   "command_c1",
+   "command_c2",
+   "command_c3",
+   "command_c0",
+   "command_c4",
+   "busy",
+   "valid",
+   "done",
+   "edge_index",
+   "ck_c1",
+   "ck_c2",
+   "ck_c3",
+   "ck_c0",
+   "ck_c4",
+   "rst_n_c1",
+   "rst_n_c2",
+   "rst_n_c3",
+   "rst_n_c0",
+   "rst_n_c4"
+  ],
+  "W": [
+   "cfg_data",
+   "cfg_bank",
+   "cfg_row",
+   "cfg_we",
+   "rst_n_h",
+   "start",
+   "length",
+   "fault",
+   "ck_h"
+  ],
+  "N": [
+   "command_c5",
+   "command_c6",
+   "command_c7",
+   "command_c8",
+   "command_c9",
+   "ck_c5",
+   "ck_c6",
+   "ck_c7",
+   "ck_c8",
+   "ck_c9",
+   "rst_n_c5",
+   "rst_n_c6",
+   "rst_n_c7",
+   "rst_n_c8",
+   "rst_n_c9"
+  ]
+ },
+ "io_tcl": "tools/ref_tile/specs_hbm_su/hbm_su_pslice_c5_lp9b_pins.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_hook_before_flops": [
+  "tools/ref_tile/specs_hbm_su/hbm_su_pslice_c5_lp9b_fences.tcl"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "every parent input lands on a child pin register (head c_* / leaf start-length stage) or a landing ring in its region; every output leaves a child register (leaf command / status, head fault); a kit flop stage would add an edge the landed record does not price"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands every regional reset port: rst_n_<r> has ONE sink, u_lpr_<r> (ot_pl_pad N 3 on ck_<r> beside its pin: 2 landing stages + 1 reach relay; lp.py regional_reset_ports, priced in the landed record: reset release +3); a kit landing would add 2 unpriced release edges"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: every input lands on a child pin register (head c_* stage) or a landing ring; every output leaves a child register; each regional reset port lands on its own root (RTL u_lpr_<r> 3 stages + u_lprc_u_<r> 4 stages, lp regional_reset_ports); r9: both chains fenced in their root's one box",
+  "2_reach": "WAIVED (L leaves only, 3 bits per L leaf): the L leaf (453.6 um tall) has its cfg pins on one face and clk / status / reset pins on the other, so one compact cluster per root leaves three single-cycle hops of ~455-470 um (rst_n_c<k> port -> u_lpr stage 1, child fault / valid -> status write ring), each one repeated bit, STA-timed at TT / FF, inside the measured 600-750 um repeated reach; the alternative (a relay or a second register group on the same root) is exactly what failed r8 (stray sinks 100-640 um from the cluster = 86-535 ps soft spread). Everything else PASS: head ring -> leaf read is the E = 3 multicycle landing (<= ~1.9 mm); S leaves (cfg-face box beside the register mass; status pin -> ring and reset port -> stage 1 hops 259 um)",
+  "3_fanout": "PASS: regional reset lpr_<r> loads <= 12 (one leaf's read halves + status rings + child pad); h <= 28 (7 rings + 20 reads + head)",
+  "4_depth": "PASS: landing read = 8:1 registered slot mux (lp ot_pl_land_r); no combinational in -> out path (all child-registered)",
+  "5_storage": "PASS: ring banks are D = 8 slot landings (fixed-latency rings, not runtime-indexed storage); leaf storage is SRAM in the hard leaves",
+  "6_floorplan": "PASS: children on the 43.2 lattice, 43.2-um command strips + 151-um cfg channel; child faces <= 3.5 pins/um (head W 302 / 86.4); fill 57% (1.03 mm2 macros / 1.81 mm2); aspect 2:1; fences 6.48 um off every macro edge, <= 21.6 tall; r9: one fence per root",
+  "7_clock": "FIXED (r8 FAIL: soft vs child 114-535 ps on 10 of 11 roots): 11 regional roots, entry at each leaf's clk pin; r9 puts EVERY soft sink of a root (reads + cones, status rings, reset chains) in ONE <= 21.6-um box (r8 census: unfenced reset chains 100-640 um away and split read / ring groups set the soft max); landed crossings between every pair; io_hold_margin 0.03; hard-child clock references from views/<child>/insertion.json",
+  "8_schedule": "PASS: static; RTL / record unchanged from r8 (pslice_c5_r8: leaves +4 edges, reset release +3, head status lag 8); r9 is placement only, 0 added cycles"
+ },
+ "slot_change_request": "H-D4G pgp_<q> (r8, supersedes the real7 request): same slot 1900.8 x 950.4; PORT CHANGE: 11 region clocks ck_h (W, head) + ck_c0..ck_c9 (each under / over its leaf's clk pin: c0..c4 S face, c5..c9 N face) and 11 regional resets rst_n_h / rst_n_c<k> (beside each clock; the die releases all 11 on the SAME edge, each timed on its own region clock: die obligation in the record); command split per leaf command_c0..c8[255:0] + command_c9[117:0] (command = {command_c9, .., command_c0}); busy/valid/done/edge_index on ck_c0; every output +4 edges, reset release +3 (was +6)",
+ "why_floorplan": "unchanged from real7 / r8: two leaf rows facing one configuration channel, head at its W end; r9 changes only the landing fences: one box per root holding all of its soft sinks",
+ "landed": {
+  "record": "results/arch/landed_parent_1018/pslice_c5_r8/ot_hbm_su_programme_pslice_c5_lp8_record.json",
+  "landings": 90,
+  "landing_flops": 6399,
+  "reset_depth": 3,
+  "lp_spec": "tools/landed_parent/specs/pslice_c5_r8.json"
+ },
+ "structural_change": "L2H-SU-FB 10-19 r9 (after r8 CTS FAIL: per-leaf soft vs child 114-535 ps; 4_1_cts sink census: unfenced regional reset chains 100-640 um from the landing boxes, r8a / r8b-L reads and status rings 260-470 um apart on one root; only the r8b S leaves with everything in one strip passed, 39 / 56 ps): ONE fence per root holds every soft sink of that root (reads + cones, status write rings, u_lpr_<r> + u_lprc_u_<r>). RTL, record, ports, pins, benches = r8. Variant b: every leaf in its cfg-face box beside the register mass",
+ "job": {
+  "owner": "Claude:L2H-SU-FB",
+  "branch": "claude/l2h-pslice-r9-1019",
+  "tag": "r9b",
+  "purpose": "landed per-quarter SU programme cluster pslice_c5 (pgp_<q>), r9 one sink cluster per leaf root",
+  "views_to": "physical/ref_tile/hbm_su_pslice_c5_lp9b/views",
+  "record_to": "results/rtl/ref_tile/hbm_su_pslice_c5_lp9b",
+  "extra_paths": [
+   "tools/landed_parent",
+   "rtl/common/landed_parent",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/adapters/static_su/programme",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/landed_parent_1018/pslice_c5_r8"
+  ],
+  "benches": [
+   {
+    "name": "lp_lockstep_mut0",
+    "cmd": "MUTS=0 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh {RUN}/bench/lp0",
+    "expect": "pass",
+    "pass_regex": "MUT 0: LP_LOCKSTEP PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_mut1_bypass",
+    "cmd": "MUTS=1 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh {RUN}/bench/lp1",
+    "expect": "fail",
+    "fail_regex": "MUT 1: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8/bench_v5050/bench_summary.log"
+   },
+   {
+    "name": "lp_mut2_read_k1",
+    "cmd": "MUTS=2 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh {RUN}/bench/lp2",
+    "expect": "fail",
+    "fail_regex": "MUT 2: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8/bench_v5050/bench_summary.log"
+   },
+   {
+    "name": "flat8_eq_mut0",
+    "cmd": "ONLY=0 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat8_eq_bench.sh {RUN}/bench/eq0",
+    "expect": "pass",
+    "pass_regex": "EQ MUT 0: FLAT_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "flat8_eq_mut1_phase",
+    "cmd": "ONLY=1 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat8_eq_bench.sh {RUN}/bench/eq1",
+    "expect": "fail",
+    "fail_regex": "EQ MUT 1: FLAT_EQ FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5_r8/bench_v5050/bench_summary.log"
+   }
+  ]
+ }
+}
