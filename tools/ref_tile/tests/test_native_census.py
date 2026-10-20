@@ -3,6 +3,9 @@ import json
 import os
 import subprocess
 import sys
+import io
+import tarfile
+from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -163,6 +166,19 @@ INTER=''
     assert r.returncode==0,r.stdout+r.stderr
     args=json.loads(out.read_text())
     assert 'PRE_FLOORPLAN=tools/ref_tile/native_census.tcl' in args
+
+
+def test_gate_only_helpers_capture_same_head_without_mutating_route_plan(tmp_path):
+    for rel in P.GATE_ONLY_HELPERS:
+        p=tmp_path/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('gate-only '+rel)
+    payloads,modes={},{}
+    with patch.object(P,'ROOT',tmp_path),patch.object(P,'DAEMON_TREE',tmp_path),patch.object(P.HO,'capture_plan',wraps=P.HO.capture_plan) as cap:
+        data=P.ship_tar([],payloads,modes,overlay_head='pinned-main-head')
+        assert cap.call_args.kwargs['head']=='pinned-main-head'
+    assert payloads=={} and modes=={}  # route frozen inventory remains untouched
+    with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tf:
+        assert set(tf.getnames())==set(P.GATE_ONLY_HELPERS)
+    assert not set(P.GATE_ONLY_HELPERS)&set(P.HO.helper_paths())
 
 
 def test_cli_outputs_hashed_provenance(tmp_path):
