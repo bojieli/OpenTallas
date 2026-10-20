@@ -1,0 +1,59 @@
+{
+  "candidate_source_commit": "7338ce567",
+  "census_prototype_commit": "94de8573f",
+  "sha256": {
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_link.sv": "e52d1c05a12c7bd6ac1313596f89872695b5cb792f26e706ca5dd07c67a36df9",
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_sram_head.sv": "59e728256e4546627d094ccb72f37bf2bd34191831915acacbe715a3c3b743bf",
+    "rtl/test/host_peer_safe_1020/run.sh": "a2749d8d4650bd2520fae8150705338bc7ba20edd25e7920c000b3168b231248",
+    "rtl/test/host_peer_safe_1020/tb.sv": "6d817c5730543ee9a6a17a635188005ff5ce8b9655df4d727a38a9b26f2077b2",
+    "rtl/test/host_peer_safe_1020/synth_reset5.sh": "c735e516ccc928b099dddc9d0af5cc86a5a295ddf9d911aab431d93fb8c4b3b4"
+  },
+  "native_bare": {
+    "status": "FAIL",
+    "roots": 8839,
+    "max": 139,
+    "only_offender": "rst_n"
+  },
+  "native_reset_only_wrapper": {
+    "status": "PASS",
+    "roots": 8865,
+    "max": 32,
+    "offenders": 0,
+    "stages": 2,
+    "final_copies": 8,
+    "first_copies": 1,
+    "reset_loads": [
+      18,
+      18,
+      18,
+      18,
+      18,
+      18,
+      18,
+      14
+    ]
+  },
+  "added_data_edges": 0,
+  "wrapper_reset_assert_release_edges": 2,
+  "macro_count": 2,
+  "macro_dimensions_um": [
+    177.768,
+    160.392
+  ],
+  "mapped_area_um2": 58170.69538,
+  "sequential_area_um2": 682.43148,
+  "verilator": "5.050",
+  "random_unreset_exact_edges": 100000,
+  "mutant_first_differences": {
+    "bypass": 5,
+    "addr": 7,
+    "choice": 5,
+    "mailhold": 6
+  },
+  "units": {
+    "bench": "oth-ubuntu-2694975-1792485042",
+    "bare_synth": "oth-ubuntu-2695271-1792485044",
+    "reset_synth": "oth-ubuntu-2695787-1792485045"
+  },
+  "hold": "no gate; data pin registration and physical geometry/clock/throughput still owed"
+}

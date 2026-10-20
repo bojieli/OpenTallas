@@ -1,3 +1,19 @@
+# Current peer successor: source7338ce567
+
+**Candidate only, default0, no layout gate/adoption.** Bare datapath preserves all qualified transfers, credits, faults and edges. Two p19232x546 macros replace >2kb queues; effective four entries each. The512b mailbox remains flop storage (<2kb), captures whenever empty including invalid cycles, then holds while pending via32kept same-age hold controls, each16bits. Mail hold copies are set from the exact next pending state in two independent source cones. A real take while empty captures the producer word on that edge; once pending, the held word is immutable until the send edge. Invalid mailbox payload has no reset and cannot become visible until an admitted take.
+
+TX payload captures without an emit hold-enable; onlytx_v qualifies consumption. Normal RX payload also captures freely, qualified by normal_rx_v. Thirty-three kept predictive choice controls each drive16bits, using exact post-edge nn/pending/rr from two separate same-age state cones. No broad inverted-source union remains: actual-Lib effective census includes both polarities.
+
+Latest pureRTL Verilator5.050 campaign uses --x-initial unique/--x-assign unique and randomized unreset initialization: PASS100000 edges/22438normal sends/27960peer receives/18705peer sends. Bypass/address/choice/mail-hold mutants differ at5/7/5/6. Default0 comparison is separate. All payload comparisons are qualified by matching valid signals; valid/credit/ready/fault/drained compare every edge. Older evidence below is retained.
+
+Native bare source FAIL8839roots with **one offender: rawrst_n139**. All non-reset data/control/selector source cones <=32. Public reset-only wrapper adds the standard two synchronous reset-landing stages, eight final same-release-edge kept copies, one first-stage copy, and split32: **PASS8865roots/max32/zerooffenders**. Reset family loads18,18,18,18,18,18,18,14. This coupon is explicitly reset-only: no input/output data pin stations and no source reset waiver. Assertion/release shifts by two clocks at this wrapper boundary; bare data latency adds zero.
+
+Mapped area58170.69538um² including two177.768x160.392um macros and682.43148um² sequential cells. Earlier third-SRAM mailbox candidate area86700.18786um² is superseded by the same-age512b hold implementation, saving28529.49248um² (~32.9%). Full pin registration, final footprint/43.2-lattice geometry/reach/clock price, and production traffic budget remain HOLD before any layout. Current peer RX head/valid remains the original combinational handshake boundary; source changes preserve it exactly, and any registered boundary successor must explicitly price its added edges.
+
+Census prototype exact toolsource94de8573f, actual5SS Liberty families AO/INVBUF/OA/SEQ/SIMPLE +macroSS; no imported cell functional model used. PDK HQN model-integrity warning therefore affects neither pureRTL proof nor native counts.
+
+# Historical bounded queue step
+
 # Peer queue bounded successor
 
 Base a7b57f71f, opt-in SAFE_SRAM=1, default 0. Existing four credits, no added edge; this block preserves the existing exceptional peer credit protocol. No adoption or layout gate.

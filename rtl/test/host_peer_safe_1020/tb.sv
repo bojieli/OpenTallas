@@ -15,7 +15,13 @@ module tb;
  wire[0:0]a_drained,b_drained;
  wire[0:0]a_fault,b_fault;
  qkd_host_peer_link_original  u_a(.ck(ck),.rst_n(rst_n),.rx_v(rx_v),.rx_d(rx_d),.normal_rx_cr(normal_rx_cr),.peer_rx_ready(peer_rx_ready),.normal_tx_v(normal_tx_v),.normal_tx_d(normal_tx_d),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.tx_cr(tx_cr),.rx_cr(a_rx_cr),.normal_rx_v(a_normal_rx_v),.normal_rx_d(a_normal_rx_d),.peer_rx_valid(a_peer_rx_valid),.peer_rx_data(a_peer_rx_data),.normal_tx_cr(a_normal_tx_cr),.peer_tx_ready(a_peer_tx_ready),.tx_v(a_tx_v),.tx_d(a_tx_d),.drained(a_drained),.fault(a_fault));
- qkd_host_peer_link #(.SAFE_SRAM(1)) u_b(.ck(ck),.rst_n(rst_n),.rx_v(rx_v),.rx_d(rx_d),.normal_rx_cr(normal_rx_cr),.peer_rx_ready(peer_rx_ready),.normal_tx_v(normal_tx_v),.normal_tx_d(normal_tx_d),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.tx_cr(tx_cr),.rx_cr(b_rx_cr),.normal_rx_v(b_normal_rx_v),.normal_rx_d(b_normal_rx_d),.peer_rx_valid(b_peer_rx_valid),.peer_rx_data(b_peer_rx_data),.normal_tx_cr(b_normal_tx_cr),.peer_tx_ready(b_peer_tx_ready),.tx_v(b_tx_v),.tx_d(b_tx_d),.drained(b_drained),.fault(b_fault));
+ qkd_host_peer_link #(
+`ifdef OT_PEER_BASELINE
+ .SAFE_SRAM(0)
+`else
+ .SAFE_SRAM(1)
+`endif
+ ) u_b(.ck(ck),.rst_n(rst_n),.rx_v(rx_v),.rx_d(rx_d),.normal_rx_cr(normal_rx_cr),.peer_rx_ready(peer_rx_ready),.normal_tx_v(normal_tx_v),.normal_tx_d(normal_tx_d),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.tx_cr(tx_cr),.rx_cr(b_rx_cr),.normal_rx_v(b_normal_rx_v),.normal_rx_d(b_normal_rx_d),.peer_rx_valid(b_peer_rx_valid),.peer_rx_data(b_peer_rx_data),.normal_tx_cr(b_normal_tx_cr),.peer_tx_ready(b_peer_tx_ready),.tx_v(b_tx_v),.tx_d(b_tx_d),.drained(b_drained),.fault(b_fault));
  integer cycle=0,checks=0,ntokens=4,rtokens=4,normalwords=0,peerwords=0,peerout=0;
  reg[6:0]crpipe=0;integer seed=1234,rv;
  task fail(input string what);$display("FAIL cycle=%0d %s",cycle,what);$fatal(1);endtask

@@ -1,0 +1,59 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz', decompressing using zlib.
+
+21. Printing statistics.
+
+=== qkd_host_peer_link_safe ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     7426        -     7426        - wires
+    10556        -    10556        - wire bits
+     1332        -     1332        - public wires
+     4462        -     4462        - public wire bits
+       22        -       22        - ports
+     3152        -     3152        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     7843 5.82E+04     7843 5.82E+04 cells
+      532   46.539      532   46.539   AND2x2_ASAP7_75t_R
+        1    0.146        1    0.146   AND2x4_ASAP7_75t_R
+       10    0.875       10    0.875   AND3x1_ASAP7_75t_R
+        3    0.612        3    0.612   AND3x4_ASAP7_75t_R
+        7    0.714        7    0.714   AND4x1_ASAP7_75t_R
+     1012    88.53     1012    88.53   AO21x1_ASAP7_75t_R
+      513   59.836      513   59.836   AOI21x1_ASAP7_75t_R
+      400    29.16      400    29.16   BUFx2_ASAP7_75t_R
+        4     0.35        4     0.35   BUFx3_ASAP7_75t_R
+      131   49.659      131   49.659   DFFASRHQNx1_ASAP7_75t_R
+     2170  632.772     2170  632.772   DFFHQNx1_ASAP7_75t_R
+       14    2.858       14    2.858   FAx1_ASAP7_75t_R
+       33     4.33       33     4.33   HAxp5_ASAP7_75t_R
+     1279   55.943     1279   55.943   INVx1_ASAP7_75t_R
+        6     0.35        6     0.35   INVx2_ASAP7_75t_R
+      560   48.989      560   48.989   NAND2x1_ASAP7_75t_R
+        1     0.16        1     0.16   NAND3x1_ASAP7_75t_R
+      502   43.915      502   43.915   NOR2x1_ASAP7_75t_R
+        2    0.321        2    0.321   NOR3x1_ASAP7_75t_R
+      529   61.703      529   61.703   OA211x2_ASAP7_75t_R
+       34     3.47       34     3.47   OA21x2_ASAP7_75t_R
+        4     0.35        4     0.35   OR2x2_ASAP7_75t_R
+       10    0.875       10    0.875   OR3x1_ASAP7_75t_R
+        3    0.306        3    0.306   OR4x1_ASAP7_75t_R
+        1    0.117        1    0.117   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        6     1.05        6     1.05   XNOR2x1_ASAP7_75t_R
+       70   11.227       70   11.227   XNOR2x2_ASAP7_75t_R
+        2    0.321        2    0.321   XOR2x2_ASAP7_75t_R
+        2  5.7E+04        2  5.7E+04   ot_sram_1r1w_32x546_m1_p192_mir
+
+   Chip area for module '\qkd_host_peer_link_safe': 58170.695380
+     of which used for sequential elements: 682.431480 (1.17%)
+
