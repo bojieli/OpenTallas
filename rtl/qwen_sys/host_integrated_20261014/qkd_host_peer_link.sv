@@ -40,9 +40,12 @@ module qkd_host_peer_link #(parameter integer MUT=0, parameter integer SAFE_SRAM
  wire[4:0]next_returns={1'b0,returns}+5'(normal_rx_cr)+5'(peer_pop)-5'(returns!=0);
  assign drained=nn==0&&pn==0&&!peer_pending&&physical==4&&returns==0&&!rx_v&&!tx_v;
  generate if(SAFE_SRAM)begin:g_payload_safe
-  // Mailbox occupancy is at most one; the same SRAM-head mechanism removes
-  // the 512-bit capture enable and payload reset without changing visibility.
-  qkd_host_peer_sram_head #(.W(512)) u_mail(.ck(ck),.rst_n(rst_n),.put(take_peer),.pop(peer_send),.head(peer_word),.data(peer_tx_data));
+  // Only512bits: a held mailbox is below the SRAM threshold. Capture freely
+  // while empty, including invalid producer cycles; a take captures the real
+  // word on that edge. Independent same-age pending copies then hold each16b.
+  reg[511:0]mail_word;
+  (* keep *)reg[31:0]mail_hold;
+  assign peer_word=mail_word;
   (* keep *)reg[2:0]nn_source;
   (* keep *)reg pending_source,rr_source;
   (* keep *)reg[32:0]choice;
@@ -63,6 +66,14 @@ module qkd_host_peer_link #(parameter integer MUT=0, parameter integer SAFE_SRAM
    wire next_pending=(pending||take_peer)&&!peer_send;
    wire next_rotation=emit?!choose_peer:rotation;
    wire next_choice=next_pending&&(next_n==0||next_rotation);
+   for(genvar h=g*16;h<(g+1)*16;h=h+1)begin:g_mail
+    always @(posedge ck or negedge rst_n)if(!rst_n)mail_hold[h]<=0;else mail_hold[h]<=next_pending;
+`ifdef OT_PEER_MUT_MAILHOLD
+    always @(posedge ck)mail_word[16*h+:16]<=peer_tx_data[16*h+:16];
+`else
+    always @(posedge ck)if(!mail_hold[h])mail_word[16*h+:16]<=peer_tx_data[16*h+:16];
+`endif
+   end
    for(genvar c=g*17;c<33&&c<(g+1)*17;c=c+1)begin:g_copy
     always @(posedge ck or negedge rst_n)if(!rst_n)choice[c]<=0;else choice[c]<=next_choice;
    end
