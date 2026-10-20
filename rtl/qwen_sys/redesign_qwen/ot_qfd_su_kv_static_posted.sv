@@ -9,7 +9,7 @@
 // the existing KVN class wire. The receiver's layer/position descriptor must
 // describe the SAME admitted epoch; this module does not fabricate that link.
 module ot_qfd_su_kv_static_posted #(
- parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0, SAFE=0
+ parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0, SAFE=0, LOCAL_CTL=0
 )(
  input wire clk,rst_n,
  input wire epoch_begin,input wire [17:0] epoch_pos,
@@ -19,6 +19,7 @@ module ot_qfd_su_kv_static_posted #(
  output wire epoch_idle,output wire drained,
  output reg word_v,output reg [10:0] word_tag,output reg [511:0] word_data,
  input wire word_slot,input wire [1:0] word_index,
+ output wire[15:0]word_ctl_pub,
  output reg fault,output reg [7:0] fault_code
 );
  // Every arriving face bit is captured before decode/arbitration.
@@ -157,6 +158,22 @@ module ot_qfd_su_kv_static_posted #(
    end
   end
  end
+ // Same-edge control publications for bounded KVN consumer groups (no new edge).
+ generate if(LOCAL_CTL)begin:g_ctl_pub
+  for(genvar cp=0;cp<4;cp=cp+1)begin:g_copy
+   (* keep = "true" *) reg[3:0]q;
+   always @(posedge clk or negedge rst_n)begin
+    if(!rst_n)q<=0;
+    else if(ENABLE!=0&&!eb_q)begin
+     if(!fault&&!(|err)&&choose&&(!word_v||take))q<={1'b1,3'b010};
+     else if(take||fault||(|err))q[3]<=0;
+    end
+   end
+   assign word_ctl_pub[4*cp+:4]=q;
+  end
+ end else begin:g_ctl_alias
+  assign word_ctl_pub={4{word_v,word_tag[10:8]}};
+ end endgenerate
  // Epoch-begin broadcast replicated per byte segment (QW-N59 10-19): the 256-seat seen / bytes_r assembly bank took its
  // clear / hold select from one eb_q flop (synthesis merged it with the service's iss[0]: 4,826 loads > 3,000).  EBC kept
  // copies of the same register, one per NBYTES/EBC-byte segment; function unchanged (the same cycle and condition).

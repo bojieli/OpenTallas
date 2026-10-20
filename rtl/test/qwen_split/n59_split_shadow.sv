@@ -63,6 +63,12 @@ module n59_split_shadow #(parameter integer NU=4,parameter [13:0] MU_SEQ0=14'd0,
 `else
  localparam integer SVC_PIN=0;
 `endif
+`ifndef N59_SVC_LOCAL32
+ `define N59_SVC_LOCAL32 0
+`endif
+`ifndef N59_SVC_LOCAL_MUT
+ `define N59_SVC_LOCAL_MUT 0
+`endif
 `ifndef N59_QB_LOCAL32
  `define N59_QB_LOCAL32 0
 `endif
@@ -75,7 +81,7 @@ module n59_split_shadow #(parameter integer NU=4,parameter [13:0] MU_SEQ0=14'd0,
 `ifndef N59_RECV_MUT
  `define N59_RECV_MUT 0
 `endif
- qfd_native59_split_flat #(.QB_LOCAL32(`N59_QB_LOCAL32),.QB_LOCAL_MUT(`N59_QB_LOCAL_MUT),.QB_ALIGN(`N59_QB_ALIGN),.SVC_RECV(SVC_PIN),.SVC_RECV_MUT(`N59_RECV_MUT),.SMUT(MUT),.QB_MUT(QB_MUT),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.EMB_RELAY(EMBR)) u_split(
+ qfd_native59_split_flat #(.SVC_LOCAL32(`N59_SVC_LOCAL32),.SVC_LOCAL_MUT(`N59_SVC_LOCAL_MUT),.QB_LOCAL32(`N59_QB_LOCAL32),.QB_LOCAL_MUT(`N59_QB_LOCAL_MUT),.QB_ALIGN(`N59_QB_ALIGN),.SVC_RECV(SVC_PIN),.SVC_RECV_MUT(`N59_RECV_MUT),.SMUT(MUT),.QB_MUT(QB_MUT),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.EMB_RELAY(EMBR)) u_split(
   .ck(ck),.rst_n(rst_n),
 `endif
   .host_epoch_valid(d_hev),.host_fused_capability(d_hfc),.host_epoch(d_he),.host_tag(d_ht),.host_generation(d_hg),
