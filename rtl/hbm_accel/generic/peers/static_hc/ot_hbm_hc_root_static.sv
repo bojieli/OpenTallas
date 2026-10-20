@@ -30,6 +30,18 @@
 // stages before its descriptor / ingest out flops and by XRU - XRUQ[q] stages after its subtree-sum / gathered-mix pin
 // flops (ot_hdc_delay, valid bits reset), so every quarter sees the same compiled timeline (no stagger, no runtime
 // alignment).  XRDQ = XRUQ = 32'hffffffff (default) = every quarter at XRD / XRU = the previous form, byte-identical cycles.
+// HBM-HC7-ROOT 10-20: reset tree whose port net loads only s0 (see the root's synced reset).  Release: s0 edge 1, s1
+// edge 2, leaves edge 3 after the port rises (= ot_rst_relay SYNC 2 + TREE 1).
+(* keep_hierarchy = 1 *) module ot_hbm_hc_rst_tree #(parameter integer REGIONS = 8) (
+    input wire clk, rst_n_in, output wire [REGIONS-1:0] rst_n
+);
+    (* async_reg = "true", keep = "true" *) reg s0, s1;
+    (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] lf;
+    always @(posedge clk or negedge rst_n_in) if (!rst_n_in) s0 <= 1'b0; else s0 <= 1'b1;
+    always @(posedge clk or negedge s0) if (!s0) s1 <= 1'b0; else s1 <= s0;
+    always @(posedge clk or negedge s0) if (!s0) lf <= {REGIONS{1'b0}}; else lf <= {REGIONS{s1}};
+    assign rst_n = lf;
+endmodule
 module ot_hbm_hc_root_static #(
     parameter integer K    = 20480,
     parameter [31:0]  NF   = 32'h46a00000,       // binary32(K)
@@ -42,7 +54,7 @@ module ot_hbm_hc_root_static #(
     parameter integer TLA  = 7,                  // quarter tree adder stages
     parameter integer SAFE = 0,                  // HBM-HC5 10-20: 1 = SRAM mix store + tail domain TD = 2 edges later (below)
     parameter integer TAILC = 0,                 // HBM-HCROOT6 10-20: 1 = hardened tail child tiles (+2 edges, emit TE = 2 later)
-    parameter integer PTFS = 0,                  // HBM-HC7-ROOT 10-20: 1 = fanout-safe targets ot_static_program_target_fs
+    parameter integer PTFS = 0,                  // HBM-HC7-ROOT 10-20: 1 = fanout-safe pass (targets _fs + reset tree, below)
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -100,7 +112,14 @@ module ot_hbm_hc_root_static #(
     // L2H-HC 10-19 (SAFE item 3, reset cohorts): eight kept relay regions instead of one rn[0] for the whole root;
     // every copy releases on the same edge (SYNC 2 + TREE 1), so the schedule is unchanged.
     wire [7:0] rn;
-    ot_rst_relay #(.REGIONS(8)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    // HBM-HC7-ROOT 10-20 (PTFS 1, SAFE item 3): the port clears ONLY the first synchronizer stage; the second stage and the
+    // region leaves are cleared by that stage (assert stays asynchronous: port -> s0 -> clear), so replicated leaves
+    // (bound_fanout_clone: same D, same clear) load s0 / s1, never the port.  Release edge = ot_rst_relay (2 + 1 = 3).
+    if (PTFS == 0) begin : g_rr
+        ot_rst_relay #(.REGIONS(8)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    end else begin : g_rt
+        ot_hbm_hc_rst_tree #(.REGIONS(8)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    end
     wire rst_pin = rn[0], rst_tgt = rn[1], rst_seq = rn[2], rst_dn = rn[3];
     wire rst_core = rn[4], rst_mix = rn[5], rst_tbl = rn[6], rst_tail = rn[7];
 
