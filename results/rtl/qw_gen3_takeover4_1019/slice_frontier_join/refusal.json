@@ -1,0 +1,94 @@
+{
+ "schema": "opentallas.qwen.slice-whole-frontier-origin-join.v1",
+ "status": "BLOCKED",
+ "qualified": false,
+ "enabled": false,
+ "K_emit": null,
+ "top": "qfd_dv_s5b_lp",
+ "source_packet_ref": "702da6fe4",
+ "source_packet_sha256": "197f10531f8327d5203c86f3236a0dd0302d28fa9a671b14716330c478e5bee9",
+ "source_commit": "e0e05b43d",
+ "errors": [
+  "INCOMPLETE_OR_EXTRA_WHOLE_FRONTIER_ACK"
+ ],
+ "ports": [
+  {
+   "port": "cmd_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "hr_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "rs_s",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "rs_n",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "l9_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "st_up_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "st_dn_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "sc_up_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "sc_dn_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "ch_up_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "ch_dn_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "ag_up_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  },
+  {
+   "port": "treq_i",
+   "errors": [
+    "MISSING_RECEIVER_ORIGIN_ACK"
+   ]
+  }
+ ]
+}
