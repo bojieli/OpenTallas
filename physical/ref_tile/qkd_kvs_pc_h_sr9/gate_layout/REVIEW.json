@@ -1,0 +1,18 @@
+{
+  "reviewer": "coordinator claude ROOT11 (PNGs personally viewed; non-critical KV PC_H tile, re-submit after packaging NEEDS_HUMAN)",
+  "verdict": "APPROVED",
+  "gate_commit": "d8c0f81b19ddbe6365b3db0d7c583ea22ded48a5",
+  "scope": "KV PC_H sr9 r3 (SAFE successor of sr8): gate WARN 0 fail, GRT overflow 0; only packaging changed since (job.json extra_paths/branch).",
+  "checklist": {
+    "lattice": "PASS 23 OT_SRAM_1R1W2C_32x64 banks in two columns on the 43.2/172.8 lattice, stacked abutted",
+    "std_cell_band": "PASS full-core rows; std mass between/around the bank columns and along the N pin face, no isolated islands; S/E low-density area = pin-limited outline (fill 0.325)",
+    "pin_spread": "PASS faces 92-98% used at <=6 pins/um (KV-PC9 review)",
+    "clock_entry": "PASS-guidance E-face lower corner; TT/FF pin-flop spread ck 64.0/58.5, hck 51.2/47.8 ps (<=80); insertion 455/378 ps guidance",
+    "shape": "PASS 267.8 x 300.2 um, ~1.1:1"
+  },
+  "timing": "GRT-stage TT setup +113 ps; placed reach 8 pairs > 405 um (max 464.7 um, ki_q -> u_tap feed-through) accepted under rule freeze (within measured repeated reach, timing met); native census PASS max 32",
+  "behavior_evidence": [
+    "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/front_m0.log"
+  ],
+  "time": "2026-10-20T15:59:58-07:00"
+}
