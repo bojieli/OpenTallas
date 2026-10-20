@@ -194,3 +194,27 @@ matching interface failure evidence. Final2 source hashes and transcript are
 committed alongside exact native evidence. The normal log's printed g3 tag is
 inherited display text in the original test; its DUT module is the private g6
 and the source hashes identify that source. No old g3 physical closure is claimed.
+
+
+Coordinator semantic gate HOLD (01:58 PT)
+
+The earlier individual-vector storage statement is superseded by the complete
+family inventory in SEMANTIC_AUDIT.md and logical_storage_audit.json. Core-c
+D4 payload storage is5444bits; its replicated indexed epoch/valid history adds
+8172/2724bits, for16340 physical history bits in that same writer family.
+Implementation partitioning does not waive the2kb SRAM requirement, and the
+current FF-based g6 source is diagnostic only. No physical gate is authorized.
+A real backend must address both data and metadata history, actual source-bound
+writer/reader phase, arbitrary initial SRAM contents, first-valid/reset behavior,
+read-before-write and no-same-address-collision witnesses.
+
+The inherited24nm placement shifts are actual changes of macro bbox origins,
+which violate the required43.2um origin lattice. They are not accepted merely
+because the physical pin-track audit passes. r0_lattice_proposal.json proves a
+source-preserving physical alternative: leave every immutable LEF/pin shape and
+all requested43.2*k origins unchanged and use R0 orientations. It lists each
+actual global pin rectangle before/after, all logical pin→net connections,
+LEF hashes and per-layer track results. Mirrored Z0/Z1/Z3 have2/338/336 off-track
+signal pin-layer contacts at the requested lattice origins; all five R0 children
+have zero. The proposal changes physical pin locations through reorientation
+and has not been applied to a kit or routed. No origin/track rule is waived.

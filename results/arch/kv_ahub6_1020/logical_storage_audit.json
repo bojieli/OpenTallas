@@ -1,0 +1,595 @@
+{
+ "schema": "opentallas.ahub6.logical_storage_audit.v1",
+ "source_sha256": "b9ae787158db9ac30605b147a1f88b7b73d67823d1ce9cebabed2c8be83458c4",
+ "status": "HOLD",
+ "reason": "core-c D4 logical history family5444bits exceeds2kb; two-bit implementation chunks are not an exemption",
+ "totals": {
+  "payload_ring_bits": 7220,
+  "reader_output_bits": 1805,
+  "physical_metadata_FFs": 29799,
+  "physical_epoch_history_bits": 10836,
+  "physical_valid_history_bits": 3612
+ },
+ "landings": [
+  {
+   "name": "0",
+   "net": "amw_c",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_w",
+   "W": 72,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 288,
+   "reader_output_bits": 72,
+   "physical_chunks": 36,
+   "physical_metadata_FFs": 1188,
+   "physical_epoch_history_bits": 432,
+   "physical_valid_history_bits": 144,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_core"
+   ],
+   "consumer_pins": [
+    "u_amw.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "1",
+   "net": "ame_c",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_e",
+   "W": 72,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 288,
+   "reader_output_bits": 72,
+   "physical_chunks": 36,
+   "physical_metadata_FFs": 1188,
+   "physical_epoch_history_bits": 432,
+   "physical_valid_history_bits": 144,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_core"
+   ],
+   "consumer_pins": [
+    "u_ame.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "2",
+   "net": "fr_epoch_i",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_w",
+   "W": 16,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 64,
+   "reader_output_bits": 16,
+   "physical_chunks": 8,
+   "physical_metadata_FFs": 264,
+   "physical_epoch_history_bits": 96,
+   "physical_valid_history_bits": 32,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_io"
+   ],
+   "consumer_pins": [
+    "u_rw.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "3",
+   "net": "fr_rz_i",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_w",
+   "W": 128,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 512,
+   "reader_output_bits": 128,
+   "physical_chunks": 64,
+   "physical_metadata_FFs": 2112,
+   "physical_epoch_history_bits": 768,
+   "physical_valid_history_bits": 256,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_io"
+   ],
+   "consumer_pins": [
+    "u_rw.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "4",
+   "net": "fr_valid_i",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_w",
+   "W": 1,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 4,
+   "reader_output_bits": 1,
+   "physical_chunks": 1,
+   "physical_metadata_FFs": 33,
+   "physical_epoch_history_bits": 12,
+   "physical_valid_history_bits": 4,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_io"
+   ],
+   "consumer_pins": [
+    "u_rw.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "5",
+   "net": "ape",
+   "writer_clock": "ck_e",
+   "reader_clock": "ck_c",
+   "W": 86,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 344,
+   "reader_output_bits": 86,
+   "physical_chunks": 43,
+   "physical_metadata_FFs": 1419,
+   "physical_epoch_history_bits": 516,
+   "physical_valid_history_bits": 172,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ape"
+   ],
+   "consumer_pins": [
+    "u_core.si_valid",
+    "u_core.si_type",
+    "u_core.si_g",
+    "u_core.si_hh",
+    "u_core.si_k",
+    "u_core.si_any",
+    "u_core.si_data"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "6",
+   "net": "apw",
+   "writer_clock": "ck_w",
+   "reader_clock": "ck_c",
+   "W": 86,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 344,
+   "reader_output_bits": 86,
+   "physical_chunks": 43,
+   "physical_metadata_FFs": 1419,
+   "physical_epoch_history_bits": 516,
+   "physical_valid_history_bits": 172,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_apw"
+   ],
+   "consumer_pins": [
+    "u_core.si_valid",
+    "u_core.si_type",
+    "u_core.si_g",
+    "u_core.si_hh",
+    "u_core.si_k",
+    "u_core.si_any",
+    "u_core.si_data"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "7",
+   "net": "zo0",
+   "writer_clock": "ck_z0",
+   "reader_clock": "ck_c",
+   "W": 68,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 272,
+   "reader_output_bits": 68,
+   "physical_chunks": 34,
+   "physical_metadata_FFs": 1122,
+   "physical_epoch_history_bits": 408,
+   "physical_valid_history_bits": 136,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ro0"
+   ],
+   "consumer_pins": [
+    "u_core.zh_root",
+    "u_eq.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "8",
+   "net": "zo1",
+   "writer_clock": "ck_z1",
+   "reader_clock": "ck_c",
+   "W": 68,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 272,
+   "reader_output_bits": 68,
+   "physical_chunks": 34,
+   "physical_metadata_FFs": 1122,
+   "physical_epoch_history_bits": 408,
+   "physical_valid_history_bits": 136,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ro1"
+   ],
+   "consumer_pins": [
+    "u_core.zh_root",
+    "u_eq.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "9",
+   "net": "zo2",
+   "writer_clock": "ck_z2",
+   "reader_clock": "ck_c",
+   "W": 68,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 272,
+   "reader_output_bits": 68,
+   "physical_chunks": 34,
+   "physical_metadata_FFs": 1122,
+   "physical_epoch_history_bits": 408,
+   "physical_valid_history_bits": 136,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ro2"
+   ],
+   "consumer_pins": [
+    "u_core.zh_root",
+    "u_eq.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "10",
+   "net": "zo3",
+   "writer_clock": "ck_z3",
+   "reader_clock": "ck_c",
+   "W": 68,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 272,
+   "reader_output_bits": 68,
+   "physical_chunks": 34,
+   "physical_metadata_FFs": 1122,
+   "physical_epoch_history_bits": 408,
+   "physical_valid_history_bits": 136,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ro3"
+   ],
+   "consumer_pins": [
+    "u_core.zh_root",
+    "u_eq.d"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "11",
+   "net": "zi0",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_z0",
+   "W": 268,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 1072,
+   "reader_output_bits": 268,
+   "physical_chunks": 134,
+   "physical_metadata_FFs": 4422,
+   "physical_epoch_history_bits": 1608,
+   "physical_valid_history_bits": 536,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ri0"
+   ],
+   "consumer_pins": [
+    "u_zh0.start",
+    "u_zh0.zs_we",
+    "u_zh0.sid",
+    "u_zh0.ziv",
+    "u_zh0.zg",
+    "u_zh0.zp"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "12",
+   "net": "zi1",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_z1",
+   "W": 268,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 1072,
+   "reader_output_bits": 268,
+   "physical_chunks": 134,
+   "physical_metadata_FFs": 4422,
+   "physical_epoch_history_bits": 1608,
+   "physical_valid_history_bits": 536,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ri1"
+   ],
+   "consumer_pins": [
+    "u_zh1.start",
+    "u_zh1.zs_we",
+    "u_zh1.sid",
+    "u_zh1.ziv",
+    "u_zh1.zg",
+    "u_zh1.zp"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "13",
+   "net": "zi2",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_z2",
+   "W": 268,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 1072,
+   "reader_output_bits": 268,
+   "physical_chunks": 134,
+   "physical_metadata_FFs": 4422,
+   "physical_epoch_history_bits": 1608,
+   "physical_valid_history_bits": 536,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ri2"
+   ],
+   "consumer_pins": [
+    "u_zh2.start",
+    "u_zh2.zs_we",
+    "u_zh2.sid",
+    "u_zh2.ziv",
+    "u_zh2.zg",
+    "u_zh2.zp"
+   ],
+   "parallel_compute_exception": false
+  },
+  {
+   "name": "14",
+   "net": "zi3",
+   "writer_clock": "ck_c",
+   "reader_clock": "ck_z3",
+   "W": 268,
+   "D": 4,
+   "K": 2,
+   "ring_payload_bits": 1072,
+   "reader_output_bits": 268,
+   "physical_chunks": 134,
+   "physical_metadata_FFs": 4422,
+   "physical_epoch_history_bits": 1608,
+   "physical_valid_history_bits": 536,
+   "write_ports": 1,
+   "read_ports": 1,
+   "read_policy": "one selected history slot each reader edge; other slots not concurrently computed",
+   "write_policy": "one rotating slot written on every released writer edge",
+   "source_nodes": [
+    "u_ri3"
+   ],
+   "consumer_pins": [
+    "u_zh3.start",
+    "u_zh3.zs_we",
+    "u_zh3.sid",
+    "u_zh3.ziv",
+    "u_zh3.zg",
+    "u_zh3.zp"
+   ],
+   "parallel_compute_exception": false
+  }
+ ],
+ "families": [
+  {
+   "writer_clock": "ck_c",
+   "depth": 4,
+   "slot_policy": "identical rotating wc/write_oh phase after same-depth reset",
+   "landings": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "11",
+    "12",
+    "13",
+    "14"
+   ],
+   "width_bits": 1361,
+   "ring_payload_bits": 5444,
+   "reader_roots": [
+    "ck_e",
+    "ck_w",
+    "ck_z0",
+    "ck_z1",
+    "ck_z2",
+    "ck_z3"
+   ],
+   "parallel_compute_exception": false,
+   "physical_epoch_history_bits": 8172,
+   "physical_valid_history_bits": 2724,
+   "concurrent_reader_clocks": 6,
+   "physical_payload_plus_history_bits": 16340,
+   "storage_status": "HOLD_NEEDS_REAL_SRAM_BACKEND"
+  },
+  {
+   "writer_clock": "ck_e",
+   "depth": 4,
+   "slot_policy": "identical rotating wc/write_oh phase after same-depth reset",
+   "landings": [
+    "5"
+   ],
+   "width_bits": 86,
+   "ring_payload_bits": 344,
+   "reader_roots": [
+    "ck_c"
+   ],
+   "parallel_compute_exception": false,
+   "physical_epoch_history_bits": 516,
+   "physical_valid_history_bits": 172,
+   "concurrent_reader_clocks": 1,
+   "physical_payload_plus_history_bits": 1032,
+   "storage_status": "UNDER_2KB_PAYLOAD_FAMILY"
+  },
+  {
+   "writer_clock": "ck_w",
+   "depth": 4,
+   "slot_policy": "identical rotating wc/write_oh phase after same-depth reset",
+   "landings": [
+    "6"
+   ],
+   "width_bits": 86,
+   "ring_payload_bits": 344,
+   "reader_roots": [
+    "ck_c"
+   ],
+   "parallel_compute_exception": false,
+   "physical_epoch_history_bits": 516,
+   "physical_valid_history_bits": 172,
+   "concurrent_reader_clocks": 1,
+   "physical_payload_plus_history_bits": 1032,
+   "storage_status": "UNDER_2KB_PAYLOAD_FAMILY"
+  },
+  {
+   "writer_clock": "ck_z0",
+   "depth": 4,
+   "slot_policy": "identical rotating wc/write_oh phase after same-depth reset",
+   "landings": [
+    "7"
+   ],
+   "width_bits": 68,
+   "ring_payload_bits": 272,
+   "reader_roots": [
+    "ck_c"
+   ],
+   "parallel_compute_exception": false,
+   "physical_epoch_history_bits": 408,
+   "physical_valid_history_bits": 136,
+   "concurrent_reader_clocks": 1,
+   "physical_payload_plus_history_bits": 816,
+   "storage_status": "UNDER_2KB_PAYLOAD_FAMILY"
+  },
+  {
+   "writer_clock": "ck_z1",
+   "depth": 4,
+   "slot_policy": "identical rotating wc/write_oh phase after same-depth reset",
+   "landings": [
+    "8"
+   ],
+   "width_bits": 68,
+   "ring_payload_bits": 272,
+   "reader_roots": [
+    "ck_c"
+   ],
+   "parallel_compute_exception": false,
+   "physical_epoch_history_bits": 408,
+   "physical_valid_history_bits": 136,
+   "concurrent_reader_clocks": 1,
+   "physical_payload_plus_history_bits": 816,
+   "storage_status": "UNDER_2KB_PAYLOAD_FAMILY"
+  },
+  {
+   "writer_clock": "ck_z2",
+   "depth": 4,
+   "slot_policy": "identical rotating wc/write_oh phase after same-depth reset",
+   "landings": [
+    "9"
+   ],
+   "width_bits": 68,
+   "ring_payload_bits": 272,
+   "reader_roots": [
+    "ck_c"
+   ],
+   "parallel_compute_exception": false,
+   "physical_epoch_history_bits": 408,
+   "physical_valid_history_bits": 136,
+   "concurrent_reader_clocks": 1,
+   "physical_payload_plus_history_bits": 816,
+   "storage_status": "UNDER_2KB_PAYLOAD_FAMILY"
+  },
+  {
+   "writer_clock": "ck_z3",
+   "depth": 4,
+   "slot_policy": "identical rotating wc/write_oh phase after same-depth reset",
+   "landings": [
+    "10"
+   ],
+   "width_bits": 68,
+   "ring_payload_bits": 272,
+   "reader_roots": [
+    "ck_c"
+   ],
+   "parallel_compute_exception": false,
+   "physical_epoch_history_bits": 408,
+   "physical_valid_history_bits": 136,
+   "concurrent_reader_clocks": 1,
+   "physical_payload_plus_history_bits": 816,
+   "storage_status": "UNDER_2KB_PAYLOAD_FAMILY"
+  }
+ ],
+ "other_parent_state": {
+  "core_lm_data_bits": 512,
+  "core_seen_bits": 512,
+  "role": "independent core scoreboard/capture state, not a landing-ring partition"
+ },
+ "macro_children": "Existing four Z children and reciprocal are separate immutable hard views; their storage is not reclassified as parent soft FFs"
+}

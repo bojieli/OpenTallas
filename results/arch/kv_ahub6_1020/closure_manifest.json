@@ -4,7 +4,7 @@
  "files": [
   {
    "path": "physical/ref_tile/qkd_ahub_g6a/README.md",
-   "sha256": "cc8c74ddc7a7a0a4fc6714c5ca292dd96f99b4ff2ecdc21b464f1fe2fbf2ed14"
+   "sha256": "274af6bfdf5d28a69f64a65da94b04779efed1be4ddaa607a27f98725ff0ad8d"
   },
   {
    "path": "physical/ref_tile/qkd_ahub_g6a/clock.sdc",
@@ -100,7 +100,7 @@
   },
   {
    "path": "physical/ref_tile/qkd_ahub_g6b/README.md",
-   "sha256": "a39022b028a9fdc6acf7644273530fd3e71679182b99860aedcb720104009ba7"
+   "sha256": "31c62b7f599d7a8876825f6f0647044cb0b75c57c502665d80af1ec8c1449c4e"
   },
   {
    "path": "physical/ref_tile/qkd_ahub_g6b/clock.sdc",
@@ -196,7 +196,11 @@
   },
   {
    "path": "results/arch/kv_ahub6_1020/README.md",
-   "sha256": "65893d17d163bf0be98f31a67b8e811c1765eb6f8deb3369ba047106a59938a5"
+   "sha256": "9c93c8a153d89c400fd51abd1243fecdda19a4d3e549ed827df842b2f694f6a5"
+  },
+  {
+   "path": "results/arch/kv_ahub6_1020/SEMANTIC_AUDIT.md",
+   "sha256": "2af29c081390c5af40c25570049c1d66a69e1618784b8fa7d3e70f7966e46ab6"
   },
   {
    "path": "results/arch/kv_ahub6_1020/canonical_lp/qkd_ahub_static_dw_g6_lp.sv",
@@ -215,6 +219,10 @@
    "sha256": "5c5b55b5ed8fc03adaa2029a297270c64f2fe1e367d025a2ad80be0c67d29d4f"
   },
   {
+   "path": "results/arch/kv_ahub6_1020/logical_storage_audit.json",
+   "sha256": "cf4dfa7c71a4c036776ce31e4985d6ee09011fe24bdf7b8a3ce074f0682df0bf"
+  },
+  {
    "path": "results/arch/kv_ahub6_1020/native.log",
    "sha256": "77893bccd8cf7086444dd76714e7720a6e6e4396a5be2e8b2ac5bef596b4c996"
   },
@@ -228,7 +236,11 @@
   },
   {
    "path": "results/arch/kv_ahub6_1020/qkd_ahub_static_dw_g6_lp_record.json",
-   "sha256": "d6fe91902f7bf1c88f569e6c28104da777dd7040ea2ef61a0a4988cade708938"
+   "sha256": "2e53f55077248bc7ab73939e70f386e48e8e359867dbb7c2fbf40f821a291891"
+  },
+  {
+   "path": "results/arch/kv_ahub6_1020/r0_lattice_proposal.json",
+   "sha256": "ae92d91f2997f2c91389d3f80f5764f85c1656df80abcc891c980522141980ab"
   },
   {
    "path": "results/arch/kv_ahub6_1020/receipts/area_model.py",
@@ -304,7 +316,7 @@
   },
   {
    "path": "results/arch/kv_ahub6_1020/receipts/final_main_focused.log",
-   "sha256": "a7ae838afb464a648d97d2b250dc40f9eb2f35f9869bb7baee2b81bbfc4d957e"
+   "sha256": "b5ba515b7d3e0ad4d89cdb75f97a975994e33c4e0faaf2a5fc95c75e5dc223c2"
   },
   {
    "path": "results/arch/kv_ahub6_1020/receipts/full_bench_v9.sh",
@@ -451,6 +463,10 @@
    "sha256": "2fa8d81fa9a1f56b577a9b1768eda1e3f910ca6eb441d6612d52ac03915ba546"
   },
   {
+   "path": "tools/qwen_kv_die/ahub6/audit_semantics.py",
+   "sha256": "6efa3209a88b1d4dff6429bd79982b80bc0173d73274a40c4d6ab4b3527ce537"
+  },
+  {
    "path": "tools/qwen_kv_die/ahub6/bench.sh",
    "sha256": "41250121a8a3ce2fdb4121e4cefe10f4b725ece124b2d6f8348ae339249578c3"
   },
@@ -508,7 +524,7 @@
   },
   {
    "path": "tools/qwen_kv_die/ahub6/mk_kits.py",
-   "sha256": "8ab30f1055a60edab5ba729550ca056153a71d936e2b6b38b6ce422a64c35c4b"
+   "sha256": "2a0a916e67bcee0ea69ffbcfd32066b51db28307ec49cb32dad918ea4692688e"
   },
   {
    "path": "tools/qwen_kv_die/ahub6/mk_source.py",
@@ -530,5 +546,6 @@
    "path": "tools/ref_tile/test_derived_landed_record.py",
    "sha256": "54d75575f8ed7ef241503e90a71649e94f6d40de9aadc0d988019f174ae09e67"
   }
- ]
+ ],
+ "admission": "DIAGNOSTIC_ONLY_STORAGE_AND_ORIGIN_LATTICE_HOLD"
 }
