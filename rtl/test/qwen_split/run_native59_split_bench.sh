@@ -9,8 +9,10 @@
 #     m1_q_lane (Q lane packing) m2_kv_addr m3_emb_word m5_mu_tag (ovl) m7_owner (bank owner select)
 #     qb1_unreg (bank q row unregistered: one edge early)  qb2_norelay (dd relay skipped; random stimulus)
 #   random-stimulus lockstep (tb_n59_split_random): rnd_s1 rnd_s2 rnd_nu1 (pass), rnd_m1_q_lane rnd_qb1_unreg (must FAIL)
-#   landed form (N59_SPLIT_LP=1, SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6): + lp_m1_land_bypass lp_m2_land_late lp_m4_svc_reset
-#     lp_rnd_m1_land_bypass (lp.py MUT 1 / 2 / 4 inside the landed parent; must FAIL)
+#   landed form (N59_SPLIT_LP=1, SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6): + lp_m1_land_bypass lp_m2_land_late lp_rnd_m1_land_bypass
+#     (lp.py MUT 1 / 2 inside the landed parent; must FAIL).  lp.py MUT 4 (the service reset run one stage long) is NOT a
+#     mutant here: a reset-release offset is unobservable under the static calendar's idle window after reset (the split
+#     itself releases its service one service-edge early for the same reason; see qfd_native59_qbank.sv).
 #   SPL_SOFF / SPL_BOFF / SPL_ROFF (env): edge offsets (flat 1/0/1; the landed form: from its lp record)
 set -uo pipefail
 out=${1:?fresh output directory}; mkdir -p "$out"
@@ -88,7 +90,6 @@ run rnd_qb1_unreg fail rnd -GQB_MUT=1
 if [[ -n ${N59_SPLIT_LP:-} ]]; then
  run lp_m1_land_bypass fail mu -GOVLP=1 -GMCTX=1 -GLP_MUT=1
  run lp_m2_land_late fail mu -GOVLP=1 -GMCTX=1 -GLP_MUT=2
- run lp_m4_svc_reset fail mu -GOVLP=1 -GMCTX=1 -GLP_MUT=4
  run lp_rnd_m1_land_bypass fail rnd -GLP_MUT=1
 fi
 sha256sum "${COMMON[@]}" "${DV[@]}" "${MU[@]}" "${RND[@]}" > "$out/source.sha256"
