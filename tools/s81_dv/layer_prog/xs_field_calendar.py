@@ -71,6 +71,27 @@ FLOORS = {     # op: (family, measured floor period, first FAIL, span tail (go0 
     'attn.wo_a': ('bf16', 231, 230, 352, 'results/rtl/s81_wqbp_1020/pipe3: 12 phases P231 2893 / 2886 PASS, P230 FAIL'),
     'ffn.router': ('bf16', 231, 230, 345, 'TOKSIM-S81C/FSEQ: 5 phases P231 1269 PASS 6/6 frames, P230 FAIL'),
 }
+# S81-ROMOPT-C (O3, OT_XS_KSLOT=k): an op compiled with k segment classes per element has its OWN measured floor / tail
+# (release FSEQ frame exes, results/rtl/s81_romopt_1020/c); a k-class op without an entry is a compile fault.
+FLOORS_K = {
+    ('ffn.experts_gu', 2): ('fp8', 145, 144, 348, 'results/rtl/s81_romopt_1020/c/fseq/k2/*/experts_gu (12 phases, u_f_0L00 / '
+                            '2L02 / 3L01 P145 PASS 1939 / 1938 / 1943, P144 FAIL; swap / shift FAIL)'),
+    ('ffn.down', 2): ('fp8', 127, 126, 298, 'results/rtl/s81_romopt_1020/c/fseq/k2/*/down (14 phases, u_f_0L00 / 2L02 / 3L01 '
+                      'P127 PASS 1948 / 1944 / 1949, P126 FAIL; swap / shift FAIL)'),
+}
+
+
+def floor_rec(op):
+    """FLOORS[op], or FLOORS_K[(op, k)] when the op is compiled with k > 1 segment classes per element"""
+    import xs_place as XP
+    k = XP.kslot_of(op)
+    if k == 1:
+        return FLOORS[op]
+    if (op, k) not in FLOORS_K:
+        raise CalendarFault(('k-class op without a measured floor', op, k))
+    return FLOORS_K[(op, k)]
+
+
 SERIAL_ONLY = {'attn.cmp.wk': 'one BF phase a layer: nothing to overlap', 'eng.wkv': 'not a field matvec calendar here'}
 # execution order of the field ops inside a layer (DAG order; the field is one resource)
 EXEC_ORDER = ['attn.wq_b', 'attn.idx.q', 'attn.cmp.wk', 'attn.wo_a', 'attn.wo_b', 'ffn.router', 'ffn.shared_gu',
@@ -89,7 +110,7 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
     """the pipelined slice xs calendar of one op's field phases (global field phase indices `phases` into the phase
     ROM words `phase` / stream ROM words `stream`).  Returns rows, segment-relative is_d words, per-phase records,
     static checks and the predicted span."""
-    fam, floor, _fail, tail, _ev = FLOORS[op]
+    fam, floor, _fail, tail, _ev = floor_rec(op)
     P = floor if period is None else period
     try:
         pipe = XC.compile_pipeline(phase, stream, list(phases), slc, P, cfg_lead=cfg_lead)
@@ -114,7 +135,7 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
         cal['span_metric'] = 'spine_go0_to_last_frame_root_ret_edges'
         cal['span_evidence'] = 'results/rtl/s81_rom12_codex_1020/fseq12/wq_b/check_P126.json (8ph64rows96RET; P125 FAIL)'
     import xs_topo as TP
-    if TP.ENABLED and op in ('ffn.down', 'ffn.experts_gu'):
+    if TP.ENABLED and op in ('ffn.down', 'ffn.experts_gu') and floor_rec(op) is FLOORS[op]:
         # S81-RATE3 (10-20): the physical-frame dealing changes the per-expert row split (down 4/4/3 instead of 4/4/2,
         # gu 4/4/4 on 6-frame slices); measured on the release frame exes (fseq3, u_f_0L00 + u_f_3L01, Verilator 5.050):
         # down 21 phases P130 2895 / 2896 (tail 296; P125 FAIL), gu 18 phases P145 2811 (tail 346; P144 FAIL)
@@ -253,9 +274,9 @@ def record(cal):
     r = {k: cal[k] for k in keep if k in cal}
     r['phases'] = [{k: p[k] for k in ('phase', 'tag', 'accept', 'cfg', 'launch', 'stream', 'retire', 'nb', 'stall_edges')}
                    for p in cal['phases']]
-    r['floor_evidence'] = FLOORS[cal['op']][4]
+    r['floor_evidence'] = floor_rec(cal['op'])[4]
     r['predicted_span_definition'] = ('spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + '
-                                      f'{cal.get("span_tail", FLOORS[cal["op"]][3])} (measured law); die wire / CAP tail not included')
+                                      f'{cal.get("span_tail", floor_rec(cal["op"])[3])} (measured law); die wire / CAP tail not included')
     return r
 
 
@@ -401,7 +422,7 @@ def cmd_die(a):
         summary['layers'][L] = dict(frame=r['frame'], field_phases=r['field_phases'], skipped=r['skipped'],
                                     ops={o: dict(nphases=v['nphases'], period=v['period'], floor=v['floor'],
                                                  predicted_span=v['predicted_span'],
-                                                 serial_span=v.get('span_tail', FLOORS[o][3]) * v['nphases'],
+                                                 serial_span=v.get('span_tail', floor_rec(o)[3]) * v['nphases'],
                                                  static_PASS=v['static']['PASS'],
                                                  negative_control=v['static']['below_floor_negative_control'])
                                          for o, v in ops_rec.items()},
@@ -444,7 +465,7 @@ def cmd_selftest(a):
         ph, st = _synthetic(op, 6)
         cals[op] = (ph, st)
         expect(f'{op}@floor', lambda op=op, ph=ph, st=st: op_calendar(op, ph, st, range(6))['predicted_span'], False)
-        expect(f'{op}@floor-1', lambda op=op, ph=ph, st=st: op_calendar(op, ph, st, range(6), period=FLOORS[op][1] - 1), True)
+        expect(f'{op}@floor-1', lambda op=op, ph=ph, st=st: op_calendar(op, ph, st, range(6), period=floor_rec(op)[1] - 1), True)
     ph, st = cals['attn.wo_a']
     expect('wo_a@230_allow_below_floor_still_flags', lambda: op_calendar('attn.wo_a', ph, st, range(6), period=230,
                                                                          allow_below_floor=True)['static']['PASS'], False)

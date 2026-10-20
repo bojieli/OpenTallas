@@ -1,0 +1,101 @@
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 1 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 2 mutant=None rows=5 fixture_rows=5 errors=0 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+MISMATCH edge 344 row 0 lo 0 k 1 got f054d7f2/0 want bc7afa40/0
+MISMATCH edge 345 row 1 lo 0 k 1 got 75b277ef/0 want 3c83d8ce/0
+MISMATCH edge 348 row 4 lo 2 k 1 got f39e0c41/0 want bc2817f8/0
+MISMATCH edge 349 row 5 lo 2 k 1 got 787f5d87/0 want 3a3b8b80/0
+MISMATCH edge 351 row 1 lo 2 k 1 got f4360979/0 want 3b4650a0/0
+MISMATCH edge 352 row 4 lo 4 k 2 got faf92195/0 want 3b96ba38/0
+MISMATCH edge 359 row 3 lo 0 k 2 got 76445490/0 want bb1f88b0/0
+COVERAGE row 0 segments [0, 1] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 3 mutant=None rows=6 fixture_rows=6 errors=14 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+MISMATCH edge 345 row 1 lo 0 k 1 got 3c83d8ce/0 want bc4390d0/0
+MISMATCH edge 348 row 2 lo 2 k 1 got bc2817f8/0 want 3c1210ec/0
+MISMATCH edge 349 row 3 lo 2 k 1 got 3a3b8b80/0 want 3becda88/0
+MISMATCH edge 357 row 1 lo 2 k 1 got bcca9b67/0 want bcb56c3e/0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [0, 1, 2, 3] of 5
+COVERAGE row 2 segments [2, 3] of 5
+COVERAGE row 3 segments [2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 4 mutant=None rows=5 fixture_rows=5 errors=10 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+MISMATCH edge 351 row 0 lo 0 k 1 got 3ba4c76c/0 want bb603090/0
+MISMATCH edge 352 row 1 lo 0 k 1 got bc4277ea/0 want bc818850/0
+MISMATCH edge 359 row 4 lo 4 k 2 got bbe042a0/0 want 3b1a1b90/0
+MISMATCH edge 360 row 5 lo 4 k 2 got 3b5491b8/0 want 39f6d140/0
+MISMATCH edge 362 row 4 lo 0 k 1 got 3bd7a0d4/0 want bbeaf71c/0
+COVERAGE row 0 segments [0, 1] of 5
+COVERAGE row 1 segments [0, 1] of 5
+COVERAGE row 2 segments [] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 5 mutant=None rows=6 fixture_rows=6 errors=12 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+MISMATCH edge 351 row 0 lo 0 k 1 got ba6429c0/0 want 3c567b5c/0
+MISMATCH edge 359 row 2 lo 4 k 2 got bacd6110/0 want 3bd48948/0
+MISMATCH edge 360 row 3 lo 4 k 2 got bbb63f10/0 want b9fc7dc0/0
+COVERAGE row 0 segments [0, 1] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [4] of 5
+COVERAGE row 3 segments [4] of 5
+COVERAGE row 4 segments [0, 1] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 6 mutant=None rows=5 fixture_rows=5 errors=9 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+MISMATCH edge 359 row 1 lo 0 k 1 got bb6b1798/0 want 3b934aba/0
+MISMATCH edge 362 row 4 lo 2 k 1 got 3bc7d668/0 want bafb2e90/0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [0, 1] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [2, 3] of 5
+COVERAGE row 5 segments [] of 5
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 7 mutant=None rows=6 fixture_rows=6 errors=9 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+MISMATCH edge 359 row 1 lo 0 k 1 got 3c87c29a/0 want 3c4191fe/0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [0, 1] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+PLAN_MISMATCH predicted 15 words, got 1; first diff ((337, 0, (0, 1, 5), 1005929898, 0), (359, 1, (0, 1, 5), 1015530138, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 8 mutant=None rows=5 fixture_rows=5 errors=7 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+COVERAGE row 5 segments [] of 5
+PLAN_MISMATCH predicted 16 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 9 mutant=None rows=6 fixture_rows=6 errors=7 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+PLAN_MISMATCH predicted 15 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 10 mutant=None rows=5 fixture_rows=5 errors=6 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+COVERAGE row 5 segments [] of 5
+PLAN_MISMATCH predicted 16 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 11 mutant=None rows=6 fixture_rows=6 errors=7 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+PLAN_MISMATCH predicted 15 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 12 mutant=None rows=5 fixture_rows=5 errors=6 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+COVERAGE row 5 segments [] of 5
+PLAN_MISMATCH predicted 16 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 13 mutant=None rows=6 fixture_rows=6 errors=7 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+PLAN_MISMATCH predicted 15 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 14 mutant=None rows=5 fixture_rows=5 errors=6 END edges=4803 ret_words=219 xo_checked=4801 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 14 rows 77 fixture_rows 77 go0 63 last_ret 1962 span 1899 errors 178 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
