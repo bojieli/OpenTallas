@@ -1,0 +1,57 @@
+{
+ "schema": "toksim.hbm.su_vop_record.v1",
+ "record": "qw_softmax_exp_sum_r3",
+ "design": "qwen",
+ "N": 8192,
+ "rows": 3,
+ "roles": {
+  "A": "vm",
+  "B": "rf"
+ },
+ "mods": {
+  "cp_m1": 3,
+  "cm_m1": 3,
+  "cp_imm1": 1026891283,
+  "cm_imm1": 1026891283,
+  "ca_ad": 3,
+  "ci_sfu": 1,
+  "cs_sfu": 1
+ },
+ "red": "sum",
+ "sfu_lanes": true,
+ "lanes_per_quarter": 32,
+ "issues": 192,
+ "emissions": 192,
+ "issue_to_write": 84,
+ "RR": 12,
+ "WR": 10,
+ "fill_slack": 1,
+ "drain_slack": 2,
+ "dispatch_edge": 118,
+ "first_emit": 134,
+ "last_emit": 471,
+ "last_lg_write": 853,
+ "retire_edge": 863,
+ "cycles_serial": 745,
+ "cycles_stream_833ps": 993.33,
+ "edges": 871,
+ "expected_vm_writes": 3073,
+ "expected_scalars": 18,
+ "reduction": {
+  "rows": 3,
+  "finals": {
+   "0": "4710582b",
+   "1": "46484e42",
+   "2": "45418d2f"
+  },
+  "model_check": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)"
+ },
+ "golden": "hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT); reduction = the MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree",
+ "pretree": {
+  "on": true,
+  "qpr": 4,
+  "quarter_run_words": 2048,
+  "blocks_per_row": 64,
+  "pt_red": 80
+ }
+}

@@ -83,7 +83,7 @@
   "h": 302.40000000000003,
   "exact": true
  },
- "structural_change": "KV-EMB4 x1b 10-19: OT_KV_EMB_CTX successor of qkd_kvs_emb (KV-EMB2 d9631325d / main f87209b55 body qkd_kvs_emb_ctx) on the e2b clock recipe ({\"OT_SPINE_TREE_PAD\": \"1\"}), same outline 388.8 x 302.4 and W/S faces; E face: -d2d__svc[173:0] +i_ctx[98:0] (die fork of the HOST -> d2d port-1 record bus, arrives from the d2d end side like svc) +px_st +emb_fault (713 vs 786 E pins); hard child qkd_embedding_row_tx_ctx_c1b (+row_open) at the 43.2 lattice (129.6, 86.4). Bench kvs_emb_ctx_bench.sh: wiring lockstep vs the die-bound qkd_kvs_emb + reference ctx_start, PASS + mutants 1-4 FAIL on Verilator 5.050 (witnesses committed). +2 edges ctx face->start priced in GEN9.",
+ "structural_change": "KV-EMB4 x1b 10-19: OT_KV_EMB_CTX successor of qkd_kvs_emb (KV-EMB2 d9631325d / main f87209b55 body qkd_kvs_emb_ctx) on the e2b clock recipe ({\"OT_SPINE_TREE_PAD\": \"1\"}), same outline 388.8 x 302.4 and W/S faces; E face: -d2d__svc[173:0] +i_ctx[98:0] (die fork of the HOST -> d2d port-1 record bus, arrives from the d2d end side like svc) +px_st +emb_fault (713 vs 786 E pins); hard child qkd_embedding_row_tx_ctx_c1b (+row_open, CLOSED 7ea686674 TT +231.65/FF +7.07, native PASS) at the 43.2 lattice (129.6, 86.4). Bench kvs_emb_ctx_bench.sh: wiring lockstep vs the die-bound qkd_kvs_emb + reference ctx_start, PASS + mutants 1-4 FAIL on Verilator 5.050 (witnesses committed). +2 edges ctx face->start priced in GEN9.",
  "job": {
   "owner": "Claude:KV-EMB4 (LEAD3-KV, tree K.STA.EMB)",
   "branch": "claude/kv-emb4-1019",
@@ -182,5 +182,21 @@
  },
  "orfs_vars": {
   "OT_SPINE_TREE_PAD": "1"
+ },
+ "reroute_reason": {
+  "kind": "native_spread",
+  "closed_job": "qkd_kvs_emb-e1-c84feb9f9",
+  "source": "results/rtl/ref_tile/qkd_kvs_emb/native_pin_audit_e1-c84feb9f9.json",
+  "cell": "qkd_kvs_emb",
+  "fix": "OT_KV_EMB_CTX structural successor (new E face -d2d__svc +i_ctx +px_st +emb_fault, hard child row_tx_ctx c1b) on the e2b OT_SPINE_TREE_PAD=1 clock recipe; the closed e1 view fails the 80 ps pin-flop rule (TT 149.9) and cannot bind",
+  "previous_attempts": [
+   "qkd_kvs_emb-i2-5561116d2",
+   "qkd_kvs_emb-e1-d99def0cd (flow failure, no TT overlay)",
+   "qkd_kvs_emb-e1-939c4f0de (NEEDS_RTL FF hold -6.74 child->pin-flop skew)",
+   "qkd_kvs_emb gate 1202b0612 WARN 0 fail (GRT 0) refused at daemon check: stale overlay tools (orfs_hold_mm.tcl RC-CAL 594825ff5, textbook_lint RESET-LANDING d4c49c8d3); tools re-taken from origin/main, reset_landing opt-out recorded",
+   "qkd_kvs_emb-e1-c84feb9f9 (CLOSED, routed spread TT 149.9 / FF 66.7: native FAIL)",
+   "qkd_kvs_emb_e2a gate WARN 0 fail (pin-flop 32.7/29.9), REVIEW_REQUIRED",
+   "qkd_kvs_emb_e2b gate FAIL clock_rule (pin-flop TT 112.8 / FF 121.4)"
+  ]
  }
 }

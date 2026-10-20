@@ -1,0 +1,16 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Traceback (most recent call last):
+  File "/work/native5.py", line 60, in <module>
+    db,block,source,rx,ro,bi,proof = coupon(kind)
+  File "/work/native5.py", line 22, in coupon
+    chip = odb.dbChip.create(db)
+  File "odb_py.py", line 6573, in create
+TypeError: Wrong number or type of arguments for overloaded function 'dbChip_create'.
+  Possible C/C++ prototypes are:
+    odb::dbChip::create(odb::dbDatabase *,odb::dbTech *,std::string const &,odb::dbChip::ChipType)
+    odb::dbChip::create(odb::dbDatabase *,odb::dbTech *,std::string const &)
+    odb::dbChip::create(odb::dbDatabase *,odb::dbTech *)
+

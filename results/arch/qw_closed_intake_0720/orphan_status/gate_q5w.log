@@ -1,0 +1,23 @@
+GATE WARN fill: fill 40% = (macros/children 13159 + std 10989) / outline 60466 um2 < 50%
+GATE INFO pin_regs: pin registers opted out: RTL registers every pin at the face: inputs land in exactly one flop (ir_q/dpr_q/drr_q/srr_q, u_tok c_tok, pk_q/di_q straps), outputs leave a flop (upd_q/urd_q/face sx regs/od_q/q_pe/q_xe); flow pin registers would add unpriced cycles
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc9 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_coll_split_q5w_20261020-054316.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_coll_split_q5w_20261020-054316.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_split_q5w-20261020-054316
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc9 in 223 s (gate total 552 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1585, 'pin_rectangles': 1585, 'pin_track_checked': 1585, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 374bc9fdc388d8be5af7aca080adeaa2f6aaec11e0d4fee3cc8421086e7c6351
+GATE INFO util: synthesized std area 10997 um2 + macros 13159 in core 58357: util 49% (std-cell density 49.0% of placeable 22446 um2; total fill 41.4%)
+GATE INFO textbook: REFUSE ot_coll_split_q_native32 cells 95,829 flops 18,744 depth 288.4 ps util 0.4138 reach 0.0 um (4.1 s)
+GATE WARN textbook.clock_domain: clock root port clk: 18,744 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. cc[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE FAIL textbook.reset_landing: reset port rst_n: 4 sinks (4 flops, 0 hard-child / macro pins, e.g. u_rs.s[0]$_DFF_PN0_/RESETN) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth  -> FIX: land every reset input at its face in 2 registered stages, then fan out at equal depth: kit "reset_landing": {"enable": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant
+GATE WARN textbook.util_channel: 10 macro channel(s) narrower than 20 um with placement rows (e.g. u_sd.g_d\[0\].g_c\[0\].u_m|u_sd.g_d\[0\].g_c\[1\].u_m 0.0 um, g_xf_fan32.u_xf/g_st\[2\].genblk1.genblk1.g_dr.u_dr.g_b\[0\].u_m|g_xf_fan32.u_xf/g_st\[2\].genblk1.genblk1.g_dr.u_dr.g_b\[1\].u_m 0.0 um, g_xf_fan32.u_xf/g_st\[2\].genblk1.genblk1.g_dr.u_dr.g_b\[0\].u_m|u_rring.g_b\[1\].u_m 0.0 um): widen to >= 20 um or block the channel  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE WARN textbook.clock_guidance: clock root port:clk: 18,744 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,744 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR RSZ-3006] Failed to insert buffer before loads for net g_xf_fan32.u_xf/g_st\[3\].g_lane\[3\].g_fan32.u_add.genblk1.g_native7.u_native.n1957  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN clock_rule: root port:clk: 18,744 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,744 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-orphans-coll-1020/physical/ref_tile/qfd_coll_split_q5w/gate_layout/floorplan.png
+GATE WARN fill: fill 40% = (hard macros 13159.4 + synthesized std cells 10990.9) / outline 60466.2 um2; pin demand per face: S 300 pins over 128.9/233.3 um (55%), N 261 pins over 172.7/233.3 um (74%), W 556 pins over 80.5/259.2 um (31%), E 554 pins over 100.2/259.2 um (39%) (< 50%)
+PRE_ROUTE_GATE: FAIL (2 fail, 7 warn)
+GATE: qfd_coll_split_q5w/gate_result.json written (exact staged source binding; commit it with the kit)

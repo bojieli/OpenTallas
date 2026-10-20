@@ -1,0 +1,137 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: SRAM macro input registers and sixteen kept one-hot select captures register every read/write input; bt_q is the direct 256-bit capture flop Q. Zero added cycles, no resettable state.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc5 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_dv_s5_btab_s2b_20261020-004831.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_dv_s5_btab_s2b_20261020-004831.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_btab_s2b-20261020-004831",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc5 in 18 s (gate total 485 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 1318, 'pin_rectangles': 1318, 'pin_track_checked': 1318, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 e8f610368c4944be7d5a5e4fe15fe28cd862c4e165412c80c8c17e70c6a3ec42",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 193 um2 + macros 15575 in core 63098: util 0% (std-cell density 0.5% of placeable 41185 um2; total fill 25.0%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep qfd_dv_s5_btab_sel_copy: $paramod\\qfd_dv_s5_btab_sel_copy\\ID=s32'00000000000000000000000000000000, $paramod\\qfd_dv_s5_btab_sel_copy\\ID=s32'00000000000000000000000000000001, $paramod\\qfd_dv_s5_btab_sel_copy\\ID=s32'00000000000000000000000000000010 ... survives synthesis (16 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qfd_dv_s5_btab_safe cells 1,298 flops 320 depth 91.7 ps util 0.2506 reach 0.6 um (0.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 287.8..414.8 ps (spread 127.0), boundary mean 303.9; tt insertion all 222.2..331.6 ps (spread 109.4), boundary mean 238.5; ff insertion all 181.8..279.0 ps (spread 97.2), boundary mean 197.7; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_dv_s5_btab_s2b/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg    180 paths, worst slack 158.5 ps (e.g. bt_q[251]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->macro     118 paths, worst slack 166.2 ps (e.g. g_btb[2].u_m/wd_in[251])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         2 paths, worst slack 204.7 ps (e.g. g_read[12].u_sel/q[1]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.5853901524920389e-10 hold WNS 6.218944803570992e-11",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "324 sinks on the largest root; measured TT insertion 331.6 ps, FF insertion 279.0 ps, TT pin-flop spread 109.4 ps, FF pin-flop spread 97.2 ps; TT pin-flop spread 109.4 ps > 80 and FF pin-flop spread 97.2 ps > 80",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-qw-slice6-t6-1020/physical/ref_tile/qfd_dv_s5_btab_s2b/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-qw-slice6-t6-1020/physical/ref_tile/qfd_dv_s5_btab_s2b/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 24% = (hard macros 15575.4 + synthesized std cells 238.7) / outline 65318.4 um2; pin demand per face: S 32 pins over 81.2/302.4 um (27%), N 267 pins over 299.3/302.4 um (99%), W 1091 pins over 213.8/216.0 um (99%), E 40 pins over 0.0/216.0 um (0%) (pin-bound: 1051 table-write pins on W require >=175.2 um; four SRAMs and continuous capture band set safe pin-bound outline; output pins occupy full N face.)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 14.61% used; GRT 100 s",
+   "fix": ""
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-403516-1792461436 after 0 s
+ot-epyc9
+GLU_CASE W=768 ninst=224 io_rows=260 arith=52 drain=182 overlap=1 lag=130
+[2640000] %Fatal: tb_toksim_glu_split.sv:239: Assertion failed in tb_toksim_glu_split.unnamedblk5.unnamedblk6: VM_QSWIGLU_WORD word=0 got=00000000 expected=3ed50000
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-403516-1792461436): exit 0

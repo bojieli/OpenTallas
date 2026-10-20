@@ -282,6 +282,13 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
                     roots=[n for n, d in nodes.items() if d["kind"] == "root"]),
         regions=regions, inter_region=inter_summary,
         tiles=tiles, pairs=prs, unmatched_pairs=missing[:200])
+    if targets:
+        from die_clock.qualification import carry_unqualified
+        qualification = carry_unqualified(json.load(open(targets)))
+        if qualification:
+            out.update(qualification)
+            if neighbour and neighbour["verdict"] == "PASS":
+                neighbour["verdict"] = "MODEL_ONLY"
     return out
 
 
@@ -371,6 +378,8 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes, per_
 def table(r, top=20):
     L = []
     c, ins, nc = r["counts"], r["insertion"], r["noncommon"]
+    if r.get("physical_qualification_eligible") is False:
+        L.append("QUALIFICATION: MODEL_ONLY; no native physical receiver view; release eligibility false")
     L.append(f"die clock check: {c['tiles']} tiles / {c['tile_entries']} clock entries, {c['clock_cells']} die clock cells, "
              f"{c['die_flops']} die flops, roots {', '.join(c['roots'])}")
     def s(x):

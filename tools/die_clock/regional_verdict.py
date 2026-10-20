@@ -18,7 +18,8 @@ def main():
     ap.add_argument('--period', type=float, default=833.333)
     ap.add_argument('--out')
     a = ap.parse_args()
-    nc = (json.load(open(a.check)).get('neighbour_check') or {})
+    check = json.load(open(a.check))
+    nc = check.get('neighbour_check') or {}
     intra = dict(classes=0, over=0, worst=[])
     for k, c in (nc.get('classes') or {}).items():
         if not c.get('judged') or not k.startswith('intra:'):
@@ -45,9 +46,11 @@ def main():
               landed=owed['neighbour_bits'] == 0 and owed['gap_bits'] == 0,
               drift=drift['measured'] > 0 and drift['over_half_T'] == 0,
               spine=(not spine['present']) or (spine['balance'] is False and not spine['pads']))
-    v = 'PASS' if all(ok.values()) else 'FAIL'
+    eligible = m.get('physical_qualification_eligible') is not False and check.get('physical_qualification_eligible') is not False
+    v = ('PASS' if eligible else 'MODEL_ONLY') if all(ok.values()) else 'FAIL'
     res = dict(schema='opentallas.qwen_compute.regional_clock_verdict.v1', verdict=v, ok=ok, intra=intra, owed=owed,
-               drift=drift, spine=spine, budget_ps=a.budget, period_ps=a.period)
+               drift=drift, spine=spine, budget_ps=a.budget, period_ps=a.period,
+               physical_qualification_eligible=eligible, qualification=m.get('qualification') or check.get('qualification'))
     if a.out:
         json.dump(res, open(a.out, 'w'), indent=1)
     print('QCLK_REGIONAL', v, ' '.join(f'{k}={"ok" if x else "FAIL"}' for k, x in ok.items()),

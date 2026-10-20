@@ -52,6 +52,7 @@ for p in (ROOT, ROOT / 'tools', HERE, ROOT / 'tools/qwen_static_kv', ROOT / 'too
     sys.path.insert(0, str(p))
 
 import attn_calendar as AC                                  # noqa: E402
+import kv_qkh_safe32 as QKH32                               # noqa: E402
 import compile_native_endpoint as CNE                      # noqa: E402
 import controller_calendar_image as CCI                    # noqa: E402
 import layer_roots_from_link as LR                         # noqa: E402
@@ -289,7 +290,7 @@ def profile(kind, ages=None):
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],
                 groups=L['programme_to_groups']['edges'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
-                v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=ages['qk']['QK_ISSUE_AGE'] - AC.QK_CONSUME,
+                v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
                 rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
                 # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)

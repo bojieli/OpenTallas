@@ -1,0 +1,638 @@
+{
+ "group": "coll",
+ "branch": "claude/toksim-hbm-coll-1019@a15601677",
+ "updated_utc": "2026-10-20T01:36:33Z",
+ "method": "PER RECORD (both designs):   cycles = c_model - P_off + M_off / n_train\n  c_model  the census model cost of the record (dump of the census schedule, job info_banklat_all)\n  P_off    the off-die collective part the price carries for that record: DS = the compiled record base_cost (the\n           perf.coll_cycles TU endpoint + delivery + 1 / 2 switch crossings + striping tail of the train, dealt over its\n           n records); Qwen = COLL.ALL_REDUCE_SUM calibration 1350 + the plan-b TP4 -> TP8 delivery delta (+8)\n  M_off    the MEASURED cross-die step(s) of the train: launch -> last publication (max over the two dies) of the\n           two-die co-sim tb_xdie_hbm_step (per die: hb_coll_NE ot_hfd_coll_q2_hard_v8g + gq_issue + cp_ep/epcal\n           calendar + 10 lane relays/way + hfd_ep_static + ot_pdie_serdes KP4; far die = the peer injecting its\n           contributions at the schedule slots; flight modelled: DS switch+cable 333 words, Qwen package 4 words),\n           bit-exact vs golden.  Train -> form as composed by TOKEN-XDIE-HBM / XDIE-HBM3..5 / HBM-COLL256-RS144:\n             DS gathers (x_proj train, attn_out y, ffn_out yf, router gsc, indexer iq)      AG(48)\n             DS expert_intermediate s0..s6 (7-record train)                                  AG(144)\n             DS o-group GROUP_REDUCE_MCAST (2 crossings)                                     RS(144) + AG(144)\n             DS TOPK_MERGE 96 x 512 (index merge)                                            link E(P = 1528)\n             Qwen ALL_REDUCE_SUM, TP8 hypercube (3 links, 6 dependent steps)                 RS64+RS32+RS16+AG16+AG32+AG64\n  c_model - P_off = the on-die adders of the price (collq gather span, COLL VM_RT 74 + g4, relay legs, ring-A +2, +64\n           TKM ...) -- kept as priced (their own measured benches: HBM-COLLQ, HBM-BANKLAT-COLL), not re-measured here.\nRecords without an off-die part in the price (engram gathers, the candidate TOPK_MERGE: base 0), ROW_GATHER (no\npayload co-sim) and ARGMAX_MERGE (only the on-die v8x merge is benched) are left unmeasured (null).",
+ "steps": {
+  "ag48": {
+   "launch_to_last_pub": 613,
+   "E": [
+    600,
+    594
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 610,
+     "first_pub": 566,
+     "last_pub": 613,
+     "vm_reqs": 48
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 604,
+     "first_pub": 560,
+     "last_pub": 607,
+     "vm_reqs": 48
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s3e3/ds_ag48_pass.log"
+  },
+  "ag48_r256": {
+   "launch_to_last_pub": 613,
+   "E": [
+    600,
+    594
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 610,
+     "first_pub": 566,
+     "last_pub": 613,
+     "vm_reqs": 48
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 604,
+     "first_pub": 560,
+     "last_pub": 607,
+     "vm_reqs": 48
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s6main/reg_ds_ag48_pass.log"
+  },
+  "ag144": {
+   "launch_to_last_pub": 773,
+   "E": [
+    760,
+    754
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 770,
+     "first_pub": 566,
+     "last_pub": 773,
+     "vm_reqs": 144
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 764,
+     "first_pub": 560,
+     "last_pub": 767,
+     "vm_reqs": 144
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s6main/reg_ds_ag144_pass.log"
+  },
+  "rs144": {
+   "launch_to_last_pub": 885,
+   "E": [
+    862,
+    872
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 857,
+     "first_pub": 573,
+     "last_pub": 875,
+     "vm_reqs": 288
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 867,
+     "first_pub": 583,
+     "last_pub": 885,
+     "vm_reqs": 288
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s6main/ds_rs144_pass.log"
+  },
+  "qrs64": {
+   "launch_to_last_pub": 398,
+   "E": [
+    385,
+    379
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 380,
+     "first_pub": 272,
+     "last_pub": 398,
+     "vm_reqs": 128
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 374,
+     "first_pub": 266,
+     "last_pub": 392,
+     "vm_reqs": 128
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s4e3/qw_rs64_pass.log"
+  },
+  "qrs32": {
+   "launch_to_last_pub": 294,
+   "E": [
+    281,
+    275
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 276,
+     "first_pub": 232,
+     "last_pub": 294,
+     "vm_reqs": 64
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 270,
+     "first_pub": 226,
+     "last_pub": 288,
+     "vm_reqs": 64
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s4e3/qw_rs32_pass.log"
+  },
+  "qrs16": {
+   "launch_to_last_pub": 242,
+   "E": [
+    229,
+    223
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 224,
+     "first_pub": 212,
+     "last_pub": 242,
+     "vm_reqs": 32
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 218,
+     "first_pub": 206,
+     "last_pub": 236,
+     "vm_reqs": 32
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s4e3/qw_rs16_pass.log"
+  },
+  "qag16": {
+   "launch_to_last_pub": 212,
+   "E": [
+    199,
+    193
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 209,
+     "first_pub": 197,
+     "last_pub": 212,
+     "vm_reqs": 16
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 203,
+     "first_pub": 191,
+     "last_pub": 206,
+     "vm_reqs": 16
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s3e3/qw_ag16_pass.log"
+  },
+  "qag32": {
+   "launch_to_last_pub": 248,
+   "E": [
+    235,
+    229
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 245,
+     "first_pub": 217,
+     "last_pub": 248,
+     "vm_reqs": 32
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 239,
+     "first_pub": 211,
+     "last_pub": 242,
+     "vm_reqs": 32
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s3e3/qw_ag32_pass.log"
+  },
+  "qag64": {
+   "launch_to_last_pub": 320,
+   "E": [
+    307,
+    301
+   ],
+   "dies": [
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 317,
+     "first_pub": 257,
+     "last_pub": 320,
+     "vm_reqs": 64
+    },
+    {
+     "first_vm": 13,
+     "first_wr": 25,
+     "last_rx": 311,
+     "first_pub": 251,
+     "last_pub": 314,
+     "vm_reqs": 64
+    }
+   ],
+   "verdict": "PASS",
+   "log": "out_s3e3/qw_ag64_pass.log"
+  },
+  "topk1528": {
+   "line": "XDIE_INST 0 P=1528 A->B E=2644.4 first=555.8 | B->A E=2645.4 first=555.3 (1.2 GHz cycles: COLL wr issue -> last / first far COLL rx_v)",
+   "E_link": [
+    2644.4,
+    2645.4
+   ],
+   "verdict": "PASS",
+   "log": "out_colle3/topk1528_ds.log"
+  }
+ },
+ "forms": {
+  "AG48": {
+   "cycles": 613,
+   "steps": [
+    "ag48"
+   ],
+   "what": "AG(48), ROWS 64 (bound default) build"
+  },
+  "AG144": {
+   "cycles": 773,
+   "steps": [
+    "ag144"
+   ],
+   "what": "AG(144) 3 x 48 RX blocks, ROWS 256 build (newest bench-passing, not bound)"
+  },
+  "RS144+AG144": {
+   "cycles": 1658,
+   "steps": [
+    "rs144",
+    "ag144"
+   ],
+   "what": "RS(144) + AG(144), ROWS 256 build (not bound)"
+  },
+  "TOPK1528": {
+   "cycles": 2645.4,
+   "steps": [
+    "topk1528"
+   ],
+   "what": "tb_xdie_hbm_link E_link P = 1528 (transport vehicle: ot_hgi_coll_link_e extract + relays + ep + serdes)"
+  },
+  "QAR_TP8": {
+   "cycles": 1714,
+   "steps": [
+    "qrs64",
+    "qrs32",
+    "qrs16",
+    "qag16",
+    "qag32",
+    "qag64"
+   ],
+   "what": "hypercube RS64+RS32+RS16 (ROWS 128 AR_ITER 1 build, not bound) + AG16+AG32+AG64 (ROWS 64 bound default)"
+  }
+ },
+ "designs": {
+  "ds_ar": {
+   "COLL.ALL_GATHER": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 2304, 1, \"FP32\"], \"O\": [\"VM\", 2304, 1, \"FP32\"]}": {
+      "cycles": 260.2,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "origin/main@22137b39b",
+      "bound_in_die": false,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step6.sh reg_ds_ag144",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s6main (unit oth-ubuntu-96092-1792459857)",
+      "verilator": "5.050",
+      "notes": "form AG144; per record = model 276.0 - priced off-die 126.2 + measured off-die 110.4 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 276.0,
+      "n": 280
+     },
+     "{\"A\": [\"VM\", 5120, 1, \"FP32\"], \"O\": [\"VM\", 5120, 1, \"FP32\"]}": {
+      "cycles": 671.9,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step.sh ds_ag48",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s3e3 (unit oth-ubuntu-96073-1792459857)",
+      "verilator": "5.050",
+      "notes": "form AG48; per record = model 847.4 - priced off-die 788.5 + measured off-die 613.0 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 847.4,
+      "n": 80
+     },
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": 427.6,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step.sh ds_ag48",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s3e3 (unit oth-ubuntu-96073-1792459857)",
+      "verilator": "5.050",
+      "notes": "form AG48; per record = model 497.1 - priced off-die 347.4 + measured off-die 277.8 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 532.5,
+      "n": 41
+     },
+     "{\"A\": [\"VM\", 1280, 1, \"FP32\"], \"O\": [\"VM\", 1280, 1, \"FP32\"]}": {
+      "cycles": 430.7,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step.sh ds_ag48",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s3e3 (unit oth-ubuntu-96073-1792459857)",
+      "verilator": "5.050",
+      "notes": "form AG48; per record = model 501.0 - priced off-die 351.3 + measured off-die 281.0 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 532.5,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 384, 1, \"FP32\"], \"O\": [\"VM\", 384, 1, \"FP32\"]}": {
+      "cycles": 762.7,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step.sh ds_ag48",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s3e3 (unit oth-ubuntu-96073-1792459857)",
+      "verilator": "5.050",
+      "notes": "form AG48; per record = model 915.2 - priced off-die 765.4 + measured off-die 613.0 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 915.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 32, 1, \"FP32\"], \"O\": [\"VM\", 32, 1, \"FP32\"]}": {
+      "cycles": 328.5,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step.sh ds_ag48",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s3e3 (unit oth-ubuntu-96073-1792459857)",
+      "verilator": "5.050",
+      "notes": "form AG48; per record = model 375.2 - priced off-die 225.4 + measured off-die 178.8 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 346.9,
+      "n": 8
+     },
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+      "cycles": 786.2,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step.sh ds_ag48",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s3e3 (unit oth-ubuntu-96073-1792459857)",
+      "verilator": "5.050",
+      "notes": "form AG48; per record = model 961.8 - priced off-die 788.5 + measured off-die 613.0 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 961.8,
+      "n": 8
+     },
+     "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"O\": [\"VM\", 1024, 1, \"FP32\"]}": {
+      "cycles": 303.0,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step.sh ds_ag48",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s3e3 (unit oth-ubuntu-96073-1792459857)",
+      "verilator": "5.050",
+      "notes": "form AG48; per record = model 346.9 - priced off-die 197.1 + measured off-die 153.2 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 346.9,
+      "n": 3
+     },
+     "{\"A\": [\"VM\", 6144, 1, \"FP32\"], \"O\": [\"VM\", 6144, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (die.v src) / origin/main@22137b39b (ROWS 256)",
+      "bound_in_die": null,
+      "bench": null,
+      "job": null,
+      "verilator": "5.050",
+      "notes": "no off-die co-sim for this record kind (see where_model_wrong); model kept",
+      "model_cost": 126.0,
+      "n": 2
+     },
+     "{\"A\": [\"VM\", 25600, 1, \"FP32\"], \"O\": [\"VM\", 25600, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (die.v src) / origin/main@22137b39b (ROWS 256)",
+      "bound_in_die": null,
+      "bench": null,
+      "job": null,
+      "verilator": "5.050",
+      "notes": "no off-die co-sim for this record kind (see where_model_wrong); model kept",
+      "model_cost": 511.0,
+      "n": 2
+     }
+    },
+    "ratio": 0.8535,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "pending": [],
+    "where_model_wrong": "price's TU endpoint+crossing+tail (765-883/train) > measured AG(48) 613 / AG(144) 773 launch->last pub (incl. 333 modelled flight): off-die over-priced ~15-20%"
+   },
+   "COLL.GROUP_REDUCE_MCAST": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"O\": [\"VM\", 12288, 1, \"BF16\"]}": {
+      "cycles": 1809.9,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "origin/main@22137b39b",
+      "bound_in_die": false,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step6.sh ds_rs144 + reg_ds_ag144",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_s6main (unit oth-ubuntu-96092-1792459857)",
+      "verilator": "5.050",
+      "notes": "form RS144+AG144; per record = model 1477.9 - priced off-die 1325.9 + measured off-die 1658.0 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 1477.9,
+      "n": 40
+     }
+    },
+    "ratio": 1.2247,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "pending": [],
+    "where_model_wrong": "price 1326 off-die vs measured RS(144) 885 + AG(144) 773 = 1658: the 2-crossing reduce-mcast is UNDER-priced by ~330/record (the 3-block RS/AG boundaries + RS drain)"
+   },
+   "COLL.TOPK_MERGE": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"B\": [\"VM\", 512, 1, \"U32\"], \"O\": [\"VM\", 512, 1, \"U32\"]}": {
+      "cycles": 4314.4,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": false,
+      "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_coll.sh topk1528 (tb_xdie_hbm_link)",
+      "job": "ot-epyc9:/srv/opentallas-scratch/claude/toksim-hbm-coll/out_colle3 (unit oth-ubuntu-95610-1792459856)",
+      "verilator": "5.050",
+      "notes": "form TOPK1528; per record = model 4349.6 - priced off-die 2680.6 + measured off-die 2645.4 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 4349.6,
+      "n": 8
+     },
+     "{\"A\": [\"VM\", 1366, 1, \"FP32\"], \"B\": [\"VM\", 1366, 1, \"U32\"], \"O\": [\"VM\", 2048, 1, \"U32\"], \"R\": [\"VM\", 2048, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (die.v src) / origin/main@22137b39b (ROWS 256)",
+      "bound_in_die": null,
+      "bench": null,
+      "job": null,
+      "verilator": "5.050",
+      "notes": "no off-die co-sim for this record kind (see where_model_wrong); model kept",
+      "model_cost": 4237.0,
+      "n": 1
+     }
+    },
+    "ratio": 0.9919,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "pending": [],
+    "where_model_wrong": "off-die priced 2680.6 vs measured link E(1528) 2645.4 (-35): price right within 1.3%"
+   },
+   "COLL.ROW_GATHER": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"HBM\", 512, 1, \"FP32\"], \"I\": [\"VM\", 512, 1, \"U32\"], \"O\": [\"HBM\", 512, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (die.v src) / origin/main@22137b39b (ROWS 256)",
+      "bound_in_die": null,
+      "bench": null,
+      "job": null,
+      "verilator": "5.050",
+      "notes": "no off-die co-sim for this record kind (see where_model_wrong); model kept",
+      "model_cost": 2717.9,
+      "n": 8
+     }
+    },
+    "ratio": null,
+    "grade": "unmeasured",
+    "pending": [],
+    "where_model_wrong": "no row-payload co-sim exists (TOKEN-XDIE-HBM gap 3); model kept"
+   },
+   "COLL.ARGMAX_MERGE": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 2, 1, \"FP32\"], \"O\": [\"VM\", 1, 1, \"U32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (die.v src) / origin/main@22137b39b (ROWS 256)",
+      "bound_in_die": null,
+      "bench": null,
+      "job": null,
+      "verilator": "5.050",
+      "notes": "no off-die co-sim for this record kind (see where_model_wrong); model kept",
+      "model_cost": 858.4,
+      "n": 1
+     }
+    },
+    "ratio": null,
+    "grade": "unmeasured",
+    "pending": [],
+    "where_model_wrong": "only the on-die v8x merge is benched (P1 launch->done 133, PASS); off-die gather not co-simulated; model kept"
+   },
+   "XDIE.LINK": {
+    "law": "const",
+    "cycles": 0.0,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "note": "inter-die part is INSIDE the COLL records' start->retire (already in the per-record cycles above): const 0 so it is not double counted; per token the off-die part is measured 221387.2 vs priced 240516.2 cycles over 548 records (sum of record cycles, not critical-path)",
+    "per_token_measured_off": 221387.2,
+    "per_token_priced_off": 240516.2,
+    "records": 548
+   }
+  },
+  "qwen": {
+   "COLL.ALL_REDUCE_SUM": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+      "cycles": 1832.8,
+      "golden": "PASS",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": false,
+      "bench": "run_xdie_hbm_step4.sh qw_rs64/32/16 + run_xdie_hbm_step.sh qw_ag16/32/64",
+      "job": "ot-epyc9:.../toksim-hbm-coll/out_s4e3 (oth-ubuntu-95607-1792459856) + out_s3e3",
+      "verilator": "5.050",
+      "notes": "form QAR_TP8; per record = model 1476.8 - priced off-die 1358.0 + measured off-die 1714.0 (train step / records in train); on-die adders kept as priced",
+      "model_cost": 1476.8,
+      "n": 72
+     }
+    },
+    "ratio": 1.2411,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "pending": [],
+    "where_model_wrong": "price 1358 (TP4 1 KB calibration + delivery) vs measured TP8 hypercube 6 dependent steps 1714: the 3-link package topology costs +356/AR (+24% per record)"
+   },
+   "COLL.ARGMAX_MERGE": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 2, 1, \"FP32\"], \"O\": [\"VM\", 1, 1, \"U32\"]}": {
+      "cycles": null,
+      "golden": "n/a",
+      "rtl_master": "ot_hfd_coll_q2_hard_v8g (hb_coll_NE) + ot_hgi_coll_gq_issue + hfd_ep_static + ot_pdie_serdes",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (die.v src) / origin/main@22137b39b (ROWS 256)",
+      "bound_in_die": null,
+      "bench": null,
+      "job": null,
+      "verilator": "5.050",
+      "notes": "no off-die co-sim for this record kind (see where_model_wrong); model kept",
+      "model_cost": 656.0,
+      "n": 1
+     }
+    },
+    "ratio": null,
+    "grade": "unmeasured",
+    "pending": [],
+    "where_model_wrong": "as DS: on-die v8x argmax only; model kept"
+   },
+   "XDIE.LINK": {
+    "law": "const",
+    "cycles": 0.0,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "note": "inter-die part is INSIDE the COLL records' start->retire (already in the per-record cycles above): const 0 so it is not double counted; per token the off-die part is measured 123408.0 vs priced 97776.0 cycles over 72 records (sum of record cycles, not critical-path)",
+    "per_token_measured_off": 123408.0,
+    "per_token_priced_off": 97776.0,
+    "records": 72
+   }
+  }
+ }
+}
