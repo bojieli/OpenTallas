@@ -1,0 +1,10 @@
+SFU_STORE_R11_MISMATCH edge=2299 io=0 ctl=1 pstat=0 iostat=0 fault=0/0
+SFU_STORE_R11_MISMATCH edge=2300 io=0 ctl=1 pstat=0 iostat=0 fault=0/0
+SFU_STORE_R11_MISMATCH edge=2301 io=0 ctl=1 pstat=0 iostat=0 fault=0/0
+SFU_STORE_R11_MISMATCH edge=2302 io=0 ctl=1 pstat=0 iostat=0 fault=0/0
+SFU_STORE_R11_MISMATCH edge=2303 io=0 ctl=1 pstat=0 iostat=0 fault=0/0
+SFU_STORE_R11_MISMATCH edge=2304 io=0 ctl=1 pstat=0 iostat=0 fault=0/0
+SFU_STORE_R11_LOCKSTEP mode=0 seed=1 pshift=11 ishift=6 edges=4318 mismatching=485 active_ctl=485 active_io=590 fault_edges=0 fault_edge_r7c=-1 fault_edge_r11=-1
+[4342000] %Fatal: tb_sfu_store_r11_lockstep.sv:160: Assertion failed in tb_sfu_store_r11_lockstep: SFU_STORE_R11_LOCKSTEP FAIL mismatching_edges=485
+SFU_STORE_R11_GATE MUTANT chain REJECTED (expected)
+BENCH_EXIT 0

@@ -59,7 +59,16 @@ bit=470
 rows_r10=[(w&~(1<<bit)) for w in rows]
 rows_r10[arith_edge-ARITH_START_ADVANCE_R10]|=1<<bit
 (out/'io_store_r10.hex').write_text(''.join(f'{word:0118x}\n' for word in rows_r10))
+# SFU programme store r11 (HBM-ELEMOWN3/SFUPS 10-19): floorplan-sized forwarded relays; the programme start is 1 (registered
+# start) + KL = 4 (launch relays) edges after IO2 bit 26, so arith_start moves ARITH_START_ADVANCE_R11 = 5 IO rows earlier
+# and compiler_control lands with io_word (store = r7c + 6 edges: D = 10, status 8). Every other IO field unchanged.
+ARITH_START_ADVANCE_R11=5
+assert arith_edge-ARITH_START_ADVANCE_R11>=0
+rows_r11=[(w&~(1<<bit)) for w in rows]
+rows_r11[arith_edge-ARITH_START_ADVANCE_R11]|=1<<bit
+(out/'io_store_r11.hex').write_text(''.join(f'{word:0118x}\n' for word in rows_r11))
 (out/'io_manifest.json').write_text(json.dumps(dict(width=471,rows=length,prefetch_edges=192,scalar_prefetch_edge=scalar_edge,
  arith_start_edge=arith_edge,drain_edges=[drain_edge,drain_edge+192],overlap=overlap,real_programme_SRAMs=6,VM_map='diagnostic SID0 G0/U1026/route2052/O4096',
  arith_start_edge_store_r10=arith_edge-ARITH_START_ADVANCE_R10,arith_start_advance_store_r10=ARITH_START_ADVANCE_R10,
+ arith_start_edge_store_r11=arith_edge-ARITH_START_ADVANCE_R11,arith_start_advance_store_r11=ARITH_START_ADVANCE_R11,
  full_4x7168_IO_schedule=False,lg_path=lg_path,latency_shift_edges=shift,native_die_qualified=False),indent=2)+'\n')

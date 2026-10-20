@@ -90,6 +90,9 @@ reg io_cfg_we=0,io_start_v=0;
 `ifdef SFU_PSTORE_R10
  `define SFU_PSTORE_R7_ANY
 `endif
+`ifdef SFU_PSTORE_R11
+ `define SFU_PSTORE_R7_ANY
+`endif
 `ifdef SFU_PSTORE_R7D
  `define SFU_PSTORE_R7_ANY
  `define SFU_PSTORE_XCLK ,.clk_wl(clk),.clk_wu(clk),.clk_io(clk),.clk_p0(clk),.clk_p1(clk),.clk_p2(clk),.clk_p3(clk)
@@ -103,6 +106,8 @@ reg io_cfg_we=0,io_start_v=0;
  localparam integer EQ_LG=`SFU_LG_R;
 `ifdef SFU_PSTORE_R7B
  localparam integer D=10;  // r7b store: r7 + SRAM pipelining: every calendar +3, programme started by the IO word -> +6
+`elsif SFU_PSTORE_R11
+ localparam integer D=10;  // r11 store (HBM-ELEMOWN3/SFUPS 10-19, floorplan-sized forwarded relays): io_word +KI 2 +KO 4 = +6 vs r7c; programme start +1+KL(4) absorbed by io_store_r11.hex (arith_start 5 rows earlier) -> D=10, status 8
 `elsif SFU_PSTORE_R10
  localparam integer D=5;   // r10 store (SFU-PS-4 relays): io_word +1 output relay; programme start +2 (decision B + row launch relay) absorbed by io_store_r10.hex (arith_start 2 rows earlier) + output relay -> D=5, status 3 [was D=4 before the relays; old text: arith_start 1 row earlier)
 `elsif SFU_PSTORE_R9
@@ -122,7 +127,7 @@ reg io_cfg_we=0,io_start_v=0;
  wire [1741:0] s_ctl;
  wire s_pact,s_pdone,s_ioact,s_iodone,s_sfault,s_cfault;
  wire [31:0] s_pord,s_ioord;
- `ifdef SFU_PSTORE_R10 ot_hgi_sfu_programme_store_r10 `elsif SFU_PSTORE_R9 ot_hgi_sfu_programme_store_r9 `elsif SFU_PSTORE_R7D ot_hgi_sfu_programme_store_r7d `elsif SFU_PSTORE_R7C ot_hgi_sfu_programme_store_r7c `elsif SFU_PSTORE_R7B ot_hgi_sfu_programme_store_r7b `elsif SFU_PSTORE_R7 ot_hgi_sfu_programme_store_r7 `elsif SFU_PSTORE_R6 ot_hgi_sfu_programme_store_r6 `else ot_hgi_sfu_programme_store `endif #(.PAGE_AW(1)) eq_store(.clk(clk),.rst_n(rst_n) `SFU_PSTORE_XCLK ,
+ `ifdef SFU_PSTORE_R11 ot_hgi_sfu_programme_store_r11 `elsif SFU_PSTORE_R10 ot_hgi_sfu_programme_store_r10 `elsif SFU_PSTORE_R9 ot_hgi_sfu_programme_store_r9 `elsif SFU_PSTORE_R7D ot_hgi_sfu_programme_store_r7d `elsif SFU_PSTORE_R7C ot_hgi_sfu_programme_store_r7c `elsif SFU_PSTORE_R7B ot_hgi_sfu_programme_store_r7b `elsif SFU_PSTORE_R7 ot_hgi_sfu_programme_store_r7 `elsif SFU_PSTORE_R6 ot_hgi_sfu_programme_store_r6 `else ot_hgi_sfu_programme_store `endif #(.PAGE_AW(1)) eq_store(.clk(clk),.rst_n(rst_n) `SFU_PSTORE_XCLK ,
   .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
   .programme_active(s_pact),.programme_done(s_pdone),.programme_ordinal(s_pord),
@@ -181,6 +186,8 @@ reg io_cfg_we=0,io_start_v=0;
  reg [OW-1:0] ref_od[0:D-1];
 `ifdef SFU_PSTORE_R7B
  localparam integer DS=8;  // status outputs: r6 2 + 6
+`elsif SFU_PSTORE_R11
+ localparam integer DS=8;  // r11: IO start +KI 2, status relays KS 2 + pads 2 + r7c 2
 `elsif SFU_PSTORE_R10
  localparam integer DS=3;  // r10 relays (SFU-PS-4): per-row status pre-combine +1
 `else
@@ -230,7 +237,9 @@ reg io_cfg_we=0,io_start_v=0;
  initial begin
   $readmemh(`SFU_IMAGE,controls);
   $readmemh({`SFU_DATA_DIR,"/io.hex"},io_rows);
-`ifdef SFU_PSTORE_R10
+`ifdef SFU_PSTORE_R11
+  $readmemh({`SFU_DATA_DIR,"/io_store_r11.hex"},s_io_rows);
+`elsif SFU_PSTORE_R10
   $readmemh({`SFU_DATA_DIR,"/io_store_r10.hex"},s_io_rows);
 `else
   $readmemh({`SFU_DATA_DIR,"/io.hex"},s_io_rows);
@@ -243,7 +252,13 @@ reg io_cfg_we=0,io_start_v=0;
   repeat(16)@(negedge clk);rst_n=1;
   for(integer row=0;row<257;row++)begin init=1;init_sector=12'(row*8);@(negedge clk);end
   init=0;repeat(20)@(negedge clk);rst_n=0;repeat(8)@(negedge clk);rst_n=1;
-`ifdef SFU_PSTORE_R7_ANY
+`ifdef SFU_PSTORE_R11
+ `ifdef SFU_PSTORE_R7_EARLY
+  repeat(6)@(negedge clk);   // r11 MUTANT: configuration one edge before the relayed reset tree releases (must fail)
+ `else
+  repeat(7)@(negedge clk);   // r11 host contract: first configuration write 4+KR(3) = 7 edges after rst_n release (once per power-up)
+ `endif
+`elsif SFU_PSTORE_R7_ANY
  `ifdef SFU_PSTORE_R7_EARLY
   repeat(3)@(negedge clk);   // r7 MUTANT: configuration one edge before the synchronous reset tree releases (must fail)
  `else
@@ -277,7 +292,11 @@ reg io_cfg_we=0,io_start_v=0;
    else io_cfg_data=(io_cfg_data&((256'd1<<222)-1))|(256'hc7a1<<240)|(256'(p)<<223);
    @(negedge clk);
   end
-`ifdef SFU_PSTORE_R10
+`ifdef SFU_PSTORE_R11
+  // r11 host contract: io_start_v >= 4 idle edges after the last configuration write (r10n2 contract unchanged: the IO0
+  // chain-head relay KCIO = KI is matched by the IO launch relay)
+  io_cfg_we=0;repeat(4)@(negedge clk);
+`elsif SFU_PSTORE_R10
   // r10n2 host contract (ot_hgi_sfu_programme_store_r10 header): io_start_v >= 4 IDLE edges after the last configuration
   // write -- the IO2 leaf write lands depth(4)+1 edges after the head pin flop (2 edges per chain hop). With 3 idle edges
   // the start reaches IO2 before its last row is written and the store raises an IO disagreement fault (SFU-R10N3 10-18).

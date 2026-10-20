@@ -53,11 +53,14 @@ if [ "${STORE9:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r9.sv $P/
 # configuration chains; SFU-PS-4 per-row relays: D=5, status 3, io_store_r10.hex advance 2). EQ_MUT=chain: leaf P4 strobe
 # ignores its chain depth; noshift: combinational programme start; rowskew: row R3 bypasses its launch relay (all must fail)
 if [ "${STORE10:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r10.sv $P/ot_hgi_sfu_store_stripe_leaf_r10.sv physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v); defs+=(-DSFU_PSTORE_R10); fi
+# STORE11=1 (r11, HBM-ELEMOWN3/SFUPS 10-19): ot_hgi_sfu_programme_store_r11 (r10 leaves + floorplan-sized forwarded relays:
+# D=10, status 8, io_store_r11.hex advance 5). EQ_MUT=chain11/noshift11/rowskew11/ioskew11 (r11 mutants), early: config 1 edge early
+if [ "${STORE11:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r11.sv $P/ot_hgi_sfu_store_stripe_leaf_r10.sv physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v); defs+=(-DSFU_PSTORE_R11); fi
 # CORE2=1 (k7, opt-in): the core under test is ot_hgi_sfu_core_split2 (W/E lane ports, regional clock roots, reset relay)
 if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT2); fi
 # SYNC_RST=1 (k8, owner standard 10-16): synchronous regional resets in the SFU core files (OT_SFU_SYNC_RST)
 if [ "${SYNC_RST:-0}" = 1 ];then defs+=(-DOT_SFU_SYNC_RST); fi
-case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
+case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; flip11) defs+=(-DOT_SFU_PSTORE11_MUT_FLIP);; chain11) defs+=(-DOT_SFU_PSTORE11_MUT_CHAIN);; noshift11) defs+=(-DOT_SFU_PSTORE11_MUT_NOSHIFT);; rowskew11) defs+=(-DOT_SFU_PSTORE11_MUT_ROWSKEW);; ioskew11) defs+=(-DOT_SFU_PSTORE11_MUT_IOSKEW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)
