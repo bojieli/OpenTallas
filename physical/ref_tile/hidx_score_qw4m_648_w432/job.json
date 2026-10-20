@@ -1,0 +1,132 @@
+{
+ "name": "hidx_score_qw4m_648_w432-ref-COMMIT",
+ "block": "ot_hbm_idx_score_qw_r4s",
+ "ref_tile": true,
+ "owner": "Claude LEAD2-HBM/L2H-IDXSCORE 1019",
+ "purpose": "IDX quarter scorer W glue tile r4 (wires-only quarter wo2, x4 per die) -- r4k: per-row B+C in kept ot_hidx_qw_row (no cross-row merge)",
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/l2h-idxscore-1019",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_score_qw_r4s u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_qwe_r4s.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_wo2.sv rtl/hbm_accel/index/ot_hbm_idx_score_leaf_c1.sv rtl/hdc/v41x/ot_hbm_idx_chunk_rt_l.sv rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv rtl/hdc/v41x/ot_hbm_idx_owned_native.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_relay_l.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/hdc/ot_hdc_delay_auto.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_r4_pos",
+    "cmd": "bash rtl/test/hbm_idx_static/run_quarter_split_r4.sh {RUN}/qs_pos pos",
+    "expect": "pass",
+    "pass_regex": "^IDX_QUARTER_SPLIT_GATE_PASS$",
+    "pass_witness": "results/rtl/hbm_idx_quarter_split_1018/qs_r4/pos.log",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_r4_keyline",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_r4.sh {RUN}/qs_keyline keyline",
+    "expect": "fail",
+    "fail_regex": "^\\[keyline\\] QSPLIT_BAD cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs_r4/keyline.log",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_r4_auxearly",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_r4.sh {RUN}/qs_auxearly auxearly",
+    "expect": "fail",
+    "fail_regex": "^\\[auxearly\\] QSPLIT_BAD cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs_r4/auxearly.log",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_r4_rowswap",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_r4.sh {RUN}/qs_rowswap rowswap",
+    "expect": "fail",
+    "fail_regex": "^\\[rowswap\\] QSPLIT_BAD cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs_r4/rowswap.log",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_score_qw4m_648_w432/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_score_qw4m_648_w432/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_score_qw4m_648_w432 --out {RUN}/record/views/ot_hbm_idx_score_qw_r4s  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_score_qw4m_648_w432/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_score_qw4m_648_w432/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_score_qw4m_648_w432/hidx_score_qw4m_648_w432-ref-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "L2H-IDXSCORE 2026-10-19 successor of hidx_score_qw_1018 (r3 FAIL GPL-0305 at 4% util, reset_landing 4, one root over 1.12 mm, row-1 outputs one ~560 um hop from the row-0 input capture): A pin capture -> B mid stage per row -> C output pin regs (+2 edges, was +1; compiler --score-chain +1), row clocks clk_w0 / clk_w1 (die clk_engine[0/1]), landed reset ot_rst_relay_l, wf split per row, width cut to the pin-flop columns. ONE-ROOT variant (L2H-IDXSCORE 10-19): top ot_hbm_idx_score_qw_r4s, single clock clk centre-fed at the row seam. r4k (L2H-IDXSCORE 10-19 21:50): gate hidx_score_qw4s_648_w432 netlist had the row-1 B/C copies merged into one set by Yosys opt_merge (clk_w0 = clk_w1: 568 of 1,136 o_q flops, b_q/b_qv/b_kv/b_md, o_qv/o_kv, most o_aux), so o_q0 launched from the row-1 flop one ~650 um buffered hop from its pin (reg->out -228 ps at placement). Each row's B+C stage is now the non-parameterised module ot_hidx_qw_row, kept through synthesis (SYNTH_KEEP_MODULES): both copies survive, every output flop sits at its own row's pins. Cycles unchanged. r4m (10-19 23:20): keep-bit select split across B/C (A->B carries the 16 candidates kb[{bi[7:4],x}] + bi[3:0], each row's B->C finishes the 16:1 select at its own pins); qw4k_648 worst path was the full 171:1 kb_r[bi_r] select over the row-0 -> row-1 B hop (+11.0 ps). Same cycles."
+}
