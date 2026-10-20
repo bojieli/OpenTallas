@@ -14,7 +14,7 @@ cdc 1 down bank perm / 2 down no prefetch; tq 1 bypass dropped; sched 1 tag-queu
 the DUT tile (random tile stimulus reaches 3 only: 1 and 2 are covered by their unit benches) / 4 health export drops the
 chain fault bit (OT_KVPC_HFX_MUT; KV-PC2: DUT pc__hfx = registered sticky {embr, es_merge, chain} of REF's internal faults).
 KV-PC3 sr6: the DUT lands the fault-chain input fi (pc__fi) in a face register (+1 hclk edge, fault-only): REF is fed fi one
-hclk edge late (ref_delay); mutant 5 (sched / ctrl / path / tile, OT_KVPC_FI_MUT) bypasses the landing and must FAIL.
+hclk edge late (ref_delay); mutant 5 (sched / ctrl / path / tile, OT_KVPC_LAND_MUT) bypasses the landing and must FAIL.
 KV-PC2 10-19: front / return banks write on pll_hbm (no storage-root clocks); unit benches unchanged (roots = pll_hbm).
     python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit U [--tile pc|pc_h] [--mut N] [--edges E] [--seed S] --out DIR
 One verdict line 'KVPC_<UNIT> PASS|FAIL ...'; exit 0 only on PASS."""
@@ -230,9 +230,9 @@ def main():
         edges = a.edges or 30000
         tb = lockstep_tb('tb_kvpc_sched', P, f'qkd_ctrl_pc_sched_nc #({SCHED_PARAMS})', f'qkd_kvpc_s_sched #({SCHED_PARAMS})',
                          {'pll_hbm': 512}, {'hrst': 'pll_hbm'}, edges, a.mut, tag='SCHED', strap={},
-                         ref_delay={'fi': 'pll_hbm'})
+                         ref_delay={'fi': 'pll_hbm', 'ki': 'pll_hbm'})
         (out / 'tb.sv').write_text(tb)
-        defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 5: ['OT_KVPC_FI_MUT']}.get(a.mut, [])
+        defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
         return build_run(out, 'tb_kvpc_sched', [str(out / 'tb.sv')] + base, defs, a.threads, 'SCHED', plus)
     if a.unit in ('ctrl', 'path'):
         if a.unit == 'ctrl':
@@ -258,10 +258,10 @@ def main():
         tb = lockstep_tb(f'tb_kvpc_{a.unit}', P, ri, di, clk, rst, a.edges or 20000, a.mut, extra_in=xin, tag=tag,
                          qual={'er': (0, 258, 1), 'native_commit_identity': ('r__native_commit_valid[0]', 60, 0),
                                'native_commit_address': ('r__native_commit_valid[0]', 28, 0)},
-                         ref_delay={'fi': 'pll_hbm'})
+                         ref_delay={'fi': 'pll_hbm', 'ki': 'pll_hbm'})
         (out / 'tb.sv').write_text(tb)
         defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_CDC_UP_MUT'], 3: ['OT_KVPC_FRONT_MUT4'],
-                5: ['OT_KVPC_FI_MUT']}.get(a.mut, [])
+                5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
         return build_run(out, f'tb_kvpc_{a.unit}', [str(out / 'tb.sv')] + base, defs, a.threads, tag, plus)
     # tile: DUT = the OT_KV_PC_SRAM tile, REF = the _rl tile; storage roots driven by hck in both
     nm = f'qkd_kvs_{a.tile}'
@@ -287,11 +287,11 @@ def main():
         '  final $display("HFX active_edges=%0d final=%b", hfx_act, hfx_m);'])
     xin = {'pc__front_hbm_data': '{4{hck}}', 'pc__return_hbm_data': '{4{hck}}'}
     tb = lockstep_tb('tb_kvpc_tile', P, 'ref_tile', 'dut_tile', {'ck': 417, 'hck': 512}, {'rst_n': 'ck', 'hrst_n': 'hck'},
-                     edges, a.mut, extra_in=xin, tag='TILE', extra=hfx, ref_delay={'pc__fi': 'hck'})
+                     edges, a.mut, extra_in=xin, tag='TILE', extra=hfx, ref_delay={'pc__fi': 'hck', 'pc__ki': 'hck', 'x__est__0_1': 'ck'})
     (out / 'tb.sv').write_text(tb)
     files = [str(out / 'tb.sv'), str(out / 'tiles.sv')] + base
     defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_FRONT_MUT4'], 3: ['OT_KVPC_CDC_UP_MUT'],
-            4: ['OT_KVPC_HFX_MUT'], 5: ['OT_KVPC_FI_MUT']}.get(a.mut, [])
+            4: ['OT_KVPC_HFX_MUT'], 5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
     return build_run(out, 'tb_kvpc_tile', files, defs, a.threads, 'TILE', plus)
 
 

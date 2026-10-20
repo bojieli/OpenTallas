@@ -67,7 +67,7 @@ SCHED = [
         else fo <= fo | fi | ctl_fault""",
      """    // KV-PC3 sr6: fault-chain input landing register (pin register at the S face; +1 edge, fault-only, priced)
     reg fi_q;
-`ifdef OT_KVPC_FI_MUT
+`ifdef OT_KVPC_LAND_MUT
     always @(*) fi_q = fi;                                         // bench mutant: landing bypassed (old in -> fo cone)
 `else
     always @(posedge hclk) fi_q <= fi;
@@ -332,6 +332,32 @@ POST = [
      "          // (streaming end: streaming_nx)\n"),
     ("          streaming__qv <= {10{streaming__f((desc_n != 0))}}; nm1 <= desc_n - 11'd1;",
      "          nm1 <= desc_n - 11'd1;"),
+    # KV-PC3 sr6 (scratch CTS rerun of gate pc_h_sr3 164813 with the hck boundary re-applied): the two remaining
+    # input cones that are not flop-direct fail their own-domain 0.2 T budget -- pc__ki -> kcmd tap (o_v / o_d / tc_d,
+    # 3 levels + wire: TT setup -181 ps at u_tap.o_v) and x__est__0_1 -> u_emb boot_ready -> emb_fault (-168 ps).
+    # Both land in face registers (no reset; consumers keep their own resets): +1 hclk edge on the kc kick chain per PC
+    # tile (handed to the die schedule / KV-GEN9) and +1 ck edge on the embedding boot-ready level.
+    ("    ot_qkvd_kcmd_tap #(.ROW0(ROW0)) u_tap (.clk(hclk), .rst_n(h_rn), .i_v(ki[0]), .i_d(ki[32:1]),",
+     """    // KV-PC3 sr6: kc kick word landing register (pin register at the N face; +1 hclk edge, priced)
+    reg [32:0] ki_q;
+`ifdef OT_KVPC_LAND_MUT
+    always @(*) ki_q = ki;                                         // bench mutant: landing bypassed
+`else
+    always @(posedge hclk) ki_q <= ki;
+`endif
+    ot_qkvd_kcmd_tap #(.ROW0(ROW0)) u_tap (.clk(hclk), .rst_n(h_rn), .i_v(ki_q[0]), .i_d(ki_q[32:1]),"""),
+    ("    // phase: own = boot window (the slice owns the controller face)\n",
+     """    // KV-PC3 sr6: embedding boot-ready level landing register (pin register; +1 ck edge on a level)
+    reg ebr_q;
+`ifdef OT_KVPC_LAND_MUT
+    always @(*) ebr_q = emb_boot_ready;                            // bench mutant: landing bypassed
+`else
+    always @(posedge ck) ebr_q <= emb_boot_ready;
+`endif
+    // phase: own = boot window (the slice owns the controller face)
+"""),
+    ("own__f(!emb_boot_ready)", "own__f(!ebr_q)"),
+    (".boot_ready(emb_boot_ready), .strap_stack(cfg_stack)", ".boot_ready(ebr_q), .strap_stack(cfg_stack)"),
 ]
 
 

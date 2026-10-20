@@ -824,7 +824,14 @@ module qkd_kvpc_s_sched #(
     // ---- kc chain station --------------------------------------------------------------------------------------------
     wire        tc_v;
     wire [31:0] tc_d;
-    ot_qkvd_kcmd_tap #(.ROW0(ROW0)) u_tap (.clk(hclk), .rst_n(h_rn), .i_v(ki[0]), .i_d(ki[32:1]),
+    // KV-PC3 sr6: kc kick word landing register (pin register at the N face; +1 hclk edge, priced)
+    reg [32:0] ki_q;
+`ifdef OT_KVPC_LAND_MUT
+    always @(*) ki_q = ki;                                         // bench mutant: landing bypassed
+`else
+    always @(posedge hclk) ki_q <= ki;
+`endif
+    ot_qkvd_kcmd_tap #(.ROW0(ROW0)) u_tap (.clk(hclk), .rst_n(h_rn), .i_v(ki_q[0]), .i_d(ki_q[32:1]),
         .o_v(ko[0]), .o_d(ko[32:1]), .c_v(tc_v), .c_d(tc_d));
 
     // ---- (nc) no W face: the legacy KV-write word ci (qkd_cdc_wleaf ho) and its pin flops are removed ----------------
@@ -990,7 +997,7 @@ module qkd_kvpc_s_sched #(
     // KVCTRL core_s7: the observer fault arrives from the obs child's fault register (its own logic one edge later).
     // KV-PC3 sr6: fault-chain input landing register (pin register at the S face; +1 edge, fault-only, priced)
     reg fi_q;
-`ifdef OT_KVPC_FI_MUT
+`ifdef OT_KVPC_LAND_MUT
     always @(*) fi_q = fi;                                         // bench mutant: landing bypassed (old in -> fo cone)
 `else
     always @(posedge hclk) fi_q <= fi;
@@ -2566,11 +2573,18 @@ module qkd_kvpc_s_esm #(
 );
     (* keep *) reg rs_q;
     always @(posedge ck) rs_q <= rst_n;
+    // KV-PC3 sr6: embedding boot-ready level landing register (pin register; +1 ck edge on a level)
+    reg ebr_q;
+`ifdef OT_KVPC_LAND_MUT
+    always @(*) ebr_q = emb_boot_ready;                            // bench mutant: landing bypassed
+`else
+    always @(posedge ck) ebr_q <= emb_boot_ready;
+`endif
     // phase: own = boot window (the slice owns the controller face)
     (* keep, ot_rst_split *) reg [10:0] own__qv;   // KV-PC SAFE: 11 kept copies of own
     function own__f; input v; own__f = v; endfunction
     wire own = own__qv[0:0];
-    always @(posedge ck or negedge rs_q) if (!rs_q) own__qv <= {11{own__f(1'b1)}}; else own__qv <= {11{own__f(!emb_boot_ready)}};
+    always @(posedge ck or negedge rs_q) if (!rs_q) own__qv <= {11{own__f(1'b1)}}; else own__qv <= {11{own__f(!ebr_q)}};
     // slice word pin flop
     // KV-PC SAFE: hq[0] (the slice word valid, 310 loads) as 13 kept copies; hq[287:1] plain
     reg [287:1] hq_d;
@@ -2583,7 +2597,7 @@ module qkd_kvpc_s_esm #(
     wire [287:0] ees;
     wire         emb_fault;
     qkd_embedding_static_pc_strap #(.ROW0(ROW0), .MUT(MUT == 2 ? 2 : 0), .RETIME(RETIME)) u_emb (.ck(ck), .rst_n(rs_q),
-        .boot_ready(emb_boot_ready), .strap_stack(cfg_stack), .strap_pc(pc),
+        .boot_ready(ebr_q), .strap_stack(cfg_stack), .strap_pc(pc),
         .issue_v(emb_issue_v), .token(emb_token), .word_index(emb_word_index), .half(emb_half), .scale(emb_scale),
         .epoch(emb_epoch), .return_slot(emb_return_slot), .es(ees), .er(er_e),
         .beat_v(beat_v), .beat_data(beat_data), .beat_token(beat_token), .beat_word(beat_word), .beat_half(beat_half),
