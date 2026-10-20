@@ -314,6 +314,14 @@ module ot_hgi_coll_static_program_target_s128 #(
     reg [PW:0] limit;
     reg ld_la;
     reg fw_q;reg [PW-1:0] fa_q;reg [FW-1:0] fd_q;
+`ifdef OT_PT_MUT_LATE_SPC
+    localparam integer PCREG=1;
+`else
+    localparam integer PCREG=(ASSEMBLY_PIPE==0);
+`endif
+    generate if(PCREG==0)begin:g_start_pc_alias
+        assign issuer_start_pc=base;
+    end endgenerate
     integer k;
     wire [PW-1:0] c_row=cfg_addr[PW+2:3];
     wire drain_done=draining && step==6'd53;
@@ -330,6 +338,7 @@ module ot_hgi_coll_static_program_target_s128 #(
                 else begin
                     if(dacc)scan_addr[ac]<=1;
                     else if(checking && check_row!=127)scan_addr[ac]<=check_row[3:0]+4'd2;
+                    else scan_addr[ac]<=check_row[3:0]+1'b1;
                     if(frame && !frame_bad)write_addr[ac]<=a_row[3:0];
                 end
         end
@@ -408,9 +417,18 @@ module ot_hgi_coll_static_program_target_s128 #(
     generate if(ASSEMBLY_PIPE!=0)begin:g_drain_onehot
         // Kept read selectors are prepared at the previous drain step, avoiding
         // the runtime divide/modulo -> 48:1 word mux control broadcasts.
-        (* keep = "true" *) reg [5:0] step_copy[0:3];
+        (* keep = "true" *) reg [5:0] step_copy[0:1];
         (* keep = "true" *) reg [95:0] rd_select;
-        for(genvar cg=0;cg<4;cg=cg+1)begin:g_counter
+        (* keep = "true" *) reg [1:0] drain_copy;
+        for(genvar dc=0;dc<2;dc=dc+1)begin:g_drain_copy
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)drain_copy[dc]<=0;
+                else begin
+                    if(draining && step==53)drain_copy[dc]<=0;
+                    if(frame && !frame_bad && ((seen|seg_q[6:0])==7'h7f))drain_copy[dc]<=1;
+                end
+        end
+        for(genvar cg=0;cg<2;cg=cg+1)begin:g_counter
             always @(posedge clk or negedge rst_n)
                 if(!rst_n)step_copy[cg]<=0;
                 else if(frame && !frame_bad && ((seen|seg_q[6:0])==7'h7f))step_copy[cg]<=0;
@@ -420,7 +438,7 @@ module ot_hgi_coll_static_program_target_s128 #(
             for(genvar half=0;half<2;half=half+1)begin:g_half
                 always @(posedge clk or negedge rst_n)
                     if(!rst_n)rd_select[wd*2+half]<=0;
-                    else rd_select[wd*2+half]<=draining && step_copy[wd/12]==6'(wd+wd/16);
+                    else rd_select[wd*2+half]<=drain_copy[wd/24] && step_copy[wd/24]==6'(wd+wd/16);
             end
         end
         reg [31:0] word_or;
@@ -450,7 +468,7 @@ module ot_hgi_coll_static_program_target_s128 #(
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
             cv<=0;dv<=0;lv<=0;issuer_cfg<=0;issuer_start<=0;
-            issuer_start_pc<=0;configured<=0;init_busy<=0;fault<=0;
+            if(PCREG!=0)issuer_start_pc<=0;configured<=0;init_busy<=0;fault<=0;
             seen<=0;if(ASSEMBLY_PIPE==0)loaded<=0;row<=0;draining<=0;step<=0;
             base<=0;limit<=0;checking<=0;check_bad<=0;check_row<=0;ld_la<=0;fw_q<=0;
         end else begin
@@ -496,7 +514,7 @@ module ot_hgi_coll_static_program_target_s128 #(
                 else begin
                     base<=base_q[PW-1:0];limit<=limit_q[PW:0];configured<=0;
 `ifndef OT_PT_MUT_LATE_SPC
-                    issuer_start_pc<=base_q[PW-1:0];                     // mutant: start_pc only at launch (v7 start faults)
+                    if(PCREG!=0)issuer_start_pc<=base_q[PW-1:0];                     // mutant: start_pc only at launch (v7 start faults)
 `endif
                     checking<=1;check_row<=0;check_bad<=0;init_busy<=1;
                     ld_la<=loaded[0];
@@ -504,7 +522,7 @@ module ot_hgi_coll_static_program_target_s128 #(
             end
             if(lv && configured)begin
                 if(occupied || draining || checking || seen!=0 || fault || cv || dv)fault<=1;
-                else begin issuer_start<=1;issuer_start_pc<=base;end
+                else begin issuer_start<=1;if(PCREG!=0)issuer_start_pc<=base;end
             end else if(lv && (seen!=0 || draining || checking))fault<=1;
         end
     end
