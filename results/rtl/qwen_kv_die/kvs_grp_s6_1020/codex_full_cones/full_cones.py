@@ -58,11 +58,13 @@ def coordinate(t):
 
 def descriptor(t, kind):
     p = coordinate(t)
+    net_info = {'net': t.getNet().getName(), 'net_id': t.getNet().getId()}
     if not hasattr(t, 'getInst'):
-        return {'name': 'port:' + t.getName(), 'pin': t.getName(), 'kind': kind, 'xy_um': p}
+        return dict(net_info, name='port:' + t.getName(), pin=t.getName(), kind=kind, xy_um=p)
     i = t.getInst()
     r = {'name': i.getName() + '/' + t.getMTerm().getName(), 'instance': i.getName(),
          'master': i.getMaster().getName(), 'pin': t.getMTerm().getName(), 'kind': kind, 'xy_um': p}
+    r.update(net_info)
     if i.getMaster().isBlock():
         x, y = i.getOrigin()
         r.update(macro_origin_um=[x / dbu, y / dbu], orientation=str(i.getOrient()),
@@ -80,6 +82,9 @@ def role_pin(role, master, name):
     return p
 
 for inst in block.getInsts():
+    if not any(t.getSigType() not in ('POWER', 'GROUND') for t in inst.getITerms()):
+        counts['power_ground_only_instances'] += 1
+        continue
     master = inst.getMaster().getName()
     role = roles.get(master)
     if role is None:
@@ -125,6 +130,7 @@ for inst in block.getInsts():
             f = re.sub(r'[\s()]', '', pr['function'] or '')
             if f in ('0', '1', "1'b0", "1'b1"):
                 constant_nets.add(n)
+                counts['constant_function_drivers'] += 1
                 continue
             if not f:
                 errors.append('missing combinational function:' + master + '/' + t.getMTerm().getName())
@@ -147,7 +153,10 @@ for inst in block.getInsts():
     if master == 'ot_sram_1r1w_4x32_m1_p192_grp_rsp':
         name = inst.getName()
         x, y = inst.getOrigin()
+        z = inst.getBBox()
         rings[name] = {'instance': name, 'master': master, 'origin_um': [x / dbu, y / dbu],
+                       'placement_lower_left_um': [z.xMin()/dbu, z.yMin()/dbu],
+                       'bbox_um': [z.xMin()/dbu, z.yMin()/dbu, z.xMax()/dbu, z.yMax()/dbu],
                        'orientation': str(inst.getOrient()),
                        'master_size_um': [inst.getMaster().getWidth() / dbu, inst.getMaster().getHeight() / dbu],
                        'input_pin_count': len(ins), 'output_pin_count': len(outs)}
@@ -225,6 +234,27 @@ for name in sorted(rings):
     all_edges.extend(dict(e, ring=name) for e in edges)
 
 all_edges.sort(key=lambda e: -e['endpoint_manhattan_um'])
+def witness(edge):
+    """One real graph path for a retained endpoint pair; never a wirelength sum."""
+    start, target = edge['root']['net_id'], edge['endpoint']['net_id']
+    todo, prev = collections.deque([start]), {start: None}
+    while todo and target not in prev:
+        n = todo.popleft()
+        for dest, cell in forward.get(n, []):
+            if dest not in prev:
+                prev[dest] = (n, cell)
+                todo.append(dest)
+    if target not in prev:
+        errors.append('missing path witness:' + edge['root']['name'] + ' -> ' + edge['endpoint']['name'])
+        return []
+    path, n = [], target
+    while prev[n] is not None:
+        dep, cell = prev[n]
+        path.append({'cell_output': cell, 'input_net': nets[dep].getName(), 'output_net': nets[n].getName()})
+        n = dep
+    return list(reversed(path))
+for edge in all_edges[:30]:
+    edge['combinational_path_witness'] = witness(edge)
 if len(rings) != 32:
     errors.append('expected32 tiny SRAM macros, got' + str(len(rings)))
 if not all_edges:
@@ -238,6 +268,12 @@ result = {'schema': 'opentallas.grp_full_sequential_cones.v1',
           'cts_log_sha256': hashlib.sha256(Path('/gate/cts.log').read_bytes()).hexdigest(),
           'audit_source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
           'die_um': [die.xMin()/dbu, die.yMin()/dbu, die.xMax()/dbu, die.yMax()/dbu],
+          'macro_inventory': [
+              {'instance': i.getName(), 'master': i.getMaster().getName(),
+               'origin_um': [v/dbu for v in i.getOrigin()], 'orientation': str(i.getOrient()),
+               'bbox_um': [i.getBBox().xMin()/dbu, i.getBBox().yMin()/dbu,
+                           i.getBBox().xMax()/dbu, i.getBBox().yMax()/dbu]}
+              for i in block.getInsts() if i.getMaster().getName() in MEMORIES],
           'liberty': receipts, 'synchronous_memory_proof': memory_receipts, 'counts': dict(counts),
           'role_errors': sorted(set(errors)), 'tiny_macro_count': len(rings), 'edge_count': len(all_edges),
           'max_endpoint_manhattan_um': all_edges[0]['endpoint_manhattan_um'] if all_edges else None,
