@@ -1,0 +1,471 @@
+{
+  "schema": "codex.native_macro_roles.v1",
+  "top": "qfd_native59_qbank",
+  "mapped_sha256": "2d5c5b5075249382a7c5c4d6742779c7149a0e3fe848c2496e267f54a87d2aee",
+  "liberty": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_ss.lib",
+  "liberty_sha256": "137da16f1bc598931bab64f1c9208e37f2d6361463382572a9850439647fad21",
+  "authority": "actual SRAM SS Liberty pin and bus directions; no coordinates or cell behavior fabricated",
+  "master": "ot_sram_1r1w_32x512_m1",
+  "liberty_roles": {
+    "clk": "input",
+    "r_ce_in": "input",
+    "r_addr_in": "input",
+    "rd_out": "output",
+    "w_ce_in": "input",
+    "w_addr_in": "input",
+    "wd_in": "input",
+    "w_mask_in": "input"
+  },
+  "checked": [
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "pin": "clk",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "pin": "r_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "pin": "r_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "pin": "rd_out",
+      "bits": 512,
+      "liberty_direction": "output",
+      "census_direction": "out"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "pin": "w_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "pin": "w_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "pin": "w_mask_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "pin": "wd_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "pin": "clk",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "pin": "r_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "pin": "r_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "pin": "rd_out",
+      "bits": 512,
+      "liberty_direction": "output",
+      "census_direction": "out"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "pin": "w_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "pin": "w_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "pin": "w_mask_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "pin": "wd_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "pin": "clk",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "pin": "r_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "pin": "r_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "pin": "rd_out",
+      "bits": 512,
+      "liberty_direction": "output",
+      "census_direction": "out"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "pin": "w_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "pin": "w_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "pin": "w_mask_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "pin": "wd_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "pin": "clk",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "pin": "r_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "pin": "r_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "pin": "rd_out",
+      "bits": 512,
+      "liberty_direction": "output",
+      "census_direction": "out"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "pin": "w_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "pin": "w_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "pin": "w_mask_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "pin": "wd_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "pin": "clk",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "pin": "r_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "pin": "r_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "pin": "rd_out",
+      "bits": 512,
+      "liberty_direction": "output",
+      "census_direction": "out"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "pin": "w_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "pin": "w_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "pin": "w_mask_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "pin": "wd_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "pin": "clk",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "pin": "r_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "pin": "r_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "pin": "rd_out",
+      "bits": 512,
+      "liberty_direction": "output",
+      "census_direction": "out"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "pin": "w_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "pin": "w_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "pin": "w_mask_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "pin": "wd_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "pin": "clk",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "pin": "r_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "pin": "r_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "pin": "rd_out",
+      "bits": 512,
+      "liberty_direction": "output",
+      "census_direction": "out"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "pin": "w_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "pin": "w_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "pin": "w_mask_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "pin": "wd_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "pin": "clk",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "pin": "r_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "pin": "r_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "pin": "rd_out",
+      "bits": 512,
+      "liberty_direction": "output",
+      "census_direction": "out"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "pin": "w_addr_in",
+      "bits": 5,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "pin": "w_ce_in",
+      "bits": 1,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "pin": "w_mask_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    },
+    {
+      "cell": "u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "pin": "wd_in",
+      "bits": 512,
+      "liberty_direction": "input",
+      "census_direction": "in"
+    }
+  ],
+  "mismatches": [],
+  "verdict": "PASS"
+}
