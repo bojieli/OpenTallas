@@ -1,0 +1,103 @@
+{
+ "source": "codex/hbm-pretree-pickup-1020@b7fd9a6fb",
+ "records": {
+  "ds_q_norm_ss": {
+   "serial": 242,
+   "stream": 322.67,
+   "golden": "PASS",
+   "asbuilt_stream": 834.67,
+   "model": 209.2,
+   "n": 40
+  },
+  "ds_kv_norm_ss": {
+   "serial": 218,
+   "stream": 290.67,
+   "golden": "PASS",
+   "asbuilt_stream": 493.33,
+   "model": 195.2,
+   "n": 40
+  },
+  "ds_route_total": {
+   "serial": 195,
+   "stream": 260.0,
+   "golden": "PASS",
+   "asbuilt_stream": 273.33,
+   "model": 159.2,
+   "n": 40
+  },
+  "ds_attend_max640": {
+   "serial": 228,
+   "stream": 304.0,
+   "golden": "PASS",
+   "asbuilt_stream": 664.0,
+   "model": 202.2,
+   "n": 38
+  },
+  "ds_attend_exp_sum640": {
+   "serial": 308,
+   "stream": 410.67,
+   "golden": "PASS",
+   "asbuilt_stream": 606.67,
+   "model": 319.0,
+   "n": 38
+  },
+  "ds_attend_max128": {
+   "serial": 196,
+   "stream": 261.33,
+   "golden": "PASS",
+   "asbuilt_stream": 453.33,
+   "model": 183.2,
+   "n": 2
+  },
+  "ds_attend_exp_sum128": {
+   "serial": 272,
+   "stream": 362.67,
+   "golden": "PASS",
+   "asbuilt_stream": 438.67,
+   "model": 299.0,
+   "n": 2
+  },
+  "qw_softmax_max": {
+   "serial": 378,
+   "stream": 504.0,
+   "golden": "PASS",
+   "asbuilt_stream": 22242.67,
+   "model": 399.2,
+   "n": 36
+  },
+  "qw_softmax_exp_sum": {
+   "serial": 1422,
+   "stream": 1896.0,
+   "golden": "PASS",
+   "asbuilt_stream": 22316.0,
+   "model": 590.0,
+   "n": 36
+  },
+  "qw_softmax_max_8row": {
+   "serial": 506,
+   "stream": 674.67,
+   "golden": "PASS",
+   "asbuilt_stream": 22242.67,
+   "model": 399.2,
+   "n": 36
+  },
+  "qw_softmax_exp_sum_8row": {
+   "serial": 2844,
+   "stream": 3792.0,
+   "golden": "PASS",
+   "asbuilt_stream": 22316.0,
+   "model": 590.0,
+   "n": 36
+  }
+ },
+ "ratio": {
+  "tp8": {
+   "ds_ar": 1.2002,
+   "qwen": 2.2283
+  },
+  "row8": {
+   "ds_ar": 1.2002,
+   "qwen": 3.4035
+  }
+ }
+}

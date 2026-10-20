@@ -1,0 +1,138 @@
+{
+ "group": "att",
+ "branch": "claude/toksim-hbm-att-1019@1fdfc7e43",
+ "updated_utc": "2026-10-20T04:32:32Z",
+ "designs": {
+  "ds_ar": {
+   "ATT.QK": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"B\": [\"HBM\", 128, 128, \"FP32\"], \"C\": [\"HBM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 640, 1, \"FP32\"]}": {
+      "cycles": 1073,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (ot_hbm_accel_smh_attn.sv sha256 826d2eb7..., ENABLE_INT8(1) as die.v)",
+      "bound_in_die": true,
+      "bench": "tools/hbm_layer_vehicle/run_att_gap.sh + att_images.py unit (tb rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv -DOT_SMH_ATTN_INT8)",
+      "job": "ot-run ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm-att/ds (L2 S32)",
+      "verilator": "5.050",
+      "notes": "T640 L2 real fixture, 40/40 ops bit-exact (10 SMs x 2 x 32-row sub-runs x QK/PV), merge==fixture PV; busiest SM sm_SW0/1 = 2 sub-runs x 534 + 5 go bubble (first-word spans 428 = HBM-ATTGAP GEN2b unchanged; +106 x-load). whole record at the SM face = first command / x-load (xw) / kv descriptor / KV packet -> last result word; EXCLUDES the HBM->SVG first access (the bench lands each KV line req_lead 8 edges after the SM request, i.e. the stream-buffer supply) -- add the controller first-access latency measured by group smhbm. Result results/rtl/toksim_hbm_1019/att/ds_L2_s32/L2_s32_pos.json; early-publish mutant FAIL",
+      "model_cost": 1047.0,
+      "ratio": 1.0248
+     },
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"B\": [\"HBM\", 128, 128, \"FP32\"], \"O\": [\"VM\", 128, 1, \"FP32\"]}": {
+      "cycles": 342,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (ot_hbm_accel_smh_attn.sv sha256 826d2eb7..., ENABLE_INT8(1) as die.v)",
+      "bound_in_die": true,
+      "bench": "tools/hbm_layer_vehicle/run_att_gap.sh + att_images.py unit (tb rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv -DOT_SMH_ATTN_INT8)",
+      "job": "ot-run ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm-att/ds_t128 (L0)",
+      "verilator": "5.050",
+      "notes": "T128 L0 real fixture (new capture ds_att_kv.py L00, PASS), 32/32 bit-exact (16 SMs x 8 rows, one op/SM, subrun 0); every SM 342 (first-word 236). whole record at the SM face = first command / x-load (xw) / kv descriptor / KV packet -> last result word; EXCLUDES the HBM->SVG first access (the bench lands each KV line req_lead 8 edges after the SM request, i.e. the stream-buffer supply) -- add the controller first-access latency measured by group smhbm. Result results/rtl/toksim_hbm_1019/att/ds_L0_t128/L0_s0_pos.json",
+      "model_cost": 691.5,
+      "ratio": 0.4946
+     }
+    },
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "ratio": 0.7597,
+    "where_model_wrong": "T640 SM-face 1073 already > model 1047 although model includes HBM first access; T128 model 691.5 is ~2x the measured 342 (one-op ratio 684/288 over-scales an 8-row op)"
+   },
+   "ATT.PV": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 640, 1, \"FP32\"], \"B\": [\"HBM\", 128, 128, \"FP32\"], \"C\": [\"HBM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": 1530,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (ot_hbm_accel_smh_attn.sv sha256 826d2eb7..., ENABLE_INT8(1) as die.v)",
+      "bound_in_die": true,
+      "bench": "tools/hbm_layer_vehicle/run_att_gap.sh + att_images.py unit (tb rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv -DOT_SMH_ATTN_INT8)",
+      "job": "ot-run ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm-att/ds (L2 S32)",
+      "verilator": "5.050",
+      "notes": "SM part MEASURED 1239 + SU lane-store merge MEASURED 100 (tb_su_static_arithmetic, die params MLAT 4 ALAT 3 LEAF 1, 20 RTL nodes pad 32, 5 AD_C levels, SU_ARITH PASS bit-exact == fixture PV, first_output 36 last_output 99, II 1; mutants ADDR/PHASE/DATA/ORDER FAIL; job ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm-att/ds/merge) replacing the model quadrant programme (209); ring AG 82 + top levels 109 stay MODEL (HBM-ATTGAP split). EXCLUDES the HBM->SVG first access (add smhbm controller first access).",
+      "cycles_sm_measured": 1239,
+      "merge_model": 400.8,
+      "model_cost": 1704.6,
+      "ratio": 0.8976,
+      "merge_su_measured": 100,
+      "merge_model_part": 191
+     },
+     "{\"A\": [\"VM\", 128, 1, \"FP32\"], \"B\": [\"HBM\", 128, 128, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": 692,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (ot_hbm_accel_smh_attn.sv sha256 826d2eb7..., ENABLE_INT8(1) as die.v)",
+      "bound_in_die": true,
+      "bench": "tools/hbm_layer_vehicle/run_att_gap.sh + att_images.py unit (tb rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv -DOT_SMH_ATTN_INT8)",
+      "job": "ot-run ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm-att/ds_t128 (L0)",
+      "verilator": "5.050",
+      "notes": "SM part MEASURED 401 + SU lane-store merge MEASURED 100 (tb_su_static_arithmetic, die params MLAT 4 ALAT 3 LEAF 1, 16 RTL nodes, 4 AD_C levels, SU_ARITH PASS bit-exact == fixture PV, first_output 36 last_output 99, II 1; mutants ADDR/PHASE/DATA/ORDER FAIL; job ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm-att/ds_t128/merge) replacing the model quadrant programme (144.5); ring AG 82 + top levels 109 stay MODEL (HBM-ATTGAP split). EXCLUDES the HBM->SVG first access (add smhbm controller first access).",
+      "cycles_sm_measured": 401,
+      "merge_model": 335.5,
+      "model_cost": 1159.9,
+      "ratio": 0.5966,
+      "merge_su_measured": 100,
+      "merge_model_part": 191
+     }
+    },
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "ratio": 0.7471,
+    "where_model_wrong": "SU merge programme 100 measured vs 209/144.5 priced; T128 PV model 1159.9 vs 692 (one-op ratio over-scales an 8-row op)"
+   }
+  },
+  "qwen": {
+   "ATT.QK": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 128, 4, \"FP32\"], \"B\": [\"HBM\", 8192, 1, \"FP8E4M3\"], \"O\": [\"VM\", 8192, 4, \"FP32\"]}": {
+      "cycles": 1301,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (ot_hbm_accel_smh_attn.sv sha256 826d2eb7..., ENABLE_INT8(1) as die.v)",
+      "bound_in_die": true,
+      "bench": "tools/hbm_layer_vehicle/run_qwen_att_unit.sh + qwen_att_unit.py run (same tb, -DOT_SMH_ATTN_INT8)",
+      "job": "ot-run ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm-att/qwen (L0 + chain L1)",
+      "verilator": "5.050",
+      "notes": "P 8192, 512 rows/SM, 16 SMs; L0 and chained L1 80/80 bit-exact each (64-block merge == fixture PV); every SM 1301 (first-word 1195 = VEH-ATT3 GEN2b unchanged; +106 x-load). KVMUT4 / early mutants FAIL. whole record at the SM face = first command / x-load (xw) / kv descriptor / KV packet -> last result word; EXCLUDES the HBM->SVG first access (the bench lands each KV line req_lead 8 edges after the SM request, i.e. the stream-buffer supply) -- add the controller first-access latency measured by group smhbm. Result results/rtl/toksim_hbm_1019/att/qwen/",
+      "model_cost": 1593.6,
+      "ratio": 0.8164
+     }
+    },
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "ratio": 0.8164,
+    "where_model_wrong": "model 1593.6 > measured 1301 at the SM face (model's fa + bytes/rate double-counts; HBM first access still to add)"
+   },
+   "ATT.PV": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 8192, 4, \"FP32\"], \"B\": [\"HBM\", 8192, 1, \"FP8E4M3\"], \"O\": [\"VM\", 128, 4, \"FP32\"]}": {
+      "cycles": 2884,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (ot_hbm_accel_smh_attn.sv sha256 826d2eb7..., ENABLE_INT8(1) as die.v)",
+      "bound_in_die": true,
+      "bench": "tools/hbm_layer_vehicle/run_qwen_att_unit.sh + qwen_att_unit.py run (same tb, -DOT_SMH_ATTN_INT8)",
+      "job": "ot-run ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm-att/qwen (L0 + chain L1)",
+      "verilator": "5.050",
+      "notes": "SM part only: 4 block ops x 721 (first-word 591; +130 p-load) back to back per SM. EXCLUDES the 16-SM pairwise merge (no on-die owner, VEH-ATT finding 3; model 4 x (20 + COLL_RING)) -> lower bound. whole record at the SM face = first command / x-load (xw) / kv descriptor / KV packet -> last result word; EXCLUDES the HBM->SVG first access (the bench lands each KV line req_lead 8 edges after the SM request, i.e. the stream-buffer supply) -- add the controller first-access latency measured by group smhbm",
+      "cycles_sm_measured": 2884,
+      "model_cost": 2624.8,
+      "ratio": 1.0988
+     }
+    },
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "ratio": 1.0988,
+    "where_model_wrong": "per-block p-load/node/fold/publish overhead: 4 x 721 = 2884 SM-only already > model 2624.8 incl. merge"
+   }
+  }
+ },
+ "coverage": {
+  "ds_ar": "100% of ATT.QK+ATT.PV model_sum (all 4 shapes)",
+  "qwen": "100% (both shapes)"
+ }
+}

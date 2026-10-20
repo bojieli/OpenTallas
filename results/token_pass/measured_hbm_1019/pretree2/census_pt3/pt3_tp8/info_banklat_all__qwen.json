@@ -1,0 +1,499 @@
+{
+ "job": "info_banklat_all|qwen",
+ "schedule_total": 1198769.6,
+ "segments": 1,
+ "crit_rec_cycles": 53373.0,
+ "result": 1198769.6,
+ "extrapolated_records": {
+  "SU.VOP": 38
+ },
+ "classes": {
+  "DMA.LOAD": {
+   "n": 149,
+   "model_sum": 33293.1,
+   "model_min": 218.1532889124814,
+   "model_max": 267.1100516930665,
+   "used_sum": 33293.1,
+   "busy": 33293.1,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 0,
+   "measured_used": 0.0,
+   "measured_model": 0.0,
+   "shapes": {
+    "{\"A\": [\"HBM\", 4096, 1, \"BF16\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+     "n": 72,
+     "model_cost": 223.4,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"HBM\", 1536, 1, \"BF16\"], \"O\": [\"VM\", 1536, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 220.1,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"HBM\", 6144, 1, \"BF16\"], \"O\": [\"VM\", 6144, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 226.1,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"HBM\", 4096, 1, \"INT8\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 220.8,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"HBM\", 1, 1, \"BF16\"], \"O\": [\"VM\", 1, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 218.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"HBM\", 128, 1, \"FP32\"], \"O\": [\"VM\", 128, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 218.5,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"HBM\", 1, 1, \"FP32\"], \"O\": [\"VM\", 1, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 218.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"HBM\", 37984, 1, \"BF16\"], \"O\": [\"VM\", 37984, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 267.1,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "embedding.codes": 1,
+    "embedding.scale": 1,
+    "rope.table_row": 1,
+    "swiglu.route_one": 1,
+    "row_scale_qkv.load": 36,
+    "row_scale_o.load": 36,
+    "row_scale_gu.load": 36,
+    "row_scale_down.load": 36,
+    "head_scale.load": 1
+   },
+   "units": [
+    "DMA"
+   ]
+  },
+  "SU.VOP": {
+   "n": 362,
+   "model_sum": 66674.4,
+   "model_min": 86.18,
+   "model_max": 590.02,
+   "used_sum": 148580.8,
+   "busy": 200965.6,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 324,
+   "measured_used": 141071.76000000004,
+   "measured_model": 63304.56000000003,
+   "shapes": {
+    "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"VM\", 4096, 1, \"FP32\"], \"C\": [\"VM\", 4096, 1, \"FP32\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+     "n": 72,
+     "model_cost": 92.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 1536, 1, \"FP32\"], \"B\": [\"VM\", 1536, 1, \"FP32\"], \"O\": [\"VM\", 1536, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 87.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 128, 10, \"FP32\"], \"B\": [\"VM\", 64, 10, \"FP32\"], \"D\": [\"VM\", 64, 10, \"FP32\"], \"O\": [\"VM\", 128, 10, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 87.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"O\": [\"VM\", 1024, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 86.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"R\": [\"VM\", 1, 8, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 399.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"B\": [\"VM\", 1, 8, \"FP32\"], \"O\": [\"VM\", 8192, 8, \"FP32\"], \"R\": [\"VM\", 1, 8, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 590.0,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"O\": [\"VM\", 8192, 8, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 212.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 128, 8, \"FP32\"], \"B\": [\"VM\", 128, 8, \"FP32\"], \"O\": [\"VM\", 128, 8, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 103.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 6144, 1, \"FP32\"], \"B\": [\"VM\", 6144, 1, \"FP32\"], \"O\": [\"VM\", 6144, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 96.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"VM\", 4096, 1, \"FP32\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 92.2,
+     "bytes_B": 0.0
+    },
+    "{\"A\": [\"STREAM\", 37984, 1, \"FP32\"], \"B\": [\"VM\", 37984, 1, \"FP32\"], \"O\": [\"STREAM\", 37984, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 139.2,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "embedding.dequant": 1,
+    "row_scale_qkv": 36,
+    "rope": 36,
+    "round_q": 36,
+    "softmax.max": 36,
+    "softmax.exp_sum": 36,
+    "softmax.bf16_p": 36,
+    "pv_normalize": 36,
+    "row_scale_o+residual": 36,
+    "row_scale_gu": 36,
+    "row_scale_down+residual": 36,
+    "head_scale": 1
+   },
+   "units": [
+    "SU"
+   ],
+   "ratio_n": 38,
+   "ratio_used": 7509.014472000003,
+   "ratio_model": 3369.839999999999
+  },
+  "FUSED.ROW_NORM": {
+   "n": 145,
+   "model_sum": 25571.1,
+   "model_min": 151.18,
+   "model_max": 201.18,
+   "used_sum": 83904.0,
+   "busy": 83904.0,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 145,
+   "measured_used": 83904.0,
+   "measured_model": 25571.10000000003,
+   "shapes": {
+    "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 1, \"BF16\"], \"O\": [\"VM\", 4096, 1, \"BF16\"]}": {
+     "n": 73,
+     "model_cost": 201.2,
+     "bytes_B": 65536.0
+    },
+    "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"B\": [\"HBM\", 128, 1, \"BF16\"], \"O\": [\"VM\", 1024, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 151.2,
+     "bytes_B": 2048.0
+    },
+    "{\"A\": [\"VM\", 256, 1, \"FP32\"], \"B\": [\"HBM\", 128, 1, \"BF16\"], \"O\": [\"VM\", 256, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 151.2,
+     "bytes_B": 2048.0
+    }
+   },
+   "tags": {
+    "prenorm.attn": 36,
+    "qknorm.q": 36,
+    "qknorm.k": 36,
+    "prenorm.ffn": 36,
+    "prenorm.final": 1
+   },
+   "units": [
+    "FUSED"
+   ]
+  },
+  "SM.MATVEC": {
+   "n": 145,
+   "model_sum": 993051.1,
+   "model_min": 2468.279583591012,
+   "model_max": 77363.5176788291,
+   "used_sum": 687460.0,
+   "busy": 687460.0,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 145,
+   "measured_used": 687460.0,
+   "measured_model": 993051.0652855095,
+   "shapes": {
+    "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 1536, \"INT8\"], \"O\": [\"VM\", 1536, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 3505.8,
+     "bytes_B": 393216.0
+    },
+    "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"B\": [\"HBM\", 1024, 4096, \"INT8\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 2468.3,
+     "bytes_B": 262144.0
+    },
+    "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 6144, \"INT8\"], \"O\": [\"VM\", 6144, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 12843.4,
+     "bytes_B": 1572864.0
+    },
+    "{\"A\": [\"VM\", 3072, 1, \"FP32\"], \"B\": [\"HBM\", 3072, 4096, \"INT8\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+     "n": 36,
+     "model_cost": 6618.3,
+     "bytes_B": 786432.0
+    },
+    "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 37984, \"INT8\"], \"O\": [\"STREAM\", 37984, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 77363.5,
+     "bytes_B": 9723904.0
+    }
+   },
+   "tags": {
+    "qkv": 36,
+    "o": 36,
+    "gu": 36,
+    "down": 36,
+    "head": 1
+   },
+   "units": [
+    "SM"
+   ]
+  },
+  "DMA.STORE": {
+   "n": 72,
+   "model_sum": 4010.4,
+   "model_min": 55.7,
+   "model_max": 55.7,
+   "used_sum": 1440.0,
+   "busy": 1440.0,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 72,
+   "measured_used": 1440.0,
+   "measured_model": 4010.3999999999946,
+   "shapes": {
+    "{\"A\": [\"VM\", 128, 2, \"FP32\"], \"O\": [\"HBM\", 128, 2, \"FP8E4M3\"]}": {
+     "n": 72,
+     "model_cost": 55.7,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "kv_append.K": 36,
+    "kv_append.V": 36
+   },
+   "units": [
+    "DMA"
+   ]
+  },
+  "DMA.FENCE": {
+   "n": 36,
+   "model_sum": 4203.2,
+   "model_min": 116.756,
+   "model_max": 116.756,
+   "used_sum": 4203.2,
+   "busy": 4203.2,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 0,
+   "measured_used": 0.0,
+   "measured_model": 0.0,
+   "shapes": {
+    "{}": {
+     "n": 36,
+     "model_cost": 116.8,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "kv_fence": 36
+   },
+   "units": [
+    "DMA"
+   ]
+  },
+  "ATT.QK": {
+   "n": 72,
+   "model_sum": 96136.6,
+   "model_min": 1335.23,
+   "model_max": 1335.23,
+   "used_sum": 44820.0,
+   "busy": 44820.0,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 72,
+   "measured_used": 44820.0,
+   "measured_model": 96136.55999999998,
+   "shapes": {
+    "{\"A\": [\"VM\", 128, 4, \"FP32\"], \"B\": [\"HBM\", 8192, 1, \"FP8E4M3\"], \"O\": [\"VM\", 8192, 4, \"FP32\"]}": {
+     "n": 72,
+     "model_cost": 1335.2,
+     "bytes_B": 65536.0
+    }
+   },
+   "tags": {
+    "attention_qk.kv0": 36,
+    "attention_qk.kv1": 36
+   },
+   "units": [
+    "ATT"
+   ]
+  },
+  "ATT.PV": {
+   "n": 72,
+   "model_sum": 189054.0,
+   "model_min": 2625.75,
+   "model_max": 2625.75,
+   "used_sum": 60804.0,
+   "busy": 60804.0,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 72,
+   "measured_used": 60804.0,
+   "measured_model": 189054.0,
+   "shapes": {
+    "{\"A\": [\"VM\", 8192, 4, \"FP32\"], \"B\": [\"HBM\", 8192, 1, \"FP8E4M3\"], \"O\": [\"VM\", 128, 4, \"FP32\"]}": {
+     "n": 72,
+     "model_cost": 2625.8,
+     "bytes_B": 65536.0
+    }
+   },
+   "tags": {
+    "attention_pv.kv0": 36,
+    "attention_pv.kv1": 36
+   },
+   "units": [
+    "ATT"
+   ]
+  },
+  "COLL.ALL_REDUCE_SUM": {
+   "n": 72,
+   "model_sum": 106328.9,
+   "model_min": 1476.79,
+   "model_max": 1476.79,
+   "used_sum": 131961.6,
+   "busy": 131961.6,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 72,
+   "measured_used": 131961.60000000015,
+   "measured_model": 106328.87999999986,
+   "shapes": {
+    "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+     "n": 72,
+     "model_cost": 1476.8,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "all_reduce_o": 36,
+    "all_reduce_down": 36
+   },
+   "units": [
+    "COLL"
+   ]
+  },
+  "SFU.GLU": {
+   "n": 36,
+   "model_sum": 4422.2,
+   "model_min": 122.84,
+   "model_max": 122.84,
+   "used_sum": 16812.0,
+   "busy": 16812.0,
+   "crit_n": 0,
+   "crit_cycles": 0.0,
+   "measured_n": 36,
+   "measured_used": 16812.0,
+   "measured_model": 4422.2400000000025,
+   "shapes": {
+    "{\"A\": [\"VM\", 3072, 1, \"FP32\"], \"B\": [\"VM\", 3072, 1, \"FP32\"], \"C\": [\"VM\", 3072, 1, \"FP32\"], \"O\": [\"VM\", 3072, 1, \"BF16\"]}": {
+     "n": 36,
+     "model_cost": 122.8,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "swiglu": 36
+   },
+   "units": [
+    "SFU"
+   ]
+  },
+  "ARGMAX.LOCAL": {
+   "n": 1,
+   "model_sum": 2482.9,
+   "model_min": 2482.94,
+   "model_max": 2482.94,
+   "used_sum": 4797.0,
+   "busy": 52715.0,
+   "crit_n": 1,
+   "crit_cycles": 52715.0,
+   "measured_n": 1,
+   "measured_used": 4797.0,
+   "measured_model": 2482.94,
+   "shapes": {
+    "{\"A\": [\"STREAM\", 37984, 1, \"FP32\"], \"O\": [\"VM\", 2, 1, \"FP32\"]}": {
+     "n": 1,
+     "model_cost": 2482.9,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "argmax_local": 1
+   },
+   "units": [
+    "ARGMAX"
+   ]
+  },
+  "COLL.ARGMAX_MERGE": {
+   "n": 1,
+   "model_sum": 656.0,
+   "model_min": 655.99,
+   "model_max": 655.99,
+   "used_sum": 656.0,
+   "busy": 656.0,
+   "crit_n": 1,
+   "crit_cycles": 656.0,
+   "measured_n": 0,
+   "measured_used": 0.0,
+   "measured_model": 0.0,
+   "shapes": {
+    "{\"A\": [\"VM\", 2, 1, \"FP32\"], \"O\": [\"VM\", 1, 1, \"U32\"]}": {
+     "n": 1,
+     "model_cost": 656.0,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "argmax_merge": 1
+   },
+   "units": [
+    "COLL"
+   ]
+  },
+  "CTL.END": {
+   "n": 1,
+   "model_sum": 2.0,
+   "model_min": 2.0,
+   "model_max": 2.0,
+   "used_sum": 2.0,
+   "busy": 2.0,
+   "crit_n": 1,
+   "crit_cycles": 2.0,
+   "measured_n": 0,
+   "measured_used": 0.0,
+   "measured_model": 0.0,
+   "shapes": {
+    "{\"A\": [\"VM\", 1, 1, \"U32\"]}": {
+     "n": 1,
+     "model_cost": 2.0,
+     "bytes_B": 0.0
+    }
+   },
+   "tags": {
+    "end": 1
+   },
+   "units": [
+    "CTL"
+   ]
+  }
+ }
+}

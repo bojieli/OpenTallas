@@ -1,0 +1,35 @@
+{
+  "record": "qw_softmax_exp_sum_r4_phased",
+  "verdict": "PASS",
+  "actual_last_lg_write": 1412,
+  "actual_last_scalar": 1373,
+  "write_return_edges": 10,
+  "charged_dispatch_edge": 0,
+  "actual_serial_edges": 1422,
+  "compiled_serial_edges": 1422,
+  "VM_reads": 4098,
+  "VM_writes": 4098,
+  "scalars": 16,
+  "no_reset_between_phases": true,
+  "scope": "direct RTL component exactness with actual phase2 source-alias and stale-scalar rejection; scheduled nonalias certificate plus exact request wiring; not die-bound or physically timed; no extrapolation or token-rate adoption",
+  "binary_build": "existing a5cc6f083 PRETREE1 Verilator5.050 mr10_pt",
+  "runtime_log_sha256": "368eebf4a9f5d16d35142eb882bb043ee41f5e986079a4e2ece812b249848ec7",
+  "causal_phase_failures": {
+    "source_alias": {
+      "verdict": "REJECTED",
+      "errors": 2055,
+      "first_error_edge": 995,
+      "phase2_offset": 731,
+      "log": "source_alias_mutant.log",
+      "sha256": "83ec898ada4a9db42d79faac4ecd59a8d424e4f11837765b5ab1a5b9c4740402"
+    },
+    "scalar_stale": {
+      "verdict": "REJECTED",
+      "errors": 2057,
+      "first_error_edge": 809,
+      "phase2_offset": 731,
+      "log": "scalar_stale_mutant.log",
+      "sha256": "391aa026e4efd3ad181a93c44e56593530e55e73ee889980d43ed509f9f9ed87"
+    }
+  }
+}
