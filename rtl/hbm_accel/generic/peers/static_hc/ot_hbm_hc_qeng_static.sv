@@ -132,8 +132,27 @@ module ot_hbm_hc_qeng_static #(
     // HBM-HCBANK6 10-20: +define+HC_BANK_RC (bench only; unset = unchanged) builds the ring from the regional-clock bank
     // successors ot_hbm_hc_bankq*_rc_static (+define+HC_BANK_RC3: the three-glue-root _rc3 tops) with every clock entry
     // tied to clk; MUT 5 = bank 3 landing-copy mutant (bankrc MUT 2).
+    // HBM-HC7-BANK 10-20: +define+HC_BANK_RR / +define+HC_BANK_RH (with HC_BANK_RC): lane-row (_rr) / half-tile (_rh)
+    // regional-root tops, every root tied to clk; b0 adds its exit-relay roots clk_s0 / clk_s1.
 `ifdef HC_BANK_RC
- `ifdef HC_BANK_RC3
+    `define OT_HCQ_B0CK
+ `ifdef HC_BANK_RR
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rr_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rr_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rr_static
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_r0(clk), .clk_r1(clk), .clk_r2(clk), .clk_r3(clk), .clk_q0(clk), \
+        .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RH
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rh_static
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rh_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rh_static
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_r0(clk), .clk_r1(clk), .clk_q0(clk), .clk_q1(clk), \
+        .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RC3
     `define OT_HCQ_B0 ot_hbm_hc_bankq0_rc3_static
     `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rc3_static
     `define OT_HCQ_BQ ot_hbm_hc_bankq_rc3_static
@@ -150,9 +169,10 @@ module ot_hbm_hc_qeng_static #(
     `define OT_HCQ_BF ot_hbm_hc_bankq_ft_static
     `define OT_HCQ_BQ ot_hbm_hc_bankq_static
     `define OT_HCQ_BCK
+    `define OT_HCQ_B0CK
     `define OT_HCQ_M3(KC) ((MUT == 1 && (KC) == 3) ? 1 : 0)
 `endif
-    `OT_HCQ_B0 #(.MUT(0), .DRLY(DRLY - XRLY), .CPO(CP)) u_b0 (.clk(clk), `OT_HCQ_BCK .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
+    `OT_HCQ_B0 #(.MUT(0), .DRLY(DRLY - XRLY), .CPO(CP)) u_b0 (.clk(clk), `OT_HCQ_BCK `OT_HCQ_B0CK .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
         .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[0 +: 256]),
         .wv(wc_w[12]), .xv(wc_w[11]), .j(wc_w[10]), .wa(wc_w[9:0]), .wfault(wf[0]),
         .s_i(s_x[XRLY]), .s_o(s_c));
@@ -191,6 +211,7 @@ module ot_hbm_hc_qeng_static #(
     `undef OT_HCQ_BF
     `undef OT_HCQ_BQ
     `undef OT_HCQ_BCK
+    `undef OT_HCQ_B0CK
     `undef OT_HCQ_M3
 endmodule
 `default_nettype wire

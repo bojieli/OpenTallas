@@ -20,6 +20,10 @@
 // the next hold slot (proves the kept copies are the ones that land the beats).
 module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI = 0, parameter integer CPO = 0)(
     input  wire          clk, clk_c, clk_o,
+    // HBM-HC7-BANK 10-20: per-lane-row glue roots (row r = lane leaves 2r / 2r+1, weight SRAMs 2r / 2r+1, x SRAM r):
+    // clk_ri[r] CPI sum flops of row r, clk_rc[r] SRAM read capture (wdat / xdat) + lane enables (lvs / sss) of row r,
+    // clk_q[r] CPO sum flops of row r.  The rc / rc3 tops tie them to clk / clk_c / clk_o (unchanged).
+    input  wire [3:0]    clk_ri, clk_rc, clk_q,
     input  wire [7:0]    ck_l, ck_w,
     input  wire [3:0]    ck_x,
     input  wire          rst_n, first,
@@ -62,17 +66,31 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     wire c_v, c_ss, c_f; wire [6:0] c_nv; wire [9:0] c_wa, c_xa; wire [2047:0] c_s;
     wire q_v, q_ss, q_f; wire [6:0] q_nv; wire [9:0] q_wa, q_xa; wire [2047:0] q_s;
     if (CPI != 0) begin : g_cpi
-        reg v_r, f_r, ss_r; reg [6:0] nv_r; reg [9:0] wa_r, xa_r; reg [2047:0] s_r;
-        always @(posedge clk or negedge rc[0]) if (!rc[0]) begin v_r <= 1'b0; f_r <= 1'b0; end else begin v_r <= d_v; f_r <= f_in; end
-        always @(posedge clk) begin ss_r <= d_ss; nv_r <= d_nv; wa_r <= d_wa; xa_r <= d_xa; s_r <= sum_in; end
+        reg v_r, f_r, ss_r; reg [6:0] nv_r; reg [9:0] wa_r, xa_r; wire [2047:0] s_r;
+        // f_in (pin at the far end of the in face, beside lane row 3) lands on row 3's root
+        always @(posedge clk or negedge rc[0]) if (!rc[0]) v_r <= 1'b0; else v_r <= d_v;
+        always @(posedge clk_ri[3] or negedge rc[0]) if (!rc[0]) f_r <= 1'b0; else f_r <= f_in;
+        always @(posedge clk) begin ss_r <= d_ss; nv_r <= d_nv; wa_r <= d_wa; xa_r <= d_xa; end
+        for (genvar gi = 0; gi < 8; gi = gi + 1) begin : g_si
+            reg [255:0] q;
+            always @(posedge clk_ri[gi/2]) q <= sum_in[gi*256 +: 256];
+            assign s_r[gi*256 +: 256] = q;
+        end
         assign {c_v, c_ss, c_nv, c_wa, c_xa, c_s, c_f} = {v_r, ss_r, nv_r, wa_r, xa_r, s_r, f_r};
     end else begin : g_ncpi
         assign {c_v, c_ss, c_nv, c_wa, c_xa, c_s, c_f} = {d_v, d_ss, d_nv, d_wa, d_xa, sum_in, f_in};
     end
     if (CPO != 0) begin : g_cpo
-        reg v_r, f_r, ss_r; reg [6:0] nv_r; reg [9:0] wa_r, xa_r; reg [2047:0] s_r;
-        always @(posedge clk_o or negedge rc[0]) if (!rc[0]) begin v_r <= 1'b0; f_r <= 1'b0; end else begin v_r <= q_v; f_r <= q_f; end
-        always @(posedge clk_o) begin ss_r <= q_ss; nv_r <= q_nv; wa_r <= q_wa; xa_r <= q_xa; s_r <= q_s; end
+        reg v_r, f_r, ss_r; reg [6:0] nv_r; reg [9:0] wa_r, xa_r; wire [2047:0] s_r;
+        // f_out (pin at the far end of the out face, beside lane row 3's CPO slice) on row 3's CPO root
+        always @(posedge clk_o or negedge rc[0]) if (!rc[0]) v_r <= 1'b0; else v_r <= q_v;
+        always @(posedge clk_q[3] or negedge rc[0]) if (!rc[0]) f_r <= 1'b0; else f_r <= q_f;
+        always @(posedge clk_o) begin ss_r <= q_ss; nv_r <= q_nv; wa_r <= q_wa; xa_r <= q_xa; end
+        for (genvar go = 0; go < 8; go = go + 1) begin : g_so
+            reg [255:0] q;
+            always @(posedge clk_q[go/2]) q <= q_s[go*256 +: 256];
+            assign s_r[go*256 +: 256] = q;
+        end
         assign {o_v, o_ss, o_nv, o_wa, o_xa, sum_out, f_out} = {v_r, ss_r, nv_r, wa_r, xa_r, s_r, f_r};
     end else begin : g_ncpo
         assign {o_v, o_ss, o_nv, o_wa, o_xa, sum_out, f_out} = {q_v, q_ss, q_nv, q_wa, q_xa, q_s, q_f};
@@ -109,16 +127,20 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     (* keep = "true" *) reg [3:0] ssc;
     always @(posedge clk_c or negedge rn_st) if (!rn_st) cvc <= 4'd0; else cvc <= {4{cv[ML-1]}};
     always @(posedge clk_c) begin nvc <= {4{cd[ML-1][DW-3 -: 7]}}; ssc <= {4{cd[ML-1][DW-2]}}; end
-    (* keep = "true" *) reg [63:0] lvs, sss;
-    always @(posedge clk_c) for (integer l = 0; l < 64; l = l + 1) begin
-        lvs[l] <= cvc[l/16] && (7'(l) < nvc[(l/16)*7 +: 7]);
-        sss[l] <= ssc[l/16];
+    wire [63:0] lvs, sss;
+    for (genvar rl = 0; rl < 4; rl = rl + 1) begin : g_le            // lanes 16 rl .. 16 rl + 15 = leaves 2 rl / 2 rl + 1
+        (* keep = "true" *) reg [15:0] lv, sv;
+        always @(posedge clk_rc[rl]) for (integer l = 0; l < 16; l = l + 1) begin
+            lv[l] <= cvc[rl] && (7'(16 * rl + l) < nvc[rl*7 +: 7]);
+            sv[l] <= ssc[rl];
+        end
+        assign lvs[16*rl +: 16] = lv; assign sss[16*rl +: 16] = sv;
     end
     reg ov_r;
     always @(posedge clk_c or negedge rn_st) if (!rn_st) ov_r <= 1'b0; else ov_r <= cv[1 + ML];
     // ---------------- macros: weight (ck_w), x (ck_x); raw capture on clk_c (ML = 2)
     wire [2047:0] wq; wire [1023:0] xq;
-    reg [2047:0] wdat; reg [1023:0] xdat;
+    wire [2047:0] wdat; wire [1023:0] xdat;
     genvar g, h, i;
     generate for (g = 0; g < 8; g = g + 1) begin : g_w
         localparam integer GS = (MUT == 1) ? ((g + 1) % 8) : g;
@@ -141,7 +163,11 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
             .w_ce_in(we), .w_addr_in(wa_q[6:0]), .wd_in(d), .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0),
             .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
-    always @(posedge clk_c) begin wdat <= wq; xdat <= xq; end
+    for (genvar rq = 0; rq < 4; rq = rq + 1) begin : g_cap         // row rq: weight SRAMs 2 rq / 2 rq + 1, x SRAM rq
+        reg [511:0] wd; reg [255:0] xd;
+        always @(posedge clk_rc[rq]) begin wd <= wq[rq*512 +: 512]; xd <= xq[rq*256 +: 256]; end
+        assign wdat[rq*512 +: 512] = wd; assign xdat[rq*256 +: 256] = xd;
+    end
     // ---------------- hard lane leaves (own entries), instantiated without overrides
     for (genvar gg = 0; gg < 8; gg = gg + 1) begin : g_grp
         ot_hdc_v41x_hcp_lanes u_lg (.clk(ck_l[gg]), .rst_n(rn_st), .fst(first), .gov_i(ov_r), .lv_i(lvs[gg*8 +: 8]),
@@ -167,7 +193,7 @@ module ot_hbm_hc_bankq_rc_static #(parameter integer MUT = 0, parameter integer 
     `OT_HCB_RC_CHAIN,
     input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out
 );
-    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .first(1'b0),
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .clk_ri({4{clk}}), .clk_rc({4{clk}}), .clk_q({4{clk}}), .first(1'b0),
         `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
 endmodule
 // plain ring bank, three regional glue roots: clk (in face), clk_c (stage + SRAM capture), clk_o (out face)
@@ -176,7 +202,8 @@ module ot_hbm_hc_bankq_rc3_static #(parameter integer MUT = 0, parameter integer
     `OT_HCB_RC_CHAIN,
     input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out
 );
-    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk_c), .clk_o(clk_o), .first(1'b0),
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk_c), .clk_o(clk_o), .clk_ri({4{clk}}), .clk_rc({4{clk_c}}),
+        .clk_q({4{clk_o}}), .first(1'b0),
         `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
 endmodule
 
@@ -195,7 +222,7 @@ module ot_hbm_hc_bankq0_rc_static #(parameter integer MUT = 0, parameter integer
     output wire [2047:0] sum_out, output wire f_out, input wire [2048:0] s_i, output wire [2048:0] s_o
 );
     `OT_HCB_RC0_BODY
-    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .first(1'b1),
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .clk_ri({4{clk}}), .clk_rc({4{clk}}), .clk_q({4{clk}}), .first(1'b1),
         `OT_HCB_RC_CONN, .sum_in(2048'd0), .sum_out(sum_out), .f_in(1'b0), .f_out(f_out));
 endmodule
 module ot_hbm_hc_bankq0_rc3_static #(parameter integer MUT = 0, parameter integer DRLY = 1, parameter integer CPO = 0)(
@@ -204,7 +231,8 @@ module ot_hbm_hc_bankq0_rc3_static #(parameter integer MUT = 0, parameter intege
     output wire [2047:0] sum_out, output wire f_out, input wire [2048:0] s_i, output wire [2048:0] s_o
 );
     `OT_HCB_RC0_BODY
-    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk_c), .clk_o(clk_o), .first(1'b1),
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk_c), .clk_o(clk_o), .clk_ri({4{clk}}), .clk_rc({4{clk_c}}),
+        .clk_q({4{clk_o}}), .first(1'b1),
         `OT_HCB_RC_CONN, .sum_in(2048'd0), .sum_out(sum_out), .f_in(1'b0), .f_out(f_out));
 endmodule
 
@@ -241,7 +269,7 @@ module ot_hbm_hc_bankq_ft_rc_static #(parameter integer MUT = 0)(
     `OT_HCB_RCFT_PORTS
 );
     `OT_HCB_RCFT_BODY
-    ot_hbm_hc_bankrc_core #(.MUT(MUT)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .first(1'b0),
+    ot_hbm_hc_bankrc_core #(.MUT(MUT)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .clk_ri({4{clk}}), .clk_rc({4{clk}}), .clk_q({4{clk}}), .first(1'b0),
         `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
 endmodule
 module ot_hbm_hc_bankq_ft_rc3_static #(parameter integer MUT = 0)(
@@ -251,9 +279,97 @@ module ot_hbm_hc_bankq_ft_rc3_static #(parameter integer MUT = 0)(
     `OT_HCB_RCFT_PORTS
 );
     `OT_HCB_RCFT_BODY
-    ot_hbm_hc_bankrc_core #(.MUT(MUT)) u_c (.clk(clk), .clk_c(clk_c), .clk_o(clk_o), .first(1'b0),
+    ot_hbm_hc_bankrc_core #(.MUT(MUT)) u_c (.clk(clk), .clk_c(clk_c), .clk_o(clk_o), .clk_ri({4{clk}}), .clk_rc({4{clk_c}}),
+        .clk_q({4{clk_o}}), .first(1'b0),
         `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
 endmodule
+// ================= HBM-HC7-BANK 10-20: lane-row regional glue roots (successor of the rc3 tops) =================
+// rc3 --cts gates FAILED at CTS (0dq rule): glue root clk pin-flop spread 354.9 ps (cb, 2,398 boundary of 5,221 sinks,
+// avg sink wire 1,301 um) and 674.3 ps (b0, 4,418 of 7,241 incl. the 2 x 2,049 exit-relay flops).  Placement evidence
+// (cb_rc3 3_place.odb): the CPI sum flops sit beside their own lane leaves (x 350..632) and the SRAM capture / lane
+// enables beside their row, so every 2,048-bit group is row-local; one root per face spanned the whole 777 x 734 tile
+// around 12 SRAMs.  Here every glue root covers ONE compact region:
+//   clk         in-face landing / write port / reset relays / CPI scalars (W-S corner, x <= ~380, y <= ~350)
+//   clk_c       stage control (cv / cd / addresses / lane-enable copies)
+//   clk_o       CPO scalars (out-face control pins, x 130..140)
+//   clk_r<r>    row r: CPI sums of leaves 2r / 2r+1 + SRAM read capture + lane enables (one lane-row strip)
+//   clk_q<r>    row r: CPO sums of leaves 2r / 2r+1 (between the row and the out face)
+//   b0 only: clk_s0 = exit-relay stage 0 (s_i face), clk_s1 = exit-relay stages >= 1 (s_o face)
+// _rr tops: 4 row roots each; _rh tops (parallel fallback): 2 half-tile roots each (rows 0-1, rows 2-3).
+// Same function, same edges (0 added), only clock-net partition; cross-root paths are same-source in-tile (< 1 mm) STA.
+`define OT_HCB_RR_ROOTS input wire clk, clk_c, clk_o, clk_r0, clk_r1, clk_r2, clk_r3, clk_q0, clk_q1, clk_q2, clk_q3,
+`define OT_HCB_RH_ROOTS input wire clk, clk_c, clk_o, clk_r0, clk_r1, clk_q0, clk_q1,
+`define OT_HCB_RR_V .clk(clk), .clk_c(clk_c), .clk_o(clk_o), .clk_ri({clk_r3, clk_r2, clk_r1, clk_r0}), \
+    .clk_rc({clk_r3, clk_r2, clk_r1, clk_r0}), .clk_q({clk_q3, clk_q2, clk_q1, clk_q0})
+`define OT_HCB_RH_V .clk(clk), .clk_c(clk_c), .clk_o(clk_o), .clk_ri({clk_r1, clk_r1, clk_r0, clk_r0}), \
+    .clk_rc({clk_r1, clk_r1, clk_r0, clk_r0}), .clk_q({clk_q1, clk_q1, clk_q0, clk_q0})
+module ot_hbm_hc_bankq_rr_static #(parameter integer MUT = 0, parameter integer CPI = 0, parameter integer CPO = 0)(
+    `OT_HCB_RR_ROOTS input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out
+);
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO)) u_c (`OT_HCB_RR_V, .first(1'b0),
+        `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
+endmodule
+module ot_hbm_hc_bankq_rh_static #(parameter integer MUT = 0, parameter integer CPI = 0, parameter integer CPO = 0)(
+    `OT_HCB_RH_ROOTS input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out
+);
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO)) u_c (`OT_HCB_RH_V, .first(1'b0),
+        `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
+endmodule
+// b0 exit relay on its own face roots: stage 0 (lands s_i) on clk_s0, stages >= 1 (drive s_o) on clk_s1
+`define OT_HCB_RR0_BODY \
+    initial if (DRLY < 2) $fatal(1, "DRLY >= 2 (stage 0 at the s_i face, last stage at the s_o face)"); \
+    reg [2048:0] sr [0:DRLY-1]; \
+    always @(posedge clk_s0) sr[0] <= s_i; \
+    always @(posedge clk_s1) for (integer i = 1; i < DRLY; i = i + 1) sr[i] <= sr[i-1]; \
+    assign s_o = sr[DRLY-1];
+module ot_hbm_hc_bankq0_rr_static #(parameter integer MUT = 0, parameter integer DRLY = 2, parameter integer CPO = 0)(
+    `OT_HCB_RR_ROOTS input wire clk_s0, clk_s1, input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    output wire [2047:0] sum_out, output wire f_out, input wire [2048:0] s_i, output wire [2048:0] s_o
+);
+    `OT_HCB_RR0_BODY
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPO(CPO)) u_c (`OT_HCB_RR_V, .first(1'b1),
+        `OT_HCB_RC_CONN, .sum_in(2048'd0), .sum_out(sum_out), .f_in(1'b0), .f_out(f_out));
+endmodule
+module ot_hbm_hc_bankq0_rh_static #(parameter integer MUT = 0, parameter integer DRLY = 2, parameter integer CPO = 0)(
+    `OT_HCB_RH_ROOTS input wire clk_s0, clk_s1, input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    output wire [2047:0] sum_out, output wire f_out, input wire [2048:0] s_i, output wire [2048:0] s_o
+);
+    `OT_HCB_RR0_BODY
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPO(CPO)) u_c (`OT_HCB_RH_V, .first(1'b1),
+        `OT_HCB_RC_CONN, .sum_in(2048'd0), .sum_out(sum_out), .f_in(1'b0), .f_out(f_out));
+endmodule
+// edge bank (bench completeness): feed registers stay on clk
+module ot_hbm_hc_bankq_ft_rr_static #(parameter integer MUT = 0)(
+    `OT_HCB_RR_ROOTS input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out,
+    `OT_HCB_RCFT_PORTS
+);
+    `OT_HCB_RCFT_BODY
+    ot_hbm_hc_bankrc_core #(.MUT(MUT)) u_c (`OT_HCB_RR_V, .first(1'b0),
+        `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
+endmodule
+module ot_hbm_hc_bankq_ft_rh_static #(parameter integer MUT = 0)(
+    `OT_HCB_RH_ROOTS input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out,
+    `OT_HCB_RCFT_PORTS
+);
+    `OT_HCB_RCFT_BODY
+    ot_hbm_hc_bankrc_core #(.MUT(MUT)) u_c (`OT_HCB_RH_V, .first(1'b0),
+        `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
+endmodule
+`undef OT_HCB_RR_ROOTS
+`undef OT_HCB_RH_ROOTS
+`undef OT_HCB_RR_V
+`undef OT_HCB_RH_V
+`undef OT_HCB_RR0_BODY
 `undef OT_HCB_RC_CHAIN
 `undef OT_HCB_RC_CONN
 `undef OT_HCB_RC0_BODY

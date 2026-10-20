@@ -1,0 +1,152 @@
+{
+ "name": "hbm_hcq_bank_cb_rh-rh-COMMIT",
+ "block": "ot_hbm_hc_bankq_rh_static",
+ "ref_tile": true,
+ "owner": "Claude:LEAD5-HBM/HBM-HC7-BANK",
+ "purpose": "HC ring bank hbm_hcq_bank_cb_rh: 2 half-tile regional roots successor of the rc3 kit (hybrid entries, FAN32, sized SRAM channels)",
+ "threads": 16,
+ "peak_ram_gb": 128,
+ "source": {
+  "branch": "claude/hcbank6-bank-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_eng4_ring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/hbm_hc_ring_1019_cpr",
+   "results/rtl/hbm_hc_ring_1019_joint",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "rtl/test/tb_hbm_hc_eng4_static_hier_rc.vlt",
+   "results/rtl/hbm_hc_ring_1020_bankrc"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_hc_bankq_rh_static #(.CPI(1), .CPO(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankrc_static.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_ring_rc_exact",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_BANK_RC +define+HC_BANK_RH' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=0 rc=0",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0"
+   },
+   {
+    "name": "hc_ring_rc_mut1",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_BANK_RC +define+HC_BANK_RH' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m1 1",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=1 rc=0",
+    "fail_regex": "HC_ENG FAIL",
+    "note": "bank 3 (rc corner tile) weight slice rotated",
+    "fail_witness": "results/rtl/hbm_hc_ring_1020_bankrc/ring_rh_mut1.log"
+   },
+   {
+    "name": "hc_ring_rc_mut5",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_BANK_RC +define+HC_BANK_RH' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m5 5",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=5 rc=0",
+    "fail_regex": "HC_ENG FAIL",
+    "note": "bank 3 landing kept copy 5 writes the next hold slot",
+    "fail_witness": "results/rtl/hbm_hc_ring_1020_bankrc/ring_rh_mut5.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_hcq_bank_cb_rh/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_hcq_bank_cb_rh/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 128
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_hcq_bank_cb_rh --out {RUN}/record/views/ot_hbm_hc_bankq_rh_static --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 --macro-view physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_hcq_bank_cb_rh/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_hcq_bank_cb_rh/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_hcq_bank_cb_rh/hbm_hcq_bank_cb_rh-rh-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBM-HC7-BANK 10-20 successor of hbm_hcq_bank_cb_rc3 (its --cts gate FAILED at CTS: glue root clk pin-flop spread 354.9 ps TT, 2,398 boundary of 5,221 sinks, avg sink wire 1,301 um; one root per face spanned the whole tile around 12 SRAMs).  Glue clock partition from the cb_rc3 placement: 2 half-tile regional roots (clk_r: CPI sums + SRAM capture + lane enables of the row; clk_q: CPO sums of the row), clk in-face landing / write port / CPI scalars, clk_c stage control, clk_o CPO scalars; landing / control scalar pin flops anchored at their faces (OT_OFLOP_PORT_RE), 2,048-bit chain flops unanchored (anchored they would make ~605 / ~562 um single-cycle hops to the far leaves).  RTL ot_hbm_hc_bankrc_static.sv: same function, 0 added edges (ring lockstep 5.050 PASS + MUT 1/5 FAIL witnesses); geometry / pins / FAN32 as the rc3 kit.  Die pin plan / HCRING joint ranges unchanged.",
+ "reroute_reason": {
+  "kind": "structural",
+  "failed_job": "ref_gate hbm_hcq_bank_cb_rc3 10-20 (CTS: 0dq glue-root pin-flop spread)",
+  "why": "regional glue clock roots per lane row / face + anchored face scalars (see structural_change)"
+ }
+}
