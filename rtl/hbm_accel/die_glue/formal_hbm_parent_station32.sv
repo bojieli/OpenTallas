@@ -18,6 +18,20 @@ module formal_hbm_parent_station32 #(
             assert(o==$past(i));
             assert(ready=={G{1'b1}});
         end
+        if (&observed && rst_n) begin
+            // Sampled state immediately after reset, then the first two
+            // released face edges: no stale payload may escape as valid.
+            if (!$past(rst_n) || ($past(rst_n) && !$past(rst_n,2)) ||
+                ($past(rst_n) && $past(rst_n,2) && !$past(rst_n,3))) begin
+                assert(o=={W{1'b0}});
+                assert(ready=={G{1'b0}});
+            end
+            // First payload appears after the THIRD released edge, exactly.
+            if ($past(rst_n) && $past(rst_n,2) && $past(rst_n,3) && !$past(rst_n,4)) begin
+                assert(o==$past(i));
+                assert(ready=={G{1'b1}});
+            end
+        end
     end
     always @* assert(ck_o==ck);
 endmodule
