@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_dv_s5_crom",
- "verdict": "FAIL",
- "generated": "2026-10-20T10:12:42-0700",
- "host": "ot-epyc5",
+ "verdict": "WARN",
+ "generated": "2026-10-20T10:32:47-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "a091b05a16dfd4f0ffaa543f8fb31de5cbdf020a",
+  "start_commit": "703c93f88ef924d74ad03db6f2a943f26e39fc28",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "c8d23b1b21d3c0239d62f16ac8f27df6ea362fd6ecf3c563992a4492e066524e",
-  "manifest_sha256": "c390922a256fd02efb20cb2ce6a2901bcecec90af95705fc792bb49f6840f862",
+  "archive_sha256": "946e6afc23c9c41190d22f75fb9df9a18c37c975eed6b45ac9e77d72669823d6",
+  "manifest_sha256": "1659cda4ecedd8e49d7213f91d7757b8b7788cc3952b9eaa6418307677ae768e",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json",
@@ -17311,8 +17311,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_crom/README.md",
     "kind": "file",
-    "sha256": "bebb138f5cfe1c2a0cc7fd0cc8ac1a637326c6f6b9c6e134e4a283df9bf6ad3e",
-    "git_blob": "e04c633a3127f31c126f7177bde9baf5da8a3f5b",
+    "sha256": "75dd2c7752bc0d2682633605f8a182289d7b5e476d757092345eb38a19f930c1",
+    "git_blob": "b089da615de58a0bdc9ecc120748576cfcfb2820",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17327,24 +17327,24 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_crom/floorplan.json",
     "kind": "file",
-    "sha256": "7aae81b1a49611480de620ab396f964290e573c9c4aab5fb032e5b378ea70365",
-    "git_blob": "85dcce97446264077bcf7c7398d4dd4ffbfe41bc",
+    "sha256": "676c52e5f3116f1e5ab5f854ef46915dbdd585ccaeb4be5bb1c2e849da7388e3",
+    "git_blob": "958550965b989bc95ac871515964d607f4f3cfe7",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qfd_dv_s5_crom/job.json",
     "kind": "file",
-    "sha256": "07777252c2ade3c8e6ef8cfcf2ba3df00398e1ca68ab9966fbeedfe1d7200af8",
-    "git_blob": "a013368c69cf04ba3b802b0afe99b3e0461fd1c6",
+    "sha256": "c895f596d2f5062eab8118bc10334bc0bea601fc673cd99a6fb8402791a92d27",
+    "git_blob": "ddf292bb738237f7e3b6f9942638cdc401c23b12",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qfd_dv_s5_crom/kit.env",
     "kind": "file",
-    "sha256": "7a07ca286ebd4e48d9bfdd7030a2aadc9b86b2f491d7a74d3fcb4dbe2f369aa2",
-    "git_blob": "77477e3eb76a805da97ab1fb5ec0b479cce0b0be",
+    "sha256": "b80a67196f65747c75b9f0e6ea3829d8c18ed183abd55075c95f169eea7ff1de",
+    "git_blob": "a43bc4a463eb16bfe0e11b558211d3306899a944",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17367,8 +17367,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_crom/place.tcl",
     "kind": "file",
-    "sha256": "c5c2eaa6c8cd1f57d654240899b603d7e0395df7b6c479a16fa819867d1c1f7d",
-    "git_blob": "cb0ce53a569dd300cfd41ab0227bf9d564adef1e",
+    "sha256": "544f44b4f35448af3665f4a029d1603e7cfff793e33ec004287ba703abdb7a12",
+    "git_blob": "92dc34147b618c2aa4993a8853f12f03b8dae797",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17455,8 +17455,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_s5_crom/spec.json",
     "kind": "file",
-    "sha256": "be3d058fc7db483a9a648b3d622cb5f120430ebd41467cca7258fe1291082174",
-    "git_blob": "80bac04cc14d73e0d7af62567db4d33c4657df93",
+    "sha256": "3f3d6d6ab2d7074d05c6a978e47fbc1f1e3cd9e9bc4a9e6aeaf765764baa6c7c",
+    "git_blob": "c775b4ae64b11fe0f7e530268cd1f1fdb2243524",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17767,8 +17767,8 @@
    {
     "path": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
     "kind": "file",
-    "sha256": "79be7397b9d56aa1da99b0590b14cc833dddb029398e2c60525c84c9f695f510",
-    "git_blob": "5e713da74867f1996c41954e1b167f2126d2b84d",
+    "sha256": "edd3caca5bae805427306f60002ec812e3284cdddb6ececd6e9ea8dd2f116437",
+    "git_blob": "99496408bea0dd91f3feb72ffe3f3103ce43d7bc",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -54351,8 +54351,8 @@
    {
     "path": "tools/qwen_dv/s5_vm8x_kit.py",
     "kind": "file",
-    "sha256": "e74b977304d9f838ab2e695effd9a02b6af00043d5b30902b6b343fa26bfe143",
-    "git_blob": "761e890884b6e855ce7485e3488b8d2263790f04",
+    "sha256": "c14f89cb1a10810f5347ae900f81e35914626a3e3756a3c31bc2875114546067",
+    "git_blob": "d2f58e1f3a6ef60d5bbad1565b4628878aa1f60d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -75999,32 +75999,32 @@
    {
     "path": "tools/ref_tile/specs_qw_vm8split/qfd_dv_s5_btab.json",
     "kind": "file",
-    "sha256": "174fa30ea2c84e68bb7f4278ebce9043b44e68ee2675c9cd3190cab50ecfbc5e",
-    "git_blob": "0608030a14e62c6272ea960c89de7f448e301ea5",
+    "sha256": "0a8a16de9f82efa546d979608f475d004d45768552721a9275d5125d838ef16b",
+    "git_blob": "876202d1d55fe3d07ad728473d3d3d2ced53702d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_qw_vm8split/qfd_dv_s5_crh.json",
+    "kind": "file",
+    "sha256": "6595f2a84dee1e4c53a972451ec69d90af8cef906a305858864841d6b0cc420f",
+    "git_blob": "8d748ac5939e60ea7d05ff408e0794a28a479115",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_qw_vm8split/qfd_dv_s5_crom.json",
     "kind": "file",
-    "sha256": "a25e94fe761babde8c9016168cd222871cc8f866ac04e991f796cbf6bdf8d911",
-    "git_blob": "3abf4f99c4d92b3876c7aa40dcb7c30074a38f5d",
+    "sha256": "2ea041f39f7fa26da61e5a2b2ae78de56d13dd1d7a6a69a4ab69b61b5985bc08",
+    "git_blob": "d112c09a6e6e9f9264397257d68a6f71c385282e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_qw_vm8split/qfd_dv_s5_prog.json",
     "kind": "file",
-    "sha256": "3d1c18d411c33af3fcc8e7bfa3cd33cfed1b7b28a99390e61e82180cfb667323",
-    "git_blob": "bf05d3259dcf42a7a8fe2e7821e777d318c16f80",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "tools/ref_tile/specs_qw_vm8split/qfd_dv_s5_su.json",
-    "kind": "file",
-    "sha256": "45a5556b5c198f2b3b1bee1ed345b773c7af258fa97d3481036153abae2e9105",
-    "git_blob": "e94e7289319463d43f3a00ba2160ea6fe46e9b40",
+    "sha256": "1aec103c915970d4f7167f437377d4c7bb41a8f281d06e9c680fa2599b6f3d00",
+    "git_blob": "e878b03c84037e269a9bd96a22a59dea8b569ef8",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -109367,8 +109367,8 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 122889426,
-   "unpacked_bytes": 697774080,
+   "archive_bytes": 122893342,
+   "unpacked_bytes": 697778176,
    "pick_gb": 22,
    "runtime_gb": 22
   },
@@ -110038,13 +110038,13 @@
     "physical/qwen_die_masters/pre_ref_skew.tcl": "bf072d5f81136a555216d51947e242ef665f1e25fd5d8eb862de22eedc18d1dc",
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
-    "physical/ref_tile/qfd_dv_s5_crom/README.md": "bebb138f5cfe1c2a0cc7fd0cc8ac1a637326c6f6b9c6e134e4a283df9bf6ad3e",
+    "physical/ref_tile/qfd_dv_s5_crom/README.md": "75dd2c7752bc0d2682633605f8a182289d7b5e476d757092345eb38a19f930c1",
     "physical/ref_tile/qfd_dv_s5_crom/clock.sdc": "97505cf5600c0bfd171a9cf361172f260315e38f7ef2e9cdab1a100bb598f3c4",
-    "physical/ref_tile/qfd_dv_s5_crom/floorplan.json": "7aae81b1a49611480de620ab396f964290e573c9c4aab5fb032e5b378ea70365",
-    "physical/ref_tile/qfd_dv_s5_crom/kit.env": "7a07ca286ebd4e48d9bfdd7030a2aadc9b86b2f491d7a74d3fcb4dbe2f369aa2",
+    "physical/ref_tile/qfd_dv_s5_crom/floorplan.json": "676c52e5f3116f1e5ab5f854ef46915dbdd585ccaeb4be5bb1c2e849da7388e3",
+    "physical/ref_tile/qfd_dv_s5_crom/kit.env": "b80a67196f65747c75b9f0e6ea3829d8c18ed183abd55075c95f169eea7ff1de",
     "physical/ref_tile/qfd_dv_s5_crom/pdn.tcl": "5f71a68561a61dcca274ccf1947203934417e53c4f6a6269c4dd52a83b2d4b98",
     "physical/ref_tile/qfd_dv_s5_crom/pin_regs.json": "8666eec7dce33bceb59932c1dd079f78f030fb368678223585ed448fd710c230",
-    "physical/ref_tile/qfd_dv_s5_crom/place.tcl": "c5c2eaa6c8cd1f57d654240899b603d7e0395df7b6c479a16fa819867d1c1f7d",
+    "physical/ref_tile/qfd_dv_s5_crom/place.tcl": "544f44b4f35448af3665f4a029d1603e7cfff793e33ec004287ba703abdb7a12",
     "physical/ref_tile/qfd_dv_s5_crom/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
     "physical/ref_tile/qfd_dv_s5_crom/post_drt.tcl": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
     "physical/ref_tile/qfd_dv_s5_crom/post_fill.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
@@ -110055,7 +110055,7 @@
     "physical/ref_tile/qfd_dv_s5_crom/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/qfd_dv_s5_crom/reset_landing.json": "29bf49e91c43daffa15ac1c677d12890b42c0f9711068ccbcf698242982a7a0c",
     "physical/ref_tile/qfd_dv_s5_crom/signoff.sdc": "c69524b8ca73bc805dc66594f2b60ac10b8126f54648baf6d5bf88af71334e5a",
-    "physical/ref_tile/qfd_dv_s5_crom/spec.json": "be3d058fc7db483a9a648b3d622cb5f120430ebd41467cca7258fe1291082174",
+    "physical/ref_tile/qfd_dv_s5_crom/spec.json": "3f3d6d6ab2d7074d05c6a978e47fbc1f1e3cd9e9bc4a9e6aeaf765764baa6c7c",
     "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
     "rtl/lib/face_land/qkd_hr_core_queue_fl.sv": "1ccee3722f337be5355048d1ec0203f944cc56f5514e12c203664cebff5862a3",
     "rtl/lib/face_land/qkd_kvs_attn_fl.sv": "81aa4188030e45eec1ad91c5795791e49a5c65aed14f15168eff2db631848ee0",
@@ -110094,7 +110094,7 @@
     "rtl/qwen_dv/s5/qfd_dv_s5_suvm7.sv": "608178187e433430b9371f49cc19bc649e9ebc6d59a1d3595043dfce0d102edd",
     "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv": "6bc5223f4ff8e4d6d7921c941709ab2b6c051d3c806a033b60ea589f31035e68",
     "rtl/qwen_dv/s5/qfd_dv_s5_vm8.sv": "1e16d24415a9964aaf1a846370d64b852a32fff86d98cd14b641bebcdea410b5",
-    "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv": "79be7397b9d56aa1da99b0590b14cc833dddb029398e2c60525c84c9f695f510",
+    "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv": "edd3caca5bae805427306f60002ec812e3284cdddb6ececd6e9ea8dd2f116437",
     "rtl/qwen_split/mu/qfd_mu_ctx_rx.sv": "1dabee3184a7ba1969b171d644d8992d870a50ea78ab413e0a7bcdc4beece922",
     "rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv": "be3edbb71a7783649859e523a6fa2f2d0d09753bfbca6a64232baf4c7893cf6a",
     "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv": "d0d4870d3e71e6eaff0b53bade25440063e267f1d7159d4f49508fb76d935ea8",
@@ -110209,16 +110209,16 @@
    },
    "digest": "f1341a296368e25a691bc477600a78060f857516b8a8be414746612b76268ba3"
   },
-  "captured": "2026-10-20T10:00:29-0700",
+  "captured": "2026-10-20T10:22:02-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_dv_s5_crom/signoff.sdc"
   },
-  "remote_script_sha256": "7cfcd557192a1787ca4cabc7615cfd1a60a63640473f5bd5dfe22a895a6afa7a",
+  "remote_script_sha256": "ca186cbaf0ef052039cfe614b610a6d9b9b95085b7acba7fd067e8551d04b641",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc5",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_crom-20261020-100002",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_crom-20261020-102135",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -110229,12 +110229,12 @@
   "max_root_sinks": 4076,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 480.9,
-  "tt_spread_ps": 143.0,
-  "tt_pin_spread_ps": 140.7,
-  "ff_insertion_ps": 400.1,
-  "ff_spread_ps": 127.6,
-  "ff_pin_spread_ps": 126.1,
+  "tt_insertion_ps": 547.0,
+  "tt_spread_ps": 140.7,
+  "tt_pin_spread_ps": 20.5,
+  "ff_insertion_ps": 457.7,
+  "ff_spread_ps": 133.5,
+  "ff_pin_spread_ps": 21.1,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -110251,52 +110251,52 @@
      },
      "boundary": {
       "n": 1694,
-      "mean": 403.6,
-      "min": 340.2,
-      "max": 480.9
+      "mean": 423.8,
+      "min": 413.5,
+      "max": 434.0
      },
      "all": {
       "n": 4076,
-      "mean": 399.9,
-      "min": 337.9,
-      "max": 480.9
+      "mean": 428.0,
+      "min": 406.3,
+      "max": 547.0
      },
      "errors": [],
      "macros": {
       "n": 4,
       "nets": 2,
       "max_per_net": 2,
-      "reg_mean": 399.9,
-      "max_slew": 254.7,
-      "max_late": -13.9,
+      "reg_mean": 428.0,
+      "max_slew": 80.1,
+      "max_late": -5.6,
       "pins": [
        {
         "pin": "g_crom[0].u_hi/clk",
-        "arr": 369.9,
-        "slew": 206.2,
-        "late": -30.0,
-        "net": "clknet_1_0_0_ck"
+        "arr": 406.3,
+        "slew": 38.9,
+        "late": -21.7,
+        "net": "clknet_1_0_1_ck"
        },
        {
         "pin": "g_crom[0].u_lo/clk",
-        "arr": 386.0,
-        "slew": 254.7,
-        "late": -13.9,
-        "net": "clknet_1_0_0_ck"
+        "arr": 420.6,
+        "slew": 77.8,
+        "late": -7.4,
+        "net": "clknet_1_0_1_ck"
        },
        {
         "pin": "g_crom[1].u_hi/clk",
-        "arr": 367.4,
-        "slew": 199.9,
-        "late": -32.5,
-        "net": "clknet_1_1_0_ck"
+        "arr": 422.4,
+        "slew": 80.1,
+        "late": -5.6,
+        "net": "clknet_1_1_1_ck"
        },
        {
         "pin": "g_crom[1].u_lo/clk",
-        "arr": 383.5,
-        "slew": 248.3,
-        "late": -16.4,
-        "net": "clknet_1_1_0_ck"
+        "arr": 406.7,
+        "slew": 37.2,
+        "late": -21.3,
+        "net": "clknet_1_1_1_ck"
        }
       ]
      },
@@ -110304,15 +110304,15 @@
      "child_flop": {
       "boundary": {
        "n": 1694,
-       "mean": 403.6,
-       "min": 340.2,
-       "max": 480.9
+       "mean": 423.8,
+       "min": 413.5,
+       "max": 434.0
       },
       "all": {
        "n": 4076,
-       "mean": 399.9,
-       "min": 337.9,
-       "max": 480.9
+       "mean": 428.0,
+       "min": 406.3,
+       "max": 547.0
       },
       "refs": {
        "ot_sram_1r1w_1024x256_m2_r2c2": {
@@ -110324,15 +110324,15 @@
       "soft": {
        "boundary": {
         "n": 1694,
-        "mean": 403.6,
-        "min": 340.2,
-        "max": 480.9
+        "mean": 423.8,
+        "min": 413.5,
+        "max": 434.0
        },
        "all": {
         "n": 4072,
-        "mean": 399.9,
-        "min": 337.9,
-        "max": 480.9
+        "mean": 428.0,
+        "min": 409.2,
+        "max": 547.0
        }
       }
      }
@@ -110340,28 +110340,28 @@
     "ff": {
      "boundary": {
       "n": 1694,
-      "mean": 332.1,
-      "min": 274.0,
-      "max": 400.1
+      "mean": 348.9,
+      "min": 338.3,
+      "max": 359.4
      },
      "all": {
       "n": 4076,
-      "mean": 328.9,
-      "min": 272.5,
-      "max": 400.1
+      "mean": 352.7,
+      "min": 324.2,
+      "max": 457.7
      },
      "child_flop": {
       "boundary": {
        "n": 1694,
-       "mean": 332.1,
-       "min": 274.0,
-       "max": 400.1
+       "mean": 348.9,
+       "min": 338.3,
+       "max": 359.4
       },
       "all": {
        "n": 4076,
-       "mean": 328.9,
-       "min": 272.5,
-       "max": 400.1
+       "mean": 352.7,
+       "min": 324.2,
+       "max": 457.7
       },
       "refs": {
        "ot_sram_1r1w_1024x256_m2_r2c2": {
@@ -110373,15 +110373,15 @@
       "soft": {
        "boundary": {
         "n": 1694,
-        "mean": 332.1,
-        "min": 274.0,
-        "max": 400.1
+        "mean": 348.9,
+        "min": 338.3,
+        "max": 359.4
        },
        "all": {
         "n": 4072,
-        "mean": 328.9,
-        "min": 272.5,
-        "max": 400.1
+        "mean": 352.7,
+        "min": 334.7,
+        "max": 457.7
        }
       }
      },
@@ -110389,37 +110389,37 @@
       "n": 4,
       "nets": 2,
       "max_per_net": 2,
-      "reg_mean": 328.9,
-      "max_slew": 265.4,
-      "max_late": -1.8,
+      "reg_mean": 352.7,
+      "max_slew": 82.2,
+      "max_late": -11.6,
       "pins": [
        {
         "pin": "g_crom[0].u_hi/clk",
-        "arr": 310.1,
-        "slew": 213.9,
-        "late": -18.8,
-        "net": "clknet_1_0_0_ck"
+        "arr": 324.2,
+        "slew": 37.1,
+        "late": -28.5,
+        "net": "clknet_1_0_1_ck"
        },
        {
         "pin": "g_crom[0].u_lo/clk",
-        "arr": 327.1,
-        "slew": 265.4,
-        "late": -1.8,
-        "net": "clknet_1_0_0_ck"
+        "arr": 339.4,
+        "slew": 79.7,
+        "late": -13.3,
+        "net": "clknet_1_0_1_ck"
        },
        {
         "pin": "g_crom[1].u_hi/clk",
-        "arr": 307.5,
-        "slew": 207.3,
-        "late": -21.4,
-        "net": "clknet_1_1_0_ck"
+        "arr": 341.1,
+        "slew": 82.2,
+        "late": -11.6,
+        "net": "clknet_1_1_1_ck"
        },
        {
         "pin": "g_crom[1].u_lo/clk",
         "arr": 324.5,
-        "slew": 258.8,
-        "late": -4.4,
-        "net": "clknet_1_1_0_ck"
+        "slew": 35.2,
+        "late": -28.2,
+        "net": "clknet_1_1_1_ck"
        }
       ]
      }
@@ -110441,8 +110441,8 @@
    }
   },
   "measured_clock": "core_clk",
-  "verdict": "REFUSE",
-  "text": "4,076 sinks on the largest root; measured TT insertion 480.9 ps, FF insertion 400.1 ps, TT pin-flop spread 140.7 ps, FF pin-flop spread 126.1 ps; TT pin-flop spread 140.7 ps > 80 and FF pin-flop spread 126.1 ps > 80",
+  "verdict": "WARN",
+  "text": "4,076 sinks on the largest root; measured TT insertion 547.0 ps, FF insertion 457.7 ps, TT pin-flop spread 20.5 ps, FF pin-flop spread 21.1 ps; WARN: insertion 547.0 ps > 300 (guidance; boundary matched by parent compensation / landing)",
   "other_roots": []
  },
  "items": [
@@ -110453,15 +110453,15 @@
    "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
   },
   {
-   "severity": "FAIL",
+   "severity": "WARN",
    "check": "clock_rule",
-   "message": "4,076 sinks on the largest root; measured TT insertion 480.9 ps, FF insertion 400.1 ps, TT pin-flop spread 140.7 ps, FF pin-flop spread 126.1 ps; TT pin-flop spread 140.7 ps > 80 and FF pin-flop spread 126.1 ps > 80",
-   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+   "message": "root port:ck: 4,076 sinks on the largest root; measured TT insertion 547.0 ps, FF insertion 457.7 ps, TT pin-flop spread 20.5 ps, FF pin-flop spread 21.1 ps; WARN: insertion 547.0 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
   },
   {
    "severity": "WARN",
    "check": "fill",
-   "message": "fill 39% = (hard macros 49269.4 + synthesized std cells 1872.2) / outline 131383.3 um2; pin demand per face: S 1126 pins over 428.3/475.2 um (90%), N 0 pins over 0.0/475.2 um (0%), W 764 pins over 99.0/276.5 um (36%), E 52 pins over 0.0/276.5 um (0%) (< 50%)",
+   "message": "fill 42% = (hard macros 49269.4 + synthesized std cells 1872.2) / outline 120932.4 um2; pin demand per face: S 1054 pins over 236.3/259.2 um (91%), N 0 pins over 0.0/259.2 um (0%), W 760 pins over 114.3/466.6 um (24%), E 48 pins over 0.0/466.6 um (0%) (pin-bound: macro- and pin-bound leaf: the dense S face (W 764 / 466.6 = 1.6/um, S 1,126 / 259.2 = 4.3/um) carries the registered table/VM write bus; the leaf is kept <= 259.2 um wide on that face so every pin register sits <= 130 um from the S-centre clock pin (r1 leaves 302-475 um wide: pin-flop spread 107-146 ps); the outline is set by the face width x macro column, not by the std-cell area)",
    "fix": ""
   }
  ],
@@ -110471,7 +110471,7 @@
   "kind": "parent",
   "skip_incremental_repair": false,
   "rc": "0",
-  "grt_s": 134,
+  "grt_s": 195,
   "layers": [
    {
     "layer": "M1",
@@ -110482,30 +110482,30 @@
    },
    {
     "layer": "M2",
-    "capacity": 2402226,
-    "usage": 209572,
-    "pct": 8.72,
+    "capacity": 2091062,
+    "usage": 95172,
+    "pct": 4.55,
     "overflow": 0
    },
    {
     "layer": "M3",
-    "capacity": 2859300,
-    "usage": 295517,
-    "pct": 10.34,
+    "capacity": 2497343,
+    "usage": 456544,
+    "pct": 18.28,
     "overflow": 0
    },
    {
     "layer": "M4",
-    "capacity": 2193360,
-    "usage": 133822,
-    "pct": 6.1,
+    "capacity": 1908420,
+    "usage": 62478,
+    "pct": 3.27,
     "overflow": 0
    },
    {
     "layer": "M5",
-    "capacity": 2632329,
-    "usage": 111677,
-    "pct": 4.24,
+    "capacity": 2363919,
+    "usage": 242743,
+    "pct": 10.27,
     "overflow": 0
    },
    {
@@ -110518,7 +110518,7 @@
   ],
   "worst_layer_usage": [
    "M3",
-   10.34
+   18.28
   ],
   "hotspot": null,
   "congestion_png": null
