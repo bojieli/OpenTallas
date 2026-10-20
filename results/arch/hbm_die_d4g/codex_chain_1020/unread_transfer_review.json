@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.hbm.unread_transfer_independent_check.v1",
+  "time": "2026-10-20T04:01:48.797314-07:00",
+  "current_proposal_sha256": "efadc4b60d1d98638cb863733a2accd572994bfda811fd82cf5cf441ed7c1bc1",
+  "current_review_sha256": "d624ab5cf8f9849fdebdcd8c83d2fa2d6561ae911f902e31d8b7fb68025cd18c",
+  "baseline_review_sha256": "477e48e716ceaf53385b46224548c5199819d728e132fe5ba7791ec2c203cf6d",
+  "baseline_proposal_sha256": "394952eecf16e383b1df57eb40309d1dfd3acb1cae7c20c60f37e303f625cb66",
+  "reviewed_source_hashes_unchanged": true,
+  "reviewed_source_files": 74,
+  "approved_entries_equal": true,
+  "approved_entries": 309,
+  "proposal_entries_equal": true,
+  "approved_bits": 65066,
+  "actual_source_files_checked": 230,
+  "actual_source_mismatches": [],
+  "proposal_source_delta_paths": [
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv"
+  ],
+  "scope": "Independent source-transfer facts only. LEAD admission required; no physical qualification. Baseline saved proposal394952ee is pre-FAN32/MC3; admission lineage recorded separately in lane L2H-GEN2E: b8307809 then e8b4e284.",
+  "live_worktree_untouched": true,
+  "lead_admission": "ADMITTED by /root/hbm_coord 2026-10-20; exact efadc4b60d1d98638cb863733a2accd572994bfda811fd82cf5cf441ed7c1bc1 / reviewd624ab5cf8f9849fdebdcd8c83d2fa2d6561ae911f902e31d8b7fb68025cd18c. Existing semantic scope only, no physical/MC3 qualification."
+}

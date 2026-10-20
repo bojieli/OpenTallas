@@ -34,9 +34,10 @@ HOME = re.compile(r'home \(([-\d.]+), ([-\d.]+)\) um')
 RST = re.compile(r'(^|_)(rst|reset|por)(_|n|$)|rst_n|_rstn|^rs$')
 
 
-def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40):
+def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40, strict_coverage=False):
     C = json.loads(Path(contract).read_text()); I = C['instances']
-    pl, nets, directions, top_inputs = RP.load_case(Path(case), C)
+    coverage = {}
+    pl, nets, directions, top_inputs = RP.load_case(Path(case), C, coverage=coverage)
 
     def planned(inst, xy):
         note = I.get(inst, {}).get('note', '') or ''
@@ -99,6 +100,10 @@ def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40):
                fix_summary=dict(buses=len(fix), extra_stations=sum(f['extra_stations'] for f in fix),
                                 extra_cycles_sum=sum(f['extra_cycles'] for f in fix),
                                 worst_bus_extra_cycles=max([f['extra_cycles'] for f in fix] or [0])))
+    res['geometry_coverage'] = coverage
+    res['strict_coverage'] = strict_coverage
+    if strict_coverage and coverage['verdict'] != 'PASS':
+        res['verdict'] = 'FAIL'
     return res, fails, fix
 
 
@@ -108,8 +113,9 @@ def main():
     ap.add_argument('--reach', type=float, default=405.0); ap.add_argument('--tol', type=float, default=0.0)
     ap.add_argument('--out'); ap.add_argument('--fix'); ap.add_argument('--all', help='write every failing bus here (json)')
     ap.add_argument('--reset-fails', action='store_true', help='post-forest case: reset fan-out over reach also fails')
+    ap.add_argument('--strict-coverage', action='store_true', help='refuse missing instance/LEF/pin geometry or unknown signal directions')
     a = ap.parse_args()
-    res, fails, fix = classify(a.case, a.contract, a.reach, a.tol)
+    res, fails, fix = classify(a.case, a.contract, a.reach, a.tol, strict_coverage=a.strict_coverage)
     if a.reset_fails and res['over_buses_by_class'].get('reset'):
         res['verdict'] = 'FAIL'
     print('REACH_CHECK', res['verdict'], json.dumps({k: res[k] for k in ('buses_checked', 'over_buses_by_class', 'over_by_cause',
