@@ -22,6 +22,14 @@ TW2-COLLAR (10-19): the XDIE-HBM4 parameters (v8g #(.AR_ITER(1), .ROWS(128)), co
   inst_ctl (inst_d2 with [717:714] zeroed).  tb_hfd_coll_<v>_lpf_ar_eq: lockstep vs the v8g/v8x #(AR_ITER 1, ROWS 128)
   parent under the scripted programme rtl/.../p2p/landed/stim_<v>_lp_ar.vh (looped AR rows, iter_ar_tag_step != 0).
   Defaults (no options) = the original output, byte-identical.
+
+HBM-ELEMOWN3/COLLQ3 (10-19): --safe (with --ar-iter --rows 128 --suffix _ars) = the SAFE successor's flat parent: every soft
+  mass that put raw SRAMs or tens of thousands of flops on the sw region root becomes ONE hard child with one scalar clock
+  pin and no instance parameters (rtl/.../p2p/ot_hgi_coll_safe_leaves.sv): u_issuer = ot_hgi_coll_issuer_m_r128 (6 SRAMs),
+  u_fj = <fj>_r128, u_link<k> = ot_hgi_coll_link_e1 (clk = clk_link[5k]; 4 SRAMs), and the reduce = u_rdc
+  (ot_hgi_coll_reduce_static_ctl, soft: tags / faults / writeback pipe / out_flit) + u_rdl0..15 (ot_hgi_coll_reduce_lane,
+  hard: 16 x 32 b state + LAT-8 add, clk = clk_reduce[1+l]).  Exact: the same lockstep vs the v8g/v8x reference
+  (tb_hfd_coll_<v>_lpf_ars_eq, the _ar scripted programme stim_<v>_lp_ar.vh).
 """
 from pathlib import Path
 
@@ -84,11 +92,13 @@ def cat(bits):
     return "{" + ",".join(reversed(bits)) + "}"
 
 
-def flat(v="q2", ar=False, rows=64, suffix="") -> str:
+def flat(v="q2", ar=False, rows=64, suffix="", safe=False) -> str:
     VV = VARIANTS[v]
     SOLO, NS = VV["SOLO"], VV["NS"]
     PW = 7 if rows > 64 else 6
     rp = f" #(.ROWS({rows}))" if rows != 64 else ""
+    if safe and not (ar and rows == 128):
+        raise SystemExit("--safe is the AR_ITER 1 / ROWS 128 successor: use --ar-iter --rows 128")
     L = []
     w = L.append
     w("`timescale 1ns/1ps")
@@ -112,7 +122,9 @@ def flat(v="q2", ar=False, rows=64, suffix="") -> str:
     w(f" wire [36:0] program_cfg;wire hgi_start;wire [{PW - 1}:0] hgi_start_pc;")
     w(f" wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [{PW - 1}:0] uop_pc;wire busy_d2,start_d3;")
     w(" wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;")
-    w(f" ot_hgi_coll_issuer_m{rp} u_issuer(.clk_control(clk_issue),.rst_n(rst_n),")
+    if safe:
+        w("// HBM-ELEMOWN3/COLLQ3 --safe: issuer / fj / link_e / reduce lanes are hard children (ot_hgi_coll_safe_leaves.sv).")
+    w(f" {'ot_hgi_coll_issuer_m_r128' if safe else 'ot_hgi_coll_issuer_m' + rp} u_issuer(.clk_control(clk_issue),.rst_n(rst_n),")
     w("  .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),")
     w("  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),")
     w("  .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));")
@@ -224,7 +236,7 @@ def flat(v="q2", ar=False, rows=64, suffix="") -> str:
         w(f" assign tkx_del_flit=dest_d[{10 * PWT}+:{4 * PWT}];")
     else:
         w(" wire [9:0] tkm_dest_v_w;")
-    w(f" {VV['fj']}{rp} u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),")
+    w(f" {VV['fj'] + '_r128' if safe else VV['fj'] + rp} u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),")
     w("  .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),")
     w("  .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),")
     w("  .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),")
@@ -240,13 +252,27 @@ def flat(v="q2", ar=False, rows=64, suffix="") -> str:
         w("  .arg_capture_slot(p_capture_slot[9]),.tkm_start(p_tkm_start),.tkm_del_slot(p_tkm_del_slot),")
         w("  .tkm_dest_v(dest_v[10+:4]),.fault(fault),.fault_cause(fault_cause));")
     # reduction
-    w(" ot_hgi_coll_reduce_static u_reduce(")
-    w("  .clk_control(clk_reduce[0]),.clk_state(clk_reduce[16:1]),.clk_add(clk_reduce[32:17]),")
-    w("  .rst_n(rst_n),.clear(p_ring[83]),.in_v(dest_v[14]),.in_flit(dest_d[7630+:545]),")
-    w("  .load_v(a_load_v),.load_tag(a_load_tag),.add_read(a_add_read),.read_tag(a_read_tag),.add_issue(a_add_issue),")
-    w("  .pub_read(a_pub_read),.pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_bf16(a_pub_bf16),")
-    w("  .pub_meta({1'b1,8'hff,a_pub_src,a_pub_index}),.pub_release(a_pub_release),.pub_issue(a_pub_issue),")
-    w("  .out_v(reduce_out_v),.out_flit(reduce_out_data),.fault(reduce_fault),.fault_cause(reduce_fault_cause));")
+    if safe:     # control soft (u_rdc) + 16 hard lanes (u_rdl<l>): ot_hgi_coll_reduce_static split exactly
+        w(" wire rd_wb;wire [3:0] rd_wb_tag;wire [15:0] rd_add_valid;wire [511:0] rd_pub_a,rd_pub_b;")
+        for l in range(16):
+            w(f" ot_hgi_coll_reduce_lane u_rdl{l}(.clk(clk_reduce[{1 + l}]),.rst_n(rst_n),.load_v(a_load_v),.load_tag(a_load_tag),"
+              f".in_data(dest_d[{7630 + 32 * l}+:32]),.wb(rd_wb),.wb_tag(rd_wb_tag),.add_read(a_add_read),.read_tag(a_read_tag),"
+              f".add_issue(a_add_issue),.pub_read(a_pub_read),.pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),"
+              f".pub_a(rd_pub_a[{32 * l}+:32]),.pub_b(rd_pub_b[{32 * l}+:32]),.add_valid(rd_add_valid[{l}]));")
+        w(" ot_hgi_coll_reduce_static_ctl u_rdc(.clk_control(clk_reduce[0]),.rst_n(rst_n),.clear(p_ring[83]),.in_v(dest_v[14]),")
+        w("  .load_v(a_load_v),.load_tag(a_load_tag),.add_read(a_add_read),.read_tag(a_read_tag),.add_issue(a_add_issue),")
+        w("  .pub_read(a_pub_read),.pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_bf16(a_pub_bf16),")
+        w("  .pub_meta({1'b1,8'hff,a_pub_src,a_pub_index}),.pub_release(a_pub_release),.pub_issue(a_pub_issue),")
+        w("  .add_valid(rd_add_valid),.pub_a(rd_pub_a),.pub_b(rd_pub_b),.wb(rd_wb),.wb_tag(rd_wb_tag),")
+        w("  .out_v(reduce_out_v),.out_flit(reduce_out_data),.fault(reduce_fault),.fault_cause(reduce_fault_cause));")
+    else:
+        w(" ot_hgi_coll_reduce_static u_reduce(")
+        w("  .clk_control(clk_reduce[0]),.clk_state(clk_reduce[16:1]),.clk_add(clk_reduce[32:17]),")
+        w("  .rst_n(rst_n),.clear(p_ring[83]),.in_v(dest_v[14]),.in_flit(dest_d[7630+:545]),")
+        w("  .load_v(a_load_v),.load_tag(a_load_tag),.add_read(a_add_read),.read_tag(a_read_tag),.add_issue(a_add_issue),")
+        w("  .pub_read(a_pub_read),.pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_bf16(a_pub_bf16),")
+        w("  .pub_meta({1'b1,8'hff,a_pub_src,a_pub_index}),.pub_release(a_pub_release),.pub_issue(a_pub_issue),")
+        w("  .out_v(reduce_out_v),.out_flit(reduce_out_data),.fault(reduce_fault),.fault_cause(reduce_fault_cause));")
     # qslots capture
     w(f" wire [{NS * PWT - 1}:0] captured;wire [{NS - 1}:0] captured_slot;")
     for s in range(NS):
@@ -280,7 +306,10 @@ def flat(v="q2", ar=False, rows=64, suffix="") -> str:
     w(" assign dest_d=" + cat(parts) + ";")
     # rails
     for k in range(NPT):
-        w(f" ot_hgi_coll_link_e u_link{k}(.ck(clk_link[{k * 5}+:5]),.rst_n(rst_n),")
+        if safe:
+            w(f" ot_hgi_coll_link_e1 u_link{k}(.clk(clk_link[{k * 5}]),.rst_n(rst_n),")
+        else:
+            w(f" ot_hgi_coll_link_e u_link{k}(.ck(clk_link[{k * 5}+:5]),.rst_n(rst_n),")
         w(f"  .epoch_begin(p_lk_epoch_begin[{k}]),.epoch_new(p_lk_epoch),.held_epoch(held_epoch[{k * 8}+:8]),")
         w(f"  .wr_v(p_lk_wr_v[{k}]),.wr_observed_v(dest_v[{k}]),.wr_seq(wr_sequence_pin[{k * 16}+:16]),")
         w(f"  .wr_flit(dest_d[{k * PWT}+:{PWT}]),.rd_v(p_lk_rd_v[{k}]),.rd_seq(rd_sequence_pin[{k * 16}+:16]),")
@@ -471,13 +500,16 @@ if __name__ == "__main__":
     ap.add_argument("--ar-iter", action="store_true", help="v8g AR_ITER=1: u_ariter leaf + inst_ctl")
     ap.add_argument("--rows", type=int, default=64, choices=[64, 128], help="issuer / fj ROWS")
     ap.add_argument("--suffix", default="", help="module / file suffix (required with --ar-iter or --rows 128)")
+    ap.add_argument("--safe", action="store_true", help="COLLQ3 SAFE successor: hard issuer / fj / link_e1 / reduce lanes")
+    ap.add_argument("--stim-suffix", default=None, help="stimulus file suffix (default = --suffix)")
     a = ap.parse_args()
     if (a.ar_iter or a.rows != 64) and not a.suffix:
         ap.error("--ar-iter / --rows 128 need --suffix (never overwrite the closed-view lpf)")
     for v in a.variants:
-        (OUT / f"ot_hfd_coll_{v}_lpf{a.suffix}.sv").write_text(flat(v, a.ar_iter, a.rows, a.suffix))
+        (OUT / f"ot_hfd_coll_{v}_lpf{a.suffix}.sv").write_text(flat(v, a.ar_iter, a.rows, a.suffix, a.safe))
         if a.suffix:
-            stim = f"rtl/hbm_accel/generic/collective/p2p/landed/stim_{v}_lp{a.suffix}.vh"
+            ss = a.suffix if a.stim_suffix is None else a.stim_suffix
+            stim = f"rtl/hbm_accel/generic/collective/p2p/landed/stim_{v}_lp{ss}.vh"
             (OUT / f"tb_hfd_coll_{v}_lpf{a.suffix}_eq.sv").write_text(tb_eq_scripted(v, a.ar_iter, a.rows, a.suffix, stim))
         else:
             (OUT / f"tb_hfd_coll_{v}_lpf_eq.sv").write_text(tb_eq(v))
