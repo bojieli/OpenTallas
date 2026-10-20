@@ -68,6 +68,12 @@
     "written": "2026-10-19 21:43 PT"
    },
    {
+    "branch": "claude/toksim-s81c-gath-1019@cf69c2a03",
+    "cls": "GATH",
+    "file": "results/token_pass/measured_s81_1019/elements/GATH.json",
+    "written": "2026-10-20 PT"
+   },
+   {
     "branch": "claude/toksim-s81b-hcl-1019@d1ea8f2b6",
     "cls": "HCL",
     "file": "results/token_pass/measured_s81_1019/elements/HCL.json",
@@ -159,40 +165,40 @@
  ],
  "multi_user": {
   "ar": {
-   "aggregate_tok_s": 39304.0,
+   "aggregate_tok_s": 39014.0,
    "base_aggregate_tok_s": 55780,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 980428,
    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
-   "pct_measured_per_user": 78.81,
-   "per_user_tok_s": 854.4,
+   "pct_measured_per_user": 79.6,
+   "per_user_tok_s": 848.1,
    "users": 46
   },
   "mtp": {
-   "aggregate_tok_s": 27872.0,
+   "aggregate_tok_s": 27711.0,
    "base_aggregate_tok_s": 36985,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 1303400,
    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
-   "pct_measured_per_user": 64.42,
-   "per_user_tok_s": 2787.2,
+   "pct_measured_per_user": 65.12,
+   "per_user_tok_s": 2771.1,
    "users": 10
   }
  },
  "schema": "opentallas.toksim_s81.v1",
  "workloads": {
   "ar": {
-   "T_cycles_fixed": 1404451.5,
-   "T_cycles_solved": 1426115.0,
+   "T_cycles_fixed": 1414882.7,
+   "T_cycles_solved": 1436546.2,
    "base_T_cycles": 989618.6,
    "base_tok_s": 1212.6,
    "by_grade": {
     "measured-current-RTL": 109119.0,
     "measured-newest-element-RTL": 177985.0,
-    "measured-old-RTL": 45264.3,
-    "measured-release-RTL": 819747.0,
+    "measured-old-RTL": 36322.5,
+    "measured-release-RTL": 839120.0,
     "modelled-PHY": 172975.0,
     "priced": 79361.2
    },
@@ -693,10 +699,10 @@
      "slot": "L20.scan_d_l20split_k6"
     }
    ],
-   "pct_measured": 78.81,
-   "pct_measured_on_chip": 89.88,
-   "pct_modelled_phy": 12.32,
-   "per_accepted_cycles": 1404451.5,
+   "pct_measured": 79.6,
+   "pct_measured_on_chip": 90.69,
+   "pct_modelled_phy": 12.23,
+   "per_accepted_cycles": 1414882.7,
    "per_op": [
     {
      "cls": "field",
@@ -814,6 +820,16 @@
      "op": "ffn.norm.scale"
     },
     {
+     "cls": "hbm",
+     "cycles": 17024.0,
+     "grades": {
+      "measured-release-RTL": 17024.0
+     },
+     "n_crit": 32,
+     "old_cycles": 5698.8,
+     "op": "attn.window_load"
+    },
+    {
      "cls": "su",
      "cycles": 16720.0,
      "grades": {
@@ -876,16 +892,6 @@
      "op": "ffn.quant2"
     },
     {
-     "cls": "select",
-     "cycles": 6487.0,
-     "grades": {
-      "measured-old-RTL": 6487.0
-     },
-     "n_crit": 8,
-     "old_cycles": 6487.0,
-     "op": "attn.gather"
-    },
-    {
      "cls": "field",
      "cycles": 6056.0,
      "grades": {
@@ -907,14 +913,15 @@
      "op": "ffn.softplus_sqrt"
     },
     {
-     "cls": "hbm",
-     "cycles": 5698.8,
+     "cls": "select",
+     "cycles": 5593.0,
      "grades": {
-      "measured-old-RTL": 5698.8
+      "measured-old-RTL": 3244.0,
+      "measured-release-RTL": 2349.0
      },
-     "n_crit": 32,
-     "old_cycles": 5698.8,
-     "op": "attn.window_load"
+     "n_crit": 8,
+     "old_cycles": 6487.0,
+     "op": "attn.gather"
     },
     {
      "cls": "su",
@@ -1263,20 +1270,20 @@
    },
    "solved_path_changed": true,
    "tau": null,
-   "tok_s": 854.4,
-   "tok_s_solved": 841.4,
+   "tok_s": 848.1,
+   "tok_s_solved": 835.3,
    "workload": "ar"
   },
   "mtp": {
-   "T_cycles_fixed": 1790616.2,
-   "T_cycles_solved": 1790616.2,
+   "T_cycles_fixed": 1801047.4,
+   "T_cycles_solved": 1801047.4,
    "base_T_cycles": 1381860.8,
    "base_tok_s": 3611.7,
    "by_grade": {
     "measured-current-RTL": 116078.0,
     "measured-newest-element-RTL": 220095.0,
-    "measured-old-RTL": 313359.4,
-    "measured-release-RTL": 817331.0,
+    "measured-old-RTL": 304417.6,
+    "measured-release-RTL": 836704.0,
     "modelled-PHY": 187823.6,
     "priced": 135929.2
    },
@@ -1795,10 +1802,10 @@
      "slot": "wave.scan_d_l20split_k6"
     }
    ],
-   "pct_measured": 64.42,
-   "pct_measured_on_chip": 71.97,
-   "pct_modelled_phy": 10.49,
-   "per_accepted_cycles": 430540.1,
+   "pct_measured": 65.12,
+   "pct_measured_on_chip": 72.7,
+   "pct_modelled_phy": 10.43,
+   "per_accepted_cycles": 433048.2,
    "per_op": [
     {
      "cls": "field",
@@ -1964,6 +1971,16 @@
      "op": "attn.q_quant"
     },
     {
+     "cls": "hbm",
+     "cycles": 17024.0,
+     "grades": {
+      "measured-release-RTL": 17024.0
+     },
+     "n_crit": 32,
+     "old_cycles": 5698.8,
+     "op": "attn.window_load"
+    },
+    {
      "cls": "ctl",
      "cycles": 15357.0,
      "grades": {
@@ -2063,23 +2080,14 @@
     },
     {
      "cls": "select",
-     "cycles": 6487.0,
+     "cycles": 5593.0,
      "grades": {
-      "measured-old-RTL": 6487.0
+      "measured-old-RTL": 3244.0,
+      "measured-release-RTL": 2349.0
      },
      "n_crit": 8,
      "old_cycles": 6487.0,
      "op": "attn.gather"
-    },
-    {
-     "cls": "hbm",
-     "cycles": 5698.8,
-     "grades": {
-      "measured-old-RTL": 5698.8
-     },
-     "n_crit": 32,
-     "old_cycles": 5698.8,
-     "op": "attn.window_load"
     },
     {
      "cls": "su",
@@ -2840,8 +2848,8 @@
    },
    "solved_path_changed": false,
    "tau": 4.159,
-   "tok_s": 2787.2,
-   "tok_s_solved": 2787.2,
+   "tok_s": 2771.1,
+   "tok_s_solved": 2771.1,
    "workload": "mtp"
   }
  },

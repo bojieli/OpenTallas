@@ -128,14 +128,14 @@ FSMALL (69b66ae1f): attn.a_proj 628 -> 531 folded; ffn.router and attn.idx.q pen
 Biggest remaining measured-old-RTL: ffn.experts_gu/down in non-L0 layer classes, attn.wq_b, ffn.router, attn.a_proj (FSMALL running),
 attn.gather, MTP draft blocks. Cross-die MU co-sim job u relaunched as out_u4 (--mem 200; u2/u3 were memcg OOM at 40 GB).
 
-## TOKSIM-S81C update (10-19 23:55 PT) -- supersedes the numbers above
+## TOKSIM-S81C update (10-20 00:20 PT) -- supersedes the numbers above
 
 | workload | cycles / token (fixed) | solved | tok/s | measured | on-chip measured | PHY modelled |
 |---|---:|---:|---:|---:|---:|---:|
-| 1 user AR | 1,404,451.5 | 1,426,115.0 | **854.4** | 78.8 % | 89.9 % | 12.3 % |
-| 1 user MTP (tau 4.159) | 1,790,616.2 | 1,790,616.2 | **2,787.2** | 64.4 % | 72.0 % | 10.5 % |
-| 46 users AR | per-user bound | | **39,304 agg** | | | |
-| 10 users MTP | per-user bound | | **27,872 agg** | | | |
+| 1 user AR | 1,414,882.7 | 1,436,546.2 | **848.1** | 79.6 % | 90.7 % | 12.2 % |
+| 1 user MTP (tau 4.159) | 1,801,047.4 | 1,801,047.4 | **2,771.1** | 65.1 % | 72.7 % | 10.4 % |
+| 46 users AR | per-user bound | | **39,014 agg** | | | |
+| 10 users MTP | per-user bound | | **27,711 agg** | | | |
 
 Sensitivity (not folded): the S81-RATEFIX wq_b pipelined calendar P126 (1,987, bit-exact vs golden) gives AR 889.2 / MTP 2,875.3
 tok/s once the die-level DV compiler emits it.
@@ -161,5 +161,9 @@ New records (all Verilator 5.050, every returned row checked against the model g
 - **XUG2** XDIE job u on guard 2 / win 3: out_u5 ep5 oth-ubuntu-554994-1792476654 (parallel to guard-1 out_u4 ep7); MU rows stay
   per-user bound until it lands.
 
-Still old: attn.a_proj sparse classes 18.6k, attn.gather 6.5k, window_load 5.7k, idx.score/topk_local non-fixture layers 11.2k (AR);
+- **GATH** attn.gather 808 -> 577 (L2/8/14), 819 -> 618 (L20), L24..36 old (no fixture); SEL_IDS scanner 1 id/cycle over 512 ids
+  (2 of 16 owner views so far, 28-view job ep6 oth-ubuntu-447079-1792480437 may raise it). attn.window_load all classes -> 532
+  (HBM-latency bound; compiled W_SLACK 560 assumes HBM latency <= 56: NOTICE). `claude/toksim-s81c-gath-1019@cf69c2a03`.
+
+Still old: attn.a_proj sparse classes 18.6k, attn.gather L24..36, idx.score/topk_local non-fixture layers 11.2k (AR);
 MTP adds wave.busy 161.5k, mc.* 28.9k, draft-block layers.
