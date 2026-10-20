@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "dsdv_sh_lk_s10c",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T19:25:00-07:00",
+ "gate_commit": "0df07925f",
+ "checklist": {
+  "lattice": "4 SRAM macros on lattice, two per row, channels clear",
+  "std_cell_band": "std cells in a central band between the macros, no red density",
+  "pin_spread": "faces ~99% of pin slots used (pin-limited outline, 2.7-3.3 pins/um); watch escape in GRT",
+  "clock_entry": "ck pin-flop spread 76.1/66.2 TT/FF (<=80), insertion 450.6 guidance",
+  "shape": "fill 37-38% pin-bound; flop-enable trees ~550-600 loads remain (s10d successor in parallel)"
+ },
+ "notes": "COORD 10-19 19:30: approved to route (critical S81 PAR.4.1; >1 failed route, structural successor); s10d with kept enable copies runs in parallel",
+ "geometry_sha256": "e32f96b62d3dde52b2a2d8c88e957ce8477bdd0fb02c4a02c3a675072cd56a1d"
+}
