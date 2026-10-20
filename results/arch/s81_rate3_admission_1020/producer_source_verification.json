@@ -55,5 +55,13 @@
   "causal_negatives": 12,
   "capture_contracts": 64,
   "capture_scope": "decode-only: not FIN/arbitration/native CAP/VP/consumer proof"
+ },
+ "aproj_cap_plan": {
+  "source": "de1ee5768",
+  "all_imported_match": true,
+  "count": 19,
+  "goldens": 2,
+  "causal_negatives": 4,
+  "scope": "single-frame logical FIN constrained plan only"
  }
 }
