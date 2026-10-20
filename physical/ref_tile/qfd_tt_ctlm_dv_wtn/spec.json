@@ -58,7 +58,8 @@
  "inhold": false,
  "outhold": false,
  "pin_regs": {
-  "enable": true
+  "enable": false,
+  "reason": "the SAFE_PHYS controller already registers every input (f_* pin registers, reset landed rs1->rs2 + kept leaves) and every output (tr_q/ca_q/awc_q/fault/group regs): +2 edges total, priced in tools/qwen_static_schedule/f16_calr_edges.py; kit pin regs would add 2 more unpriced edges"
  },
  "reset_landing": {
   "enable": true,

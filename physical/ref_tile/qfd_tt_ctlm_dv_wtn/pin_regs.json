@@ -1,21 +1,6 @@
 {
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "qfd_tt_ctlm_dv_wtn",
- "enable": true,
- "clock": "ck",
- "clock_ports": [
-  "ck"
- ],
- "reset_ports": [
-  "rst_n"
- ],
- "exclude": "",
- "reset": "",
- "reason": "",
- "latency_cycles": {
-  "input": 1,
-  "output": 1
- },
- "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
- "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+ "enable": false,
+ "reason": "the SAFE_PHYS controller already registers every input (f_* pin registers, reset landed rs1->rs2 + kept leaves) and every output (tr_q/ca_q/awc_q/fault/group regs): +2 edges total, priced in tools/qwen_static_schedule/f16_calr_edges.py; kit pin regs would add 2 more unpriced edges"
 }
