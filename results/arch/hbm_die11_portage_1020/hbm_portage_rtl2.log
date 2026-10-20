@@ -1,0 +1,37 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   587 GB (avail 524, growth 113, headroom 0, waiters 0/0 GB) load 36/128 running 15 disk 3618 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-36438-1792525851 after 0 s
+RTL_PRODUCTION_SUBSET ['rf1427', 'rf1047'] instances 53
+Verilator 5.050 2026-07-01 rev v5.050
+RELAY_LOCKSTEP_TB lane buses 2 forks 1 landings 3 mut None applied -
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 325ns; walltime 0.000 s; speed 1.957 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+pos EXPECTED_VERDICT_PASS
+RELAY_LOCKSTEP_TB lane buses 2 forks 1 landings 3 mut lane_stage applied True
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 325ns; walltime 0.000 s; speed 1.997 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+lane_stage EXPECTED_VERDICT_PASS
+RELAY_LOCKSTEP_TB lane buses 2 forks 1 landings 3 mut bitswap applied True
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 325ns; walltime 0.000 s; speed 2.016 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+bitswap EXPECTED_VERDICT_PASS
+RELAY_LOCKSTEP_TB lane buses 2 forks 1 landings 3 mut branch_drop applied True
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 325ns; walltime 0.000 s; speed 1.983 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+branch_drop EXPECTED_VERDICT_PASS
+RELAY_LOCKSTEP_TB lane buses 2 forks 1 landings 3 mut land_k applied True
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 325ns; walltime 0.000 s; speed 2.052 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+land_k EXPECTED_VERDICT_PASS
+PORTAGE_RTL_COHORT_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-36438-1792525851): exit 0

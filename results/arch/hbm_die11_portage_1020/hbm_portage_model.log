@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   609 GB (avail 527, growth 100, headroom 0, waiters 0/0 GB) load 24/128 running 15 disk 3618 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-34020-1792525708 after 0 s
+{"buses": 2312, "tile_categories": {"land0136": 10, "land048": 1, "land136": 803, "land48": 369, "land624": 417, "lh0136": 226, "lh0136_f2": 15, "lh0136_f3": 16, "lh048": 369, "lh0624": 417, "lh136": 7101, "lh136_f2": 357, "lh136_f3": 71, "lh48": 10439, "lh624": 9972, "old136": 10658, "old48": 11182, "old624": 10738}, "kinds": {"old": 1544, "fc": 710, "fc136lane": 58}, "fork_buses": 167, "inter_region_buses": 768, "equal_age_max_depth_by_domain": {"stream": 35, "hbm": 29, "serial": 37}} 79 hops over reach, 0 problems []
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-34020-1792525708): exit 0

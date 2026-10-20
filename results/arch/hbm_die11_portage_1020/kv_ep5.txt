@@ -1,0 +1,6 @@
+kvs14r-4f127317d-gen9d14rd
+2026-10-20 12:05:02 PDT kvs14r 4f127317d: lane views 16 committed (lane_views.tsv); prep start 4f127317d8e936d39be7b58359f53531726359f1
+2026-10-20 12:21:25 PDT PREP FAIL (prep.log):   File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4f127317d-gen9d14rd/tools/qwen_kv_die/kv_expand.py", line 527, in main     raise ValueError(f'{inst}: overlapping closed leaves {cell} / {other[0]}') ValueError: head_WS_0_0: overlapping closed leaves g_t[11].u_stk / g_t[11].u_l8 
+kvs14r-4f127317d-gen9d14sd
+2026-10-20 12:05:11 PDT kvs14r 4f127317d: lane views 16 committed (lane_views.tsv); prep start 4f127317d8e936d39be7b58359f53531726359f1
+2026-10-20 12:21:40 PDT PREP FAIL (prep.log):   File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4f127317d-gen9d14sd/tools/qwen_kv_die/kv_expand.py", line 527, in main     raise ValueError(f'{inst}: overlapping closed leaves {cell} / {other[0]}') ValueError: head_WS_0_0: overlapping closed leaves g_t[11].u_stk / g_t[11].u_l8 

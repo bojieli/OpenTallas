@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   591 GB (avail 523, growth 108, headroom 0, waiters 0/0 GB) load 36/128 running 16 disk 3618 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-36707-1792525865 after 1 s
+{"buses": 2312, "tile_categories": {"land0136": 10, "land048": 1, "land136": 803, "land48": 368, "land624": 414, "lh0136": 226, "lh0136_f2": 15, "lh0136_f3": 16, "lh048": 368, "lh0624": 414, "lh136": 7101, "lh136_f2": 357, "lh136_f3": 71, "lh48": 10434, "lh624": 9952, "old136": 10658, "old48": 11171, "old624": 10661}, "kinds": {"old": 1548, "fc": 706, "fc136lane": 58}, "fork_buses": 167, "inter_region_buses": 764, "equal_age_max_depth_by_domain": {"stream": 35, "hbm": 29, "serial": 37}} 79 hops over reach, 4 problems ['PORT-AGE: pgp_SE.command -> su_SE0.vmw_cmd split over forwarded AND plain rows (align at the landing plan)', 'PORT-AGE: pgp_NE.command -> sucore_NE.red_cmd split over forwarded AND plain rows (align at the landing plan)', 'PORT-AGE: pgp_SW.command -> sucore_SW.red_cmd split over forwarded AND plain rows (align at the landing plan)', 'PORT-AGE: hb_vms_SW.vmstat -> vm_status4.quadrant_status split over forwarded AND plain rows (align at the landing plan)']
+DEFAULT_LAYER_EXACT_IDENTITY_PASS 63040
+DEFAULT_REPORT_EXACT_IDENTITY_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-36707-1792525865): exit 0

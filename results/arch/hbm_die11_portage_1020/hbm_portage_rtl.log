@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   605 GB (avail 524, growth 101, headroom 0, waiters 0/0 GB) load 30/128 running 15 disk 3618 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-36259-1792525834 after 0 s
+Traceback (most recent call last):
+  File "<stdin>", line 7, in <module>
+ValueError: min() iterable argument is empty
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-36259-1792525834): exit 1

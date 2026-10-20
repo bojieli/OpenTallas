@@ -1,0 +1,52 @@
+kvs14r-de48bb914-gen9d13r
+2026-10-20 12:05:32 PDT STATIONS + REACH GATE: {"stations": {"inserted": 1230, "moved_landings": 8, "refused": 0, "iterations": 5, "per_master": {"qkd_rlysh0_36": {"count": 28, "area_um2": 4702.924800000001}, "qkd_rlysh0_296": {"count": 7, "area_um2": 7185.024000000003}, "qkd_rlysh0_1": {"count": 3, "area_um2": 503.8848000000001}, "qkd_rlysh0_528": {"count": 3, "area_um2": 5318.784000000001}, "qkd_rlysh_1": {"count": 10, "area_um2": 1679.6160000000007}, "qkd_rlys_1": {"count": 2, "area_um2": 335.92320000000007}, "qkd_rlysh_36": {"count": 119, "area_um2": 19987.430399999994}, "qkd_rlys_36": {"count": 1007, "area_um2": 169137.33120000063}, "qkd_rlysh_528": {"count": 28, "area_um2": 49641.984000000004}, "qkd_rlys_528": {"count": 4, "area_um2": 7091.712}, "qkd_rlysh_296": {"count": 7, "area_um2": 7185.024000000003}, "qkd_rlys_296": {"count": 12, "area_um2": 12317.184000000007}}, "added_area_mm2": 0.285087, "lanes_with_inserted": 163, "la
+2026-10-20 12:05:32 PDT RST_PER_TREE: 71 split reset nets
+2026-10-20 12:05:32 PDT STRICT BIND (laned netlist): DIE_PORT_BIND PASS masters=69 instances=46301 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=36 pad_bits=209685 spare_out_bits=652539 unresolved_c
+2026-10-20 12:05:32 PDT FWD PRICE: {"charged": {"c->st": {"bundle": "ks_kvs_hroot_ES__o_pc", "added_edges": 2, "worst_added_signed": 2, "n": 1, "E": 2}, "st->c": {"bundle": "ks_kvpc_WS_31__o_next", "added_edges": 2, "worst_added_signed": 2, "n": 1, "E": 2}}, "per_layer": 4, "token": {"base_cycles": 249431.0, "new_cycles": 249575.0, "base_tok_s": 4810.95, "new_tok_s": 4808.17, "loss_pct": 0.058}}
+2026-10-20 12:05:43 PDT KV RST WINDOW HOPS: 50 cross-tree reset root hops on 15 nets {'EN->c': 11, 'ES->EN': 5, 'ES->c': 12, 'WN->c': 1, 'WS->WN': 4, 'WS->c': 1, 'c->EN': 4, 'c->ES': 4, 'c->WN': 4, 'c->WS': 4}
+2026-10-20 12:05:45 PDT chain start (laned netlist; OT_BIND_DIAGNOSTIC=1)
+2026-10-20 12:05:45 PDT chain start die=kv src=de48bb914 from=case
+2026-10-20 12:16:32 PDT STRICT PORT BIND v2: DIE_PORT_BIND PASS masters=69 instances=46301 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=36 pad_bits=209685 spare_out_bits=652539 unresolved_c
+2026-10-20 12:18:48 PDT RELAY_CHECK FAIL design=qwen_kv buses=51983 digest=sha256:ca253f599430d09a66438f564a2cac03ace8b7e5c13c605411660b32d2c1f7dd plan=kvs14r-de48bb914-gen9d13r-netlist schedule=compiled_schedule:tools/qwen_layerbench/layer_compile.py | KV_STATIC_PARAMS FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-de48bb914-gen9d13r/static_params.json)
+2026-10-20 12:18:48 PDT RELAY_CHECK FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-de48bb914-gen9d13r/relay_check.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT
+kv die KVJ-G2b: kvs_ctl.o_hroot_ES -> kvs_hroot_ES.i_ctl waypoint route failed (kv die: no route kvs_ctl -> wp0 (src 128 cells, dst 1 cells, avoid relays True, src0 [(284, 1206), (284, 1207), (284, 1208)], dst0 [(562, 1156)])); shortest path
+kv die: re-plan pass stopped: kv die relays: no spot for pvrs_WS_3_1 stage 0 after path index 0 at (1695.6000000000001, 11005.2) (ends slg_WS_7.rsp -> vport_WS_3.i1; path 14 cells, remaining 1414 um, wide True, src (1459, 11027, 222, 1188, (1681.0320000000002, 11916.645660064485)) dst (1957, 10778, 86, 173, (2042.904, 10864.8)))
+kv die BUNDLE_EQ: K.rx_record 11, K.tx_slot 9, K.tx_record 9, K.emb_record 0, K.kvn_writer 4, S.seq_kvn 17 (22 pad relays)
+kv die K_RT_EQ: target 80 (QK_ISSUE_AGE 91), natural 13..80, 1364 pad relays
+kv die VPORT_SIDE_EQ: RT [16, 17, 26] (tile 8), 92 pad relays
+kv die PVFIN_ALIGN: align [-1, 0] -> [0, 0], pads {'pvfst': 1, 'pvp_0': 0, 'pvp_1': 1}
+kv die LANDSLOT: 305 crossing runs, tiers {'near': 240, 'abut': 59, 'unslotted': 6}, legality {'overlaps': 0, 'outside': 0, 'examples': []}
+prep done: de48bb914 }
+kvs14r-a34df2a74-gen9d15p
+2026-10-20 12:20:53 PDT kvs14r a34df2a74: lane views 16 committed (lane_views.tsv); prep start a34df2a74fd2785fe18ddc6bc6f5e3f87462ec6e
+2026-10-20 12:21:57 PDT PREP FAIL (prep.log):                      f' at {path_[idx0_] if idx0_ < len(path_) else None} (ends {a}.{pa} -> {b}.{pb};'                      f' path {len(path_)} cells, remaining {remaining_():.0f} um, wide {st_.get("wide")}, src {ctr_dbg(a, pa)} dst {ctr_dbg(b, pb)})') ValueError: kv die relays: no spot for ks_kvs_attn__attn__tx_payload stage 8 after path index 132 at (6490.8, 27010.800000000003) (ends kvs_attn.a
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-a34df2a74-gen9d15p/tools/qwen_kv_die/kv_die.py", line 3645, in _relays
+    chain_()
+    ~~~~~~^^
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-a34df2a74-gen9d15p/tools/qwen_kv_die/kv_die.py", line 3609, in chain_
+    raise ValueError(f'kv die relays: no spot for {bid} stage {st_["k"]} after path index {idx0_}'
+                     f' at {path_[idx0_] if idx0_ < len(path_) else None} (ends {a}.{pa} -> {b}.{pb};'
+                     f' path {len(path_)} cells, remaining {remaining_():.0f} um, wide {st_.get("wide")}, src {ctr_dbg(a, pa)} dst {ctr_dbg(b, pb)})')
+ValueError: kv die relays: no spot for ks_kvs_attn__attn__tx_payload stage 8 after path index 132 at (6490.8, 27010.800000000003) (ends kvs_attn.attn__tx_payload -> d2d_kv.att_tx_payload; path 145 cells, remaining 698 um, wide True, src (5310, 24829, 302, 302, None) dst (6501, 27132, 476, 283, None))
+kvs14r-a34df2a74-gen9d15g
+2026-10-20 12:20:59 PDT kvs14r a34df2a74: lane views 16 committed (lane_views.tsv); prep start a34df2a74fd2785fe18ddc6bc6f5e3f87462ec6e
+2026-10-20 12:22:03 PDT PREP FAIL (prep.log):                      f' at {path_[idx0_] if idx0_ < len(path_) else None} (ends {a}.{pa} -> {b}.{pb};'                      f' path {len(path_)} cells, remaining {remaining_():.0f} um, wide {st_.get("wide")}, src {ctr_dbg(a, pa)} dst {ctr_dbg(b, pb)})') ValueError: kv die relays: no spot for ks_kvs_attn__attn__tx_payload stage 8 after path index 132 at (6490.8, 27010.800000000003) (ends kvs_attn.a
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-a34df2a74-gen9d15g/tools/qwen_kv_die/kv_die.py", line 3645, in _relays
+    chain_()
+    ~~~~~~^^
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-a34df2a74-gen9d15g/tools/qwen_kv_die/kv_die.py", line 3609, in chain_
+    raise ValueError(f'kv die relays: no spot for {bid} stage {st_["k"]} after path index {idx0_}'
+                     f' at {path_[idx0_] if idx0_ < len(path_) else None} (ends {a}.{pa} -> {b}.{pb};'
+                     f' path {len(path_)} cells, remaining {remaining_():.0f} um, wide {st_.get("wide")}, src {ctr_dbg(a, pa)} dst {ctr_dbg(b, pb)})')
+ValueError: kv die relays: no spot for ks_kvs_attn__attn__tx_payload stage 8 after path index 132 at (6490.8, 27010.800000000003) (ends kvs_attn.attn__tx_payload -> d2d_kv.att_tx_payload; path 145 cells, remaining 698 um, wide True, src (5310, 24829, 302, 302, None) dst (6501, 27132, 476, 283, None))
+kvs14r-ac2868769-gen9d14rf
+2026-10-20 12:10:07 PDT kvs14r ac2868769: lane views 16 committed (lane_views.tsv); prep start ac286876938a459ab6c8ab828d3ddb15b250ba30
+2026-10-20 12:42:27 PDT PREP FAIL (prep.log):   File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-ac2868769-gen9d14rf/tools/qwen_kv_die/kv_expand.py", line 527, in main     raise ValueError(f'{inst}: overlapping closed leaves {cell} / {other[0]}') ValueError: head_WS_0_0: overlapping closed leaves g_t[11].u_stk / g_t[11].u_l8 
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-ac2868769-gen9d14rf/tools/qwen_kv_die/kv_expand.py", line 647, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-ac2868769-gen9d14rf/tools/qwen_kv_die/kv_expand.py", line 527, in main
+    raise ValueError(f'{inst}: overlapping closed leaves {cell} / {other[0]}')
+ValueError: head_WS_0_0: overlapping closed leaves g_t[11].u_stk / g_t[11].u_l8

@@ -1,0 +1,24 @@
+dv2f20g5
+2026-10-20 09:49:46 PDT DIE CLOCK PHYS start (chain_dieclk.sh rG5: on case_r22k/floorplan_pdn.odb, before GRT)
+2026-10-20 10:47:50 PDT DIE_REPEATERS PASS repeaters=213385 max_wire=160 slew=260 removed=0 resized=0 non_buffer=0 skip_nets=61258 longest=447.9 over_reach(425)=7 post_slew=17 post_cap=0 legalize='spread util=0.30 bin_um=8.64 passes=213385 unplaced=0' WARN(1) max_disp=128.47: repeater displaced 128.5 um > max_wire/2 = 80.0 um by the spread: a die lane likely runs over a block (check the plan path; post-GRT slew decides)
+2026-10-20 10:47:50 PDT full-die GRT exit=0 overflow=0 ([INFO GRT-0018] Total wirelength: 154565918 um)
+2026-10-20 10:47:50 PDT STA tt: physical die clock arrivals (puts "OT_DIE_CLOCK_PHYS col=late measured=14539 ideal=1 of 14540")
+2026-10-20 10:50:08 PDT STA tt: tns max -43991816.00 wns max -9036.30 worst slack max -9036.30 
+2026-10-20 10:50:14 PDT STA ff: physical die clock arrivals (puts "OT_DIE_CLOCK_PHYS col=early measured=14539 ideal=1 of 14540")
+2026-10-20 10:53:25 PDT STA ff: tns max -22647900.00 wns max -7201.51 worst slack min -7350.64 
+2026-10-20 10:53:25 PDT STA ss: die clock NOT measured at SS (sensitivity corner; ideal die clock)
+2026-10-20 10:56:49 PDT STA ss: tns max -4259058.50 wns max -3266.48 worst slack max -3266.48 
+2026-10-20 10:56:50 PDT REGIONAL VERDICT (STA window): QCLK_REGIONAL FAIL intra=ok landed=FAIL drift=ok spine=ok | intra over 0/942 worst  | land owed links 185 bits N50267+G0 noroot 8 bump 3 | lane drift max 1536.3 >window 2300.0 0/421 (info >T/2 70) | STA L5 window_fail 0 D {'4': 359, '8': 40} | spine cells 4594 levels 147 pads 0 model 8316.8
+2026-10-20 10:57:07 PDT chain done
+dv2f20g5b
+2026-10-20 09:50:04 PDT DIE CLOCK PHYS start (chain_dieclk.sh rG5: on case_r22k/floorplan_pdn.odb, before GRT)
+2026-10-20 10:47:57 PDT DIE_REPEATERS PASS repeaters=213385 max_wire=160 slew=260 removed=0 resized=0 non_buffer=0 skip_nets=61395 longest=447.9 over_reach(425)=7 post_slew=17 post_cap=0 legalize='spread util=0.30 bin_um=8.64 passes=213385 unplaced=0' WARN(1) max_disp=128.47: repeater displaced 128.5 um > max_wire/2 = 80.0 um by the spread: a die lane likely runs over a block (check the plan path; post-GRT slew decides)
+2026-10-20 10:47:57 PDT full-die GRT exit=0 overflow=0 ([INFO GRT-0018] Total wirelength: 154596278 um)
+2026-10-20 10:47:57 PDT STA tt: physical die clock arrivals (puts "OT_DIE_CLOCK_PHYS col=late measured=14540 ideal=0 of 14540")
+2026-10-20 10:50:15 PDT STA tt: tns max -43967708.00 wns max -15592.50 worst slack max -15592.50 
+2026-10-20 10:50:21 PDT STA ff: physical die clock arrivals (puts "OT_DIE_CLOCK_PHYS col=early measured=14540 ideal=0 of 14540")
+2026-10-20 10:53:47 PDT STA ff: tns max -22628122.00 wns max -12581.71 worst slack min -12734.34 
+2026-10-20 10:53:48 PDT STA ss: die clock NOT measured at SS (sensitivity corner; ideal die clock)
+2026-10-20 10:57:02 PDT STA ss: tns max -4258868.00 wns max -3266.46 worst slack max -3266.46 
+2026-10-20 10:57:03 PDT REGIONAL VERDICT (STA window): QCLK_REGIONAL FAIL intra=ok landed=FAIL drift=FAIL spine=ok | intra over 0/942 worst  | land owed links 185 bits N50267+G0 noroot 8 bump 3 | lane drift max 2568.9 >window 2300.0 3/421 (info >T/2 70) | STA L5 window_fail 0 D {'4': 359, '8': 40} | spine cells 4719 levels 272 pads 0 model 15739.2
+2026-10-20 10:57:19 PDT chain done

@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   611 GB (avail 528, growth 100, headroom 0, waiters 0/0 GB) load 27/128 running 15 disk 3618 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-34981-1792525770 after 1 s
+ACTUAL_PORT_MODEL 8530 unequal 0 []
+ORIGINAL_UNEQUAL 7 [("('pgp_NW', 'command', 'su_NW0', 'vmw_cmd')", [(7, 'rf0982', True), (34, 'rf1927', True)]), ("('pgp_SE', 'command', 'su_SE0', 'vmw_cmd')", [(9, 'rf0983', False), (31, 'rf1928', True)]), ("('pgp_NE', 'command', 'sucore_NE', 'red_cmd')", [(4, 'rf1038', False), (37, 'rf1440', True)]), ("('pgp_NW', 'command', 'sucore_NW', 'red_cmd')", [(20, 'rf1039', True), (24, 'rf1441', True)])]
+REMOVED_PAD_CAUGHT ('rf0982', 'su_NW0') 1
+CHANGED_BUSES 73 INSTANCES 6596 E_UNKNOWN 1013 HOPS_OVER 79
+EXACT_TAIL_MODEL {"data_positions": 7170947, "instances": 47044, "straps_remastered": 3024, "tail_widths": 1035, "variants": 60, "buses": 2312}
+EXACT_TAIL_MODEL {"data_positions": 7170947, "instances": 47044, "straps_remastered": 3024, "tail_widths": 1035, "variants": 60, "buses": 2312}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-34981-1792525770): exit 0
