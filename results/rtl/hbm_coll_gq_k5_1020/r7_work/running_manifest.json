@@ -1,0 +1,16 @@
+{
+  "source_commit": "0e95437c6",
+  "helpers_commit": "c08afcc64",
+  "native_session": 60954,
+  "native_run": "ot-epyc6:/srv/opentallas-scratch/codex-gq7-native-r7",
+  "ia_session": 50411,
+  "ia_run": "ot-epyc9:/srv/opentallas-scratch/claude/codex-gq7-r7-ia-1020/bench_ia1",
+  "ia_scope": "productionVM_RT74/ISSUE_AHEAD1 gold+fault5; inheritedR6mutants remain distinct",
+  "native_scope": "canonical mappedsynthesis+normalise+census ONLY; no floorplan/CTS/layout",
+  "source_sha256": {
+    "ot_hgi_coll_gq.sv": "9b5dbc3f0ec7c50482396508dbd5ff4b07499da02ba32246b674dc09696341cf",
+    "ot_hgi_coll_gq_target16.sv": "dac3b2bd32154dbdc72c0657119c95e7acc2813baa8b0d694c64138eabf147fd"
+  },
+  "cycles_added": 0,
+  "geometry": "HOLD35f39f06c no fullsource405 model"
+}
