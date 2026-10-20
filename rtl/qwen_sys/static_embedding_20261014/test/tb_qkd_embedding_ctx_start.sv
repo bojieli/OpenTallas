@@ -10,22 +10,22 @@ module tb_qkd_embedding_ctx_start;
 `ifndef MUT
 `define MUT 0
 `endif
-    reg ck = 0, rst_n = 0;
+    reg ck = 0, rst_n = 1;
     always #1 ck = ~ck;
     reg ctx_v = 0, ctx_o = 0; reg [35:0] ctx_h = 0; reg [60:0] ctx_d = 0;
-    wire st; wire [17:0] tok; wire [15:0] tep; wire [60:0] own; wire cf;
-    qkd_embedding_ctx_start #(.MUT(`MUT)) dut (.ck(ck), .rst_n(rst_n), .ctx_v(ctx_v), .ctx_observed_v(ctx_o), .ctx_hdr(ctx_h),
+    wire row_open; wire st; wire [17:0] tok; wire [15:0] tep; wire [60:0] own; wire cf;
+    qkd_embedding_ctx_start #(.MUT(`MUT)) dut (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(ctx_v), .ctx_observed_v(ctx_o), .ctx_hdr(ctx_h),
         .ctx_owner(ctx_d), .start(st), .token(tok), .epoch(tep), .owner(own), .fault(cf));
     reg w_v = 0, w_sc = 0; reg [511:0] w_d = 0; reg [17:0] w_t = 0; reg [5:0] w_i = 0; reg [15:0] w_e = 0; reg slot = 0;
     wire tx_v; wire [547:0] tx_p; wire rf, rr;
-    qkd_embedding_row_tx u_rowtx (.ck(ck), .rst_n(rst_n), .fill_begin(st), .fill_token(tok), .fill_epoch(tep),
+    qkd_embedding_row_tx_ctx u_rowtx (.ck(ck), .rst_n(rst_n), .fill_begin(st), .fill_token(tok), .fill_epoch(tep),
         .word_v(w_v), .word_data(w_d), .word_token(w_t), .word_index(w_i), .word_scale(w_sc), .word_epoch(w_e),
-        .emb_tx_slot(slot), .emb_tx_v(tx_v), .emb_tx_payload(tx_p), .fault(rf), .row_ready(rr));
+        .emb_tx_slot(slot), .emb_tx_v(tx_v), .emb_tx_payload(tx_p), .fault(rf), .row_ready(rr), .row_open(row_open));
     // negative instance
-    reg n_rst = 0, n_v = 0, n_o = 0; reg [35:0] n_h = 0; reg [60:0] n_d = 0;
-    wire n_st, n_f;
-    qkd_embedding_ctx_start #(.MUT(`MUT)) dneg (.ck(ck), .rst_n(n_rst), .ctx_v(n_v), .ctx_observed_v(n_o), .ctx_hdr(n_h),
-        .ctx_owner(n_d), .start(n_st), .token(), .epoch(), .owner(), .fault(n_f));
+    reg n_rst = 1, n_v = 0, n_o = 0; reg [35:0] n_h = 0; reg [60:0] n_d = 0;
+    reg n_open=0; wire n_st, n_f; wire [17:0] n_tok; wire [15:0] n_ep; wire [60:0] n_owner;
+    qkd_embedding_ctx_start #(.MUT(`MUT)) dneg (.ck(ck), .rst_n(n_rst), .row_open(n_open), .ctx_v(n_v), .ctx_observed_v(n_o), .ctx_hdr(n_h),
+        .ctx_owner(n_d), .start(n_st), .token(n_tok), .epoch(n_ep), .owner(n_owner), .fault(n_f));
 
     integer errors = 0, starts = 0, n_starts = 0;
     always @(posedge ck) begin if (st) starts <= starts + 1; if (n_st) n_starts <= n_starts + 1; end
@@ -64,9 +64,12 @@ module tb_qkd_embedding_ctx_start;
         integer i;
         begin
             for (i = 0; i < 65; i = i + 1) begin
-                @(negedge ck); slot = 1;
+                @(negedge ck);
+                if (!row_open) begin $display("FAIL: row owner released before record %0d",i);errors=errors+1;end
+                slot = 1;
                 @(negedge ck); slot = 0;
                 @(posedge ck); #0.1;
+                if (row_open !== (i != 64)) begin $display("FAIL: row drain edge %0d open=%0d",i,row_open);errors=errors+1;end
                 if (i == 0) begin
                     if (tx_p[547:530] !== t || tx_p[47:32] !== e || tx_p[15:0] !== {t[7:0], e[7:0]}) begin
                         $display("FAIL: header token %0d epoch %0d scale %h, expected the context owner token %0d epoch %0d",
@@ -95,6 +98,7 @@ module tb_qkd_embedding_ctx_start;
     endtask
 
     initial begin
+        #0.2; rst_n=0; n_rst=0; // genuine assertion edge, including four-state simulators
         wait_edges(3); rst_n = 1; n_rst = 1; wait_edges(4);
         // step 0: prompt token 7 at position 0 (first token: no RESULT exists), epoch 4 user 0, generation 1
         step(16'd4, 18'd7, 13'd0, 2'd1, 1);
@@ -113,6 +117,10 @@ module tb_qkd_embedding_ctx_start;
         step(16'd25, 18'd4242, 13'd3, 2'd2, 4);
         if (cf || rf) begin $display("FAIL: sticky fault ctx %0d row_tx %0d on legal traffic", cf, rf); errors = errors + 1; end
         // negatives (second instance, reset between cases)
+        rec(1,1,1,mkhdr(4'd13,16'd7),{2'd0,mktag(16'd7,6'd0,18'd5,13'd0,6'd0)});
+        wait_edges(3);
+        if (n_starts!=0 || n_f) begin $display("FAIL: AUTH record treated as context");errors=errors+1;end
+        n_rst=0;wait_edges(2);n_rst=1;wait_edges(2);
         rec(1, 1, 1, mkhdr(4'd12, 16'd8), {2'd0, mktag(16'd7, 6'd0, 18'd5, 13'd0, 6'd0)});        // header epoch != TAG epoch
         wait_edges(3); if (!n_f) begin $display("FAIL: header epoch mismatch not faulted"); errors = errors + 1; end
         if (n_starts != 0) begin $display("FAIL: malformed record started a fill"); errors = errors + 1; end
@@ -127,7 +135,27 @@ module tb_qkd_embedding_ctx_start;
         wait_edges(10);
         rec(1, 1, 1, mkhdr(4'd12, 16'd8), {2'd0, mktag(16'd8, 6'd0, 18'd6, 13'd1, 6'd0)});        // closer than MIN_GAP
         wait_edges(3); if (!n_f) begin $display("FAIL: two owners inside one row window not faulted"); errors = errors + 1; end
-        if (errors == 0) $display("PASS tb_qkd_embedding_ctx_start: 4 steps, %0d fills, header owner = context owner, 4 negatives faulted", starts);
+        if (n_tok !== 18'd5 || n_ep !== 16'd7 || n_owner !== {2'd0, mktag(16'd7, 6'd0, 18'd5, 13'd0, 6'd0)} || n_starts != 1) begin
+            $display("FAIL: early owner changed publication token=%0d epoch=%0d starts=%0d", n_tok, n_ep, n_starts); errors = errors + 1;
+        end
+        wait_edges(80);
+        rec(1, 1, 1, mkhdr(4'd12, 16'd9), {2'd1, mktag(16'd9, 6'd0, 18'd7, 13'd2, 6'd0)});
+        wait_edges(3);
+        if (!n_f || n_tok !== 18'd5 || n_ep !== 16'd7 || n_owner !== {2'd0, mktag(16'd7, 6'd0, 18'd5, 13'd0, 6'd0)} || n_starts != 1) begin
+            $display("FAIL: sticky-fault context restarted publication token=%0d epoch=%0d starts=%0d", n_tok, n_ep, n_starts); errors = errors + 1;
+        end
+        n_rst=0;n_open=0;wait_edges(2);n_rst=1;wait_edges(2);
+        rec(1,1,1,mkhdr(4'd12,16'd20),{2'd0,mktag(16'd20,6'd0,18'd30,13'd0,6'd0)});
+        wait_edges(80);n_open=1;
+        rec(1,1,1,mkhdr(4'd12,16'd21),{2'd0,mktag(16'd21,6'd0,18'd31,13'd1,6'd0)});
+        wait_edges(3);
+        if (!n_f || n_tok!==18'd30 || n_ep!==16'd20 || n_owner!=={2'd0,mktag(16'd20,6'd0,18'd30,13'd0,6'd0)}) begin
+            $display("FAIL: full-row overlap after MIN_GAP changed owner");errors=errors+1;end
+        n_open=0;wait_edges(2);
+        rec(1,1,1,mkhdr(4'd12,16'd22),{2'd0,mktag(16'd22,6'd0,18'd32,13'd2,6'd0)});
+        wait_edges(3);
+        if (n_tok!==18'd30 || n_ep!==16'd20) begin $display("FAIL: row drain cleared sticky fault");errors=errors+1;end
+        if (errors == 0) $display("PASS tb_qkd_embedding_ctx_start: 4 steps, %0d fills, header owner = context owner, early/sticky/row-open negatives faulted", starts);
         else $display("FAIL tb_qkd_embedding_ctx_start: %0d errors", errors);
         $finish;
     end

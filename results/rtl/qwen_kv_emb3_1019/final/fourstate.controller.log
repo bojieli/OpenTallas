@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-kv-emb3-1019/final
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-emb3-1019/final
+ot-run: ot-epyc6       admits  1147 GB (avail 916, growth 113, headroom 0, waiters 0/0 GB) load 72/128 running 36 disk 5525 GB 
+ot-run: ot-epyc7       admits   610 GB (avail 528, growth 101, headroom 0, waiters 0/0 GB) load 85/96 running 22 disk 6095 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-kv-emb3-1019/final
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-emb3-1019/final
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-emb3-1019/final
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-808758-1792456815 after 0 s
+Icarus Verilog version 12.0 (stable) ()
+
+PASS tb_qkd_embedding_ctx_owner_chain: 4 steps, 4 fills, header owner = context owner, early/sticky/row-open negatives faulted
+inputs/tb_qkd_embedding_ctx_owner_chain.sv:203: $finish called at 2226000 (1ps)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-808758-1792456815): exit 0
