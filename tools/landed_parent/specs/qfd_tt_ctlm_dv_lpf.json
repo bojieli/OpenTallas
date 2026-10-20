@@ -1,6 +1,6 @@
 {
  "top": "qfd_tt_ctlm_dv_lpf",
- "why": "HF-4 (HARD-FIX 0id) 10-18: Qwen TT control cluster qfd_tt_ctlm_dv (slot 777.6 x 345.6) as a landed parent. The hard TT head h16c/h17 (ck_head TT insertion ~355 ps, FF ~292) and the calendar's 2 x 64x512 SRAMs + pin registers (macro clock entry ~0 ps) differ by >300 ps and sit ~400 um apart, so they get their own clock regions: core = u_gi (W, calendar SRAMs, pin registers), hr = u_hr + u_go + u_thru (E). Every input lands from core (port_regions) and every output leaves hr, so the cluster is the flat block + 3 edges on every output (uniform). MU-ADOPT-CTLM 10-19: u_gi calendar = qfd_dv_cmd_cal_mu NU 4 (Qwen ROM 4 users) + dh_user input (core). MU-QW-DIE 10-19: OPSEG 1 (MU-QW-B1 op-start leaf u_gi.g_op.u_leaf (core), ROM 4096x72 inside; coordinator 0ka boot context record DW5/DW6 in u_gi) + QW-DIEFIX hr pack in u_thru (zero logic, hr region). MU-DQ-CTLMCLK 10-19 (COORD 0ke/0kg): ck_core boundary spread 162/144 came from the input pin-register band (N x 460-771, S ss5/ag5) on the W-centred core root -> every input port lands from the hr region (the band lies in hr's footprint; no third die clock); ck_core keeps u_gi (calendar + SRAMs + ROM leaf); tl leaves u_gi directly (core region, S face under core: no 1088-b landing). QW-CTLM3 10-19 (LEAD2-QW): landing_reset_lead (landing rq released with the t = 0 children: first post-reset word no longer lost, MUT0 ss5 cycle 19), D 2 / E = K = 1 rings (ring storage < 2 kb; +2 edges per landing instead of +3), landing_mcp false (no data multicycle: every ring -> read cone single-cycle at full STA).",
+ "why": "HF-4 (HARD-FIX 0id) 10-18: Qwen TT control cluster qfd_tt_ctlm_dv (slot 777.6 x 345.6) as a landed parent. The hard TT head h16c/h17 (ck_head TT insertion ~355 ps, FF ~292) and the calendar's 2 x 64x512 SRAMs + pin registers (macro clock entry ~0 ps) differ by >300 ps and sit ~400 um apart, so they get their own clock regions: core = u_gi (W, calendar SRAMs, pin registers), hr = u_hr + u_go + u_thru (E). Every input lands from core (port_regions) and every output leaves hr, so the cluster is the flat block + 3 edges on every output (uniform). MU-ADOPT-CTLM 10-19: u_gi calendar = qfd_dv_cmd_cal_mu NU 4 (Qwen ROM 4 users) + dh_user input (core). MU-QW-DIE 10-19: OPSEG 1 (MU-QW-B1 op-start leaf u_gi.g_op.u_leaf (core), ROM 4096x72 inside; coordinator 0ka boot context record DW5/DW6 in u_gi) + QW-DIEFIX hr pack in u_thru (zero logic, hr region). MU-DQ-CTLMCLK 10-19 (COORD 0ke/0kg): ck_core boundary spread 162/144 came from the input pin-register band (N x 460-771, S ss5/ag5) on the W-centred core root -> every input port lands from the hr region (the band lies in hr's footprint; no third die clock); ck_core keeps u_gi (calendar + SRAMs + ROM leaf); tl leaves u_gi directly (core region, S face under core: no 1088-b landing). QW-CTLM3 10-19 (LEAD2-QW): landing_reset_lead (landing rq released with the t = 0 children: first post-reset word no longer lost, MUT0 ss5 cycle 19), D 2 / E = K = 1 rings (ring storage < 2 kb; +2 edges per landing instead of +3), landing_mcp false (no data multicycle: every ring -> read cone single-cycle at full STA). QW-CTLM5 10-19 (LEAD3-QW): D 4 / E = K = 2 rings with the LANDING-CONTRACT L5 multicycle (-setup 2 -hold 3, ring -> read cells): safe4's D2/K1 single-cycle hr -> core crossing failed the gate cross_clock check (-158.1 ps: the hr root launches ~207 ps after core -- it is co-timed with the h16c ck_head reference -- plus 210 ps inter-clock reserve, on ss5 u_lpl_5); the D4/K2 window (-2T + t_hold < dL < 2T - t_cq - t_setup) absorbs the regional phase by construction. +1 edge per landing (outputs +6, tl +3, pw/kok/kwd/native_ret +6: the MU-DQ-CTLMCLK offsets the die schedule had before QW-CTLM3), ring storage ~3.8 kb in 24-bit local rings (no dual-clock SRAM macro). F16WTN / PRIVATE_CALR ports (claude/qw-f16ctlm-port-1019): f16_auth / f16_obs land from hr, f16_st / table_req leave hr (u_thru). pw lands from CORE (port_regions pw core; its N pins move beside ck_core, x205-221): the F16 port makes u_gi (core) a pw reader, so an hr pw would need two 6-deep 75-b alignment pads (900 flops, a flop delay line); from core it is read directly by u_gi and landed once to u_hr / u_go, no pad.",
  "sources": [
   "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv"
  ],
@@ -38,7 +38,11 @@
   "rtl/qwen_dv/qfd_dv_hr_pack.sv",
   "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
   "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
-  "rtl/qwen_dv/qfd_mu_context_guard.sv"
+  "rtl/qwen_dv/qfd_mu_context_guard.sv",
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv",
+  "rtl/qwen_dv/qfd_dv_typed_witness_control.sv",
+  "rtl/qwen_dv/qfd_dv_calendar_rom.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v"
  ],
  "params": {
   "XPF_TRANSPORT_EDGES": 20,
@@ -95,7 +99,7 @@
   }
  ],
  "port_regions": {
-  "pw": "hr",
+  "pw": "core",
   "dh": "hr",
   "dh_user": "hr",
   "kok": "hr",
@@ -106,7 +110,9 @@
   "ag5": "hr",
   "ctx_x": "hr",
   "mu_fault": "hr",
-  "init_u0": "hr"
+  "init_u0": "hr",
+  "f16_auth": "hr",
+  "f16_obs": "hr"
  },
  "bench": {
   "cycles": 3000,
@@ -120,8 +126,8 @@
  "synthesis_hard_instances": [
   "u_hr"
  ],
- "D": 2,
- "E": 1,
+ "D": 4,
+ "E": 2,
  "landing_reset_lead": true,
- "landing_mcp": false
+ "landing_mcp": true
 }

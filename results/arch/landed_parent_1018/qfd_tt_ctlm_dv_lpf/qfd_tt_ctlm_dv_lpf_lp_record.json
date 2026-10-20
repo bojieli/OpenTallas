@@ -20,14 +20,48 @@
    ]
   }
  },
- "D": 2,
- "E": 1,
- "K": 1,
- "added_edges_per_landing": 2,
- "window": "(1 - 2) T + t_hold < dL < 1 T - t_cq - t_setup at TT and FF",
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
  "landings": [
   {
    "name": "0",
+   "net": "f16_auth",
+   "src_region": "hr",
+   "dst_region": "core",
+   "src_nodes": [
+    "port:f16_auth"
+   ],
+   "width": 83,
+   "readers": [
+    "u_gi.f16_auth"
+   ],
+   "ring": "u_lpl_0_w (ck_hr)",
+   "read": "u_lpl_0_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "f16_obs",
+   "src_region": "hr",
+   "dst_region": "core",
+   "src_nodes": [
+    "port:f16_obs"
+   ],
+   "width": 38,
+   "readers": [
+    "u_gi.f16_obs"
+   ],
+   "ring": "u_lpl_1_w (ck_hr)",
+   "read": "u_lpl_1_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
    "net": "dh",
    "src_region": "hr",
    "dst_region": "core",
@@ -38,13 +72,13 @@
    "readers": [
     "u_gi.dh"
    ],
-   "ring": "u_lpl_0_w (ck_hr)",
-   "read": "u_lpl_0_r (ck_core)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_2_w (ck_hr)",
+   "read": "u_lpl_2_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
   },
   {
-   "name": "1",
+   "name": "3",
    "net": "dh_user",
    "src_region": "hr",
    "dst_region": "core",
@@ -55,13 +89,13 @@
    "readers": [
     "u_gi.dh_user"
    ],
-   "ring": "u_lpl_1_w (ck_hr)",
-   "read": "u_lpl_1_r (ck_core)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_3_w (ck_hr)",
+   "read": "u_lpl_3_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
   },
   {
-   "name": "2",
+   "name": "4",
    "net": "ctx_x",
    "src_region": "hr",
    "dst_region": "core",
@@ -72,13 +106,13 @@
    "readers": [
     "u_gi.ctx_x"
    ],
-   "ring": "u_lpl_2_w (ck_hr)",
-   "read": "u_lpl_2_r (ck_core)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_4_w (ck_hr)",
+   "read": "u_lpl_4_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
   },
   {
-   "name": "3",
+   "name": "5",
    "net": "init_u0",
    "src_region": "hr",
    "dst_region": "core",
@@ -89,13 +123,13 @@
    "readers": [
     "u_gi.init_u0"
    ],
-   "ring": "u_lpl_3_w (ck_hr)",
-   "read": "u_lpl_3_r (ck_core)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_5_w (ck_hr)",
+   "read": "u_lpl_5_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
   },
   {
-   "name": "4",
+   "name": "6",
    "net": "mu_fault",
    "src_region": "hr",
    "dst_region": "core",
@@ -106,13 +140,13 @@
    "readers": [
     "u_gi.mu_fault"
    ],
-   "ring": "u_lpl_4_w (ck_hr)",
-   "read": "u_lpl_4_r (ck_core)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_6_w (ck_hr)",
+   "read": "u_lpl_6_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
   },
   {
-   "name": "5",
+   "name": "7",
    "net": "ss5",
    "src_region": "hr",
    "dst_region": "core",
@@ -123,13 +157,13 @@
    "readers": [
     "u_gi.ss5"
    ],
-   "ring": "u_lpl_5_w (ck_hr)",
-   "read": "u_lpl_5_r (ck_core)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_7_w (ck_hr)",
+   "read": "u_lpl_7_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
   },
   {
-   "name": "6",
+   "name": "8",
    "net": "ag5",
    "src_region": "hr",
    "dst_region": "core",
@@ -140,13 +174,13 @@
    "readers": [
     "u_gi.ag5"
    ],
-   "ring": "u_lpl_6_w (ck_hr)",
-   "read": "u_lpl_6_r (ck_core)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_8_w (ck_hr)",
+   "read": "u_lpl_8_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
   },
   {
-   "name": "7",
+   "name": "9",
    "net": "fab",
    "src_region": "hr",
    "dst_region": "core",
@@ -157,13 +191,13 @@
    "readers": [
     "u_gi.fab"
    ],
-   "ring": "u_lpl_7_w (ck_hr)",
-   "read": "u_lpl_7_r (ck_core)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_9_w (ck_hr)",
+   "read": "u_lpl_9_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
   },
   {
-   "name": "8",
+   "name": "10",
    "net": "s_start",
    "src_region": "core",
    "dst_region": "hr",
@@ -174,13 +208,13 @@
    "readers": [
     "u_hr.stage_start"
    ],
-   "ring": "u_lpl_8_w (ck_core)",
-   "read": "u_lpl_8_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_10_w (ck_core)",
+   "read": "u_lpl_10_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
   },
   {
-   "name": "9",
+   "name": "11",
    "net": "s_stage",
    "src_region": "core",
    "dst_region": "hr",
@@ -191,13 +225,13 @@
    "readers": [
     "u_hr.stage"
    ],
-   "ring": "u_lpl_9_w (ck_core)",
-   "read": "u_lpl_9_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_11_w (ck_core)",
+   "read": "u_lpl_11_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
   },
   {
-   "name": "10",
+   "name": "12",
    "net": "rom_ret_v",
    "src_region": "core",
    "dst_region": "hr",
@@ -208,13 +242,13 @@
    "readers": [
     "u_hr.rom_ret_i"
    ],
-   "ring": "u_lpl_10_w (ck_core)",
-   "read": "u_lpl_10_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_12_w (ck_core)",
+   "read": "u_lpl_12_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
   },
   {
-   "name": "11",
+   "name": "13",
    "net": "st",
    "src_region": "core",
    "dst_region": "hr",
@@ -229,13 +263,33 @@
     "u_hr.prog_base",
     "u_go.st"
    ],
-   "ring": "u_lpl_11_w (ck_core)",
-   "read": "u_lpl_11_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_13_w (ck_core)",
+   "read": "u_lpl_13_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
   },
   {
-   "name": "12",
+   "name": "14",
+   "net": "pw",
+   "src_region": "core",
+   "dst_region": "hr",
+   "src_nodes": [
+    "port:pw"
+   ],
+   "width": 75,
+   "readers": [
+    "u_hr.pw_v",
+    "u_hr.pw_addr",
+    "u_hr.pw_data",
+    "u_go.pw"
+   ],
+   "ring": "u_lpl_14_w (ck_core)",
+   "read": "u_lpl_14_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_14_w.* -to u_lpl_14_r.*"
+  },
+  {
+   "name": "15",
    "net": "su_acc",
    "src_region": "core",
    "dst_region": "hr",
@@ -246,13 +300,13 @@
    "readers": [
     "u_hr.x_oacc"
    ],
-   "ring": "u_lpl_12_w (ck_core)",
-   "read": "u_lpl_12_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_15_w (ck_core)",
+   "read": "u_lpl_15_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
   },
   {
-   "name": "13",
+   "name": "16",
    "net": "x_oidle",
    "src_region": "core",
    "dst_region": "hr",
@@ -263,13 +317,13 @@
    "readers": [
     "u_hr.x_oidle"
    ],
-   "ring": "u_lpl_13_w (ck_core)",
-   "read": "u_lpl_13_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_16_w (ck_core)",
+   "read": "u_lpl_16_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
   },
   {
-   "name": "14",
+   "name": "17",
    "net": "x_oprog",
    "src_region": "core",
    "dst_region": "hr",
@@ -280,13 +334,13 @@
    "readers": [
     "u_hr.x_oprog"
    ],
-   "ring": "u_lpl_14_w (ck_core)",
-   "read": "u_lpl_14_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_17_w (ck_core)",
+   "read": "u_lpl_17_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
   },
   {
-   "name": "15",
+   "name": "18",
    "net": "x_orows",
    "src_region": "core",
    "dst_region": "hr",
@@ -297,13 +351,13 @@
    "readers": [
     "u_hr.x_orows"
    ],
-   "ring": "u_lpl_15_w (ck_core)",
-   "read": "u_lpl_15_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_18_w (ck_core)",
+   "read": "u_lpl_18_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
   },
   {
-   "name": "16",
+   "name": "19",
    "net": "su_obs",
    "src_region": "core",
    "dst_region": "hr",
@@ -314,13 +368,13 @@
    "readers": [
     "u_go.su_obs"
    ],
-   "ring": "u_lpl_16_w (ck_core)",
-   "read": "u_lpl_16_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_19_w (ck_core)",
+   "read": "u_lpl_19_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
   },
   {
-   "name": "17",
+   "name": "20",
    "net": "dcs",
    "src_region": "core",
    "dst_region": "hr",
@@ -331,13 +385,47 @@
    "readers": [
     "u_go.dcs"
    ],
-   "ring": "u_lpl_17_w (ck_core)",
-   "read": "u_lpl_17_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_20_w (ck_core)",
+   "read": "u_lpl_20_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
   },
   {
-   "name": "18",
+   "name": "21",
+   "net": "g_f16_st",
+   "src_region": "core",
+   "dst_region": "hr",
+   "src_nodes": [
+    "u_gi"
+   ],
+   "width": 17,
+   "readers": [
+    "u_thru.f16_st_i"
+   ],
+   "ring": "u_lpl_21_w (ck_core)",
+   "read": "u_lpl_21_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_21_w.* -to u_lpl_21_r.*"
+  },
+  {
+   "name": "22",
+   "net": "g_treq",
+   "src_region": "core",
+   "dst_region": "hr",
+   "src_nodes": [
+    "u_gi"
+   ],
+   "width": 9,
+   "readers": [
+    "u_thru.treq_i"
+   ],
+   "ring": "u_lpl_22_w (ck_core)",
+   "read": "u_lpl_22_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_22_w.* -to u_lpl_22_r.*"
+  },
+  {
+   "name": "23",
    "net": "hu",
    "src_region": "core",
    "dst_region": "hr",
@@ -348,13 +436,13 @@
    "readers": [
     "u_thru.hu_i"
    ],
-   "ring": "u_lpl_18_w (ck_core)",
-   "read": "u_lpl_18_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_23_w (ck_core)",
+   "read": "u_lpl_23_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_23_w.* -to u_lpl_23_r.*"
   },
   {
-   "name": "19",
+   "name": "24",
    "net": "fctx",
    "src_region": "core",
    "dst_region": "hr",
@@ -365,13 +453,13 @@
    "readers": [
     "u_thru.fctx_i"
    ],
-   "ring": "u_lpl_19_w (ck_core)",
-   "read": "u_lpl_19_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_24_w (ck_core)",
+   "read": "u_lpl_24_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_24_w.* -to u_lpl_24_r.*"
   },
   {
-   "name": "20",
+   "name": "25",
    "net": "g_cmd",
    "src_region": "core",
    "dst_region": "hr",
@@ -382,13 +470,13 @@
    "readers": [
     "u_thru.cmd_i"
    ],
-   "ring": "u_lpl_20_w (ck_core)",
-   "read": "u_lpl_20_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_25_w (ck_core)",
+   "read": "u_lpl_25_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_25_w.* -to u_lpl_25_r.*"
   },
   {
-   "name": "21",
+   "name": "26",
    "net": "g_cal_program_obs",
    "src_region": "core",
    "dst_region": "hr",
@@ -399,13 +487,13 @@
    "readers": [
     "u_thru.cal_program_obs_i"
    ],
-   "ring": "u_lpl_21_w (ck_core)",
-   "read": "u_lpl_21_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_26_w (ck_core)",
+   "read": "u_lpl_26_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_26_w.* -to u_lpl_26_r.*"
   },
   {
-   "name": "22",
+   "name": "27",
    "net": "g_cal_descriptor_obs",
    "src_region": "core",
    "dst_region": "hr",
@@ -416,13 +504,13 @@
    "readers": [
     "u_thru.cal_descriptor_obs_i"
    ],
-   "ring": "u_lpl_22_w (ck_core)",
-   "read": "u_lpl_22_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_27_w (ck_core)",
+   "read": "u_lpl_27_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_27_w.* -to u_lpl_27_r.*"
   },
   {
-   "name": "23",
+   "name": "28",
    "net": "g_cal_image_ready",
    "src_region": "core",
    "dst_region": "hr",
@@ -433,13 +521,13 @@
    "readers": [
     "u_thru.cal_image_ready_i"
    ],
-   "ring": "u_lpl_23_w (ck_core)",
-   "read": "u_lpl_23_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_28_w (ck_core)",
+   "read": "u_lpl_28_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_28_w.* -to u_lpl_28_r.*"
   },
   {
-   "name": "24",
+   "name": "29",
    "net": "g_emb_start",
    "src_region": "core",
    "dst_region": "hr",
@@ -450,13 +538,13 @@
    "readers": [
     "u_thru.emb_start_i"
    ],
-   "ring": "u_lpl_24_w (ck_core)",
-   "read": "u_lpl_24_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_29_w (ck_core)",
+   "read": "u_lpl_29_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_29_w.* -to u_lpl_29_r.*"
   },
   {
-   "name": "25",
+   "name": "30",
    "net": "g_emb_token",
    "src_region": "core",
    "dst_region": "hr",
@@ -467,10 +555,10 @@
    "readers": [
     "u_thru.emb_token_i"
    ],
-   "ring": "u_lpl_25_w (ck_core)",
-   "read": "u_lpl_25_r (ck_hr)",
-   "added_edges": 2,
-   "sdc": "none: single-cycle full STA (landing_mcp false)"
+   "ring": "u_lpl_30_w (ck_core)",
+   "read": "u_lpl_30_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_30_w.* -to u_lpl_30_r.*"
   }
  ],
  "pads": [],
@@ -491,9 +579,9 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 3584,
+  "landing": 7298,
   "pads": 0,
-  "reset": 19
+  "reset": 26
  },
  "communicating_region_pairs": {
   "landed": [
@@ -506,55 +594,58 @@
  "compiler": {
   "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
   "child_offset_edges": {
-   "u_gi": 2,
-   "u_hr": 4,
-   "u_go": 4,
-   "u_thru": 4
+   "u_gi": 3,
+   "u_hr": 6,
+   "u_go": 6,
+   "u_thru": 6
   },
   "input_port_offset_edges": {
-   "pw": 4,
+   "pw": 3,
    "dh": 0,
    "init_u0": 0,
    "ctx_x": 0,
    "mu_fault": 0,
    "dh_user": 0,
-   "kok": 4,
-   "kwd": 4,
+   "kok": 6,
+   "kwd": 6,
    "fab": 0,
-   "native_ret": 4,
+   "native_ret": 6,
    "ss5": 0,
-   "ag5": 0
+   "ag5": 0,
+   "f16_auth": 0,
+   "f16_obs": 0
   },
   "output_port_offset_edges": {
-   "program_obs": 4,
-   "control_stores_ready": 4,
-   "layer_context_v": 4,
-   "native_tok": 4,
-   "native_pos": 4,
-   "command_stage": 4,
-   "cal_program_obs": 4,
-   "cal_descriptor_obs": 4,
-   "cal_image_ready": 4,
-   "dc": 4,
-   "native_cmd": 4,
-   "hr": 4,
-   "cmd": 4,
-   "tl": 2,
-   "emb_start": 4,
-   "emb_token": 4,
-   "cf": 4
+   "program_obs": 6,
+   "control_stores_ready": 6,
+   "layer_context_v": 6,
+   "native_tok": 6,
+   "native_pos": 6,
+   "command_stage": 6,
+   "cal_program_obs": 6,
+   "cal_descriptor_obs": 6,
+   "cal_image_ready": 6,
+   "dc": 6,
+   "native_cmd": 6,
+   "hr": 6,
+   "cmd": 6,
+   "tl": 3,
+   "emb_start": 6,
+   "emb_token": 6,
+   "cf": 6,
+   "f16_st": 6,
+   "table_req": 6
   },
   "reset_release_added_edges": 3,
   "status_flag_lag_edges": {},
   "schedule": "offsets",
   "ref_params": null,
-  "max_added_edges": 4
+  "max_added_edges": 6
  },
  "warnings": [],
  "landing_implementation": {
   "chunk_bits": 24,
   "direct_quarter_period_timing": false,
-  "no_data_multicycle": true,
   "reset_lead": true,
   "compensated_phase_T": [
    -0.75,
@@ -574,7 +665,7 @@
  ],
  "audit": {
   "ok": true,
-  "landings": 26,
+  "landings": 31,
   "reset_hops": 1,
   "fails": []
  }
