@@ -1,0 +1,64 @@
+{
+  "id": null,
+  "status": "READY",
+  "updated": "2026-10-20T07:54:48-07:00",
+  "stage_key": "verdict",
+  "wait": "benches",
+  "btrack": {
+    "bench_lint": {
+      "state": "done",
+      "tag": "bench_lint.a1b1",
+      "host": "ot-epyc5",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9",
+      "n": 1,
+      "started": "2026-10-20T04:17:48-07:00",
+      "stage_source": "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9/bench_src_a1"
+    },
+    "bench_rg2_exact": {
+      "state": "done",
+      "tag": "bench_rg2_exact.a1b1",
+      "host": "ot-epyc5",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9",
+      "n": 1,
+      "started": "2026-10-20T04:18:57-07:00",
+      "stage_source": "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9/bench_src_a1",
+      "wd_checked": 1792495197.8442638
+    },
+    "bench_rg2_mut_rd": {
+      "state": "done",
+      "tag": "bench_rg2_mut_rd.a1b1",
+      "host": "ot-epyc5",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9",
+      "n": 1,
+      "started": "2026-10-20T04:40:47-07:00",
+      "stage_source": "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9/bench_src_a1",
+      "wd_checked": 1792507539.9559977
+    },
+    "bench_rg2_mut_pack": {
+      "state": "running",
+      "tag": "bench_rg2_mut_pack.a1b1",
+      "host": "ot-epyc5",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9",
+      "n": 1,
+      "started": "2026-10-20T07:54:48-07:00",
+      "stage_source": "/srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9/bench_src_a1"
+    }
+  },
+  "fail_witnesses": {
+    "bench_rg2_mut_rd": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/s81ctrl_rg2_n32s_n32s_f1f7c42d9/bench_rg2_mut_rd.log",
+      "sha256": "2caa4ae063a37495903700df7d1992ecb23578a7de0c4afb488402767b860e0d",
+      "fail_regex": "TB_DSFD_CTRL FAIL",
+      "matched": "TB_DSFD_CTRL FAIL",
+      "captured_at": "2026-10-20T07:54:43-07:00",
+      "declared": null
+    }
+  },
+  "commit_full": "f1f7c42d9f58f8162b90ddaeb9ee493c6ada50a2",
+  "collected_at": "2026-10-20T15:09:11.180127+00:00",
+  "file_sha256": {
+    "build.log": "39ebee10210372c97951b235fab946c784ab19b0e674763c6d7d5cd6c58c19f8",
+    "run.log": "50cbf6fd62a5eee0ff8d4167338637d749051d5ebffeff3cdb379ebc6287f17e",
+    "fail_witness.log": "2caa4ae063a37495903700df7d1992ecb23578a7de0c4afb488402767b860e0d"
+  }
+}
