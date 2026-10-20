@@ -1,0 +1,30 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/collfj/src_88bed7633
+ot-run: ot-epyc6       admits   447 GB (avail 426, growth 113, headroom 0, waiters 0/0 GB) load 170/128 running 39 disk 5070 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/collfj/src_88bed7633
+ot-run: ot-epyc9       admits   950 GB (avail 812, growth 147, headroom 0, waiters 0/0 GB) load 89/128 running 54 disk 303 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collfj/src_88bed7633
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/collfj/src_88bed7633
+ot-run: -> ot-epyc6
+ot-heavy: request 48G is charged 13G (class 'run_coll_lp_ars_all.sh:q#' measured peak 4.1G, n=4+0 proved); the cap stays 48G
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4184444-1792476604 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+eq LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=1038 rr_v_cycles=1941 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0604
+eq LPF_EQ PASS compared=144578 cycles=3164 stimulus=q3ar_v5prog_vm_writer_tkw_ring_random
+EQ PASS
+m_refnostep EQ_MISMATCH port=del_flit cyc=2500
+m_refnostep EQ_MISMATCH port=del_flit cyc=2762
+m_refnostep LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=1038 rr_v_cycles=1941 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0604
+m_refnostep LPF_EQ FAIL mismatches=2 of 144578 stimulus=q3ar_v5prog_vm_writer_tkw_ring_random
+EQ_MUTANT m_refnostep REJECTED
+m_leafedge EQ_MISMATCH port=fault_cause cyc=2474
+m_leafedge EQ_MISMATCH port=del_flit cyc=2500
+m_leafedge EQ_MISMATCH port=vm_kq cyc=2504
+m_leafedge EQ_MISMATCH port=vm_kq cyc=2505
+EQ_MUTANT m_leafedge REJECTED
+m_rlaneext EQ_MISMATCH port=del_flit cyc=2500
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2504
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2505
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2506
+EQ_MUTANT m_rlaneext REJECTED
+COLL_LP_ARS_ALL_EXIT 0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4184444-1792476604): exit 0
