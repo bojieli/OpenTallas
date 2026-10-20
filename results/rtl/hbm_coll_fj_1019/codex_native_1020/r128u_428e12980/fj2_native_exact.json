@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.codex.native_exact.v1",
+ "source_commit": "428e12980",
+ "top": "ot_hgi_coll_fj_q2_r128",
+ "mapped_sha256": "a83a8cd33a516760b2feb43b9f62a69e1d654387f835aac0985a11e7b2207d74",
+ "leaf_sha256": "e1da21d2a602a858aeb8cfc01ae4a3c1973466efed525809c95ba1ae64a79cbf",
+ "drivers_examined": 8803,
+ "max_loads": 32,
+ "over32": [],
+ "top_drivers": [
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[10]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[11]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[12]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[13]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[14]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[15]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[16]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[17]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[18]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[19]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  },
+  {
+   "loads": 32,
+   "flops": 0,
+   "driver": "u_ot_pr_core.u.u_program.g_assembly_pipe.we_copy[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+  }
+ ],
+ "verdict": "PASS"
+}
