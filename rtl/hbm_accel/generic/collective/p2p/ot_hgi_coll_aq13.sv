@@ -143,8 +143,8 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
     // N32 (HBM-GQ7 10-20): the 2 -> 1 compare drove all 31 select bits (62 loads); three kept chunks, each with its own
     // compares, select <= 11 bits. Same value, same edge.
     wire [30:0] s2_amax_d;
-    generate for (genvar c = 0; c < 8; c = c + 1) begin : g_amax_chunk
-        localparam integer LO = 4*c, W = (c == 7) ? 3 : 4;
+    generate for (genvar c = 0; c < 3; c = c + 1) begin : g_amax_chunk
+        localparam integer LO = (c == 0) ? 0 : 1 + 10 * c, W = (c == 0) ? 11 : 10;
         (* keep="true" *) ot_hgi_coll_aq_amax_chunk #(.LO(LO), .W(W)) u_c(.a(s2a_m[0]), .b(s2a_m[1]), .fp4(s2a_fp4),
             .q(s2_amax_d[LO +: W]));
     end endgenerate
@@ -168,6 +168,17 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
     end
     wire s7_v = vl[4];
     wire s7_fp4, s7_nf;
+`ifdef OT_GQ_N32
+    wire s7_fp4_shift;
+    (* keep_hierarchy="yes",dont_touch="yes" *)ot_hdc_delay #(.W(1),.D(5))u_mode_shift(.clk(clk),.rst_n(rst_n),.d(s2_fp4),.q(s7_fp4_shift));
+    wire[31:0]s8_fp4_shift;
+    generate for(genvar c=0;c<32;c=c+1)begin:g_mode_shift
+      ot_hgi_coll_aq_control_ff #(.W(1))u_ff(.clk(clk),.d(s7_fp4_shift),.q(s8_fp4_shift[c]));
+    end endgenerate
+`else
+    wire[31:0]s8_fp4_shift=s8_fp4c;
+`endif
+
     ot_hdc_delay #(.W(2), .D(5)) u_d27 (.clk(clk), .rst_n(rst_n), .d({s2_fp4, s2_nf}), .q({s7_fp4, s7_nf}));
 
     // elements, from S0 to S8 (nine registers: S1, S2, S2b, S3-S7, S8)
@@ -236,7 +247,7 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
         end
     endfunction
     generate for(genvar lane=0;lane<32;lane=lane+1)begin:g_shift_controls
-        wire[4:0]d=gq_shift(x8[32*lane+23+:8],s8_ec[lane/EC8_GROUP],s8_fp4c[lane/EC8_GROUP]);
+        wire[4:0]d=gq_shift(x8[32*lane+23+:8],s8_ec[lane/EC8_GROUP],s8_fp4_shift[lane/EC8_GROUP]);
         wire[50:0]shift_stage[0:5];
         assign shift_stage[0]={s9_sig[lane],27'd0};
         for(genvar stage=0;stage<5;stage=stage+1)begin:g_stage
@@ -420,10 +431,10 @@ endmodule
 // N32: bits [LO +: W] of max(max(a, b), floor) with the chunk's own compares (kept per chunk)
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_aq_amax_chunk #(parameter integer LO=0,W=11)(input wire[30:0]a,b,input wire fp4,output wire[W-1:0]q);
-    wire[30:0]m=(a>=b)?a:b;
     wire[30:0]f=fp4?31'h01c00000:31'h38d1b717;
-    wire[30:0]x=(m>=f)?m:f;
-    assign q=x[LO+:W];
+    // Direct three-way max avoids a 31-bit selected intermediate feeding a second comparator.
+    wire choose_a=(a>=b)&&(a>=f),choose_b=(b>a)&&(b>=f);
+    assign q=choose_a?a[LO+:W]:(choose_b?b[LO+:W]:f[LO+:W]);
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_aq_control_ff #(parameter integer W=11)(input wire clk,input wire[W-1:0]d,output wire[W-1:0]q);

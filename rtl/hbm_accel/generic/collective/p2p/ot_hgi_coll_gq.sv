@@ -606,6 +606,7 @@ module ot_hgi_coll_gq_issue #(
     end endgenerate
     // later-stage held state: as built = the copies loaded at fire; ISSUE_AHEAD > 0 = per-stage-group copies loaded from the
     // slot bank on the gather's first entry (ot_hgi_coll_gq_stage_hold: own kept slot copy, <= 16 mux bits each)
+    wire [7:0] qbg_pr_copy;
     wire qbg_pr14, qbg_qc, qbg_pp; wire [7:0] bs_pp;   // g_qbg @S_PR-1 (plain read), @S_QCAP-1, @S_P-2; g_bs @S_P-2
 `ifdef OT_GQ_FAN32
     wire[13:0]flit_r2;
@@ -656,6 +657,12 @@ module ot_hgi_coll_gq_issue #(
             .sp(ev_s[S_PR-4]), .d(f_r2x2), .q(flit_r2[5:4]));
         ot_hgi_coll_gq_stage_hold #(.W(1), .NB(NB), .SW(SW)) u_pr_qbg(.clk(clk), .a(ev_v[S_PR-2]), .b(ev_fst[S_PR-2]),
             .sp(ev_s[S_PR-3]), .d(f_qbg), .q(qbg_pr14));
+`ifdef OT_GQ_N32
+        for(genvar c=0;c<8;c=c+1)begin:g_pr_qbg_copy
+          ot_hgi_coll_gq_stage_hold #(.W(1),.NB(NB),.SW(SW))u_copy(.clk(clk),.a(ev_v[S_PR-2]),.b(ev_fst[S_PR-2]),
+           .sp(ev_s[S_PR-3]),.d(f_qbg),.q(qbg_pr_copy[c]));
+        end
+`endif
         // quantiser feed group @S_QCAP-1 (src 8 x 16, qbg, r2 x 2)
         for (genvar g = 0; g < 8; g = g + 1) begin : g_qc
             ot_hgi_coll_gq_stage_hold #(.W(16), .NB(NB), .SW(SW)) u_src(.clk(clk), .a(ev_v[S_QCAP-2]), .b(ev_fst[S_QCAP-2]),
@@ -787,11 +794,22 @@ module ot_hgi_coll_gq_issue #(
     // & sfv & scd and the plain gate !qbg & ev & pr_v reached 100-108 loads as ONE net each) and the registered one-hot
     // selects qoh / pr_oh. Same priority (QBG r, w ascending, then plain), same edge.
     // Independent request muxes per <=6-bit output chunk bound each combined enable.
+    wire [7:0] rq_iss,rq_ev;
+    wire [1:0] rq_iph[0:7];
+    wire iss_next=fire?1'b1:((iss&&ev_in_v&&ik==g_kn-10'd1)?1'b0:iss);
+    wire[1:0]iph_next=fire_iph?2'd0:(iss?((iph==2'd2)?2'd0:iph+2'd1):iph);
+    generate if(IA==0)begin:g_plain_mode_direct
+     assign qbg_pr_copy={8{g_qbg}};
+    end
+    for(genvar c=0;c<8;c=c+1)begin:g_request_state
+     ot_hgi_coll_gq_phase_copy u_phase(.clk(clk),.rst_n(rn),.d({iss_next,iph_next}),.q({rq_iss[c],rq_iph[c]}));
+     ot_hgi_coll_gq_control_ff u_valid(.clk(clk),.rst_n(rn1),.d(ev_v[S_PR-2]),.q(rq_ev[c]));
+    end endgenerate
     wire [1:0] rq_eq [0:7][0:2], rq_ep [0:7][0:2];
     generate for (genvar b = 0; b < 8; b = b + 1) begin : g_rq_en
       for (genvar c = 0; c < 3; c = c + 1) begin : g_chunk
-        (* keep = "true" *) ot_hgi_coll_gq_rq_en u_en(.qbg(g_qbg), .iss(iss), .iph(iph), .sfv(sfv), .scd(scd), .pq(qbg_pr14),
-            .pv(ev_v[S_PR-1]), .prv(pr_v), .eq(rq_eq[b][c]), .ep(rq_ep[b][c]));
+        (* keep = "true" *) ot_hgi_coll_gq_rq_en u_en(.qbg(g_qbg), .iss(rq_iss[b]), .iph(rq_iph[b]), .sfv(sfv), .scd(scd), .pq(qbg_pr_copy[b]),
+            .pv(rq_ev[b]), .prv(pr_v), .eq(rq_eq[b][c]), .ep(rq_ep[b][c]));
       end
     end endgenerate
     always @(posedge clk or negedge rn2) begin
@@ -1528,3 +1546,10 @@ endmodule
 
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_gq_decode16(input wire[3:0]a,output wire[15:0]q);assign q=16'd1<<a;endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_phase_copy(input wire clk,rst_n,input wire[2:0]d,output wire[2:0]q);
+ (* keep="true",dont_touch="true" *)reg[2:0]r;
+ always @(posedge clk or negedge rst_n)if(!rst_n)r<=0;else r<=d;
+ assign q=r;
+endmodule
