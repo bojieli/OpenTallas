@@ -1,0 +1,215 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w258_narrow#0: origin (1425.6, 259.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w258_narrow#0: origin (1555.2, 259.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w258_narrow#0: origin (1425.6, 1382.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w258_narrow#0: origin (1555.2, 1382.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w257_narrow#0: origin (302.4, 43.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w257_narrow#0: origin (432.0, 43.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w257_narrow#0: origin (820.8, 820.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_r257_narrow#0: origin (172.8, 820.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w257_narrow#0: origin (691.2, 820.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_r257_narrow#0: origin (43.2, 820.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w257_narrow#0: origin (1036.8, 1814.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_r257_narrow#0: origin (1598.4, 1814.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_w257_narrow#0: origin (1166.4, 1814.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_r257_narrow#0: origin (1728.0, 1814.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_r257_narrow#0: origin (1641.6, 1468.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_r257_narrow#0: origin (1771.2, 1468.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_r257_narrow#0: origin (1641.6, 43.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_c_land_r257_narrow#0: origin (1771.2, 43.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M8 stripes as pins, signals M2-M7, parent strap M9; children PG {'qfd_tile_nk_rp2_romleaf_rr': 'M7', 'qfd_c_land_w258_narrow': 'M5', 'qfd_c_land_r258_narrow': 'M5', 'qfd_c_stn516': 'M5', 'qfd_c_xstnw_safe': 'M5', 'qfd_c_land_w257_narrow': 'M5', 'qfd_c_land_r257_narrow': 'M5', 'qfd_c_stn514': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc8 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_c_b16_reg1b_20261019-172939.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_c_b16_reg1b_20261019-172939.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qfd_c_b16_reg1b-20261019-172939",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc8 in 121 s (gate total 521 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 4143, 'pin_rectangles': 4143, 'pin_track_checked': 4143, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 57fef3bad05ea9e092384ca0633a2290b40dffc9a998bdf9a9f7399a522ab50c",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 19 um2 + macros 846862 in core 3760492: util 0% (std-cell density 0.0% of placeable 2807721 um2; total fill 22.5%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qfd_c_b16_reg1b cells 149 flops 51 depth 11.7 ps util 0.2252 reach 0.0 um (1.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "cross_clock",
+   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
+   "fix": "fix the signoff SDC read and re-gate with --cts"
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck_c1r1: 119 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-cluster3-cb16-1019/physical/ref_tile/qfd_c_b16_reg1b/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 22% = (hard macros 846862.4 + synthesized std cells 18.7) / outline 3777269.8 um2; pin demand per face: S 1782 pins over 1534.9/1900.8 um (81%), N 1253 pins over 887.1/1900.8 um (47%), W 1031 pins over 355.3/1987.2 um (18%), E 536 pins over 991.3/1987.2 um (50%) (< 35%)",
+   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  }
+ ]
+}

@@ -112,7 +112,7 @@ if {!$::ot_ref_pre_cts} {
   set ot_qc_u [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]
   set ot_qc_r [expr {[info exists ::env(OT_BH_ROUTE_RELIEF_PS)] ? $::env(OT_BH_ROUTE_RELIEF_PS) : 0}]
   set ot_qc_io_n 0
-  foreach {ot_qc_bus ot_qc_dir ot_qc_clk} {bc in ck_c1r0 bco out ck_c1r2 la_i in ck_c1r0 lb_i in ck_c0r1 lt_o out ck_c0r1 ly_o out ck_c2r1 lf_i in ck_c1r2 lf_o out ck_c1r0 lrst_dn1_rly3_w in ck_c1r0 lrst_dn1_rly6_r in ck_c1r2 lrst_leg_2_0a_3_w in ck_c1r0 lrst_leg_2_0b_y_w in ck_c0r1 lrst_leg_1_1b_y_r in ck_c0r1 lrst_leg_3_0a_4_r in ck_c2r1 lrst_leg_4_0b_1_w in ck_c1r2 lrst_leg_4_0b_5_r in ck_c1r0} {
+  foreach {ot_qc_bus ot_qc_dir ot_qc_clk} {bc in ck_c1r0 bco out ck_c1r2 la_i in ck_c1r0 lb_i in ck_c0r1 lt_o out ck_c0r1 ly_o out ck_c2r1 lf_i in ck_c1r2 lf_o out ck_c1r0} {
     set ot_qc_a {}
     foreach p [ot_qc_pinreg_cks $ot_qc_bus $ot_qc_dir] {
       set a0 [get_property $p arrival_min_rise]; set a1 [get_property $p arrival_max_rise]

@@ -739,6 +739,9 @@
    "v": "M5"
   }
  },
+ "fill_reason": {
+  "pin_bound": "reach-bound, not area-bound: every single-cycle wire <= 405 um around a 1.17 mm A0 stand-in plus 2,152-pin landing pairs whose bank windows must stay <= ~650 um; the soft logic is 56 reset flops, so fill is the hard children only (S face 81% pin occupancy); NW pocket recorded"
+ },
  "cluster_level": 2,
  "recipe": 4,
  "hold_budget": "die",

@@ -444,7 +444,9 @@ def full_sdc():
     b = kit.index('        "  puts \\"OT_QC_IO_SDC')
     txt = kit[a:b]
     i0 = txt.index('        "  foreach {ot_qc_bus'); i1 = txt.index('"} {",', i0) + len('"} {",')
-    lst = " ".join(f"{n} {d} {c}" for (n, d, c, bb) in io)
+    # 1-bit lrst_* leaves fan out to two closed-half rsi pins through repair buffers (gate 1: no pin-register arrival
+    # found): they keep the plain 0.2 T constraint above; the data buses are referenced to their half's clock pin
+    lst = " ".join(f"{n} {d} {c}" for (n, d, c, bb) in io if bb > 1)
     txt = txt[:i0] + "        " + repr("  foreach {ot_qc_bus ot_qc_dir ot_qc_clk} {" + lst + "} {") + ",\n" + txt[i1:]
     block = eval("[" + txt + "]")
     S += block + ['  puts "OT_QC_IO_SDC $ot_qc_io_n buses referenced to their region tree"', "}"]
@@ -487,6 +489,9 @@ def spec(variant):
         pin_ranges={p["port"]: p["range_um"] for p in T}, pin_layers={p["port"]: p["layer"] for p in T},
         route=dict(pd=0.5, threads=16, peak_ram_gb=96, pin_v="M5", pin_h="M4 M6", macro_halo_um=5.4, io_hold_margin_ns=0.03, hold_margin_ns=0.03,
                    pin_balance=dict(group_max=1, h="M4 M6", v="M5")),
+        fill_reason=dict(pin_bound="reach-bound, not area-bound: every single-cycle wire <= 405 um around a 1.17 mm A0 "
+                         "stand-in plus 2,152-pin landing pairs whose bank windows must stay <= ~650 um; the soft logic is 56 "
+                         "reset flops, so fill is the hard children only (S face 81% pin occupancy); NW pocket recorded"),
         cluster_level=2, recipe=4, hold_budget="die", inhold=False, outhold=False,
         pin_regs=dict(enable=False, reason="every data port lands directly in a hard-half register (writer slot capture / reader "
                       "output flop, both closed views); rst_c1r1 is registered at the face (rpin_q) then 5 kept stages; lrst_* "
