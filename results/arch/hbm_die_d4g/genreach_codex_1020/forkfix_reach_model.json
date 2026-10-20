@@ -1,0 +1,106 @@
+{
+  "schema": "opentallas.genreach.failure_model.v1",
+  "source": "189871044",
+  "packet_sha256": "113b7ebf8ae8e6918a318d4ab343d1b0c39d883d55ae5e5fd1f9fbccd1a20d68",
+  "coverage": "Reached audit after completeness guard; original diagnostic process still live; no terminal GEN_PASS",
+  "verdict": "REACH_FAIL",
+  "audit": {
+    "buses_checked": 126817,
+    "over_buses": 18351,
+    "by_class": {
+      "not_inserted": 918,
+      "hop": 3624,
+      "hop_fwd": 13809
+    },
+    "reach_um": 405.0,
+    "basis": "lower bound: REAL LEF port pin centroids / SYNTH block rectangles; resets excluded"
+  },
+  "failed_rows": 4262,
+  "failure_reasons": {
+    "no free spot keeps every hop <= reach": 2259,
+    "no free spot of the row size inside the reach window": 2003
+  },
+  "failed_row_tile_counts": {
+    "17": 36,
+    "4": 219,
+    "2": 524,
+    "3": 181,
+    "1": 3241,
+    "13": 57,
+    "9": 4
+  },
+  "most_duplicated_failed_sites": [
+    {
+      "site": [
+        19251.1,
+        8298.4
+      ],
+      "rows": 51
+    },
+    {
+      "site": [
+        19251.1,
+        8622.4
+      ],
+      "rows": 51
+    },
+    {
+      "site": [
+        18797.4,
+        22730.1
+      ],
+      "rows": 50
+    },
+    {
+      "site": [
+        19251.1,
+        23699.2
+      ],
+      "rows": 50
+    },
+    {
+      "site": [
+        18797.4,
+        9111.3
+      ],
+      "rows": 49
+    }
+  ],
+  "concrete_row": {
+    "row": "rf0027_k02_00",
+    "tiles": [
+      "rf0027_k02_00_l0",
+      "rf0027_k02_00_l1",
+      "rf0027_k02_00_l2",
+      "rf0027_k02_00_l3",
+      "rf0027_k02_00_l4",
+      "rf0027_k02_00_l5",
+      "rf0027_k02_00_l6",
+      "rf0027_k02_00_l7",
+      "rf0027_k02_00_l8",
+      "rf0027_k02_00_l9",
+      "rf0027_k02_00_l10",
+      "rf0027_k02_00_l11",
+      "rf0027_k02_00_l12",
+      "rf0027_k02_00_l13",
+      "rf0027_k02_00_l14",
+      "rf0027_k02_00_l15",
+      "rf0027_k02_00_l16"
+    ],
+    "flow": "NS",
+    "site": [
+      13774.8,
+      14672.0
+    ],
+    "best_span_um": 545.3,
+    "offending_hop": "rf0027_k02_00_l16.b -> cij_SE.idx_tx_v",
+    "reason": "no free spot keeps every hop <= reach"
+  },
+  "actual_NS_624_lef_size_um": [
+    64.8,
+    23.76
+  ],
+  "concrete_row_width_um": 1101.6,
+  "next_model": "Per-tile actual port-pin geometry and global footprint reservation before station count/depth finalization; existing shared centroid and independently planned buses are insufficient",
+  "qualification": "No reach/STA/function/release qualification"
+}
