@@ -1,0 +1,35 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-epyc8       admits  1140 GB (avail 883, growth 85, headroom 0, waiters 0/0 GB) load 40/128 running 23 disk 298 GB 
+ot-run: ot-epyc9       admits  1202 GB (avail 944, growth 102, headroom 0, waiters 0/0 GB) load 52/128 running 30 disk 669 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-678197-1792462610 after 0 s
+HOST ot-epyc9 start Mon Oct 19 19:16:50 PDT 2026 src 19bf4121e
+Verilator 5.050 2026-07-01 rev v5.050
+error: unexpected argument '-3' found
+
+  tip: to pass '-3' as a value, use '-- -3'
+
+Usage: tail [OPTION]... [FILE]...
+
+For more information, try '--help'.
+== /srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_*.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/out/cases/lph16/*/ NH=16 nv=0 lt=0 checks=512
+SMXT raw s0=-1 sl=-1 mv=-1 e0=-1 el=-1 sum=-1 den=-1 p0=461 o0=515 ol=546
+SMXT max=0 exp=0 den=0 sink=0 norm=85 se_pin=0 den_pin=0 se_chain=0
+SMX PASS NH=16 nv=0 checks=512
+== /srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_*.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/out/cases/lph16/*/ NH=2 nv=0 lt=0 checks=64
+SMXT raw s0=-1 sl=-1 mv=-1 e0=-1 el=-1 sum=-1 den=-1 p0=461 o0=515 ol=546
+SMXT max=0 exp=0 den=0 sink=0 norm=85 se_pin=0 den_pin=0 se_chain=0
+SMX PASS NH=2 nv=0 checks=64
+== /srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_*.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/out/cases/lph16/*/ NH=16 nv=0 lt=0 checks=512
+SMXT raw s0=-1 sl=-1 mv=-1 e0=-1 el=-1 sum=-1 den=-1 p0=461 o0=515 ol=546
+SMXT max=0 exp=0 den=0 sink=0 norm=85 se_pin=0 den_pin=0 se_chain=0
+SMX PASS NH=16 nv=0 checks=512
+HOST ot-epyc9 done Mon Oct 19 19:57:16 PDT 2026
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-678197-1792462610): exit 0

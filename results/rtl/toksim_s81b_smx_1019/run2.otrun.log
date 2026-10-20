@@ -1,0 +1,137 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-epyc7       admits   968 GB (avail 742, growth 64, headroom 0, waiters 0/0 GB) load 18/96 running 11 disk 5910 GB 
+ot-run: ot-epyc8       admits  1291 GB (avail 961, growth 40, headroom 0, waiters 0/0 GB) load 17/128 running 12 disk 347 GB 
+ot-run: ot-epyc9       admits  1268 GB (avail 938, growth 11, headroom 0, waiters 0/0 GB) load 15/128 running 3 disk 663 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1057659-1792470390 after 0 s
+HOST ot-epyc9 Mon Oct 19 21:26:30 PDT 2026
+-rwxrwxr-x 1 ubuntu ubuntu 129322320 Oct 19 19:50 /srv/opentallas-scratch/claude/toksim-s81b-smx/out/obj_flat16/Vtb_toksim_smx
+-rwxrwxr-x 1 ubuntu ubuntu  20382544 Oct 19 19:21 /srv/opentallas-scratch/claude/toksim-s81b-smx/out/obj_flat2/Vtb_toksim_smx
+-rwxrwxr-x 1 ubuntu ubuntu 139452592 Oct 19 19:52 /srv/opentallas-scratch/claude/toksim-s81b-smx/out/obj_smt16/Vtb_toksim_smx
+basename: extra operand '/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_L2_attend_T640.log'
+Try 'basename --help' for more information.
+== 
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_*.log:SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/out/cases/lph16/*/ NH=16 nv=0 lt=0 checks=512
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_*.log:SMXT raw s0=-1 sl=-1 mv=-1 e0=-1 el=-1 sum=-1 den=-1 p0=461 o0=515 ol=546
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_*.log:SMXT max=0 exp=0 den=0 sink=0 norm=85 se_pin=0 den_pin=0 se_chain=0
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_*.log:SMX PASS NH=16 nv=0 checks=512
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_L0_attend_T128.log:SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L0_attend_T128 NH=16 nv=8 lt=3 checks=640
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_L0_attend_T128.log:SMXT raw s0=15 sl=22 mv=43 e0=128 el=135 sum=167 den=196 p0=469 o0=523 ol=554
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_L0_attend_T128.log:SMXT max=28 exp=92 den=32 sink=29 norm=85 se_pin=106 den_pin=61 se_chain=181
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat16_L0_attend_T128.log:SMX PASS NH=16 nv=8 checks=640
+== run_flat16_L0_attend_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L0_attend_T128 NH=16 nv=8 lt=3 checks=640
+SMXT raw s0=15 sl=22 mv=43 e0=128 el=135 sum=167 den=196 p0=469 o0=523 ol=554
+SMXT max=28 exp=92 den=32 sink=29 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=16 nv=8 checks=640
+== run_flat16_L2_attend_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L2_attend_T640 NH=16 nv=40 lt=6 checks=1152
+SMXT raw s0=15 sl=54 mv=75 e0=160 el=199 sum=231 den=275 p0=501 o0=555 ol=586
+SMXT max=60 exp=124 den=32 sink=44 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=16 nv=40 checks=1152
+== run_flat16_stress0_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress0_T640 NH=16 nv=40 lt=6 checks=1152
+SMXT raw s0=15 sl=54 mv=75 e0=160 el=199 sum=231 den=275 p0=501 o0=555 ol=586
+SMXT max=60 exp=124 den=32 sink=44 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=16 nv=40 checks=1152
+== run_flat16_stress1_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress1_T128 NH=16 nv=8 lt=3 checks=640
+SMXT raw s0=15 sl=22 mv=43 e0=128 el=135 sum=167 den=196 p0=469 o0=523 ol=554
+SMXT max=28 exp=92 den=32 sink=29 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=16 nv=8 checks=640
+== run_flat16_stress2_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress2_T640 NH=16 nv=40 lt=6 checks=1152
+SMXT raw s0=15 sl=54 mv=75 e0=160 el=199 sum=231 den=275 p0=501 o0=555 ol=586
+SMXT max=60 exp=124 den=32 sink=44 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=16 nv=40 checks=1152
+== run_flat16_stress3_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress3_T128 NH=16 nv=8 lt=3 checks=640
+SMXT raw s0=15 sl=22 mv=43 e0=128 el=135 sum=167 den=196 p0=469 o0=523 ol=554
+SMXT max=28 exp=92 den=32 sink=29 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=16 nv=8 checks=640
+== 
+basename: extra operand '/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_L2_attend_T640.log'
+Try 'basename --help' for more information.
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_*.log:SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/out/cases/lph16/*/ NH=2 nv=0 lt=0 checks=64
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_*.log:SMXT raw s0=-1 sl=-1 mv=-1 e0=-1 el=-1 sum=-1 den=-1 p0=461 o0=515 ol=546
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_*.log:SMXT max=0 exp=0 den=0 sink=0 norm=85 se_pin=0 den_pin=0 se_chain=0
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_*.log:SMX PASS NH=2 nv=0 checks=64
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_L0_attend_T128.log:SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L0_attend_T128 NH=2 nv=8 lt=3 checks=80
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_L0_attend_T128.log:SMXT raw s0=15 sl=22 mv=43 e0=128 el=135 sum=167 den=196 p0=469 o0=523 ol=554
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_L0_attend_T128.log:SMXT max=28 exp=92 den=32 sink=29 norm=85 se_pin=106 den_pin=61 se_chain=181
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_flat2_L0_attend_T128.log:SMX PASS NH=2 nv=8 checks=80
+== run_flat2_L0_attend_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L0_attend_T128 NH=2 nv=8 lt=3 checks=80
+SMXT raw s0=15 sl=22 mv=43 e0=128 el=135 sum=167 den=196 p0=469 o0=523 ol=554
+SMXT max=28 exp=92 den=32 sink=29 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=2 nv=8 checks=80
+== run_flat2_L2_attend_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L2_attend_T640 NH=2 nv=40 lt=6 checks=144
+SMXT raw s0=15 sl=54 mv=75 e0=160 el=199 sum=231 den=275 p0=501 o0=555 ol=586
+SMXT max=60 exp=124 den=32 sink=44 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=2 nv=40 checks=144
+== run_flat2_stress0_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress0_T640 NH=2 nv=40 lt=6 checks=144
+SMXT raw s0=15 sl=54 mv=75 e0=160 el=199 sum=231 den=275 p0=501 o0=555 ol=586
+SMXT max=60 exp=124 den=32 sink=44 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=2 nv=40 checks=144
+== run_flat2_stress1_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress1_T128 NH=2 nv=8 lt=3 checks=80
+SMXT raw s0=15 sl=22 mv=43 e0=128 el=135 sum=167 den=196 p0=469 o0=523 ol=554
+SMXT max=28 exp=92 den=32 sink=29 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=2 nv=8 checks=80
+== run_flat2_stress2_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress2_T640 NH=2 nv=40 lt=6 checks=144
+SMXT raw s0=15 sl=54 mv=75 e0=160 el=199 sum=231 den=275 p0=501 o0=555 ol=586
+SMXT max=60 exp=124 den=32 sink=44 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=2 nv=40 checks=144
+== run_flat2_stress3_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress3_T128 NH=2 nv=8 lt=3 checks=80
+SMXT raw s0=15 sl=22 mv=43 e0=128 el=135 sum=167 den=196 p0=469 o0=523 ol=554
+SMXT max=28 exp=92 den=32 sink=29 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=2 nv=8 checks=80
+basename: extra operand '/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_L2_attend_T640.log'
+Try 'basename --help' for more information.
+== 
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_*.log:SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/out/cases/lph16/*/ NH=16 nv=0 lt=0 checks=512
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_*.log:SMXT raw s0=-1 sl=-1 mv=-1 e0=-1 el=-1 sum=-1 den=-1 p0=461 o0=515 ol=546
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_*.log:SMXT max=0 exp=0 den=0 sink=0 norm=85 se_pin=0 den_pin=0 se_chain=0
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_*.log:SMX PASS NH=16 nv=0 checks=512
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_L0_attend_T128.log:SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L0_attend_T128 NH=16 nv=8 lt=3 checks=640
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_L0_attend_T128.log:SMXT raw s0=15 sl=22 mv=-1 e0=128 el=135 sum=-1 den=196 p0=469 o0=523 ol=554
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_L0_attend_T128.log:SMXT max=-16 exp=136 den=-136 sink=197 norm=85 se_pin=106 den_pin=61 se_chain=181
+/srv/opentallas-scratch/claude/toksim-s81b-smx/out/run_smt16_L0_attend_T128.log:SMX PASS NH=16 nv=8 checks=640
+== run_smt16_L0_attend_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L0_attend_T128 NH=16 nv=8 lt=3 checks=640
+SMXT raw s0=15 sl=22 mv=-1 e0=128 el=135 sum=-1 den=196 p0=469 o0=523 ol=554
+SMXT max=-16 exp=136 den=-136 sink=197 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=16 nv=8 checks=640
+== run_smt16_L2_attend_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/L2_attend_T640 NH=16 nv=40 lt=6 checks=1152
+SMXT raw s0=15 sl=54 mv=-1 e0=160 el=199 sum=-1 den=275 p0=501 o0=555 ol=586
+SMXT max=-16 exp=200 den=-200 sink=276 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=16 nv=40 checks=1152
+== run_smt16_stress0_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress0_T640 NH=16 nv=40 lt=6 checks=1152
+SMXT raw s0=15 sl=54 mv=-1 e0=160 el=199 sum=-1 den=275 p0=501 o0=555 ol=586
+SMXT max=-16 exp=200 den=-200 sink=276 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=16 nv=40 checks=1152
+== run_smt16_stress1_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress1_T128 NH=16 nv=8 lt=3 checks=640
+SMXT raw s0=15 sl=22 mv=-1 e0=128 el=135 sum=-1 den=196 p0=469 o0=523 ol=554
+SMXT max=-16 exp=136 den=-136 sink=197 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=16 nv=8 checks=640
+== run_smt16_stress2_T640.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress2_T640 NH=16 nv=40 lt=6 checks=1152
+SMXT raw s0=15 sl=54 mv=-1 e0=160 el=199 sum=-1 den=275 p0=501 o0=555 ol=586
+SMXT max=-16 exp=200 den=-200 sink=276 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=16 nv=40 checks=1152
+== run_smt16_stress3_T128.log
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress3_T128 NH=16 nv=8 lt=3 checks=640
+SMXT raw s0=15 sl=22 mv=-1 e0=128 el=135 sum=-1 den=196 p0=469 o0=523 ol=554
+SMXT max=-16 exp=136 den=-136 sink=197 norm=85 se_pin=106 den_pin=61 se_chain=181
+SMX PASS NH=16 nv=8 checks=640
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1057659-1792470390): exit 0

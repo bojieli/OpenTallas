@@ -1,0 +1,20 @@
+== build_flat16.log
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.681 MB sources in 92 modules, into 2656.384 MB in 1873 C++ files needing 12.408 MB
+- Verilator: Walltime 2010.023 s (elab=10.808, cvt=1497.437, bld=447.687); cpu 1559.266 s on 16 threads; allocated 66096.551 MB
+EXIT 0
+== build_flat2.log
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.681 MB sources in 92 modules, into 361.283 MB in 331 C++ files needing 1.706 MB
+- Verilator: Walltime 280.883 s (elab=1.364, cvt=171.095, bld=101.939); cpu 186.647 s on 16 threads; allocated 8328.480 MB
+EXIT 0
+== build_smt16.log
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.072 MB sources in 100 modules, into 3454.901 MB in 1934 C++ files needing 12.793 MB
+- Verilator: Walltime 2157.526 s (elab=10.919, cvt=1515.793, bld=563.155); cpu 1602.592 s on 16 threads; allocated 66110.547 MB
+EXIT 0
+== prep.log
+  File "/srv/opentallas-scratch/claude/toksim-s81b-smx/src/tools/dsrom_su_softmax.py", line 96, in golden_cases
+    s_raw = init[ops[0]["abase"]].reshape(H, T)
+ValueError: cannot reshape array of size 128 into shape (16,128)
+EXIT 1

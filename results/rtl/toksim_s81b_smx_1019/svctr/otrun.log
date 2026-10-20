@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-epyc7       admits   866 GB (avail 695, growth 89, headroom 0, waiters 0/0 GB) load 46/96 running 18 disk 5977 GB 
+ot-run: ot-epyc8       admits  1065 GB (avail 859, growth 113, headroom 0, waiters 0/0 GB) load 69/128 running 31 disk 309 GB 
+ot-run: ot-epyc9       admits   909 GB (avail 812, growth 176, headroom 0, waiters 0/0 GB) load 108/128 running 44 disk 659 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-smx
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2051895-1792462766 after 0 s
+HOST ot-epyc7 Mon Oct 19 19:19:26 PDT 2026
+SVCRS die=0 st=0 T=640 window=128 nsel=512 pairs_in=1506 go=5016 first_score=5146 last_score=5305 end=6563 root_beats=160 sc_checked=2672 sc_errors=0 order_errors=0 se_checked=2672 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=6864 verdict=PASS
+SVCRS die=0 st=0 T=428 window=128 nsel=300 pairs_in=992 go=4384 first_score=4514 last_score=4620 end=5564 root_beats=107 sc_checked=2240 sc_errors=0 order_errors=0 se_checked=2240 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=5865 verdict=PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2051895-1792462766): exit 0

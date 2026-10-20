@@ -1,0 +1,53 @@
+{
+ "cases": [
+  {
+   "name": "L0_attend_T128",
+   "layer": "L0",
+   "T": 128,
+   "source": "golden 1M token (real head x16 slots)",
+   "reference_equals_chain_checks": {
+    "e": true,
+    "o": true
+   }
+  },
+  {
+   "name": "L2_attend_T640",
+   "layer": "L2",
+   "T": 640,
+   "source": "golden 1M token (real head x16 slots)",
+   "reference_equals_chain_checks": {
+    "e": true,
+    "o": true
+   }
+  },
+  {
+   "name": "stress0_T640",
+   "layer": null,
+   "T": 640,
+   "source": "random seed 20261004 case 0",
+   "reference_equals_chain_checks": null
+  },
+  {
+   "name": "stress1_T128",
+   "layer": null,
+   "T": 128,
+   "source": "random seed 20261004 case 1",
+   "reference_equals_chain_checks": null
+  },
+  {
+   "name": "stress2_T640",
+   "layer": null,
+   "T": 640,
+   "source": "random seed 20261004 case 2",
+   "reference_equals_chain_checks": null
+  },
+  {
+   "name": "stress3_T128",
+   "layer": null,
+   "T": 128,
+   "source": "random seed 20261004 case 3",
+   "reference_equals_chain_checks": null
+  }
+ ],
+ "cases_pkl_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
+}

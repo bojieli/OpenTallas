@@ -1,0 +1,9 @@
+SMX case /srv/opentallas-scratch/claude/toksim-s81b-smx/cases/stress2_T640 NH=16 nv=40 lt=6 checks=1152
+SMXT raw s0=15 sl=54 mv=-1 e0=160 el=199 sum=-1 den=275 p0=501 o0=555 ol=586
+SMXT max=-16 exp=200 den=-200 sink=276 norm=85 se_pin=106 den_pin=76 se_chain=260
+SMX PASS NH=16 nv=40 checks=1152
+- rtl/dsrom_sys/s81_dv/su_sm/test/tb_toksim_smx.sv:142: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 33.685 s; speed 49.432 ns/s
+- Verilator: cpu 33.684 s on 1 threads; allocated 143 MB
+EXIT 0
