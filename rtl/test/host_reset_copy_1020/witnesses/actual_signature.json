@@ -1,0 +1,36 @@
+{
+  "qualification": "PROPOSAL_ONLY_AFTER_COMMON_RESET_ASSERTION; no pre-reset alias or signoff/adoption",
+  "groups": [
+    {
+      "canonical": "u_rank__u_fence.g_on.req",
+      "signature": [
+        "$_DFF_PN0_",
+        7895,
+        2,
+        4
+      ],
+      "copies": [
+        "u_rank__u_fence.g_on.req_copy[0]",
+        "u_rank__u_fence.g_on.req_copy[1]",
+        "u_rank__u_fence.g_on.req_copy[2]",
+        "u_rank__u_fence.g_on.req_copy[3]"
+      ]
+    },
+    {
+      "canonical": "u_rank__u_fence.g_on.ack_host",
+      "signature": [
+        "$_DFF_PN0_",
+        8159,
+        3,
+        2524
+      ],
+      "copies": [
+        "u_rank__u_fence.g_on.ack_copy[0]",
+        "u_rank__u_fence.g_on.ack_copy[1]",
+        "u_rank__u_fence.g_on.ack_copy[2]",
+        "u_rank__u_fence.g_on.ack_copy[3]"
+      ]
+    }
+  ],
+  "negative_checks_per_group": 5
+}
