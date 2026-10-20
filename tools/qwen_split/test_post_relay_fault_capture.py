@@ -43,3 +43,17 @@ def test_stale_source_inventory_fails_closed(tmp_path, change):
     if change == 'duplicate': rows[0]['unused_bits'] += rows[0]['unused_bits']
     if change == 'connection': rows[0]['connection'] = ''
     with pytest.raises(ValueError): prepare(die,mods,rows)
+
+
+def test_distinct_early_capture_preserves_actual_groups_and_default(tmp_path):
+    die, mods, rows = fixture(tmp_path)
+    legacy = prepare(die,mods,rows)
+    early = prepare(die,mods,rows,early_sticky=True)
+    assert all(n['master']=='qfd_fault_or' for n in legacy['nodes'])
+    assert all(n['master']=='qfd_fault_capture' for n in early['nodes'])
+    assert early['capture_flop_bits']==legacy['capture_flop_bits']
+    assert early['clock_reset_groups']==2
+    assert {n['reset'] for n in early['nodes']}=={'r0','r1'}
+    assert all(n['input_capture_first_edge']==1 for n in early['nodes'])
+    assert all(n['reset_added_direct_loads']==n['N']+2<=18 for n in early['nodes'])
+    assert not early['die_emission_eligible'] and not early['physical_qualification_eligible']

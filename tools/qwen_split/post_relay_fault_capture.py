@@ -15,7 +15,7 @@ from pathlib import Path
 import fault_inventory as F
 
 
-def prepare(die, mods, rows):
+def prepare(die, mods, rows, early_sticky=False):
     nets, _, _, instances = F.E.P.parse_die(die)
     by = {name: (master, params, cm) for master, name, params, cm in instances}
     if len(by) != len(instances):
@@ -65,13 +65,15 @@ def prepare(die, mods, rows):
             take = sources[offset:offset+16]
             name = f'fault_capture_d{domain}_n{offset//16}'
             output = f'n_{name}'
-            nodes.append(dict(instance=name, master='qfd_fault_or', N=len(take), clock=clock, reset=reset,
+            master = 'qfd_fault_capture' if early_sticky else 'qfd_fault_or'
+            nodes.append(dict(instance=name, master=master, N=len(take), clock=clock, reset=reset,
                               inputs=take, output=output, pin_to_output_edges=3,
-                              reset_release_edges=2, first_fault_output_edge=5,
+                              reset_release_edges=2, first_fault_output_edge=4 if early_sticky else 5,
+                              input_capture_first_edge=1 if early_sticky else 3,
                               flop_bits=len(take)+4, source_pin_geometry='OWED',
-                              reset_added_direct_loads=2, physical_qualification_eligible=False))
+                              reset_added_direct_loads=len(take)+2 if early_sticky else 2, physical_qualification_eligible=False))
             fragment += [f'wire {output};',
-                         f'qfd_fault_or #(.N({len(take)})) {name} (.ck({clock}), .rs({reset}), '
+                         f'{master} #(.N({len(take)})) {name} (.ck({clock}), .rs({reset}), '
                          f'.f({{{", ".join(x["signal"] for x in reversed(take))}}}), .o({output}));']
             root_bits.append(output)
         roots.append(dict(clock=clock, reset=reset, signals=root_bits,
@@ -81,6 +83,7 @@ def prepare(die, mods, rows):
     return dict(schema='opentallas.qwen.post-relay-fault-capture.v1',
                 scope='Source insertion proposal only; not emitted GEN, not a bound or qualified die',
                 physical_qualification_eligible=False, die_emission_eligible=False,
+                capture_mode='early_sticky_optin' if early_sticky else 'legacy_delayed',
                 actual_source_bits=len(seen), source_ports=len(rows), clock_reset_groups=len(groups),
                 capture_nodes=len(nodes), capture_flop_bits=sum(n['flop_bits'] for n in nodes),
                 actual_sys_face_obs_fault_input=sink_port,
@@ -100,6 +103,7 @@ def main():
     for name in ('die-v', 'port-bind', 'classification', 'out'):
         p.add_argument('--'+name, required=True, type=Path)
     p.add_argument('--commit', required=True)
+    p.add_argument('--early-sticky', action='store_true', help='source-only distinct first-edge capture leaf')
     p.add_argument('--src-prefix', action='append', default=[])
     p.add_argument('--local-rtl', action='append', default=[])
     a = p.parse_args()
@@ -108,7 +112,7 @@ def main():
     declared = {(r['master'], r['port']) for r in classified['owed'] if r['cls'] == 'FAULT_OBS'}
     mods, _ = F.E.load_ports(pb, a.commit, a.src_prefix, a.local_rtl)
     rows = F.collect(a.die_v, mods, declared)
-    out = prepare(a.die_v, mods, rows)
+    out = prepare(a.die_v, mods, rows, early_sticky=a.early_sticky)
     out['source_commit'] = a.commit
     out['sources'] = {str(f): hashlib.sha256(f.read_bytes()).hexdigest()
                       for f in (a.die_v, a.port_bind, a.classification)}
