@@ -1,0 +1,376 @@
+{
+  "schema": "opentallas.sysface32.protocol_adapter.v1",
+  "scope": "Production bare-core protocol plus actual wrapper source-capture equation provenance. No native clone retention or layout claim.",
+  "extra_boot_reset_edges": 1,
+  "extra_production_edges": 0,
+  "paired_actual_wrapper_output_bits": 1766,
+  "paired_actual_wrapper_output_ports": 56,
+  "paired_wrapper_scope": "Actual captured original pin wrapper and actual successor wrapper with its 35 same-edge producer FFs. Identical raw protocol inputs; both boot_done required at epoch anchor, compare every output from the epoch anchor with no post-anchor mask. Bare core supplies healthy protocol checks separately.",
+  "bounded_source": {
+    "physical_source_sha256": "4150a751b23181f38f67dab909a4dc683a519553f8f175be03e96328236b621e",
+    "simulation_binding_sha256": "700952ce54b332fb583733c7f03a1a767342c12e9c23117fa8221369fd5d0985",
+    "helper_sha256": "860aab547428308ac559df2084a5588948766a0cb1cf3342e09aaae04e3ccd15",
+    "change": "Only real ROM INSTANCE initialization parameter restored; +OT_ROM_DIR loads exact same compiled .viamap.hex. Same actual model, depth, data bits and read edge. No physical source edit.",
+    "boot_done_wire": "n_4216",
+    "cal_ready_wire": "n_4548"
+  },
+  "epoch_anchor": "Wait bare core and BOTH actual wrappers boot_done AND cal_ready, then four quiet edges; epoch stimulus is relative to that anchor. Compare every output from the first epoch edge, with no post-anchor mask.",
+  "actual_pin_wrapper_sha256": "91efd728457e4a562a79faf5fbbc2fa3d58ec9076509422a3c152516ae486166",
+  "successor_wrapper_sha256": "00da6286b4a644aee0cf587c9747cb9b1a0f498e4e756389a922dcd34274dc1c",
+  "successor_core_sha256": "e3f98f6efe715a1b4dcad17d6d1696044e0e3c9e58876d20558506ab119266db",
+  "original_bench_sha256": "b36c99014aebc4134dd88bc72e1bc0f523c5bca2790b7315733b5b6398271d61",
+  "prepared_bench_sha256": "925b258ba34808903622a365064b20c39b141ce57e6ce5d60d34f7adf1399abc",
+  "equations": [
+    {
+      "copy_bit": 0,
+      "record_copy_bit": 1,
+      "raw_source_bit": "prog_auth_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[0](t+1) = original_pin_q(prog_auth_slot)(t+1) = raw(prog_auth_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 1,
+      "record_copy_bit": 2,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[1](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 2,
+      "record_copy_bit": 3,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[2](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 3,
+      "record_copy_bit": 4,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[3](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 4,
+      "record_copy_bit": 5,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[4](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 5,
+      "record_copy_bit": 6,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[5](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 6,
+      "record_copy_bit": 7,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[6](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 7,
+      "record_copy_bit": 8,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[7](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 8,
+      "record_copy_bit": 9,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[8](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 9,
+      "record_copy_bit": 10,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[9](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 10,
+      "record_copy_bit": 11,
+      "raw_source_bit": "prog_witness_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[10](t+1) = original_pin_q(prog_witness_slot)(t+1) = raw(prog_witness_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 11,
+      "record_copy_bit": 12,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[11](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 12,
+      "record_copy_bit": 13,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[12](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 13,
+      "record_copy_bit": 14,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[13](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 14,
+      "record_copy_bit": 15,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[14](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 15,
+      "record_copy_bit": 16,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[15](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 16,
+      "record_copy_bit": 17,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[16](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 17,
+      "record_copy_bit": 18,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[17](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 18,
+      "record_copy_bit": 19,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[18](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 19,
+      "record_copy_bit": 20,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[19](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 20,
+      "record_copy_bit": 21,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[20](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 21,
+      "record_copy_bit": 22,
+      "raw_source_bit": "prog_context_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[21](t+1) = original_pin_q(prog_context_slot)(t+1) = raw(prog_context_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 22,
+      "record_copy_bit": 23,
+      "raw_source_bit": "prog_context_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[22](t+1) = original_pin_q(prog_context_slot)(t+1) = raw(prog_context_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 23,
+      "record_copy_bit": 24,
+      "raw_source_bit": "prog_auth_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[23](t+1) = original_pin_q(prog_auth_slot)(t+1) = raw(prog_auth_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 24,
+      "record_copy_bit": 25,
+      "raw_source_bit": "prog_auth_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[24](t+1) = original_pin_q(prog_auth_slot)(t+1) = raw(prog_auth_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 25,
+      "record_copy_bit": 26,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[25](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 26,
+      "record_copy_bit": 27,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[26](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 27,
+      "record_copy_bit": 28,
+      "raw_source_bit": "prog_auth_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[27](t+1) = original_pin_q(prog_auth_slot)(t+1) = raw(prog_auth_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 28,
+      "record_copy_bit": 29,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[28](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 29,
+      "record_copy_bit": 30,
+      "raw_source_bit": "tt_program_obs[75]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[29](t+1) = original_pin_q(tt_program_obs[75])(t+1) = raw(tt_program_obs[75])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 30,
+      "record_copy_bit": 31,
+      "raw_source_bit": "seq_program_obs[75]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[30](t+1) = original_pin_q(seq_program_obs[75])(t+1) = raw(seq_program_obs[75])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 31,
+      "record_copy_bit": 32,
+      "raw_source_bit": "prog_auth_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[31](t+1) = original_pin_q(prog_auth_slot)(t+1) = raw(prog_auth_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 32,
+      "record_copy_bit": 33,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[32](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 33,
+      "record_copy_bit": 34,
+      "raw_source_bit": "prog_auth_slot",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[33](t+1) = original_pin_q(prog_auth_slot)(t+1) = raw(prog_auth_slot)(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    },
+    {
+      "copy_bit": 34,
+      "record_copy_bit": 35,
+      "raw_source_bit": "seq_descriptor_obs[68]",
+      "clock": "posedge ck",
+      "assignment": "nonblocking",
+      "extra_edges": 0,
+      "equation": "copy[34](t+1) = original_pin_q(seq_descriptor_obs[68])(t+1) = raw(seq_descriptor_obs[68])(t)",
+      "qualification": "Actual source capture equations; arbitrary initial copies may differ until first edge. Native physical clone retention remains separate."
+    }
+  ],
+  "PASS": true
+}
