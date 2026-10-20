@@ -448,10 +448,16 @@ module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
  // ---------------- control registers (reset) ----------------
  reg [5:0] wp;reg [13:0] selected;reg [7:0] hz;reg qfault;reg [10:0] rtag;
  wire [13:0] selected_next;
+ wire selected_over;
  generate if(FAST_COUNT)begin:g_fast_count
   ot_hidx_s3_acc14 u_sum(.a(selected),.b(c_cnt[0]),.mut(DMUT==7),.y(selected_next));
+  // Exact unsigned bound: selected>=1024 always exceeds512. Otherwise
+  // selected+count fits11bits (count<=31), so no 14/32-bit ripple is needed.
+  assign selected_over=(|selected[13:10])||selected_next[10]||
+                       (selected_next[9]&&(|selected_next[8:0]));
  end else begin:g_original_count
   assign selected_next=selected+14'(c_cnt[0]);
+  assign selected_over=int'(selected)+int'(c_cnt[0])>512;
  end endgenerate
 
  wire wr_pk=s4v_f[4]&&nf_q[4]>=16;     // pack write (master replica)
@@ -468,7 +474,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
    hz[0]<=qop==2&&(rv&&rop==6||s16_c||s2v_m||s3v_b||s4v_f[4]||wreq);
    hz[1]<=qop==7&&(rv&&rop==6||s16_c||s2v_m||s3v_b||s4v_f[4]);
    hz[2]<=qop==3&&(rv&&rop==4||s14||f_h7[0]||f_h2v[0][0]);
-   hz[3]<=s3v_h&&(int'(selected)+int'(c_cnt[0])>512);
+   hz[3]<=s3v_h&&selected_over;
    hz[4]<=wr_pk&&({2'd0,wp}>s4_addr);   // never overwrite an unread source line
    hz[7:5]<=3'd0;
    if((|hz)||(|idbad))qfault<=1;
