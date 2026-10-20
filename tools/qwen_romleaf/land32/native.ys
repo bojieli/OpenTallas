@@ -1,0 +1,8 @@
+read_verilog -sv rtl/physical/ot_qw_land4_n32.sv tools/qwen_romleaf/land32/native_top.sv
+hierarchy -check -top land32_native
+synth -top land32_native -flatten
+dfflibmap -liberty native/SEQ.lib
+abc -liberty native/AO.lib -liberty native/INVBUF.lib -liberty native/OA.lib -liberty native/SIMPLE.lib -liberty native/SEQ.lib -D 770
+splitnets -ports
+opt_clean -purge
+write_verilog -noattr native/mapped.v
