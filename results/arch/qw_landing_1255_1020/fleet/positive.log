@@ -1,0 +1,9 @@
+LAND8_LANE tb.l3 DOFF=0.676 L=5 K=14 G=31 R0=20 SC=3 SR=1 age=2.068T
+LAND8_LANE tb.l2 DOFF=9.159 L=4 K=6 G=24 R0=20 SC=2 SR=1 age=1.916T
+LAND8_LANE tb.l1 DOFF=0.676 L=5 K=11 G=28 R0=20 SC=1 SR=1 age=2.068T
+LAND8_LANE tb.l0 DOFF=9.159 L=4 K=3 G=21 R0=20 SC=0 SR=1 age=1.916T
+LAND8_BENCH PASS 0 errors in 1618 checks (4 lanes, K 3/6/11/14)
+- ../final_positive/tb.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.018 s; speed 233.020 us/s
+- Verilator: cpu 0.018 s on 1 threads; allocated 7 MB

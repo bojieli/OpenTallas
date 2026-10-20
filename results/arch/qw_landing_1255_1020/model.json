@@ -1,0 +1,3570 @@
+{
+  "schema": "opentallas.qwen_slice_face_landing_candidate.v1",
+  "source_receipt_sha256": "eb39d99fbbd389bab5ba4a489b6d74c666ed0a03f171c0a560bca1e05097cc5a",
+  "physical_qualification_eligible": false,
+  "totals": {
+    "links": 185,
+    "bits": 50270,
+    "by_mechanism": {
+      "static_strap_source_epoch_required": 3,
+      "receiver_face_ring": 182
+    },
+    "bits_by_mechanism": {
+      "static_strap_source_epoch_required": 3,
+      "receiver_face_ring": 50267
+    }
+  },
+  "representative": {
+    "bus": "n_dv_st_E1_st_u_st",
+    "src": "dvs_E1/st_wo",
+    "dst": "dvs_E2/st_ei",
+    "ck_s": "dvs_E1/ck[0] = n_clk_r96",
+    "ck": "dvs_E2/ck[0] = n_clk_r122",
+    "phases_tt_ff_ps": [
+      -70.086914,
+      56.322754
+    ],
+    "phase_basis": "TT late difference; FF early difference, same corner/pin per subtraction",
+    "D": 8,
+    "width": 1088,
+    "macro_count": 17,
+    "macro_type": "ot_sram_1r1w2c_32x64_m1",
+    "payload_ring_bits": 8704,
+    "allocated_sram_bits": 34816,
+    "bytes_per_cycle": 136,
+    "boundary_bits_per_cycle": 1088,
+    "static_no_backpressure": true,
+    "schedule_added_receiver_edges": 5,
+    "token_delta_ps_per_traversal": 4166.665,
+    "K_rule": "(L+G-R0-2) mod16, latched during reset; G/R0 exact release receipts required",
+    "macro_area_um2": 9411.022656,
+    "physical_area_um2": null,
+    "area_status": "macro LEF plus mapped control census required before gate",
+    "phi_interval_ps": [
+      -330.086914,
+      316.32275400000003
+    ],
+    "feasible_L": [
+      5,
+      6
+    ],
+    "selected_L": 5,
+    "window_ok": true
+  },
+  "global_drift_scope": {
+    "g5_ps": 1536.3,
+    "g5b_ps": 2568.9,
+    "applies_to": "forwarded lane drift, not slice pair phase"
+  },
+  "ledger": [
+    {
+      "cls": "BUMP",
+      "src": "bump_die_ps",
+      "src_master": "qfd_sigbump",
+      "src_root": [],
+      "dst": "rly_sf_strap_bump_die_ps_0",
+      "dst_master": "qfd_rlyh0_1_SN_65x30",
+      "dst_root": [
+        "clk_rx/pll_coll[0]"
+      ],
+      "bus": "n_sf_strap_bump_die_ps",
+      "bits": 1,
+      "mechanism": "static_strap_source_epoch_required",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "BUMP",
+      "src": "bump_pkg_s0",
+      "src_master": "qfd_sigbump",
+      "src_root": [],
+      "dst": "rly_sf_strap_bump_pkg_s0_0",
+      "dst_master": "qfd_rlyh0_1_SN_65x30",
+      "dst_root": [
+        "clk_rx/pll_coll[0]"
+      ],
+      "bus": "n_sf_strap_bump_pkg_s0",
+      "bits": 1,
+      "mechanism": "static_strap_source_epoch_required",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "BUMP",
+      "src": "bump_pkg_s1",
+      "src_master": "qfd_sigbump",
+      "src_root": [],
+      "dst": "rly_sf_strap_bump_pkg_s1_0",
+      "dst_master": "qfd_rlyh0_1_SN_65x30",
+      "dst_root": [
+        "clk_rx/pll_coll[0]"
+      ],
+      "bus": "n_sf_strap_bump_pkg_s1",
+      "bits": 1,
+      "mechanism": "static_strap_source_epoch_required",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E0",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_x0_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E0",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_x0_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E1_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E1_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E1_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E1_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E1_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E1_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_st_E1_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_st_E1_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_st_E1_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E1",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_st_E1_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": true,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_ch_E1_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_ch_E1_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_ch_E1_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_ch_E1_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_ch_E1_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_ch_E1_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_ch_E1_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_st_E1_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_st_E1_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E2_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E2_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E2_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E2_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E2_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E2_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_st_E2_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_st_E2_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_st_E2_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E2",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_st_E2_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E2_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E2_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E2_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E2_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E2_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E2_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_ch_E2_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_l9_E2",
+      "bits": 514,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_st_E2_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r122[0]"
+      ],
+      "bus": "n_dv_st_E2_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E3_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E3_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E3_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E3_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E3_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E3_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_st_E3_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_st_E3_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_st_E3_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E3",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_st_E3_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E3_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E3_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E3_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E3_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E3_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E3_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_ch_E3_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_st_E3_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r114[0]"
+      ],
+      "bus": "n_dv_st_E3_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_ch_E4_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_ch_E4_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_ch_E4_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_ch_E4_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_ch_E4_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_ch_E4_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_st_E4_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_st_E4_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_st_E4_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E4",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "bus": "n_dv_st_E4_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E4_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E4_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E4_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E4_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E4_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E4_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_ch_E4_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_l9_E4",
+      "bits": 514,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_st_E4_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_E5",
+      "src_master": "qfd_dv_slice2_e",
+      "src_root": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r110[0]"
+      ],
+      "bus": "n_dv_st_E4_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_E0",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_x0_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_E0",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_x0_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_E0",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_x0_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_E0",
+      "dst_master": "qfd_dv_slice2_e",
+      "dst_root": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "bus": "n_dv_x0_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W0_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W0_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W0_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W0_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W0_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W0_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W0_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_st_W0_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W0",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_st_W0_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_ch_W0_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_ch_W0_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_ch_W0_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_ch_W0_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_ch_W0_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_ch_W0_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_l9_W0",
+      "bits": 514,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_st_W0_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_st_W0_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_st_W0_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r97[0]"
+      ],
+      "bus": "n_dv_st_W0_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W1_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W1_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W1_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W1_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W1_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W1_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W1_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_st_W1_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W1",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_st_W1_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W1_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W1_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W1_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W1_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W1_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_ch_W1_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_st_W1_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_st_W1_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_st_W1_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r126[0]"
+      ],
+      "bus": "n_dv_st_W1_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W2_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W2_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W2_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W2_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W2_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W2_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W2_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_st_W2_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W2",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_st_W2_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W2_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W2_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W2_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W2_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W2_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_ch_W2_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_l9_W2",
+      "bits": 514,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_st_W2_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_st_W2_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_st_W2_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r130[0]"
+      ],
+      "bus": "n_dv_st_W2_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W3_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W3_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W3_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W3_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W3_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W3_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W3_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_st_W3_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W3",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_st_W3_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W3_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W3_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W3_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W3_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W3_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_ch_W3_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_st_W3_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_st_W3_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_st_W3_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "bus": "n_dv_st_W3_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_ch_W4_ag_ag",
+      "bits": 10,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_ch_W4_ar_ard",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_ch_W4_ar_arl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_ch_W4_ar_arm",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_ch_W4_ar_art",
+      "bits": 32,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_ch_W4_ar_arv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_ch_W4_dd_dd",
+      "bits": 548,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_st_W4_sc_d_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W4",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "bus": "n_dv_st_W4_st_d_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W4_dr_dr",
+      "bits": 520,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W4_rt_rd",
+      "bits": 512,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W4_rt_re",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W4_rt_rl",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W4_rt_rr",
+      "bits": 3,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_ch_W4_rt_rv",
+      "bits": 1,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_l9_W4",
+      "bits": 514,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_st_W4_cmd_cmd",
+      "bits": 116,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_st_W4_hr_hr",
+      "bits": 453,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_st_W4_sc_u_sc",
+      "bits": 48,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    },
+    {
+      "cls": "NEIGHBOUR",
+      "src": "dvs_W5",
+      "src_master": "qfd_dv_slice2_w",
+      "src_root": [
+        "clk_rx/pll_r148[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "dst_root": [
+        "clk_rx/pll_r139[0]"
+      ],
+      "bus": "n_dv_st_W4_st_u_st",
+      "bits": 1088,
+      "mechanism": "receiver_face_ring",
+      "source_implemented": false,
+      "bound": false,
+      "schedule_adopted": false
+    }
+  ]
+}

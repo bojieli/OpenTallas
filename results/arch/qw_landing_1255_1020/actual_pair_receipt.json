@@ -1,0 +1,51 @@
+{
+  "source": "ot-epyc6:/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/chain/dieclk/rG5",
+  "die_clock_check_sha256": "1644b09505f029ed0561c974633fcb9d5acf223f99e2b8d4ed28c119d38cb1ff",
+  "actual_tiles": [
+    {
+      "inst": "dvs_E1",
+      "entry": "dvs_E1/ck[0]",
+      "master": "qfd_dv_slice2_e",
+      "x": 20631.996,
+      "y": 13391.88,
+      "root": "dc_spine_src",
+      "region": "r96",
+      "R_tt_ps": 0.0,
+      "levels": 280,
+      "model_ps": 10245.5,
+      "sta_max_ps": 8788.80957,
+      "sta_min_ps": 6981.118164
+    },
+    {
+      "inst": "dvs_E2",
+      "entry": "dvs_E2/ck[0]",
+      "master": "qfd_dv_slice2_e",
+      "x": 23094.396,
+      "y": 13391.88,
+      "root": "dc_spine_src",
+      "region": "r122",
+      "R_tt_ps": 0.0,
+      "levels": 211,
+      "model_ps": 9436.0,
+      "sta_max_ps": 8718.722656,
+      "sta_min_ps": 7037.440918
+    }
+  ],
+  "arrivals": {
+    "TT_late_ps": {
+      "dvs_E1/ck[0]": 8788.80957,
+      "dvs_E2/ck[0]": 8718.722656
+    },
+    "FF_early_ps": {
+      "dvs_E1/ck[0]": 6981.118164,
+      "dvs_E2/ck[0]": 7037.440918
+    }
+  },
+  "unit": "oth-ubuntu-39814-1792526330",
+  "bench": {
+    "positive_checks": 1618,
+    "positive_errors": 0,
+    "read_selector_mutant_errors": 2935
+  },
+  "qualification_eligible": false
+}
