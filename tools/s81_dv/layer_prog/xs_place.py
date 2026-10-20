@@ -821,6 +821,14 @@ def lower_placed(die, op, ctx):
         rec['files'][f'prog/xs/{op["id"]}/pq_calendar_action.viamap.hex'] = viamap([w & ((1 << 72) - 1) for w in cw] + [0] * (4096 - len(cw)))
         rec['files'][f'prog/xs/{op["id"]}/pq_calendar_time.viamap.hex'] = viamap([w >> 72 for w in cw] + [0] * (4096 - len(cw)))
         rec['files'][f'prog/xs/{op["id"]}/is_d.txt'] = ''.join(f'{t} {v:040x}\n' for t, v in sorted(cal_['issuers'].items()))
+    fcal_ = None
+    if name not in ('attn.wq_b', 'attn.idx.q'):     # idx.q phases ride in the wq_b calendar (same field, same x)
+        # S81-CALPIPE 10-20: every other multi-phase FP8 field op gets its pipelined calendar (xs_field_calendar,
+        # measured per-op floor, static checks; refuses P < floor = compile fault)
+        import xs_field_calendar as XF
+        files_, fcal_ = XF.emit_files(die, op, ctx, sl)
+        if files_:
+            rec['files'].update(files_)
     unm = sorted({m['mat'] for m in mats if m['calendar'] != 'measured_class'})
     rest = REST
     if name == 'attn.wq_b':
@@ -830,6 +838,10 @@ def lower_placed(die, op, ctx):
                 'retire / deadline check results/rtl/s81_wqbp_1020); open: cap cfg_d descriptors of this 8-frame / '
                 f'{cal_["nphases"]}-phase shape (only the private fullsix 6-frame / 15-phase CAP lowering exists, '
                 'codex/token-cap-contract-1020) and the image writer\'s rank-local row tags')
+    if isinstance(fcal_, dict):
+        rest = (f'xs calendar COMPILED (xs_field_calendar pipeline P{fcal_["period"]}, {fcal_["nphases"]} phases, measured '
+                'floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer\'s '
+                'rank-local row tags')
     miss = rest + ('' if bench else '; this op has no frame bench of its own (the placement compiler is benched on '
                    'another op of the same field)') + (f'; element-work term unmeasured for {unm} (calendar not '
                                                       'cycle-exact until one bench of that class)' if unm else '')
@@ -874,7 +886,14 @@ def lower_placed_bf(die, op, ctx, rec, fx, sl, g):
         unmeasured_shapes=sorted(unm),
         images='python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (BF phases appended after '
         'the FP8 / FP4 phases; gen --op OP for one phase\'s bench vectors)'), indent=1) + '\n'}
-    miss = REST + ('' if bench else '; no production frame bench PASS of this op yet') + (
+    import xs_field_calendar as XF
+    files_, fcal_ = XF.emit_files(die, op, ctx, sl)      # S81-CALPIPE 10-20: BF pipelined calendar (P231 label floor)
+    rest = REST
+    if files_:
+        rec['files'].update(files_)
+        rest = (f'xs calendar COMPILED (xs_field_calendar BF pipeline P{fcal_["period"]}, {fcal_["nphases"]} phases, '
+                'seg-label floor 231, static + layer checks); open: cap cfg_d descriptors of this shape')
+    miss = rest + ('' if bench else '; no production frame bench PASS of this op yet') + (
         f'; programme / emission unmeasured for shapes {sorted(unm)} (BF_LEGACY measurement run of each shape owed)'
         if unm else '')
     return dict(rec, status='PARTIAL', gap=dict(module='ot_s81sl_xs / ot_s81sl_cap', port='pq_calendar_action / '
