@@ -20,5 +20,7 @@ RS_SRC=(rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv rtl/hdc/v41x/ot_hdc_v41x_attn_s.
   rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv
   rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv
   rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
-  $D/dsdv_svc_sx_hrow.sv $D/dsdv_svc_sx.sv $D/dsdv_svc_att.sv $D/dsdv_svc_rs.sv)
+  $D/dsdv_svc_sx_hrow.sv $D/dsdv_svc_sx.sv $D/dsdv_svc_att.sv $D/dsdv_svc_rs.sv
+  rtl/hdc/v41x/ot_hdc_v41x_attn_hgrp_s81.sv $D/dsdv_svc_rs_glue.sv $D/attw/dsdv_svc_attw_f.sv $D/attw/lp/dsdv_svc_attw_f_lp.sv
+  rtl/common/landed_parent/ot_pl_land.sv)   # SVC4: -DOT_SVC_ATTW_LP (landed attw) sources; unused otherwise
 RS_LIB=(-v rtl/dsrom_sys/s81_ph/svc/dsfd_svc_c.sv)

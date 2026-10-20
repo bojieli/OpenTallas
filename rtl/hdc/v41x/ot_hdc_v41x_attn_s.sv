@@ -219,9 +219,22 @@ module ot_hdc_v41x_attn_s #(
                                        //    one-hot write enables (ot_hdc_v41x_attn_tr_x; same cycles)
     parameter integer MFAN = 0,        // 1: the block merges with per-head control copies (ot_hdc_v41x_attn_merge_x;
                                        //    +1 cycle on p.v results only)
-    parameter integer NARROW = 0       // 1: block counters (load / fill / issue / filled / count) BKW bits wide, not
+    parameter integer NARROW = 0,      // 1: block counters (load / fill / issue / filled / count) BKW bits wide, not
                                        //    16 (values never exceed NBLKMAX; same values and cycles for T <= TROWS):
                                        //    shortens the controller's compare/increment loops for 1.2 GHz
+    // SVC4 (LEAD2-S81, 10-19): landed engine.  TEXT 1 = the NT tiles are NOT instantiated here: tile t's input bundle
+    // leaves on tx_i[t] and its output bundle returns on tx_o[t] (the landed parent dsdv_svc_attw_f_lp puts every tile
+    // in its own clock region with LANDED crossings both ways).  TLX = edges the tile round trip takes beyond TLAT (the
+    // compiler re-schedule: tags / lane trees wait TLX more); TXD = register stages on the returning bundle inside this
+    // module (the flat lockstep reference of a landed parent: TXD = TLX; a landed build: TXD = 0).  Defaults = as built.
+    parameter integer TEXT = 0,
+    parameter integer TLX = 0,
+    parameter integer TXD = 0,
+    // derived (do not override): tile bundle widths, same formulas as the NBANK / BW localparams below
+    parameter integer TX_NB = (NBANKP > 0) ? NBANKP : (((PWORDS >= 2) ? 4 : 3) + ((ILV != 0) ? 1 : 0)),
+    parameter integer TX_BW = (TX_NB > 4) ? $clog2(TX_NB) : 2,
+    parameter integer TXI = 1 + 1 + TX_BW + 8 + PWORDS*TD*16 + 1 + 1 + TX_BW + TD*18,  // {ib, ibank, iv, ld_w2v, ld_w, ld_grp, ld_bank, ld_mode, ld_v}
+    parameter integer TXO = 1 + H*32 + H                                                // {oflt, oy, ov}
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -257,7 +270,10 @@ module ot_hdc_v41x_attn_s #(
     input  wire                   pv_cr,
     // bench visibility
     output wire                   qk_iss,
-    output wire                   pv_iss
+    output wire                   pv_iss,
+    // SVC4 landed engine (TEXT 1): tile bundles; unused (tx_i 0, tx_o ignored) when TEXT 0
+    output wire [NL*(D/TD)*TXI-1:0] tx_i,
+    input  wire [NL*(D/TD)*TXO-1:0] tx_o
 );
     localparam integer S = D / TD;
     localparam integer NT = NL * S;
@@ -891,30 +907,55 @@ module ot_hdc_v41x_attn_s #(
     wire [NT*H*32-1:0] t_y;
     wire [NT*H-1:0]    t_f;
     generate
+        if (TX_BW != BW) begin : g_bad_txbw
+            initial $error("ot_hdc_v41x_attn_s: TX_BW / TX_NB are derived parameters, do not override them");
+        end
+        if (TEXT == 0 && TXD != 0) begin : g_bad_txd
+            initial $error("ot_hdc_v41x_attn_s: TXD needs TEXT 1");
+        end
         for (gk = 0; gk < NT; gk = gk + 1) begin : g_t
             localparam integer SL = gk % S;
             wire [PWORDS*TD*16-1:0] ldw = e_ld_mode ? e_p_w : (PWORDS*TD*16)'(e_q_w[SL*TD*16 +: TD*16]);
-            if (TILE_S != 0) begin : g_ts
+            wire          b_ov;
+            wire [H*32-1:0] b_y;
+            wire [H-1:0]  b_f;
+            if (TEXT != 0) begin : g_tx
+                assign tx_i[gk*TXI +: TXI] = {e_ib[gk*TD*18 +: TD*18], e_ibank, e_iv, e_ld_w2v, ldw, e_ld_grp, e_ld_bank,
+                                              e_ld_mode, e_ld_v};
+                wire [TXO-1:0] r;
+                ot_hdc_v41x_dly #(.W(TXO - 1), .D(TXD)) u_xd (.clk(clk), .d(tx_o[gk*TXO + 1 +: TXO - 1]), .q(r[TXO-1:1]));
+                if (TXD > 0) begin : g_xv
+                    ot_hdc_v41x_vdly #(.D(TXD)) u_xv (.clk(clk), .rst_n(rst_n), .d(tx_o[gk*TXO]), .q(r[0]));
+                end else begin : g_xw
+                    assign r[0] = tx_o[gk*TXO];
+                end
+                assign {b_f, b_y, b_ov} = r;
+            end else if (TILE_S != 0) begin : g_ts
+                assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
                 ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML), .F12(F12)) u_t (
                     .clk(clk), .rst_n(rst_n), .ld_v(e_ld_v), .ld_mode(e_ld_mode), .ld_bank(e_ld_bank),
                     .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(e_iv), .ibank(e_ibank), .ib(e_ib[gk*TD*18 +: TD*18]),
-                    .ov(t_ov[gk]), .oy(t_y[gk*H*32 +: H*32]), .oflt(t_f[gk*H +: H]));
+                    .ov(b_ov), .oy(b_y), .oflt(b_f));
             end else begin : g_tl
+                assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
                 ot_hdc_v41x_attn_tile_l #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML)) u_t (
                     .clk(clk), .rst_n(rst_n), .ld_v(e_ld_v), .ld_mode(e_ld_mode), .ld_bank(e_ld_bank),
                     .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(e_iv), .ibank(e_ibank), .ib(e_ib[gk*TD*18 +: TD*18]),
-                    .ov(t_ov[gk]), .oy(t_y[gk*H*32 +: H*32]), .oflt(t_f[gk*H +: H]));
+                    .ov(b_ov), .oy(b_y), .oflt(b_f));
             end
+            assign t_ov[gk] = b_ov;
+            assign t_y[gk*H*32 +: H*32] = b_y;
+            assign t_f[gk*H +: H] = b_f;
         end
     endgenerate
 
-    // tags to the tile outputs
+    // tags to the tile outputs (TLX: the landed round trip, compiler re-schedule)
     wire [15:0] t_row0;
     wire [NL-1:0] t_mask;
     wire t_pv, t_fin;
     wire [MLEV-1:0] t_blk;
     wire [7:0] t_c;
-    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT)) u_tag (.clk(clk),
+    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX)) u_tag (.clk(clk),
         .d({e_row0, e_mask, e_pv, e_fin, e_blk, e_c}), .q({t_row0, t_mask, t_pv, t_fin, t_blk, t_c}));
 
     // ================= q.k lane trees =================

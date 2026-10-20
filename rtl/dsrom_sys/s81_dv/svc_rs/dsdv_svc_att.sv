@@ -88,7 +88,10 @@ module dsdv_svc_att_core #(
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
     parameter bit SRAM_MACRO = 0,
-    parameter bit QMEM_SRAM = 0                // opt-in: native 8x32x64, same capture edge
+    parameter bit QMEM_SRAM = 0,               // opt-in: native 8x32x64, same capture edge
+    parameter integer TEXT = 0,                   // SVC4: 1 = engine tiles outside (landed parent dsdv_svc_attw_f_lp), see
+    parameter integer TLX = 0,                    //   ot_hdc_v41x_attn_s TEXT / TLX / TXD; tile bundles on tx_i / tx_o
+    parameter integer TXD = 0                     //   (4 tiles x 1,618 b out, 4 x 529 b back)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -133,7 +136,9 @@ module dsdv_svc_att_core #(
     output reg  [1:0]           hcr,
     output reg  [1:0]           hack,
     output wire                 fault,
-    output wire [31:0]          fault_code
+    output wire [31:0]          fault_code,
+    output wire [4*1618-1:0]    tx_i,
+    input  wire [4*529-1:0]     tx_o
 );
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
@@ -556,14 +561,14 @@ module dsdv_svc_att_core #(
     ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
                          .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
-                         .SC_CRED(0), .PV_CRED(0)) u_eng (
+                         .SC_CRED(0), .PV_CRED(0), .TEXT(TEXT), .TLX(TLX), .TXD(TXD)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(1'b0),
         .p_v(ep_v), .p_w(ep_w), .p_ready(ep_ready),
         .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f), .pv_cr(1'b0),
-        .qk_iss(), .pv_iss());
+        .qk_iss(), .pv_iss(), .tx_i(tx_i), .tx_o(tx_o));
     assign l_v = sc_v;
     assign l_d = {sc_row, sc_m, sc_y, sc_f};
 
@@ -838,7 +843,8 @@ endmodule
 module dsdv_svc_att #(
     parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0, parameter integer PFIFO = 512,
     parameter integer PMEM = 1, parameter integer PVQ = 8, parameter integer DQ = 8,
-    parameter bit SRAM_MACRO = 0, parameter bit QMEM_SRAM = 0
+    parameter bit SRAM_MACRO = 0, parameter bit QMEM_SRAM = 0,
+    parameter integer TEXT = 0, parameter integer TLX = 0, parameter integer TXD = 0
 ) (
     input  wire clk, input wire rst_n, input wire [3:0] sid, input wire [3:0] tile, input wire [7:0] gd,
     input  wire [7:0] pvs, input wire root,
@@ -849,7 +855,8 @@ module dsdv_svc_att #(
     output wire sm_st, output wire [3:0] sm_kind, output wire [7:0] sm_jid, output wire sm_rv, output wire sm_rp,
     output wire [2:0] sm_rj, output wire [511:0] sm_rd,
     output wire go_o, output wire [9:0] tjob_o, output wire done, output wire [7:0] tagj,
-    output wire [1:0] hcr, output wire [1:0] hack, output wire fault, output wire [31:0] fault_code
+    output wire [1:0] hcr, output wire [1:0] hack, output wire fault, output wire [31:0] fault_code,
+    output wire [4*1618-1:0] tx_i, input wire [4*529-1:0] tx_o
 );
 `ifdef OT_SVC_ATT_PINREG
     reg pq_v, phw_v; reg [511:0] pq_d; reg [290:0] phw_d;
@@ -867,12 +874,12 @@ module dsdv_svc_att #(
     assign fault = fault_c;
 `endif
     dsdv_svc_att_core #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .PFIFO(PFIFO), .PMEM(PMEM), .PVQ(PVQ), .DQ(DQ),
-                        .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM)) u_core (
+                        .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM), .TEXT(TEXT), .TLX(TLX), .TXD(TXD)) u_core (
         .clk(clk), .rst_n(rst_n), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(root),
         .q_v(pq_v), .q_d(pq_d), .hw_v(phw_v), .hw_d(phw_d),
         .qrq(qrq), .qrk(pqrk), .qwd(pqwd), .qrv(pqrv), .qr_data(pqr_data), .qr_tag(pqr_tag), .qr_beat(pqr_beat),
         .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go_o), .tjob_o(tjob_o), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(fault_c),
-        .fault_code(fault_code));
+        .fault_code(fault_code), .tx_i(tx_i), .tx_o(tx_o));
 endmodule

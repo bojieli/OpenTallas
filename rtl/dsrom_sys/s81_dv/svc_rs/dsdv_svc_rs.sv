@@ -168,6 +168,19 @@ module dsdv_svc_rs_c #(
     wire l_v; wire [2131:0] l_d; wire a_pv_v; wire [512:0] a_pv_d;
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f; wire [31:0] a_fc;
+`ifdef OT_SVC_ATTW_LP
+    // SVC4 (10-19): the attention share as the LANDED attw parent (production engine, 5 clock regions, every engine
+    // tile bundle landed both ways, engine re-schedule TLX 6); its own role ROM / 2-stage reset (dsdv_svc_rs_attw) +
+    // the lp regional reset runs.  Bench-only single clock: every region root = ck.
+    assign a_fc = 32'd0;
+    dsdv_svc_attw_f_lp #(.AMUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .ROOT(ENTRY), .PMEM(PMEM),
+                         .TLX(6), .TXD(0)) u_att (
+        .ck_c(ck), .ck_t0(ck), .ck_t1(ck), .ck_t2(ck), .ck_t3(ck), .rst(rst), .sid(sid), .cs(cs[804:0]),
+        .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
+        .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
+        .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
+        .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f));
+`else
     dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM)) u_att (
         .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[DW-1:514]),
@@ -175,6 +188,7 @@ module dsdv_svc_rs_c #(
         .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f), .fault_code(a_fc));
+`endif
 
     // ------------------------------------------------------------------ score exchange
     wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;

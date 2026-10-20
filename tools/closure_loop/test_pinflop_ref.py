@@ -127,6 +127,7 @@ puts [exec grep -E "_delay" /tmp/y.sdc]
                 Path(t, "t.v").write_text(net)
                 Path(t, "t.tcl").write_text(head + body)
                 shutil.copy(ROOT / "physical/common_flow/io_ref_routed.sdc", Path(t, "io_ref_routed.sdc"))
+                shutil.copy(D / "pinflop_ref.tcl", Path(t, "pinflop_ref.tcl"))   # PF-HOLDPAD: the shipped {CL} pair
                 r = subprocess.run(["docker", "run", "--rm", *(["-e", "PF=1"] if pf else []), "-v", f"{t}:/w", IMAGE,
                                     "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad", "-no_init", "-exit",
                                     "/w/t.tcl"], capture_output=True, text=True, timeout=600)
@@ -136,6 +137,7 @@ puts [exec grep -E "_delay" /tmp/y.sdc]
         om = lambda o: float(re.search(r"set_output_delay (\S+) -clock \[get_clocks \{vclk\}\] -min", o).group(1))
         self.assertEqual(mn(outs[False], "a"), 0.0)                  # off: unchanged
         self.assertRegex(outs[True], r"OT_IOREF_PF \S+ input pin flops 2 ")
+        self.assertIn("OT_IOREF_PF search: pinflop_ref.tcl", outs[True])
         self.assertGreater(mn(outs[True], "a"), 0.0)                 # pin flops later than the boundary mean
         self.assertEqual(om(outs[True]), om(outs[False]))            # outputs keep the boundary mean
 
@@ -178,6 +180,7 @@ puts [exec grep -E "_delay" /tmp/y.sdc]
             Path(t, "t.v").write_text(net)
             Path(t, "t.tcl").write_text(head + body)
             shutil.copy(ROOT / "physical/common_flow/io_ref_routed.sdc", Path(t, "io_ref_routed.sdc"))
+            shutil.copy(D / "pinflop_ref.tcl", Path(t, "pinflop_ref.tcl"))   # PF-HOLDPAD: the shipped {CL} pair
             r = subprocess.run(["docker", "run", "--rm", "-v", f"{t}:/w", IMAGE,
                                 "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad", "-no_init", "-exit",
                                 "/w/t.tcl"], capture_output=True, text=True, timeout=600)
@@ -186,6 +189,162 @@ puts [exec grep -E "_delay" /tmp/y.sdc]
         mn = lambda ck, p: float(re.search(r"set_input_delay (\S+) -clock \[get_clocks \{%s\}\] -min -add_delay \[get_ports \{%s\}\]" % (ck, p), out).group(1))
         self.assertGreater(mn("vclk", "a"), 0.0, out[-3000:])        # core pin flops later than the core boundary mean
         self.assertAlmostEqual(mn("vclk_s", "e"), 0.0, places=1, msg=out[-3000:])   # ser: its own pin-flop mean = boundary
+
+
+# PF-HOLDPAD (NATIVE-REF 2026-10-18): the smhq GRT netlist (d[24]: HB2 ot_inhold -> BUFx4f ot_ihdrv -> HB2 -> BUFx2 -> ...
+# CTS hold buffers -> pin flop) and the kp4_dec wires-only parent (inputs straight into a hard child; the reference fell
+# on the raw child clock pin u_chn/clk, ~250-290 ps before the child flops).
+HOLDPAD_NET = """module top(input clk, input a, input b, input r, input h, output q1);
+  wire a1, a2, a3, a4, a5, a6, r1, r2, r3, r4a, r4b;
+  HB2xp67_ASAP7_75t_R  inh (.A(a), .Y(a1));
+  BUFx4f_ASAP7_75t_R   drv (.A(a1), .Y(a2));
+  HB2xp67_ASAP7_75t_R  h1 (.A(a2), .Y(a3));
+  BUFx2_ASAP7_75t_R    h2 (.A(a3), .Y(a4));
+  HB2xp67_ASAP7_75t_R  h3 (.A(a4), .Y(a5));
+  BUFx2_ASAP7_75t_R    h4 (.A(a5), .Y(a6));
+  DFFHQNx1_ASAP7_75t_R pa (.CLK(clk), .D(a6), .QN(q1));
+  BUFx2_ASAP7_75t_R    t0 (.A(r), .Y(r1));
+  BUFx2_ASAP7_75t_R    t1 (.A(r1), .Y(r2));
+  BUFx2_ASAP7_75t_R    t2 (.A(r2), .Y(r3));
+  BUFx2_ASAP7_75t_R    t3a (.A(r3), .Y(r4a));
+  BUFx2_ASAP7_75t_R    t3b (.A(r3), .Y(r4b));
+  DFFHQNx1_ASAP7_75t_R ra (.CLK(clk), .D(r4a), .QN());
+  DFFHQNx1_ASAP7_75t_R rb (.CLK(clk), .D(r4b), .QN());
+  hm u_chn (.ck(clk), .d(h), .q());
+endmodule
+"""
+HM_LIB = """library(hm_tt) {
+  delay_model : table_lookup; time_unit : "1ps"; voltage_unit : "1V"; current_unit : "1mA";
+  capacitive_load_unit(1, ff); pulling_resistance_unit : "1kohm"; leakage_power_unit : "1pW";
+  nom_process : 1; nom_voltage : 0.7; nom_temperature : 25;
+  cell(hm) {
+    area : 100; is_macro_cell : true;
+    pin("ck") {
+      direction : input; clock : true; capacitance : 1.0;
+      timing() { timing_sense : positive_unate; timing_type : min_clock_tree_path;
+        cell_rise(scalar) { values("250.0"); } cell_fall(scalar) { values("255.0"); } }
+      timing() { timing_sense : positive_unate; timing_type : max_clock_tree_path;
+        cell_rise(scalar) { values("300.0"); } cell_fall(scalar) { values("305.0"); } }
+    }
+    pin("d") { direction : input; capacitance : 1.0;
+      timing() { related_pin : "ck"; timing_type : setup_rising;
+        rise_constraint(scalar) { values("10.0"); } fall_constraint(scalar) { values("10.0"); } } }
+    pin("q") { direction : output;
+      timing() { related_pin : "ck"; timing_type : rising_edge;
+        cell_rise(scalar) { values("400.0"); } cell_fall(scalar) { values("400.0"); }
+        rise_transition(scalar) { values("10.0"); } fall_transition(scalar) { values("10.0"); } } }
+  }
+}
+"""
+HM_LEF = """VERSION 5.8 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+MACRO hm
+  CLASS BLOCK ;
+  ORIGIN 0 0 ;
+  SIZE 10.8 BY 10.8 ;
+  PIN ck
+    DIRECTION INPUT ; USE CLOCK ;
+    PORT LAYER M4 ; RECT 0 0 0.1 0.1 ; END
+  END ck
+  PIN d
+    DIRECTION INPUT ; USE SIGNAL ;
+    PORT LAYER M4 ; RECT 0 1 0.1 1.1 ; END
+  END d
+  PIN q
+    DIRECTION OUTPUT ; USE SIGNAL ;
+    PORT LAYER M4 ; RECT 0 2 0.1 2.1 ; END
+  END q
+END hm
+END LIBRARY
+"""
+HOLDPAD_TCL = """set L /OpenROAD-flow-scripts/flow/platforms/asap7
+foreach f [glob $L/lib/NLDM/*SEQ*RVT_TT*.lib* $L/lib/NLDM/*SIMPLE*RVT_TT*.lib* $L/lib/NLDM/*INVBUF*RVT_TT*.lib* $L/lib/NLDM/*AO*RVT_TT*.lib*] { read_liberty $f }
+read_liberty /w/hm_tt.lib
+read_lef $L/lef/asap7_tech_1x_201209.lef
+read_lef $L/lef/asap7sc7p5t_28_R_1x_220121a.lef
+read_lef /w/hm.lef
+read_verilog /w/t.v
+link_design top
+create_clock -name core_clk -period 833 [get_ports clk]
+set ::env(ADDITIONAL_LIBS) /w/hm_tt.lib
+source /w/pinflop_ref.tcl
+puts "PFH [lsort [lmap p [ot_pf_clks [get_ports {a b r}]] {get_full_name $p}]]"
+puts "PFM [lsort [lmap p [ot_pf_clks [get_ports h]] {get_full_name $p}]]"
+set p [ot_pf_ref [get_ports h]]
+puts "REFH [get_full_name $p] RAW [get_property $p arrival_max_rise] MAX [ot_pf_arr $p max] MIN [ot_pf_arr $p min]"
+set ::env(OT_PF_HOPS) 3
+puts "PF3 [lsort [lmap p [ot_pf_clks [get_ports {a}]] {get_full_name $p}]]"
+"""
+
+
+class HoldPad(unittest.TestCase):
+    def test_overlay_refreshes_older_procs(self):
+        """an io_ref_skew.sdc that already carries the 10-10 procs (3-hop search, raw macro pin arrival) gets the
+        PF-HOLDPAD procs and ot_pf_arr reads; a second pass changes nothing"""
+        import sys
+        sys.path.insert(0, str(ROOT / "tools/closure_loop"))
+        import pinflop_overlay as po
+        procs = (D / "pinflop_ref.tcl").read_text()
+        self.assertIn(po.MARK, procs)
+        r = subprocess.run(["git", "-C", str(ROOT), "show", "2cac78ec5:physical/qwen_die_masters/io_ref_skew.sdc"],
+                           capture_output=True, text=True)
+        if r.returncode:
+            self.skipTest("old blob not in this clone")
+        old = r.stdout
+        self.assertIn("$hop < 3 && [llength $nets]", old)
+        new = po.patch(old, procs)
+        self.assertIsNotNone(new)
+        self.assertNotIn("$hop < 3 && [llength $nets]", new)
+        self.assertIn("set qdm_lmax [ot_pf_arr $qdm_ref max]", new)
+        self.assertIn("set qdm_lmin [ot_pf_arr $qdm_ref min]", new)
+        self.assertEqual(new.count("proc ot_pf_clks"), 1)
+        self.assertEqual(new.count("proc ot_pf_median"), 1)
+        self.assertIsNone(po.patch(new, procs))
+        self.assertEqual(new, (D / "io_ref_skew.sdc").read_text())   # the committed SDC is the overlay's output
+        for k in sorted((D / "mc").glob("*/io_ref_skew.sdc")):        # kit copies: procs + "$ref" reads
+            kn = po.patch(k.read_text(), procs)
+            self.assertIsNotNone(kn, k)
+            self.assertIn("ot_pf_arr $", kn, k)
+            self.assertNotRegex(kn, r"get_property \$(qdm_)?ref arrival_m", k)
+            self.assertNotIn("$hop < 3 && [llength $nets]", kn, k)
+            self.assertIsNone(po.patch(kn, procs), k)
+        # a pre-10-10 kit (no procs at all): procs inserted AND reads routed through ot_pf_arr
+        kit = ("# kit\nforeach {clk sk ins outs} {\n  ck 150 {a} {b}\n} {\n" + po.KIT_OLD
+               + "  set lmax [get_property $ref arrival_max_rise]; set lmin [get_property $ref arrival_min_rise]\n"
+               + "  set_input_delay 1 [get_ports $ins]\n}\n")
+        kn = po.patch(kit, procs)
+        self.assertIn("ot_pf_arr $ref max", kn)
+        self.assertIsNone(po.patch(kn, procs))
+
+    def test_routed_ioref_uses_shared_search(self):
+        s = (ROOT / "physical/common_flow/io_ref_routed.sdc").read_text()
+        self.assertIn("ot_pf_clks [all_inputs -no_clocks]", s)
+        self.assertIn("ot_pf_ins $p max", s)
+
+    @unittest.skipUnless(shutil.which("docker"), "no docker")
+    def test_openroad_holdpad_chain_and_hard_child(self):
+        if subprocess.run(["docker", "image", "inspect", IMAGE], capture_output=True).returncode:
+            self.skipTest("no ORFS image")
+        with tempfile.TemporaryDirectory() as t:
+            for n, body in (("t.v", HOLDPAD_NET), ("t.tcl", HOLDPAD_TCL), ("hm_tt.lib", HM_LIB), ("hm.lef", HM_LEF)):
+                Path(t, n).write_text(body)
+            shutil.copy(D / "pinflop_ref.tcl", Path(t, "pinflop_ref.tcl"))
+            r = subprocess.run(["docker", "run", "--rm", "-v", f"{t}:/w", IMAGE, "/OpenROAD-flow-scripts/tools/install/"
+                                "OpenROAD/bin/openroad", "-no_init", "-exit", "/w/t.tcl"], capture_output=True, text=True,
+                               timeout=600)
+        out = r.stdout + r.stderr
+        import re
+        # pa sits 6 buffers deep (smhq GRT shape): found; the fanned-out 5-deep tree (ra / rb, a reset-like tree) is
+        # past hop 3 through a 2-load net: not followed
+        self.assertRegex(out, r"PFH pa/CLK\n", out[-3000:])
+        self.assertRegex(out, r"PFM u_chn/ck\n", out[-3000:])
+        m = re.search(r"REFH u_chn/ck RAW (\S+) MAX (\S+) MIN (\S+)", out)
+        self.assertIsNotNone(m, out[-3000:])
+        raw, mx, mn = map(float, m.groups())
+        self.assertAlmostEqual(mx - raw, 300.0, places=3)           # + the child's max_clock_tree_path
+        self.assertIn("1 hard-child clock pins at +insertion", out)
+        self.assertRegex(out, r"PF3 \n")                            # OT_PF_HOPS=3 = the old search: lost behind the pads
 
 if __name__ == "__main__":
     unittest.main()

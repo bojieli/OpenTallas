@@ -1,0 +1,138 @@
+{
+ "top": "dsdv_svc_attw_f",
+ "why": "SVC4 (LEAD2-S81 10-19): attw (dsdv_svc_rs_attw at the PRODUCTION engine, 16 hard s81svc_attn_hgrp) is a ~2.7 x 2.0 mm parent -> landed parent: region c = the attention share (u_c, centre column with every SRAM), regions t0..t3 = one per engine tile (u_t<k>, 4 hard head groups). The c<->tile loop (issue -> tile -> lane trees) is re-scheduled: schedule 'reference', ref TLX = TXD = 6 (+3 edges per landed crossing, both ways), landed TLX 6 / TXD 0.",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/svc_rs/attw/dsdv_svc_attw_f.sv"
+ ],
+ "child_sources": [
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_hgrp_s81.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_glue.sv"
+ ],
+ "include_dirs": [
+  "rtl/dsrom_sys/s81_dv/svc_rs"
+ ],
+ "defines": [
+  "OT_ATTN_HGRP_HARD",
+  "OT_SVC_LAND_SRAM",
+  "OT_SVC_ATT_SRAM",
+  "OT_SVC_ATT_PINREG"
+ ],
+ "params": {
+  "AMUT": 0,
+  "DIE_ID": 0,
+  "ST": 0,
+  "SRAM_MACRO": 1,
+  "ROOT": 0,
+  "PMEM": 1,
+  "TLX": 6,
+  "TXD": 0
+ },
+ "ref_params": {
+  "AMUT": 0,
+  "DIE_ID": 0,
+  "ST": 0,
+  "SRAM_MACRO": 1,
+  "ROOT": 0,
+  "PMEM": 1,
+  "TLX": 6,
+  "TXD": 6
+ },
+ "schedule": "reference",
+ "out_dir": "rtl/dsrom_sys/s81_dv/svc_rs/attw/lp",
+ "record_dir": "results/arch/landed_parent_1018/dsdv_svc_attw_f",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck",
+  "clk"
+ ],
+ "reset_port": "rst",
+ "reset_pins": [
+  "rst",
+  "rst_n"
+ ],
+ "static": [
+  "sid"
+ ],
+ "tb_static": {
+  "sid": "4'd3"
+ },
+ "regions": [
+  {
+   "name": "c",
+   "insts": [
+    "u_c"
+   ],
+   "centre": [
+    1339.2,
+    993.6
+   ]
+  },
+  {
+   "name": "t0",
+   "insts": [
+    "u_t0"
+   ],
+   "centre": [
+    280.8,
+    993.6
+   ]
+  },
+  {
+   "name": "t1",
+   "insts": [
+    "u_t1"
+   ],
+   "centre": [
+    756.0,
+    993.6
+   ]
+  },
+  {
+   "name": "t2",
+   "insts": [
+    "u_t2"
+   ],
+   "centre": [
+    1922.4,
+    993.6
+   ]
+  },
+  {
+   "name": "t3",
+   "insts": [
+    "u_t3"
+   ],
+   "centre": [
+    2397.6,
+    993.6
+   ]
+  }
+ ],
+ "bench": {
+  "cycles": 6000,
+  "reset_cycles": 24,
+  "sim": "verilator"
+ },
+ "mut_child": "u_c"
+}
