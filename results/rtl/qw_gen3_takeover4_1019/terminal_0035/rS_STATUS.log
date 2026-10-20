@@ -1,0 +1,30 @@
+2026-10-19 21:48:10 PDT QW-DIECLK3 rS: COPY of dv2f19g3r chain (case + PDN PASS 21:39), safe die clock tools claude/qw-dieclk3-1019 cb2f70495; DIAGNOSTIC (not the run of record)
+2026-10-19 21:48:24 PDT chain start die=r22k src=6f78e3de2 (claude/qw-gen3-1019 QW-GEN3 successor of dv2f19g2; overlay on dv2f18dh2 src 0d4c9808f) from=grt
+2026-10-19 21:48:24 PDT RELAY_CHECK PASS design=qwen_compute buses=641 digest=sha256:e31deb978dd48f3ab2a6732443c143e495d123421f099979f1753ac3dfcde26f plan=dv2f19g3r-netlist schedule=compiled_schedule:tools/qwen_layerbench/layer_compile.py
+2026-10-19 21:48:25 PDT resume: OT_LEGAL instances=31871 overlaps=0 outside=0 / OT_PDN PASS special_shapes=20430110
+2026-10-19 21:48:25 PDT DIE CLOCK PHYS start (chain_dieclk.sh rS: on case_r22k/floorplan_pdn.odb, before GRT)
+2026-10-19 21:48:57 PDT DIE CLOCK PHYS FAIL (/srv/opentallas-scratch/claude/qw-dieclk3-1019/rS/chain/dieclk.log, /srv/opentallas-scratch/claude/qw-dieclk3-1019/rS/chain/dieclk/STATUS.log): 2026-10-19 21:48:57 PDT QCLK rS CTS build FAIL (rS/build_tt.log)
+2026-10-19 21:48:57 PDT QW-DIECLK3 rS chain rc=1
+2026-10-19 22:41:25 PDT QW-DIECLK3 relaunch after qwen_regional_spec fix 562357708 (first try: spec UnboundLocalError, data deleted)
+2026-10-19 22:41:32 PDT chain start die=r22k src=6f78e3de2 (claude/qw-gen3-1019 QW-GEN3 successor of dv2f19g2; overlay on dv2f18dh2 src 0d4c9808f) from=grt
+2026-10-19 22:41:32 PDT RELAY_CHECK PASS design=qwen_compute buses=641 digest=sha256:e31deb978dd48f3ab2a6732443c143e495d123421f099979f1753ac3dfcde26f plan=dv2f19g3r-netlist schedule=compiled_schedule:tools/qwen_layerbench/layer_compile.py
+2026-10-19 22:41:32 PDT resume: OT_LEGAL instances=31871 overlaps=0 outside=0 / OT_PDN PASS special_shapes=20430110
+2026-10-19 22:41:32 PDT DIE CLOCK PHYS start (chain_dieclk.sh rS: on case_r22k/floorplan_pdn.odb, before GRT)
+2026-10-19 23:40:23 PDT DIE CLOCK PHYS: QCLK_REGIONAL_SPEC forwarded spine clk_rx/pll_d2d[0] balance=false trees 1057 stream 1055 land_owed links 182 bits 50267 bus classes 182 grid_center True safe_tree True neighbour_pairs 0 balance_spine False 2026-10-19 23:40:01 PDT QCLK rS QCLK_REACH PASS nets 63317 over405 0 over220 562 max_um 224.1 dc_spine_B386 by_type {} hpwl_max_um 443.1 safe_tree True safe_violations {} no_xy 0 2026-10-19 23:40:15 PDT QCLK rS CHECK TT+FF: NEIGHBOUR CHECK budget 80.0 ps (TT + FF): PASS  judged 9888 pairs, over 0 2026-10-19 23:40:17 PDT QCLK rS QCLK_REGIONAL FAIL intra=ok landed=FAIL drift=FAIL spine=ok | intra over 0/897 worst  | land owed links 182 bits N50267+G0 noroot 8 | lane drift max 697.7 >T/2 40/421 | spine cells 11842 levels 382 pads 0 model 22519.2 DIECLK_STA_LAT late measured 14347 ideal 1 of 14348 (ideal e.g. clk_rx/pll_fwd[0]) DIECLK_STA_LAT early measured 14347 ideal 1 of 14348 (ideal e
+2026-10-19 23:40:23 PDT DIE_REPAIR design qwen_compute_fwd
+2026-10-20 00:03:57 PDT DIE_REPEATERS PASS repeaters=209345 max_wire=160 slew=260 removed=0 resized=0 non_buffer=0 skip_nets=64379 longest=590.5 over_reach(425)=544 post_slew=161 post_cap=0 legalize='spread util=0.30 bin_um=8.64 passes=209345 unplaced=0' WARN(1) max_disp=151.77: repeater displaced 151.8 um > max_wire/2 = 80.0 um by the spread: a die lane likely runs over a block (check the plan path; post-GRT slew decides)
+2026-10-20 00:03:57 PDT full-die GRT exit=0 overflow=0 ([INFO GRT-0018] Total wirelength: 155800305 um)
+2026-10-20 00:03:57 PDT STA tt clock: /srv/opentallas-scratch/claude/qw-dieclk3-1019/rS/chain/libs/clocks.tcl
+2026-10-20 00:03:57 PDT STA tt: physical die clock arrivals (puts "OT_DIE_CLOCK_PHYS col=late measured=14347 ideal=1 of 14348")
+2026-10-20 00:07:03 PDT STA tt: tns max -74867904.00 wns max -6209.29 worst slack max -6209.29 
+2026-10-20 00:07:10 PDT DIE CLOCK CHECK tt: /srv/opentallas-scratch/claude/qw-dieclk3-1019/rS/chain/sta_r22k_tt/die_clock_check.txt
+2026-10-20 00:07:10 PDT STA ff clock: /srv/opentallas-scratch/claude/qw-dieclk3-1019/rS/chain/libs/clocks.tcl
+2026-10-20 00:07:10 PDT STA ff: physical die clock arrivals (puts "OT_DIE_CLOCK_PHYS col=early measured=14347 ideal=1 of 14348")
+2026-10-20 00:10:46 PDT STA ff: tns max -45376884.00 wns max -4917.18 worst slack min -18579.43 
+2026-10-20 00:10:46 PDT STA ss clock: /srv/opentallas-scratch/claude/qw-dieclk3-1019/rS/chain/libs/clocks.tcl
+2026-10-20 00:10:46 PDT STA ss: die clock NOT measured at SS (sensitivity corner; ideal die clock)
+2026-10-20 00:13:05 PDT STA ss: tns max -4855927.00 wns max -3753.11 worst slack max -3753.11 
+2026-10-20 00:13:05 PDT LAND PLAN: {"links": 417, "E_hist": {"4": 21, "1": 250, "2": 57, "7": 6, "3": 55, "6": 3, "5": 8, "8": 1}, "window_fail": ["q3h_col_0_1", "q3h_col_0_2", "q3h_col_1_1", "q3h_col_1_2", "q3h_col_2_1", "q3h_col_2_2", "q3h_col_3_1", "q3h_col_3_2", "q3h_col_16_1", "q3h_col_16_2", "q3h_col_17_1", "q3h_col_17_2", "q3h_col_18_1", "q3h_col_18_2", "q3h_col_19_1", "q3h_col_19_2", "q3h_col_20_2", "q3h_col_21_2", "q3h_col_22_2", "q3h_col_23_2", "q3h_col_24_1", "q3h_col_24_2", "q3h_col_25_1", "q3h_col_25_2", "q3h_col_26_1", "q3h_col_26_2", "q3h_col_27_1", "q3h_col_27_2", "q3h_col_44_2", "q3h_col_45_2", "q3h_col_46_2", "q3h_col_47_2"], "no_slack": ["serdes0_rxv", "serdes0_up", "serdes2_txv", "lnk_fwd_epoch", "lnk_fwd_epoch__fo1", "sf_cal_start", "sf_vm_drained", "sf_collective_drained", "sf_collective_busy", "sf_crom_fault", "sf_admit_ready", "sf_result_v", "sf_result_done", "sf_result_fault", "sf_prog_tx_observed_v", "sf_prog_rx_v"]}
+2026-10-20 00:13:16 PDT HOLD BUDGET: OT_HOLD_BUDGET FAIL links=152 viol=87 skew_fail=116 tap_mismatch=61 skew_at=flops diag=134 by_fix={"DIAGNOSTIC_PLACEHOLDER":4,"PASS":65,"SKEW_GT80":83}
+2026-10-20 00:13:16 PDT chain done
+2026-10-20 00:13:16 PDT QW-DIECLK3 rS chain rc=0
