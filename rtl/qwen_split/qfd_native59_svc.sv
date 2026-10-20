@@ -263,6 +263,15 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  reg p_lcv;reg[5:0]p_stage;reg[17:0]p_tok,p_pos;reg[379:0]p_cmd;reg[547:0]p_dd;
  reg p_kvs,p_x3s;reg[1:0]p_kvi;
  wire[9:0]x3_slot_pub;
+ wire[9:0]rx_result_pub;
+ generate if(LOCAL32)begin:g_rx_result_pub
+  (* keep = "true" *) reg[9:0]q;
+  always @(posedge ck or negedge rst_pin)
+   if(!rst_pin)q<=0;else q<={10{bnd_rx_slot&&(bnd_rx_slot_kind==3)}};
+  assign rx_result_pub=q;
+ end else begin:g_rx_result_alias
+  assign rx_result_pub={10{p_rs&&(p_rk==3)}};
+ end endgenerate
  wire[15:0]fmt_index_pub;
  generate if(LOCAL32)begin:g_fmt_index_pub
   (* keep = "true" *) reg[15:0]q;
@@ -418,6 +427,16 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[4:0]s_vm_write_beat[0:NS-1];wire[511:0]s_vm_write_data[0:NS-1];wire[547:0]s_tx_payload[0:NS-1];wire[94:0]s_ret[0:NS-1];
  reg[58:0]s_optag[0:NS-1];reg[NS-1:0]s_vis_seen;
  wire svc_fault=|s_svc_fault,record_fault=|s_rec_fault,land_fault=|s_land_fault;
+ wire[9:0]back_slot_pub;
+ generate if(LOCAL32)begin:g_back_slot_pub
+  (* keep = "true" *) reg[9:0]q;
+  always @(posedge ck or negedge rst_top)
+   if(!rst_top)q<=0;
+   else if(MCTX!=0&&(|(s_completed&sel_b)))q<=~q;
+  assign back_slot_pub=q;
+ end else begin:g_back_slot_alias
+  assign back_slot_pub={10{bs}};
+ end endgenerate
  wire[NS-1:0]sel_nf=NS'(1)<<(MCTX!=0?nf:1'b0),sel_f=NS'(1)<<(MCTX!=0?fs:1'b0),sel_b=NS'(1)<<(MCTX!=0?bs:1'b0);
  assign active=|(s_active&sel_nf);   // the command context faults a begin into a slot that is still active
  assign completed=|s_completed;
@@ -452,6 +471,8 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  generate for(gs=0;gs<NS;gs=gs+1)begin:g_slot
   wire f=sel_f[gs],b=sel_b[gs];
   wire req_s=request_slot&&f;
+  wire[75:0]result_slot_pub;
+  wire[9:0]slot_back_pub=(MCTX==0)?10'h3ff:(gs==0?~back_slot_pub:back_slot_pub);
   wire result_v,result_slot,kernel_done;wire[4:0]result_beat,result_slot_beat;wire[58:0]result_tag,kernel_done_tag;wire[511:0]result_data;
   wire[58:0]req_tag,kq_tag;wire[4:0]kq_beat;wire[511:0]kq_data;
   wire vm_commit_v;wire[4:0]vm_commit_beat;wire[58:0]vm_commit_tag;
@@ -461,22 +482,22 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
     if(req_s)begin s_optag[gs]<=request_tag;s_vis_seen[gs]<=0;end
     else if(p_vis&&b)s_vis_seen[gs]<=s_commit_complete[gs]&&!s_land_fault[gs];
    end
-  qfd_native59_static_service u_service(
+  qfd_native59_static_service #(.LOCAL32(LOCAL32)) u_service(
   .ck(ck),.rst_n(rst_svc),.source_fault(src_fault),
   .begin_slot(begin_slot&&sel_nf[gs]),.begin_tag(begin_tag),.request_slot(req_s),.request_tag(request_tag),.result_base_word(base),
   .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
   .q_slot(q_emit&&f),.q_slot_beat(q_emit_beat),.q_v(q[523]&&f),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
-  .result_slot(result_slot),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
+  .result_slot(result_slot),.result_slot_pub(result_slot_pub),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
   .vm_write_v(s_vm_write_v[gs]),.vm_write_word(s_vm_write_word[gs]),.vm_write_beat(s_vm_write_beat[gs]),.vm_write_tag(s_vm_write_tag[gs]),.vm_write_data(s_vm_write_data[gs]),
   .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
   .complete_slot(p_cs&&b),.completed(s_completed[gs]),.active(s_active[gs]),.fault(s_svc_fault[gs]),.native_ret(s_ret[gs]));
-  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1),.TX_FREE(MCTX!=0))u_record(   // QW-N59-4: free rx (svc2) / tx (svc3, MCTX 1: payload merged under tx_v) capture, output-exact
+  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1),.TX_FREE(MCTX!=0),.LOCAL32(LOCAL32))u_record(   // QW-N59-4: free rx (svc2) / tx (svc3, MCTX 1: payload merged under tx_v) capture, output-exact
   .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
   .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),
-  .rx_event(p_rv&&b),.rx_payload(p_rp),.rx_slot(p_rs&&b),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
-  .result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.result_slot(result_slot),.result_slot_beat(result_slot_beat),
+  .rx_result_pub(rx_result_pub),.slot_back_pub(slot_back_pub),.rx_event(p_rv&&b),.rx_payload(p_rp),.rx_slot(p_rs&&b),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
+  .result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.result_slot(result_slot),.result_slot_pub(result_slot_pub),.result_slot_beat(result_slot_beat),
   .kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),.fault(s_rec_fault[gs]));
   qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES))u_land(
   .ck(ck),.rst_n(rst_land),.request_slot(req_s),.request_tag59(request_tag),

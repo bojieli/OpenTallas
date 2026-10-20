@@ -3,7 +3,7 @@
 // the typed codec. Historical x3 Q is not a second attention-service source.
 // operation_tag is captured at the actual accepted CMD, held through all
 // returned results/done. Epoch/layer/beat are checked before restoring TAG59.
-module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX_FREE=0)(  // RX_FREE / TX_FREE: qkd_native_attention_record (QW-N59-4)
+module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX_FREE=0,LOCAL32=0)(  // RX_FREE / TX_FREE: qkd_native_attention_record (QW-N59-4)
  input wire ck,rst_n,
  input wire [58:0] operation_tag,
  input wire kernel_request_v,input wire [58:0] kernel_request_tag,
@@ -15,10 +15,23 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX
  input wire rx_slot,input wire [3:0] rx_slot_kind,input wire [4:0] rx_slot_beat,
  output wire result_v,output wire [4:0] result_beat,output wire [58:0] result_tag,
  output wire [511:0] result_data,
+ input wire[9:0]rx_result_pub,slot_back_pub,
+ output wire[75:0]result_slot_pub,
  output reg result_slot,output reg [4:0] result_slot_beat,
  output wire kernel_done,output wire [58:0] kernel_done_tag,
  output wire fault
 );
+ // Same original result_slot edge, independently kept per 8-bit service hold.
+ generate if(LOCAL32)begin:g_result_pub
+  for(genvar rc=0;rc<76;rc=rc+1)begin:g_copy
+   (* keep = "true" *) reg q;
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)q<=0;else q<=rx_result_pub[rc/8]&&slot_back_pub[rc/8];
+   assign result_slot_pub[rc]=q;
+  end
+ end else begin:g_result_alias
+  assign result_slot_pub={76{result_slot}};
+ end endgenerate
  wire request=kernel_request_v;
  wire [58:0] actual_tag=request?kernel_request_tag:kernel_q_tag;
  // Position is an18-bit count, zero-extended from the actual TAG59 position13.

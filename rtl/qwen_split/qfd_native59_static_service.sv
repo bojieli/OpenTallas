@@ -9,7 +9,7 @@
 // This module contains no arithmetic and cannot fabricate Q or result words.
 // TAG59={epoch16,stage6,token18,position13,segment6}; stages1..36.
 module qfd_native59_static_service #(
- parameter integer MUT_EARLY_COMPLETE=0
+ parameter integer MUT_EARLY_COMPLETE=0,LOCAL32=0
 )(
  input wire ck,rst_n,input wire source_fault,
  input wire begin_slot,input wire [58:0] begin_tag,
@@ -19,7 +19,7 @@ module qfd_native59_static_service #(
  input wire q_slot,input wire [4:0] q_slot_beat,
  input wire q_v,input wire [4:0] q_beat,input wire [58:0] q_tag,input wire [511:0] q_data,
  output reg kernel_q_v,output reg [4:0] kernel_q_beat,output reg [58:0] kernel_q_tag,output reg [511:0] kernel_q_data,
- input wire result_slot,input wire [4:0] result_slot_beat,
+ input wire result_slot,input wire[75:0]result_slot_pub,input wire [4:0] result_slot_beat,
  input wire result_v,input wire [4:0] result_beat,input wire [58:0] result_tag,input wire [511:0] result_data,
  output reg vm_write_v,output reg [19:0] vm_write_word,output reg [4:0] vm_write_beat,
  output reg [58:0] vm_write_tag,output reg [511:0] vm_write_data,
@@ -27,6 +27,31 @@ module qfd_native59_static_service #(
  input wire kernel_done,input wire [58:0] kernel_done_tag,
  input wire complete_slot,output reg completed,output reg active,output reg fault,output wire [94:0] native_ret
 );
+ // Result payload holds use independently registered same-edge publications.
+ // Every bit is retained on the same inactive edges as the original service.
+ wire[19:0]result_word=base+result_slot_beat;
+ generate if(LOCAL32)begin:g_result_payload32
+  for(genvar rg=0;rg<64;rg=rg+1)begin:g_data
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)vm_write_data[8*rg+:8]<=0;
+    else if(result_slot_pub[rg])vm_write_data[8*rg+:8]<=result_data[8*rg+:8];
+  end
+  for(genvar rg=0;rg<8;rg=rg+1)begin:g_tag
+   localparam integer RW=(rg==7)?3:8;
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)vm_write_tag[8*rg+:RW]<=0;
+    else if(result_slot_pub[64+rg])vm_write_tag[8*rg+:RW]<=result_tag[8*rg+:RW];
+  end
+  for(genvar rg=0;rg<3;rg=rg+1)begin:g_word
+   localparam integer RW=(rg==2)?4:8;
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)vm_write_word[8*rg+:RW]<=0;
+    else if(result_slot_pub[72+rg])vm_write_word[8*rg+:RW]<=result_word[8*rg+:RW];
+  end
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)vm_write_beat<=0;
+   else if(result_slot_pub[75])vm_write_beat<=result_slot_beat;
+ end endgenerate
  reg [58:0] tag;
  reg [19:0] base;
  reg requested,done_seen,context_valid;reg [5:0] q_count,result_count,commit_count;
@@ -41,7 +66,7 @@ module qfd_native59_static_service #(
   if(!rst_n)begin
    tag<=0;base<=0;context_valid<=0;commit_count<=0;requested<=0;done_seen<=0;q_seen<=0;result_seen<=0;committed<=0;q_count<=0;result_count<=0;
    kernel_request_v<=0;kernel_request_tag<=0;kernel_q_v<=0;kernel_q_beat<=0;kernel_q_tag<=0;kernel_q_data<=0;
-   vm_write_v<=0;vm_write_word<=0;vm_write_beat<=0;vm_write_tag<=0;vm_write_data<=0;
+   vm_write_v<=0;if(LOCAL32==0)begin vm_write_word<=0;vm_write_beat<=0;vm_write_tag<=0;vm_write_data<=0;end
    completed<=0;active<=0;fault<=0;
   end else begin
    kernel_request_v<=request_slot&&!fault&&!source_fault;
@@ -67,8 +92,9 @@ module qfd_native59_static_service #(
    end
    if(result_v!=result_slot)fault<=1;
    if(result_slot)begin
-    vm_write_word<=base+result_slot_beat;vm_write_beat<=result_slot_beat;
-    vm_write_tag<=result_tag;vm_write_data<=result_data;result_count<=result_count+1'b1;
+    if(LOCAL32==0)begin vm_write_word<=base+result_slot_beat;vm_write_beat<=result_slot_beat;
+    vm_write_tag<=result_tag;vm_write_data<=result_data;end
+    result_count<=result_count+1'b1;
     if(!active||!requested||result_tag!=tag||result_beat!=result_slot_beat||result_seen[result_slot_beat]||result_count!={1'b0,result_slot_beat})fault<=1;
     result_seen[result_slot_beat]<=1;
    end
