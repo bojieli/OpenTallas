@@ -1,0 +1,36 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc3-20261019-213744
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc3-20261019-213744
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc3-20261019-213744
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc3-20261019-213744
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc3-20261019-213744
+ot-run: ot-agidock128  admits    44 GB (avail 44, growth 13, headroom 0, waiters 0/0 GB) load 15/64 running 11 disk 315 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3310835-1792471665 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+A0_ACTUAL_CENSUS {"cells": 40227, "drivers": 48531, "register_outputs": 15869, "register_outputs_over32": 33, "maximum_register_loads": 48}
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[35\].q\[0\]$_DFF_P_/QN 48
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[29\].q\[1\]$_DFF_P_/QN 46
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[35\].q\[1\]$_DFF_P_/QN 46
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[41\].q\[0\]$_DFF_P_/QN 46
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[43\].q\[0\]$_DFF_P_/QN 45
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[1\].q\[1\]$_DFF_P_/QN 44
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[42\].q\[0\]$_DFF_P_/QN 44
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[43\].q\[1\]$_DFF_P_/QN 44
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[29\].q\[0\]$_DFF_P_/QN 43
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[27\].q\[1\]$_DFF_P_/QN 42
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[22\].q\[0\]$_DFF_P_/QN 40
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[23\].q\[0\]$_DFF_P_/QN 40
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[24\].q\[0\]$_DFF_P_/QN 40
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[25\].q\[0\]$_DFF_P_/QN 40
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[40\].q\[0\]$_DFF_P_/QN 40
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[41\].q\[1\]$_DFF_P_/QN 40
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[42\].q\[1\]$_DFF_P_/QN 39
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[9\].q\[0\]$_DFF_P_/QN 39
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[22\].q\[1\]$_DFF_P_/QN 38
+A0_DRIVER u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_rr6.g_sp\[23\].q\[1\]$_DFF_P_/QN 38
+b8478228eaf91204ea8fab15080b091e2a4678140ab60e27a4af37371e9841c8  /srv/opentallas-scratch/claude/a0rc3_census_nk/1_synth.odb
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3310835-1792471665): exit 0

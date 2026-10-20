@@ -19,6 +19,7 @@ qfd_tile_nl_romleaf_rc2: FAIL (non-member cells 3795 um2 model, 15 fences)
   corridor  359.0- 475.2 rows=   99256 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.27 nonmember=  3869 nm/free=0.15 util=0.06
   corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.12 nonmember=  1445 nm/free=0.49 util=0.08
   corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   350 nm/free=0.01 util=0.01
+  FAIL hub fence aspect 18.2:1 > 2.5 (one ck root over a tall strip: H-tree spread)
   FAIL corridor 216.0-259.2 free rows 0.11 < 0.40
   FAIL corridor 359.0-475.2 free rows 0.27 < 0.40
   FAIL corridor 575.0-604.8 free rows 0.12 < 0.40
@@ -43,12 +44,13 @@ qfd_tile_nk_romleaf_rc2: FAIL (non-member cells 12867 um2 model, 15 fences)
   corridor  359.0- 475.2 rows=   79836 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.32 nonmember= 12982 nm/free=0.50 util=0.19
   corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.12 nonmember=  4232 nm/free=1.43 util=0.19
   corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   427 nm/free=0.01 util=0.01
+  FAIL hub fence aspect 9.0:1 > 2.5 (one ck root over a tall strip: H-tree spread)
   FAIL corridor 216.0-259.2 free rows 0.11 < 0.40
   FAIL corridor 216.0-259.2 non-member/free 1.24 > 0.60
   FAIL corridor 359.0-475.2 free rows 0.32 < 0.40
   FAIL corridor 575.0-604.8 free rows 0.12 < 0.40
   FAIL corridor 575.0-604.8 non-member/free 1.43 > 0.60
-qfd_tile_nl_romleaf_rc3: PASS (non-member cells 3795 um2 model, 15 fences)
+qfd_tile_nl_romleaf_rc3: FAIL (non-member cells 3795 um2 model, 15 fences)
   fence tx0  w= 14.4 rows=    1914 regs=   133 fill=0.069
   fence tx1  w= 14.4 rows=    1914 regs=   133 fill=0.069
   fence tx2  w= 14.4 rows=    1914 regs=   133 fill=0.069
@@ -69,7 +71,8 @@ qfd_tile_nl_romleaf_rc3: PASS (non-member cells 3795 um2 model, 15 fences)
   corridor  359.0- 475.2 rows=   99256 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.49 nonmember=  3869 nm/free=0.08 util=0.06
   corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.55 nonmember=  1445 nm/free=0.10 util=0.08
   corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   350 nm/free=0.01 util=0.01
-qfd_tile_nk_romleaf_rc3: PASS (non-member cells 12867 um2 model, 15 fences)
+  FAIL hub fence aspect 19.2:1 > 2.5 (one ck root over a tall strip: H-tree spread)
+qfd_tile_nk_romleaf_rc3: FAIL (non-member cells 12867 um2 model, 15 fences)
   fence tx0  w= 14.4 rows=    1914 regs=   133 fill=0.069
   fence tx1  w= 14.4 rows=    1914 regs=   133 fill=0.069
   fence tx2  w= 14.4 rows=    1914 regs=   133 fill=0.069
@@ -90,7 +93,8 @@ qfd_tile_nk_romleaf_rc3: PASS (non-member cells 12867 um2 model, 15 fences)
   corridor  359.0- 475.2 rows=   79836 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.59 nonmember= 12982 nm/free=0.27 util=0.19
   corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.55 nonmember=  4232 nm/free=0.30 util=0.19
   corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   427 nm/free=0.01 util=0.01
-qfd_tile_nl_romleaf_rc3b: PASS (non-member cells 3795 um2 model, 15 fences)
+  FAIL hub fence aspect 9.5:1 > 2.5 (one ck root over a tall strip: H-tree spread)
+qfd_tile_nl_romleaf_rc3b: FAIL (non-member cells 3795 um2 model, 15 fences)
   fence tx0  w= 14.4 rows=    1914 regs=   133 fill=0.069
   fence tx1  w= 14.4 rows=    1914 regs=   133 fill=0.069
   fence tx2  w= 14.4 rows=    1914 regs=   133 fill=0.069
@@ -111,7 +115,8 @@ qfd_tile_nl_romleaf_rc3b: PASS (non-member cells 3795 um2 model, 15 fences)
   corridor  359.0- 475.2 rows=   99256 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.62 nonmember=  3869 nm/free=0.06 util=0.06
   corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.55 nonmember=  1445 nm/free=0.10 util=0.08
   corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   350 nm/free=0.01 util=0.01
-qfd_tile_nk_romleaf_rc3b: PASS (non-member cells 12867 um2 model, 15 fences)
+  FAIL hub fence aspect 9.5:1 > 2.5 (one ck root over a tall strip: H-tree spread)
+qfd_tile_nk_romleaf_rc3b: FAIL (non-member cells 12867 um2 model, 15 fences)
   fence tx0  w= 14.4 rows=    1914 regs=   133 fill=0.069
   fence tx1  w= 14.4 rows=    1914 regs=   133 fill=0.069
   fence tx2  w= 14.4 rows=    1914 regs=   133 fill=0.069
@@ -130,5 +135,90 @@ qfd_tile_nk_romleaf_rc3b: PASS (non-member cells 12867 um2 model, 15 fences)
   corridor    2.2-  43.2 rows=   35053 fences=-                        free=1.00 nonmember=  1514 nm/free=0.04 util=0.04
   corridor  216.0- 259.2 rows=   36898 fences=rsw,rnw,dw               free=0.68 nonmember=  4956 nm/free=0.20 util=0.15
   corridor  359.0- 475.2 rows=   79836 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.66 nonmember= 12982 nm/free=0.25 util=0.19
+  corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.55 nonmember=  4232 nm/free=0.30 util=0.19
+  corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   427 nm/free=0.01 util=0.01
+  FAIL hub fence aspect 5.1:1 > 2.5 (one ck root over a tall strip: H-tree spread)
+qfd_tile_nl_romleaf_rc4: PASS (non-member cells 3795 um2 model, 15 fences)
+  fence tx0  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx1  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx2  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx3  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx4  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx5  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx6  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx7  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence rsw  w= 15.2 rows=    3739 regs=   150 fill=0.040
+  fence rnw  w= 15.2 rows=    4314 regs=   150 fill=0.035
+  fence rse  w= 14.8 rows=    3640 regs=   150 fill=0.041
+  fence rne  w= 14.8 rows=    4200 regs=   150 fill=0.036
+  fence dw   w= 15.2 rows=    3739 regs=   308 fill=0.082
+  fence de   w= 14.8 rows=    3640 regs=   308 fill=0.085
+  fence hub  w= 70.0 rows=    9271 regs=   899 fill=0.097
+  corridor    2.2-  43.2 rows=   35053 fences=-                        free=1.00 nonmember=   350 nm/free=0.01 util=0.01
+  corridor  216.0- 259.2 rows=   36898 fences=rsw,rnw,dw               free=0.68 nonmember=  1090 nm/free=0.04 util=0.05
+  corridor  359.0- 475.2 rows=   99256 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.75 nonmember=  3869 nm/free=0.05 util=0.06
+  corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.55 nonmember=  1445 nm/free=0.10 util=0.08
+  corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   350 nm/free=0.01 util=0.01
+qfd_tile_nk_romleaf_rc4: PASS (non-member cells 12867 um2 model, 15 fences)
+  fence tx0  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx1  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx2  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx3  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx4  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx5  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx6  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx7  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence rsw  w= 15.2 rows=    3739 regs=   150 fill=0.040
+  fence rnw  w= 15.2 rows=    4314 regs=   150 fill=0.035
+  fence rse  w= 14.8 rows=    3640 regs=   150 fill=0.041
+  fence rne  w= 14.8 rows=    4200 regs=   150 fill=0.036
+  fence dw   w= 15.2 rows=    3739 regs=   308 fill=0.082
+  fence de   w= 14.8 rows=    3640 regs=   308 fill=0.085
+  fence hub  w= 70.0 rows=    9271 regs=   749 fill=0.081
+  corridor    2.2-  43.2 rows=   35053 fences=-                        free=1.00 nonmember=  1514 nm/free=0.04 util=0.04
+  corridor  216.0- 259.2 rows=   36898 fences=rsw,rnw,dw               free=0.68 nonmember=  4956 nm/free=0.20 util=0.15
+  corridor  359.0- 475.2 rows=   79836 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.69 nonmember= 12982 nm/free=0.23 util=0.19
+  corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.55 nonmember=  4232 nm/free=0.30 util=0.19
+  corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   427 nm/free=0.01 util=0.01
+qfd_tile_nl_romleaf_rc4b: PASS (non-member cells 3795 um2 model, 15 fences)
+  fence tx0  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx1  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx2  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx3  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx4  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx5  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx6  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx7  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence rsw  w= 15.2 rows=    3739 regs=   150 fill=0.040
+  fence rnw  w= 15.2 rows=    4314 regs=   150 fill=0.035
+  fence rse  w= 14.8 rows=    3640 regs=   150 fill=0.041
+  fence rne  w= 14.8 rows=    4200 regs=   150 fill=0.036
+  fence dw   w= 15.2 rows=    3739 regs=   308 fill=0.082
+  fence de   w= 14.8 rows=    3640 regs=   308 fill=0.085
+  fence hub  w= 80.0 rows=    8325 regs=   899 fill=0.108
+  corridor    2.2-  43.2 rows=   35053 fences=-                        free=1.00 nonmember=   350 nm/free=0.01 util=0.01
+  corridor  216.0- 259.2 rows=   36898 fences=rsw,rnw,dw               free=0.68 nonmember=  1090 nm/free=0.04 util=0.05
+  corridor  359.0- 475.2 rows=   99256 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.76 nonmember=  3869 nm/free=0.05 util=0.06
+  corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.55 nonmember=  1445 nm/free=0.10 util=0.08
+  corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   350 nm/free=0.01 util=0.01
+qfd_tile_nk_romleaf_rc4b: PASS (non-member cells 12867 um2 model, 15 fences)
+  fence tx0  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx1  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx2  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx3  w= 14.4 rows=    1914 regs=   133 fill=0.069
+  fence tx4  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx5  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx6  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence tx7  w= 14.0 rows=    1859 regs=   133 fill=0.071
+  fence rsw  w= 15.2 rows=    3739 regs=   150 fill=0.040
+  fence rnw  w= 15.2 rows=    4314 regs=   150 fill=0.035
+  fence rse  w= 14.8 rows=    3640 regs=   150 fill=0.041
+  fence rne  w= 14.8 rows=    4200 regs=   150 fill=0.036
+  fence dw   w= 15.2 rows=    3739 regs=   308 fill=0.082
+  fence de   w= 14.8 rows=    3640 regs=   308 fill=0.085
+  fence hub  w= 80.0 rows=    8325 regs=   749 fill=0.090
+  corridor    2.2-  43.2 rows=   35053 fences=-                        free=1.00 nonmember=  1514 nm/free=0.04 util=0.04
+  corridor  216.0- 259.2 rows=   36898 fences=rsw,rnw,dw               free=0.68 nonmember=  4956 nm/free=0.20 util=0.15
+  corridor  359.0- 475.2 rows=   79836 fences=tx0,tx1,tx2,tx3,tx4,tx5,tx6,tx7,hub free=0.71 nonmember= 12982 nm/free=0.23 util=0.19
   corridor  575.0- 604.8 rows=   25460 fences=rse,rne,de               free=0.55 nonmember=  4232 nm/free=0.30 util=0.19
   corridor  777.6- 818.6 rows=   35053 fences=-                        free=1.00 nonmember=   427 nm/free=0.01 util=0.01

@@ -1,0 +1,8 @@
+QW-A0-RC3 rc3/rc3b gates (10-19 21:35, @28d7d8290, --remote auto --cts):
+ NK rc3  (ot-agidock128): DPL 8061 -> 1 stuck cell: DPL-0008 region check u_g.u_tile.n_va$_DFF_P_ (hub regex member placed at the pin side) -> rc4 FREE land_top
+ NK rc3b (ot-agidock128): same single n_va cell
+ NL rc3  (ot-epyc9): DPL PASS (free lanes fixed DPL-0033); CTS FAIL ck pin-flop spread 193.3 ps TT (3099 sinks, hub 44x845, insertion 635.7)
+ NL rc3b (ot-epyc9): DPL PASS; CTS FAIL ck spread 147.6 ps TT (hub 50x475, CTS sink region 39x350 normalized, insertion 547.1)
+ ck sinks (NL rc3b 3_place.odb): 3060 hub + 39 FREE land_rq/fault, all inside x 387-460 -> spread is the H-tree over a tall strip
+ -> rc4 square-ish hub 70x140 (rc4b 80x110), n_va/fault_q FREE.
+ NK rc3 1_synth.odb census (audit_odb): 33 registers > 32 loads, max 48 (rc1: 46, max 88); all g_rr6.g_sp[*] shift-amount copies.
