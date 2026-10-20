@@ -49,8 +49,9 @@ for w,h in [(302.4,302.4),(345.6,302.4)]:
     reach=max(math.dist(x,y) for x in corners for y in corners)
     result['variants'].append(dict(outline_um=[w,h],std_band_um=band,band_area_um2=usable,
                                   modeled_std_density=area/usable,pin_density_per_um=density,
-                                  all_terminal_pair_distance_bound_um=reach,
-                                  planning_reach_pass=reach<=405,
+                                  euclidean_model_only=reach,
+                                  manhattan_all_terminal_pair_envelope_um=max(abs(x[0]-y[0])+abs(x[1]-y[1]) for x in corners for y in corners),
+                                  full_stage_manhattan_reach_qualification="OPEN: connected actual-stage L1 audit required",
                                   clock_entry='N centre beside all boundary/core register mass',
                                   qualification='PLAN ONLY: actual row occupancy, clock spread, native placed reach and routing required'))
 Path('geometry_plan.json').write_text(json.dumps(result,indent=2)+'\n')

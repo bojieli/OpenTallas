@@ -89,10 +89,11 @@
         "E": 3.9173789173789197,
         "W": 4.617758784425454
       },
-      "all_terminal_pair_distance_bound_um": 369.35898947230186,
-      "planning_reach_pass": true,
       "clock_entry": "N centre beside all boundary/core register mass",
-      "qualification": "PLAN ONLY: actual row occupancy, clock spread, native placed reach and routing required"
+      "qualification": "PLAN ONLY: actual row occupancy, clock spread, native placed reach and routing required",
+      "euclidean_model_only": 369.35898947230186,
+      "manhattan_all_terminal_pair_envelope_um": 514.08,
+      "full_stage_manhattan_reach_qualification": "OPEN: Euclidean envelope is not the <=405um full combinational-stage L1 requirement; connected actual-stage audit required"
     },
     {
       "outline_um": [
@@ -112,10 +113,11 @@
         "E": 3.9173789173789197,
         "W": 4.617758784425454
       },
-      "all_terminal_pair_distance_bound_um": 395.2386863655935,
-      "planning_reach_pass": true,
       "clock_entry": "N centre beside all boundary/core register mass",
-      "qualification": "PLAN ONLY: actual row occupancy, clock spread, native placed reach and routing required"
+      "qualification": "PLAN ONLY: actual row occupancy, clock spread, native placed reach and routing required",
+      "euclidean_model_only": 395.2386863655935,
+      "manhattan_all_terminal_pair_envelope_um": 557.28,
+      "full_stage_manhattan_reach_qualification": "OPEN: Euclidean envelope is not the <=405um full combinational-stage L1 requirement; connected actual-stage audit required"
     }
   ]
 }

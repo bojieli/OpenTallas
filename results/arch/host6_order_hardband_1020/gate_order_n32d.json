@@ -1,0 +1,125 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 23% = (macros/children 12326 + std 11774) / outline 104509 um2 (lattice/channel-bound gate-rule exception (placement verification required): Six real p192 SRAMs occupy a 43.2 um lattice with >=34.992 um channels. A single full-width north standard-cell band at y216..300.24 is sized from measured11773.81656 um2 standard area: primary25110.2592 um2/46.89%, backup28749.4272 um2/40.95%. Actual row-hook carrier probes retain312 rows and remove792; they prove hook geometry only, not new-source placement. Planned pin densities are <=5.237/um and terminal-pair upper bounds369.359/395.239 um. The additional outline area is accepted for truthful lattice/channel/band geometry; actual placed occupancy/reach/clock/native checks remain mandatory.)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Exact selected source already contains all input/output pin registers; adding a flow wrapper changes the boundary latency.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc6 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qkd_hr_core_order_n32d_20261020-051204.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qkd_hr_core_order_n32d_20261020-051204.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/qkd_hr_core_order_n32d-20261020-051204",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc6 in 661 s (gate total 734 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2280, 'pin_rectangles': 2280, 'pin_track_checked': 2280, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 7edf1506789861cd7acb90eb99b5d5db2bcea62acd347091a5700d8f43c5dc5f",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 11890 um2 + macros 12326 in core 101729: util 14% (std-cell density 14.4% of placeable 82783 um2; total fill 23.8%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qkd_hr_core_order_n32 cells 79,546 flops 18,231 depth 506.8 ps util 0.2422 reach 0.0 um (2.8 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck_core: 18,231 flops > 15,000 on one root (+0 ICGs, 6 macro clock pins; e.g. u65596_c0.u_cell): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:ck_core: 18,237 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,237 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck_core: 18,237 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,237 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/kv-host7-1020/physical/ref_tile/qkd_hr_core_order_n32d/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "measured_band_fill",
+   "message": "missing actual placed-cell/row occupancy evidence",
+   "fix": "fix actual placement/row envelope; preserve this failed receipt"
+  },
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 24% = (hard macros 12325.6 + synthesized std cells 12308.0) / outline 104509.4 um2; pin demand per face: S 8 pins over 37.8/345.6 um (11%), N 1569 pins over 341.0/345.6 um (99%), W 445 pins over 148.8/302.4 um (49%), E 386 pins over 148.9/302.4 um (49%) (< 35%)",
+   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  }
+ ]
+}

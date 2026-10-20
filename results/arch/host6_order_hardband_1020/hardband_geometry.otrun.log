@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: ot-epyc9       admits   929 GB (avail 753, growth 102, headroom 0, waiters 0/0 GB) load 62/128 running 33 disk 113 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3843493-1792506948 after 0 s
+ORDER_ACTUAL_ANCHOR_GEOMETRY variant=e count=2290 bbox_um=2.268,216.27,300.132,300.24 std_area_um2=667.7640000000006 outside_approved_band=0
+ORDER_ACTUAL_ANCHOR_GEOMETRY variant=f count=2290 bbox_um=2.322,216.27,343.332,300.24 std_area_um2=667.7640000000038 outside_approved_band=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3843493-1792506948): exit 0

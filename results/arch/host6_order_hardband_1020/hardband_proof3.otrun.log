@@ -1,0 +1,39 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: ot-epyc9       admits  1079 GB (avail 835, growth 79, headroom 0, waiters 0/0 GB) load 41/128 running 30 disk 115 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-order-hardband-proof-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3823747-1792506489 after 0 s
+ORDER_HARDBAND_PROOF PASS anchors=2290 nonboundary_fenced=86751 classes=anchor 2290 physical 9133 macro 6 central 86751
+Error: proof.tcl, 26 ORDER_BAND: missing actual pin-anchor list /work/out/ot_out_flop_at_pins.txt
+ORDER_HARDBAND_NEGATIVE REFUSED variant=e mutant=missing_list rc=1
+Error: proof.tcl, 26 ORDER_BAND: duplicate anchor u65596_c0/u_cell
+ORDER_HARDBAND_NEGATIVE REFUSED variant=e mutant=duplicate_anchor rc=1
+Error: proof.tcl, 26 ORDER_BAND: missing listed anchor no_such_instance
+ORDER_HARDBAND_NEGATIVE REFUSED variant=e mutant=missing_anchor rc=1
+Error: proof.tcl, 26 ORDER_BAND: listed anchor not fixed: u65596_c0/u_cell
+ORDER_HARDBAND_NEGATIVE REFUSED variant=e mutant=unfixed_anchor rc=1
+Error: proof.tcl, 26 ORDER_BAND: unexpected input-hold ownership file for exact inhold=false kit
+ORDER_HARDBAND_NEGATIVE REFUSED variant=e mutant=unexpected_hold rc=1
+Error: proof.tcl, 26 ORDER_BAND: unowned fixed functional cell _0000_
+ORDER_HARDBAND_NEGATIVE REFUSED variant=e mutant=unowned_fixed rc=1
+Error: proof.tcl, 27 ORDER_BAND: region already exists; refuse duplicate hook
+ORDER_HARDBAND_NEGATIVE REFUSED variant=e mutant=duplicate_hook rc=1
+ORDER_HARDBAND_PROOF PASS anchors=2290 nonboundary_fenced=86751 classes=anchor 2290 physical 10079 macro 6 central 86751
+Error: proof.tcl, 26 ORDER_BAND: missing actual pin-anchor list /work/out/ot_out_flop_at_pins.txt
+ORDER_HARDBAND_NEGATIVE REFUSED variant=f mutant=missing_list rc=1
+Error: proof.tcl, 26 ORDER_BAND: duplicate anchor u65596_c0/u_cell
+ORDER_HARDBAND_NEGATIVE REFUSED variant=f mutant=duplicate_anchor rc=1
+Error: proof.tcl, 26 ORDER_BAND: missing listed anchor no_such_instance
+ORDER_HARDBAND_NEGATIVE REFUSED variant=f mutant=missing_anchor rc=1
+Error: proof.tcl, 26 ORDER_BAND: listed anchor not fixed: u65596_c0/u_cell
+ORDER_HARDBAND_NEGATIVE REFUSED variant=f mutant=unfixed_anchor rc=1
+Error: proof.tcl, 26 ORDER_BAND: unexpected input-hold ownership file for exact inhold=false kit
+ORDER_HARDBAND_NEGATIVE REFUSED variant=f mutant=unexpected_hold rc=1
+Error: proof.tcl, 26 ORDER_BAND: unowned fixed functional cell _0000_
+ORDER_HARDBAND_NEGATIVE REFUSED variant=f mutant=unowned_fixed rc=1
+Error: proof.tcl, 27 ORDER_BAND: region already exists; refuse duplicate hook
+ORDER_HARDBAND_NEGATIVE REFUSED variant=f mutant=duplicate_hook rc=1
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3823747-1792506489): exit 0

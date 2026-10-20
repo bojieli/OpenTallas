@@ -99,3 +99,13 @@ The probe uses a historical pre-placement database only as a technology carrier;
 it is not a new-source floorplan/CTS proof. The first-width run passed the row
 probe then refused loading a second DB; the separate second-width run passed.
 The source-native registry and final source-bound layout gates remain required.
+
+
+07:31 metric correction: the original 369.359/395.239 um corner envelopes
+were computed with `math.dist`, so they are Euclidean model values only.
+They do not establish the <=405 um full combinational-stage Manhattan rule.
+The same full geometry envelope has L1 maxima 514.08/557.28 um. Those
+conservative all-pair envelopes do not prove a connected-path failure either;
+actual connected stage endpoints must be measured. The original signed
+approval is preserved verbatim as a MODEL/fill approval, with no reach
+qualification inferred. The updated geometry JSON records both metrics.
