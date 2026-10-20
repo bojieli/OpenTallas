@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/collfj2/src_243ff95fd
+ot-run: ot-epyc6       admits  1030 GB (avail 834, growth 113, headroom 0, waiters 0/0 GB) load 68/128 running 43 disk 4946 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/collfj2/src_243ff95fd
+ot-run: ot-epyc9       admits   553 GB (avail 583, growth 197, headroom 0, waiters 0/0 GB) load 258/128 running 58 disk 255 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collfj2/src_243ff95fd
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/collfj2/src_243ff95fd
+ot-run: -> ot-epyc6
+ot-heavy: request 48G is charged 13G (class 'run_coll_lp_ars_all.sh:q#' measured peak 4.1G, n=4+0 proved); the cap stays 48G
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4193235-1792478947 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+m_latespc EQ_MISMATCH port=program_fault cyc=2441
+m_latespc EQ_MISMATCH port=fault_cause cyc=2441
+m_latespc EQ_MISMATCH port=program_fault cyc=2442
+m_latespc EQ_MISMATCH port=hgi_busy cyc=2442
+EQ_MUTANT m_latespc REJECTED
+COLL_LP_ARS_PTMUT_EXIT 1
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4193235-1792478947): exit 1

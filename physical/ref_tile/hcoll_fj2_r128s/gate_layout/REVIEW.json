@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hcoll_fj2_r128s",
+ "reviewer": "HBM-COLLFJ2 sub-lane of LEAD3-HBM (not on critical_tiles.txt; successor kit, 0 earlier routes)",
+ "verdict": "APPROVED",
+ "time": "2026-10-20T00:20:00-07:00",
+ "gate_commit": "8c8113b7a",
+ "checklist": {
+  "lattice": "PASS: one SRAM macro at [23.76, 23.76] on the track lattice, >= 20 um channels to every core edge on both macro pin faces",
+  "std_cell_band": "PASS: one connected band around the macro, util 41% (std density 40.7%, total fill 44.6%); N band denser (HOST frame pin flops), no hotspot, GRT overflow 0 (M2 34.84%)",
+  "pin_spread": "PASS: N cfg/desc/status, S issuer, E/W faults on full faces <= 6/um, as r128w",
+  "clock_entry": "PASS: clk N face; TT/FF insertion 173.6/142.0 ps, pin-flop spread 14.7/14.8 ps (<= 80)",
+  "shape": "PASS: 86.4 x 71.28 (1.21:1); placement setup +89.7 ps, hold +50.5 ps"
+ },
+ "notes": "SAFE successor of hcoll_fj2_r128w: 12 kept reset copies (<= 27 loads), flow store in SRAM, registered frame decode; no WARN. Re-gated by submit_exact --regate on the final commit (same geometry)."
+}
