@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_static_ovl_sfm2-sfm2-a71ab049e bench bench_sfm_mutfo7_z17_bit19 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_static_ovl_sfm2-sfm2-a71ab049e log cl/bench_sfm_mutfo7_z17_bit19.a1b1.log captured 2026-10-19T19:49:24-07:00
+# fail_regex '^SFO_MITER_FAIL Z17 cycle'
+SFO_MITER_FAIL Z17 cycle 2022 z 00002 payload-derived 00003
+SFO_MITER_FAIL
