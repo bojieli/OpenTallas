@@ -1,0 +1,8 @@
+lint_receipt: cdc_synchronizers hbm_su_pg_stream_b_safe3_1019: no matching receipt; running the lint on the fleet (ot-run, 48 GB)
+lint_receipt: cdc_synchronizers hbm_su_pg_stream_b_safe3_1019: lint ran on ot-epyc9 (17 s); receipt /home/ubuntu/wt/codex-pgsafe3-batch-1020/physical/ref_tile/hbm_su_pg_stream_b_safe3_1019/lint_receipt.json (commit it with the kit)
+GATE FAIL native_cts_sdc: ['clock.sdc', 'clock_entry.sdc', 'signoff.sdc'] differ from current generated native CTS stage policy (4af58769b): declared standard CTS roots must be ideal before CTS, while raw hard-entry roots and require-wire/postCTS checks retain actual propagation; a marker alone is insufficient  -> FIX: rebase on main; run python3 tools/ref_tile/ref_tile.py gen <this kit's spec.json>; review unchanged RTL/pins/periods, commit regenerated kit, then run a fresh source-bound --cts gate and submit a new normal successor; preserve original accepted/frozen jobs
+GATE WARN util: utilisation 8% outside 45%-60% (std 4400 + macro 0 in core 53953 um2)  -> FIX: resize the outline to util 0.50-0.55 (drop 'outline', set util)
+GATE INFO pin_regs: pin registers opted out: SAFE3: every boundary bit has its register in RTL (mapped boundary check c4751: 0 inputs reaching logic, 0 outputs from logic): vmr_cmd/su_wq are captured at the face on clk_ctl (+1 serial edge, priced), su_rr / ij_* / pg_fault are return-region / inject-region / synchroniser flops, the LG tap regis
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: skipped: local FAIL first
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

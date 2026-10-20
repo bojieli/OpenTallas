@@ -19,8 +19,7 @@ proc ot_cdc_flow_names {name} {
     lappend names $core
     if {[regexp {^([^$]+)\$} $core -> base]} {lappend names $base}
   }
-  # LH-PGVM2 10-19: contents of kept-hierarchy instances (keep_hierarchy region / replica cells) are named with '/'
-  # in the routed netlist; the lint flattens them with '.' (cdc_sync_constraints.elaborate)
+  # Logical lint flattens module hierarchy with dots; mapped kept cells use slashes.
   foreach n $names {if {[string first / $n] >= 0} {lappend names [string map {/ .} $n]}}
   return $names
 }
@@ -50,6 +49,7 @@ proc ot_cdc_seam_role {cell} {
 
 # Every non-CDC dependence is an exact linted bank-source / domain pair; ordinary related data is not exempted.
 set ::ot_cdc_seam_seen {}
+set ::ot_cdc_seam_pending {}
 proc ot_cdc_seam_crossing {start pin source target source_domain target_domain} {
   lassign [ot_cdc_seam_role $source] name role index
   if {$name eq "" || ![dict exists $::ot_cdc_seams $name]} {
@@ -67,17 +67,27 @@ proc ot_cdc_seam_crossing {start pin source target source_domain target_domain} 
   set min_bound [expr {-[dict get $w hold] * $q}]
   set_max_delay $max_bound -from $launch -to $pin
   set_min_delay $min_bound -from $launch -to $pin
-  foreach kind {max min} {
-    set paths [find_timing_paths -from $launch -to $pin -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} continue
-    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-      error "OT_CDC_SEAM: missing finite bounded $kind path $source -> $target"
-    }
-  }
+  # Install every exact constraint before timing verification: changing constraints per
+  # query invalidates the full timing graph (SAFE3: >4 hours in CDC_SEAM enumeration).
+  lappend ::ot_cdc_seam_pending [list $launch $pin $source $target]
   dict incr ::ot_cdc_seam_seen $name
   puts "OT_CDC_SEAM BOUNDED $name $source -> $target"
 }
+proc ot_cdc_seam_verify {} {
+  foreach item $::ot_cdc_seam_pending {
+    lassign $item launch pin source target
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $pin -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} continue
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_CDC_SEAM: missing finite bounded $kind path $source -> $target"
+      }
+    }
+  }
+  set ::ot_cdc_seam_pending {}
+}
 proc ot_cdc_seam_complete {} {
+  ot_cdc_seam_verify
   dict for {name window} $::ot_cdc_seams {
     if {![dict exists $::ot_cdc_seam_seen $name]} {error "OT_CDC_SEAM: missing actual bank window $name"}
   }
@@ -118,6 +128,7 @@ ot_fsm_cdc_guard OT_CDC {::ot_cdc_roles}
 # sources (Gray source, >= 2-stage destination chain, payload published with the count, capture gated by the
 # synchronised count). Every actual crossing must match a tagged pair; no other path receives an exception.
 set ::ot_cdc_seen {}
+set ::ot_cdc_pending {}
 proc ot_cdc_role {cell} {
   set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
   set names [ot_cdc_flow_names $full]
@@ -144,16 +155,23 @@ proc ot_cdc_bound {start target bound} {
   if {[llength $launch] != 1} {error "OT_CDC: missing unique launch register"}
   set_max_delay -ignore_clock_latency $bound -from $launch -to $target
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
-  foreach kind {max min} {
-    set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-      puts "OT_CDC PATH_DEFERRED [get_full_name $start] -> [get_full_name $target] $kind (strict at sign-off)"
-      continue
-    }
-    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-      error "OT_CDC: missing finite bounded $kind path [get_full_name $start] -> [get_full_name $target]"
+  lappend ::ot_cdc_pending [list $launch $target [get_full_name $start] [get_full_name $target]]
+}
+proc ot_cdc_verify {} {
+  foreach item $::ot_cdc_pending {
+    lassign $item launch target sname tname
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        puts "OT_CDC PATH_DEFERRED $sname -> $tname $kind (strict at sign-off)"
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_CDC: missing finite bounded $kind path $sname -> $tname"
+      }
     }
   }
+  set ::ot_cdc_pending {}
 }
 proc ot_cdc_crossing {start pin source target source_domain target_domain} {
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
@@ -181,6 +199,7 @@ proc ot_cdc_crossing {start pin source target source_domain target_domain} {
   puts "OT_CDC BOUNDED $sg $sr -> $tr $source -> $target"
 }
 proc ot_cdc_complete {cells} {
+  ot_cdc_verify
   # Every tagged register sits in its declared domain (a tag on a same-domain path is refused here).
   dict for {cell domain} $cells {
     lassign [ot_cdc_role $cell] g r i
