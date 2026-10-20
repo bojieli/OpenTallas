@@ -1,5 +1,5 @@
 {
-  "status": "ROOTcriticalreviewpending, noREVIEW/submit/route",
+  "status": "HOLD_FULL_FLOP_CLOCK_FAIL: ROOTreviewrejectsapproval; noREVIEW/submit/route",
   "source": "ccb102bce",
   "actual_pngs_viewed": [
     "physical/ref_tile/qfd_dv_slice_tload_ns4/gate_layout/floorplan.png",
@@ -9,7 +9,7 @@
     "macro_lattice": "4realROM121.824x62.91um at43.2/129.6/216umorigins,43.2grid; actual2x2PNG",
     "band": "fullinterrowstdcellband23.49um; left/rightandcenteropen, nohalooverlap",
     "pins": "standardregisteredallfunctionalIN/OUT; data1024/197.6um=5.18/um onW/E,addr24/5um=4.8/um; nativepinmatchPASS; wrapperexisting+1input/+1output",
-    "clock": "ckN195um besidecentralcontrol/macro mass; TT/FFspread58.4/55.9ps,insertion519.9/433.8ps guidanceonly; parentreferencecompensationrequired",
+    "clock": "ckN195um besidecentralcontrol/macro mass; TT/FFspread58.4/55.9ps,insertion519.9/433.8ps guidanceonly; parentreferencecompensationrequired; FULLallFF TT433.9..519.9=86.0ps,FF345.0..433.8=88.8ps >80 FAIL underROOTevery-flop/linkedendpoint rule. BoundarysubsetPASS doesnotqualify.",
     "shape": "388.8x216aspect1.8 inheritedreal4ROM/pinboundshape; no arbitraryoutlinepadding",
     "util": "actualstd1855.9+ROM30655.8 /83980.8=38.72%, pin/macroboundexceptionexplicitROOTCTSonly; warningretained",
     "timing": "TTplacementRCsetup+84.7643ps/hold+24.0212ps; mappeddepth448.4ps; finalSSsetup/FFholdunqualified",
@@ -32,5 +32,5 @@
   "constant_drivers": 196,
   "constant_topport_endpoints": [],
   "PG": "rawGRT5396unbound; ordinaryglobal_connect disposablecopy0. SignalidentityPASS27831instmasters/allnonPGsignal+clock+resetpins/placement/allBTerms identical, originalSHAunchanged. No finalPGmetal/via/shortproof, final6_finalnativePGowed.",
-  "remaining": "ROOTactualPNG/checklistreview/exactrouteadmission; nofinaltiming/PGclaim; no thresholdwaiver"
+  "remaining": "Structuralclocklocality successor or exactfullendpoint/rootproof; no metadatafilter or clockthresholdwaiver. FinalSS/FFandPGproof stillowed."
 }
