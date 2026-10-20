@@ -321,24 +321,26 @@ module ot_hgi_coll_static_program_target_s128 #(
     wire scan_loaded;
     wire [6:0] scan_next=check_row+1'b1;
     generate if(ASSEMBLY_PIPE!=0)begin:g_loaded_banks
-        (* keep = "true" *) reg [3:0] scan_addr[0:7];
-        (* keep = "true" *) reg [3:0] write_addr[0:7];
+        (* keep = "true" *) reg [3:0] scan_addr[0:3];
+        (* keep = "true" *) reg [3:0] write_addr[0:3];
         wire [7:0] cfg_bits,scan_bits;
+        for(genvar ac=0;ac<4;ac=ac+1)begin:g_addr
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)begin scan_addr[ac]<=1;write_addr[ac]<=0;end
+                else begin
+                    if(dacc)scan_addr[ac]<=1;
+                    else if(checking && check_row!=127)scan_addr[ac]<=check_row[3:0]+4'd2;
+                    if(frame && !frame_bad)write_addr[ac]<=a_row[3:0];
+                end
+        end
         for(genvar bk=0;bk<8;bk=bk+1)begin:g_bank
             reg [15:0] loaded_local;
             assign loaded[bk*16+:16]=loaded_local;
             always @(posedge clk or negedge rst_n)
-                if(!rst_n)begin scan_addr[bk]<=1;write_addr[bk]<=0;end
-                else begin
-                    if(dacc)scan_addr[bk]<=1;
-                    else if(checking && check_row!=127)scan_addr[bk]<=check_row[3:0]+4'd2;
-                    if(frame && !frame_bad)write_addr[bk]<=a_row[3:0];
-                end
-            always @(posedge clk or negedge rst_n)
                 if(!rst_n)loaded_local<=0;
-                else if(drain_done && row[6:4]==3'(bk))loaded_local[write_addr[bk]]<=1;
+                else if(drain_done && row[6:4]==3'(bk))loaded_local[write_addr[bk/2]]<=1;
             assign cfg_bits[bk]=loaded[bk*16+cfg_lookup_addr[bk*4+:4]];
-            assign scan_bits[bk]=loaded[bk*16+scan_addr[bk]];
+            assign scan_bits[bk]=loaded[bk*16+scan_addr[bk/2]];
         end
         assign cfg_loaded=cfg_bits[c_row[6:4]];
         assign scan_loaded=scan_bits[scan_next[6:4]];
@@ -406,9 +408,9 @@ module ot_hgi_coll_static_program_target_s128 #(
     generate if(ASSEMBLY_PIPE!=0)begin:g_drain_onehot
         // Kept read selectors are prepared at the previous drain step, avoiding
         // the runtime divide/modulo -> 48:1 word mux control broadcasts.
-        (* keep = "true" *) reg [5:0] step_copy[0:5];
+        (* keep = "true" *) reg [5:0] step_copy[0:3];
         (* keep = "true" *) reg [95:0] rd_select;
-        for(genvar cg=0;cg<6;cg=cg+1)begin:g_counter
+        for(genvar cg=0;cg<4;cg=cg+1)begin:g_counter
             always @(posedge clk or negedge rst_n)
                 if(!rst_n)step_copy[cg]<=0;
                 else if(frame && !frame_bad && ((seen|seg_q[6:0])==7'h7f))step_copy[cg]<=0;
@@ -418,7 +420,7 @@ module ot_hgi_coll_static_program_target_s128 #(
             for(genvar half=0;half<2;half=half+1)begin:g_half
                 always @(posedge clk or negedge rst_n)
                     if(!rst_n)rd_select[wd*2+half]<=0;
-                    else rd_select[wd*2+half]<=draining && step_copy[wd/8]==6'(wd+wd/16);
+                    else rd_select[wd*2+half]<=draining && step_copy[wd/12]==6'(wd+wd/16);
             end
         end
         reg [31:0] word_or;
