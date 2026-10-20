@@ -16,7 +16,7 @@
   213.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 1860.4370000000017,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -109,8 +109,8 @@
   [
    "WARN",
    "fill",
-   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
-   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+   "fill 39% = (macros/children 30656 + std 1860) / outline 83981 um2 < 50%",
+   ""
   ]
  ],
  "referenced": [

@@ -1,0 +1,25 @@
+{
+  "source_prerequisite": "8d24d55ef exacthookednativeall32",
+  "outline_um": [
+    388.8,
+    216
+  ],
+  "area_um2": 83980.8,
+  "macro_area_um2": 30655.79136,
+  "std_area_um2": 1860.437,
+  "total_fill": 0.38718645642813593,
+  "reason": "samefourrealROM pinboundshape; W/E1024databits over197.6um=5.18/um;43.2macrooriginlattice",
+  "registered_interface": "standardpin_regs allfunctionalinput/output +1edgeeach unchangedfromns3; reset_landing2 unchanged",
+  "source_change_edges": 0,
+  "native_maxfanout": 32,
+  "native_over32": 0,
+  "storage": "fourunchangedROM;nosourcedynamicarray",
+  "placement_plan": "independent16bitdata/12bitaddrselectgroups beside destinationchunks; stage sourcecopies central; center194.4,108 has<=302.4umL1 toanyoutlinepoint, per-bit controlsource/dest balls mustbeverified inactualODB; no unplacedreachclaim",
+  "critical_status": "noREVIEWsubmit; actualgatePNG+8itemchecklist+nativeallrolesandPG required",
+  "risks": [
+    "fill38.72%below50%requiresactualmacro/pinboundadmission",
+    "newplacementclockspread/reach/timing unmeasured",
+    "actualcontrolregionalplacementnotyetproven",
+    "sequentialfunctionalproofs sourceRTLonly"
+  ]
+}
