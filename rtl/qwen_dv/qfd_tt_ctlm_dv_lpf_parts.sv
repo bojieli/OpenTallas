@@ -36,10 +36,17 @@ module qfd_tt_ctlm_dv_gi #(
     parameter integer CTX_SRC = 0, FCTX = 0,
     parameter [11:0] NCTX_BASE = 12'h010,
     parameter OPSEG_VIAMAP = ""       ,
-    parameter OPSEG_INST = "qfd_tt_ctlm_opseg"         
+    parameter OPSEG_INST = "qfd_tt_ctlm_opseg",
+    parameter integer PRIVATE_CALR = 0,          // QW-F16PROG4: 1 = CALR two-ROM calendar + LOCAL4 table-load request lane
+    parameter integer F16WTN = 0                 // QW-F16PROG4: 1 = F16 typed witness control (SAFE_PHYS) in the core
 ) (
     input  wire          ck,
     input  wire          rst_n,
+    input  wire [74:0]   pw,                     // F16WTN: the landed TT PW bundle (same port as u_hr / u_go); else unused
+    input  wire [82:0]   f16_auth,               // F16WTN: {begin, all_copies_auth, fusedcap, digest 64, epoch 16} (SYSFACE)
+    input  wire [37:0]   f16_obs,                // F16WTN: {observation 16 {v, user 2, slice 4, pc 9}, stage 6, epoch 16}
+    output wire [16:0]   f16_st,                 // F16WTN: {fault, group 4, user 2, group_complete, awc 4, active 4, ready}
+    output wire [8:0]    treq,                   // PRIVATE_CALR: {valid, stage 6, user 2} registered request lane -> slices
     input  wire [186:0]  dh,
     input  wire [1:0]    dh_user,
     input  wire          init_u0,                  // explicit static admission INIT selector, aligned to DH stage0
@@ -143,8 +150,10 @@ module qfd_tt_ctlm_dv_gi #(
     wire        c_emb, c_seg, c_su, c_xc, c_run, c_done, c_fault, c_ready;
     wire [11:0] c_base; wire [8:0] c_pidx;
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
+    wire        c_tload; wire [5:0] c_tstage; wire [1:0] c_tuser;
     qfd_dv_cmd_cal_mu #(.MUT(0), .LAST_STAGE(LAST_STAGE), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE),
-        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS)) u_cal (.ck(ck), .rst_n(rst_n),
+        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS), .TABLE_ROM(PRIVATE_CALR), .CALENDAR_ROM(PRIVATE_CALR))
+        u_cal (.ck(ck), .rst_n(rst_n), .table_load(c_tload), .table_stage(c_tstage), .table_user(c_tuser),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
         .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start || u0_init_start), .start_first(u0_init_start ? 10'(INIT_FIRST) : op_first), .start_cnt(u0_init_start ? 10'(INIT_CNT) : op_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),
@@ -224,6 +233,34 @@ module qfd_tt_ctlm_dv_gi #(
             if (fh[0]) begin ov <= fcx[0]; if (fcx[0]) begin ov_tok <= f1_tok; ov_pos <= f1_pos; end end
         end
     assign fctx = {fcx[1], ov, ov_tok, ov_pos};
+    // ---- QW-F16PROG4 PRIVATE_CALR: the LOCAL4 table-load pulse leaves the core as ONE registered 9-bit request lane
+    //      (+1 edge here; die transport and the slice face register are priced in tools/qwen_static_schedule/f16_calr_edges.py)
+    generate if (PRIVATE_CALR != 0) begin : g_calr
+        reg [8:0] treq_q;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) treq_q <= 9'd0;
+            else treq_q <= {c_tload, c_tload ? {c_tstage, c_tuser} : 8'd0};
+        assign treq = treq_q;
+    end else begin : g_no_calr
+        assign treq = 9'd0;
+        wire unused_t = &{1'b0, c_tload, c_tstage, c_tuser};
+    end endgenerate
+    // ---- QW-F16PROG4 F16WTN: typed witness control, SAFE_PHYS (+2 edges on every output, priced in f16_calr_edges.py)
+    //      start = the calendar's ACCEPTED start (u_start / u_user / u_stage, face + OPSEG leaf), epoch = the context's
+//      token identity (dh token, or the OPSEG user's token bank) -- the typed execution events carry the same field;
+    //      retire = calendar per-user completion (c_done / c_done_user) qualified by ME idle (!ag_stn_busy: the ME station
+    //      has no outstanding read).  Fault joins start_fault (core_fault -> dc / cf).
+    wire        w_fault;
+    wire [15:0] u_tokid = l_start ? tok_b[l_user][15:0] : s_tok[15:0];   // the context's token identity at its start
+    generate if (F16WTN != 0) begin : g_wtn
+        qfd_tt_ctlm_dv_wtn u_wtn (.ck(ck), .rst_n(rst_n), .pw(pw), .auth(f16_auth),
+            .start({u_start, 2'(u_user), u_stage, u_tokid}), .retire({c_done, 2'(c_done_user), !ag_stn_busy}), .obs(f16_obs),
+            .st(f16_st));
+        assign w_fault = f16_st[16];
+    end else begin : g_no_wtn
+        assign f16_st = 17'd0; assign w_fault = 1'b0;
+        wire unused_w = &{1'b0, pw, f16_auth, f16_obs};
+    end endgenerate
 
     reg  [23:0] su_acc;
     reg  [15:0] su_obs;
@@ -242,7 +279,7 @@ module qfd_tt_ctlm_dv_gi #(
     assign rom_ret_v = {ag_stn, !ag_stn_busy};
     // OPSEG: dc ntok / nval / tok_seen take user-0 results only; op_fault joins start_fault (both into core_fault)
     assign dcs = {d_start && d_stage == 6'd0, ss_tokv && (OPS == 0 || ss_tu == 2'd0), ss_tok[17:0], ss_tval, ss_arl, ss_arland,
-                  c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault | op_fault, c_ready};
+                  c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault | op_fault | w_fault, c_ready};
     wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28], ss_tok[23:18], dh_q[43], c_run_u, c_done_user, c_fcode, op_user,
                     NF[0]};
 endmodule
@@ -349,6 +386,10 @@ module qfd_tt_ctlm_dv_thru (
     output wire [17:0]   native_tok,
     input  wire [1:0]    hu_i,                   // MU-DQ-D2DUSER: u_gi hu (core) -> native_pos[17:16] (one OR, no state;
     input  wire [17:0]   npos_i,                 //   hu_i is 0 at NU = 1)
+    input  wire [16:0]   f16_st_i,               // QW-F16PROG4: u_gi F16 status (core) -> f16_st (hr region, like cmd)
+    output wire [16:0]   f16_st,
+    input  wire [8:0]    treq_i,                 // QW-F16PROG4: u_gi table request lane -> table_req (like cmd)
+    output wire [8:0]    table_req,
     output wire [17:0]   native_pos,
     output wire [115:0]  cmd,
     output wire [75:0]   cal_program_obs,
@@ -361,6 +402,8 @@ module qfd_tt_ctlm_dv_thru (
     assign layer_context_v = lcv_i | fctx_i[37];
     assign native_tok = fctx_i[36] ? fctx_i[35:18] : ntok_i;
     assign native_pos = (fctx_i[36] ? {2'b00, fctx_i[15:0]} : npos_i) | {hu_i, 16'd0};
+    assign f16_st = f16_st_i;
+    assign table_req = treq_i;
     assign cal_program_obs = cal_program_obs_i;
     assign cal_descriptor_obs = cal_descriptor_obs_i;
     assign cal_image_ready = cal_image_ready_i;

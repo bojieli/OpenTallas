@@ -96,6 +96,16 @@
 //   starts hold all three).  fire_n compares the dq register with dd: no adder from tcount before fire_q.  ZERO added
 //   edges (edge-identical: lockstep with qfd_dv_cmd_cal at NU 1 and the compiled NU 4 timeline unchanged), no schedule
 //   change.  tcount stays for the overflow / late faults only.  MUT 34 (bench only): a start loads dq = 1 (one short).
+// CALR / TABLE_ROM (QW-F16SUB 10-19: the QW-F16PROG4 PRIVATE_CALR hunks ported onto CALPIPE/FIREDQ; opt-in, 0 = unchanged).
+//   CALENDAR_ROM = 1: the image descriptor is CALR10 (d0 = 'CALR', nent 10 b, base 0) and the four-entry fetch reads the
+//   immutable two-ROM calendar (qfd_dv_calendar_rom: pin register -> macro -> capture register) instead of the shared
+//   programme store.  The store-side fetch pipeline gets ONE extra registered stage (rce_q -> rce2_q -> rd_v), so rd_v /
+//   rd_n / the kept read-valid copies line up with the ROM capture register and every CALPIPE structure (per-user SRAM
+//   ring, registered head, FIREDQ, kept selectors) is reused unchanged; the entry row (rds) is the ROM capture register.
+//   +1 fetch edge: compiler rule T_0 >= 5 + (NU - 1) (late = FAULT, never a stall).  TLOAD is refused under CALR
+//   (tl_bad).  TABLE_ROM = 1 (with CALENDAR_ROM): LOCAL kind 4 = explicit table-load pulse {table_load, table_stage,
+//   table_user} on the issue register (stage 1..36, all other bits 0, else fault_code[4]); checks per playhead from the
+//   registered head, as TLOAD.  BOUNDARY_RELOC of QW-F16PROG3 is NOT ported (unused by the CTLM gi).
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -107,6 +117,8 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer PIDX_STRIDE = 0,              // per-user SU program-index stride
     parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
     parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
+    parameter integer TABLE_ROM = 0,                // opt-in LOCAL4 explicit table-load pulse (with CALENDAR_ROM)
+    parameter integer CALENDAR_ROM = 0,             // opt-in CALR10 / two-ROM calendar fetch; +1 fetch edge
     parameter integer CTX_DW = 0                    // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
 ) (
     input  wire          ck,
@@ -131,6 +143,9 @@ module qfd_dv_cmd_cal_mu #(
     output reg           su_issue,
     output reg  [8:0]    su_pidx,
     output reg           xc_issue,
+    output reg           table_load,                // TABLE_ROM: one edge, the issued LOCAL4 table-load request
+    output reg  [5:0]    table_stage,
+    output reg  [1:0]    table_user,
     output reg  [1087:0] tl,                        // TLOAD stream table word (W5 st_wi), one edge, else 0
     output reg  [75:0]   program_obs,
     output reg  [68:0]   descriptor_obs,
@@ -152,16 +167,18 @@ module qfd_dv_cmd_cal_mu #(
     reg  [63:0] dwr [0:6];
     wire [63:0] d0 = dwr[0];
     wire [9:0]  base = d0[25:16];
-    wire [8:0]  nent = d0[8:0];
+    wire [9:0]  nent = CALENDAR_ROM ? d0[9:0] : {1'b0, d0[8:0]};
     reg         seal_bad;
     integer     s;
     always @* begin
-        seal_bad = d0[63:32] != 32'h43414c44 || d0[31:26] != 6'd0 || d0[15:9] != 7'd0 || base[2:0] != 3'd0 ||
-                   nent == 9'd0 || {1'b0, base} + {1'b0, nent, 1'b0} > 11'd976 || {4'd0, base} < {meta_rows, 4'd0} ||
+        seal_bad = (CALENDAR_ROM ? (d0[63:32] != 32'h43414c52 || d0[31:10] != 22'd0) :
+                   (d0[63:32] != 32'h43414c44 || d0[31:26] != 6'd0 || d0[15:9] != 7'd0 || base[2:0] != 3'd0 ||
+                    {1'b0, base} + {nent, 1'b0} > 11'd976 || {4'd0, base} < {meta_rows, 4'd0})) ||
+                   nent == 10'd0 ||
                    (CTX_DW == 0 && (dwr[5] != 64'd0 || dwr[6] != 64'd0)) || dw_data != 64'd0;
         for (s = 1; s <= 4; s = s + 1)
             if (dwr[s][63:32] != 32'd0 ||
-                (dwr[s][15:0] != 16'd0 && (dwr[s][17:16] != 2'd0 || {1'b0, dwr[s][31:16]} + {1'b0, dwr[s][15:0]} > {8'd0, nent})))
+                (dwr[s][15:0] != 16'd0 && (dwr[s][17:16] != 2'd0 || {1'b0, dwr[s][31:16]} + {1'b0, dwr[s][15:0]} > {7'd0, nent})))
                 seal_bad = 1'b1;
     end
     reg         pw_v2, pw_b2; reg [5:0] pw_row2; reg [7:0] pw_sl2; reg [63:0] pw_d2;
@@ -197,7 +214,8 @@ module qfd_dv_cmd_cal_mu #(
     reg  [NU-1:0] wh;                               // write half: a push's entry j lands in slot {wh, j}
     reg  [7:0]    rp_oh [0:NU-1];                   // one-hot read pointer
     reg  [TW-1:0] tcount [0:NU-1];
-    reg  [NU-1:0] rce_q, rbank_q, rd_v;
+    reg  [NU-1:0] rce_q, rbank_q, rd_v, rce2_q;        // rce2_q: CALENDAR_ROM extra fetch stage
+    reg  [2:0]    r_n2_q [0:NU-1];
     reg  [5:0]    rrow_q [0:NU-1];
     reg  [2:0]    rd_n [0:NU-1], r_n_q [0:NU-1];
     reg  [1:0]    rdb_oh;                           // bank of the entry read on rd this edge (one-hot, shared)
@@ -241,13 +259,14 @@ module qfd_dv_cmd_cal_mu #(
                 assign w3_mask[64*h+32*c +: 32] = {32{mask}};
             end
         end
-        ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck), .r_ce_in((m_rce && (m_rbank == g[0])) || tl_rce_q),
+        ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck), .r_ce_in((CALENDAR_ROM == 0 && m_rce && (m_rbank == g[0])) || tl_rce_q),
             .r_addr_in(tl_rce_q ? tl_row_q : m_rrow), .rd_out(rd[g]),
             .w_ce_in(w3_ce[g]), .w_addr_in(w3_row[g]), .wd_in({8{w3_d[g]}}), .w_mask_in(w3_mask),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     end endgenerate
     // the entry row on rd (bank AND-OR by the registered one-hot bank; MUT 2: entry halves swapped)
-    wire [511:0] rds = ({512{rdb_oh[0]}} & rd[0]) | ({512{rdb_oh[1]}} & rd[1]);
+    wire [511:0] rom_data;
+    wire [511:0] rds = (CALENDAR_ROM != 0) ? rom_data : (({512{rdb_oh[0]}} & rd[0]) | ({512{rdb_oh[1]}} & rd[1]));
     reg  [127:0] ent [0:3];
     reg  [11:0]  dlt [0:3];
     integer      e;
@@ -333,7 +352,7 @@ module qfd_dv_cmd_cal_mu #(
             wire valid;
             qfd_calpipe_readvalid #(.COPY_ID(16*g+c)) u_v (
                 .ck(ck), .rst_n(rst_n), .clear(do_clear), .freeze(frz_u[g] || go_u[g]),
-                .read_ce(rce_q[g]), .valid(valid));
+                .read_ce((CALENDAR_ROM != 0) ? rce2_q[g] : rce_q[g]), .valid(valid));
             always @(posedge ck)
                 if (valid && !frz_u[g] && !go_u[g]) fq_wd[g][32*c +: 32] <= rds[32*c +: 32];
         end
@@ -360,7 +379,7 @@ module qfd_dv_cmd_cal_mu #(
     wire [15:0] g_first = (g_rng && MUT != 21) ? {6'd0, start_first} : gd[31:16];
     wire [15:0] g_cnt = (g_rng && MUT != 21) ? {6'd0, start_cnt} : gd[15:0];
     wire        rng_bad = g_rng && (start_cnt == 10'd0 || start_first[1:0] != 2'd0 ||
-                                    {1'b0, start_first} + {1'b0, start_cnt} > {2'd0, nent});
+                                    {1'b0, start_first} + {1'b0, start_cnt} > {1'b0, nent});
     wire [UB-1:0] go_user = (NU > 1 && !boot_go) ? start_user : {UB{1'b0}};
     // a start reaches only its own playhead (MUT 15: every playhead, the single calendar's gating)
     reg  [NU-1:0] go_u, frz_u;
@@ -431,10 +450,35 @@ module qfd_dv_cmd_cal_mu #(
             dq_n[u] = dq[u] + {{(TW-1){1'b0}}, run_q[u]} - (nh_v[u] ? {{(TW-12){1'b0}}, dd} : {TW{1'b0}});
         end
     end
+    // CALENDAR_ROM: the granted playhead's 4-entry request goes to the two-ROM calendar (pin register inside); the
+    // capture register returns on the rd_v edge of that playhead (rce_q -> rce2_q -> rd_v, as the ROM's pv -> mv -> valid)
+    wire       rom_valid, rom_fault; wire [1:0] rom_user; wire [5:0] rom_stage; wire [2:0] rom_count;
+    reg        rom_req; reg [9:0] rom_first; reg [2:0] rom_n; reg [1:0] rom_u;
+    integer    ri;
+    always @* begin
+        rom_req = 1'b0; rom_first = 10'd0; rom_n = 3'd0; rom_u = 2'd0;
+        for (ri = 0; ri < NU; ri = ri + 1) if (gnt[ri]) begin
+            rom_req = 1'b1; rom_first = f_idx[ri]; rom_n = f_n[ri]; rom_u = 2'(ri);
+        end
+    end
+    generate if (CALENDAR_ROM != 0) begin : g_calrom
+        qfd_dv_calendar_rom #(.NENT(1023)) u_rom (.ck(ck), .rst_n(rst_n), .req(rom_req),
+            .first(rom_first), .count(rom_n), .user_id(rom_u), .stage(6'd0),
+            .install(pw_v && running), .running(running), .valid(rom_valid), .data(rom_data),
+            .out_user(rom_user), .out_stage(rom_stage), .out_count(rom_count), .fault(rom_fault));
+    end else begin : g_no_calrom
+        assign rom_valid = 1'b0; assign rom_fault = 1'b0; assign rom_data = 512'd0;
+        assign rom_user = 2'd0; assign rom_stage = 6'd0; assign rom_count = 3'd0;
+        wire unused_rom = &{1'b0, rom_req, rom_first, rom_n, rom_u};
+    end endgenerate
+    // the ROM's own valid / user / count must agree with the playhead pipeline (a mismatch is an image fault)
+    wire       rom_mis = (CALENDAR_ROM != 0) && (rom_valid != (|rd_v) ||
+                         (rom_valid && (!rd_v[rom_user] || rd_n[rom_user] != rom_count)));
+    wire unused_rs = &{1'b0, rom_stage};
     // per-playhead issue word: relocation for its user (constant stride), carry / tag checks, TLOAD checks -- all from
     // the registered head, beside the issue select
     reg  [115:0]  rcu [0:NU-1];
-    reg  [NU-1:0] rbad, tlk, tlb;
+    reg  [NU-1:0] rbad, tlk, tlb, trk, trb;
     reg  [UB-1:0] ruu [0:NU-1];
     reg  [115:0]  hu;
     reg  [24:0]   uvb, r_ar, r_dd, r_em, r_db;
@@ -476,12 +520,15 @@ module qfd_dv_cmd_cal_mu #(
             tlk[v] = hu[115:112] == 4'hE && hu[3:1] == 3'd3;
             tlo = {1'b0, hu[9:4], 4'd0}; thi = tlo + 11'd16;
             tlb[v] = hu[12:10] == 3'd0 || hu[12] || hu[111:73] != 39'd0 || {4'd0, hu[9:4]} < meta_rows ||
-                     hu[9:4] >= 6'd61 || (tlo < {1'b0, base} + {1'b0, nent, 1'b0} && thi > {1'b0, base});
+                     hu[9:4] >= 6'd61 || (tlo < {1'b0, base} + {nent, 1'b0} && thi > {1'b0, base}) || (CALENDAR_ROM != 0);
+            // TABLE_ROM (LOCAL kind 4): explicit table-load request, checked from the registered head
+            trk[v] = (TABLE_ROM != 0) && (CALENDAR_ROM != 0) && hu[115:112] == 4'hE && hu[3:1] == 3'd4;
+            trb[v] = hu[111:10] != 102'd0 || hu[9:4] < 6'd1 || hu[9:4] > 6'd36;
         end
     end
     // the issuing playhead: the lowest with a go entry this edge (one-hot select); a second one is a collision
     reg  [NU-1:0] isel; reg i_any, i_col;
-    reg  [115:0]  ic, rc; reg r_bad, tl_bad, tl_go; reg [UB-1:0] ru;
+    reg  [115:0]  ic, rc; reg r_bad, tl_bad, tl_go, tr_go, tr_bad; reg [UB-1:0] ru;
     integer       c;
     always @* begin
         i_any = 1'b0; i_col = 1'b0; isel = {NU{1'b0}};
@@ -489,11 +536,11 @@ module qfd_dv_cmd_cal_mu #(
             isel[c] = hgo[c] && !i_any;
             if (hgo[c]) begin if (i_any) i_col = 1'b1; i_any = 1'b1; end
         end
-        ic = 116'd0; rc = 116'd0; r_bad = 1'b0; tl_bad = 1'b0; tl_go = 1'b0; ru = {UB{1'b0}};
+        ic = 116'd0; rc = 116'd0; r_bad = 1'b0; tl_bad = 1'b0; tl_go = 1'b0; tr_go = 1'b0; tr_bad = 1'b0; ru = {UB{1'b0}};
         for (c = 0; c < NU; c = c + 1)
             if (isel[c]) begin
                 ic = ic | hc_q[c]; rc = rc | rcu[c]; r_bad = r_bad | rbad[c]; tl_bad = tl_bad | tlb[c];
-                tl_go = tl_go | tlk[c]; ru = ru | ruu[c];
+                tl_go = tl_go | tlk[c]; tr_go = tr_go | trk[c]; tr_bad = tr_bad | trb[c]; ru = ru | ruu[c];
             end
     end
     wire [2:0]    i_kind = ic[3:1];
@@ -501,6 +548,9 @@ module qfd_dv_cmd_cal_mu #(
     assign        tl_fire = tl_go;
     wire [5:0]    tl_row = ic[9:4];
     wire [2:0]    tl_kind = ic[12:10];
+    generate if (CALENDAR_ROM != 0 && NU > 4) begin : g_calrom_users_bad
+        initial $error("qfd_dv_cmd_cal_mu: CALENDAR_ROM requires NU <= 4");
+    end endgenerate
     generate if (UFOLD != 0 && (NU < 2 || UB > 2)) begin : g_ufold_bad
         initial $error("qfd_dv_cmd_cal_mu: UFOLD needs 2 <= NU <= 4");
     end endgenerate
@@ -516,14 +566,15 @@ module qfd_dv_cmd_cal_mu #(
             for (k = 0; k < NU; k = k + 1) begin
                 f_idx[k] <= 10'd0; f_rem[k] <= 10'd0; i_rem[k] <= 10'd0; fifo_n[k] <= 4'd0; infl[k] <= 4'd0;
                 rp_oh[k] <= 8'd1; tcount[k] <= {TW{1'b0}};
-                rrow_q[k] <= 6'd0; r_n_q[k] <= 3'd0; rd_n[k] <= 3'd0;
+                rrow_q[k] <= 6'd0; r_n_q[k] <= 3'd0; rd_n[k] <= 3'd0; r_n2_q[k] <= 3'd0;
                 hc_q[k] <= 116'd0; ht_q[k] <= {TW{1'b0}};
                 dq[k] <= (MUT == 1) ? {TW{1'b0}} : {{(TW-1){1'b0}}, 1'b1};
             end
             wh <= {NU{1'b0}}; fire_q <= {NU{1'b0}}; rdb_oh <= 2'b00;
-            rce_q <= {NU{1'b0}}; rbank_q <= {NU{1'b0}}; rd_v <= {NU{1'b0}};
+            rce_q <= {NU{1'b0}}; rbank_q <= {NU{1'b0}}; rd_v <= {NU{1'b0}}; rce2_q <= {NU{1'b0}};
             cmd <= 116'd0; cmd_user <= {UB{1'b0}}; loc_emb <= 1'b0; loc_seg <= 1'b0; loc_base <= 12'd0;
             su_issue <= 1'b0; su_pidx <= 9'd0; xc_issue <= 1'b0;
+            table_load <= 1'b0; table_stage <= 6'd0; table_user <= 2'd0;
             tl <= 1088'd0; tl_rce_q <= 1'b0; tl_v2 <= 1'b0; tl_v3 <= 1'b0; tl_row_q <= 6'd0;
             tl_ctl_q <= 64'd0; tl_ctl2 <= 64'd0; tl_ctl3 <= 64'd0; tl_pay3 <= 1024'd0;
         end else begin
@@ -553,6 +604,7 @@ module qfd_dv_cmd_cal_mu #(
                 end
             end
             if (m_dbl) begin fault <= 1'b1; fault_code[5] <= 1'b1; end
+            if (rom_fault || rom_mis) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
             if (m_rce) rdb_oh <= {m_rbank, !m_rbank};
             // ---------------- playheads
             for (k = 0; k < NU; k = k + 1) begin
@@ -563,7 +615,7 @@ module qfd_dv_cmd_cal_mu #(
                         tcount[k] <= {{(TW-1){1'b0}}, 1'b1}; ht_q[k] <= {TW{1'b0}};
                         dq[k] <= (MUT == 1 || MUT == 34) ? {{(TW-1){1'b0}}, 1'b1} : {{(TW-2){1'b0}}, 2'd2};
                         fifo_n[k] <= 4'd0; infl[k] <= 4'd0; wh[k] <= 1'b0; rp_oh[k] <= 8'd1;
-                        rce_q[k] <= 1'b0; rd_v[k] <= 1'b0; fire_q[k] <= 1'b0;
+                        rce_q[k] <= 1'b0; rce2_q[k] <= 1'b0; rd_v[k] <= 1'b0; fire_q[k] <= 1'b0;
                     end else begin
                         if (d_any) d_col = 1'b1;
                         d_any = 1'b1; d_u = k[UB-1:0];
@@ -578,7 +630,9 @@ module qfd_dv_cmd_cal_mu #(
                     end
                     rce_q[k] <= gnt[k]; rbank_q[k] <= waddr[k][3]; rrow_q[k] <= waddr[k][9:4]; r_n_q[k] <= f_n[k];
                     if (gnt[k]) begin f_idx[k] <= f_idx[k] + 10'd4; f_rem[k] <= f_rem[k] - {7'd0, f_n[k]}; end
-                    rd_v[k] <= rce_q[k]; rd_n[k] <= r_n_q[k];
+                    rce2_q[k] <= rce_q[k]; r_n2_q[k] <= r_n_q[k];
+                    rd_v[k] <= (CALENDAR_ROM != 0) ? rce2_q[k] : rce_q[k];
+                    rd_n[k] <= (CALENDAR_ROM != 0) ? r_n2_q[k] : r_n_q[k];
                     infl[k] <= infl[k] + (gnt[k] ? {1'b0, f_n[k]} : 4'd0) - (rd_v[k] ? {1'b0, rd_n[k]} : 4'd0);
                     if (rd_v[k]) begin
                         wh[k] <= !wh[k];
@@ -599,7 +653,7 @@ module qfd_dv_cmd_cal_mu #(
             if (d_any) begin done <= 1'b1; done_user <= d_u; end
             if (NU > 1 && d_col) begin fault <= 1'b1; fault_code[3] <= 1'b1; end
             // ---------------- issue register (one word an edge, all playheads)
-            cmd <= 116'd0; loc_emb <= 1'b0; loc_seg <= 1'b0; su_issue <= 1'b0; xc_issue <= 1'b0;
+            cmd <= 116'd0; loc_emb <= 1'b0; loc_seg <= 1'b0; su_issue <= 1'b0; xc_issue <= 1'b0; table_load <= 1'b0;
             // TLOAD pipeline: issue edge -> macro read -> tl register (-> +1 edge under MUT 5)
             tl_rce_q <= tl_fire; tl_v2 <= tl_rce_q; tl_v3 <= tl_v2;
             if (tl_fire) begin
@@ -617,6 +671,10 @@ module qfd_dv_cmd_cal_mu #(
                 if (i_loc) begin
                     if (i_kind == 3'd1) loc_emb <= 1'b1;
                     else if (i_kind == 3'd2) begin loc_seg <= 1'b1; loc_base <= ic[15:4]; end
+                    else if (tr_go) begin
+                        if (tr_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
+                        else begin table_load <= 1'b1; table_stage <= ic[9:4]; table_user <= 2'(ru); end
+                    end
                     else if (i_kind == 3'd3) begin if (tl_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end end
                     else begin fault <= 1'b1; fault_code[4] <= 1'b1; end
                 end else begin
