@@ -33,9 +33,14 @@
 // MUT 5/6/7 remove prior-fault / actual-row-open / early-gap veto, respectively.
 // Admission is fail closed: an early new owner or sticky prior fault never changes start/token/epoch/owner.
 // MIN_GAP is a consistency floor; the compiler must independently place the next start after full row drain.
+// Native32 opt-in: register local bank admission enables and retire start/token/epoch/owner/fault one edge later.
+// Pending-owner forwarding preserves the golden's immediate duplicate suppression and gap/fault decisions.
+// Two-level ot_rst_relay releases after six edges; the compiler keeps context/boot idle through that warmup.
+// Native32 data/state bank controls are proved by the source-pinned delayed-golden bench and loaded-Lib census.
 // ---------------------------------------------------------------------------------------------------------------------
 module qkd_embedding_ctx_start #(
     parameter integer MUT = 0,
+    parameter integer NATIVE32 = 0,
     parameter integer MIN_GAP = 66          // >= the 65 row records + 1: a second fill inside one row's send window faults
 ) (
     input  wire          ck,
@@ -47,12 +52,20 @@ module qkd_embedding_ctx_start #(
     input  wire [35:0]   ctx_hdr,              // record[547:512] = {res5 [35:31], kind4 [30:27], layer6 [26:21], epoch16 [20:5], beat5 [4:0]}
     input  wire [60:0]   ctx_owner,            // record[60:0]    = {gen2, TAG59}
     // fill start (to join4_cal start, row_tx fill_*, the fan root emb_* via px_*)
-    output reg           start,
+    output wire          start,
     output reg  [17:0]   token,
     output reg  [15:0]   epoch,
     output wire [60:0]   owner,                // last started owner (retained; diagnostic / health)
-    output reg           fault
+    output wire          fault
 );
+    reg start_state,fault_state;
+    (* keep=1,dont_touch=1 *)reg [3:0] pending_valid;
+    reg start_delayed,fault_delayed;
+    assign start=NATIVE32?start_delayed:start_state;
+    assign fault=NATIVE32?fault_delayed:fault_state;
+    reg [60:0] pending_owner;
+    reg [33:0] pending_result;
+    always @(posedge ck)begin pending_owner<=qd;pending_result<={t_ep,t_tok};end
     reg         qv, qo;
     reg [35:0]  qh;
     reg [60:0]  qd;
@@ -69,24 +82,68 @@ module qkd_embedding_ctx_start #(
     wire        take  = qv && qo && is12;
     wire        hdr_ok = qh[35:31] == 5'd0 && qh[26:21] == 6'd63 && qh[4:0] == 5'd0 && (MUT == 3 || qh[20:5] == t_ep);
     wire        own_ok = t_st == 6'd0 && t_seg == 6'd0 && tag[36:19] < 18'd151936;
-    wire        fresh  = !have || qd != last || MUT == 1;
-    wire        admit = take && hdr_ok && own_ok && fresh && (MUT == 5 || !fault) && (MUT == 7 || gap == 10'd0) && (MUT == 6 || !row_open);
+    wire fresh;
+    generate if(NATIVE32)begin:g_fresh
+        wire [3:0] differs;
+        for(genvar group=0;group<4;group=group+1)begin:g_group
+            localparam integer LO=group*16;
+            localparam integer WIDTH=(61-LO<16)?61-LO:16;
+            assign differs[group]=pending_valid[group] ?
+                qd[LO+:WIDTH]!=pending_owner[LO+:WIDTH] : qd[LO+:WIDTH]!=last[LO+:WIDTH];
+        end
+        assign fresh=!have || (|differs) || MUT==1;
+    end else begin:g_legacy_fresh
+        assign fresh=!have || qd!=last || MUT==1;
+    end endgenerate
+    wire        admit = take && hdr_ok && own_ok && fresh && (MUT == 5 || !fault_state) && (MUT == 7 || gap == 10'd0) && (MUT == 6 || !row_open);
+    wire [4:0] reset_region;
+    generate if(NATIVE32)begin:g_reset
+        wire [0:0] reset_root;
+        ot_rst_relay #(.REGIONS(1)) u_root(.clk(ck),.rst_n_in(rst_n),.rst_n(reset_root));
+        ot_rst_relay #(.REGIONS(5)) u_leaf(.clk(ck),.rst_n_in(reset_root[0]),.rst_n(reset_region));
+    end else begin:g_legacy_reset
+        assign reset_region={5{rst_n}};
+    end endgenerate
+    generate if(NATIVE32)begin:g_native32
+        // Same admission decision as the golden; retire banked state one edge
+        // later. Pending-owner forwarding preserves consecutive repeat vetoes.
+        (* keep=1,dont_touch=1 *)reg [6:0] admit_q;
+        always @(posedge ck or negedge reset_region[0])
+            if(!reset_region[0])begin admit_q<=0;pending_valid<=0;start_delayed<=0;fault_delayed<=0;end
+            else begin admit_q<={7{admit}};pending_valid<={4{admit}};start_delayed<=start_state;fault_delayed<=fault_state;end
+        for(genvar group=0;group<4;group=group+1)begin:g_owner
+            localparam integer LO=group*16;
+            localparam integer WIDTH=(61-LO<16)?61-LO:16;
+            always @(posedge ck or negedge reset_region[group+1])
+                if(!reset_region[group+1])last[LO+:WIDTH]<=0;
+                else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+        end
+        reg [33:0] accepted;
+        for(genvar group=0;group<3;group=group+1)begin:g_result
+            localparam integer LO=group*16;
+            localparam integer WIDTH=(34-LO<16)?34-LO:16;
+            always @(posedge ck)
+                if(admit_q[group+4])accepted[LO+:WIDTH]<=pending_result[LO+:WIDTH];
+        end
+        always @(*)begin token=accepted[17:0];epoch=accepted[33:18];end
+    end else begin:g_legacy_result
+        always @(posedge ck) if (admit) begin token <= t_tok; epoch <= t_ep; end
+    end endgenerate
     // face capture (plain D, no reset: the data face; valid bits carry the reset)
     always @(posedge ck) begin qh <= ctx_hdr; qd <= ctx_owner; end
-    always @(posedge ck) if (admit) begin token <= t_tok; epoch <= t_ep; end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin
-            qv <= 1'b0; qo <= 1'b0; start <= 1'b0; last <= 61'd0; have <= 1'b0; gap <= 10'd0; fault <= 1'b0;
+    always @(posedge ck or negedge reset_region[0])
+        if (!reset_region[0]) begin
+            qv <= 1'b0; qo <= 1'b0; start_state <= 1'b0; if(!NATIVE32)last <= 61'd0; have <= 1'b0; gap <= 10'd0; fault_state <= 1'b0;
         end else begin
             qv <= ctx_v; qo <= ctx_observed_v;
-            start <= 1'b0;
+            start_state <= 1'b0;
             if (gap != 10'd0) gap <= gap - 10'd1;
             if (take) begin
-                if (!hdr_ok || !own_ok) fault <= 1'b1;
+                if (!hdr_ok || !own_ok) fault_state <= 1'b1;
                 else if (fresh) begin
-                    if (gap != 10'd0 || row_open) fault <= 1'b1;
+                    if (gap != 10'd0 || row_open) fault_state <= 1'b1;
                     if (admit) begin
-                        start <= 1'b1; last <= qd; have <= 1'b1; gap <= 10'(MIN_GAP);
+                        start_state <= 1'b1; if(!NATIVE32)last <= qd; have <= 1'b1; gap <= 10'(MIN_GAP);
                     end
                 end
             end

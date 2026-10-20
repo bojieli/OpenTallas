@@ -32,6 +32,7 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_die as K  # noqa: E402
 from binding_order import sliced_order
 import kv_expand_parameters as EP
+import kv_qkh_safe32 as QKH32
 
 CORNERS = ('tt', 'ff', 'ss')
 RT = 'physical/ref_tile'
@@ -105,6 +106,7 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
                                                                      'qkd_pv_rs_hd_f')},
            **{m_: 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv' for m_ in
               ('qkd_seq_core_static_s', 'qkd_seq_xs_s', 'qkd_seq_fan_s')})
+QKH32.configure(VIEWS, RTL)
 # HKV-DIE3 10-19: child master -> the view master it is bound to (face-landed _fl successors: same ports, the RTL child
 # keeps its core name; kv_astk_expand.configure fills it for the selected kv_static_die.FACE_LAND_SEL tiles)
 ALIAS = {}
@@ -370,6 +372,8 @@ def main(argv=None):
     param_path = case / 'die.v.params.json'
     child_params = json.loads(param_path.read_text()) if param_path.exists() else {}
     profiles = json.loads(a.parameter_profiles.read_text()) if a.parameter_profiles else {}
+    if QKH32.enabled():
+        QKH32.require_profiles(ROOT, profiles)
     dv = (case / 'die.v').read_text()
     lines = dv.split('\n')
     wires = {}
@@ -421,6 +425,10 @@ def main(argv=None):
     views = json.loads((libs / 'views.json').read_text())
     rep = dict(schema='opentallas.qwen_kvsys_expand.v1', frames={}, parameter_instances={},
                preexpand_die_sha256=EP.sha(case / 'die.v'))
+    if QKH32.enabled():
+        rep['qkh_safe32'] = dict(flag=QKH32.FLAG, targets=QKH32.TARGETS,
+                                 native_profiles_required=True, token_cycles_added=0,
+                                 placement='actual CLOSED leaf sizes; existing containment/overlap checks remain required')
     occupied = set(re.findall(r'^\s+\w+(?:\s*#\s*\((?:[^()]|\([^()]*\))*\))?\s+(\S+)\s*\(', dv, re.M))
     new_lines, add_wires, add_place, drop_inst, used_leaf = [], [], [], set(), set()
     inst_re = re.compile(r'^\s+(\w+) (\S+) \((.*)\);\s*$')

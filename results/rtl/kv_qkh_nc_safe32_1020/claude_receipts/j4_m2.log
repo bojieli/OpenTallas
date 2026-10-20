@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   898 GB (avail 742, growth 113, headroom 0, waiters 0/0 GB) load 50/128 running 32 disk 159 GB 
+ot-run: ot-epyc6       admits   913 GB (avail 752, growth 113, headroom 0, waiters 0/0 GB) load 148/128 running 41 disk 4812 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-params3-qkh/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/kv-params3-qkh/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-params3-qkh/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-params3-qkh/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1326747-1792481360 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH add.err/v cycle 145 ref 0000000000000001 nc 0000000000000000
+MISMATCH add.err/v cycle 152 ref 0000000000000001 nc 0000000000000000
+MISMATCH add.err/v cycle 158 ref 0000000000000001 nc 0000000000000000
+TB_QKH_NC FAIL add errors 37899 of 900120 checks
+- /srv/opentallas-scratch/claude/kv-params3-qkh/src/rtl/test/qwen_kv_die/tb_qkh_nc.sv:113: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 600us; walltime 6.744 s; speed 88.978 us/s
+- Verilator: cpu 6.744 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1326747-1792481360): exit 1

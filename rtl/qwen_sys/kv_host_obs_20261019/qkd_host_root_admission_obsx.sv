@@ -97,7 +97,7 @@ wire  m_wlast;
 wire  m_bvalid;
 wire  m_bready;
 wire [1:0] m_bresp;
-qkd_host_control_prompt_observed #(.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.PROMPT_MUT(PROMPT_MUT),.PROMPT_BIND_LATENCY(PROMPT_BIND_LATENCY),.ENABLE_SERVICE(ENABLE_SERVICE))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
+qkd_host_control_prompt_observed #(.MU(1),.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.PROMPT_MUT(PROMPT_MUT),.PROMPT_BIND_LATENCY(PROMPT_BIND_LATENCY),.ENABLE_SERVICE(ENABLE_SERVICE))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
 .package_abort(package_abort),.begin_tx_cr(begin_cr),.begin_tx_available(ctrl_begin_available),.pending_ack8(pending_ack8),.service_epoch8(service_epoch8),.service_fault(service_abort),.ingest_permission(ingest_permission),
 .begin_v(begin_v),.begin_epoch(begin_epoch),.begin_available(begin_available),.begin_fault(begin_fault),.epoch_busy(epoch_busy),.startup_allowed(startup_allowed),
 .service_abort(service_abort),.service_ready(service_ready),.service_ready8(service_ready8),.service_diag_raw(service_diag_raw),.service_status(service_status),
@@ -652,7 +652,7 @@ end else begin:g_mu
  wire[1:0] allocated_generation;
  wire program_installed_valid,program_commit_v,installed_fusedcap;
  wire[15:0]program_commit_epoch,program_begin_epoch;wire[63:0]program_commit_digest;
- qkd_host_record_port u_records(.ck(ck_records),.rst_n(host_rst_n),.send_kind(record_send_kind),
+ qkd_host_record_port_mu #(.MU(1))u_records(.ck(ck_records),.rst_n(host_rst_n),.send_kind(record_send_kind),
  .request_v(native_request_v),.request_tag(native_request_tag),.request_gen(native_request_gen),
  .request_token(native_request_token),.request_position(native_request_pos),
  .token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),

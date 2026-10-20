@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex/qkh-buffer-review-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex/qkh-buffer-review-1020
+ot-run: ot-epyc7       admits   913 GB (avail 729, growth 90, headroom 0, waiters 0/0 GB) load 56/96 running 21 disk 5496 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex/qkh-buffer-review-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex/qkh-buffer-review-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex/qkh-buffer-review-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3165568-1792495062 after 0 s
+{"scope": "REVIEW_PROPOSAL_ONLY_NO_ADMISSION", "equal": true, "raw_sha256": ["6d1d28a1d58ab5088166ffb25084c552ae7810b51ee401801a55fc3434fc7cea", "c53dd281eba6a845dff175c6e88876013eb106c5cd3cb6c52053c449f88a2368"], "canonical_sha256": "24f05e9e4e08b9590b5ce8d6e1d2b00958c5fb0fea739cd7934f7da46b5dc228", "modules": [{"count": 0, "masters": {}}, {"count": 1191, "masters": {"BUFx2_ASAP7_75t_R": 1133, "BUFx6f_ASAP7_75t_R": 8, "BUFx3_ASAP7_75t_R": 40, "BUFx4f_ASAP7_75t_R": 5, "BUFx12f_ASAP7_75t_R": 5}}, {"count": 1202, "masters": {"BUFx2_ASAP7_75t_R": 1136, "BUFx6f_ASAP7_75t_R": 19, "BUFx4f_ASAP7_75t_R": 4, "BUFx3_ASAP7_75t_R": 42, "BUFx12f_ASAP7_75t_R": 1}}, {"count": 871, "masters": {"BUFx2_ASAP7_75t_R": 846, "BUFx3_ASAP7_75t_R": 20, "BUFx6f_ASAP7_75t_R": 5}}, {"count": 0, "masters": {}}, {"count": 2, "masters": {"BUFx2_ASAP7_75t_R": 2}}]}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3165568-1792495062): exit 0

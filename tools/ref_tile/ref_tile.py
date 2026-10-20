@@ -301,6 +301,72 @@ def pin_regs_vars(s: dict) -> list:
     return out
 
 
+SOURCE_NATIVE_RESET_LANDINGS = {
+    # This source already contains the two plain-FF landing levels. Counts
+    # remain a mandatory balanced_reset_proof obligation on the actual map.
+    "host_order_n32_1020": {
+        "source": "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+        "sha256": "c3de9cf6aeab78cbf4a01c9b6dd6b6cbf15f8f9f0839cf7f3f18bf47616a8b75",
+        "top": "qkd_hr_core_order_n32", "clock": "ck_core", "reset_ports": ["host_rst_n"],
+        "first_copies": {"host_rst_n": 12}, "copies": {"host_rst_n": 288},
+        "source_dependencies": {
+            "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v":
+                "abcda04ef59dc8c8056b48e3d1b1aab255d4d3713d658644e57a6638974799ba",
+        },
+    },
+    "host_prompt_n32_1020": {
+        # MU0 component only. A production MU4 source/shape needs a separate
+        # fingerprint and its own exactness, cold-state and mapped proof.
+        "source": "rtl/qwen_sys/host_cluster_20261017/prompt_native32/qkd_hr_core_prompt_n32.sv",
+        "sha256": "ddced4a80043ea79b4f2b95c47f745ea946f4646d9dba0fb1d5b28e793697426",
+        "top": "qkd_hr_core_prompt_n32", "clock": "ck_core", "reset_ports": ["u_rank__u_control__por_n"],
+        "first_copies": {"u_rank__u_control__por_n": 1}, "copies": {"u_rank__u_control__por_n": 4},
+        "source_dependencies": {
+            "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v":
+                "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+            "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v":
+                "f9074a0e2e16dacebdc30e8c8e8e66386165c6b2cf704da4ceb26209e4ade77c",
+            "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v":
+                "68ae182bc55607412d5dc4a5adf117adb3fd8acb863a28e3155af85691e10c8d",
+        },
+    },
+}
+
+
+def source_native_reset_landing(s: dict, rl: dict) -> dict | None:
+    """Exact source admission for an existing forest, never a proof/threshold waiver."""
+    if "source_native" not in rl:
+        return None
+    key = rl["source_native"]
+    if not isinstance(key, str) or key not in SOURCE_NATIVE_RESET_LANDINGS:
+        raise SpecError("spec: reset_landing.source_native must name a reviewed source fingerprint")
+    entry = SOURCE_NATIVE_RESET_LANDINGS[key]
+    if (s.get("top") != entry["top"] or s.get("params", {}) != {} or s.get("defines", []) != []
+            or s.get("reset_ports") != entry["reset_ports"] or rl.get("enable") is not True
+            or rl.get("stages", 2) != 2 or rl.get("clock", entry["clock"]) != entry["clock"]
+            or s.get("clock_port") != entry["clock"]
+            or any(rl.get(k) != entry[k] for k in ("first_copies", "copies"))):
+        raise SpecError("spec: source-native reset top/parameters/defines/clock/counts differ from reviewed source")
+    if any(k in rl for k in ("waive", "max_sinks")) or s.get("reset_relay_split") is not None:
+        raise SpecError("spec: source-native reset forbids threshold waivers and reset-copy rewiring")
+    overrides = s.get("orfs_vars") or {}
+    if any(k in overrides for k in ("SYNTH_PARAMETERS", "SYNTH_DEFINES", "VERILOG_DEFINES", "VERILOG_FILES", "SYNTH_ARGS")) \
+            or any(k.startswith(("OT_RST_", "OT_PIN_REGS")) for k in overrides):
+        raise SpecError("spec: source-native reset forbids source/landing ORFS overrides")
+    pr = s.get("pin_regs") or {}
+    if pr.get("enable") is not False:
+        raise SpecError("spec: source-native reset requires existing source pin registers")
+    closure = {entry["source"]: entry["sha256"], **entry.get("source_dependencies", {})}
+    sources = s.get("sources", [])
+    if not isinstance(sources, list) or len(sources) != len(closure) or set(sources) != set(closure):
+        raise SpecError("spec: source-native reset complete source closure differs from reviewed source")
+    for path, digest in closure.items():
+        source = ROOT / path
+        if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+            raise SpecError("spec: source-native reset source fingerprint changed or missing: " + path)
+    return {"id": key, "source": entry["source"], "sha256": entry["sha256"], "source_closure": closure}
+
+
 def reset_landing_plan(s: dict) -> dict | None:
     """the kit's reset landing plan or None; SpecError on a malformed record or an opt-out without a reason"""
     rl = s.get("reset_landing")
@@ -309,6 +375,7 @@ def reset_landing_plan(s: dict) -> dict | None:
     if not isinstance(rl, dict):
         raise SpecError('spec: reset_landing must be an object ({"enable": true, "stages": 2} | {"enable": false, '
                         '"reason": ...})')
+    native = source_native_reset_landing(s, rl)
     if not rl.get("enable"):
         if not str(rl.get("reason") or rl.get("waive") or "").strip():
             raise SpecError(f"spec: reset_landing opt-out needs a recorded reason ({RESET_LANDING_RULE})")
@@ -326,6 +393,10 @@ def reset_landing_plan(s: dict) -> dict | None:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
     plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    if native:
+        if ck != SOURCE_NATIVE_RESET_LANDINGS[native["id"]]["clock"]:
+            raise SpecError("spec: source-native reset effective landing clock differs from reviewed source")
+        plan["source_native"] = native
     fc = rl.get("first_copies")
     if fc is not None:
         if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
@@ -333,7 +404,7 @@ def reset_landing_plan(s: dict) -> dict | None:
             raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
         if st != 2:
             raise SpecError('spec: balanced first_copies requires exactly two landing stages')
-        if not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32:
+        if not native and (not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32):
             raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
         plan['first_copies'] = dict(fc)
     cp = rl.get("copies")
@@ -345,7 +416,7 @@ def reset_landing_plan(s: dict) -> dict | None:
             raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
         if st < 2:
             raise SpecError("spec: reset_landing.copies needs stages >= 2")
-        if not reset_relay_split_plan(s):
+        if not native and not reset_relay_split_plan(s):
             raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
         if fc is not None and (set(fc) != set(cp) or any(cp[p] > 32*fc[p] for p in fc)):
             raise SpecError('spec: balanced copies requires matching first/final ports and <=32 final copies per first')
@@ -394,7 +465,7 @@ def reset_relay_split_vars(s: dict) -> list:
 
 def reset_landing_vars(s: dict) -> list:
     plan = reset_landing_plan(s)
-    if not plan or not plan["enable"]:
+    if not plan or not plan["enable"] or plan.get("source_native"):
         return []
     out = ["--orfs-var OT_RST_LAND=1", f"--orfs-var OT_RST_LAND_STAGES={plan['stages']}"]
     pp = pin_regs_plan(s)
@@ -501,6 +572,8 @@ def kit_pin_hooks(s: dict) -> bool:
 
 
 def gen_pin_hooks(s: dict) -> dict:
+    if s.get("pin_hook_after_flops") and not pin_hook_wrapper(s):
+        raise SpecError("pin_hook_after_flops needs the recipe-2 pin-hook wrapper")
     if pin_hook_flops_only(s):
         pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (pin flops, no hold stages): the spec's pin_hook_before_flops repo hooks, then",
                    "# every port's single launch / capture flop is fixed at its pin.  ORFS takes one hook per step."]
@@ -548,6 +621,15 @@ def gen_pin_hooks(s: dict) -> dict:
         if not (ROOT / rel).is_file():
             raise SpecError(f"missing pin hook: {rel}")
         pre_gpl.insert(-1, f"source /src/{rel}")
+    # spec "pin_hook_after_flops" (KV-RST3 2026-10-20): repo Tcl hooks sourced AFTER the pin flops are fixed, so they can
+    # read ot_out_flop_at_pins.txt / ot_inhold_firm.txt (e.g. a hard central placement fence for every non-boundary cell);
+    # safe relative repo paths only, and they join the source-sync list.  Kits without the key regenerate byte-identically.
+    for rel in s.get("pin_hook_after_flops", []):
+        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+            raise SpecError("pin_hook_after_flops must name safe relative repo Tcl files")
+        if not (ROOT / rel).is_file():
+            raise SpecError(f"missing pin hook: {rel}")
+        pre_gpl.append(f"source /src/{rel}")
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
@@ -1244,12 +1326,15 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     reason_kind = "pin-bound"
     structural = fr.get("lattice_channel_bound")
     if structural is not None:
-        errors = lattice_band_errors(s, W, H, blocks, float(std_area))
+        errors = lattice_band_errors(s, W, H, blocks, float(std_area), planning=True, root=ROOT)
         if errors:
             return ("FAIL", "fill", "invalid lattice/channel band: " + "; ".join(errors),
                     "fix measured sizing geometry; actual placement verification is also required")
         reason = str(structural["why"]).strip()
         reason_kind = "lattice/channel-bound gate-rule exception (placement verification required)"
+        if "planning_birth_budget" in s:
+            reason_kind += (f"; PLANNING ONLY birth budget {s['planning_std_area_um2']:.3f} um2, "
+                            f"source {float(std_area):.3f} um2; actual placed 40..60% still required")
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
@@ -1581,7 +1666,7 @@ def pin_wrapper(s: dict) -> bool:
     reset_landing on (a landing-only wrapper); the design's core is then instance u_ot_pr_core of <top>__ot_pr_core"""
     pr = pin_regs_plan(s)
     rl = reset_landing_plan(s)
-    return bool((pr and pr.get("enable")) or (rl and rl.get("enable")))
+    return bool((pr and pr.get("enable")) or (rl and rl.get("enable") and not rl.get("source_native")))
 
 
 def gen_place(s: dict, blocks: list) -> str:
@@ -2243,7 +2328,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
@@ -2370,6 +2455,9 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(clock_entry_constraints.single_clock_contract.evidence_paths(s)))
     if s.get("registered_cluster_candidate"):
         from registered_cluster_budget import evidence_paths
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
+    if s.get("planning_birth_budget"):
+        from planning_birth_budget import evidence_paths
         j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
     hold = route_hold_context(s, kd)
     hm = float(hold["HM"])

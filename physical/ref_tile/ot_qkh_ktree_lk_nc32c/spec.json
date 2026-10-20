@@ -1,0 +1,155 @@
+{
+ "name": "ot_qkh_ktree_lk_nc32c",
+ "top": "ot_qkh_ktree_lk_nc32c",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/nearhbm/ot_qkh_ktree_nc32c.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/lib/ot_rst_relay_bounded32.sv",
+  "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 129.6
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "g_f",
+   "sc_d",
+   "sc_f"
+  ],
+  "N": [
+   "gf_in",
+   "kp_in",
+   "kpv_in"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The K-tree RTL registers every input at the pin (kp_r 512, kv_r, gf_r 16 = the existing input stage; the new kpv_in[15:1] reach gf_r through one XOR + one OR) and every output (sc_d / sc_f / g_f) is a tile output register. A generic extra stage would add a cycle to the scheduled K path (head ages are compiled with the closed ot_qkh_ktree latency)."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "The RTL owns the landing: rst_n -> rst_l0 -> rst_l1 (2 registered face stages, async assert / sync release; 2 rst_n sinks), then ot_rst_relay_bounded32 #(53) (8 root endpoints, leaves <= 32)."
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 112,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "KV-PARAMS4 10-20 safe32 successor of ot_qkh_ktree_lk (lkp: reset 369 / SS -88 / hops 410-418 obligations): ncr adders, bounded32 #(53) reset farm, ot_hdc_fp32_mul_lat_ncr (constant SCALE, one-hot normalise from 2 kept root-y copies, kept selects, B encode copy). Same ports, pins faces, latency; outline 151.2 x 97.2 -> 172.8 x 129.6 (synth ~10.9k um2 = 74% in the old slot).",
+ "job": {
+  "owner": "Claude:KV-PARAMS4",
+  "branch": "claude/kv-params4-qkh-1020",
+  "tag": "g1",
+  "purpose": "KV-PARAMS4 10-20 safe32 successor of ot_qkh_ktree_lk (lkp: reset 369 / SS -88 / hops 410-418 obligations): ncr adders, bounded32 #(53) reset farm, ot_hdc_fp32_mul_lat_ncr (constant SCALE, one-hot normalise from 2 kept root-y copies, kept selects, B encode copy). Same ports, pins faces, latency; outline 151.2 x 97.2 -> 172.8 x 129.6 (synth ~10.9k um2 = 74% in the old slot).",
+  "extra_paths": [
+   "rtl",
+   "results/rtl/kv_params4_qkh_1020",
+   "physical/ref_tile/ot_qkh_ktree_m5/src"
+  ],
+  "benches": [
+   {
+    "name": "kt32c_ktreelk",
+    "cmd": "bash results/rtl/kv_params4_qkh_1020/kt32c_bench.sh ktreelk 0 {RUN}/kt_m0 +n=200000",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TB_QKH_KT32C PASS"
+   },
+   {
+    "name": "kt32c_ktree_mut1",
+    "cmd": "bash results/rtl/kv_params4_qkh_1020/kt32c_bench.sh ktree 1 {RUN}/kt_m1 +n=200000",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TB_QKH_KT32C FAIL",
+    "fail_witness": "results/rtl/kv_params4_qkh_1020/kt_m1/bench_ktree_m1.log"
+   },
+   {
+    "name": "kt32c_mul_mut7",
+    "cmd": "bash results/rtl/kv_params4_qkh_1020/kt32c_bench.sh mul 7 {RUN}/kt_m7 +n=500000",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TB_QKH_KT32C FAIL",
+    "fail_witness": "results/rtl/kv_params4_qkh_1020/kt_m7/bench_mul_m7.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/ot_qkh_ktree_lk_nc32c/views",
+  "record_to": "results/rtl/ref_tile/ot_qkh_ktree_lk_nc32c"
+ },
+ "pin_ranges": {
+  "kp_in": [
+   3.0,
+   125.0
+  ],
+  "gf_in": [
+   127.0,
+   136.0
+  ],
+  "kpv_in": [
+   138.0,
+   148.0
+  ],
+  "sc_d": [
+   20.0,
+   120.0
+  ],
+  "sc_f": [
+   124.0,
+   130.0
+  ],
+  "g_f": [
+   134.0,
+   140.0
+  ]
+ },
+ "purpose": "KV-PARAMS4 10-20 safe32 successor of ot_qkh_ktree_lk (lkp: reset 369 / SS -88 / hops 410-418 obligations): ncr adders, bounded32 #(53) reset farm, ot_hdc_fp32_mul_lat_ncr (constant SCALE, one-hot normalise from 2 kept root-y copies, kept selects, B encode copy). Same ports, pins faces, latency; outline 151.2 x 97.2 -> 172.8 x 129.6 (synth ~10.9k um2 = 74% in the old slot).",
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

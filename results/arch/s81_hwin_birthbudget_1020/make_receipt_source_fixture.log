@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_c21k-20261020-022307
+ot-run: ot-epyc6       admits   966 GB (avail 789, growth 113, headroom 0, waiters 0/0 GB) load 42/128 running 33 disk 4191 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_c21k-20261020-022307
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_c21k-20261020-022307
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_c21k-20261020-022307
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_c21k-20261020-022307
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-156997-1792496292 after 0 s
+{
+  "approval": {
+    "path": "results/arch/s81_hwin_birthbudget_1020/proof/receipt.json",
+    "sha256": "3799dd402d3f47293551fa12c03d55a52c0cf0ea3ba8d036ba4618b65a877158",
+    "approved_by": "ROOT",
+    "why": "ROOT authorized narrowly source-bound HWIN22l actual measured CTS birth population for PLANNING ONLY; new actual placed40..60 proof remains mandatory (10-20 takeover)."
+  },
+  "source_cells": 59580,
+  "cts_cells": 82834,
+  "master_digest": "23d964fe5003d91f7e6e602803b525dc0ec0bf792c6982660ce0e7412a67d0c4"
+}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-156997-1792496292): exit 0

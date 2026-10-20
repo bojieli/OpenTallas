@@ -1,0 +1,941 @@
+{
+  "status": "FAILED_NATIVE_NO_GATE",
+  "max": 72,
+  "role_errors": [],
+  "netlist": {
+    "path": "/work/native_ot_qkh_lane8_nc32c/results/asap7/ot_qkh_lane8_nc32c/base/1_2_yosys.v",
+    "sha256": "604bb003e01acdad9084ab1b29b29ad2a4b30e20a6fb2469c5e421046e91d871"
+  },
+  "violations": [
+    {
+      "driver": "g_d[0].u_a._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[0].u_a.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[0].u_a.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[0].u_a.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[0].u_a.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[0].u_a.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[0].u_a.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[0].u_a.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[0].u_a.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[0].u_a.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[0].u_a.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[0].u_a.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[0].u_a.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[0].u_a.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[0].u_b._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[0].u_b.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[0].u_b.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[0].u_b.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[0].u_b.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[0].u_b.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[0].u_b.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[0].u_b.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[0].u_b.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[0].u_b.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[0].u_b.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[0].u_b.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[0].u_b.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[0].u_b.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[0].u_p.s2_sh[2]$_DFF_P_/QN",
+      "loads": 33
+    },
+    {
+      "driver": "g_d[1].u_a._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[1].u_a.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[1].u_a.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[1].u_a.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[1].u_a.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[1].u_a.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[1].u_a.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[1].u_a.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[1].u_a.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[1].u_a.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[1].u_a.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[1].u_a.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[1].u_a.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[1].u_a.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[1].u_b._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[1].u_b.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[1].u_b.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[1].u_b.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[1].u_b.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[1].u_b.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[1].u_b.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[1].u_b.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[1].u_b.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[1].u_b.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[1].u_b.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[1].u_b.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[1].u_b.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[1].u_b.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[1].u_p.s2_sh[2]$_DFF_P_/QN",
+      "loads": 33
+    },
+    {
+      "driver": "g_d[2].u_a._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[2].u_a.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[2].u_a.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[2].u_a.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[2].u_a.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[2].u_a.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[2].u_a.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[2].u_a.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[2].u_a.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[2].u_a.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[2].u_a.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[2].u_a.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[2].u_a.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[2].u_a.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[2].u_b._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[2].u_b.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[2].u_b.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[2].u_b.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[2].u_b.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[2].u_b.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[2].u_b.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[2].u_b.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[2].u_b.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[2].u_b.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[2].u_b.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[2].u_b.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[2].u_b.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[2].u_b.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[2].u_p.s2_sh[2]$_DFF_P_/QN",
+      "loads": 33
+    },
+    {
+      "driver": "g_d[3].u_a._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[3].u_a.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[3].u_a.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[3].u_a.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[3].u_a.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[3].u_a.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[3].u_a.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[3].u_a.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[3].u_a.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[3].u_a.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[3].u_a.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[3].u_a.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[3].u_a.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[3].u_a.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[3].u_b._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[3].u_b.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[3].u_b.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[3].u_b.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[3].u_b.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[3].u_b.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[3].u_b.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[3].u_b.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[3].u_b.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[3].u_b.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[3].u_b.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[3].u_b.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[3].u_b.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[3].u_b.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[3].u_p.s2_sh[2]$_DFF_P_/QN",
+      "loads": 33
+    },
+    {
+      "driver": "g_d[4].u_a._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[4].u_a.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[4].u_a.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[4].u_a.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[4].u_a.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[4].u_a.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[4].u_a.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[4].u_a.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[4].u_a.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[4].u_a.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[4].u_a.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[4].u_a.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[4].u_a.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[4].u_a.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[4].u_b._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[4].u_b.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[4].u_b.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[4].u_b.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[4].u_b.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[4].u_b.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[4].u_b.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[4].u_b.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[4].u_b.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[4].u_b.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[4].u_b.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[4].u_b.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[4].u_b.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[4].u_b.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[4].u_p.s2_sh[2]$_DFF_P_/QN",
+      "loads": 33
+    },
+    {
+      "driver": "g_d[5].u_a._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[5].u_a.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[5].u_a.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[5].u_a.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[5].u_a.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[5].u_a.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[5].u_a.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[5].u_a.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[5].u_a.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[5].u_a.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[5].u_a.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[5].u_a.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[5].u_a.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[5].u_a.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[5].u_b._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[5].u_b.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[5].u_b.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[5].u_b.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[5].u_b.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[5].u_b.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[5].u_b.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[5].u_b.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[5].u_b.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[5].u_b.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[5].u_b.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[5].u_b.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[5].u_b.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[5].u_b.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[5].u_p.s2_sh[2]$_DFF_P_/QN",
+      "loads": 33
+    },
+    {
+      "driver": "g_d[6].u_a._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[6].u_a.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[6].u_a.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[6].u_a.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[6].u_a.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[6].u_a.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[6].u_a.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[6].u_a.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[6].u_a.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[6].u_a.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[6].u_a.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[6].u_a.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[6].u_a.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[6].u_a.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[6].u_b._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[6].u_b.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[6].u_b.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[6].u_b.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[6].u_b.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[6].u_b.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[6].u_b.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[6].u_b.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[6].u_b.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[6].u_b.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[6].u_b.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[6].u_b.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[6].u_b.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[6].u_b.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[6].u_p.s2_sh[2]$_DFF_P_/QN",
+      "loads": 33
+    },
+    {
+      "driver": "g_d[7].u_a._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[7].u_a.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[7].u_a.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[7].u_a.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[7].u_a.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[7].u_a.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[7].u_a.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[7].u_a.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[7].u_a.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[7].u_a.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[7].u_a.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[7].u_a.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[7].u_a.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[7].u_a.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[7].u_b._4819_/Y",
+      "loads": 35
+    },
+    {
+      "driver": "g_d[7].u_b.lz_dist[2][0]$_DFF_P_/QN",
+      "loads": 48
+    },
+    {
+      "driver": "g_d[7].u_b.lz_dist[2][1]$_DFF_P_/QN",
+      "loads": 38
+    },
+    {
+      "driver": "g_d[7].u_b.lz_dist[3][0]$_DFF_P_/QN",
+      "loads": 53
+    },
+    {
+      "driver": "g_d[7].u_b.lz_dist[3][1]$_DFF_P_/QN",
+      "loads": 66
+    },
+    {
+      "driver": "g_d[7].u_b.t_exp[2]$_DFF_P_/QN",
+      "loads": 45
+    },
+    {
+      "driver": "g_d[7].u_b.x_dab_mask[0]$_DFF_P_/QN",
+      "loads": 56
+    },
+    {
+      "driver": "g_d[7].u_b.x_dab_mask[1]$_DFF_P_/QN",
+      "loads": 71
+    },
+    {
+      "driver": "g_d[7].u_b.x_dab_mask[2]$_DFF_P_/QN",
+      "loads": 69
+    },
+    {
+      "driver": "g_d[7].u_b.x_dab_mask[3]$_DFF_P_/QN",
+      "loads": 55
+    },
+    {
+      "driver": "g_d[7].u_b.x_dba_mask[0]$_DFF_P_/QN",
+      "loads": 58
+    },
+    {
+      "driver": "g_d[7].u_b.x_dba_mask[1]$_DFF_P_/QN",
+      "loads": 72
+    },
+    {
+      "driver": "g_d[7].u_b.x_dba_mask[2]$_DFF_P_/QN",
+      "loads": 60
+    },
+    {
+      "driver": "g_d[7].u_b.x_dba_mask[3]$_DFF_P_/QN",
+      "loads": 54
+    },
+    {
+      "driver": "g_d[7].u_p.s2_sh[2]$_DFF_P_/QN",
+      "loads": 33
+    }
+  ],
+  "source": "arithmetic_r4_source.sv.txt",
+  "remaining": "binary control of barrel shifts/jam masks; more register copies alone insufficient"
+}

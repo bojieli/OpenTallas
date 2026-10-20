@@ -119,10 +119,13 @@ def apply(contract, root=ROOT):
             v = I[n]
             if v['master'] == master:
                 allowed_extra = ({'ID_COHORT'} if master == SVG and re.search(r'\bID_COHORT\s*=', (root / SOURCES[SVG]).read_text()) else set())
+                # HBM-RATE7 l24: SMXL XSLOT/OPEN_IL (svg) and XSLOT (xc) are later parameter-only binds (0/1, no port change)
+                allowed_extra |= {k for k in ({'XSLOT', 'OPEN_IL'} if master == SVG else {'XSLOT'} if master == XC else set())
+                                  if re.search(r'\b' + k + r'\s*=', (root / SOURCES[master]).read_text())}
                 actual_params = v.get('params', {})
                 params_ok = (all(actual_params.get(k) == val for k, val in PARAMS[master].items())
                     and set(actual_params) <= set(PARAMS[master]) | allowed_extra
-                    and actual_params.get('ID_COHORT', 0) in (0, 1))
+                    and all(actual_params.get(k, 0) in (0, 1) for k in ('ID_COHORT', 'XSLOT', 'OPEN_IL')))
                 if not params_ok or v['ports'] != ports[master]:
                     raise ValueError(f'PARTIAL_MIGRATION {n}: relative master with stale parameters/ports')
                 states.append('new')

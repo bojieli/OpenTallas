@@ -1,0 +1,26 @@
+ot-run: ot-epyc5       admits   456 GB (avail 432, growth 113, headroom 0, waiters 0/0 GB) load 113/128 running 53 disk 313 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-sufix-rn/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-sufix-rn/src
+ot-run: ot-epyc9       admits   738 GB (avail 793, growth 277, headroom 0, waiters 0/0 GB) load 160/128 running 72 disk 283 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-sufix-rn/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-sufix-rn/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-713973-1792476878 after 0 s
+ot-epyc9
+== d4096_q8 ROWNORM_PT {"case": "d4096_q8", "blocks": 8, "reducer_ops": 12, "first_tree_edge": 10, "exports": [{"edge": 133, "scalar_edge": 144, "tag": 769, "value": "45710d76"}], "span_serial": 135, "PT_RED": 80, "DEP": 10}
+  mut0: PASS tb_hbm_su_red_pretree MUT=0: 1 exports bit-exact at fixed edges (+11), no fault
+  mut512: FAIL tb_hbm_su_red_pretree MUT=512: 2 errors
+== d4096_q32 ROWNORM_PT {"case": "d4096_q32", "blocks": 32, "reducer_ops": 48, "first_tree_edge": 10, "exports": [{"edge": 175, "scalar_edge": 186, "tag": 770, "value": "4686b7cd"}], "span_serial": 177, "PT_RED": 80, "DEP": 10}
+  mut0: PASS tb_hbm_su_red_pretree MUT=0: 1 exports bit-exact at fixed edges (+11), no fault
+  mut512: FAIL tb_hbm_su_red_pretree MUT=512: 2 errors
+== seg128_q2 ROWNORM_PT {"case": "seg128_q2", "blocks": 2, "reducer_ops": 4, "first_tree_edge": 10, "exports": [{"edge": 100, "scalar_edge": 111, "tag": 771, "value": "44131862"}, {"edge": 101, "scalar_edge": 112, "tag": 772, "value": "43de1a2d"}], "span_serial": 103, "PT_RED": 80, "DEP": 10}
+  mut0: PASS tb_hbm_su_red_pretree MUT=0: 2 exports bit-exact at fixed edges (+11), no fault
+  mut512: FAIL tb_hbm_su_red_pretree MUT=512: 3 errors
+== seg128_k1 ROWNORM_PT {"case": "seg128_k1", "blocks": 1, "reducer_ops": 2, "first_tree_edge": 10, "exports": [{"edge": 100, "scalar_edge": 111, "tag": 773, "value": "44131862"}], "span_serial": 102, "PT_RED": 80, "DEP": 10}
+  mut0: PASS tb_hbm_su_red_pretree MUT=0: 1 exports bit-exact at fixed edges (+11), no fault
+  mut512: FAIL tb_hbm_su_red_pretree MUT=512: 2 errors
+== hh6 order witness mut0: PASS tb_hbm_su_red_pretree MUT=0: 10 exports bit-exact at fixed edges (+11), no fault
+== hh6 order witness mut1: FAIL tb_hbm_su_red_pretree MUT=1: 5 errors
+== hh6 order witness mut1024: FAIL tb_hbm_su_red_pretree MUT=1024: 2 errors
+rc=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-713973-1792476878): exit 0
