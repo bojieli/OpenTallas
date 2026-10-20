@@ -290,10 +290,37 @@ def compile_qwen(tags, seed=20261019):
 _compile_all = S.compile_all
 
 
+def qwen_bf16w_records(tags, seed=20261019):
+    """Qwen INT8 records as the CURRENT die can stream them: the BF16-widened image (fmt 0; exact: codes exact in BF16,
+    golden = hgi_sim.lib.sm_int8 == fmt-0 csum), one 136-B line per 64 codes (2x the INT8 bytes).  The packed INT8 path
+    (ENABLE_INT8, command[116]) is NOT reachable through the bound svg feed (its ot_smh_static_feed S1 copy requires
+    packet valid == command[29] and equal tags on every edge; see qwen_int8 runs).  TOKSIM_QWEN_R=tag:R,... overrides
+    the rows of SM 0 (affine fit points when the census rows overflow the 256-row descriptor table)."""
+    ov = dict((a.split(":")[0], int(a.split(":")[1])) for a in os.environ.get("TOKSIM_QWEN_R", "").split(",") if a)
+    out = []
+    for r in qwen_records(tags, seed):
+        R = ov.get(r["tag"], r["R"])
+        W = r["W"][:R]
+        acc, o = r["acc"][:R], r["o"][:R]
+        out.append(dict(k=r["k"], rec=dict(tag=r["tag"], priced=None), fmt=0, w=W.astype(np.float32), x=r["x"], o=o,
+                        acc=acc, ofmt="FP32", gok=r["gok"], slot=None, eid=None, m=R, R=R, K=r["K"]))
+    return out
+
+
 def compile_all(fix_root, smw_root, layers, mut=""):
-    """--layers qwen:<tag>[+<tag>...] runs the Qwen INT8 compiler; anything else is smb_unit's DS compiler."""
+    """--layers qwen:<tag>[+<tag>...] runs the Qwen INT8 packed compiler (TOKSIM_QWEN_MODE=int8) or, default, the
+    BF16-widened stream through smb_unit's own looped DS compiler; anything else is smb_unit's DS compiler."""
     if layers and layers[0][0].startswith("qwen"):
-        return compile_qwen(os.environ.get("TOKSIM_QWEN_TAGS", "qkv").split("+"))
+        tags = os.environ.get("TOKSIM_QWEN_TAGS", "qkv").split("+")
+        if os.environ.get("TOKSIM_QWEN_MODE", "bf16w") == "int8":
+            return compile_qwen(tags)
+        recs = qwen_bf16w_records(tags)
+        lr = S.layer_records
+        S.layer_records = lambda fix, smw: recs
+        try:
+            return _compile_all(fix_root, smw_root, [("qwen", 0)], mut)
+        finally:
+            S.layer_records = lr
     return _compile_all(fix_root, smw_root, layers, mut)
 
 
