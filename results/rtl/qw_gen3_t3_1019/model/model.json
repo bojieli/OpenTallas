@@ -1,0 +1,160 @@
+{
+  "scope": "source-owned full-shape geometry MODEL only; no GEN/placement/STA/clock closure",
+  "sources": {
+    "/home/ubuntu/artifacts/qwen-die-gen3-takeover3-1019/pickup/dv2r8f7r_qdv_p2462.json": "8c5de31ac3a8e9e47b4007fa827b74bc6f007f0ce9cbfc5a14524db0560bac45",
+    "results/arch/qw_dieclk2_1019/landing_list.json": "589248ca5b72371416fcc1653bc6e46843c8eb53fd611685d0d5d9b0055fabec"
+  },
+  "hard_bodies": 60,
+  "overlaps": [],
+  "vertical_gap_um": 86.4,
+  "slice_gap_um": 129.6,
+  "old_slice_gap_um": 43.2,
+  "channels": [
+    {
+      "left": "dvs_W5",
+      "right": "dvs_W4",
+      "rect": [
+        4492.8,
+        172.8,
+        4579.2,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_W4",
+      "right": "dvs_W3",
+      "rect": [
+        7041.6,
+        172.8,
+        7128.0,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_W3",
+      "right": "dvs_W2",
+      "rect": [
+        9590.4,
+        172.8,
+        9676.8,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_W2",
+      "right": "dvs_W1",
+      "rect": [
+        12139.2,
+        172.8,
+        12225.6,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_W1",
+      "right": "dvs_W0",
+      "rect": [
+        14688.0,
+        172.8,
+        14774.4,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_W0",
+      "right": "dvs_E0",
+      "rect": [
+        17236.8,
+        172.8,
+        17452.8,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_E0",
+      "right": "dvs_E1",
+      "rect": [
+        19915.2,
+        172.8,
+        20001.6,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_E1",
+      "right": "dvs_E2",
+      "rect": [
+        22464.0,
+        172.8,
+        22550.4,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_E2",
+      "right": "dvs_E3",
+      "rect": [
+        25012.8,
+        172.8,
+        25099.2,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_E3",
+      "right": "dvs_E4",
+      "rect": [
+        27561.6,
+        172.8,
+        27648.0,
+        24192.0
+      ]
+    },
+    {
+      "left": "dvs_E4",
+      "right": "dvs_E5",
+      "rect": [
+        30110.4,
+        172.8,
+        30196.8,
+        24192.0
+      ]
+    }
+  ],
+  "before_outline_um": [
+    31730.4,
+    24040.8
+  ],
+  "after_outline_um": [
+    32680.8,
+    24213.6
+  ],
+  "delta_outline_um": [
+    950.4,
+    172.8
+  ],
+  "delta_area_mm2": 28.495619,
+  "authority": "docs/INTEGRATED_PHYSICAL_PLAN.md:9 owner 26 by 33 mm",
+  "fits_reticle": true,
+  "listed_landings": {
+    "links": 446,
+    "bits": 186347,
+    "ff": 1154266,
+    "area_mm2": 13.079
+  },
+  "schedule": {
+    "per_new_landing_edges": 3,
+    "worst_extra_cycles_per_layer": 45,
+    "layers": 36,
+    "token_extra_cycles": 1620,
+    "token_extra_us_at_1p2GHz": 1.35,
+    "status": "existing conservative landing-list price; final GEN/compiler must rederive actual ages"
+  },
+  "unresolved": [
+    "20 auto hard crossings beyond frozen446 list require actual GEN cost",
+    "directional physical landing masters remain declared stand-ins",
+    "complete clock/reset/PG/via/OBS/access and actual pin reach not yet measured",
+    "OVL source/view and BOOTCTX/first-use joint closure pending",
+    "no whole-system numeric or throughput qualification"
+  ]
+}

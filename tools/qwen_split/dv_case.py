@@ -281,6 +281,38 @@ def _ctxrx_buses(m, out, cx_crt, has):
                                 open_outputs=['ctx_user', 'mu_fault'])
 
 
+def landing_column_channels(model, gap_um):
+    """Add source-owned full-height channels without changing any hard body.
+
+    Columns keep their left-to-right order and all four cluster rows follow
+    their slice. The legacy geometry is untouched when the opt-in is zero.
+    """
+    import math
+    if not math.isfinite(gap_um) or gap_um < 0 or abs(gap_um / 43.2 - round(gap_um / 43.2)) > 1e-8:
+        raise ValueError('landing column gap must be a nonnegative multiple of 43.2 um')
+    if gap_um == 0:
+        return []
+    slices = sorted((d for d in model['insts'] if d['n'].startswith('dvs_')), key=lambda d: d['x'])
+    if not slices or len({d['x'] for d in slices}) != len(slices):
+        raise ValueError('landing columns require distinct slice x positions')
+    shifts = {d['n'][4:]: k * gap_um for k, d in enumerate(slices)}
+    array = [d for d in model['insts'] if d['n'].startswith(('dvs_', 'c16_'))]
+    y0 = min(d['y'] for d in array)
+    y1 = max(d['y'] + d['h'] for d in array)
+    for d in array:
+        column = d['n'][4:] if d['n'].startswith('dvs_') else d['n'][4:].rsplit('_', 1)[0]
+        if column not in shifts:
+            raise ValueError(f"hard instance {d['n']} has no slice column")
+        d['x'] = round(d['x'] + shifts[column], 3)
+    channels = []
+    for left, right in zip(slices, slices[1:]):
+        x0, x1 = left['x'] + left['w'], right['x']
+        if x1 - x0 < gap_um - 1e-3:
+            raise ValueError('landing column channel overlaps a hard body')
+        channels.append(dict(left=left['n'], right=right['n'], rect=[round(x0, 3), y0, x1, y1]))
+    return channels
+
+
 def apply_dv(v, m):
     D = _load('OT_SPLIT_DV')
     C = _load('OT_SPLIT_Q3H_CONTRACT')
@@ -307,6 +339,8 @@ def apply_dv(v, m):
                 d['y'] = round(d['y'] + sgap, 3)
             elif d['n'].startswith('c16_') and d['y'] > ys:
                 d['y'] = round(d['y'] + 2 * sgap, 3)
+    m['dv_landing_channels'] = landing_column_channels(
+        D, float(os.environ.get('OT_SPLIT_DV_COLUMN_GAP_UM', '0') or 0))
     SLF = 'N' if sgap else 'W'
     # W-column channel width (Q-DV option (i), 2026-10-17): every PHY stays on the W die edge, single file; the far
     # SerDes (io_serdes_2, under io_serdes_1) reaches the collective's S face over a relayed FDI lane in this channel

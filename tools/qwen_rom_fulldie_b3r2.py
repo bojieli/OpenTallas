@@ -2087,6 +2087,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     fw, fe = fields[0], fields[1]
 
     def in_field(x, y):
+        # Only explicitly reserved, source-owned column channels are exempt
+        # from the field interior rule. free() still checks every whole frame.
+        if any(a <= x <= c and b <= y <= d
+               for a, b, c, d in (r['rect'] for r in m.get('dv_landing_channels', ()))):
+            return False
         return any(a - 1 <= x <= c + v.CORR + 1 and b - 1 <= y <= d + 1 for a, b, c, d in fields)
 
     def side_cols(x):
@@ -4154,6 +4159,14 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 keep.pop(idx, None)
             pl = plans[idx]
             w, h = relay_frame(pl['bits'], pl['cl'])
+            # A lateral landing needs its >= bits/6 face span on E/W, not
+            # N/S. Use the same complete ring area with the axes exchanged;
+            # re-quantise both dimensions on their own native site grids.
+            # Existing lanes and default floorplans remain byte-identical.
+            if (m.get('dv_landing_channels') and bid in _lc_bids
+                    and abs(pl['P0'][1] - pl['P1'][1]) < 1e-3
+                    and abs(pl['P0'][0] - pl['P1'][0]) > 1e-3):
+                w, h = v.up(h + v.SHAVE, v.GX) - v.SHAVE, v.up(w + v.SHAVE, v.GY) - v.SHAVE
             x1, y1 = pl['P1']
             cc = corr_of(x1 - v.CORR / 2)
             got = []
