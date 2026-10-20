@@ -63,12 +63,13 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
    open_q<=start_v;open_land_q<=start_bank;open_epoch_q<=start_epoch;
   end
  end
+ wire[LBANKS-1:0]producer_ready;
  wire out_v,out_bank,out_last;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
  ot_hbm_svc_sm4pc_cdc_rel_id #(.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.OVERLAP(OVERLAP),.LBANKS(LBANKS),.OPEN_IL(OPEN_IL)) producer(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
   .reserve_v(reserve_fire),.reserve_ready(cdc_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),.reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),
-  .block_ready(block_ready),.block_ready_v(),.block_ready_bank(),.block_ready_epoch(),.start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),
+  .block_ready(producer_ready),.block_ready_v(),.block_ready_bank(),.block_ready_epoch(),.start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),
   .out_v(out_v),.out_mask(out_mask),.out_data(out_data),.out_ordinal(out_ordinal),.out_bank(out_bank),.out_epoch(out_epoch),.out_last(out_last),.fault(cdc_fault),
   .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.k_we(k_we),.k_wdata(k_wdata),.k_wstrb(k_wstrb),.k_wr_done(k_wr_done),.kr_v(kr_v),.kr_rdy(kr_rdy),.kr_tag(kr_tag),.kr_beat(kr_beat),.kr_data(kr_data));
  wire[95:0]indices;wire[63:0]epochs;
@@ -76,6 +77,12 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   assign indices[l*24+:24]=out_ordinal+l;assign epochs[l*16+:16]=out_epoch;
  end
  wire[134:0]word;wire[CTXW-1:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;wire cache_busy;
+ // OPEN_IL governs the variable HBM-to-cache admission, before the fixed programme GO.
+ // The landing producer releases draining at its last sector, but packed136 still
+ // writes its last row and clears running over the next two edges. Include that
+ // real consumer completion and the registered open already in flight; never
+ // alter a cache fault or delay a programme GO to hide a missed compiled slot.
+ assign block_ready=(OPEN_IL!=0)?(producer_ready&{LBANKS{!cache_busy&&!open_q}}):producer_ready;
  ot_smh_calendar_static_x #(.W(135),.AW(PAW),.XW(CTXW)) programme_leaf(
   .clk(stream_clk),.rst_n(stream_rst_n),.cfg_we(program_cfg_we),.cfg_addr(program_cfg_addr),.cfg_data(program_cfg_data),
   .start_v(program_start_v),.start_base(program_start_base),.start_limit(program_start_limit),.start_loops(program_start_loops),
