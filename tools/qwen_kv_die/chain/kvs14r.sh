@@ -54,7 +54,11 @@ export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_
 #    (d2ds_view_select.py; fails closed on a mismatch; frame while absent)
 #  * OT_KV_HROOT_VIEW=auto (kvsys_prep): qkd_kvs_hroot binds the CLOSED k1 view as a stand-in (native FAIL)
 export OT_KV_FACE_LAND=${OT_KV_FACE_LAND:-astk_rly_296}
+# KV-BIND4 10-19: GEN9 d2ds kit = the CLOSED KV-SRAM-D2D successor qkd_d2d_static_r7w_sfm2 (sfm2-1c6c02ed7, TT +76.47 /
+#    FF +2.91; top qkd_d2d_static_sfm, TXDP 0x03030416 NTX 3 SAFE_RC 1 SRAMV 2 FEG 1): kv_die.d2ds_kit binds the sfm RTL
+#    with those params, d2ds_view_select its views/qkd_d2d_static_sfm (still fails closed on a TXDP / NTX mismatch)
 export OT_KV_D2DS_VIEW=${OT_KV_D2DS_VIEW:-auto} OT_KV_HROOT_VIEW=${OT_KV_HROOT_VIEW:-auto}
+export OT_KV_D2DS_KIT=${OT_KV_D2DS_KIT:-qkd_d2d_static_r7w_sfm2}
 # Clock evidence and legal landing reservations are mandatory even in diagnostics.
 unset OT_KV_FWD_UNLANDED_DIAG OT_KV_CLK_UNMEASURED_DIAG
 [ -f tools/qwen_kv_die/kv_lane_reach.py ] || {
