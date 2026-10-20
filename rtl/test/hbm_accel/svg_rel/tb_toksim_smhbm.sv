@@ -119,7 +119,10 @@ module tb_toksim_smhbm;
   .request(request),.xw_en(xw_en),.xw_addr(xw_addr),.xw_grp(xw_grp),.xw_data(xw_data),
   .rv(sm_rv),.rrow(rrow),.rdata(rdata),.fault(sm_fault),.schedule_fault(sm_sfault));
  // ---------------- checks / trace
- integer nres=0,ngo=0,nrun=0;reg[1:0]cr_q=0;reg[3:0]br_q=0;
+ integer nres=0,ngo=0,nrun=0;reg[1:0]cr_q=0;reg[3:0]br_q=0;reg[3:0]pr_q=0;
+`ifdef PTRACE
+ integer ap;always @(posedge hbm)if(hrst)for(ap=0;ap<4;ap=ap+1)if(row_v[ap])$display("A %0d %0d %0d %0d %0d",cyc,ap,row_op[ap*3+:3],row_bank[ap*5+:5],row_row[ap*19+:19]);
+`endif
  always @(posedge hbm)if(hrst&&native_fault)begin $display("FAULT controller cycle %0d vmks %0d pc %b ofs %h",cyc,vmks_fault,pcf,ofs);$fatal(1,"native_fault");end
  always @(posedge stream)if(srst&&hrst)begin
   if(sm_rv)begin $display("R %0d %03h %064h",cyc,rrow,rdata);nres=nres+1;end
@@ -133,6 +136,11 @@ module tb_toksim_smhbm;
   if(svg.feed.cache_ready!=cr_q)$display("C %0d %b",cyc,svg.feed.cache_ready);
   if(svg.feed.block_ready!=br_q)$display("B %0d %b",cyc,svg.feed.block_ready);
   cr_q<=svg.feed.cache_ready;br_q<=svg.feed.block_ready;
+`ifdef PTRACE
+  // HBM-SMXL2 diagnostic only: raw landing-producer readiness (before the OPEN_IL cache mask) -> fetch law of the elastic side
+  if(svg.feed.producer_ready!=pr_q)$display("P %0d %b",cyc,svg.feed.producer_ready);
+  pr_q<=svg.feed.producer_ready;
+`endif
   if(sm_sfault)begin $display("FAULT sm_schedule cycle %0d",cyc);$fatal(1,"sm schedule_fault");end
   if(sm_fault)begin $display("FAULT sm_arith cycle %0d",cyc);$fatal(1,"sm fault");end
   if(svg_fault)begin $display("FAULT svg cycle %0d issuer %0d feed %0d (desc %0d cdc %0d cache %0d prog %0d s1 %0d fl %0d)",cyc,svg.issuer.fault,svg.feed.fault,
