@@ -1,12 +1,12 @@
 BW blocks=156 sectors_per_pc=8300 hbm_cycles=9484 B_per_edge=91.16 steady_blocks=148 steady_cycles=8858 steady_B_per_edge=91.70 peak=104.17
-PC0 cols=8300 returns=8300 acts=624 refs=88 gaps>8=29 gap_cycles=903 first=1 done=9474
-PC1 cols=8300 returns=8300 acts=624 refs=88 gaps>8=29 gap_cycles=907 first=1 done=9477
-PC2 cols=8300 returns=8300 acts=624 refs=88 gaps>8=29 gap_cycles=911 first=1 done=9482
-PC3 cols=8300 returns=8300 acts=624 refs=88 gaps>8=29 gap_cycles=915 first=1 done=9485
-EXPOSE pc0 busy=8300 empty=32 refresh=0 closed=381 conflict=30 trcd=538 other=192 acts=624
-EXPOSE pc1 busy=8300 empty=32 refresh=0 closed=381 conflict=31 trcd=540 other=192 acts=624
-EXPOSE pc2 busy=8300 empty=32 refresh=0 closed=386 conflict=31 trcd=540 other=192 acts=624
-EXPOSE pc3 busy=8300 empty=32 refresh=0 closed=389 conflict=31 trcd=540 other=192 acts=624
+PC0 cols=8300 returns=8300 acts=624 refs=88 gaps>8=29 gap_cycles=901 first=1 done=9474
+PC1 cols=8300 returns=8300 acts=624 refs=88 gaps>8=29 gap_cycles=905 first=1 done=9477
+PC2 cols=8300 returns=8300 acts=624 refs=88 gaps>8=29 gap_cycles=909 first=1 done=9482
+PC3 cols=8300 returns=8300 acts=624 refs=88 gaps>8=29 gap_cycles=913 first=1 done=9485
+EXPOSE pc0 busy=8300 empty=32 refresh=0 closed=381 conflict=30 trcd=537 other=193 acts=624
+EXPOSE pc1 busy=8300 empty=32 refresh=0 closed=379 conflict=31 trcd=541 other=193 acts=624
+EXPOSE pc2 busy=8300 empty=32 refresh=0 closed=384 conflict=31 trcd=541 other=193 acts=624
+EXPOSE pc3 busy=8300 empty=32 refresh=0 closed=387 conflict=31 trcd=541 other=193 acts=624
 BLK 0 row 100 slot 3 words 68 ret 141 140 141 140
 BLK 1 row 100 slot 4 words 68 ret 209 208 209 208
 BLK 2 row 100 slot 5 words 68 ret 329 328 329 328
@@ -165,17 +165,17 @@ BLK 154 row 3337 slot 2 words 34 ret 9438 9441 9446 9449
 BLK 155 row 3215 slot 3 words 34 ret 9474 9477 9482 9485
 DONE dram_reads=33200 refreshes=352
 - /srv/opentallas-scratch/claude/hbm-mc3c-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv:163: Verilog $finish
-BW_ROW_GRANT_TRUTH 00=3267 01=1478 10=3410 11=1336
+BW_ROW_GRANT_TRUTH 00=3268 01=1477 10=3410 11=1336
 BW_REFRESH_CLEAR_TRUTH group=0 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=1 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=2 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=3 00=9351 01=52 10=86 11=2
-BW_ROW_GRANT_TRUTH 00=3265 01=1481 10=3409 11=1336
+BW_ROW_GRANT_TRUTH 00=3266 01=1480 10=3409 11=1336
 BW_REFRESH_CLEAR_TRUTH group=0 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=1 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=2 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=3 00=9351 01=52 10=86 11=2
-BW_ROW_GRANT_TRUTH 00=3265 01=1480 10=3410 11=1336
+BW_ROW_GRANT_TRUTH 00=3266 01=1479 10=3410 11=1336
 BW_REFRESH_CLEAR_TRUTH group=0 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=1 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=2 00=9351 01=52 10=86 11=2
@@ -186,5 +186,5 @@ BW_REFRESH_CLEAR_TRUTH group=1 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=2 00=9351 01=52 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=3 00=9351 01=52 10=86 11=2
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 10us; walltime 0.379 s; speed 25.633 us/s
-- Verilator: cpu 0.378 s on 1 threads; allocated 9 MB
+- Verilator: $finish at 10us; walltime 0.286 s; speed 34.068 us/s
+- Verilator: cpu 0.286 s on 1 threads; allocated 9 MB

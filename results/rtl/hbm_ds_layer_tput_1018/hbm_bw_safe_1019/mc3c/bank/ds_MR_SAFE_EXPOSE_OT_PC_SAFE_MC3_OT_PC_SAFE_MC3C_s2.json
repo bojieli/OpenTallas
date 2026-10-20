@@ -15,9 +15,9 @@
  "bw": "BW blocks=156 sectors_per_pc=8300 hbm_cycles=9383 B_per_edge=92.14 steady_blocks=148 steady_cycles=8757 steady_B_per_edge=92.76 peak=104.17",
  "pcs": [
   "PC0 cols=8300 returns=8300 acts=624 refs=86 gaps>8=28 gap_cycles=850 first=1 done=9373",
-  "PC1 cols=8300 returns=8300 acts=624 refs=86 gaps>8=27 gap_cycles=841 first=1 done=9376",
-  "PC2 cols=8300 returns=8300 acts=624 refs=86 gaps>8=27 gap_cycles=845 first=1 done=9381",
-  "PC3 cols=8300 returns=8300 acts=624 refs=86 gaps>8=27 gap_cycles=849 first=1 done=9384"
+  "PC1 cols=8300 returns=8300 acts=624 refs=86 gaps>8=27 gap_cycles=843 first=1 done=9376",
+  "PC2 cols=8300 returns=8300 acts=624 refs=86 gaps>8=27 gap_cycles=847 first=1 done=9381",
+  "PC3 cols=8300 returns=8300 acts=624 refs=86 gaps>8=27 gap_cycles=851 first=1 done=9384"
  ],
  "fault": [],
  "done": [
@@ -38,9 +38,9 @@
    "busy": 8300,
    "empty": 32,
    "refresh": 0,
-   "closed": 333,
+   "closed": 335,
    "conflict": 33,
-   "trcd": 510,
+   "trcd": 508,
    "other": 167,
    "acts": 624
   },
@@ -48,9 +48,9 @@
    "busy": 8300,
    "empty": 32,
    "refresh": 0,
-   "closed": 338,
+   "closed": 340,
    "conflict": 33,
-   "trcd": 510,
+   "trcd": 508,
    "other": 167,
    "acts": 624
   },
@@ -58,9 +58,9 @@
    "busy": 8300,
    "empty": 32,
    "refresh": 0,
-   "closed": 341,
+   "closed": 343,
    "conflict": 33,
-   "trcd": 510,
+   "trcd": 508,
    "other": 167,
    "acts": 624
   }

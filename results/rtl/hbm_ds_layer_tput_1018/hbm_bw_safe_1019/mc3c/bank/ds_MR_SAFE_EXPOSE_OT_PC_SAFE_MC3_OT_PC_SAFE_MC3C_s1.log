@@ -4,9 +4,9 @@ PC1 cols=8300 returns=8300 acts=624 refs=88 gaps>8=27 gap_cycles=922 first=1 don
 PC2 cols=8300 returns=8300 acts=624 refs=88 gaps>8=27 gap_cycles=926 first=1 done=9484
 PC3 cols=8300 returns=8300 acts=624 refs=88 gaps>8=27 gap_cycles=930 first=1 done=9487
 EXPOSE pc0 busy=8300 empty=32 refresh=0 closed=417 conflict=31 trcd=515 other=180 acts=624
-EXPOSE pc1 busy=8300 empty=32 refresh=0 closed=415 conflict=32 trcd=519 other=180 acts=624
-EXPOSE pc2 busy=8300 empty=32 refresh=0 closed=420 conflict=32 trcd=519 other=180 acts=624
-EXPOSE pc3 busy=8300 empty=32 refresh=0 closed=423 conflict=32 trcd=519 other=180 acts=624
+EXPOSE pc1 busy=8300 empty=32 refresh=0 closed=417 conflict=32 trcd=517 other=180 acts=624
+EXPOSE pc2 busy=8300 empty=32 refresh=0 closed=422 conflict=32 trcd=517 other=180 acts=624
+EXPOSE pc3 busy=8300 empty=32 refresh=0 closed=425 conflict=32 trcd=517 other=180 acts=624
 BLK 0 row 100 slot 3 words 68 ret 141 140 141 140
 BLK 1 row 100 slot 4 words 68 ret 209 208 209 208
 BLK 2 row 100 slot 5 words 68 ret 329 328 329 328
@@ -180,11 +180,11 @@ BW_REFRESH_CLEAR_TRUTH group=0 00=9375 01=30 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=1 00=9375 01=30 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=2 00=9375 01=30 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=3 00=9375 01=30 10=86 11=2
-BW_ROW_GRANT_TRUTH 00=3261 01=1486 10=3410 11=1336
+BW_ROW_GRANT_TRUTH 00=3263 01=1484 10=3410 11=1336
 BW_REFRESH_CLEAR_TRUTH group=0 00=9375 01=30 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=1 00=9375 01=30 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=2 00=9375 01=30 10=86 11=2
 BW_REFRESH_CLEAR_TRUTH group=3 00=9375 01=30 10=86 11=2
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 10us; walltime 0.318 s; speed 30.621 us/s
-- Verilator: cpu 0.318 s on 1 threads; allocated 9 MB
+- Verilator: $finish at 10us; walltime 0.262 s; speed 37.120 us/s
+- Verilator: cpu 0.262 s on 1 threads; allocated 9 MB
