@@ -1,0 +1,9 @@
+# Main-based XDIE functional admission integration
+
+This integration is based directly on origin/main, without merging the old MU branch ancestry. It carries the missing fluid deadline/copy-A MU generator options, gate scripts and mu_check, plus the37-line MU2 endpoint/bench prerequisite from eb0d31c63. MU0 and MU1 bench paths are unchanged by that prerequisite. Main's staging source defaults remain unchanged; DIE=ce… explicitly selects a unified released MU source when desired. Stage now carries the new result helper, all gate variants and both checkers, avoiding missing-helper runtime failures.
+
+The new source input contract reserves MU tag bits explicitly for SU through MU endpoints. Legacy main default generator output is byte-identical for stim.hex, mu.hex, NS, NM and golden.json; this was tested against the pristine main generator committed here as main_gen_golden_before.py. Fluid mode and tag reservation remain opt-ins. No RTL datapath is edited.
+
+Payload correctness, exact LAND coverage, deadline windows and invariance all gate admission. Aggregation propagates build, simulation and checker failures. Mutants require a passing nominal on the same reserved-tag SU stimulus and source SHA/build-argument identity except the named mutant define. Historical manifests are never inferred: missing source inventory refuses causal mutant qualification.
+
+19 tests PASS on the actual main-based candidate (tests_main_candidate.log), including legacy byte equivalence, functional/timing discrepancy rejection, missing/duplicate LAND, empty terminal verdict, record refusal, shell status propagation and nominal/source/build-mode prerequisites. Original failing rawSU and strict replay evidence live in separate evidence commit d2c049400. The corrective SU-only hardware replay reuses the original exact out_u5/bU executable and does not build anything new; it remains pending until collected.
