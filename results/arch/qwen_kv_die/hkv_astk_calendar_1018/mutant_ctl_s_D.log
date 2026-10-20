@@ -1,0 +1,11 @@
+CAL T=8192 RL=3 DER=1 stride=4 LMAX=350 EXP=500 Z=2100 READ=3600 
+FAIL Z word=0 got=43000001
+FAIL Z word=1 got=43000001
+FAIL Z word=2 got=43000001
+FAIL Z word=3 got=43000001
+FAIL Z word=4 got=43000001
+FAIL qkd_astk_calendar errors=64 mut=3
+- /srv/opentallas-scratch/claude/hkv-astk-1018/rtl/test/qwen_kv_die/tb_qkd_astk_calendar.sv:119: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 2.772 s; speed 4.160 us/s
+- Verilator: cpu 2.767 s on 1 threads; allocated 30 MB

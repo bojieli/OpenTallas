@@ -1,0 +1,5 @@
+RST_REGION_WIDE_PASS HOLD=273 held=273 IGNORE=600 chain=580(random ones 304) dly=300 release=+882 exact
+- rtl/test/qwen_split/tb_qkd_rst_region_wide.sv:51: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 5.089 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

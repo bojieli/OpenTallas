@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_emb-e1-c84feb9f9 bench bench_emb_mut3 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_emb-e1-c84feb9f9 log cl/bench_emb_mut3.a1b1.log captured 2026-10-19T03:11:20-07:00
+# fail_regex '^KVS_TILE FAIL tile=emb .* mut=3 '
+MISMATCH t=3 out rowtx__emb_tx_v
+MISMATCH t=3 out rowtx__emb_tx_payload
+MISMATCH t=4 out rowtx__emb_tx_v
+MISMATCH t=4 out rowtx__emb_tx_payload
+MISMATCH t=5 out rowtx__emb_tx_payload
+KVS_TILE FAIL tile=emb edges=4000 checks=55958 errors=6025 mut=3 (removed child u_rowtx)

@@ -1,0 +1,48 @@
+{
+ "cell": "ot_hbm_idx_vm_share2_leaf_r",
+ "view": "physical/ref_tile/hidx_share2r_leaf_1018/views/ot_hbm_idx_vm_share2_leaf_r",
+ "lib_cell": "ot_hbm_idx_vm_share2_leaf_r",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean -> relative C 110"
+ ],
+ "R_ps": 143.6,
+ "spread_ps": 73.0,
+ "relative_to": "given tt=110,ff=95",
+ "outputs": 1063,
+ "inputs": 583,
+ "launch_ps": 145.2,
+ "launch_pin": "b_rr0[67]",
+ "capture_ps": 181.5,
+ "capture_pin": "b_rq[33]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 70.2,
+ "ff_launch_min_ps": 77.6,
+ "ff_hold_need_ps": -12.1,
+ "relative": {
+  "tt": {
+   "clock_pin": "clk",
+   "rel_min_ps": -14.5,
+   "rel_max_ps": 58.5,
+   "mismatch_ps": 58.5,
+   "offset_ps": 33.6,
+   "comp_ps": 110.0
+  },
+  "ff": {
+   "clock_pin": "clk",
+   "rel_min_ps": -18.3,
+   "rel_max_ps": 51.9,
+   "mismatch_ps": 51.9,
+   "offset_ps": 28.2,
+   "comp_ps": 95.0
+  }
+ },
+ "pass": true,
+ "fail_why": "",
+ "job": "hidx_share2r_leaf_1018-r3-16615707a",
+ "by": "TW2-NATIVE 2026-10-19",
+ "die_obligation": "hb_idx__nwsh_p<p> clock pins: parent compensation C = 110 ps TT / 95 ps FF (pass window TT ~89..118): the die delivers the leaf clock so its boundary reference sits C after the neighbour edge (~34 ps TT / ~28 ps FF later than own-R 143.6/123.2). Own-R audit FAILS capture 211-215 on a_rq/b_rq[16]/[33] (4 valid pins); no RTL change chosen because pin-flopping the requests costs +1 request edge (RL 9->10 QDQ strap, IDX NW reader n+12 uniform) and r1 showed the post-flop merge fails launch (vm_rq 247.5)."
+}

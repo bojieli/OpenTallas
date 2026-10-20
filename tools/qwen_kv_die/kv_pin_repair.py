@@ -4,7 +4,79 @@ Freeze the die tool's current master pin assignment before adding relays, so a
 shared master's face cannot move in response to the new neighbouring relay.
 Never route through a leaf; failed placement remains an explicit plan defect.
 """
+import json
 import math
+import os
+import re
+from pathlib import Path
+
+# KVR-DERIVE 10-19 (QW-KVATTN2 finding 5): a relay this pass (or kv_bundle_eq / kv_k_rt_eq) adds is clocked by the clock of
+# the LAUNCHING pin's register, never by "the first clock trunk touching the source instance" (that put the K / V
+# response relays krs / pvrs, slg o_pc and kvpc o_next on n_clk_hbm: unsynchronised core -> HBM -> core resampling).
+# Launch domain per tile port = the elaborated-RTL measurement (kvs_port_domains.py, results/arch/qwen_kv_kits_b_1018/
+# <kind>_ports.json); a die master without a record launches on the core clock (every non-tile KV die master is a core
+# element; the main relay planner clocks every chain on clk_core_*).  ck -> the source's (else the sink's) clk_core_*
+# trunk; hck (the kc command / fault chain kck_* / kcf_*: measured hck at both ends) -> its clk_hbm_* trunk; a bundle that
+# carries both (slg o_pc / o_ctl, kvpc o_grp) has no single legal relay clock: core (as the main planner) + recorded
+# MIXED (the bundle must be split by domain; open item, lanes/KVR-DERIVE.md).
+PORT_DOMAINS = 'results/arch/qwen_kv_kits_b_1018'
+# KV-DOMSPLIT 10-19 (OT_KV_DOMSPLIT=1): the split tiles' measured records (every group <-> PC / gather word single-domain)
+if os.environ.get('OT_KV_DOMSPLIT', '0') == '1':
+    PORT_DOMAINS = 'results/arch/qwen_kv_domsplit_1019/ports'
+_PD = {}
+
+
+def _port_record(master):
+    kind = re.sub(r'^qkd_kvs_', '', master or '')
+    if kind not in _PD:
+        f = Path(__file__).resolve().parents[2] / PORT_DOMAINS / f'{kind}_ports.json'
+        _PD[kind] = json.loads(f.read_text())['ports'] if master and master.startswith('qkd_kvs_') and f.exists() else None
+    return _PD[kind]
+
+
+def port_domain(master, port):
+    """'core' | 'hbm' | 'mixed' | None (unknown / feed-through) for one die pin of a master"""
+    rec = _port_record(master)
+    if rec is None:
+        return None
+    v = rec.get(port.lstrip('*'))
+    if not v:
+        return None
+    ds = {d for d in v.get('domains', []) if d not in ('none', '?const')}
+    if not ds:
+        return None
+    if ds == {'ck'}:
+        return 'core'
+    if ds == {'hck'}:
+        return 'hbm'
+    return 'mixed'
+
+
+def launch_domain(by, src, dst):
+    """the launching pin's domain of a chain src -> dst (src record, else the sink's, else core)"""
+    d = port_domain(getattr(by.get(src[0]), 'master', None), src[1])
+    if d is None and dst is not None:
+        d = port_domain(getattr(by.get(dst[0]), 'master', None), dst[1])
+    return d or 'core'
+
+
+def relay_trunk(buses, by, src, dst):
+    """-> (bus index of the clock trunk for a relay on chain src -> dst, launch domain).  Never an HBM trunk for a core
+    word, never a core trunk for an HBM word; mixed bundles take the core trunk (recorded by the callers)."""
+    dom = launch_domain(by, src, dst)
+    pre = 'clk_hbm_' if dom == 'hbm' else 'clk_core_'
+    for inst in (src[0], dst[0] if dst else None):
+        j = next((j for j, b in enumerate(buses) if b is not None and b[1] == 'clock_trunk' and b[0].startswith(pre)
+                  and any(i == inst for i, _ in b[3])), None)
+        if j is not None:
+            return j, dom
+    if dom == 'hbm':
+        raise ValueError(f'kv_pin_repair: HBM-domain chain {src} -> {dst} has no clk_hbm_* trunk at either end')
+    return next(j for j, b in enumerate(buses) if b is not None and b[0] == 'clk_core_c'), dom
+
+
+def trunk_domain(bid):
+    return 'hbm' if bid.startswith('clk_hbm') else 'core' if bid.startswith('clk_core') else None
 
 
 def _cands(K, target, grid, r):
@@ -100,14 +172,22 @@ def repair(K, m):
         base=bid.split('__r')[0]
         m['relay_stages'][base]=m['relay_stages'].get(base,0)+len(staged)
         for index,it in enumerate(staged):
-            additions.append(dict(bus=bid,relay=it.name,clock_source=a,stages_added=1,
+            additions.append(dict(bus=bid,relay=it.name,clock_source=a,launch=(a,pa),sink=(b,pb),stages_added=1,
                                   before_um=round(abs(initial_ap[0]-bp[0])+abs(initial_ap[1]-bp[1]),3)))
-    for row in additions:
-        n=row['relay']; source=row['clock_source']
-        clock=next((j for j,(_,cl,_,eps) in enumerate(buses) if cl=='clock_trunk' and any(i==source for i,p in eps)),None)
-        if clock is None:
-            clock=next(j for j,(bid,_,_,_) in enumerate(buses) if bid=='clk_core_c')
+    mixed = set()
+    for row in additions:      # KVR-DERIVE: the launching pin's clock (relay_trunk), not the source's first trunk
+        n=row['relay']
+        clock, dom = relay_trunk(buses, by, row['launch'], row['sink'])
+        row['domain'] = dom
+        row['clock'] = buses[clock][0]
+        if dom == 'mixed':
+            mixed.add(row['bus'])
         bid,cl,bits,eps=buses[clock];buses[clock]=(bid,cl,bits,list(eps)+[(n,'ck')])
+    bad = [r_ for r_ in additions if trunk_domain(r_['clock']) != ('core' if r_['domain'] == 'mixed' else r_['domain'])]
+    if bad:
+        raise ValueError(f'kv_pin_repair: relay clock domain != launching pin domain: {bad[:4]}')
     m['buses']=buses
-    m['pin_repair']=dict(added=additions, unresolved=unresolved, method='fixed master pins; registered channel relay; no leaf traversal')
+    m['pin_repair']=dict(added=additions, unresolved=unresolved, mixed_domain_buses=sorted(mixed),
+                         method='fixed master pins; registered channel relay; no leaf traversal; relay clock = the '
+                                'launching pin domain (kv_pin_repair.relay_trunk)')
     return m

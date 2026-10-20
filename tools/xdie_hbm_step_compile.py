@@ -310,7 +310,10 @@ def compile_die_mb(d, C, kind, bw, rd, rxp, mut='', ar_iter=False, del_edge=0):
             else:
                 assert ar_iter, 'multi-block reduce needs --ar-iter (frame tags > 8 in flight across a block bubble)'
                 R = ux + 5
-                RL = rxp['slots'][0][0] + 16 - K1 + 5 + 2 * f   # local operand: back to back (no block bubble)
+                # local operand load in lockstep with the peer frame (as compile_die: RL = R).  XDIE-HBM5 tried a back to
+                # back local stream (RL = first slot + 2 f) to save rows, but a block bubble puts R - RL past the reducer's
+                # 16-row operand window (assert below) -> RS(144) never compiled; at ROWS 256 the rows are affordable.
+                RL = R
                 assert RL <= R and (R - RL) % 2 == 0 and R - RL <= 16, (f, RL, R)
                 fl = f + 4 if (mut == 'rsrc' and d == 1 and f == 1) else f
                 Sd.vm(RL - 13, f, d, lambda _f, fl=fl: sec(fl))
@@ -378,6 +381,9 @@ def steps_between(a, b):
     return (k, sv, dv, sa)
 
 
+NL_256 = 32                                 # ot_hgi_coll_static_issuer_v7 #(.NL)
+
+
 def lower(Sd, end, cap=64):
     keys = [Sd.key(u) for u in range(end + 1)]
     its = [Sd.I.get(u, {}) for u in range(end + 1)]
@@ -424,23 +430,40 @@ def lower(Sd, end, cap=64):
     lower.nrows = len(rows)
     assert len(rows) <= cap, ('programme capacity', len(rows), cap)
     # metadata: next | target << 6 | count << 12 | halt << 44 | lid << 45; ROWS 128 (cap > 64): pc bit 6 of
-    # next / target / lid at 51 / 52 / 53 (ot_hgi_coll_static_issuer_v6 #(ROWS 128))
-    pm = 127 if cap > 64 else 63
-    pc7 = lambda v, lo, hi: ((v & 63) << lo) | (((v >> 6) & 1) << hi)
+    # next / target / lid at 51 / 52 / 53 (ot_hgi_coll_static_issuer_v6 #(ROWS 128)); ROWS 256 (cap > 128): pc bit 7 at
+    # 54 / 55 / 56 (v6 ROWS 256 positions, ot_hgi_coll_static_issuer_v7) and DENSE loop ids < NL 32 (issuer v7 keeps one
+    # counter per loop id): lid 0 stays the id of the non-loop rows, loop bodies take 1, 2, ... in row order (an
+    # injective rename; the independent unroll below runs on the renamed ids)
+    pm = 255 if cap > 128 else 127 if cap > 64 else 63
+    if cap > 128:
+        pc7 = lambda v, lo, hi: ((v & 63) << lo) | (((v >> 6) & 1) << hi) | (((v >> 7) & 1) << (hi + 3))
+    else:
+        pc7 = lambda v, lo, hi: ((v & 63) << lo) | (((v >> 6) & 1) << hi)
+    lids = {}
+    def lid_of(last):
+        if cap <= 128:
+            return last
+        if last not in lids:
+            lids[last] = len(lids) + 1
+        assert lids[last] < NL_256, ('issuer v7 loop ids', len(lids), NL_256)
+        return lids[last]
     meta, words = [], []
     for r, row in enumerate(rows):
         m = pc7((r + 1) & pm, 0, 51)
         if row['body_start'] is not None:
             last = row['body_start'] + row['T'] - 1
-            m |= pc7(last, 45, 53)
+            m |= pc7(lid_of(last), 45, 53)
             if r == last:
                 m |= pc7(row['body_start'], 6, 52) | (row['n'] << 12)
         meta.append(m)
         words.append(encode(Sd, row['u'], row['step']))
     meta[-1] |= 1 << 44
     # independent unroll of the issuer_v6 metadata/counter ISA + the ctl_v5 iteration offsets -> compare every cycle
-    pc, cnt = 0, [0] * 128
-    fld = lambda m, lo, hi: ((m >> lo) & 63) | (((m >> hi) & 1) << 6)
+    pc, cnt = 0, [0] * 256
+    if cap > 128:
+        fld = lambda m, lo, hi: ((m >> lo) & 63) | (((m >> hi) & 1) << 6) | (((m >> (hi + 3)) & 1) << 7)
+    else:
+        fld = lambda m, lo, hi: ((m >> lo) & 63) | (((m >> hi) & 1) << 6)
     for c in range(end + 1):
         m = meta[pc]
         it = cnt[fld(m, 45, 53)]
@@ -567,7 +590,7 @@ def main():
     ap.add_argument('--ar-iter', action='store_true', help='iterated reduce tags (v8g AR_ITER=1, iter_ar_tag_step)')
     ap.add_argument('--del-edge', type=int, default=0, help='XDIE-HBM4 item 3: del_obase row = sink row + N (1: the '
                     'ctl_v5 delivery_obase pin then lands on the DEL0 valid edge; 0 = XDIE-HBM3 programmes)')
-    ap.add_argument('--rows', type=int, default=64, choices=[64, 128], help='issuer ROWS (v8g #(.ROWS))')
+    ap.add_argument('--rows', type=int, default=64, choices=[64, 128, 256], help='issuer ROWS (v8g #(.ROWS); 256 = issuer v7)')
     ap.add_argument('--blocks', type=int, default=0, help='RX pingpong blocks (0: 1 if P <= 64 else ceil(P / 64), equal sizes)')
     a = ap.parse_args()
     check_layout()

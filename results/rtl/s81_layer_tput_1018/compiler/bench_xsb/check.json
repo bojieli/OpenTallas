@@ -1,0 +1,242 @@
+{
+ "schema": "opentallas.s81_dv.bench_xsp.v1",
+ "bench": "tools/s81_dv/layer_prog/xs/xs_bench.sh (+PH)",
+ "lowering": "tools/s81_dv/layer_prog/xs_place.py",
+ "host": "ot-epyc4",
+ "die_frame": "u_f_0L00",
+ "runs": [
+  {
+   "name": "p65",
+   "op": "attn.wo_a",
+   "mat": "wo_a",
+   "fmt": "bf16",
+   "field_phase": 65,
+   "nphases": 82,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": null,
+   "words": 6,
+   "fixture_rows": 6,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p65.log",
+   "pass": true
+  },
+  {
+   "name": "p70",
+   "op": "attn.wo_a",
+   "mat": "wo_a",
+   "fmt": "bf16",
+   "field_phase": 70,
+   "nphases": 82,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": null,
+   "words": 6,
+   "fixture_rows": 6,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p70.log",
+   "pass": true
+  },
+  {
+   "name": "p76",
+   "op": "attn.wo_a",
+   "mat": "wo_a",
+   "fmt": "bf16",
+   "field_phase": 76,
+   "nphases": 82,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": null,
+   "words": 4,
+   "fixture_rows": 4,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p76.log",
+   "pass": true
+  },
+  {
+   "name": "p77",
+   "op": "ffn.router",
+   "mat": "gate",
+   "fmt": "bf16",
+   "field_phase": 77,
+   "nphases": 82,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": null,
+   "words": 1,
+   "fixture_rows": 1,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p77.log",
+   "pass": true
+  },
+  {
+   "name": "p81",
+   "op": "ffn.router",
+   "mat": "gate",
+   "fmt": "bf16",
+   "field_phase": 81,
+   "nphases": 82,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": null,
+   "words": 1,
+   "fixture_rows": 1,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p81.log",
+   "pass": true
+  },
+  {
+   "name": "cwk",
+   "op": "attn.cmp.wk",
+   "mat": "indexer.wk",
+   "fmt": "bf16",
+   "field_phase": 71,
+   "nphases": 89,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": null,
+   "words": 1,
+   "fixture_rows": 1,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_cwk.log",
+   "pass": true
+  },
+  {
+   "name": "p65_swap",
+   "op": "attn.wo_a",
+   "mat": "wo_a",
+   "fmt": "bf16",
+   "field_phase": 65,
+   "nphases": 82,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": "swap",
+   "words": 6,
+   "fixture_rows": 6,
+   "value_errors": [
+    "MISMATCH edge 405 row 1 lo 0 k 0 got bb801a5a/0 want bcac1a54/0",
+    "MISMATCH edge 408 row 0 lo 0 k 0 got bcac1a54/0 want bb801a5a/0"
+   ],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p65_swap.log",
+   "pass": false
+  },
+  {
+   "name": "p65_shift",
+   "op": "attn.wo_a",
+   "mat": "wo_a",
+   "fmt": "bf16",
+   "field_phase": 65,
+   "nphases": 82,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": "shift",
+   "words": 6,
+   "fixture_rows": 6,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    -1
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p65_shift.log",
+   "pass": false
+  },
+  {
+   "name": "p65_desc",
+   "op": "attn.wo_a",
+   "mat": "wo_a",
+   "fmt": "bf16",
+   "field_phase": 65,
+   "nphases": 82,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": "desc",
+   "words": 6,
+   "fixture_rows": 6,
+   "value_errors": [
+    "MISMATCH edge 404 row 1 lo 0 k 0 got bc810643/0 want bcac1a54/0",
+    "MISMATCH edge 407 row 0 lo 0 k 0 got 3af4e6e0/0 want bb801a5a/0"
+   ],
+   "ret_edge_offsets_vs_plan": [
+    -1,
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p65_desc.log",
+   "pass": false
+  },
+  {
+   "name": "cwk_swap",
+   "op": "attn.cmp.wk",
+   "mat": "indexer.wk",
+   "fmt": "bf16",
+   "field_phase": 71,
+   "nphases": 89,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": "swap",
+   "words": 1,
+   "fixture_rows": 1,
+   "value_errors": [
+    "MISMATCH edge 408 row 0 lo 0 k 0 got 00000000/0 want be182dc8/0"
+   ],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_cwk_swap.log",
+   "pass": false
+  }
+ ],
+ "base_pass": true,
+ "mutants_fail": true,
+ "measurements": [],
+ "pass": true
+}

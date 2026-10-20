@@ -1,0 +1,598 @@
+{
+  "status": "NATIVE_COVERED_RULE_FULLMASTER_RESULT_ONLY",
+  "geometry_commit": "c634d1540",
+  "model_sha256": "033b2a0e1522a9bd28b3ab9a35df88d394175fa06fbf6dca0e6f48b12e97146a",
+  "families": {
+    "qwen": {
+      "global_markers": [],
+      "global_marker_count": 0,
+      "global_types": {},
+      "full_outline_roi_equal_global": true,
+      "native_net_count": 208,
+      "all_actual_signal_components_one": true,
+      "PG_components": {
+        "VDD": 22,
+        "VSS": 22
+      },
+      "exact_native_box_count": 2088,
+      "OBS_retained_reservations": [
+        {
+          "layer": "M1",
+          "rect_nm": [
+            0,
+            39,
+            52440,
+            21183
+          ],
+          "identity": "qwen:OBS:0",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M2",
+          "rect_nm": [
+            0,
+            39,
+            52440,
+            21183
+          ],
+          "identity": "qwen:OBS:1",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M3",
+          "rect_nm": [
+            0,
+            39,
+            52440,
+            21183
+          ],
+          "identity": "qwen:OBS:2",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            72,
+            39,
+            52368,
+            21183
+          ],
+          "identity": "qwen:OBS:3",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M5",
+          "rect_nm": [
+            72,
+            39,
+            10224,
+            21183
+          ],
+          "identity": "qwen:OBS:4",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M5",
+          "rect_nm": [
+            42216,
+            39,
+            52368,
+            21183
+          ],
+          "identity": "qwen:OBS:5",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        }
+      ],
+      "native_resource": "\tCommand being timed: \"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -python /work/run_native.py\"\n\tUser time (seconds): 0.49\n\tSystem time (seconds): 0.17\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.66\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 250932\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 58562\n\tVoluntary context switches: 1\n\tInvoluntary context switches: 1\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 3920\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+    },
+    "sc2": {
+      "global_markers": [],
+      "global_marker_count": 0,
+      "global_types": {},
+      "full_outline_roi_equal_global": true,
+      "native_net_count": 439,
+      "all_actual_signal_components_one": true,
+      "PG_components": {
+        "VDD": 39,
+        "VSS": 38
+      },
+      "exact_native_box_count": 4868,
+      "OBS_retained_reservations": [
+        {
+          "layer": "M1",
+          "rect_nm": [
+            0,
+            39,
+            216840,
+            43791
+          ],
+          "identity": "sc2:OBS:0",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M2",
+          "rect_nm": [
+            0,
+            39,
+            216840,
+            43791
+          ],
+          "identity": "sc2:OBS:1",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M3",
+          "rect_nm": [
+            0,
+            39,
+            216840,
+            43791
+          ],
+          "identity": "sc2:OBS:2",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            72,
+            39,
+            216768,
+            43791
+          ],
+          "identity": "sc2:OBS:3",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M5",
+          "rect_nm": [
+            72,
+            39,
+            21360,
+            43791
+          ],
+          "identity": "sc2:OBS:4",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        },
+        {
+          "layer": "M5",
+          "rect_nm": [
+            195480,
+            39,
+            216768,
+            43791
+          ],
+          "identity": "sc2:OBS:5",
+          "interpretation": "conditional reservation, NOT real metal and NOT hidden"
+        }
+      ],
+      "native_resource": "\tCommand being timed: \"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -python /work/run_native.py\"\n\tUser time (seconds): 0.74\n\tSystem time (seconds): 0.20\n\tPercent of CPU this job got: 99%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:00.94\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 248168\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 67823\n\tVoluntary context switches: 5\n\tInvoluntary context switches: 1\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 7720\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n"
+    }
+  },
+  "controls": [
+    {
+      "name": "aligned_rectangle",
+      "markers": [],
+      "types": {},
+      "model_components": 1
+    },
+    {
+      "name": "original_9nm_step",
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net0"
+          ],
+          "bbox_nm": [
+            10584,
+            8667,
+            10632,
+            8691
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net0"
+          ],
+          "bbox_nm": [
+            10608,
+            8667,
+            10632,
+            8700
+          ],
+          "layer": "M4"
+        }
+      ],
+      "types": {
+        "Rect Only": 2
+      },
+      "model_components": 1
+    },
+    {
+      "name": "spacing_23nm",
+      "markers": [
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case2_net0",
+            "case2_net1"
+          ],
+          "bbox_nm": [
+            864,
+            10620,
+            864,
+            10643
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case2_net0",
+            "case2_net1"
+          ],
+          "bbox_nm": [
+            1152,
+            10620,
+            1152,
+            10643
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Metal Spacing",
+          "nets": [
+            "case2_net0",
+            "case2_net1"
+          ],
+          "bbox_nm": [
+            864,
+            10620,
+            1152,
+            10643
+          ],
+          "layer": "M4"
+        }
+      ],
+      "types": {
+        "Lef58EolKeepOut": 2,
+        "Metal Spacing": 1
+      },
+      "model_components": 1
+    },
+    {
+      "name": "disconnected_contact",
+      "markers": [
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10596
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2952,
+            10596
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10620,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10620,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58SpacingEndOfLine",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Metal Spacing",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2918,
+            10596,
+            2928,
+            10620
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Min Area",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            2928,
+            10596,
+            2952,
+            10620
+          ],
+          "layer": "M4"
+        }
+      ],
+      "types": {
+        "Lef58EolKeepOut": 6,
+        "Lef58SpacingEndOfLine": 1,
+        "Metal Spacing": 1,
+        "Min Area": 1
+      },
+      "model_components": 2
+    }
+  ],
+  "controls_global_markers": [
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case2_net0",
+        "case2_net1"
+      ],
+      "bbox_nm": [
+        864,
+        10620,
+        864,
+        10643
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case2_net0",
+        "case2_net1"
+      ],
+      "bbox_nm": [
+        1152,
+        10620,
+        1152,
+        10643
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2928,
+        10596
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2928,
+        10620
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2952,
+        10596
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2952,
+        10620
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10620,
+        2928,
+        10620
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Lef58EolKeepOut",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10620,
+        2952,
+        10620
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Metal Spacing",
+      "nets": [
+        "case2_net0",
+        "case2_net1"
+      ],
+      "bbox_nm": [
+        864,
+        10620,
+        1152,
+        10643
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Metal Spacing",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2928,
+        10620
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Lef58SpacingEndOfLine",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2918,
+        10596,
+        2928,
+        10620
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Min Area",
+      "nets": [
+        "case3_net0"
+      ],
+      "bbox_nm": [
+        2928,
+        10596,
+        2952,
+        10620
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Rect Only",
+      "nets": [
+        "case1_net0"
+      ],
+      "bbox_nm": [
+        10584,
+        8667,
+        10632,
+        8691
+      ],
+      "layer": "M4"
+    },
+    {
+      "type": "Rect Only",
+      "nets": [
+        "case1_net0"
+      ],
+      "bbox_nm": [
+        10608,
+        8667,
+        10632,
+        8700
+      ],
+      "layer": "M4"
+    }
+  ],
+  "provenance": {
+    "host": "ot-epyc8",
+    "observed_at": "2026-10-19T22:05:45Z",
+    "image_Id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "RepoDigests": [
+      "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+    ],
+    "binary": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846  /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+    "disk": "15137373\t."
+  },
+  "HOLD": [
+    "Native non-ORTH WIDTHTABLE import/binding and track coverage gaps.",
+    "All 121 own PG/OBS intersections remain unresolved; no AP or PG continuity.",
+    "PG disconnected, SIGNAL visibility diagnostic only; no fed supply or core/contact implementation.",
+    "No transistor-grid, source phase/reset/K/first-use, timing/RC, B/C or production-view qualification."
+  ]
+}

@@ -57,3 +57,6 @@ rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv
 rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv
 rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv
 rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv

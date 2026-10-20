@@ -1,0 +1,1740 @@
+{
+  "schema": "opentallas.attn_reset_partition.v1",
+  "input_sha256": "f78cea8af28b15937316ca31ea473a916fe1342d8bf91255bd3023c5dfd2fc5e",
+  "output_sha256": "ba5f10bb5cad533e7c276b3d959cbb8c5981161f440cebd2699d464ccca6bed9",
+  "mut": 1,
+  "extra_ff": 13,
+  "extra_inv": 13,
+  "serial_edge_delta": 0,
+  "rewired_reset_pins": 292,
+  "roots": [
+    {
+      "master": "c12184",
+      "master_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_pins": {
+        "CLK": "n4",
+        "D": "n26738",
+        "QN": "n18527",
+        "RESETN": "n25007",
+        "SETN": "n20608"
+      },
+      "endpoints": 131,
+      "clones": [
+        {
+          "name": "cpr32_c12184_1",
+          "pins": {
+            "CLK": "n4",
+            "D": "n26738",
+            "QN": "npr32_c12184_1",
+            "RESETN": "n25007",
+            "SETN": "n20608"
+          },
+          "endpoints": [
+            [
+              "cpo117_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo118_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo119_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo120_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo121_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo122_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo123_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo124_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo125_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo126_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo127_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo128_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo129_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo130_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo131_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo142_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo14_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo15_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo16_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo17_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo18_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo19_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo1_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo20_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo21_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo220_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo221_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo222_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo224_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo225_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo226_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo227_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        },
+        {
+          "name": "cpr32_c12184_2",
+          "pins": {
+            "CLK": "n4",
+            "D": "n26738",
+            "QN": "npr32_c12184_2",
+            "RESETN": "n25007",
+            "SETN": "n20608"
+          },
+          "endpoints": [
+            [
+              "cpo228_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo229_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo22_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo230_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo232_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo233_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo23_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo24_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo25_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo26_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo27_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo281_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo28_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo29_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo2_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo30_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo31_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo32_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo33_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo34_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo351_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo35_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo38_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo47_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo48_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo49_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo50_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo51_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo52_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo53_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo54_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo55_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        },
+        {
+          "name": "cpr32_c12184_3",
+          "pins": {
+            "CLK": "n4",
+            "D": "n26738",
+            "QN": "npr32_c12184_3",
+            "RESETN": "n25007",
+            "SETN": "n20608"
+          },
+          "endpoints": [
+            [
+              "cpo56_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo57_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo58_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo59_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo5_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo60_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo61_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo62_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo63_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo64_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo65_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo66_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo67_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo68_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo71_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo80_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo81_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo82_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo83_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo84_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo85_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo86_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo87_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo88_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo89_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo90_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo91_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo92_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo93_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo94_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo95_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo96_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        },
+        {
+          "name": "cpr32_c12184_4",
+          "pins": {
+            "CLK": "n4",
+            "D": "n26738",
+            "QN": "npr32_c12184_4",
+            "RESETN": "n25007",
+            "SETN": "n20608"
+          },
+          "endpoints": [
+            [
+              "cpo97_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo98_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo99_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "master": "c12185",
+      "master_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_pins": {
+        "CLK": "n4",
+        "D": "n26739",
+        "QN": "n18531",
+        "RESETN": "n25008",
+        "SETN": "n20608"
+      },
+      "endpoints": 89,
+      "clones": [
+        {
+          "name": "cpr32_c12185_1",
+          "pins": {
+            "CLK": "n4",
+            "D": "n26739",
+            "QN": "npr32_c12185_1",
+            "RESETN": "n25008",
+            "SETN": "n20608"
+          },
+          "endpoints": [
+            [
+              "cpo110_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo111_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo112_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo11_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo12_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo133_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo134_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo135_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo136_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo137_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo138_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo139_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo13_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo140_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo141_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo143_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo144_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo145_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo146_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo147_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo234_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo235_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo236_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo237_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo238_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo240_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo241_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo242_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo243_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo244_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo258_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo36_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        },
+        {
+          "name": "cpr32_c12185_2",
+          "pins": {
+            "CLK": "n4",
+            "D": "n26739",
+            "QN": "npr32_c12185_2",
+            "RESETN": "n25008",
+            "SETN": "n20608"
+          },
+          "endpoints": [
+            [
+              "cpo37_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo39_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo3_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo40_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo41_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo42_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo43_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo44_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo45_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo46_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo4_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo69_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo6_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo70_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo72_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo73_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo74_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo75_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo76_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo77_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo78_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo79_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo7_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo8_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo9_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "master": "c27386",
+      "master_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_pins": {
+        "CLK": "n4",
+        "D": "n34288",
+        "QN": "n29127",
+        "RESETN": "n34272",
+        "SETN": "n32599"
+      },
+      "endpoints": 48,
+      "clones": [
+        {
+          "name": "cpr32_c27386_1",
+          "pins": {
+            "CLK": "n4",
+            "D": "n34288",
+            "QN": "npr32_c27386_1",
+            "RESETN": "n34272",
+            "SETN": "n32599"
+          },
+          "endpoints": [
+            [
+              "cpo157_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo158_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo159_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo160_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo162_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo163_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo164_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo165_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo166_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo167_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo168_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo170_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo171_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo172_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo173_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo174_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "master": "c27387",
+      "master_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_pins": {
+        "CLK": "n4",
+        "D": "n34289",
+        "QN": "n29128",
+        "RESETN": "n34273",
+        "SETN": "n32599"
+      },
+      "endpoints": 64,
+      "clones": [
+        {
+          "name": "cpr32_c27387_1",
+          "pins": {
+            "CLK": "n4",
+            "D": "n34289",
+            "QN": "npr32_c27387_1",
+            "RESETN": "n34273",
+            "SETN": "n32599"
+          },
+          "endpoints": [
+            [
+              "cpo184_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo185_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo186_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo187_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo188_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo189_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo190_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo192_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo193_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo194_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo195_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo196_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo245_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo247_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo248_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo249_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo313_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo315_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo316_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo317_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo318_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo319_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo320_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo321_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo322_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo323_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo324_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo326_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo327_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo328_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo329_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo330_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "master": "c27388",
+      "master_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_pins": {
+        "CLK": "n4",
+        "D": "n34290",
+        "QN": "n29129",
+        "RESETN": "n34274",
+        "SETN": "n32599"
+      },
+      "endpoints": 47,
+      "clones": [
+        {
+          "name": "cpr32_c27388_1",
+          "pins": {
+            "CLK": "n4",
+            "D": "n34290",
+            "QN": "npr32_c27388_1",
+            "RESETN": "n34274",
+            "SETN": "n32599"
+          },
+          "endpoints": [
+            [
+              "cpo260_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo261_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo262_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo264_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo265_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo266_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo267_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo268_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo269_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo270_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo271_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo288_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo289_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo293_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo294_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "master": "c27389",
+      "master_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_pins": {
+        "CLK": "n4",
+        "D": "n34291",
+        "QN": "n29130",
+        "RESETN": "n34275",
+        "SETN": "n32599"
+      },
+      "endpoints": 42,
+      "clones": [
+        {
+          "name": "cpr32_c27389_1",
+          "pins": {
+            "CLK": "n4",
+            "D": "n34291",
+            "QN": "npr32_c27389_1",
+            "RESETN": "n34275",
+            "SETN": "n32599"
+          },
+          "endpoints": [
+            [
+              "cpo302_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo303_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo304_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo305_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo306_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo307_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo309_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo310_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo311_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo312_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "master": "c27394",
+      "master_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_pins": {
+        "CLK": "n4",
+        "D": "n34280",
+        "QN": "n29135",
+        "RESETN": "n34264",
+        "SETN": "n32600"
+      },
+      "endpoints": 74,
+      "clones": [
+        {
+          "name": "cpr32_c27394_1",
+          "pins": {
+            "CLK": "n4",
+            "D": "n34280",
+            "QN": "npr32_c27394_1",
+            "RESETN": "n34264",
+            "SETN": "n32600"
+          },
+          "endpoints": [
+            [
+              "cpo200_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo201_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo202_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo203_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo204_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo205_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo206_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo207_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo208_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo209_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo210_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo211_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo212_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo213_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo214_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo215_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo282_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo283_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo284_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo285_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo286_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo287_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo291_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo300_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo336_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo341_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo342_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo346_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo352_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo353_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo354_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo355_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        },
+        {
+          "name": "cpr32_c27394_2",
+          "pins": {
+            "CLK": "n4",
+            "D": "n34280",
+            "QN": "npr32_c27394_2",
+            "RESETN": "n34264",
+            "SETN": "n32600"
+          },
+          "endpoints": [
+            [
+              "cpo356_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo357_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo358_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo359_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo360_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo361_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo362_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo363_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo364_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo365_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "master": "c27395",
+      "master_cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_pins": {
+        "CLK": "n4",
+        "D": "n34281",
+        "QN": "n29136",
+        "RESETN": "n34265",
+        "SETN": "n32600"
+      },
+      "endpoints": 53,
+      "clones": [
+        {
+          "name": "cpr32_c27395_1",
+          "pins": {
+            "CLK": "n4",
+            "D": "n34281",
+            "QN": "npr32_c27395_1",
+            "RESETN": "n34265",
+            "SETN": "n32600"
+          },
+          "endpoints": [
+            [
+              "cpo257_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo263_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo272_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo308_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo314_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo325_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo331_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo332_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo333_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo334_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo337_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo338_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo339_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo340_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo343_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo344_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo345_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo347_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo348_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo349_ff",
+              "RESETN",
+              1
+            ],
+            [
+              "cpo350_ff",
+              "RESETN",
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

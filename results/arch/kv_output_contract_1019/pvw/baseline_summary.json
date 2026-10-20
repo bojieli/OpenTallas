@@ -1,0 +1,61 @@
+{
+  "helper_source_commit": "6279dd8fa",
+  "input_source_commit": "219049242d",
+  "remote_evidence": "/srv/opentallas-scratch/claude/codex-kv-output-contract-1019/baseline",
+  "pvw_padding_contract": {
+    "die_sha256": "726f9a08bb3bf497ebe778a0b59f4e1746b9bd8bfbce58eeebcf7848bcd71c21",
+    "source_pad_input_bits": 117064,
+    "new_unused_output_bits": 117064,
+    "affected_replicas": 2710,
+    "source_sha256": {
+      "rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv": "4601aa6d6ccb8b201d2f991a028a972d77f505506bc1ea87d5495738f0a7064d",
+      "tools/qwen_kv_die/pv_trunk_gen.py": "85e6bb225c010e1758b0dbcf8e24ebb20e1ab562b304c3f159ade8c787ba9458",
+      "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e"
+    },
+    "parents": {
+      "pvw_0": "qkd_pvw_s",
+      "pvw_1": "qkd_pvw_n"
+    },
+    "expand_sha256": "9bf46f1d0c28f8b6722ce8861514cdd138d4e7d6313f3bace76bab00686d6730",
+    "preexpand_sha256": "da2d63b7dbcc97f158e551cc5e541be6ef68f5c4c13b537e72fee509fbf8d87f"
+  },
+  "pads_sha256": "0a6e1dd49b82713e22b988578c5f9c4b35d1056fcef946d09df13fc6300066d4",
+  "strict_sha256": "2c0742c653df1e250ed12fbf4d3be058846f41be6ef78c02ec73e096b68225dc",
+  "verdict": "FAIL",
+  "before_unread": 162853,
+  "summary": {
+    "masters": 68,
+    "instances": 43967,
+    "unbound_masters": 0,
+    "stub_masters": 0,
+    "ambiguous_masters": 0,
+    "port_not_in_rtl": 0,
+    "width_mismatch": 0,
+    "input_unconnected": 4,
+    "input_tied": 0,
+    "unparsed_connections": 0,
+    "duplicate_port_connections": 0,
+    "undriven_net_bits": 0,
+    "multi_driven_net_bits": 0,
+    "unread_net_bits": 45789,
+    "output_open_ports": 73,
+    "top_assigns": 0,
+    "params_not_in_rtl": 0,
+    "strap_ports": 36,
+    "pad_bits": 196115,
+    "spare_out_bits": 555056,
+    "unresolved_children": 0,
+    "ambiguous_children": 0,
+    "variant_children": 11
+  },
+  "remaining_pvw_nonzero_bits": 5356,
+  "remaining_pvw_classes": {
+    "CP": 4224,
+    "X0": 532,
+    "S": 448,
+    "DL": 62,
+    "cmd_w": 56,
+    "out_age": 32,
+    "busy": 2
+  }
+}

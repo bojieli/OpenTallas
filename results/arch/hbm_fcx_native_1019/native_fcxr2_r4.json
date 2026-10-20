@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_accel_smh_fc_xr2",
+ "view": "physical/ref_tile/smn_fcxr2_ref_fa/views/ot_hbm_accel_smh_fc_xr2",
+ "lib_cell": "ot_hbm_accel_smh_fc_xr2",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 256.6,
+ "spread_ps": 76.6,
+ "outputs": 2642,
+ "inputs": 2643,
+ "launch_ps": 155.8,
+ "launch_pin": "xo[1849]",
+ "capture_ps": 100.0,
+ "capture_pin": "xi[1126]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 72.4,
+ "ff_launch_min_ps": 62.8,
+ "ff_hold_need_ps": -17.1,
+ "pass": true,
+ "fail_why": ""
+}

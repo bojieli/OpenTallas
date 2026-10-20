@@ -1,0 +1,26 @@
+{
+  "scope": "FUNCTIONAL_ONLY single prompt-input generated step; not healthy four-step stream or no-CQ boundary",
+  "freeze": "befe721d9",
+  "case": 21,
+  "H": 93,
+  "deadline": 93,
+  "age_bits": 7,
+  "declared_added_bits": 1827,
+  "original_case20_failure_preserved": true,
+  "same_sampled_edge_required": [
+    "native_certificate_attempt_v",
+    "raw_done_v",
+    "certificate_key_ok",
+    "native_certificate_v"
+  ],
+  "descriptor": {
+    "plen": 1,
+    "max_new": 1,
+    "input": 70001,
+    "next_token_gold": 70002
+  },
+  "source_sha256": {
+    "bench/native_join_bench.sv": "1314d64b5abd2fc37a7074c4c414e4d92bc3340cfcce5e88243c3d0af7c6aee4",
+    "bench/SINGLE_BOUNDARY_FREEZE.md": "6077d85237970c70d1f98d36c2b5d2507892e08e903c9eaf032c12782ee2a45e"
+  }
+}

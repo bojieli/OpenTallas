@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.qlb_c4.txdp_sctx2.v1",
+ "lane": "QLB-C4 (Q-LBGAP2) 10-18",
+ "source_commit": "2ea5808d9 (claude/qlb-c4-1018 = origin/main 4a4c0a958 + qlb-prog 3fac5f0ef + qlb-gen 9634b2b0d + this adoption)",
+ "adopted": "SC_TX 2 (QXF-SEAMC lands C.tx_record at age 2 on dv2f14bq): die stages 2,2,2,2,2,2/11,11,9,9,9,11,11, TXD C [8,3,1,9] -> D2D_TXDP_C 0x09010308, TXD K [23,4,3,3] unchanged",
+ "how": [
+  "compiled_L1 = layer_compile.py on the dv2f14bq die-run table (die_run/compute_dv2f14bq_relay_stages.json + die.v.params.json, compute commit 7c660b3f7): attn_kv X 5 -> 7 (L0 -217 -> -215), token unpadded 249,389 -> 249,461, padded period 249,600 unchanged",
+  "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh = tools/qwen_split/d2d_cal_image_production.sh (default stages SC_TX 2, token path = the recompiled compiled_L1): equal to layer_compile's own d2d image except the comment",
+  "rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh = layer_roots_from_link on the production program calendar (== compiled_L1/kv_programme == kv_static_programme --profile component values)"
+ ],
+ "qlb_gen_candidate_not_used": "results/rtl/qlb_gen_1018/d2d_cal_image_sctx2_candidate.svh compiled SC_TX 2 on the OLD X 5 token path: it moved the K RX word but not the RESULT slots, so the KV programme's fixed TX_FIRST - RX_CMD would be missed by 2 edges (layer_compile re-derives X 7); the adopted image differs from it in C_RX / K_TX / CAL_START too",
+ "tests": "test_d2d_txdp, test_die_params, test_kv_static_programme (13), test_layer_compile, test_kv_bundle_eq: 26 + 16 PASS (local python)",
+ "die_params_audit_compiled_dv2f14bq": {"as_genned_TXDP_0x09010306": "FAIL (2 fails: != image, != compiled TXD) dv2f14bq_asgen_audit.log", "rederived_TXDP_0x09010308": "PASS dv2f14bq_sctx2_audit.log (params dv2f14bq_die.v.params_sctx2.json = gen_params rule on the new image)"},
+ "fleet_benches_verilator_5_050_ot_epyc4": {
+  "d2d_program default_m0": "PASS (production image == compiler check + 1188/1188 frames)", "seqpin_m0": "PASS",
+  "default_m1..m5, seqpin_m6, seqpin_m7": "FAIL as required (witness logs benches/*_run.log)",
+  "layer_rom m0": "PASS 504 events (committed d2d + layer images == the production compile)", "layer_rom m1..m4": "FAIL as required",
+  "link_cfg_boot": "scn0..3 PASS, mut5/mut6 FAIL as required; the LINKCFG=0 regression run_die_cfg_boot.sh did not run (results/rtl/qwen_kv_boot_dispatch_cdc_join_1017 not in the shipped tree) -- not image related"
+ },
+ "cascade_not_done": [
+  "physical/ref_tile/qkd_layer_prog_img_r3 holds the OLD layer image constants (bench-arg calendar): the KV die's lprg closed view must be re-hardened (r4) from the new layer_programme_image.svh before a KV GEN binds it (kvsys_prep now compiles the production calendar, so it MATCHes the RTL image, but the closed view is stale) -> KV die lane",
+  "rtl/test/qwen_split/run_xdie_exchange.sh PLAN stays the dv2f14bn as-netlisted SC_TX 0 config (its full_r3stages config already PASSes SC_TX 2)",
+  "ctlm image (ctlm_prog/image) recompiled on the new token path: PC12 issue +2 (attn_kv window), XPF PC12 record +2"
+ ]
+}

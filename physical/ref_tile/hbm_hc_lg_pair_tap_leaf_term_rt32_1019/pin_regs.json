@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+ "enable": false,
+ "reason": "Every boundary bit already has its register in RTL: the pair leaf registers core<->tap one edge each way and each tap registers local/far/near inputs at the pins and its mux/output stage; reset is one pin register. Wrapper flops would add edges to the fixed calendar."
+}

@@ -1,0 +1,20 @@
+{
+ "verilator": "5.050",
+ "host": "ot-epyc4",
+ "source_sha256": {
+  "rtl/physical/qcluster/qfd_c_land.sv": "04392bcb9a1fc4022f29faebbab8d6a8505957e3ef16f147d080e6ac665ececb",
+  "rtl/physical/qcluster/qfd_c_land_safe.sv": "b21909711e2a0b1ecb9d0213cf0d2e6db196b3c152ef684dc0b00f2533de6d45",
+  "rtl/test/tb_qfd_c_land_safe.sv": "84eaa525f3d6cb8a619d9a750b8fe31f4c72d9bf988343484c313fb8d9f1e695",
+  "rtl/test/tb_qfd_c_bank_relay.sv": "16f8da37a23b35976c380366b39b56305cab60775d14a7801dd5bc16cc2f4759",
+  "tools/qwen_cluster/bench_land_safe.sh": "6e3a4e4930a0349ab0be38cc7ff743a68332d82431002f07e1ef319111867f94",
+  "tools/qwen_cluster/bench_bank_relay.sh": "9edbdea9b786394ae108477541a5516055ca34cd22fa3170e8949ad0a69f2956"
+ },
+ "pass_regex": "SAFE_LAND_EXIT 0",
+ "mutant": {
+  "witness": "mut1.log",
+  "fail_regex": "SAFE_LAND_FAIL MUT1"
+ },
+ "phase_receipts": "../bench_bank_relay",
+ "reset_epoch_added_edges": 1,
+ "normal_data_added_edges": 0
+}

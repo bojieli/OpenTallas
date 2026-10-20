@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.toksim_qw.kv.v1",
+ "lane": "TOKSIM-QW/KV",
+ "date": "2026-10-19 18:55 PT",
+ "scope": "Qwen3-8B KV-die attention (QK+softmax+PV16) at T8192, 1 user and 4 users",
+ "stages": [
+  {"stage": "kv_attention_1u_full", "cycles_start_to_retire": null, "grade": "PENDING",
+   "verdict": "NOT MEASURED on current RTL",
+   "reason": "No full QK+softmax+PV attention vehicle exists on GEN9 (not built yet; kvs14r-3923bb422-gen9s/gen9d in progress) nor on the newest bound die kvs14r-4db097403-codexmub (NOT_A_DIE_RESULT; RELAY_CHECK_FAIL_DIAGNOSTIC_ONLY). KV-TOK3/KV-TOK2 vehicles (G7 WSQK) are QK-only and still running at 18:50."},
+  {"stage": "kv_attention_4u_full", "cycles_start_to_retire": null, "grade": "PENDING",
+   "verdict": "NOT MEASURED",
+   "rtl_semantics": "qkd_attn_service_root (gen9 b9f3c1c30d): request_ready = !running && boot_count==80. One request at a time, so 4 users are served back to back: occupancy >= 4 x per-user service (from the old unit number, 4 x 1,561 = 6,244 + accept edges). This is DERIVED, not measured."}
+ ],
+ "old_reference_not_counted": {
+  "what": "KVJ-B2 unit service _sr (qkd_attn_service_root + w16 PV16 service), REAL TP4 L0/L1 P8191 operands, 16/16 exact, mutants shift/pos 4/4 FAIL, 1,561 service cycles at T8192 (claude/qw-kvattn-1018 0e509e763)",
+  "grade": "OLD (10-15 leaf archives)",
+  "why_not_rerunnable": "build_w16.sh links 30 prebuilt hier-block archives + cp_minimal.sv/ep_selector.sv from /srv/opentallas-scratch/codex/q-attn-minparent-1015 (reaped 10-17 on ep4/agidock/pve1) and deps in /srv/opentallas-scratch/claude/kvj-b2-1017 (reaped 10-19 10:30). cp_minimal.sv and ep_selector.sv are not in git. Rebuilding needs the full Verilator hierarchical b4 build (the parent OOMed at 400 GiB on 10-15) plus a rewrite of cp_minimal.",
+  "source_drift_vs_gen9": "7 of 48 b4 archive sources differ on origin/claude/kv-gen9-1019 3923bb422: ot_qkd_ahub_core.sv, ot_qwen_tp8_attention_native_stack.sv, ot_qwen_tp8_attention_native_service.sv, qkd_astk_cal_gen.sv, qkd_ectl3_epoch_direct_s.sv, qkd_ectl_a_tp8_epoch_direct.sv, qkd_ectl_native_direct_tp8.sv (unit_service_b4_source_vs_gen9.txt). The _sr service, the w16 bench, pv_wide_pair, vrow_capture and pv16 slice are byte-identical. qkd_attn_service_root only gained CAL_PIPE (default 0 = same behaviour)."
+ },
+ "die_vehicle_status": {
+  "qwk_slice_attn (QW-KVATTN2, kvs14p)": "run1 killed (exit 143), run2 on ep6 never got past the build (03:15, no run logs). Old die. It does not retarget to 4db097403: the masters qkd_astk_strip_er_die, qkd_pvw_die_t and qkd_seq_static_s are absent there (renamed), and qkd_pv16_vport became qkd_pv16_vport_b."
+ },
+ "release_attention_rtl": "qkd_kvs_attn_r16 (claude/kv-attn2b-1019 @69bab6da2; kits rv3/rv4 routing, RETIRE_STATIC=1 STATUS_DELAY=213, tx_first 1751)",
+ "price": {"1u": 1555, "window": 1816},
+ "verilator": "5.050 (old reference)",
+ "measured_numbers": "none on current RTL"
+}

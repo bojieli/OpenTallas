@@ -16,6 +16,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  9.984 120.768 10.008 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  9.984 120.768 10.008 120.784 ;
+    END
   END clk
   PIN i_first
     DIRECTION INPUT ;
@@ -23,6 +27,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.272 120.768 10.296 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.272 120.768 10.296 120.784 ;
     END
   END i_first
   PIN i_v
@@ -32,6 +40,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.176 120.768 10.2 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.176 120.768 10.2 120.784 ;
+    END
   END i_v
   PIN i_w[0]
     DIRECTION INPUT ;
@@ -39,6 +51,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.368 120.768 10.392 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.368 120.768 10.392 120.784 ;
     END
   END i_w[0]
   PIN i_w[100]
@@ -48,6 +64,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.568 120.768 29.592 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.568 120.768 29.592 120.784 ;
+    END
   END i_w[100]
   PIN i_w[101]
     DIRECTION INPUT ;
@@ -55,6 +75,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.76 120.768 29.784 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.76 120.768 29.784 120.784 ;
     END
   END i_w[101]
   PIN i_w[102]
@@ -64,6 +88,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.952 120.768 29.976 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.952 120.768 29.976 120.784 ;
+    END
   END i_w[102]
   PIN i_w[103]
     DIRECTION INPUT ;
@@ -71,6 +99,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.144 120.768 30.168 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.144 120.768 30.168 120.784 ;
     END
   END i_w[103]
   PIN i_w[104]
@@ -80,6 +112,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.336 120.768 30.36 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.336 120.768 30.36 120.784 ;
+    END
   END i_w[104]
   PIN i_w[105]
     DIRECTION INPUT ;
@@ -87,6 +123,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.528 120.768 30.552 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.528 120.768 30.552 120.784 ;
     END
   END i_w[105]
   PIN i_w[106]
@@ -96,6 +136,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.72 120.768 30.744 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.72 120.768 30.744 120.784 ;
+    END
   END i_w[106]
   PIN i_w[107]
     DIRECTION INPUT ;
@@ -103,6 +147,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.912 120.768 30.936 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.912 120.768 30.936 120.784 ;
     END
   END i_w[107]
   PIN i_w[108]
@@ -112,6 +160,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.104 120.768 31.128 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.104 120.768 31.128 120.784 ;
+    END
   END i_w[108]
   PIN i_w[109]
     DIRECTION INPUT ;
@@ -119,6 +171,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.296 120.768 31.32 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.296 120.768 31.32 120.784 ;
     END
   END i_w[109]
   PIN i_w[10]
@@ -128,6 +184,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.288 120.768 12.312 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.288 120.768 12.312 120.784 ;
+    END
   END i_w[10]
   PIN i_w[110]
     DIRECTION INPUT ;
@@ -135,6 +195,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.488 120.768 31.512 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.488 120.768 31.512 120.784 ;
     END
   END i_w[110]
   PIN i_w[111]
@@ -144,6 +208,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.68 120.768 31.704 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.68 120.768 31.704 120.784 ;
+    END
   END i_w[111]
   PIN i_w[112]
     DIRECTION INPUT ;
@@ -151,6 +219,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.872 120.768 31.896 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.872 120.768 31.896 120.784 ;
     END
   END i_w[112]
   PIN i_w[113]
@@ -160,6 +232,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.064 120.768 32.088 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.064 120.768 32.088 120.784 ;
+    END
   END i_w[113]
   PIN i_w[114]
     DIRECTION INPUT ;
@@ -167,6 +243,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.256 120.768 32.28 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.256 120.768 32.28 120.784 ;
     END
   END i_w[114]
   PIN i_w[115]
@@ -176,6 +256,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.448 120.768 32.472 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.448 120.768 32.472 120.784 ;
+    END
   END i_w[115]
   PIN i_w[116]
     DIRECTION INPUT ;
@@ -183,6 +267,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.64 120.768 32.664 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.64 120.768 32.664 120.784 ;
     END
   END i_w[116]
   PIN i_w[117]
@@ -192,6 +280,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.832 120.768 32.856 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.832 120.768 32.856 120.784 ;
+    END
   END i_w[117]
   PIN i_w[118]
     DIRECTION INPUT ;
@@ -199,6 +291,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.024 120.768 33.048 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.024 120.768 33.048 120.784 ;
     END
   END i_w[118]
   PIN i_w[119]
@@ -208,6 +304,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.216 120.768 33.24 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.216 120.768 33.24 120.784 ;
+    END
   END i_w[119]
   PIN i_w[11]
     DIRECTION INPUT ;
@@ -215,6 +315,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.48 120.768 12.504 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.48 120.768 12.504 120.784 ;
     END
   END i_w[11]
   PIN i_w[120]
@@ -224,6 +328,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.408 120.768 33.432 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.408 120.768 33.432 120.784 ;
+    END
   END i_w[120]
   PIN i_w[121]
     DIRECTION INPUT ;
@@ -231,6 +339,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.6 120.768 33.624 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.6 120.768 33.624 120.784 ;
     END
   END i_w[121]
   PIN i_w[122]
@@ -240,6 +352,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.792 120.768 33.816 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.792 120.768 33.816 120.784 ;
+    END
   END i_w[122]
   PIN i_w[123]
     DIRECTION INPUT ;
@@ -247,6 +363,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.984 120.768 34.008 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.984 120.768 34.008 120.784 ;
     END
   END i_w[123]
   PIN i_w[124]
@@ -256,6 +376,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  34.176 120.768 34.2 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  34.176 120.768 34.2 120.784 ;
+    END
   END i_w[124]
   PIN i_w[125]
     DIRECTION INPUT ;
@@ -263,6 +387,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.368 120.768 34.392 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.368 120.768 34.392 120.784 ;
     END
   END i_w[125]
   PIN i_w[126]
@@ -272,6 +400,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  34.56 120.768 34.584 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  34.56 120.768 34.584 120.784 ;
+    END
   END i_w[126]
   PIN i_w[127]
     DIRECTION INPUT ;
@@ -279,6 +411,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.752 120.768 34.776 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.752 120.768 34.776 120.784 ;
     END
   END i_w[127]
   PIN i_w[12]
@@ -288,6 +424,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.672 120.768 12.696 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.672 120.768 12.696 120.784 ;
+    END
   END i_w[12]
   PIN i_w[13]
     DIRECTION INPUT ;
@@ -295,6 +435,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.864 120.768 12.888 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.864 120.768 12.888 120.784 ;
     END
   END i_w[13]
   PIN i_w[14]
@@ -304,6 +448,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.056 120.768 13.08 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.056 120.768 13.08 120.784 ;
+    END
   END i_w[14]
   PIN i_w[15]
     DIRECTION INPUT ;
@@ -311,6 +459,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.248 120.768 13.272 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.248 120.768 13.272 120.784 ;
     END
   END i_w[15]
   PIN i_w[16]
@@ -320,6 +472,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.44 120.768 13.464 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.44 120.768 13.464 120.784 ;
+    END
   END i_w[16]
   PIN i_w[17]
     DIRECTION INPUT ;
@@ -327,6 +483,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.632 120.768 13.656 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.632 120.768 13.656 120.784 ;
     END
   END i_w[17]
   PIN i_w[18]
@@ -336,6 +496,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.824 120.768 13.848 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.824 120.768 13.848 120.784 ;
+    END
   END i_w[18]
   PIN i_w[19]
     DIRECTION INPUT ;
@@ -343,6 +507,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.016 120.768 14.04 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.016 120.768 14.04 120.784 ;
     END
   END i_w[19]
   PIN i_w[1]
@@ -352,6 +520,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.56 120.768 10.584 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.56 120.768 10.584 120.784 ;
+    END
   END i_w[1]
   PIN i_w[20]
     DIRECTION INPUT ;
@@ -359,6 +531,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.208 120.768 14.232 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.208 120.768 14.232 120.784 ;
     END
   END i_w[20]
   PIN i_w[21]
@@ -368,6 +544,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.4 120.768 14.424 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.4 120.768 14.424 120.784 ;
+    END
   END i_w[21]
   PIN i_w[22]
     DIRECTION INPUT ;
@@ -375,6 +555,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.592 120.768 14.616 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.592 120.768 14.616 120.784 ;
     END
   END i_w[22]
   PIN i_w[23]
@@ -384,6 +568,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.784 120.768 14.808 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.784 120.768 14.808 120.784 ;
+    END
   END i_w[23]
   PIN i_w[24]
     DIRECTION INPUT ;
@@ -391,6 +579,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.976 120.768 15 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.976 120.768 15 120.784 ;
     END
   END i_w[24]
   PIN i_w[25]
@@ -400,6 +592,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.168 120.768 15.192 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.168 120.768 15.192 120.784 ;
+    END
   END i_w[25]
   PIN i_w[26]
     DIRECTION INPUT ;
@@ -407,6 +603,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.36 120.768 15.384 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.36 120.768 15.384 120.784 ;
     END
   END i_w[26]
   PIN i_w[27]
@@ -416,6 +616,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.552 120.768 15.576 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.552 120.768 15.576 120.784 ;
+    END
   END i_w[27]
   PIN i_w[28]
     DIRECTION INPUT ;
@@ -423,6 +627,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.744 120.768 15.768 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.744 120.768 15.768 120.784 ;
     END
   END i_w[28]
   PIN i_w[29]
@@ -432,6 +640,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.936 120.768 15.96 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.936 120.768 15.96 120.784 ;
+    END
   END i_w[29]
   PIN i_w[2]
     DIRECTION INPUT ;
@@ -439,6 +651,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.752 120.768 10.776 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.752 120.768 10.776 120.784 ;
     END
   END i_w[2]
   PIN i_w[30]
@@ -448,6 +664,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.128 120.768 16.152 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.128 120.768 16.152 120.784 ;
+    END
   END i_w[30]
   PIN i_w[31]
     DIRECTION INPUT ;
@@ -455,6 +675,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.32 120.768 16.344 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.32 120.768 16.344 120.784 ;
     END
   END i_w[31]
   PIN i_w[32]
@@ -464,6 +688,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.512 120.768 16.536 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.512 120.768 16.536 120.784 ;
+    END
   END i_w[32]
   PIN i_w[33]
     DIRECTION INPUT ;
@@ -471,6 +699,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.704 120.768 16.728 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.704 120.768 16.728 120.784 ;
     END
   END i_w[33]
   PIN i_w[34]
@@ -480,6 +712,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.896 120.768 16.92 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.896 120.768 16.92 120.784 ;
+    END
   END i_w[34]
   PIN i_w[35]
     DIRECTION INPUT ;
@@ -487,6 +723,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.088 120.768 17.112 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.088 120.768 17.112 120.784 ;
     END
   END i_w[35]
   PIN i_w[36]
@@ -496,6 +736,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.28 120.768 17.304 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.28 120.768 17.304 120.784 ;
+    END
   END i_w[36]
   PIN i_w[37]
     DIRECTION INPUT ;
@@ -503,6 +747,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.472 120.768 17.496 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.472 120.768 17.496 120.784 ;
     END
   END i_w[37]
   PIN i_w[38]
@@ -512,6 +760,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.664 120.768 17.688 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.664 120.768 17.688 120.784 ;
+    END
   END i_w[38]
   PIN i_w[39]
     DIRECTION INPUT ;
@@ -519,6 +771,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.856 120.768 17.88 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.856 120.768 17.88 120.784 ;
     END
   END i_w[39]
   PIN i_w[3]
@@ -528,6 +784,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.944 120.768 10.968 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.944 120.768 10.968 120.784 ;
+    END
   END i_w[3]
   PIN i_w[40]
     DIRECTION INPUT ;
@@ -535,6 +795,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.048 120.768 18.072 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.048 120.768 18.072 120.784 ;
     END
   END i_w[40]
   PIN i_w[41]
@@ -544,6 +808,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.24 120.768 18.264 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.24 120.768 18.264 120.784 ;
+    END
   END i_w[41]
   PIN i_w[42]
     DIRECTION INPUT ;
@@ -551,6 +819,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.432 120.768 18.456 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.432 120.768 18.456 120.784 ;
     END
   END i_w[42]
   PIN i_w[43]
@@ -560,6 +832,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.624 120.768 18.648 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.624 120.768 18.648 120.784 ;
+    END
   END i_w[43]
   PIN i_w[44]
     DIRECTION INPUT ;
@@ -567,6 +843,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.816 120.768 18.84 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.816 120.768 18.84 120.784 ;
     END
   END i_w[44]
   PIN i_w[45]
@@ -576,6 +856,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.008 120.768 19.032 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.008 120.768 19.032 120.784 ;
+    END
   END i_w[45]
   PIN i_w[46]
     DIRECTION INPUT ;
@@ -583,6 +867,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  19.2 120.768 19.224 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  19.2 120.768 19.224 120.784 ;
     END
   END i_w[46]
   PIN i_w[47]
@@ -592,6 +880,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.392 120.768 19.416 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.392 120.768 19.416 120.784 ;
+    END
   END i_w[47]
   PIN i_w[48]
     DIRECTION INPUT ;
@@ -599,6 +891,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  19.584 120.768 19.608 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  19.584 120.768 19.608 120.784 ;
     END
   END i_w[48]
   PIN i_w[49]
@@ -608,6 +904,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.776 120.768 19.8 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.776 120.768 19.8 120.784 ;
+    END
   END i_w[49]
   PIN i_w[4]
     DIRECTION INPUT ;
@@ -615,6 +915,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.136 120.768 11.16 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.136 120.768 11.16 120.784 ;
     END
   END i_w[4]
   PIN i_w[50]
@@ -624,6 +928,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.968 120.768 19.992 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.968 120.768 19.992 120.784 ;
+    END
   END i_w[50]
   PIN i_w[51]
     DIRECTION INPUT ;
@@ -631,6 +939,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.16 120.768 20.184 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.16 120.768 20.184 120.784 ;
     END
   END i_w[51]
   PIN i_w[52]
@@ -640,6 +952,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.352 120.768 20.376 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.352 120.768 20.376 120.784 ;
+    END
   END i_w[52]
   PIN i_w[53]
     DIRECTION INPUT ;
@@ -647,6 +963,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.544 120.768 20.568 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.544 120.768 20.568 120.784 ;
     END
   END i_w[53]
   PIN i_w[54]
@@ -656,6 +976,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.736 120.768 20.76 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.736 120.768 20.76 120.784 ;
+    END
   END i_w[54]
   PIN i_w[55]
     DIRECTION INPUT ;
@@ -663,6 +987,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.928 120.768 20.952 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.928 120.768 20.952 120.784 ;
     END
   END i_w[55]
   PIN i_w[56]
@@ -672,6 +1000,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.12 120.768 21.144 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.12 120.768 21.144 120.784 ;
+    END
   END i_w[56]
   PIN i_w[57]
     DIRECTION INPUT ;
@@ -679,6 +1011,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.312 120.768 21.336 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.312 120.768 21.336 120.784 ;
     END
   END i_w[57]
   PIN i_w[58]
@@ -688,6 +1024,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.504 120.768 21.528 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.504 120.768 21.528 120.784 ;
+    END
   END i_w[58]
   PIN i_w[59]
     DIRECTION INPUT ;
@@ -695,6 +1035,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.696 120.768 21.72 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.696 120.768 21.72 120.784 ;
     END
   END i_w[59]
   PIN i_w[5]
@@ -704,6 +1048,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.328 120.768 11.352 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.328 120.768 11.352 120.784 ;
+    END
   END i_w[5]
   PIN i_w[60]
     DIRECTION INPUT ;
@@ -711,6 +1059,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.888 120.768 21.912 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.888 120.768 21.912 120.784 ;
     END
   END i_w[60]
   PIN i_w[61]
@@ -720,6 +1072,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.08 120.768 22.104 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.08 120.768 22.104 120.784 ;
+    END
   END i_w[61]
   PIN i_w[62]
     DIRECTION INPUT ;
@@ -727,6 +1083,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.272 120.768 22.296 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.272 120.768 22.296 120.784 ;
     END
   END i_w[62]
   PIN i_w[63]
@@ -736,6 +1096,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.464 120.768 22.488 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.464 120.768 22.488 120.784 ;
+    END
   END i_w[63]
   PIN i_w[64]
     DIRECTION INPUT ;
@@ -743,6 +1107,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.656 120.768 22.68 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.656 120.768 22.68 120.784 ;
     END
   END i_w[64]
   PIN i_w[65]
@@ -752,6 +1120,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.848 120.768 22.872 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.848 120.768 22.872 120.784 ;
+    END
   END i_w[65]
   PIN i_w[66]
     DIRECTION INPUT ;
@@ -759,6 +1131,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.04 120.768 23.064 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.04 120.768 23.064 120.784 ;
     END
   END i_w[66]
   PIN i_w[67]
@@ -768,6 +1144,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.232 120.768 23.256 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.232 120.768 23.256 120.784 ;
+    END
   END i_w[67]
   PIN i_w[68]
     DIRECTION INPUT ;
@@ -775,6 +1155,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.424 120.768 23.448 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.424 120.768 23.448 120.784 ;
     END
   END i_w[68]
   PIN i_w[69]
@@ -784,6 +1168,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.616 120.768 23.64 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.616 120.768 23.64 120.784 ;
+    END
   END i_w[69]
   PIN i_w[6]
     DIRECTION INPUT ;
@@ -791,6 +1179,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.52 120.768 11.544 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.52 120.768 11.544 120.784 ;
     END
   END i_w[6]
   PIN i_w[70]
@@ -800,6 +1192,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.808 120.768 23.832 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.808 120.768 23.832 120.784 ;
+    END
   END i_w[70]
   PIN i_w[71]
     DIRECTION INPUT ;
@@ -807,6 +1203,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24 120.768 24.024 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24 120.768 24.024 120.784 ;
     END
   END i_w[71]
   PIN i_w[72]
@@ -816,6 +1216,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.192 120.768 24.216 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.192 120.768 24.216 120.784 ;
+    END
   END i_w[72]
   PIN i_w[73]
     DIRECTION INPUT ;
@@ -823,6 +1227,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.384 120.768 24.408 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.384 120.768 24.408 120.784 ;
     END
   END i_w[73]
   PIN i_w[74]
@@ -832,6 +1240,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.576 120.768 24.6 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.576 120.768 24.6 120.784 ;
+    END
   END i_w[74]
   PIN i_w[75]
     DIRECTION INPUT ;
@@ -839,6 +1251,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.768 120.768 24.792 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.768 120.768 24.792 120.784 ;
     END
   END i_w[75]
   PIN i_w[76]
@@ -848,6 +1264,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.96 120.768 24.984 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.96 120.768 24.984 120.784 ;
+    END
   END i_w[76]
   PIN i_w[77]
     DIRECTION INPUT ;
@@ -855,6 +1275,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.152 120.768 25.176 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.152 120.768 25.176 120.784 ;
     END
   END i_w[77]
   PIN i_w[78]
@@ -864,6 +1288,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.344 120.768 25.368 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.344 120.768 25.368 120.784 ;
+    END
   END i_w[78]
   PIN i_w[79]
     DIRECTION INPUT ;
@@ -871,6 +1299,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.536 120.768 25.56 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.536 120.768 25.56 120.784 ;
     END
   END i_w[79]
   PIN i_w[7]
@@ -880,6 +1312,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.712 120.768 11.736 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.712 120.768 11.736 120.784 ;
+    END
   END i_w[7]
   PIN i_w[80]
     DIRECTION INPUT ;
@@ -887,6 +1323,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.728 120.768 25.752 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.728 120.768 25.752 120.784 ;
     END
   END i_w[80]
   PIN i_w[81]
@@ -896,6 +1336,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.92 120.768 25.944 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.92 120.768 25.944 120.784 ;
+    END
   END i_w[81]
   PIN i_w[82]
     DIRECTION INPUT ;
@@ -903,6 +1347,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.112 120.768 26.136 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.112 120.768 26.136 120.784 ;
     END
   END i_w[82]
   PIN i_w[83]
@@ -912,6 +1360,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.304 120.768 26.328 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.304 120.768 26.328 120.784 ;
+    END
   END i_w[83]
   PIN i_w[84]
     DIRECTION INPUT ;
@@ -919,6 +1371,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.496 120.768 26.52 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.496 120.768 26.52 120.784 ;
     END
   END i_w[84]
   PIN i_w[85]
@@ -928,6 +1384,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.688 120.768 26.712 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.688 120.768 26.712 120.784 ;
+    END
   END i_w[85]
   PIN i_w[86]
     DIRECTION INPUT ;
@@ -935,6 +1395,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.88 120.768 26.904 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.88 120.768 26.904 120.784 ;
     END
   END i_w[86]
   PIN i_w[87]
@@ -944,6 +1408,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.072 120.768 27.096 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.072 120.768 27.096 120.784 ;
+    END
   END i_w[87]
   PIN i_w[88]
     DIRECTION INPUT ;
@@ -951,6 +1419,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.264 120.768 27.288 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.264 120.768 27.288 120.784 ;
     END
   END i_w[88]
   PIN i_w[89]
@@ -960,6 +1432,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.456 120.768 27.48 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.456 120.768 27.48 120.784 ;
+    END
   END i_w[89]
   PIN i_w[8]
     DIRECTION INPUT ;
@@ -967,6 +1443,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.904 120.768 11.928 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.904 120.768 11.928 120.784 ;
     END
   END i_w[8]
   PIN i_w[90]
@@ -976,6 +1456,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.648 120.768 27.672 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.648 120.768 27.672 120.784 ;
+    END
   END i_w[90]
   PIN i_w[91]
     DIRECTION INPUT ;
@@ -983,6 +1467,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.84 120.768 27.864 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.84 120.768 27.864 120.784 ;
     END
   END i_w[91]
   PIN i_w[92]
@@ -992,6 +1480,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.032 120.768 28.056 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.032 120.768 28.056 120.784 ;
+    END
   END i_w[92]
   PIN i_w[93]
     DIRECTION INPUT ;
@@ -999,6 +1491,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.224 120.768 28.248 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.224 120.768 28.248 120.784 ;
     END
   END i_w[93]
   PIN i_w[94]
@@ -1008,6 +1504,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.416 120.768 28.44 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.416 120.768 28.44 120.784 ;
+    END
   END i_w[94]
   PIN i_w[95]
     DIRECTION INPUT ;
@@ -1015,6 +1515,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.608 120.768 28.632 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.608 120.768 28.632 120.784 ;
     END
   END i_w[95]
   PIN i_w[96]
@@ -1024,6 +1528,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.8 120.768 28.824 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.8 120.768 28.824 120.784 ;
+    END
   END i_w[96]
   PIN i_w[97]
     DIRECTION INPUT ;
@@ -1031,6 +1539,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.992 120.768 29.016 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.992 120.768 29.016 120.784 ;
     END
   END i_w[97]
   PIN i_w[98]
@@ -1040,6 +1552,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.184 120.768 29.208 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.184 120.768 29.208 120.784 ;
+    END
   END i_w[98]
   PIN i_w[99]
     DIRECTION INPUT ;
@@ -1047,6 +1563,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.376 120.768 29.4 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.376 120.768 29.4 120.784 ;
     END
   END i_w[99]
   PIN i_w[9]
@@ -1056,6 +1576,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.096 120.768 12.12 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.096 120.768 12.12 120.784 ;
+    END
   END i_w[9]
   PIN i_x[0]
     DIRECTION INPUT ;
@@ -1063,6 +1587,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.464 120.768 10.488 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.464 120.768 10.488 120.784 ;
     END
   END i_x[0]
   PIN i_x[100]
@@ -1072,6 +1600,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.664 120.768 29.688 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.664 120.768 29.688 120.784 ;
+    END
   END i_x[100]
   PIN i_x[101]
     DIRECTION INPUT ;
@@ -1079,6 +1611,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.856 120.768 29.88 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.856 120.768 29.88 120.784 ;
     END
   END i_x[101]
   PIN i_x[102]
@@ -1088,6 +1624,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.048 120.768 30.072 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.048 120.768 30.072 120.784 ;
+    END
   END i_x[102]
   PIN i_x[103]
     DIRECTION INPUT ;
@@ -1095,6 +1635,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.24 120.768 30.264 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.24 120.768 30.264 120.784 ;
     END
   END i_x[103]
   PIN i_x[104]
@@ -1104,6 +1648,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.432 120.768 30.456 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.432 120.768 30.456 120.784 ;
+    END
   END i_x[104]
   PIN i_x[105]
     DIRECTION INPUT ;
@@ -1111,6 +1659,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.624 120.768 30.648 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.624 120.768 30.648 120.784 ;
     END
   END i_x[105]
   PIN i_x[106]
@@ -1120,6 +1672,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.816 120.768 30.84 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.816 120.768 30.84 120.784 ;
+    END
   END i_x[106]
   PIN i_x[107]
     DIRECTION INPUT ;
@@ -1127,6 +1683,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.008 120.768 31.032 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.008 120.768 31.032 120.784 ;
     END
   END i_x[107]
   PIN i_x[108]
@@ -1136,6 +1696,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.2 120.768 31.224 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.2 120.768 31.224 120.784 ;
+    END
   END i_x[108]
   PIN i_x[109]
     DIRECTION INPUT ;
@@ -1143,6 +1707,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.392 120.768 31.416 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.392 120.768 31.416 120.784 ;
     END
   END i_x[109]
   PIN i_x[10]
@@ -1152,6 +1720,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.384 120.768 12.408 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.384 120.768 12.408 120.784 ;
+    END
   END i_x[10]
   PIN i_x[110]
     DIRECTION INPUT ;
@@ -1159,6 +1731,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.584 120.768 31.608 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.584 120.768 31.608 120.784 ;
     END
   END i_x[110]
   PIN i_x[111]
@@ -1168,6 +1744,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.776 120.768 31.8 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.776 120.768 31.8 120.784 ;
+    END
   END i_x[111]
   PIN i_x[112]
     DIRECTION INPUT ;
@@ -1175,6 +1755,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.968 120.768 31.992 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.968 120.768 31.992 120.784 ;
     END
   END i_x[112]
   PIN i_x[113]
@@ -1184,6 +1768,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.16 120.768 32.184 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.16 120.768 32.184 120.784 ;
+    END
   END i_x[113]
   PIN i_x[114]
     DIRECTION INPUT ;
@@ -1191,6 +1779,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.352 120.768 32.376 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.352 120.768 32.376 120.784 ;
     END
   END i_x[114]
   PIN i_x[115]
@@ -1200,6 +1792,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.544 120.768 32.568 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.544 120.768 32.568 120.784 ;
+    END
   END i_x[115]
   PIN i_x[116]
     DIRECTION INPUT ;
@@ -1207,6 +1803,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.736 120.768 32.76 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.736 120.768 32.76 120.784 ;
     END
   END i_x[116]
   PIN i_x[117]
@@ -1216,6 +1816,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.928 120.768 32.952 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.928 120.768 32.952 120.784 ;
+    END
   END i_x[117]
   PIN i_x[118]
     DIRECTION INPUT ;
@@ -1223,6 +1827,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.12 120.768 33.144 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.12 120.768 33.144 120.784 ;
     END
   END i_x[118]
   PIN i_x[119]
@@ -1232,6 +1840,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.312 120.768 33.336 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.312 120.768 33.336 120.784 ;
+    END
   END i_x[119]
   PIN i_x[11]
     DIRECTION INPUT ;
@@ -1239,6 +1851,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.576 120.768 12.6 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.576 120.768 12.6 120.784 ;
     END
   END i_x[11]
   PIN i_x[120]
@@ -1248,6 +1864,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.504 120.768 33.528 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.504 120.768 33.528 120.784 ;
+    END
   END i_x[120]
   PIN i_x[121]
     DIRECTION INPUT ;
@@ -1255,6 +1875,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.696 120.768 33.72 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.696 120.768 33.72 120.784 ;
     END
   END i_x[121]
   PIN i_x[122]
@@ -1264,6 +1888,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.888 120.768 33.912 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.888 120.768 33.912 120.784 ;
+    END
   END i_x[122]
   PIN i_x[123]
     DIRECTION INPUT ;
@@ -1271,6 +1899,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.08 120.768 34.104 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.08 120.768 34.104 120.784 ;
     END
   END i_x[123]
   PIN i_x[124]
@@ -1280,6 +1912,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  34.272 120.768 34.296 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  34.272 120.768 34.296 120.784 ;
+    END
   END i_x[124]
   PIN i_x[125]
     DIRECTION INPUT ;
@@ -1287,6 +1923,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.464 120.768 34.488 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.464 120.768 34.488 120.784 ;
     END
   END i_x[125]
   PIN i_x[126]
@@ -1296,6 +1936,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  34.656 120.768 34.68 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  34.656 120.768 34.68 120.784 ;
+    END
   END i_x[126]
   PIN i_x[127]
     DIRECTION INPUT ;
@@ -1303,6 +1947,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.848 120.768 34.872 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.848 120.768 34.872 120.784 ;
     END
   END i_x[127]
   PIN i_x[12]
@@ -1312,6 +1960,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.768 120.768 12.792 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.768 120.768 12.792 120.784 ;
+    END
   END i_x[12]
   PIN i_x[13]
     DIRECTION INPUT ;
@@ -1319,6 +1971,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.96 120.768 12.984 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.96 120.768 12.984 120.784 ;
     END
   END i_x[13]
   PIN i_x[14]
@@ -1328,6 +1984,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.152 120.768 13.176 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.152 120.768 13.176 120.784 ;
+    END
   END i_x[14]
   PIN i_x[15]
     DIRECTION INPUT ;
@@ -1335,6 +1995,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.344 120.768 13.368 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.344 120.768 13.368 120.784 ;
     END
   END i_x[15]
   PIN i_x[16]
@@ -1344,6 +2008,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.536 120.768 13.56 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.536 120.768 13.56 120.784 ;
+    END
   END i_x[16]
   PIN i_x[17]
     DIRECTION INPUT ;
@@ -1351,6 +2019,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.728 120.768 13.752 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.728 120.768 13.752 120.784 ;
     END
   END i_x[17]
   PIN i_x[18]
@@ -1360,6 +2032,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.92 120.768 13.944 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.92 120.768 13.944 120.784 ;
+    END
   END i_x[18]
   PIN i_x[19]
     DIRECTION INPUT ;
@@ -1367,6 +2043,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.112 120.768 14.136 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.112 120.768 14.136 120.784 ;
     END
   END i_x[19]
   PIN i_x[1]
@@ -1376,6 +2056,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.656 120.768 10.68 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.656 120.768 10.68 120.784 ;
+    END
   END i_x[1]
   PIN i_x[20]
     DIRECTION INPUT ;
@@ -1383,6 +2067,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.304 120.768 14.328 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.304 120.768 14.328 120.784 ;
     END
   END i_x[20]
   PIN i_x[21]
@@ -1392,6 +2080,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.496 120.768 14.52 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.496 120.768 14.52 120.784 ;
+    END
   END i_x[21]
   PIN i_x[22]
     DIRECTION INPUT ;
@@ -1399,6 +2091,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.688 120.768 14.712 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.688 120.768 14.712 120.784 ;
     END
   END i_x[22]
   PIN i_x[23]
@@ -1408,6 +2104,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.88 120.768 14.904 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.88 120.768 14.904 120.784 ;
+    END
   END i_x[23]
   PIN i_x[24]
     DIRECTION INPUT ;
@@ -1415,6 +2115,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.072 120.768 15.096 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.072 120.768 15.096 120.784 ;
     END
   END i_x[24]
   PIN i_x[25]
@@ -1424,6 +2128,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.264 120.768 15.288 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.264 120.768 15.288 120.784 ;
+    END
   END i_x[25]
   PIN i_x[26]
     DIRECTION INPUT ;
@@ -1431,6 +2139,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.456 120.768 15.48 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.456 120.768 15.48 120.784 ;
     END
   END i_x[26]
   PIN i_x[27]
@@ -1440,6 +2152,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.648 120.768 15.672 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.648 120.768 15.672 120.784 ;
+    END
   END i_x[27]
   PIN i_x[28]
     DIRECTION INPUT ;
@@ -1447,6 +2163,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.84 120.768 15.864 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.84 120.768 15.864 120.784 ;
     END
   END i_x[28]
   PIN i_x[29]
@@ -1456,6 +2176,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.032 120.768 16.056 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.032 120.768 16.056 120.784 ;
+    END
   END i_x[29]
   PIN i_x[2]
     DIRECTION INPUT ;
@@ -1463,6 +2187,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.848 120.768 10.872 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.848 120.768 10.872 120.784 ;
     END
   END i_x[2]
   PIN i_x[30]
@@ -1472,6 +2200,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.224 120.768 16.248 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.224 120.768 16.248 120.784 ;
+    END
   END i_x[30]
   PIN i_x[31]
     DIRECTION INPUT ;
@@ -1479,6 +2211,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.416 120.768 16.44 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.416 120.768 16.44 120.784 ;
     END
   END i_x[31]
   PIN i_x[32]
@@ -1488,6 +2224,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.608 120.768 16.632 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.608 120.768 16.632 120.784 ;
+    END
   END i_x[32]
   PIN i_x[33]
     DIRECTION INPUT ;
@@ -1495,6 +2235,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.8 120.768 16.824 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.8 120.768 16.824 120.784 ;
     END
   END i_x[33]
   PIN i_x[34]
@@ -1504,6 +2248,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.992 120.768 17.016 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.992 120.768 17.016 120.784 ;
+    END
   END i_x[34]
   PIN i_x[35]
     DIRECTION INPUT ;
@@ -1511,6 +2259,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.184 120.768 17.208 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.184 120.768 17.208 120.784 ;
     END
   END i_x[35]
   PIN i_x[36]
@@ -1520,6 +2272,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.376 120.768 17.4 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.376 120.768 17.4 120.784 ;
+    END
   END i_x[36]
   PIN i_x[37]
     DIRECTION INPUT ;
@@ -1527,6 +2283,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.568 120.768 17.592 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.568 120.768 17.592 120.784 ;
     END
   END i_x[37]
   PIN i_x[38]
@@ -1536,6 +2296,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.76 120.768 17.784 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.76 120.768 17.784 120.784 ;
+    END
   END i_x[38]
   PIN i_x[39]
     DIRECTION INPUT ;
@@ -1543,6 +2307,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.952 120.768 17.976 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.952 120.768 17.976 120.784 ;
     END
   END i_x[39]
   PIN i_x[3]
@@ -1552,6 +2320,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.04 120.768 11.064 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.04 120.768 11.064 120.784 ;
+    END
   END i_x[3]
   PIN i_x[40]
     DIRECTION INPUT ;
@@ -1559,6 +2331,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.144 120.768 18.168 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.144 120.768 18.168 120.784 ;
     END
   END i_x[40]
   PIN i_x[41]
@@ -1568,6 +2344,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.336 120.768 18.36 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.336 120.768 18.36 120.784 ;
+    END
   END i_x[41]
   PIN i_x[42]
     DIRECTION INPUT ;
@@ -1575,6 +2355,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.528 120.768 18.552 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.528 120.768 18.552 120.784 ;
     END
   END i_x[42]
   PIN i_x[43]
@@ -1584,6 +2368,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.72 120.768 18.744 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.72 120.768 18.744 120.784 ;
+    END
   END i_x[43]
   PIN i_x[44]
     DIRECTION INPUT ;
@@ -1591,6 +2379,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.912 120.768 18.936 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.912 120.768 18.936 120.784 ;
     END
   END i_x[44]
   PIN i_x[45]
@@ -1600,6 +2392,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.104 120.768 19.128 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.104 120.768 19.128 120.784 ;
+    END
   END i_x[45]
   PIN i_x[46]
     DIRECTION INPUT ;
@@ -1607,6 +2403,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  19.296 120.768 19.32 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  19.296 120.768 19.32 120.784 ;
     END
   END i_x[46]
   PIN i_x[47]
@@ -1616,6 +2416,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.488 120.768 19.512 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.488 120.768 19.512 120.784 ;
+    END
   END i_x[47]
   PIN i_x[48]
     DIRECTION INPUT ;
@@ -1623,6 +2427,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  19.68 120.768 19.704 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  19.68 120.768 19.704 120.784 ;
     END
   END i_x[48]
   PIN i_x[49]
@@ -1632,6 +2440,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.872 120.768 19.896 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.872 120.768 19.896 120.784 ;
+    END
   END i_x[49]
   PIN i_x[4]
     DIRECTION INPUT ;
@@ -1639,6 +2451,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.232 120.768 11.256 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.232 120.768 11.256 120.784 ;
     END
   END i_x[4]
   PIN i_x[50]
@@ -1648,6 +2464,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.064 120.768 20.088 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.064 120.768 20.088 120.784 ;
+    END
   END i_x[50]
   PIN i_x[51]
     DIRECTION INPUT ;
@@ -1655,6 +2475,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.256 120.768 20.28 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.256 120.768 20.28 120.784 ;
     END
   END i_x[51]
   PIN i_x[52]
@@ -1664,6 +2488,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.448 120.768 20.472 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.448 120.768 20.472 120.784 ;
+    END
   END i_x[52]
   PIN i_x[53]
     DIRECTION INPUT ;
@@ -1671,6 +2499,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.64 120.768 20.664 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.64 120.768 20.664 120.784 ;
     END
   END i_x[53]
   PIN i_x[54]
@@ -1680,6 +2512,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.832 120.768 20.856 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.832 120.768 20.856 120.784 ;
+    END
   END i_x[54]
   PIN i_x[55]
     DIRECTION INPUT ;
@@ -1687,6 +2523,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.024 120.768 21.048 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.024 120.768 21.048 120.784 ;
     END
   END i_x[55]
   PIN i_x[56]
@@ -1696,6 +2536,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.216 120.768 21.24 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.216 120.768 21.24 120.784 ;
+    END
   END i_x[56]
   PIN i_x[57]
     DIRECTION INPUT ;
@@ -1703,6 +2547,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.408 120.768 21.432 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.408 120.768 21.432 120.784 ;
     END
   END i_x[57]
   PIN i_x[58]
@@ -1712,6 +2560,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.6 120.768 21.624 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.6 120.768 21.624 120.784 ;
+    END
   END i_x[58]
   PIN i_x[59]
     DIRECTION INPUT ;
@@ -1719,6 +2571,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.792 120.768 21.816 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.792 120.768 21.816 120.784 ;
     END
   END i_x[59]
   PIN i_x[5]
@@ -1728,6 +2584,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.424 120.768 11.448 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.424 120.768 11.448 120.784 ;
+    END
   END i_x[5]
   PIN i_x[60]
     DIRECTION INPUT ;
@@ -1735,6 +2595,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.984 120.768 22.008 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.984 120.768 22.008 120.784 ;
     END
   END i_x[60]
   PIN i_x[61]
@@ -1744,6 +2608,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.176 120.768 22.2 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.176 120.768 22.2 120.784 ;
+    END
   END i_x[61]
   PIN i_x[62]
     DIRECTION INPUT ;
@@ -1751,6 +2619,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.368 120.768 22.392 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.368 120.768 22.392 120.784 ;
     END
   END i_x[62]
   PIN i_x[63]
@@ -1760,6 +2632,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.56 120.768 22.584 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.56 120.768 22.584 120.784 ;
+    END
   END i_x[63]
   PIN i_x[64]
     DIRECTION INPUT ;
@@ -1767,6 +2643,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.752 120.768 22.776 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.752 120.768 22.776 120.784 ;
     END
   END i_x[64]
   PIN i_x[65]
@@ -1776,6 +2656,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.944 120.768 22.968 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.944 120.768 22.968 120.784 ;
+    END
   END i_x[65]
   PIN i_x[66]
     DIRECTION INPUT ;
@@ -1783,6 +2667,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.136 120.768 23.16 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.136 120.768 23.16 120.784 ;
     END
   END i_x[66]
   PIN i_x[67]
@@ -1792,6 +2680,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.328 120.768 23.352 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.328 120.768 23.352 120.784 ;
+    END
   END i_x[67]
   PIN i_x[68]
     DIRECTION INPUT ;
@@ -1799,6 +2691,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.52 120.768 23.544 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.52 120.768 23.544 120.784 ;
     END
   END i_x[68]
   PIN i_x[69]
@@ -1808,6 +2704,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.712 120.768 23.736 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.712 120.768 23.736 120.784 ;
+    END
   END i_x[69]
   PIN i_x[6]
     DIRECTION INPUT ;
@@ -1815,6 +2715,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.616 120.768 11.64 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.616 120.768 11.64 120.784 ;
     END
   END i_x[6]
   PIN i_x[70]
@@ -1824,6 +2728,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.904 120.768 23.928 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.904 120.768 23.928 120.784 ;
+    END
   END i_x[70]
   PIN i_x[71]
     DIRECTION INPUT ;
@@ -1831,6 +2739,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.096 120.768 24.12 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.096 120.768 24.12 120.784 ;
     END
   END i_x[71]
   PIN i_x[72]
@@ -1840,6 +2752,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.288 120.768 24.312 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.288 120.768 24.312 120.784 ;
+    END
   END i_x[72]
   PIN i_x[73]
     DIRECTION INPUT ;
@@ -1847,6 +2763,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.48 120.768 24.504 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.48 120.768 24.504 120.784 ;
     END
   END i_x[73]
   PIN i_x[74]
@@ -1856,6 +2776,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.672 120.768 24.696 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.672 120.768 24.696 120.784 ;
+    END
   END i_x[74]
   PIN i_x[75]
     DIRECTION INPUT ;
@@ -1863,6 +2787,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.864 120.768 24.888 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.864 120.768 24.888 120.784 ;
     END
   END i_x[75]
   PIN i_x[76]
@@ -1872,6 +2800,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.056 120.768 25.08 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.056 120.768 25.08 120.784 ;
+    END
   END i_x[76]
   PIN i_x[77]
     DIRECTION INPUT ;
@@ -1879,6 +2811,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.248 120.768 25.272 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.248 120.768 25.272 120.784 ;
     END
   END i_x[77]
   PIN i_x[78]
@@ -1888,6 +2824,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.44 120.768 25.464 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.44 120.768 25.464 120.784 ;
+    END
   END i_x[78]
   PIN i_x[79]
     DIRECTION INPUT ;
@@ -1895,6 +2835,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.632 120.768 25.656 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.632 120.768 25.656 120.784 ;
     END
   END i_x[79]
   PIN i_x[7]
@@ -1904,6 +2848,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.808 120.768 11.832 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.808 120.768 11.832 120.784 ;
+    END
   END i_x[7]
   PIN i_x[80]
     DIRECTION INPUT ;
@@ -1911,6 +2859,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.824 120.768 25.848 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.824 120.768 25.848 120.784 ;
     END
   END i_x[80]
   PIN i_x[81]
@@ -1920,6 +2872,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.016 120.768 26.04 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.016 120.768 26.04 120.784 ;
+    END
   END i_x[81]
   PIN i_x[82]
     DIRECTION INPUT ;
@@ -1927,6 +2883,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.208 120.768 26.232 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.208 120.768 26.232 120.784 ;
     END
   END i_x[82]
   PIN i_x[83]
@@ -1936,6 +2896,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.4 120.768 26.424 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.4 120.768 26.424 120.784 ;
+    END
   END i_x[83]
   PIN i_x[84]
     DIRECTION INPUT ;
@@ -1943,6 +2907,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.592 120.768 26.616 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.592 120.768 26.616 120.784 ;
     END
   END i_x[84]
   PIN i_x[85]
@@ -1952,6 +2920,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.784 120.768 26.808 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.784 120.768 26.808 120.784 ;
+    END
   END i_x[85]
   PIN i_x[86]
     DIRECTION INPUT ;
@@ -1959,6 +2931,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.976 120.768 27 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.976 120.768 27 120.784 ;
     END
   END i_x[86]
   PIN i_x[87]
@@ -1968,6 +2944,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.168 120.768 27.192 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.168 120.768 27.192 120.784 ;
+    END
   END i_x[87]
   PIN i_x[88]
     DIRECTION INPUT ;
@@ -1975,6 +2955,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.36 120.768 27.384 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.36 120.768 27.384 120.784 ;
     END
   END i_x[88]
   PIN i_x[89]
@@ -1984,6 +2968,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.552 120.768 27.576 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.552 120.768 27.576 120.784 ;
+    END
   END i_x[89]
   PIN i_x[8]
     DIRECTION INPUT ;
@@ -1991,6 +2979,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12 120.768 12.024 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12 120.768 12.024 120.784 ;
     END
   END i_x[8]
   PIN i_x[90]
@@ -2000,6 +2992,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.744 120.768 27.768 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.744 120.768 27.768 120.784 ;
+    END
   END i_x[90]
   PIN i_x[91]
     DIRECTION INPUT ;
@@ -2007,6 +3003,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.936 120.768 27.96 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.936 120.768 27.96 120.784 ;
     END
   END i_x[91]
   PIN i_x[92]
@@ -2016,6 +3016,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.128 120.768 28.152 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.128 120.768 28.152 120.784 ;
+    END
   END i_x[92]
   PIN i_x[93]
     DIRECTION INPUT ;
@@ -2023,6 +3027,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.32 120.768 28.344 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.32 120.768 28.344 120.784 ;
     END
   END i_x[93]
   PIN i_x[94]
@@ -2032,6 +3040,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.512 120.768 28.536 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.512 120.768 28.536 120.784 ;
+    END
   END i_x[94]
   PIN i_x[95]
     DIRECTION INPUT ;
@@ -2039,6 +3051,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.704 120.768 28.728 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.704 120.768 28.728 120.784 ;
     END
   END i_x[95]
   PIN i_x[96]
@@ -2048,6 +3064,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.896 120.768 28.92 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.896 120.768 28.92 120.784 ;
+    END
   END i_x[96]
   PIN i_x[97]
     DIRECTION INPUT ;
@@ -2055,6 +3075,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.088 120.768 29.112 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.088 120.768 29.112 120.784 ;
     END
   END i_x[97]
   PIN i_x[98]
@@ -2064,6 +3088,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.28 120.768 29.304 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.28 120.768 29.304 120.784 ;
+    END
   END i_x[98]
   PIN i_x[99]
     DIRECTION INPUT ;
@@ -2071,6 +3099,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.472 120.768 29.496 120.96 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.472 120.768 29.496 120.784 ;
     END
   END i_x[99]
   PIN i_x[9]
@@ -2080,6 +3112,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.192 120.768 12.216 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.192 120.768 12.216 120.784 ;
+    END
   END i_x[9]
   PIN lfault
     DIRECTION OUTPUT ;
@@ -2087,6 +3123,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.56 0 34.584 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.56 0.144 34.584 0.192 ;
     END
   END lfault
   PIN rst_a
@@ -2096,6 +3136,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.08 120.768 10.104 120.96 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.08 120.768 10.104 120.784 ;
+    END
   END rst_a
   PIN sum_o[0]
     DIRECTION OUTPUT ;
@@ -2103,6 +3147,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  9.984 0 10.008 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  9.984 0.144 10.008 0.192 ;
     END
   END sum_o[0]
   PIN sum_o[100]
@@ -2112,6 +3160,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.584 0 19.608 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.584 0.144 19.608 0.192 ;
+    END
   END sum_o[100]
   PIN sum_o[101]
     DIRECTION OUTPUT ;
@@ -2119,6 +3171,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  19.68 0 19.704 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  19.68 0.144 19.704 0.192 ;
     END
   END sum_o[101]
   PIN sum_o[102]
@@ -2128,6 +3184,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.776 0 19.8 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.776 0.144 19.8 0.192 ;
+    END
   END sum_o[102]
   PIN sum_o[103]
     DIRECTION OUTPUT ;
@@ -2135,6 +3195,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  19.872 0 19.896 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  19.872 0.144 19.896 0.192 ;
     END
   END sum_o[103]
   PIN sum_o[104]
@@ -2144,6 +3208,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.968 0 19.992 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.968 0.144 19.992 0.192 ;
+    END
   END sum_o[104]
   PIN sum_o[105]
     DIRECTION OUTPUT ;
@@ -2151,6 +3219,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.064 0 20.088 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.064 0.144 20.088 0.192 ;
     END
   END sum_o[105]
   PIN sum_o[106]
@@ -2160,6 +3232,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.16 0 20.184 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.16 0.144 20.184 0.192 ;
+    END
   END sum_o[106]
   PIN sum_o[107]
     DIRECTION OUTPUT ;
@@ -2167,6 +3243,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.256 0 20.28 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.256 0.144 20.28 0.192 ;
     END
   END sum_o[107]
   PIN sum_o[108]
@@ -2176,6 +3256,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.352 0 20.376 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.352 0.144 20.376 0.192 ;
+    END
   END sum_o[108]
   PIN sum_o[109]
     DIRECTION OUTPUT ;
@@ -2183,6 +3267,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.448 0 20.472 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.448 0.144 20.472 0.192 ;
     END
   END sum_o[109]
   PIN sum_o[10]
@@ -2192,6 +3280,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.944 0 10.968 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.944 0.144 10.968 0.192 ;
+    END
   END sum_o[10]
   PIN sum_o[110]
     DIRECTION OUTPUT ;
@@ -2199,6 +3291,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.544 0 20.568 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.544 0.144 20.568 0.192 ;
     END
   END sum_o[110]
   PIN sum_o[111]
@@ -2208,6 +3304,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.64 0 20.664 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.64 0.144 20.664 0.192 ;
+    END
   END sum_o[111]
   PIN sum_o[112]
     DIRECTION OUTPUT ;
@@ -2215,6 +3315,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.736 0 20.76 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.736 0.144 20.76 0.192 ;
     END
   END sum_o[112]
   PIN sum_o[113]
@@ -2224,6 +3328,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  20.832 0 20.856 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.832 0.144 20.856 0.192 ;
+    END
   END sum_o[113]
   PIN sum_o[114]
     DIRECTION OUTPUT ;
@@ -2231,6 +3339,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  20.928 0 20.952 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  20.928 0.144 20.952 0.192 ;
     END
   END sum_o[114]
   PIN sum_o[115]
@@ -2240,6 +3352,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.024 0 21.048 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.024 0.144 21.048 0.192 ;
+    END
   END sum_o[115]
   PIN sum_o[116]
     DIRECTION OUTPUT ;
@@ -2247,6 +3363,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.12 0 21.144 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.12 0.144 21.144 0.192 ;
     END
   END sum_o[116]
   PIN sum_o[117]
@@ -2256,6 +3376,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.216 0 21.24 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.216 0.144 21.24 0.192 ;
+    END
   END sum_o[117]
   PIN sum_o[118]
     DIRECTION OUTPUT ;
@@ -2263,6 +3387,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.312 0 21.336 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.312 0.144 21.336 0.192 ;
     END
   END sum_o[118]
   PIN sum_o[119]
@@ -2272,6 +3400,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.408 0 21.432 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.408 0.144 21.432 0.192 ;
+    END
   END sum_o[119]
   PIN sum_o[11]
     DIRECTION OUTPUT ;
@@ -2279,6 +3411,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.04 0 11.064 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.04 0.144 11.064 0.192 ;
     END
   END sum_o[11]
   PIN sum_o[120]
@@ -2288,6 +3424,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.504 0 21.528 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.504 0.144 21.528 0.192 ;
+    END
   END sum_o[120]
   PIN sum_o[121]
     DIRECTION OUTPUT ;
@@ -2295,6 +3435,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.6 0 21.624 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.6 0.144 21.624 0.192 ;
     END
   END sum_o[121]
   PIN sum_o[122]
@@ -2304,6 +3448,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.696 0 21.72 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.696 0.144 21.72 0.192 ;
+    END
   END sum_o[122]
   PIN sum_o[123]
     DIRECTION OUTPUT ;
@@ -2311,6 +3459,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.792 0 21.816 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.792 0.144 21.816 0.192 ;
     END
   END sum_o[123]
   PIN sum_o[124]
@@ -2320,6 +3472,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  21.888 0 21.912 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.888 0.144 21.912 0.192 ;
+    END
   END sum_o[124]
   PIN sum_o[125]
     DIRECTION OUTPUT ;
@@ -2327,6 +3483,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  21.984 0 22.008 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  21.984 0.144 22.008 0.192 ;
     END
   END sum_o[125]
   PIN sum_o[126]
@@ -2336,6 +3496,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.08 0 22.104 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.08 0.144 22.104 0.192 ;
+    END
   END sum_o[126]
   PIN sum_o[127]
     DIRECTION OUTPUT ;
@@ -2343,6 +3507,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.176 0 22.2 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.176 0.144 22.2 0.192 ;
     END
   END sum_o[127]
   PIN sum_o[128]
@@ -2352,6 +3520,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.272 0 22.296 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.272 0.144 22.296 0.192 ;
+    END
   END sum_o[128]
   PIN sum_o[129]
     DIRECTION OUTPUT ;
@@ -2359,6 +3531,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.368 0 22.392 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.368 0.144 22.392 0.192 ;
     END
   END sum_o[129]
   PIN sum_o[12]
@@ -2368,6 +3544,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.136 0 11.16 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.136 0.144 11.16 0.192 ;
+    END
   END sum_o[12]
   PIN sum_o[130]
     DIRECTION OUTPUT ;
@@ -2375,6 +3555,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.464 0 22.488 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.464 0.144 22.488 0.192 ;
     END
   END sum_o[130]
   PIN sum_o[131]
@@ -2384,6 +3568,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.56 0 22.584 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.56 0.144 22.584 0.192 ;
+    END
   END sum_o[131]
   PIN sum_o[132]
     DIRECTION OUTPUT ;
@@ -2391,6 +3579,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.656 0 22.68 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.656 0.144 22.68 0.192 ;
     END
   END sum_o[132]
   PIN sum_o[133]
@@ -2400,6 +3592,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.752 0 22.776 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.752 0.144 22.776 0.192 ;
+    END
   END sum_o[133]
   PIN sum_o[134]
     DIRECTION OUTPUT ;
@@ -2407,6 +3603,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  22.848 0 22.872 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  22.848 0.144 22.872 0.192 ;
     END
   END sum_o[134]
   PIN sum_o[135]
@@ -2416,6 +3616,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  22.944 0 22.968 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  22.944 0.144 22.968 0.192 ;
+    END
   END sum_o[135]
   PIN sum_o[136]
     DIRECTION OUTPUT ;
@@ -2423,6 +3627,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.04 0 23.064 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.04 0.144 23.064 0.192 ;
     END
   END sum_o[136]
   PIN sum_o[137]
@@ -2432,6 +3640,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.136 0 23.16 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.136 0.144 23.16 0.192 ;
+    END
   END sum_o[137]
   PIN sum_o[138]
     DIRECTION OUTPUT ;
@@ -2439,6 +3651,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.232 0 23.256 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.232 0.144 23.256 0.192 ;
     END
   END sum_o[138]
   PIN sum_o[139]
@@ -2448,6 +3664,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.328 0 23.352 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.328 0.144 23.352 0.192 ;
+    END
   END sum_o[139]
   PIN sum_o[13]
     DIRECTION OUTPUT ;
@@ -2455,6 +3675,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.232 0 11.256 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.232 0.144 11.256 0.192 ;
     END
   END sum_o[13]
   PIN sum_o[140]
@@ -2464,6 +3688,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.424 0 23.448 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.424 0.144 23.448 0.192 ;
+    END
   END sum_o[140]
   PIN sum_o[141]
     DIRECTION OUTPUT ;
@@ -2471,6 +3699,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.52 0 23.544 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.52 0.144 23.544 0.192 ;
     END
   END sum_o[141]
   PIN sum_o[142]
@@ -2480,6 +3712,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.616 0 23.64 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.616 0.144 23.64 0.192 ;
+    END
   END sum_o[142]
   PIN sum_o[143]
     DIRECTION OUTPUT ;
@@ -2487,6 +3723,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.712 0 23.736 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.712 0.144 23.736 0.192 ;
     END
   END sum_o[143]
   PIN sum_o[144]
@@ -2496,6 +3736,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  23.808 0 23.832 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  23.808 0.144 23.832 0.192 ;
+    END
   END sum_o[144]
   PIN sum_o[145]
     DIRECTION OUTPUT ;
@@ -2503,6 +3747,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  23.904 0 23.928 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.904 0.144 23.928 0.192 ;
     END
   END sum_o[145]
   PIN sum_o[146]
@@ -2512,6 +3760,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24 0 24.024 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24 0.144 24.024 0.192 ;
+    END
   END sum_o[146]
   PIN sum_o[147]
     DIRECTION OUTPUT ;
@@ -2519,6 +3771,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.096 0 24.12 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.096 0.144 24.12 0.192 ;
     END
   END sum_o[147]
   PIN sum_o[148]
@@ -2528,6 +3784,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.192 0 24.216 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.192 0.144 24.216 0.192 ;
+    END
   END sum_o[148]
   PIN sum_o[149]
     DIRECTION OUTPUT ;
@@ -2535,6 +3795,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.288 0 24.312 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.288 0.144 24.312 0.192 ;
     END
   END sum_o[149]
   PIN sum_o[14]
@@ -2544,6 +3808,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.328 0 11.352 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.328 0.144 11.352 0.192 ;
+    END
   END sum_o[14]
   PIN sum_o[150]
     DIRECTION OUTPUT ;
@@ -2551,6 +3819,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.384 0 24.408 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.384 0.144 24.408 0.192 ;
     END
   END sum_o[150]
   PIN sum_o[151]
@@ -2560,6 +3832,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.48 0 24.504 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.48 0.144 24.504 0.192 ;
+    END
   END sum_o[151]
   PIN sum_o[152]
     DIRECTION OUTPUT ;
@@ -2567,6 +3843,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.576 0 24.6 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.576 0.144 24.6 0.192 ;
     END
   END sum_o[152]
   PIN sum_o[153]
@@ -2576,6 +3856,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.672 0 24.696 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.672 0.144 24.696 0.192 ;
+    END
   END sum_o[153]
   PIN sum_o[154]
     DIRECTION OUTPUT ;
@@ -2583,6 +3867,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.768 0 24.792 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.768 0.144 24.792 0.192 ;
     END
   END sum_o[154]
   PIN sum_o[155]
@@ -2592,6 +3880,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  24.864 0 24.888 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.864 0.144 24.888 0.192 ;
+    END
   END sum_o[155]
   PIN sum_o[156]
     DIRECTION OUTPUT ;
@@ -2599,6 +3891,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  24.96 0 24.984 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  24.96 0.144 24.984 0.192 ;
     END
   END sum_o[156]
   PIN sum_o[157]
@@ -2608,6 +3904,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.056 0 25.08 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.056 0.144 25.08 0.192 ;
+    END
   END sum_o[157]
   PIN sum_o[158]
     DIRECTION OUTPUT ;
@@ -2615,6 +3915,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.152 0 25.176 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.152 0.144 25.176 0.192 ;
     END
   END sum_o[158]
   PIN sum_o[159]
@@ -2624,6 +3928,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.248 0 25.272 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.248 0.144 25.272 0.192 ;
+    END
   END sum_o[159]
   PIN sum_o[15]
     DIRECTION OUTPUT ;
@@ -2631,6 +3939,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.424 0 11.448 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.424 0.144 11.448 0.192 ;
     END
   END sum_o[15]
   PIN sum_o[160]
@@ -2640,6 +3952,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.344 0 25.368 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.344 0.144 25.368 0.192 ;
+    END
   END sum_o[160]
   PIN sum_o[161]
     DIRECTION OUTPUT ;
@@ -2647,6 +3963,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.44 0 25.464 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.44 0.144 25.464 0.192 ;
     END
   END sum_o[161]
   PIN sum_o[162]
@@ -2656,6 +3976,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.536 0 25.56 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.536 0.144 25.56 0.192 ;
+    END
   END sum_o[162]
   PIN sum_o[163]
     DIRECTION OUTPUT ;
@@ -2663,6 +3987,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.632 0 25.656 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.632 0.144 25.656 0.192 ;
     END
   END sum_o[163]
   PIN sum_o[164]
@@ -2672,6 +4000,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.728 0 25.752 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.728 0.144 25.752 0.192 ;
+    END
   END sum_o[164]
   PIN sum_o[165]
     DIRECTION OUTPUT ;
@@ -2679,6 +4011,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  25.824 0 25.848 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  25.824 0.144 25.848 0.192 ;
     END
   END sum_o[165]
   PIN sum_o[166]
@@ -2688,6 +4024,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  25.92 0 25.944 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  25.92 0.144 25.944 0.192 ;
+    END
   END sum_o[166]
   PIN sum_o[167]
     DIRECTION OUTPUT ;
@@ -2695,6 +4035,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.016 0 26.04 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.016 0.144 26.04 0.192 ;
     END
   END sum_o[167]
   PIN sum_o[168]
@@ -2704,6 +4048,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.112 0 26.136 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.112 0.144 26.136 0.192 ;
+    END
   END sum_o[168]
   PIN sum_o[169]
     DIRECTION OUTPUT ;
@@ -2711,6 +4059,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.208 0 26.232 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.208 0.144 26.232 0.192 ;
     END
   END sum_o[169]
   PIN sum_o[16]
@@ -2720,6 +4072,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.52 0 11.544 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.52 0.144 11.544 0.192 ;
+    END
   END sum_o[16]
   PIN sum_o[170]
     DIRECTION OUTPUT ;
@@ -2727,6 +4083,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.304 0 26.328 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.304 0.144 26.328 0.192 ;
     END
   END sum_o[170]
   PIN sum_o[171]
@@ -2736,6 +4096,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.4 0 26.424 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.4 0.144 26.424 0.192 ;
+    END
   END sum_o[171]
   PIN sum_o[172]
     DIRECTION OUTPUT ;
@@ -2743,6 +4107,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.496 0 26.52 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.496 0.144 26.52 0.192 ;
     END
   END sum_o[172]
   PIN sum_o[173]
@@ -2752,6 +4120,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.592 0 26.616 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.592 0.144 26.616 0.192 ;
+    END
   END sum_o[173]
   PIN sum_o[174]
     DIRECTION OUTPUT ;
@@ -2759,6 +4131,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.688 0 26.712 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.688 0.144 26.712 0.192 ;
     END
   END sum_o[174]
   PIN sum_o[175]
@@ -2768,6 +4144,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.784 0 26.808 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.784 0.144 26.808 0.192 ;
+    END
   END sum_o[175]
   PIN sum_o[176]
     DIRECTION OUTPUT ;
@@ -2775,6 +4155,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  26.88 0 26.904 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  26.88 0.144 26.904 0.192 ;
     END
   END sum_o[176]
   PIN sum_o[177]
@@ -2784,6 +4168,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  26.976 0 27 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  26.976 0.144 27 0.192 ;
+    END
   END sum_o[177]
   PIN sum_o[178]
     DIRECTION OUTPUT ;
@@ -2791,6 +4179,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.072 0 27.096 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.072 0.144 27.096 0.192 ;
     END
   END sum_o[178]
   PIN sum_o[179]
@@ -2800,6 +4192,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.168 0 27.192 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.168 0.144 27.192 0.192 ;
+    END
   END sum_o[179]
   PIN sum_o[17]
     DIRECTION OUTPUT ;
@@ -2807,6 +4203,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.616 0 11.64 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.616 0.144 11.64 0.192 ;
     END
   END sum_o[17]
   PIN sum_o[180]
@@ -2816,6 +4216,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.264 0 27.288 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.264 0.144 27.288 0.192 ;
+    END
   END sum_o[180]
   PIN sum_o[181]
     DIRECTION OUTPUT ;
@@ -2823,6 +4227,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.36 0 27.384 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.36 0.144 27.384 0.192 ;
     END
   END sum_o[181]
   PIN sum_o[182]
@@ -2832,6 +4240,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.456 0 27.48 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.456 0.144 27.48 0.192 ;
+    END
   END sum_o[182]
   PIN sum_o[183]
     DIRECTION OUTPUT ;
@@ -2839,6 +4251,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.552 0 27.576 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.552 0.144 27.576 0.192 ;
     END
   END sum_o[183]
   PIN sum_o[184]
@@ -2848,6 +4264,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.648 0 27.672 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.648 0.144 27.672 0.192 ;
+    END
   END sum_o[184]
   PIN sum_o[185]
     DIRECTION OUTPUT ;
@@ -2855,6 +4275,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.744 0 27.768 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.744 0.144 27.768 0.192 ;
     END
   END sum_o[185]
   PIN sum_o[186]
@@ -2864,6 +4288,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  27.84 0 27.864 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  27.84 0.144 27.864 0.192 ;
+    END
   END sum_o[186]
   PIN sum_o[187]
     DIRECTION OUTPUT ;
@@ -2871,6 +4299,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  27.936 0 27.96 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  27.936 0.144 27.96 0.192 ;
     END
   END sum_o[187]
   PIN sum_o[188]
@@ -2880,6 +4312,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.032 0 28.056 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.032 0.144 28.056 0.192 ;
+    END
   END sum_o[188]
   PIN sum_o[189]
     DIRECTION OUTPUT ;
@@ -2887,6 +4323,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.128 0 28.152 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.128 0.144 28.152 0.192 ;
     END
   END sum_o[189]
   PIN sum_o[18]
@@ -2896,6 +4336,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  11.712 0 11.736 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  11.712 0.144 11.736 0.192 ;
+    END
   END sum_o[18]
   PIN sum_o[190]
     DIRECTION OUTPUT ;
@@ -2903,6 +4347,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.224 0 28.248 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.224 0.144 28.248 0.192 ;
     END
   END sum_o[190]
   PIN sum_o[191]
@@ -2912,6 +4360,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.32 0 28.344 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.32 0.144 28.344 0.192 ;
+    END
   END sum_o[191]
   PIN sum_o[192]
     DIRECTION OUTPUT ;
@@ -2919,6 +4371,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.416 0 28.44 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.416 0.144 28.44 0.192 ;
     END
   END sum_o[192]
   PIN sum_o[193]
@@ -2928,6 +4384,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.512 0 28.536 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.512 0.144 28.536 0.192 ;
+    END
   END sum_o[193]
   PIN sum_o[194]
     DIRECTION OUTPUT ;
@@ -2935,6 +4395,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.608 0 28.632 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.608 0.144 28.632 0.192 ;
     END
   END sum_o[194]
   PIN sum_o[195]
@@ -2944,6 +4408,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.704 0 28.728 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.704 0.144 28.728 0.192 ;
+    END
   END sum_o[195]
   PIN sum_o[196]
     DIRECTION OUTPUT ;
@@ -2951,6 +4419,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.8 0 28.824 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.8 0.144 28.824 0.192 ;
     END
   END sum_o[196]
   PIN sum_o[197]
@@ -2960,6 +4432,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  28.896 0 28.92 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  28.896 0.144 28.92 0.192 ;
+    END
   END sum_o[197]
   PIN sum_o[198]
     DIRECTION OUTPUT ;
@@ -2967,6 +4443,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  28.992 0 29.016 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  28.992 0.144 29.016 0.192 ;
     END
   END sum_o[198]
   PIN sum_o[199]
@@ -2976,6 +4456,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.088 0 29.112 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.088 0.144 29.112 0.192 ;
+    END
   END sum_o[199]
   PIN sum_o[19]
     DIRECTION OUTPUT ;
@@ -2983,6 +4467,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.808 0 11.832 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.808 0.144 11.832 0.192 ;
     END
   END sum_o[19]
   PIN sum_o[1]
@@ -2992,6 +4480,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.08 0 10.104 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.08 0.144 10.104 0.192 ;
+    END
   END sum_o[1]
   PIN sum_o[200]
     DIRECTION OUTPUT ;
@@ -2999,6 +4491,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.184 0 29.208 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.184 0.144 29.208 0.192 ;
     END
   END sum_o[200]
   PIN sum_o[201]
@@ -3008,6 +4504,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.28 0 29.304 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.28 0.144 29.304 0.192 ;
+    END
   END sum_o[201]
   PIN sum_o[202]
     DIRECTION OUTPUT ;
@@ -3015,6 +4515,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.376 0 29.4 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.376 0.144 29.4 0.192 ;
     END
   END sum_o[202]
   PIN sum_o[203]
@@ -3024,6 +4528,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.472 0 29.496 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.472 0.144 29.496 0.192 ;
+    END
   END sum_o[203]
   PIN sum_o[204]
     DIRECTION OUTPUT ;
@@ -3031,6 +4539,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.568 0 29.592 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.568 0.144 29.592 0.192 ;
     END
   END sum_o[204]
   PIN sum_o[205]
@@ -3040,6 +4552,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.664 0 29.688 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.664 0.144 29.688 0.192 ;
+    END
   END sum_o[205]
   PIN sum_o[206]
     DIRECTION OUTPUT ;
@@ -3047,6 +4563,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.76 0 29.784 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.76 0.144 29.784 0.192 ;
     END
   END sum_o[206]
   PIN sum_o[207]
@@ -3056,6 +4576,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  29.856 0 29.88 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  29.856 0.144 29.88 0.192 ;
+    END
   END sum_o[207]
   PIN sum_o[208]
     DIRECTION OUTPUT ;
@@ -3063,6 +4587,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  29.952 0 29.976 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  29.952 0.144 29.976 0.192 ;
     END
   END sum_o[208]
   PIN sum_o[209]
@@ -3072,6 +4600,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.048 0 30.072 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.048 0.144 30.072 0.192 ;
+    END
   END sum_o[209]
   PIN sum_o[20]
     DIRECTION OUTPUT ;
@@ -3079,6 +4611,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  11.904 0 11.928 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  11.904 0.144 11.928 0.192 ;
     END
   END sum_o[20]
   PIN sum_o[210]
@@ -3088,6 +4624,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.144 0 30.168 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.144 0.144 30.168 0.192 ;
+    END
   END sum_o[210]
   PIN sum_o[211]
     DIRECTION OUTPUT ;
@@ -3095,6 +4635,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.24 0 30.264 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.24 0.144 30.264 0.192 ;
     END
   END sum_o[211]
   PIN sum_o[212]
@@ -3104,6 +4648,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.336 0 30.36 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.336 0.144 30.36 0.192 ;
+    END
   END sum_o[212]
   PIN sum_o[213]
     DIRECTION OUTPUT ;
@@ -3111,6 +4659,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.432 0 30.456 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.432 0.144 30.456 0.192 ;
     END
   END sum_o[213]
   PIN sum_o[214]
@@ -3120,6 +4672,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.528 0 30.552 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.528 0.144 30.552 0.192 ;
+    END
   END sum_o[214]
   PIN sum_o[215]
     DIRECTION OUTPUT ;
@@ -3127,6 +4683,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.624 0 30.648 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.624 0.144 30.648 0.192 ;
     END
   END sum_o[215]
   PIN sum_o[216]
@@ -3136,6 +4696,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.72 0 30.744 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.72 0.144 30.744 0.192 ;
+    END
   END sum_o[216]
   PIN sum_o[217]
     DIRECTION OUTPUT ;
@@ -3143,6 +4707,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  30.816 0 30.84 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  30.816 0.144 30.84 0.192 ;
     END
   END sum_o[217]
   PIN sum_o[218]
@@ -3152,6 +4720,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  30.912 0 30.936 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  30.912 0.144 30.936 0.192 ;
+    END
   END sum_o[218]
   PIN sum_o[219]
     DIRECTION OUTPUT ;
@@ -3159,6 +4731,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.008 0 31.032 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.008 0.144 31.032 0.192 ;
     END
   END sum_o[219]
   PIN sum_o[21]
@@ -3168,6 +4744,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12 0 12.024 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12 0.144 12.024 0.192 ;
+    END
   END sum_o[21]
   PIN sum_o[220]
     DIRECTION OUTPUT ;
@@ -3175,6 +4755,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.104 0 31.128 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.104 0.144 31.128 0.192 ;
     END
   END sum_o[220]
   PIN sum_o[221]
@@ -3184,6 +4768,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.2 0 31.224 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.2 0.144 31.224 0.192 ;
+    END
   END sum_o[221]
   PIN sum_o[222]
     DIRECTION OUTPUT ;
@@ -3191,6 +4779,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.296 0 31.32 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.296 0.144 31.32 0.192 ;
     END
   END sum_o[222]
   PIN sum_o[223]
@@ -3200,6 +4792,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.392 0 31.416 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.392 0.144 31.416 0.192 ;
+    END
   END sum_o[223]
   PIN sum_o[224]
     DIRECTION OUTPUT ;
@@ -3207,6 +4803,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.488 0 31.512 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.488 0.144 31.512 0.192 ;
     END
   END sum_o[224]
   PIN sum_o[225]
@@ -3216,6 +4816,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.584 0 31.608 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.584 0.144 31.608 0.192 ;
+    END
   END sum_o[225]
   PIN sum_o[226]
     DIRECTION OUTPUT ;
@@ -3223,6 +4827,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.68 0 31.704 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.68 0.144 31.704 0.192 ;
     END
   END sum_o[226]
   PIN sum_o[227]
@@ -3232,6 +4840,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.776 0 31.8 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.776 0.144 31.8 0.192 ;
+    END
   END sum_o[227]
   PIN sum_o[228]
     DIRECTION OUTPUT ;
@@ -3239,6 +4851,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  31.872 0 31.896 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  31.872 0.144 31.896 0.192 ;
     END
   END sum_o[228]
   PIN sum_o[229]
@@ -3248,6 +4864,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  31.968 0 31.992 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  31.968 0.144 31.992 0.192 ;
+    END
   END sum_o[229]
   PIN sum_o[22]
     DIRECTION OUTPUT ;
@@ -3255,6 +4875,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.096 0 12.12 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.096 0.144 12.12 0.192 ;
     END
   END sum_o[22]
   PIN sum_o[230]
@@ -3264,6 +4888,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.064 0 32.088 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.064 0.144 32.088 0.192 ;
+    END
   END sum_o[230]
   PIN sum_o[231]
     DIRECTION OUTPUT ;
@@ -3271,6 +4899,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.16 0 32.184 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.16 0.144 32.184 0.192 ;
     END
   END sum_o[231]
   PIN sum_o[232]
@@ -3280,6 +4912,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.256 0 32.28 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.256 0.144 32.28 0.192 ;
+    END
   END sum_o[232]
   PIN sum_o[233]
     DIRECTION OUTPUT ;
@@ -3287,6 +4923,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.352 0 32.376 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.352 0.144 32.376 0.192 ;
     END
   END sum_o[233]
   PIN sum_o[234]
@@ -3296,6 +4936,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.448 0 32.472 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.448 0.144 32.472 0.192 ;
+    END
   END sum_o[234]
   PIN sum_o[235]
     DIRECTION OUTPUT ;
@@ -3303,6 +4947,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.544 0 32.568 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.544 0.144 32.568 0.192 ;
     END
   END sum_o[235]
   PIN sum_o[236]
@@ -3312,6 +4960,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.64 0 32.664 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.64 0.144 32.664 0.192 ;
+    END
   END sum_o[236]
   PIN sum_o[237]
     DIRECTION OUTPUT ;
@@ -3319,6 +4971,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.736 0 32.76 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.736 0.144 32.76 0.192 ;
     END
   END sum_o[237]
   PIN sum_o[238]
@@ -3328,6 +4984,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  32.832 0 32.856 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  32.832 0.144 32.856 0.192 ;
+    END
   END sum_o[238]
   PIN sum_o[239]
     DIRECTION OUTPUT ;
@@ -3335,6 +4995,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  32.928 0 32.952 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  32.928 0.144 32.952 0.192 ;
     END
   END sum_o[239]
   PIN sum_o[23]
@@ -3344,6 +5008,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.192 0 12.216 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.192 0.144 12.216 0.192 ;
+    END
   END sum_o[23]
   PIN sum_o[240]
     DIRECTION OUTPUT ;
@@ -3351,6 +5019,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.024 0 33.048 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.024 0.144 33.048 0.192 ;
     END
   END sum_o[240]
   PIN sum_o[241]
@@ -3360,6 +5032,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.12 0 33.144 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.12 0.144 33.144 0.192 ;
+    END
   END sum_o[241]
   PIN sum_o[242]
     DIRECTION OUTPUT ;
@@ -3367,6 +5043,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.216 0 33.24 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.216 0.144 33.24 0.192 ;
     END
   END sum_o[242]
   PIN sum_o[243]
@@ -3376,6 +5056,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.312 0 33.336 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.312 0.144 33.336 0.192 ;
+    END
   END sum_o[243]
   PIN sum_o[244]
     DIRECTION OUTPUT ;
@@ -3383,6 +5067,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.408 0 33.432 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.408 0.144 33.432 0.192 ;
     END
   END sum_o[244]
   PIN sum_o[245]
@@ -3392,6 +5080,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.504 0 33.528 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.504 0.144 33.528 0.192 ;
+    END
   END sum_o[245]
   PIN sum_o[246]
     DIRECTION OUTPUT ;
@@ -3399,6 +5091,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.6 0 33.624 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.6 0.144 33.624 0.192 ;
     END
   END sum_o[246]
   PIN sum_o[247]
@@ -3408,6 +5104,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.696 0 33.72 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.696 0.144 33.72 0.192 ;
+    END
   END sum_o[247]
   PIN sum_o[248]
     DIRECTION OUTPUT ;
@@ -3415,6 +5115,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  33.792 0 33.816 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  33.792 0.144 33.816 0.192 ;
     END
   END sum_o[248]
   PIN sum_o[249]
@@ -3424,6 +5128,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.888 0 33.912 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.888 0.144 33.912 0.192 ;
+    END
   END sum_o[249]
   PIN sum_o[24]
     DIRECTION OUTPUT ;
@@ -3431,6 +5139,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.288 0 12.312 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.288 0.144 12.312 0.192 ;
     END
   END sum_o[24]
   PIN sum_o[250]
@@ -3440,6 +5152,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  33.984 0 34.008 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  33.984 0.144 34.008 0.192 ;
+    END
   END sum_o[250]
   PIN sum_o[251]
     DIRECTION OUTPUT ;
@@ -3447,6 +5163,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.08 0 34.104 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.08 0.144 34.104 0.192 ;
     END
   END sum_o[251]
   PIN sum_o[252]
@@ -3456,6 +5176,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  34.176 0 34.2 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  34.176 0.144 34.2 0.192 ;
+    END
   END sum_o[252]
   PIN sum_o[253]
     DIRECTION OUTPUT ;
@@ -3463,6 +5187,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.272 0 34.296 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.272 0.144 34.296 0.192 ;
     END
   END sum_o[253]
   PIN sum_o[254]
@@ -3472,6 +5200,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  34.368 0 34.392 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  34.368 0.144 34.392 0.192 ;
+    END
   END sum_o[254]
   PIN sum_o[255]
     DIRECTION OUTPUT ;
@@ -3479,6 +5211,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  34.464 0 34.488 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  34.464 0.144 34.488 0.192 ;
     END
   END sum_o[255]
   PIN sum_o[25]
@@ -3488,6 +5224,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.384 0 12.408 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.384 0.144 12.408 0.192 ;
+    END
   END sum_o[25]
   PIN sum_o[26]
     DIRECTION OUTPUT ;
@@ -3495,6 +5235,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.48 0 12.504 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.48 0.144 12.504 0.192 ;
     END
   END sum_o[26]
   PIN sum_o[27]
@@ -3504,6 +5248,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.576 0 12.6 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.576 0.144 12.6 0.192 ;
+    END
   END sum_o[27]
   PIN sum_o[28]
     DIRECTION OUTPUT ;
@@ -3511,6 +5259,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.672 0 12.696 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.672 0.144 12.696 0.192 ;
     END
   END sum_o[28]
   PIN sum_o[29]
@@ -3520,6 +5272,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.768 0 12.792 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.768 0.144 12.792 0.192 ;
+    END
   END sum_o[29]
   PIN sum_o[2]
     DIRECTION OUTPUT ;
@@ -3527,6 +5283,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.176 0 10.2 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.176 0.144 10.2 0.192 ;
     END
   END sum_o[2]
   PIN sum_o[30]
@@ -3536,6 +5296,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  12.864 0 12.888 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  12.864 0.144 12.888 0.192 ;
+    END
   END sum_o[30]
   PIN sum_o[31]
     DIRECTION OUTPUT ;
@@ -3543,6 +5307,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  12.96 0 12.984 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  12.96 0.144 12.984 0.192 ;
     END
   END sum_o[31]
   PIN sum_o[32]
@@ -3552,6 +5320,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.056 0 13.08 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.056 0.144 13.08 0.192 ;
+    END
   END sum_o[32]
   PIN sum_o[33]
     DIRECTION OUTPUT ;
@@ -3559,6 +5331,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.152 0 13.176 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.152 0.144 13.176 0.192 ;
     END
   END sum_o[33]
   PIN sum_o[34]
@@ -3568,6 +5344,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.248 0 13.272 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.248 0.144 13.272 0.192 ;
+    END
   END sum_o[34]
   PIN sum_o[35]
     DIRECTION OUTPUT ;
@@ -3575,6 +5355,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.344 0 13.368 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.344 0.144 13.368 0.192 ;
     END
   END sum_o[35]
   PIN sum_o[36]
@@ -3584,6 +5368,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.44 0 13.464 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.44 0.144 13.464 0.192 ;
+    END
   END sum_o[36]
   PIN sum_o[37]
     DIRECTION OUTPUT ;
@@ -3591,6 +5379,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.536 0 13.56 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.536 0.144 13.56 0.192 ;
     END
   END sum_o[37]
   PIN sum_o[38]
@@ -3600,6 +5392,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.632 0 13.656 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.632 0.144 13.656 0.192 ;
+    END
   END sum_o[38]
   PIN sum_o[39]
     DIRECTION OUTPUT ;
@@ -3607,6 +5403,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.728 0 13.752 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.728 0.144 13.752 0.192 ;
     END
   END sum_o[39]
   PIN sum_o[3]
@@ -3616,6 +5416,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.272 0 10.296 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.272 0.144 10.296 0.192 ;
+    END
   END sum_o[3]
   PIN sum_o[40]
     DIRECTION OUTPUT ;
@@ -3623,6 +5427,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  13.824 0 13.848 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  13.824 0.144 13.848 0.192 ;
     END
   END sum_o[40]
   PIN sum_o[41]
@@ -3632,6 +5440,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  13.92 0 13.944 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  13.92 0.144 13.944 0.192 ;
+    END
   END sum_o[41]
   PIN sum_o[42]
     DIRECTION OUTPUT ;
@@ -3639,6 +5451,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.016 0 14.04 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.016 0.144 14.04 0.192 ;
     END
   END sum_o[42]
   PIN sum_o[43]
@@ -3648,6 +5464,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.112 0 14.136 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.112 0.144 14.136 0.192 ;
+    END
   END sum_o[43]
   PIN sum_o[44]
     DIRECTION OUTPUT ;
@@ -3655,6 +5475,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.208 0 14.232 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.208 0.144 14.232 0.192 ;
     END
   END sum_o[44]
   PIN sum_o[45]
@@ -3664,6 +5488,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.304 0 14.328 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.304 0.144 14.328 0.192 ;
+    END
   END sum_o[45]
   PIN sum_o[46]
     DIRECTION OUTPUT ;
@@ -3671,6 +5499,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.4 0 14.424 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.4 0.144 14.424 0.192 ;
     END
   END sum_o[46]
   PIN sum_o[47]
@@ -3680,6 +5512,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.496 0 14.52 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.496 0.144 14.52 0.192 ;
+    END
   END sum_o[47]
   PIN sum_o[48]
     DIRECTION OUTPUT ;
@@ -3687,6 +5523,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.592 0 14.616 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.592 0.144 14.616 0.192 ;
     END
   END sum_o[48]
   PIN sum_o[49]
@@ -3696,6 +5536,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.688 0 14.712 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.688 0.144 14.712 0.192 ;
+    END
   END sum_o[49]
   PIN sum_o[4]
     DIRECTION OUTPUT ;
@@ -3703,6 +5547,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.368 0 10.392 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.368 0.144 10.392 0.192 ;
     END
   END sum_o[4]
   PIN sum_o[50]
@@ -3712,6 +5560,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.784 0 14.808 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.784 0.144 14.808 0.192 ;
+    END
   END sum_o[50]
   PIN sum_o[51]
     DIRECTION OUTPUT ;
@@ -3719,6 +5571,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  14.88 0 14.904 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  14.88 0.144 14.904 0.192 ;
     END
   END sum_o[51]
   PIN sum_o[52]
@@ -3728,6 +5584,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  14.976 0 15 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  14.976 0.144 15 0.192 ;
+    END
   END sum_o[52]
   PIN sum_o[53]
     DIRECTION OUTPUT ;
@@ -3735,6 +5595,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.072 0 15.096 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.072 0.144 15.096 0.192 ;
     END
   END sum_o[53]
   PIN sum_o[54]
@@ -3744,6 +5608,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.168 0 15.192 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.168 0.144 15.192 0.192 ;
+    END
   END sum_o[54]
   PIN sum_o[55]
     DIRECTION OUTPUT ;
@@ -3751,6 +5619,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.264 0 15.288 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.264 0.144 15.288 0.192 ;
     END
   END sum_o[55]
   PIN sum_o[56]
@@ -3760,6 +5632,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.36 0 15.384 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.36 0.144 15.384 0.192 ;
+    END
   END sum_o[56]
   PIN sum_o[57]
     DIRECTION OUTPUT ;
@@ -3767,6 +5643,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.456 0 15.48 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.456 0.144 15.48 0.192 ;
     END
   END sum_o[57]
   PIN sum_o[58]
@@ -3776,6 +5656,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.552 0 15.576 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.552 0.144 15.576 0.192 ;
+    END
   END sum_o[58]
   PIN sum_o[59]
     DIRECTION OUTPUT ;
@@ -3783,6 +5667,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.648 0 15.672 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.648 0.144 15.672 0.192 ;
     END
   END sum_o[59]
   PIN sum_o[5]
@@ -3792,6 +5680,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.464 0 10.488 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.464 0.144 10.488 0.192 ;
+    END
   END sum_o[5]
   PIN sum_o[60]
     DIRECTION OUTPUT ;
@@ -3799,6 +5691,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.744 0 15.768 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.744 0.144 15.768 0.192 ;
     END
   END sum_o[60]
   PIN sum_o[61]
@@ -3808,6 +5704,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  15.84 0 15.864 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  15.84 0.144 15.864 0.192 ;
+    END
   END sum_o[61]
   PIN sum_o[62]
     DIRECTION OUTPUT ;
@@ -3815,6 +5715,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  15.936 0 15.96 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  15.936 0.144 15.96 0.192 ;
     END
   END sum_o[62]
   PIN sum_o[63]
@@ -3824,6 +5728,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.032 0 16.056 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.032 0.144 16.056 0.192 ;
+    END
   END sum_o[63]
   PIN sum_o[64]
     DIRECTION OUTPUT ;
@@ -3831,6 +5739,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.128 0 16.152 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.128 0.144 16.152 0.192 ;
     END
   END sum_o[64]
   PIN sum_o[65]
@@ -3840,6 +5752,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.224 0 16.248 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.224 0.144 16.248 0.192 ;
+    END
   END sum_o[65]
   PIN sum_o[66]
     DIRECTION OUTPUT ;
@@ -3847,6 +5763,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.32 0 16.344 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.32 0.144 16.344 0.192 ;
     END
   END sum_o[66]
   PIN sum_o[67]
@@ -3856,6 +5776,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.416 0 16.44 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.416 0.144 16.44 0.192 ;
+    END
   END sum_o[67]
   PIN sum_o[68]
     DIRECTION OUTPUT ;
@@ -3863,6 +5787,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.512 0 16.536 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.512 0.144 16.536 0.192 ;
     END
   END sum_o[68]
   PIN sum_o[69]
@@ -3872,6 +5800,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.608 0 16.632 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.608 0.144 16.632 0.192 ;
+    END
   END sum_o[69]
   PIN sum_o[6]
     DIRECTION OUTPUT ;
@@ -3879,6 +5811,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.56 0 10.584 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.56 0.144 10.584 0.192 ;
     END
   END sum_o[6]
   PIN sum_o[70]
@@ -3888,6 +5824,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.704 0 16.728 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.704 0.144 16.728 0.192 ;
+    END
   END sum_o[70]
   PIN sum_o[71]
     DIRECTION OUTPUT ;
@@ -3895,6 +5835,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.8 0 16.824 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.8 0.144 16.824 0.192 ;
     END
   END sum_o[71]
   PIN sum_o[72]
@@ -3904,6 +5848,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  16.896 0 16.92 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  16.896 0.144 16.92 0.192 ;
+    END
   END sum_o[72]
   PIN sum_o[73]
     DIRECTION OUTPUT ;
@@ -3911,6 +5859,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  16.992 0 17.016 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  16.992 0.144 17.016 0.192 ;
     END
   END sum_o[73]
   PIN sum_o[74]
@@ -3920,6 +5872,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.088 0 17.112 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.088 0.144 17.112 0.192 ;
+    END
   END sum_o[74]
   PIN sum_o[75]
     DIRECTION OUTPUT ;
@@ -3927,6 +5883,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.184 0 17.208 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.184 0.144 17.208 0.192 ;
     END
   END sum_o[75]
   PIN sum_o[76]
@@ -3936,6 +5896,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.28 0 17.304 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.28 0.144 17.304 0.192 ;
+    END
   END sum_o[76]
   PIN sum_o[77]
     DIRECTION OUTPUT ;
@@ -3943,6 +5907,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.376 0 17.4 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.376 0.144 17.4 0.192 ;
     END
   END sum_o[77]
   PIN sum_o[78]
@@ -3952,6 +5920,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.472 0 17.496 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.472 0.144 17.496 0.192 ;
+    END
   END sum_o[78]
   PIN sum_o[79]
     DIRECTION OUTPUT ;
@@ -3959,6 +5931,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.568 0 17.592 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.568 0.144 17.592 0.192 ;
     END
   END sum_o[79]
   PIN sum_o[7]
@@ -3968,6 +5944,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  10.656 0 10.68 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.656 0.144 10.68 0.192 ;
+    END
   END sum_o[7]
   PIN sum_o[80]
     DIRECTION OUTPUT ;
@@ -3975,6 +5955,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.664 0 17.688 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.664 0.144 17.688 0.192 ;
     END
   END sum_o[80]
   PIN sum_o[81]
@@ -3984,6 +5968,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.76 0 17.784 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.76 0.144 17.784 0.192 ;
+    END
   END sum_o[81]
   PIN sum_o[82]
     DIRECTION OUTPUT ;
@@ -3991,6 +5979,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  17.856 0 17.88 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  17.856 0.144 17.88 0.192 ;
     END
   END sum_o[82]
   PIN sum_o[83]
@@ -4000,6 +5992,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  17.952 0 17.976 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  17.952 0.144 17.976 0.192 ;
+    END
   END sum_o[83]
   PIN sum_o[84]
     DIRECTION OUTPUT ;
@@ -4007,6 +6003,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.048 0 18.072 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.048 0.144 18.072 0.192 ;
     END
   END sum_o[84]
   PIN sum_o[85]
@@ -4016,6 +6016,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.144 0 18.168 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.144 0.144 18.168 0.192 ;
+    END
   END sum_o[85]
   PIN sum_o[86]
     DIRECTION OUTPUT ;
@@ -4023,6 +6027,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.24 0 18.264 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.24 0.144 18.264 0.192 ;
     END
   END sum_o[86]
   PIN sum_o[87]
@@ -4032,6 +6040,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.336 0 18.36 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.336 0.144 18.36 0.192 ;
+    END
   END sum_o[87]
   PIN sum_o[88]
     DIRECTION OUTPUT ;
@@ -4039,6 +6051,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.432 0 18.456 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.432 0.144 18.456 0.192 ;
     END
   END sum_o[88]
   PIN sum_o[89]
@@ -4048,6 +6064,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.528 0 18.552 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.528 0.144 18.552 0.192 ;
+    END
   END sum_o[89]
   PIN sum_o[8]
     DIRECTION OUTPUT ;
@@ -4055,6 +6075,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.752 0 10.776 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.752 0.144 10.776 0.192 ;
     END
   END sum_o[8]
   PIN sum_o[90]
@@ -4064,6 +6088,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.624 0 18.648 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.624 0.144 18.648 0.192 ;
+    END
   END sum_o[90]
   PIN sum_o[91]
     DIRECTION OUTPUT ;
@@ -4071,6 +6099,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.72 0 18.744 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.72 0.144 18.744 0.192 ;
     END
   END sum_o[91]
   PIN sum_o[92]
@@ -4080,6 +6112,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  18.816 0 18.84 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  18.816 0.144 18.84 0.192 ;
+    END
   END sum_o[92]
   PIN sum_o[93]
     DIRECTION OUTPUT ;
@@ -4087,6 +6123,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  18.912 0 18.936 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  18.912 0.144 18.936 0.192 ;
     END
   END sum_o[93]
   PIN sum_o[94]
@@ -4096,6 +6136,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.008 0 19.032 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.008 0.144 19.032 0.192 ;
+    END
   END sum_o[94]
   PIN sum_o[95]
     DIRECTION OUTPUT ;
@@ -4103,6 +6147,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  19.104 0 19.128 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  19.104 0.144 19.128 0.192 ;
     END
   END sum_o[95]
   PIN sum_o[96]
@@ -4112,6 +6160,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.2 0 19.224 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.2 0.144 19.224 0.192 ;
+    END
   END sum_o[96]
   PIN sum_o[97]
     DIRECTION OUTPUT ;
@@ -4119,6 +6171,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  19.296 0 19.32 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  19.296 0.144 19.32 0.192 ;
     END
   END sum_o[97]
   PIN sum_o[98]
@@ -4128,6 +6184,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.392 0 19.416 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.392 0.144 19.416 0.192 ;
+    END
   END sum_o[98]
   PIN sum_o[99]
     DIRECTION OUTPUT ;
@@ -4136,6 +6196,10 @@ MACRO ot_hbm_accel_smh_tcl
       LAYER M5 ;
         RECT  19.488 0 19.512 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  19.488 0.144 19.512 0.192 ;
+    END
   END sum_o[99]
   PIN sum_o[9]
     DIRECTION OUTPUT ;
@@ -4143,6 +6207,10 @@ MACRO ot_hbm_accel_smh_tcl
     PORT
       LAYER M5 ;
         RECT  10.848 0 10.872 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  10.848 0.144 10.872 0.192 ;
     END
   END sum_o[9]
   PIN VDD
@@ -4181,6 +6249,7 @@ MACRO ot_hbm_accel_smh_tcl
         RECT  2.16 4.016 84.24 4.304 ;
     END
   END VSS
+  # OT_OBS_CLOSED layer=M6 d_um=2.048 added=304
   OBS
     LAYER RVTN ;
      RECT  2.16 2.16 84.24 2.295 ;
@@ -12292,11 +14361,9 @@ MACRO ot_hbm_accel_smh_tcl
      RECT  83.704 106.464 83.729 106.488 ;
      RECT  83.704 13.296 83.801 13.32 ;
     LAYER M5 ;
-     RECT  33.264 0.085 33.288 0.133 ;
-     RECT  25.008 0.085 25.032 0.144 ;
-     RECT  32.4 0.133 33.288 0.144 ;
      RECT  34.656 0.037 34.68 0.144 ;
-     RECT  9.984 0.144 34.68 0.227 ;
+     RECT  34.656 0.144 34.68 0.192 ;
+     RECT  9.984 0.192 34.68 0.227 ;
      RECT  10.08 0.227 34.68 0.309 ;
      RECT  10.08 0.309 35.064 0.373 ;
      RECT  10.08 0.373 35.928 0.555 ;
@@ -14688,10 +16755,7 @@ MACRO ot_hbm_accel_smh_tcl
      RECT  10.08 119.125 35.688 120.555 ;
      RECT  10.08 120.555 34.872 120.629 ;
      RECT  43.296 114.563 43.32 120.683 ;
-     RECT  9.984 120.629 34.872 120.784 ;
-     RECT  20.784 120.784 21.768 120.851 ;
-     RECT  24.816 120.784 25.512 120.851 ;
-     RECT  24.816 120.851 24.84 120.899 ;
+     RECT  9.984 120.629 34.872 120.768 ;
     LAYER M6 ;
      RECT  2.16 79.616 2.773 80.288 ;
      RECT  2.16 36.416 2.821 37.088 ;
@@ -15562,6 +17626,320 @@ MACRO ot_hbm_accel_smh_tcl
      RECT  81.203 90.416 84.24 91.088 ;
      RECT  83.267 101.216 84.24 101.888 ;
      RECT  78.707 112.016 84.24 112.688 ;
+     RECT  23.699 0.416 25.621 0.48 ;
+     RECT  23.699 0.48 23.939 0.608 ;
+     RECT  22.693 0.608 23.939 2.496 ;
+     RECT  26.773 0.928 29.557 2.56 ;
+     RECT  29.891 0.928 32.437 2.56 ;
+     RECT  51.683 1.44 60.179 2.752 ;
+     RECT  17.029 2.272 18.515 4.016 ;
+     RECT  22.693 2.528 23.893 4.016 ;
+     RECT  23.939 2.56 25.237 2.592 ;
+     RECT  23.939 2.592 28.981 3.072 ;
+     RECT  29.843 2.592 31.717 4.016 ;
+     RECT  57.635 2.752 60.179 2.944 ;
+     RECT  24.419 3.072 28.981 4.016 ;
+     RECT  9.347 4.688 10.645 5.216 ;
+     RECT  14.437 4.688 17.749 6.016 ;
+     RECT  45.493 4.688 48.181 6.208 ;
+     RECT  51.443 4.688 55.957 5.792 ;
+     RECT  61.669 4.688 66.565 6.208 ;
+     RECT  8.243 5.216 10.645 6.24 ;
+     RECT  10.883 5.792 12.035 7.104 ;
+     RECT  51.443 5.792 55.907 5.984 ;
+     RECT  52.405 5.984 55.907 6.208 ;
+     RECT  54.179 6.208 55.907 6.336 ;
+     RECT  9.301 6.24 10.645 6.976 ;
+     RECT  63.205 6.24 66.611 8.192 ;
+     RECT  21.061 6.816 22.211 8.832 ;
+     RECT  3.397 8.608 6.131 9.984 ;
+     RECT  46.117 9.248 47.363 10.56 ;
+     RECT  3.397 9.984 3.685 10.304 ;
+     RECT  75.781 11.36 75.971 12.8 ;
+     RECT  14.005 12.512 14.051 13.056 ;
+     RECT  75.781 12.832 79.955 12.928 ;
+     RECT  75.781 12.928 79.957 12.96 ;
+     RECT  75.781 12.96 81.827 14.816 ;
+     RECT  13.811 13.056 14.051 13.824 ;
+     RECT  45.493 13.344 57.635 14.816 ;
+     RECT  2.293 15.488 5.747 17.344 ;
+     RECT  33.205 15.488 34.069 15.648 ;
+     RECT  35.411 15.488 36.275 15.712 ;
+     RECT  38.725 15.488 42.803 17.024 ;
+     RECT  54.565 15.488 57.635 17.088 ;
+     RECT  61.477 15.488 62.867 17.024 ;
+     RECT  33.205 15.648 34.165 15.712 ;
+     RECT  33.205 15.712 36.275 17.024 ;
+     RECT  38.725 17.024 40.981 17.056 ;
+     RECT  33.205 17.056 36.275 17.856 ;
+     RECT  38.725 17.056 42.709 17.344 ;
+     RECT  61.477 17.056 62.867 18.368 ;
+     RECT  40.931 17.344 42.709 17.824 ;
+     RECT  33.205 17.856 36.565 17.888 ;
+     RECT  33.205 17.888 38.483 18.688 ;
+     RECT  46.117 17.888 47.939 19.648 ;
+     RECT  58.403 18.4 59.939 18.464 ;
+     RECT  59.221 18.464 59.939 19.968 ;
+     RECT  35.219 18.688 38.483 18.72 ;
+     RECT  35.845 18.72 38.483 19.712 ;
+     RECT  77.893 18.976 78.707 20.288 ;
+     RECT  35.845 19.744 36.467 21.12 ;
+     RECT  16.499 20.352 18.469 20.48 ;
+     RECT  30.661 21.408 31.187 22.272 ;
+     RECT  65.653 21.664 65.699 23.04 ;
+     RECT  29.123 22.272 31.187 23.296 ;
+     RECT  3.157 23.84 4.595 25.616 ;
+     RECT  38.725 23.968 39.683 25.616 ;
+     RECT  57.541 23.968 58.739 25.616 ;
+     RECT  33.973 24.096 35.459 25.616 ;
+     RECT  51.397 24.096 54.803 25.616 ;
+     RECT  43.621 24.16 47.123 25.152 ;
+     RECT  43.621 25.152 47.845 25.616 ;
+     RECT  3.397 26.288 13.139 27.712 ;
+     RECT  29.315 26.288 31.141 26.528 ;
+     RECT  44.965 26.288 47.845 27.584 ;
+     RECT  48.995 26.288 50.771 27.584 ;
+     RECT  4.115 27.712 13.139 28.16 ;
+     RECT  7.187 28.16 13.139 28.224 ;
+     RECT  10.883 28.224 13.139 28.256 ;
+     RECT  11.941 28.256 13.139 28.288 ;
+     RECT  43.285 31.904 43.955 33.408 ;
+     RECT  13.573 32.224 14.773 32.544 ;
+     RECT  13.573 32.544 13.619 33.792 ;
+     RECT  39.157 32.992 40.787 34.624 ;
+     RECT  50.101 32.992 50.147 34.496 ;
+     RECT  4.501 34.144 4.595 35.904 ;
+     RECT  26.725 34.4 36.469 34.656 ;
+     RECT  50.101 34.528 57.011 36.416 ;
+     RECT  26.725 34.656 40.787 34.752 ;
+     RECT  26.243 34.752 40.787 34.784 ;
+     RECT  25.045 34.784 40.787 35.904 ;
+     RECT  25.045 35.904 26.725 36.416 ;
+     RECT  27.923 35.904 40.787 36.416 ;
+     RECT  46.547 37.088 49.763 37.216 ;
+     RECT  53.125 37.088 53.603 38.912 ;
+     RECT  63.875 37.088 65.509 37.92 ;
+     RECT  75.301 37.088 75.493 37.344 ;
+     RECT  47.845 37.216 49.763 38.72 ;
+     RECT  75.301 37.344 78.467 38.72 ;
+     RECT  58.357 37.92 62.243 39.232 ;
+     RECT  58.787 39.232 62.243 39.488 ;
+     RECT  53.603 39.264 58.645 39.328 ;
+     RECT  53.749 39.328 58.645 39.52 ;
+     RECT  53.749 39.52 61.091 41.088 ;
+     RECT  48.421 41.376 48.467 42.112 ;
+     RECT  48.421 42.112 48.949 43.264 ;
+     RECT  11.893 43.04 13.619 44.48 ;
+     RECT  48.997 43.296 50.291 45.056 ;
+     RECT  9.733 43.872 9.779 45.632 ;
+     RECT  48.997 45.088 50.291 45.632 ;
+     RECT  34.693 45.216 35.603 47.216 ;
+     RECT  48.997 45.632 50.869 45.664 ;
+     RECT  73.331 45.632 74.629 45.664 ;
+     RECT  9.733 45.664 12.083 47.104 ;
+     RECT  48.997 45.664 52.115 46.4 ;
+     RECT  70.837 45.664 74.629 45.952 ;
+     RECT  81.299 45.664 82.499 45.92 ;
+     RECT  75.299 45.888 77.173 45.92 ;
+     RECT  75.299 45.92 82.499 45.952 ;
+     RECT  70.837 45.952 73.957 47.216 ;
+     RECT  76.979 45.952 82.499 47.216 ;
+     RECT  50.291 46.4 52.115 47.216 ;
+     RECT  9.733 47.104 13.861 47.216 ;
+     RECT  17.077 47.888 23.029 48.992 ;
+     RECT  40.069 47.888 41.219 49.664 ;
+     RECT  44.965 47.888 50.053 49.472 ;
+     RECT  63.877 47.888 65.843 49.472 ;
+     RECT  17.077 48.992 21.251 49.216 ;
+     RECT  47.651 49.472 50.053 49.504 ;
+     RECT  47.701 49.504 50.053 49.536 ;
+     RECT  40.069 49.696 40.643 51.648 ;
+     RECT  35.363 51.68 35.987 53.184 ;
+     RECT  70.645 53.024 72.515 54.656 ;
+     RECT  58.645 54.176 58.931 54.336 ;
+     RECT  58.645 54.336 59.605 54.368 ;
+     RECT  58.645 54.368 61.091 55.872 ;
+     RECT  72.515 55.424 74.341 55.552 ;
+     RECT  13.861 55.904 14.341 56.224 ;
+     RECT  14.387 56.128 16.021 56.192 ;
+     RECT  13.861 56.224 17.605 57.792 ;
+     RECT  21.683 56.224 23.891 56.96 ;
+     RECT  50.197 56.416 50.435 58.016 ;
+     RECT  21.683 56.96 25.477 58.016 ;
+     RECT  13.139 57.792 17.605 58.016 ;
+     RECT  10.307 57.856 11.941 58.016 ;
+     RECT  3.061 58.688 6.323 60.16 ;
+     RECT  72.469 59.296 73.763 61.248 ;
+     RECT  16.261 63.2 17.699 65.152 ;
+     RECT  11.413 63.712 12.035 65.152 ;
+     RECT  47.077 64.288 50.147 65.536 ;
+     RECT  47.077 65.536 50.869 65.92 ;
+     RECT  50.915 65.568 54.467 65.952 ;
+     RECT  50.869 65.952 54.467 67.392 ;
+     RECT  42.707 66.784 44.483 67.04 ;
+     RECT  37.621 67.04 44.483 67.712 ;
+     RECT  9.061 67.296 9.539 68.816 ;
+     RECT  66.899 67.296 68.341 67.424 ;
+     RECT  50.869 67.424 55.619 68.816 ;
+     RECT  66.899 67.424 70.885 68.816 ;
+     RECT  72.275 67.424 72.515 68.816 ;
+     RECT  36.467 67.712 44.483 68.816 ;
+     RECT  4.549 69.488 11.413 70.976 ;
+     RECT  25.955 69.488 33.397 70.048 ;
+     RECT  35.939 69.488 36.419 69.6 ;
+     RECT  35.219 69.6 36.419 70.048 ;
+     RECT  16.019 70.048 19.043 70.496 ;
+     RECT  25.955 70.048 36.419 71.296 ;
+     RECT  15.637 70.496 19.043 71.872 ;
+     RECT  57.299 70.752 57.731 70.944 ;
+     RECT  56.869 70.944 57.731 72.64 ;
+     RECT  6.227 70.976 11.413 71.04 ;
+     RECT  31.571 71.296 36.419 71.36 ;
+     RECT  31.571 71.36 33.589 71.392 ;
+     RECT  31.571 71.392 32.435 71.872 ;
+     RECT  51.829 72.16 52.451 73.728 ;
+     RECT  68.053 72.928 69.011 74.88 ;
+     RECT  47.269 75.872 49.139 77.504 ;
+     RECT  55.141 76.64 57.059 78.592 ;
+     RECT  47.269 77.504 48.421 77.536 ;
+     RECT  47.269 77.536 47.939 77.568 ;
+     RECT  50.485 77.536 50.531 78.592 ;
+     RECT  44.533 77.6 47.939 79.616 ;
+     RECT  50.485 78.592 51.829 79.232 ;
+     RECT  14.915 79.168 16.789 79.616 ;
+     RECT  59.221 80.288 59.893 81.92 ;
+     RECT  71.317 80.288 81.587 81.6 ;
+     RECT  20.339 80.992 20.579 81.12 ;
+     RECT  13.669 81.12 20.579 82.432 ;
+     RECT  71.317 81.6 74.101 81.792 ;
+     RECT  74.147 81.632 76.403 81.824 ;
+     RECT  74.533 81.824 76.403 83.392 ;
+     RECT  13.669 82.432 14.293 82.56 ;
+     RECT  59.221 82.976 59.747 84.608 ;
+     RECT  74.533 83.392 74.629 83.456 ;
+     RECT  75.347 83.392 76.403 83.456 ;
+     RECT  43.141 84.96 46.019 86.72 ;
+     RECT  44.483 86.752 46.211 87.584 ;
+     RECT  54.997 86.944 55.715 88.896 ;
+     RECT  43.955 87.584 46.211 88.384 ;
+     RECT  43.955 88.384 45.301 88.416 ;
+     RECT  46.019 88.384 46.211 88.512 ;
+     RECT  43.955 88.416 45.397 88.48 ;
+     RECT  39.301 88.48 45.397 88.544 ;
+     RECT  39.301 88.544 45.493 88.64 ;
+     RECT  38.819 88.64 45.493 88.672 ;
+     RECT  25.333 88.672 45.493 88.928 ;
+     RECT  25.333 88.928 46.885 90.416 ;
+     RECT  48.659 88.928 58.979 90.304 ;
+     RECT  65.269 88.928 69.635 90.416 ;
+     RECT  48.659 90.304 58.021 90.416 ;
+     RECT  2.773 91.088 2.821 92.416 ;
+     RECT  11.365 91.088 12.563 92.928 ;
+     RECT  25.621 91.088 29.269 91.232 ;
+     RECT  61.525 91.088 62.725 92.928 ;
+     RECT  25.621 91.232 28.163 93.056 ;
+     RECT  41.317 91.232 41.459 93.184 ;
+     RECT  62.771 92 64.451 92.96 ;
+     RECT  64.357 92.96 64.451 93.44 ;
+     RECT  50.101 93.472 50.771 94.976 ;
+     RECT  69.829 97.568 69.875 99.392 ;
+     RECT  60.515 98.08 61.043 98.336 ;
+     RECT  54.085 98.336 55.283 98.368 ;
+     RECT  59.797 98.336 61.043 99.968 ;
+     RECT  53.363 98.368 55.283 98.4 ;
+     RECT  53.893 98.4 55.283 100.288 ;
+     RECT  30.085 99.232 31.235 100.736 ;
+     RECT  69.829 99.424 71.605 100.8 ;
+     RECT  72.515 99.424 74.005 101.216 ;
+     RECT  3.925 99.552 4.501 99.808 ;
+     RECT  5.171 99.552 5.747 99.808 ;
+     RECT  3.925 99.808 5.747 101.216 ;
+     RECT  18.179 99.808 20.771 101.216 ;
+     RECT  28.979 100.736 31.235 100.8 ;
+     RECT  3.925 101.888 9.635 103.424 ;
+     RECT  21.061 101.888 32.149 103.488 ;
+     RECT  69.397 101.888 71.315 103.68 ;
+     RECT  38.725 102.432 43.861 102.56 ;
+     RECT  38.725 102.56 42.803 104.256 ;
+     RECT  3.925 103.424 6.805 103.744 ;
+     RECT  21.061 103.488 27.877 103.52 ;
+     RECT  21.061 103.52 26.003 103.872 ;
+     RECT  5.459 103.744 6.805 104.256 ;
+     RECT  21.299 103.904 23.029 104.032 ;
+     RECT  15.491 106.72 16.451 108.48 ;
+     RECT  71.605 107.04 72.515 107.968 ;
+     RECT  12.755 107.264 14.197 107.84 ;
+     RECT  71.605 107.968 74.005 108 ;
+     RECT  71.605 108 72.467 108.48 ;
+     RECT  75.253 108 76.403 109.952 ;
+     RECT  81.637 108.576 82.691 110.208 ;
+     RECT  14.101 109.984 15.011 110.272 ;
+     RECT  48.901 109.984 50.677 112.016 ;
+     RECT  50.819 109.984 55.571 111.808 ;
+     RECT  75.253 109.984 76.403 111.424 ;
+     RECT  81.589 110.24 82.691 112.016 ;
+     RECT  12.755 110.272 15.011 110.304 ;
+     RECT  10.789 110.304 15.011 111.552 ;
+     RECT  4.597 110.56 5.987 112.016 ;
+     RECT  10.789 111.552 13.573 112.016 ;
+     RECT  14.291 111.552 15.011 111.68 ;
+     RECT  14.867 111.68 15.011 112.016 ;
+     RECT  50.819 111.808 53.509 112.016 ;
+     RECT  3.925 112.688 12.517 113.12 ;
+     RECT  21.155 112.688 25.045 113.952 ;
+     RECT  28.547 112.688 30.469 113.984 ;
+     RECT  65.509 112.688 67.859 114.496 ;
+     RECT  71.653 112.688 75.875 113.984 ;
+     RECT  3.925 113.12 12.563 114.24 ;
+     RECT  14.773 113.12 15.253 114.432 ;
+     RECT  19.285 113.952 25.045 113.984 ;
+     RECT  19.285 113.984 23.317 114.016 ;
+     RECT  71.653 113.984 71.797 114.24 ;
+     RECT  72.515 113.984 75.875 114.24 ;
+     RECT  19.285 114.016 22.307 114.304 ;
+     RECT  24.469 114.016 25.333 115.648 ;
+     RECT  28.453 114.016 29.989 114.08 ;
+     RECT  28.453 114.08 31.333 115.072 ;
+     RECT  3.925 114.24 6.325 114.496 ;
+     RECT  11.363 114.24 12.563 115.072 ;
+     RECT  19.285 114.304 21.445 114.336 ;
+     RECT  19.285 114.336 21.589 114.464 ;
+     RECT  19.285 114.464 20.003 115.584 ;
+     RECT  66.179 114.528 67.859 115.968 ;
+     RECT  26.483 115.072 31.333 115.648 ;
+     RECT  19.909 115.616 20.003 116.864 ;
+     RECT  25.573 115.68 26.197 115.936 ;
+     RECT  13.139 115.712 14.773 115.84 ;
+     RECT  27.779 115.744 30.709 115.936 ;
+     RECT  25.573 115.936 26.579 117.44 ;
+     RECT  29.029 115.936 30.709 117.76 ;
+     RECT  14.197 116.448 15.925 116.896 ;
+     RECT  7.621 116.704 7.669 118.336 ;
+     RECT  19.909 116.864 20.485 117.376 ;
+     RECT  14.197 116.896 14.963 118.016 ;
+     RECT  21.203 116.896 22.741 117.024 ;
+     RECT  21.203 117.024 22.163 117.984 ;
+     RECT  21.973 117.984 22.163 118.592 ;
+     RECT  30.421 118.048 31.237 118.176 ;
+     RECT  30.421 118.176 34.165 118.624 ;
+     RECT  21.973 118.624 22.163 120.256 ;
+     RECT  30.421 118.624 37.235 119.936 ;
+     RECT  40.981 118.624 43.331 120.256 ;
+     RECT  34.259 119.936 37.235 120.256 ;
+     RECT  21.973 120.256 22.837 120.64 ;
+     RECT  26.099 120.256 28.021 120.384 ;
+     RECT  40.115 120.256 43.331 120.64 ;
+     RECT  26.483 120.384 28.021 120.64 ;
+    LAYER M5 ;
+      RECT  20.784 120.768 20.808 120.851 ;
+      RECT  21.744 120.768 21.768 120.851 ;
+      RECT  24.816 120.768 24.84 120.899 ;
+      RECT  24.912 120.768 24.936 120.851 ;
+      RECT  25.008 0.085 25.032 0.192 ;
+      RECT  25.488 120.768 25.512 120.851 ;
+      RECT  29.712 0.181 29.736 0.192 ;
+      RECT  32.4 0.133 32.424 0.192 ;
+      RECT  33.264 0.085 33.288 0.192 ;
   END
 END ot_hbm_accel_smh_tcl
 END LIBRARY

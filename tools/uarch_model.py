@@ -17407,3 +17407,9 @@ QWEN_VM_RO6_PIN_E3_COMPOSITION_1016 = dict(
     parent_clock_ff_before=55382, parent_clock_ff_after=12198,
     unmapped_memory_bits=80, all_leaf_clocks=2571, additional_edges=0,
     SU_VL=20, row_RL=18, compiler_adopted=False, physical_qualified=False)
+
+
+def qwen_release_programme_store_candidate_model():
+    """Finite SU/MU programme storage; physical/native gates remain mandatory."""
+    from uarch_model_qwen_programme_store import model
+    return model()

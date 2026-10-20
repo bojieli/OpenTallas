@@ -1,0 +1,153 @@
+{
+  "schema": "opentallas.capc_clock_scope_diagnostic.v1",
+  "status": "HOLD",
+  "root": "clk/core_clk",
+  "clock_mapping_basis": "4_cts.sdc create_clock -name core_clk [get_ports {clk}]",
+  "scope": "Single genuine root; no spec inter-domain landed split",
+  "method": "Parent native macro pin arrival + exact committed child boundary min/max, not just child means. Conservative bounds identify what cannot be qualified; not endpoint-correlated pair proof.",
+  "corners": {
+    "tt": {
+      "profile_rows": {
+        "parent_soft": {
+          "min": 784.5,
+          "max": 835.2
+        },
+        "u_p.u_core.g_hard.u_rt": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_hard.u_rt/clk",
+          "parent_pin_arrival_ps": 586.8,
+          "parent_leaf_net": "clkbuf_sp_L4_net",
+          "child_boundary_min_ps": 234.3,
+          "child_boundary_max_ps": 298.0,
+          "min": 821.1,
+          "max": 884.8
+        },
+        "u_p.u_core.g_hard.u_tw": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_hard.u_tw/clk",
+          "parent_pin_arrival_ps": 685.2,
+          "parent_leaf_net": "clkbuf_sp_L2_net",
+          "child_boundary_min_ps": 124.7,
+          "child_boundary_max_ps": 149.5,
+          "min": 809.9,
+          "max": 834.7
+        },
+        "u_p.u_core.g_hard.u_te": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_hard.u_te/clk",
+          "parent_pin_arrival_ps": 651.0,
+          "parent_leaf_net": "clkbuf_sp_L3_net",
+          "child_boundary_min_ps": 124.7,
+          "child_boundary_max_ps": 149.5,
+          "min": 775.7,
+          "max": 800.5
+        },
+        "u_p.u_core.g_ed.u_ed": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_ed.u_ed/clk",
+          "parent_pin_arrival_ps": 726.2,
+          "parent_leaf_net": "clkbuf_sp_L5_net",
+          "child_boundary_min_ps": 94.2,
+          "child_boundary_max_ps": 103.1,
+          "min": 820.4,
+          "max": 829.3
+        },
+        "u_p.u_core.g_ld3.u_ld3": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_ld3.u_ld3/clk",
+          "parent_pin_arrival_ps": 746.3,
+          "parent_leaf_net": "clkbuf_sp_L1_net",
+          "child_boundary_min_ps": 104.1,
+          "child_boundary_max_ps": 120.9,
+          "min": 850.4,
+          "max": 867.2
+        }
+      },
+      "root_conservative_boundary_span_ps": 109.1,
+      "gate_child_mean_span_ps": 74.89999999999998
+    },
+    "ff": {
+      "profile_rows": {
+        "parent_soft": {
+          "min": 614.3,
+          "max": 661.7
+        },
+        "u_p.u_core.g_hard.u_rt": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_hard.u_rt/clk",
+          "parent_pin_arrival_ps": 488.7,
+          "parent_leaf_net": "clkbuf_sp_L4_net",
+          "child_boundary_min_ps": 187.5,
+          "child_boundary_max_ps": 248.0,
+          "min": 676.2,
+          "max": 736.7
+        },
+        "u_p.u_core.g_hard.u_tw": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_hard.u_tw/clk",
+          "parent_pin_arrival_ps": 552.1,
+          "parent_leaf_net": "clkbuf_sp_L2_net",
+          "child_boundary_min_ps": 98.9,
+          "child_boundary_max_ps": 122.1,
+          "min": 651.0,
+          "max": 674.2
+        },
+        "u_p.u_core.g_hard.u_te": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_hard.u_te/clk",
+          "parent_pin_arrival_ps": 519.8,
+          "parent_leaf_net": "clkbuf_sp_L3_net",
+          "child_boundary_min_ps": 98.9,
+          "child_boundary_max_ps": 122.1,
+          "min": 618.7,
+          "max": 641.9
+        },
+        "u_p.u_core.g_ed.u_ed": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_ed.u_ed/clk",
+          "parent_pin_arrival_ps": 580.7,
+          "parent_leaf_net": "clkbuf_sp_L5_net",
+          "child_boundary_min_ps": 73.8,
+          "child_boundary_max_ps": 82.9,
+          "min": 654.5,
+          "max": 663.6
+        },
+        "u_p.u_core.g_ld3.u_ld3": {
+          "root": "core_clk",
+          "parent_clock_pin": "u_p.u_core.g_ld3.u_ld3/clk",
+          "parent_pin_arrival_ps": 607.8,
+          "parent_leaf_net": "clkbuf_sp_L1_net",
+          "child_boundary_min_ps": 77.1,
+          "child_boundary_max_ps": 94.4,
+          "min": 684.9,
+          "max": 702.2
+        }
+      },
+      "root_conservative_boundary_span_ps": 122.4,
+      "gate_child_mean_span_ps": 84.70000000000005
+    }
+  },
+  "child_receipts": {
+    "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt/insertion.json": {
+      "sha256": "689e709fefcc75a91f61a6063708b83b2a77e77f48915e296ad08bcc46e8738a",
+      "source_odb": "/srv/opentallas-scratch/claude/closure-loop/s81sl_cap_rt-s81sl_cap_rt-c302169ce/routes/s81sl_cap_rt_s81sl_cap_rt_c302169ce/work/orfs/results/asap7/opentallas_ot_s81sl_cap_rt_asap7_ref_s81sl_cap_rt_s81sl_cap_rt_c302169ce/base/6_final.odb",
+      "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+    },
+    "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/insertion.json": {
+      "sha256": "fac8edda7ab104ae37a125bebd29247abab62219b0687dcb0ae2f85dfc7a8ce0",
+      "source_odb": "/srv/opentallas-scratch2/claude/closure-loop/s81sl_cap_tr-s81sl_cap_tr-0ecc0c258/routes/s81sl_cap_tr_s81sl_cap_tr_0ecc0c258/work/orfs/results/asap7/opentallas_ot_s81sl_cap_tr_asap7_ref_s81sl_cap_tr_s81sl_cap_tr_0ecc0c258/base/6_final.odb",
+      "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+    },
+    "physical/ref_tile/s81sl_cap_ed/views/ot_s81sl_cap_ed/insertion.json": {
+      "sha256": "71a9625f3eda7558eb47985028d840b9d20a9a5abe7363c1e67726929d93c0ee",
+      "source_odb": "/srv/opentallas-scratch/claude/closure-loop/s81sl_cap_ed-s81sl_cap_ed-08889f37d/routes/s81sl_cap_ed_s81sl_cap_ed_08889f37d/work/orfs/results/asap7/opentallas_ot_s81sl_cap_ed_asap7_ref_s81sl_cap_ed_s81sl_cap_ed_08889f37d/base/6_final.odb",
+      "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+    },
+    "physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld/insertion.json": {
+      "sha256": "7df11ea8749b15a15e6526ae9452ec7b4f8afd43f65d78b1f75d9a8ea8c8ff17",
+      "source_odb": "/srv/opentallas-scratch/claude/closure-loop/s81sl_cap_ld-s81sl_cap_ld-636f4c670/routes/s81sl_cap_ld_s81sl_cap_ld_636f4c670/work/orfs/results/asap7/opentallas_ot_s81sl_cap_ld_asap7_ref_s81sl_cap_ld_s81sl_cap_ld_636f4c670/base/6_final.odb",
+      "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+    }
+  },
+  "next": "No REVIEW/submit. Need actual per-linked-endpoint profile census or physical clock compensation successor; no waiver from native_reach."
+}

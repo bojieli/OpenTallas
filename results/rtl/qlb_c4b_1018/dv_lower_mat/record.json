@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.qlb_c4b.dv_lower_mat.v1",
+ "lane": "QLB-C4b/3b 10-18 (parent QLB-C4b, gap G-C4): matrix-side DV slice lowering",
+ "compiler": "tools/qwen_layerbench/dv_lower_mat.py (imports dv_lower.py unchanged; ctlm_image.py unchanged)",
+ "constants": "results/rtl/qlb_c4b_1018/dv_lower_mat/stn_ages.json (measured by --calibrate, Verilator 5.050; re-measured in the PASS campaign: AGES MATCH): l8_ar 26 (far cluster word -> AR word at W5), ar_hop 2, xc_cc 2, amax_ami 3, arx_after_amv 3",
+ "lowered": {
+  "stn": "qkv (L9 recv/send, VM QKV 16000), gate/up (L7, VM GU 16128 = gate | up = PC19 layout), o / down (L8, AR dbase = 128 b = global row element tag), LM head (L9 amax, dbase = die row0 + 128 b): one STN per slice per round (dbase is read at r_v: no mid-op cfg), BTAB map qkv 0 / o 8 / gu 32 / down 48 / lm 72..271 + kind-2 table words; tile-delivery contract emitted (far-word edge per slice per round)",
+  "ar_schedule": "o / down AR words staggered so the 256 words leave dvs_W5 one an edge in global row order (= io_collective c + 1 + w): slice s gets block b's far words at M0 + 8 b + j - 26 - 2 s; collision-free (0); the as-built hr delivery (all slices together) collides 436x",
+  "xc": "dst 0 (dvs_W5 only), cc_o at word0 - 2 (cc / ar relay ages 2 / 2, collective cmd pin register + c + 1); reduce words 256 mode 0; LM-head gather words 1 mode 1",
+  "amax": "AMAX clear (dst 15), ROOT (root W5, amnb 6, RMSNorm fields kept), ARX arm, 298 amax STN (25 rounds), root emit + 5 collision-free AMI/AMV emits, TOK, ARX word, XC gather, GATHER (dst 15) before the 8 rank returns (c + LU 53 + LS 376 + 13 at the W5 pin)",
+  "stage0": "embedding row 256 words on the D2D return chain; per owned residual block a PORTS arm (em_base = X + 128 i) entering t_b - s - 1 and a disarm entering t_b + 7 - s (64 commands, exact)",
+  "lm_head_programme": "results/rtl/qlb_c4b_1018/dv_lower_mat/lm_head_lowering.json: token_source_plan head_profiles (8 dies; SSQ, rsqrt, apply, 4 amax chunks 6144/6144/6144/560 rows, END) -> per-segment ME8 rows 100300000002..4007000009bb (cycles from the LM-head segment start; chunk issue tied to the DV round schedule with tile_first 40)",
+  "splice": "results/rtl/qlb_c4b_1018/dv_lower_mat/splice.json: ctlm decode calendar with the SU PC0/15/23 broadcasts replaced by dv_lower's 12 per-slice SSQ commands each, XC dst 0 at the lowered edge, 88 matvec STN commands; 142 entries (ctlm today 21); ctlm_image cmd_cal model OK (last issue 5856); ROOT cfg + SETID listed as boot events"
+ },
+ "bench": {
+  "vehicle": "rtl/test/qwen_dv/dv_lower_mat_bench.py via rtl/test/qwen_dv/run_dv_lower_mat.sh on tb_qfd_dv2 N 12 (dv_lower_bench build), Verilator 5.050, ot-epyc4 (ot-run --mem 160), campaign_c3",
+  "pass": {
+   "qkv": "PASS 768/768 (6 receiver slices' VM QKV bit-exact vs hdc_golden matvec split 512 x BF16 scale)",
+   "gu": "PASS 3072/3072 (12 slices' GU region: gate then up)",
+   "od": "PASS 515/515 (o + down: 512 AR words on their compiled W5 edges, tag = row address, data exact; both XC words exact on their edge, no other slice cc)",
+   "lm": "PASS 26/26 (18,992 rows / 25 rounds: die token at all 12 slices, ARX word + edge exact, XC gather word, cross-die GATHER token + value at all 12 slices incl. a rank-5 tie that must lose)",
+   "emb": "PASS 4096/4096 (every slice's X = its residual blocks of the embedding row)"
+  },
+  "mutants": {
+   "qkv:sbase1": "FAIL 2/768 (BTAB sbase + 1)",
+   "gu:sbase1": "FAIL 9/3072",
+   "od:nostagger": "FAIL 15/515 (as-built hr delivery: port faults on 11 slices)",
+   "od:xc_bc": "FAIL 514/515 (XC dst 15 = ctlm today: cc words on 11 more slices)",
+   "lm:amax_local": "FAIL 13/26 (STN dbase without the row: die token 45)",
+   "emb:emb_late": "FAIL 0/4096 (PORTS arm one edge late)"
+  },
+  "fail_regex": "^DV_LOWER_MAT \\S+ FAIL",
+  "witnesses": "results/rtl/qlb_c4b_1018/dv_lower_mat/campaign_c3/run_<run>_<mutant>.out + <run>_<mutant>.log (committed); all outputs results/rtl/qlb_c4b_1018/dv_lower_mat/campaign_c3/bench.out",
+  "sources": "results/rtl/qlb_c4b_1018/dv_lower_mat/campaign_c3/source.sha256 (36 files, == committed; every bench input incl. the 22 RTL / TB files, token_source_plan, die model, relay table, ages)",
+  "unit_tests": "tools/qwen_layerbench/test_dv_lower_mat.py 7 PASS (+ test_dv_lower.py 7 PASS)"
+ },
+ "gaps_found": [
+  "RTL GAP (slice2 AR word vs qfd_io_collective_static): the collective requires in_tag == cmd tag on every word of a message and in_last only on its last word (a_bad -> fault_code[2]); qfd_dv_slice2 sends tag = r_addr (row address, per word) and r_last per STN op: measured on the PASS run o: 255/256 words tag != cmd tag, 32 last flags (down 256 / 32). LM-head ARX tag = token index != the compile-time XC tag. Fix options (slice owner): an STN / XC field with the message tag for own AR words + a 'last of message' enable, or a collective that checks tag = cmd_tag + offset.",
+  "SCHEDULE GAP (tile delivery): o / down need slice s's results staggered (M0 + 8 b + j - 26 - 2 s) to share the one outbound lane; today's hr chain gives all slices the go 1 edge a hop apart (mutant nostagger: 436 collisions, port faults). The ME / xhead calendar (or a per-slice AR slot buffer in the slice) must deliver on the emitted contract; no tool compiles tile delivery edges yet (splice uses tile_first 40 as a parameter).",
+  "SCHEDULE GAP (XC order): ctlm_image places XC after the segment END (o: W5 edge 2614, down 4830); the collective contract needs the command BEFORE word 0 (lowered: 2349 / 4689 with tile_first 40).",
+  "SCHEDULE NOTE (SSQ): the lowered per-slice SSQ finishes 119 edges after ctlm's priced SU window (PC0 241 vs 122, PC15 4005 vs 3886, PC23 6079 vs 5960).",
+  "DEPENDENCY (LM head): per-segment fixed-issue calendar at a nonzero prog_base = QLB-C4b item 2 (claude/qlb-c4b-lmh-1018); the head-side rows are emitted, the DV side runs on today's RTL (lm PASS).",
+  "PENDING (QLB-C4b/3a dv_lower_vec): PROG words for PC15 / PC23 (residual add + SSQ at pidx = PC) used by the splice; the VM bottom regions.",
+  "DIE GAP (unchanged, dv_lower): dvs_W5.st_wi tied 0 on the die: BTAB / PROG table words reach the slices only in the bench."
+ ]
+}

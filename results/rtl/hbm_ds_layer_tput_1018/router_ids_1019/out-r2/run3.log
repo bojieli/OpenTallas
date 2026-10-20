@@ -1,0 +1,5 @@
+CQ t=1520000 age=137 due=138 packet=3000030000000000000000000000000050000000400000003000000020000000100000000000000000910 idsbad=1
+COLLECTFAULT t=1535000 age=139 due=138 packet=3000030000000000000000000000000050000000400000003000000020000000100000000000000000910 active=0 used=1
+[1630000] %Fatal: tb_hbm_router_ids_static.sv:63: Assertion failed in tb_hbm_router_ids_static.unnamedblk3: ROUTER_IDS collector fault mutant3
+%Error: rtl/test/hbm_idx_static/tb_hbm_router_ids_static.sv:63: Verilog $stop
+Aborting...

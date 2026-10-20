@@ -1,0 +1,16 @@
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1191732-1792453294 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+FAIL: repeated owner: 2 fill starts, expected 1
+FAIL: bserved-0 record: 2 fill starts, expected 1
+FAIL: context step: 3 fill starts, expected 2
+FAIL: context step: 4 fill starts, expected 3
+FAIL: context step: 5 fill starts, expected 4
+FAIL: sticky fault ctx 1 row_tx 1 on legal traffic
+FAIL tb_qkd_embedding_ctx_start: 6 errors
+- /srv/opentallas-scratch/claude/kv-emb2-1019/src/rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_embedding_ctx_start.sv:132: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 2.496 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1191732-1792453294): exit 0
+rc=0

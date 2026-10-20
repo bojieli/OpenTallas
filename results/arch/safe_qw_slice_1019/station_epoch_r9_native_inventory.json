@@ -1,0 +1,104 @@
+{
+  "status": "GENERIC_NATIVE_MACRO_FANOUT_AND_STATE_LIVENESS_PASS_PHYSICAL_PENDING",
+  "source_sha256": {
+    "rtl/common/landed_parent/ot_pl_land.sv": "83b086ea1938da53250f2a3047d0142bbf53809a8c55f7f0880446d96c6c7d86",
+    "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": "268d635cd7a5583b51d4179942b75a8973c8d8ebc683fb1e670f45cd2bad4cd9",
+    "rtl/qwen_dv/qfd_dv_station_math_g.sv": "7f8a4ea445ff68c49d11e52a1d9744cbcee24bbffeeae61a50c3e4c490091d8f",
+    "rtl/qwen_dv/qfd_dv_ring_delay.sv": "5d83c7a5f33d6f429e3709d113d0fee3ff6480a6931a1ad04add77dd5b029a90",
+    "tools/qwen_dv/station_live_state.py": "db70671043f5b236e887c6591169a0cbbace7295b8cfd1b66bc44550a6b435a9",
+    "rtl/test/qwen_dv/safe_storage/tb_land_epoch.sv": "0d00ae6b9b5fc55a2642afa317e49eebd3332dc7206ddcc88f8277ed8840f825",
+    "rtl/test/qwen_dv/safe_storage/land_epoch_reference.sv": "efafd99510de6b2a7788ac92424fb5547f6df4595ad1d91ef7c4cae955d8ecd9",
+    "rtl/test/qwen_dv/safe_storage/run_land_epoch.sh": "78eae784f5607f64fc731c763c75d638fc04d448811cb42c43459a41bd700fe5"
+  },
+  "host": "ot-epyc5",
+  "synthesis_unit": "oth-ubuntu-1840077-1792432949",
+  "diagnostic_flatten_audit_unit": "oth-ubuntu-1858895-1792433133",
+  "reachability_unit": "oth-ubuntu-1862397-1792433314",
+  "raw_hierarchical_netlist_sha256": "b2506a15c62f752bea89c269ce283b57910e2edfd9a4984511c061d4d912d184",
+  "diagnostic_flat_netlist_sha256": "e9b194842d67c130f053af99ee6f3a3594eae7039b14922cb424508f9355dbe4",
+  "diagnostic_flatten": "read_json station.json; setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; flatten; write_json station_flat.json; NO optimization after flatten; source keep identities remain in original netlist",
+  "raw_directory": "/srv/opentallas-scratch/claude/codex-safe-qw-slice/census_station_epoch_r9",
+  "actual_ff": 76682,
+  "actual_ff_removed": 12375,
+  "physical_generic_cells": 413104,
+  "diagnostic_scopeinfo_cells": 46001,
+  "cell_types": {
+    "$_DFFE_PN0P_": 151,
+    "$_DFFE_PN1P_": 34,
+    "$_DFF_PN0_": 630,
+    "$_DFF_P_": 44655,
+    "$_NOT_": 19317,
+    "$_AND_": 128277,
+    "$_XOR_": 36525,
+    "$_OR_": 82237,
+    "$_MUX_": 70024,
+    "$_SDFF_PN0_": 14405,
+    "$_SDFFE_PN0P_": 859,
+    "$_SDFF_PN1_": 1780,
+    "$_DFFE_PP_": 11400,
+    "$_SDFF_PP0_": 2672,
+    "$_SDFF_PP1_": 96,
+    "$scopeinfo": 46001,
+    "ot_sram_1r1w_32x64_m1": 42
+  },
+  "native_memory_sinks": 42,
+  "native_memory_area_um2": 23201.09568,
+  "driven_nets_over32_count": 0,
+  "register_outputs_over32": [],
+  "max_reset_pin_loads": 32,
+  "max_reset_all_pin_loads": 32,
+  "issues": [],
+  "direct_unread_ff_outputs": 0,
+  "functional_boundary_reachability": {
+    "netlist_sha256": "e9b194842d67c130f053af99ee6f3a3594eae7039b14922cb424508f9355dbe4",
+    "scope": "Backward sequential+combinational reachability from actual top outputs and real native memory data/control input pins; excludes clocks; no functional-correlation or physical timing inference",
+    "total_ff": 76682,
+    "ff_outside_functional_boundary_cones": 0,
+    "examples": []
+  },
+  "worst_generic_stage_depth": [
+    {
+      "cell": "$flatten\\g_sc[0].u_mul.g_exact.u_d.u_289.$auto$ff.cc:337:slice$318595",
+      "pin": "D",
+      "bit": 291336,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[681]",
+        "g_sc[0].u_mul.g_exact.u_d.u_289.D"
+      ]
+    },
+    {
+      "cell": "$flatten\\g_sc[0].u_mul.g_exact.u_d.u_290.$auto$ff.cc:337:slice$318594",
+      "pin": "D",
+      "bit": 291337,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[682]",
+        "g_sc[0].u_mul.g_exact.u_d.u_290.D"
+      ]
+    },
+    {
+      "cell": "$flatten\\g_sc[0].u_mul.g_exact.u_d.u_293.$auto$ff.cc:337:slice$318591",
+      "pin": "D",
+      "bit": 291340,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[685]",
+        "g_sc[0].u_mul.g_exact.u_d.u_293.D"
+      ]
+    }
+  ],
+  "unit_checks": {
+    "default_simulation": "PASS1600edges,tworesets,widths1/32/97/1073,K1/2/3,legacy+chunk24;epochdiagnosticsalsoexact",
+    "synthesis": "samefunctionaloutputsPASS;epo0",
+    "wrong_K": "FAIL116ns W1073K2edge11"
+  },
+  "edge_change": 0,
+  "hardware_removed": "825 local writer chunks:12 epoch+3 epochcounter FF each; legacy epoch registers also synthesis guarded; preserve legacy slotcounter lowbits and reader warmcounter",
+  "tools": {
+    "yosys": "0.68 git38e001a6f",
+    "verilator": "5.0502026-07-01",
+    "inventory_source_commit": "751c34c25 on helper branch"
+  },
+  "scope": "No mapped stdcell area/native TT setup/FF hold/clock/PG/route credit; final regional/VM/static-stream/native-head parent composition stillpending. Hardware functional-output proof compositional with exact component tests and R8 parent suites when terminal; no gate."
+}

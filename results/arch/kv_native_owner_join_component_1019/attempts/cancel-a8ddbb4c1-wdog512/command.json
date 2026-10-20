@@ -1,0 +1,28 @@
+{
+  "command": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "--top-module",
+    "native_join_bench",
+    "-j",
+    "4",
+    "--Mdir",
+    "obj",
+    "--x-initial",
+    "unique",
+    "--x-assign",
+    "unique",
+    "-DOT_MEM_NO_INIT",
+    "-Wno-fatal",
+    "-f",
+    "sources.f",
+    "-GFIXTURE_WDOG=512"
+  ],
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "mem_GB": 16,
+  "threads": 4,
+  "disk_GB": 20,
+  "fixture_wdog": 512,
+  "scope": "FUNCTIONAL_ONLY common-clock fixture; no production calendar"
+}

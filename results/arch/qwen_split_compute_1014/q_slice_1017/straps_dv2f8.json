@@ -17,10 +17,6 @@
   ],
   [
    "qfd_dv_slice2_w",
-   "st_wi"
-  ],
-  [
-   "qfd_dv_slice2_w",
    "sc_wi"
   ],
   [
@@ -98,14 +94,6 @@
    "rule": "c",
    "class": "provably unused mode (chain end)",
    "reason": "far-band clusters (c16_*_0, c16_*_3) have no cluster beyond them; rs_i feeds only the 16-register rs_i -> rs_o feedthrough, and rs_o is unconnected on every far instance, so no consumer reads it. Q-CLUSTER 0fd5cb773 keeps one master; a port-free far variant would remove the tie (Decision 3)"
-  },
-  {
-   "master": "qfd_dv_slice2_w",
-   "port": "st_wi",
-   "bits": 1088,
-   "rule": "c",
-   "class": "provably unused mode (chain end)",
-   "reason": "W5: no slice beyond the W5 end on the up-travelling stream (the W column sends no stream word); zero = \"no word\" on every chain port (qfd_dv_slice2 header)"
   },
   {
    "master": "qfd_dv_slice2_w",
@@ -212,6 +200,15 @@
    "reason": "D2D port 3 is the KV-die -> compute RX lane (kvn rx); the compiled program has no compute -> KV TX on port 3; the KV end faults any stray valid"
   }
  ],
- "total_constant_bits": 12960,
- "not_accepted": "every INPUT_UNCONNECTED / UNDRIVEN item of port_bind_r3.json (functional producers): see lanes/Q-BIND.md"
+ "total_constant_bits": 11872,
+ "not_accepted": "every INPUT_UNCONNECTED / UNDRIVEN item of port_bind_r3.json (functional producers): see lanes/Q-BIND.md",
+ "removed": [
+  {
+   "master": "qfd_dv_slice2_w",
+   "port": "st_wi",
+   "bits": 1088,
+   "by": "QLB-C4b 10-18",
+   "reason": "NOT a chain-end idle input: the slice PROG / CROM / BTAB tables load only through stream table words on W5 st_wi; driven by qfd_tt_ctlm_dv.tl (cmd_cal LOCAL TLOAD entries from the installed image). A tie here is a missing functional producer (rule d) and must fail the strict bind."
+  }
+ ]
 }

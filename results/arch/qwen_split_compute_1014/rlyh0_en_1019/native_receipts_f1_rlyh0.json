@@ -3,7 +3,7 @@
  "lane": "RLYH0-FIN",
  "generated": "2026-10-19 02:50 PT",
  "tool": "tools/hier_contract/native_pin_audit.py @ main 5a8510563 (--view; Liberty ETM read only)",
- "note": "13 CLOSED qfwd_rlyh0 f1 views (en registered on ck before the hop-0 ICG, RLYH0-EN 70d2a74d2): capture fixed on every family (en no longer the worst capture pin; worst capture 67.2-86.0 on a[*]). 11 PASS. 600 NE FAIL launch 261.6 > 220 on 9 b pins (b[482]) and 600 EN FAIL launch 231.4 > 220 on 3 b pins (b[389]): the die-assigned a / b faces are perpendicular and each bit's single pass-through flop is anchored at its a pin, so the whole a -> b pin-pair distance (up to 153 um) lands on the launch side. Fix: kit io_flop_at_pins.through_frac 0.5 (physical/qwen_fwd_lane/lane_flop_thru.tcl), re-route reroute_reason native_launch.",
+ "note": "13 CLOSED qfwd_rlyh0 f1 views (en registered on ck before the hop-0 ICG, RLYH0-EN 70d2a74d2): capture fixed on every family (en no longer the worst capture pin; worst capture 67.2-86.0 on a[*]). 11 PASS. 600 NE FAIL launch 261.6 > 220 on 9 b pins (b[482]) and 600 EN FAIL launch 231.4 > 220 on 3 b pins (b[389]): the die-assigned a / b faces are perpendicular and each bit's single pass-through flop is anchored at its a pin, so the whole a -> b pin-pair distance (up to 153 um) lands on the launch side. Fix: kit io_flop_at_pins.through_frac 0.5 (physical/qwen_fwd_lane/lane_flop_thru.tcl), re-route reroute_reason native_launch. | RLYH0-NAT 10-19: f2 re-routes (through_frac 0.5) CLOSED and PASS: 600 NE launch 176.9 / capture 95.5, 600 EN launch 125.4 / capture 88.9 (f1 FAIL records kept). All 13 rlyh0 families PASS with the f2 600 NE/EN views.",
  "records": [
   {
    "cell": "qfd_rlyh0_128_EN_65x30",
@@ -368,6 +368,68 @@
    "fail_why": "",
    "job": "qfwd_rlyh0_600_ns_104x60-f1-fc2236d82",
    "view_source": "main (record origin/codex/closure-record-qfwd_rlyh0_600_ns_104x60-f1-fc2236d82)"
+  },
+  {
+   "cell": "qfd_rlyh0_600_NE_104x106",
+   "view": "physical/ref_tile/qfwd_rlyh0_600_ne_104x106/views/qfd_rlyh0_600_NE_104x106",
+   "lib_cell": "qfd_rlyh0_600_NE_104x106",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 160.3,
+   "spread_ps": 13.6,
+   "outputs": 601,
+   "inputs": 601,
+   "launch_ps": 176.9,
+   "launch_pin": "b[391]",
+   "capture_ps": 95.5,
+   "capture_pin": "a[440]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 13.4,
+   "ff_launch_min_ps": 53.3,
+   "ff_hold_need_ps": -17.3,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_rlyh0_600_ne_104x106-f2-5490bc567",
+   "view_source": "main (record origin/codex/closure-record-qfwd_rlyh0_600_ne_104x106-f2-5490bc567, AUTO-MERGE)",
+   "route_log": "OT_IOFLOP_THRU moved 600 pass-through pin flops to 0.50 of their a -> b L path (pin pair mean 110.0 um, max 155.5 um)",
+   "supersedes_fail_of": "qfwd_rlyh0_600_ne_104x106-f1-fc2236d82",
+   "audited": "2026-10-19 RLYH0-NAT, tools/hier_contract/native_pin_audit.py @ main c7cbd0216 (--view)"
+  },
+  {
+   "cell": "qfd_rlyh0_600_EN_104x106",
+   "view": "physical/ref_tile/qfwd_rlyh0_600_en_104x106/views/qfd_rlyh0_600_EN_104x106",
+   "lib_cell": "qfd_rlyh0_600_EN_104x106",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 160.9,
+   "spread_ps": 20.0,
+   "outputs": 601,
+   "inputs": 601,
+   "launch_ps": 125.4,
+   "launch_pin": "b[415]",
+   "capture_ps": 88.9,
+   "capture_pin": "a[462]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 18.9,
+   "ff_launch_min_ps": 53.2,
+   "ff_hold_need_ps": -18.2,
+   "pass": true,
+   "fail_why": "",
+   "job": "qfwd_rlyh0_600_en_104x106-f2-69e007892",
+   "view_source": "main (record origin/codex/closure-record-qfwd_rlyh0_600_en_104x106-f2-69e007892, AUTO-MERGE)",
+   "route_log": "OT_IOFLOP_THRU moved 600 pass-through pin flops to 0.50 of their a -> b L path (pin pair mean 110.0 um, max 155.5 um)",
+   "supersedes_fail_of": "qfwd_rlyh0_600_en_104x106-f1-fc2236d82",
+   "audited": "2026-10-19 RLYH0-NAT, tools/hier_contract/native_pin_audit.py @ main c7cbd0216 (--view)"
   }
  ]
 }

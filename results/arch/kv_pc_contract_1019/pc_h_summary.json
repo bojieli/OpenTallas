@@ -1,0 +1,51 @@
+{
+  "input_odb": "/fleet/ref_gate/qkd_kvs_pc_h_rl1-20261019-064619/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_pc_h_asap7_ref_gate/base/1_synth.odb",
+  "sha256": "2f5ecf33a7c07ada45c20c3ee3a1d75ebb5bb267596aa45f174c566013ce6ccf",
+  "cells": 180521,
+  "FF": 39690,
+  "transparent_cells": 35236,
+  "driver_records": 182321,
+  "canonical_components": 147085,
+  "logical_endpoint_pins": 385459,
+  "violating_drivers": 12664,
+  "max_logical_pins": 20072,
+  "role_summary": {
+    "FF": {
+      "drivers": 39690,
+      "max": 2405,
+      "over32": 184
+    },
+    "comb": {
+      "drivers": 140790,
+      "max": 4023,
+      "over32": 12467
+    },
+    "comb_reset": {
+      "drivers": 19,
+      "max": 72,
+      "over32": 2
+    },
+    "constant": {
+      "drivers": 22,
+      "max": 4023,
+      "over32": 1
+    },
+    "top_clock_input": {
+      "drivers": 10,
+      "max": 20072,
+      "over32": 10
+    },
+    "top_input": {
+      "drivers": 1788,
+      "max": 3,
+      "over32": 0
+    },
+    "top_reset_input": {
+      "drivers": 2,
+      "max": 2,
+      "over32": 0
+    }
+  },
+  "ports": 3580,
+  "multi_face_FF": null
+}

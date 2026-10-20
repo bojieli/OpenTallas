@@ -1,0 +1,11 @@
+test_full_width_repair_stage_preserves_exact_zero_provenance (test_kv_replica_output_pads.ReplicaPads.test_full_width_repair_stage_preserves_exact_zero_provenance) ... ok
+test_instance_declared_pad_follows_actual_repair_bit_graph (test_kv_replica_output_pads.ReplicaPads.test_instance_declared_pad_follows_actual_repair_bit_graph) ... ok
+test_lost_live_lane_on_wider_replica_still_fails (test_kv_replica_output_pads.ReplicaPads.test_lost_live_lane_on_wider_replica_still_fails) ... ok
+test_recovery_derives_only_paired_private_bits (test_kv_replica_output_pads.ReplicaPads.test_recovery_derives_only_paired_private_bits) ... ok
+test_tied_live_lane_and_tied_high_padding_still_fail (test_kv_replica_output_pads.ReplicaPads.test_tied_live_lane_and_tied_high_padding_still_fail) ... ok
+test_two_different_logical_widths_bind (test_kv_replica_output_pads.ReplicaPads.test_two_different_logical_widths_bind) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.006s
+
+OK

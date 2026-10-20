@@ -1,0 +1,163 @@
+{
+ "name": "smh_int8_s1",
+ "top": "ot_smh_int8_tile_safe",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "sources": [
+  "rtl/hbm_accel/sm/static/ot_smh_int8_tile_safe.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pg_layer": "M5",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "outline": {
+  "w": 237.6,
+  "h": 129.6
+ },
+ "pins": {
+  "N": [
+   "i_v",
+   "i_tag",
+   "i_codes"
+  ],
+  "S": [
+   "o_v",
+   "o_tag",
+   "o_data",
+   "o_sel"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every pin (inputs p_v[21:0] kept copies / p_tag / p_codes; outputs driven only by r_v / r_tag / r_data / r_sel[34:0]); cycle-exact with ot_smh_static_int8, so no flow pin register may add a cycle"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the safe RTL lands rst_n itself in exactly two sampled posedge stages (kept reset_first -> 9 kept reset_final copies, each <=24 source reset pins) = the age of the old 2-stage flow landing; a flow landing would add two more reset edges"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "inter": [],
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-SMATT",
+  "branch": "claude/smh-int8-safe-1019",
+  "tag": "s1",
+  "purpose": "H.STA.BLK.14.5 SAFE successor of smh_int8_t1 from SOURCE (D4: in-place ECO-clone path dropped): ot_smh_int8_tile_safe (Codex da40a2a46): 128 kept pend copies, 22 input-valid copies <=8 loads, 9 kept reset copies <=24, mapped 2,782 FF / 0 unsafe roots / max transparent fanout 24 (t1 RTL: 17 unsafe roots, max 87). Same ABI, same ages (low +2 / high +3), cycle-exact with ot_smh_static_int8. Standard flow buffering + hold repair.",
+  "benches": [
+   {
+    "name": "i8s_exact",
+    "cmd": "bash rtl/hbm_accel/sm/static/test/run_smh_int8_tile_safe_bench.sh {RUN}/i8s_exact none 20000 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^I8T PASS checked=",
+    "min_count_regex": "^I8T PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_int8_safe_source_1019/bench/run_none.log"
+   },
+   {
+    "name": "i8s_mut_pend",
+    "cmd": "bash rtl/hbm_accel/sm/static/test/run_smh_int8_tile_safe_bench.sh {RUN}/i8s_mut_pend pend 20000 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^I8T FAIL .*mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_int8_safe_source_1019/bench/run_pend.log"
+   },
+   {
+    "name": "i8s_mut_sign",
+    "cmd": "bash rtl/hbm_accel/sm/static/test/run_smh_int8_tile_safe_bench.sh {RUN}/i8s_mut_sign sign 20000 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^I8T FAIL .*mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_int8_safe_source_1019/bench/run_sign.log"
+   },
+   {
+    "name": "i8s_mut_tag",
+    "cmd": "bash rtl/hbm_accel/sm/static/test/run_smh_int8_tile_safe_bench.sh {RUN}/i8s_mut_tag tag 20000 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^I8T FAIL .*mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_int8_safe_source_1019/bench/run_tag.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/sm/static",
+   "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv",
+   "results/arch/hbm_int8_safe_source_1019"
+  ],
+  "views_to": "physical/ref_tile/smh_int8_s1/views",
+  "record_to": "results/rtl/ref_tile/smh_int8_s1"
+ },
+ "pin_ranges": {
+  "i_v": [
+   2.0,
+   3.0
+  ],
+  "i_tag": [
+   3.0,
+   8.0
+  ],
+  "i_codes": [
+   10.0,
+   234.0
+  ],
+  "o_v": [
+   2.0,
+   3.0
+  ],
+  "o_tag": [
+   3.0,
+   8.0
+  ],
+  "o_sel": [
+   8.0,
+   15.5
+  ],
+  "o_data": [
+   17.0,
+   234.0
+  ],
+  "clk": [
+   62.8,
+   64.3
+  ],
+  "rst_n": [
+   65.3,
+   66.8
+  ]
+ },
+ "fill_reason": {
+  "pin_bound": "2,106 signal pins (1,036 in on N, 1,070 out on S) need >= ~216 um per face at <= 5 pins/um; std area ~1.3k um2 (no macros) -> util ~5%; a smaller outline would exceed the face pin density."
+ }
+}

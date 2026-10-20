@@ -102,7 +102,9 @@ def test_default_run_reads_the_committed_records():
     assert 'results/rtl/xdie_s81_1018/record.json' in rels
     o, seen = tc.run()
     used = {s['record'] for s in seen if s['used']}
-    assert {'results/rtl/xdie_s81_1018/record.json', 'results/rtl/xdie_qwen_1018/pair_r2/record.json'} <= used
+    assert {'results/rtl/xdie_s81_1019/record.json', 'results/rtl/xdie_qwen_1018/pair_r2/record.json'} <= used
+    older = next(s for s in seen if s['record'] == 'results/rtl/xdie_s81_1018/record.json')
+    assert not older['used'] and older['superseded_by'] == 'results/rtl/xdie_s81_1019/record.json'
     assert {s['record'] for s in seen} == rels
     for d, wls in o.items():                          # no two records silently fight over one slot
         for w in wls.values():
@@ -132,6 +134,17 @@ def test_o_ref_reads_o_meas_from_the_schedule(tmp_path):
     assert seen[0]['used'] is True
     t = [t for t in o['qwen_rom']['ar']['terms'] if t['slot'] == 'Lc.xdie.d2d_attention']
     assert t[0]['O'] == 30.0 and t[0]['cycles'] == pytest.approx(40.0) and 'exchanges.0.O_meas' in t[0]['O_source']
+
+
+def test_inactive_historical_terms_cannot_change_current_price(tmp_path):
+    p = tmp_path / 'historical.json'
+    _w(p, {'token_compose': {'active': False, 'selection_note': 'replaced component measurement',
+                            'terms': [{'design': 'qwen_rom', 'workload': 'ar', 'slot': 'head.die',
+                                       'cycles': 1e12, 'grade': 'measured-current-RTL'}]}})
+    baseline, _ = tc.run([], [])
+    current, seen = tc.run([str(p)], [])
+    assert current['qwen_rom']['ar']['tok_s'] == baseline['qwen_rom']['ar']['tok_s']
+    assert not seen[0]['used'] and seen[0]['why'] == 'replaced component measurement'
 
 
 def test_two_records_on_one_slot_are_reported(tmp_path):

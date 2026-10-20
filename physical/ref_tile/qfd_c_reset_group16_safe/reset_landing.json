@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_c_reset_group16_safe",
+ "enable": false,
+ "reason": "reset payload is itself passed through two capture registers on every channel"
+}

@@ -49,7 +49,9 @@ module qfd_dv_su8_entries #(
                                       // kept relay copy per group of 8 lanes first); requires LOFF = 1.  Lanes see the
                                       // memories 2 + 2*RD edges later (their ML grows by that); outputs leave 1 + RD later.
     parameter integer RD = 2,         // LT: relay stages each way between the vstream ports / control and each lane tile
-    parameter integer RED_ENTRIES = 0 // opt-in functional regional64 reducer; physical top supplies nine distinct clocks
+    parameter integer RED_ENTRIES = 0,// opt-in functional regional64 reducer; physical top supplies nine distinct clocks
+    parameter integer LTD = 0         // S-QSLICE 10-18 (opt-in): LT lane tile = qfd_dv_su_lane (the slice lane tile, no
+                                      // parameters: WR 16 AW 24 NW 18 KV_FP8 1 ML 1 RD 2) instead of the candidate
 ) (
     input wire[SW-1:0]ck_head,ck_exp,ck_rcp,ck_rsq,
     input  wire [SW-1:0] ck_lane, input wire[8:0]ck_red,
@@ -247,6 +249,80 @@ module qfd_dv_su8_entries #(
                 .sx_exp_v(), .sx_exp_x(), .sy_exp_y(32'd0), .sy_exp_vo(1'b0), .sy_exp_f(1'b0),
                 .sx_rcp_v(), .sx_rcp_x(), .sy_rcp_y(32'd0), .sy_rcp_f(1'b0),
                 .sx_rsq_v(), .sx_rsq_x(), .sy_rsq_y(32'd0), .sy_rsq_f(1'b0));
+        end else if (LTD != 0) begin : g_tile_dv
+            //: LTD (S-QSLICE 10-18): the slice lane tile qfd_dv_su_lane (one clock, pin-registered on both faces: IREG 1,
+            //: OREG 1).  As ot_hdc_vstream LIREG / LOREG: the memory answers (va/vb/vc/crom per lane, the wrom row on the
+            //: group broadcast) and the five read requests take RD - 1 relay stages, so the read round trip and the head's
+            //: ML + 2 + 2 RD alignment are unchanged by the tile's own pin flops.
+            if (WR != 16 || AW != 24 || NW != 18 || KV_FP8 != 1 || ML != 1 || RD != 2 || LOFF != 1) begin : g_cfg_err
+                QFD_DV_SU_LANE_IS_WR16_AW24_NW18_KVFP8_ML1_RD2_LOFF1 u_cfg_err ();   // undefined: elaboration stops
+            end
+            localparam integer PDW = 4*AW + 3*32 + 64;
+            wire [AW-1:0] tcura = lcura + LMUT * l * asi, tcurb = lcurb + LMUT * l * bsi;
+            wire [AW-1:0] tcurc = lcurc + LMUT * l * csi, tcurd = lcurd + LMUT * l * dsi;
+            wire [GBW-1:0] b_d = g_grp[l / 8].g_on.gb;
+            wire [2:0]     b_v = g_grp[l / 8].g_on.gv;
+            wire [GBW-1:0] b_q;
+            wire [2:0]     bv_q;
+            wire           lv_q;
+            wire [PDW-1:0] p_q;
+`ifdef OT_LOREG_MUT
+            localparam integer AC = 0;   // bench mutant: the answers keep RD stages (one edge late: must FAIL)
+`else
+            localparam integer AC = 1;
+`endif
+            ot_hdc_delay #(.W(GBW - WR*16), .D(RD - 1)) u_bd (.clk(ck_lane[l]), .rst_n(rst_l), .d(b_d[GBW-1:WR*16]),
+                .q(b_q[GBW-1:WR*16]));
+            ot_hdc_delay #(.W(WR*16), .D(RD - 1 - AC)) u_bw (.clk(ck_lane[l]), .rst_n(rst_l), .d(b_d[WR*16-1:0]),
+                .q(b_q[WR*16-1:0]));
+            ot_hdc_delay #(.W(3), .D(RD - 1), .RESET(1)) u_bv (.clk(ck_lane[l]), .rst_n(rst_l), .d(b_v), .q(bv_q));
+            ot_hdc_delay #(.W(1), .D(RD), .RESET(1)) u_lv (.clk(ck_lane[l]), .rst_n(rst_l), .d(live), .q(lv_q));
+            ot_hdc_delay #(.W(4*AW), .D(RD)) u_pd (.clk(ck_lane[l]), .rst_n(rst_l), .d({tcura, tcurb, tcurc, tcurd}),
+                .q(p_q[PDW-1 -: 4*AW]));
+            ot_hdc_delay #(.W(3*32 + 64), .D(RD - AC)) u_pa (.clk(ck_lane[l]), .rst_n(rst_l),
+                .d({va_q[32*l +: 32], vb_q[32*l +: 32], vc_q[32*l +: 32], crom_q[64*l +: 64]}), .q(p_q[3*32 + 64 - 1:0]));
+            wire [NW-1:0] t_i; wire [NW:0] t_fin; wire [AW-1:0] t_rrow, t_asi, t_bsi, t_csi, t_dsi;
+            wire t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq; wire [1:0] t_ma, t_mb, t_dst, t_red;
+            wire [2:0] t_ad, t_cls, t_isfu; wire [31:0] t_imm1, t_imm2; wire [WR*16-1:0] t_wrom;
+            assign {t_i, t_fin, t_rrow, t_asi, t_bsi, t_csi, t_dsi, t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq,
+                    t_ma, t_mb, t_dst, t_red, t_ad, t_cls, t_isfu, t_imm1, t_imm2, t_wrom} = b_q;
+            localparam integer OVW = 11;
+            localparam integer ODW = 7*AW + 2*32 + 32 + 2 + 1 + AW;
+            wire [OVW-1:0] o_v, o_vq;
+            wire [ODW-1:0] o_d, o_dq;
+`ifdef OT_LIREG_MUT
+            localparam integer AQ = 0;   // bench mutant: the read requests keep RD stages (one edge late: must FAIL)
+`else
+            localparam integer AQ = 1;
+`endif
+            qfd_dv_su_lane u_tile (
+                .clk(ck_lane[l]), .rst_n(rst_l), .emit0(bv_q[2]), .live(lv_q), .i(t_i), .fin_th(t_fin), .i_last_r(bv_q[0]),
+                .cura0(p_q[PDW-1 -: AW]), .curb0(p_q[PDW-1-AW -: AW]), .curc0(p_q[PDW-1-2*AW -: AW]),
+                .curd0(p_q[PDW-1-3*AW -: AW]), .rrow(t_rrow),
+                .asi(t_asi), .bsi(t_bsi), .csi(t_csi), .dsi(t_dsi),
+                .asrc(t_asrc), .bsrc(t_bsrc), .csrc(t_csrc), .mc(t_mc), .md(t_md), .redsq(t_redsq),
+                .ma(t_ma), .mb(t_mb), .dst(t_dst), .red(t_red), .ad(t_ad), .imm1(t_imm1), .imm2(t_imm2),
+                .cls(t_cls), .accept(bv_q[1]), .i_sfu(t_isfu),
+                .va_re(o_v[10]), .va_addr(o_d[ODW-1 -: AW]), .va_q(p_q[64+64 +: 32]),
+                .vb_re(o_v[9]), .vb_addr(o_d[ODW-1-AW -: AW]), .vb_q(p_q[64+32 +: 32]),
+                .vc_re(o_v[8]), .vc_addr(o_d[ODW-1-2*AW -: AW]), .vc_q(p_q[64 +: 32]),
+                .wrom_re(o_v[7]), .wrom_addr(o_d[ODW-1-3*AW -: AW]), .wrom_q(t_wrom),
+                .crom_re(o_v[6]), .crom_addr(o_d[ODW-1-4*AW -: AW]), .crom_q(p_q[0 +: 64]),
+                .vm_we(o_v[5]), .vm_waddr(o_d[ODW-1-5*AW -: AW]), .vm_wdata(o_d[ODW-1-6*AW -: 32]),
+                .kv_we(o_v[4]), .kv_waddr(o_d[ODW-1-6*AW-32 -: AW]), .kv_wdata(o_d[ODW-1-7*AW-32 -: 32]),
+                .l_ov(o_v[3]), .l_out(o_d[AW+3 +: 32]), .l_red(o_d[AW+1 +: 2]), .l_redsq(o_d[AW]),
+                .l_raddr(o_d[0 +: AW]), .l_last(o_v[2]), .retire(o_v[1]), .l_fault(o_v[0]));
+            ot_hdc_delay #(.W(5), .D(RD - AQ), .RESET(1)) u_ovr (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_v[10:6]), .q(o_vq[10:6]));
+            ot_hdc_delay #(.W(OVW - 5), .D(RD), .RESET(1)) u_ov (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_v[5:0]), .q(o_vq[5:0]));
+            ot_hdc_delay #(.W(5*AW), .D(RD - AQ)) u_odr (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_d[ODW-1 -: 5*AW]),
+                .q(o_dq[ODW-1 -: 5*AW]));
+            ot_hdc_delay #(.W(ODW - 5*AW), .D(RD)) u_od (.clk(ck_lane[l]), .rst_n(rst_l), .d(o_d[ODW-5*AW-1:0]),
+                .q(o_dq[ODW-5*AW-1:0]));
+            assign {va_re[l], vb_re[l], vc_re[l], l_wrom_re[l], crom_re[l], vm_we[l], kv_we[l], l_ov[l], l_last[l],
+                    l_retire[l], l_fault[l]} = o_vq;
+            assign {va_addr[l*AW +: AW], vb_addr[l*AW +: AW], vc_addr[l*AW +: AW], l_wrom_addr[l*AW +: AW],
+                    crom_addr[l*AW +: AW], vm_waddr[l*AW +: AW], vm_wdata[32*l +: 32], kv_waddr[l*AW +: AW],
+                    kv_wdata[32*l +: 32], l_out[32*l +: 32], l_red[2*l +: 2], l_redsq[l], l_raddr[l*AW +: AW]} = o_dq;
         end else begin : g_tile
             //: inbound -- broadcast fields from this lane's group relay (stage 1), then RD - 1 per-lane stages; per-lane
             //: fields (live, offsets, memory answers) RD per-lane stages; the tile adds its pin flop.

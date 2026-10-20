@@ -1,0 +1,4 @@
+# case F0_nu4_m_s21 env DV2_FACE=0 DV2_MU_NU=4 DV2_SEED=21 args m --work /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/amix_w/G0/F0_nu4 host ot-epyc7 2026-10-19T06:19:42-07:00 commit 0e6795834c4aeab9537216c77473df6f6cfe2198
+    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680
+bench2 (m) MUT=0: PASS 8/8
+# exit 0

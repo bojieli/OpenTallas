@@ -1,0 +1,66 @@
+{
+  "kind": "bounded_component_analytical_model_not_physical_receipt",
+  "selected_SU": {
+    "MODE": 0,
+    "NSLOT": 1,
+    "ENG_CTX": 1,
+    "NW": 18,
+    "PLB": 13,
+    "EVQ": 4,
+    "FMT": 1
+  },
+  "defaults": {
+    "ENABLE_RETAINED_COMMIT": 0,
+    "HEALTH_CUTOFF_EDGES": 0,
+    "STEP_RESPONSE_DEADLINE_EDGES": 0
+  },
+  "fixture_examples": [
+    {
+      "H": 12,
+      "deadline": 8,
+      "scheduler_added_declared_state_bits": 1563
+    },
+    {
+      "H": 40,
+      "deadline": 8,
+      "scheduler_added_declared_state_bits": 1565
+    },
+    {
+      "H": 64,
+      "deadline": 48,
+      "scheduler_added_declared_state_bits": 1566
+    }
+  ],
+  "bridge_added_declared_state_bits": 27,
+  "endpoint_added_declared_state_bits_each": 2,
+  "ND8_H64_total_added_declared_state_bits": 1609,
+  "event_storage": {
+    "entries": 16,
+    "original_event_width": 116,
+    "lineage_width": 62,
+    "owner_record_width": 1,
+    "total_indexed_bits": 2864,
+    "functional_component_only": true,
+    "physical_SRAM": "HOLD"
+  },
+  "scheduling": {
+    "pending_reservations": "One selectedSU step may waitH; pending_v is exact reserved_pending count. No new issue untilcertification orfailure. I_GO rechecksactualcapacity.",
+    "extra_per_step_wait": "max(0,H-R) componentedges; actualproductionH/Runknown",
+    "token_SU_latency": null,
+    "token_MU_rate": null,
+    "physical_clock_reset_fanout_copy_cost": null,
+    "native_TAG59_binding": null
+  },
+  "fleet": {
+    "initial_admission": "32GB/8threads/20GBdisk, unpinnedot-run",
+    "final_integrated_admission": "12GB/8threads/20GBdisk, unpinnedot-run",
+    "actual_ingress_runtime_RSS_KB": 4084,
+    "actual_ingress_object_disk_KB": 1304,
+    "final_ND8_object_disk_KB": 2016,
+    "final_ND8_Verilator_report_allocated_MB": 7,
+    "local_simulation_or_synthesis": "NONE",
+    "cached_final_ingress_build_driver_RSS_KB": 13336,
+    "full_compile_peak_RSS_KB": null
+  },
+  "physical_SAFE_checklist": "HOLD all physical pin/fanout/depth/reach/clock/PG/storage/floorplan checks; no physicalrun or waiver issued"
+}

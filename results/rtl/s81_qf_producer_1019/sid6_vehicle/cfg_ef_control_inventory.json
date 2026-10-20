@@ -1,0 +1,417 @@
+{
+  "scope": "Read-only actual source/control inventory; no cfg7 runtime coupon or fullsix frontend",
+  "source_ref": "ceaed19c4",
+  "files": [
+    {
+      "path": "rtl/v41die/ot_s81_cfg7_seq.sv",
+      "sha256": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
+      "bytes": 17274
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+      "sha256": "ebb7c771a180813761a6f0fb690e59571924c4ed82633872645421089371fe58",
+      "bytes": 6869
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+      "sha256": "517e501dd6a505871302dc93cf31b87f9dc5cfcc771a9564c07b58b662014d96",
+      "bytes": 5673
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+      "sha256": "5089c68ea2171f736980d879c484f8165469fb01a7c00315593f7d4f2e22f0f5",
+      "bytes": 159212
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4.sv",
+      "sha256": "b55f3e9a08362281581729d3d93db56837c752c8bdb3563a43f637a56c6833a5",
+      "bytes": 1480534
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4.sv",
+      "sha256": "3d6e0cbf289fc9df6df2ae995dc6628ac900141d2404a1b53e42c2ef9ed5f663",
+      "bytes": 1656317
+    }
+  ],
+  "masters": [
+    {
+      "master": "col_h9_l4",
+      "q_pairs": [
+        {
+          "pair": 0,
+          "cfg_instance": "u_s0",
+          "ef": "{n23289, n23292}",
+          "element_bank_free": "n23289",
+          "element_sh_free": "n23292",
+          "real_go_tag": "{n23291, n23290}",
+          "element_go": "n3732",
+          "cfg7_go": "n3128",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 1,
+          "cfg_instance": "u_s1",
+          "ef": "{n23293, n23296}",
+          "element_bank_free": "n23293",
+          "element_sh_free": "n23296",
+          "real_go_tag": "{n23295, n23294}",
+          "element_go": "n4391",
+          "cfg7_go": "n4336",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 2,
+          "cfg_instance": "u_s2",
+          "ef": "{n23297, n23300}",
+          "element_bank_free": "n23297",
+          "element_sh_free": "n23300",
+          "real_go_tag": "{n23299, n23298}",
+          "element_go": "n5599",
+          "cfg7_go": "n4995",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 3,
+          "cfg_instance": "u_s3",
+          "ef": "{n23301, n23304}",
+          "element_bank_free": "n23301",
+          "element_sh_free": "n23304",
+          "real_go_tag": "{n23303, n23302}",
+          "element_go": "n6258",
+          "cfg7_go": "n6203",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 5,
+          "cfg_instance": "u_s5",
+          "ef": "{n26165, n26168}",
+          "element_bank_free": "n26165",
+          "element_sh_free": "n26168",
+          "real_go_tag": "{n26167, n26166}",
+          "element_go": "n7466",
+          "cfg7_go": "n6862",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 6,
+          "cfg_instance": "u_s6",
+          "ef": "{n26169, n26172}",
+          "element_bank_free": "n26169",
+          "element_sh_free": "n26172",
+          "real_go_tag": "{n26171, n26170}",
+          "element_go": "n8125",
+          "cfg7_go": "n8070",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 7,
+          "cfg_instance": "u_s7",
+          "ef": "{n26173, n26176}",
+          "element_bank_free": "n26173",
+          "element_sh_free": "n26176",
+          "real_go_tag": "{n26175, n26174}",
+          "element_go": "n9333",
+          "cfg7_go": "n8729",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 9,
+          "cfg_instance": "u_s9",
+          "ef": "{n29037, n29040}",
+          "element_bank_free": "n29037",
+          "element_sh_free": "n29040",
+          "real_go_tag": "{n29039, n29038}",
+          "element_go": "n9992",
+          "cfg7_go": "n9937",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 10,
+          "cfg_instance": "u_s10",
+          "ef": "{n29041, n29044}",
+          "element_bank_free": "n29041",
+          "element_sh_free": "n29044",
+          "real_go_tag": "{n29043, n29042}",
+          "element_go": "n11200",
+          "cfg7_go": "n10596",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 11,
+          "cfg_instance": "u_s11",
+          "ef": "{n29045, n29048}",
+          "element_bank_free": "n29045",
+          "element_sh_free": "n29048",
+          "real_go_tag": "{n29047, n29046}",
+          "element_go": "n11859",
+          "cfg7_go": "n11804",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 12,
+          "cfg_instance": "u_s12",
+          "ef": "{n29049, n29052}",
+          "element_bank_free": "n29049",
+          "element_sh_free": "n29052",
+          "real_go_tag": "{n29051, n29050}",
+          "element_go": "n13067",
+          "cfg7_go": "n12463",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 14,
+          "cfg_instance": "u_s14",
+          "ef": "{n31913, n31916}",
+          "element_bank_free": "n31913",
+          "element_sh_free": "n31916",
+          "real_go_tag": "{n31915, n31914}",
+          "element_go": "n13726",
+          "cfg7_go": "n13671",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        }
+      ]
+    },
+    {
+      "master": "col_h10_l4",
+      "q_pairs": [
+        {
+          "pair": 0,
+          "cfg_instance": "u_s0",
+          "ef": "{n23812, n23815}",
+          "element_bank_free": "n23812",
+          "element_sh_free": "n23815",
+          "real_go_tag": "{n23814, n23813}",
+          "element_go": "n3732",
+          "cfg7_go": "n3128",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 2,
+          "cfg_instance": "u_s2",
+          "ef": "{n26676, n26679}",
+          "element_bank_free": "n26676",
+          "element_sh_free": "n26679",
+          "real_go_tag": "{n26678, n26677}",
+          "element_go": "n4391",
+          "cfg7_go": "n4336",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 3,
+          "cfg_instance": "u_s3",
+          "ef": "{n26680, n26683}",
+          "element_bank_free": "n26680",
+          "element_sh_free": "n26683",
+          "real_go_tag": "{n26682, n26681}",
+          "element_go": "n5599",
+          "cfg7_go": "n4995",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 4,
+          "cfg_instance": "u_s4",
+          "ef": "{n26684, n26687}",
+          "element_bank_free": "n26684",
+          "element_sh_free": "n26687",
+          "real_go_tag": "{n26686, n26685}",
+          "element_go": "n6258",
+          "cfg7_go": "n6203",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 6,
+          "cfg_instance": "u_s6",
+          "ef": "{n29548, n29551}",
+          "element_bank_free": "n29548",
+          "element_sh_free": "n29551",
+          "real_go_tag": "{n29550, n29549}",
+          "element_go": "n7466",
+          "cfg7_go": "n6862",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 7,
+          "cfg_instance": "u_s7",
+          "ef": "{n29552, n29555}",
+          "element_bank_free": "n29552",
+          "element_sh_free": "n29555",
+          "real_go_tag": "{n29554, n29553}",
+          "element_go": "n8125",
+          "cfg7_go": "n8070",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 8,
+          "cfg_instance": "u_s8",
+          "ef": "{n29556, n29559}",
+          "element_bank_free": "n29556",
+          "element_sh_free": "n29559",
+          "real_go_tag": "{n29558, n29557}",
+          "element_go": "n9333",
+          "cfg7_go": "n8729",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 9,
+          "cfg_instance": "u_s9",
+          "ef": "{n29560, n29563}",
+          "element_bank_free": "n29560",
+          "element_sh_free": "n29563",
+          "real_go_tag": "{n29562, n29561}",
+          "element_go": "n9992",
+          "cfg7_go": "n9937",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 11,
+          "cfg_instance": "u_s11",
+          "ef": "{n32424, n32427}",
+          "element_bank_free": "n32424",
+          "element_sh_free": "n32427",
+          "real_go_tag": "{n32426, n32425}",
+          "element_go": "n11200",
+          "cfg7_go": "n10596",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 12,
+          "cfg_instance": "u_s12",
+          "ef": "{n32428, n32431}",
+          "element_bank_free": "n32428",
+          "element_sh_free": "n32431",
+          "real_go_tag": "{n32430, n32429}",
+          "element_go": "n11859",
+          "cfg7_go": "n11804",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 13,
+          "cfg_instance": "u_s13",
+          "ef": "{n32432, n32435}",
+          "element_bank_free": "n32432",
+          "element_sh_free": "n32435",
+          "real_go_tag": "{n32434, n32433}",
+          "element_go": "n13067",
+          "cfg7_go": "n12463",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        },
+        {
+          "pair": 14,
+          "cfg_instance": "u_s14",
+          "ef": "{n32436, n32439}",
+          "element_bank_free": "n32436",
+          "element_sh_free": "n32439",
+          "real_go_tag": "{n32438, n32437}",
+          "element_go": "n13726",
+          "cfg7_go": "n13671",
+          "go_same_net": false,
+          "ef_direct_source_binding": true,
+          "go_tag_direct_source_binding": true
+        }
+      ]
+    }
+  ],
+  "actual_six_q_cfg7_pairs": 72,
+  "actual_six_q_weight_ROMs": 288,
+  "actual_cfg_ROMs_for_q": 504,
+  "tag_rule": "cfg7 tag reset0, increments every GO broadcast before classgate, output pin go_tag; direct same tag nets into element",
+  "EF_rule": "actual element registered bank_free/sh_free directly drive own cfg7 ef; never replace by always-free constants",
+  "bank_free_state": "gcnt[nbank]==0; nbank reflects go swap; gcnt refreshed to actualDRAIN127 on go or walk_busy and counts down otherwise",
+  "shadow_state": "sh_full set by final CFG word; clears on actualswap when !walking&&!go_e; settle and swap ownership remain live",
+  "walk_busy": "w_run | n_run | bn_run | i1_v | i2_v | (BP!=0 && bp_hold!=0)",
+  "registered_export": "st_bank_free additionally masks go_pin/go; registered st_sh_free/st_walking and optional QM>=6 walking second stage",
+  "actual_Q_DRAIN": 127,
+  "BF_DRAIN200_is_different_profile": true,
+  "control_cone_inputs": [
+    "actual CFG image words/classes/address/bank/swap",
+    "actual GO/tag and original pin/register stages",
+    "actual source xstream valid/block/index/half metadata and walking/need/issue machinery",
+    "real local reset and gate/pin/slot-clock ownership"
+  ],
+  "no_CAP_feedback_into_Q_EF": true,
+  "minimal_coupon_options": [
+    {
+      "name": "Independent control extraction",
+      "required": "Exact backward cone through qx_pq walker/need/issue/bank/swap/tagger/registeredEF and CFG pins, with source correspondence proving arithmetic/ROMcode data independence",
+      "eliminated_claim": "Cannot substitute assumed walking or tiedEF; source cone not yet extracted/proved",
+      "new_hardware": 0,
+      "CPP_and_RSS": null
+    },
+    {
+      "name": "Six real q-elements/control loops",
+      "q_elements": 6,
+      "weight4096x274_ROMs": 24,
+      "cfg4096x72_ROMs": 42,
+      "required": "Actual selected slot ingress+cfg7+real full q element, original weights/config/source and true EF, no syntheticready",
+      "scope": "Only six chosen pair control coupons; cannot qualify all72pair skew/tagdelivery, fullsixnumeric, CAP orVPdrain",
+      "duplicate_build_cost": "Likely separate compile before eventual fullsix; actual peak unknown",
+      "new_hardware": 0
+    },
+    {
+      "name": "Actual fullsix integrated frontend",
+      "q_elements": 72,
+      "all_frame_ROMs": 1012,
+      "required": "Use existing selected source/images inventory, retain all actual EF/CFG/tag/return/CAP/VP loops and instrument sequentially",
+      "scope": "Only route that directly measures all72 runtime tag/EF and512rowCAP/VPdrain together; requiresROOTselection/admission prerequisites",
+      "CPP_and_RSS": null,
+      "new_hardware": 0
+    }
+  ],
+  "unproved_by_control_coupon": [
+    "All72 physicalslot/go delivery",
+    "Actual fullframe emissions and6returnARR phases",
+    "CAPpartial-store/decoder/CW/VPcommit and atomic per-epochRBASE install",
+    "Original tokendeadline and production/MU/nativephase"
+  ],
+  "native_phase": null,
+  "actual_CFG_rbase_dates": null,
+  "actual_CAP_VP_drain_dates": null,
+  "source_selected": false,
+  "qbank_GO_tag_skew_source_model": "All24 base pair GO nets differ: real qbank register delays cfg7.go_e\u2192element.go, while go_tag nets are direct. FAST r_go/r_go_tag capture together later. Backend tag may reflect next cfg7 count; actualcoupledtrace required, not counter-level e%4 assumption."
+}

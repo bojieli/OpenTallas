@@ -1,0 +1,291 @@
+{
+  "verdict": "FAIL_NOT_PRICEABLE",
+  "remote_src_REV_observed": "deecc1a8ef5328a3332e5b107fc4bb4161232717",
+  "remote_dir": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-smxl-1019/out",
+  "runs": [
+    {
+      "run": "mi4_dsA_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 6,
+      "ops_total": 42,
+      "fault": "FAULT svg cycle 4569 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 44,
+        "tag": "expert slot 6 w1+w3",
+        "xb": 80,
+        "xmode": "xl",
+        "first_cmd_abs": 4214,
+        "last_cmd_abs": 4365
+      },
+      "defines_field": []
+    },
+    {
+      "run": "ms0_dsA_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 7,
+      "ops_total": 42,
+      "fault": "FAULT svg cycle 4569 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 49,
+        "tag": "expert slot 0 w1+w3",
+        "xb": 0,
+        "xmode": "xl",
+        "first_cmd_abs": 4611,
+        "last_cmd_abs": 4762
+      },
+      "defines_field": []
+    },
+    {
+      "run": "ms0_dsB_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 10,
+      "ops_total": 24,
+      "fault": "FAULT svg cycle 6781 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 79,
+        "tag": "expert slot 0 w1+w3",
+        "xb": 0,
+        "xmode": "xl",
+        "first_cmd_abs": 6805,
+        "last_cmd_abs": 6956
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xd_dsA_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 6,
+      "ops_total": 42,
+      "fault": "FAULT svg cycle 4665 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 44,
+        "tag": "expert slot 6 w1+w3",
+        "xb": 0,
+        "xmode": "die",
+        "first_cmd_abs": 4492,
+        "last_cmd_abs": 4643
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xd_dsA_6b",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 6,
+      "ops_total": 42,
+      "fault": "FAULT svg cycle 4745 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 44,
+        "tag": "expert slot 6 w1+w3",
+        "xb": 0,
+        "xmode": "die",
+        "first_cmd_abs": 4555,
+        "last_cmd_abs": 4706
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xd_dsB_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 9,
+      "ops_total": 24,
+      "fault": "FAULT svg cycle 7053 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 74,
+        "tag": "expert slot 6 w1+w3",
+        "xb": 0,
+        "xmode": "die",
+        "first_cmd_abs": 6876,
+        "last_cmd_abs": 7027
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xd_dsB_6b",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 9,
+      "ops_total": 24,
+      "fault": "FAULT svg cycle 7154 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 74,
+        "tag": "expert slot 6 w1+w3",
+        "xb": 0,
+        "xmode": "die",
+        "first_cmd_abs": 6984,
+        "last_cmd_abs": 7135
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xl_dsA_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 7,
+      "ops_total": 42,
+      "fault": "FAULT svg cycle 4569 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 49,
+        "tag": "expert slot 0 w1+w3",
+        "xb": 120,
+        "xmode": "xl",
+        "first_cmd_abs": 4611,
+        "last_cmd_abs": 4762
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xl_dsA_6b",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 7,
+      "ops_total": 42,
+      "fault": "FAULT svg cycle 4633 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 49,
+        "tag": "expert slot 0 w1+w3",
+        "xb": 120,
+        "xmode": "xl",
+        "first_cmd_abs": 4750,
+        "last_cmd_abs": 4901
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xl_dsB_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 10,
+      "ops_total": 24,
+      "fault": "FAULT svg cycle 6781 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 79,
+        "tag": "expert slot 0 w1+w3",
+        "xb": 120,
+        "xmode": "xl",
+        "first_cmd_abs": 6805,
+        "last_cmd_abs": 6956
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xl_dsB_6b",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 10,
+      "ops_total": 24,
+      "fault": "FAULT svg cycle 6869 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 79,
+        "tag": "expert slot 0 w1+w3",
+        "xb": 120,
+        "xmode": "xl",
+        "first_cmd_abs": 6989,
+        "last_cmd_abs": 7140
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xr_dsA_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 0,
+      "ops_total": 42,
+      "fault": "FAULT svg cycle 1080 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 4,
+        "tag": "wq_a",
+        "xb": 0,
+        "xmode": "xlr",
+        "first_cmd_abs": 932,
+        "last_cmd_abs": 995
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xr_dsA_6b",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 0,
+      "ops_total": 42,
+      "fault": "FAULT svg cycle 1080 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 4,
+        "tag": "wq_a",
+        "xb": 0,
+        "xmode": "xlr",
+        "first_cmd_abs": 932,
+        "last_cmd_abs": 995
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xr_dsB_6a",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 1,
+      "ops_total": 24,
+      "fault": "FAULT svg cycle 2766 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 27,
+        "tag": "wq_a",
+        "xb": 0,
+        "xmode": "xlr",
+        "first_cmd_abs": 2618,
+        "last_cmd_abs": 2681
+      },
+      "defines_field": []
+    },
+    {
+      "run": "xr_dsB_6b",
+      "run_rc": 1,
+      "done": null,
+      "ops_pass": 1,
+      "ops_total": 24,
+      "fault": "FAULT svg cycle 2811 issuer 0 feed 1 (desc 0 cdc 0 cache 1 prog 0 s1 0 fl 0)",
+      "first_failing_op": {
+        "k": 27,
+        "tag": "wq_a",
+        "xb": 0,
+        "xmode": "xlr",
+        "first_cmd_abs": 2663,
+        "last_cmd_abs": 2726
+      },
+      "defines_field": []
+    }
+  ],
+  "xl_dsA_6a_failure_source_dir": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-smxl-1019/src3",
+  "xl_dsA_6a_source_REV": "fff9933bfa8283771546da450ab82eaa5b017d7a",
+  "core_source_matches": [
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+      "remote_sha256": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+      "committed_sha256": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+      "matches": true
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_id.sv",
+      "remote_sha256": "570a470eebf66e6230032cd74142641ba2088f907a93c40ab363cde131d0edcb",
+      "committed_sha256": "570a470eebf66e6230032cd74142641ba2088f907a93c40ab363cde131d0edcb",
+      "matches": true
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_id.sv",
+      "remote_sha256": "f11a3701413de90d536e8456f6435b93e9ddda8a443037e380f45f3335ed9fe3",
+      "committed_sha256": "f11a3701413de90d536e8456f6435b93e9ddda8a443037e380f45f3335ed9fe3",
+      "matches": true
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+      "remote_sha256": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9",
+      "committed_sha256": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9",
+      "matches": true
+    }
+  ],
+  "old_src_REV_scope": "earlier src directory only, not the xl_dsA_6a failing executable"
+}

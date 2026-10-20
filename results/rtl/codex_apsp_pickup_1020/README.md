@@ -1,0 +1,7 @@
+# Sparse a_proj/compressor/indexer field pickup
+
+All18 BF-bearing frame sequences across L2,L20,L24 pass at uniform phase period231; all18 fail at230. The whole6-phase programme starts with a_proj and includes the five BF1024-segment phases for the real compressor/indexer.weights_proj rows. Worst GO→last root return is1507(L2) or1500(L20,L24), plus the existing170-cycle wire budget ->1677/1670/1670. Other layers retain old cycles; no extrapolated field shape is admitted.
+
+The record is tied to bit-exact segment-tree golden returns and the fixture rows. indexer.weights_proj ties additionally apply the model's existing BF16 rounding and index_w_scale to match attn.idx.weights; source weights are unchanged. These scalar operations are not newly claimed as part of the measured field hardware. L24 has only2 BF-bearing frames; its phase0-only frames are in singles.txt. Gen/single summaries cover all8 frames per layer. The exact original FSEQ binary hash set equals the copied APSP executable hash set (original_fseq_exe.sha256 vs out/L2/exe.sha256), so the existing release-DUT source-pin proof applies without a new build.
+
+P231/P230 raw logs and checker JSONs, full sweep/single summaries, compiled per-phase golden metadata and source snapshots are preserved. CAP/whole-die producer transport and retirement remain outside the frame-root measurement boundary; CAP source-age costs are priced separately.

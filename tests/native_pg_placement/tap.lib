@@ -1,0 +1,17 @@
+library(tap_canary_tt) {
+ delay_model : table_lookup;
+ time_unit : "1ps";
+ voltage_unit : "1V";
+ current_unit : "1mA";
+ capacitive_load_unit (1,ff);
+ nom_process : 1;
+ nom_temperature : 25;
+ nom_voltage : 0.7;
+ cell(TAP_CANARY) {
+  area : 1;
+  pg_pin(VDD) { voltage_name : VDD; pg_type : primary_power; }
+  pg_pin(VSS) { voltage_name : VSS; pg_type : primary_ground; }
+  pin(RAW) { direction : input; clock : true; capacitance : 1; }
+  pin(REF) { direction : input; clock : true; capacitance : 1; }
+ }
+}

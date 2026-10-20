@@ -1,0 +1,77 @@
+{
+  "binding_scope": "native_master_pg_terminal_binding_only",
+  "container_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "input_odb": "/srv/opentallas-scratch/claude/pg-native-hooks-1019/source_order_clone.odb",
+  "input_spef": "/srv/opentallas-scratch/claude/pg-native-admission-integration-1019/wrong_design.spef",
+  "native_audit": "/srv/opentallas-scratch/claude/pg-native-admission-integration-1019/model_refusals/audit-ejn_i5si/native_audit.json",
+  "native_audit_sha256": "020576aa127b8667b96ac961208ecec35ca21fa766bf21a7f12c59c73d795c5d",
+  "native_exit": 0,
+  "native_result": {
+    "block": "ot_hbm_static_cfg_collar_idx256",
+    "checked": 196864,
+    "domain_rules": [
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDD$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDDCE$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDDPE$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VSS",
+        "pin_pattern": "^VSS$",
+        "region": "",
+        "role": "GROUND"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VSS",
+        "pin_pattern": "^VSSE$",
+        "region": "",
+        "role": "GROUND"
+      }
+    ],
+    "failure_count": 0,
+    "failures": [],
+    "instance_count": 98432,
+    "mapping_error": "",
+    "pg_master_count": 76,
+    "regions": [],
+    "roles": {
+      "GROUND": 98432,
+      "POWER": 98432
+    },
+    "schema": "native_pg_audit.v1",
+    "status": "PASS"
+  },
+  "odb_sha256": "22e4a3d00d57b5d0b9c69e92bd26b4ca351b95b179f3fce416c065a34e79821a",
+  "openroad_sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+  "parasitic_model": "routed_extracted",
+  "parasitic_qualification": "source_output_pair_hash_binding_not_independent_rc_equivalence",
+  "reason": "SPEF DESIGN mismatches active native ODB block",
+  "schema": "opentallas.native_pg_receipt.v1",
+  "source_dependencies": {
+    "/srv/opentallas-scratch/claude/pg-native-admission-integration-1019/audit_native_pg.tcl": "5039f7899aee4140b5160ced4bc9792096d854b4edbb57d93184f268441d2a2a",
+    "/srv/opentallas-scratch/claude/pg-native-admission-integration-1019/native_pg_binding.tcl": "dffcff4836d8dfc8c5cad54b253a5dfbb81bb20a74f57e3802fdc844042a008c",
+    "/srv/opentallas-scratch/claude/pg-native-admission-integration-1019/pg_receipt.py": "62540384f484100a7b37e7f4942cc65009de78395981d78439855ca23ab9edfe"
+  },
+  "spef_design": "different_design",
+  "spef_sha256": "ce01f97f14e17b38f338abbe2189232ff5f896e6373f4e241691396faf663e6c",
+  "status": "REFUSED",
+  "transaction": "/srv/opentallas-scratch/claude/pg-native-admission-integration-1019/model_refusals/audit-ejn_i5si"
+}

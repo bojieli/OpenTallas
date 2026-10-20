@@ -1,0 +1,159 @@
+{
+ "cells": 161964,
+ "flops": 26100,
+ "icgs": 0,
+ "macros": 0,
+ "findings": {
+  "clock_domain": [
+   "clock root port ck: 26,100 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+  ],
+  "high_fanout": [
+   "reset u_ot_pr_core.u_h.host.u_hi.u_rsc.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,074 loads (1,066 flops, e.g. u_ot_pr_core.u_h.host.u_hi.csr_seam$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_ot_pr_core.u_rr.rst_n$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 257 loads (182 flops, e.g. u_ot_pr_core.jd_o[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)"
+  ],
+  "logic_depth": [
+   "reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.ap1_gs[7]$_DFFE_PN_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.apb_blk[28]$_DFFE_PN_/D: ~753 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage"
+  ],
+  "clock_guidance": [
+   "clock root port:ck: 26,100 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 26,100 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+  ]
+ },
+ "refuse": {
+  "logic_depth": [
+   "~753 ps > 700 ps (u_ot_pr_core.u_h.host.u_hi.u_eng.ap1_gs[7]$_DFFE_PN_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.apb_blk[28]$_DFFE_PN_/D)"
+  ]
+ },
+ "metrics": {
+  "core_um": [
+   250.6,
+   146.9
+  ],
+  "clock_roots": [
+   {
+    "root": "port:ck",
+    "ff": 26100,
+    "icg": 0,
+    "macro_pins": 0,
+    "example": "rst_n__ot_rl0$_DFF_P_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 26100,
+  "clock_max_root": "port:ck",
+  "high_fanout_top": [
+   {
+    "net": "_272076_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 2060,
+    "flops": 0
+   },
+   {
+    "net": "_267292_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 2060,
+    "flops": 0
+   },
+   {
+    "net": "_262495_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 2060,
+    "flops": 0
+   },
+   {
+    "net": "_261294_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 2060,
+    "flops": 0
+   },
+   {
+    "net": "_260091_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 2060,
+    "flops": 0
+   },
+   {
+    "net": "_258886_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 2060,
+    "flops": 0
+   },
+   {
+    "net": "_257168_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 2060,
+    "flops": 0
+   },
+   {
+    "net": "_257166_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 2060,
+    "flops": 0
+   }
+  ],
+  "hf_max_port": 0,
+  "hf_max_reset": 1074,
+  "hf_max_net": 2060,
+  "reset_landing": [
+   {
+    "port": "rst_n",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 1,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 753.5,
+  "depth_path": [
+   "u_ot_pr_core.u_h.host.u_hi.u_eng.ap1_gs[7]$_DFFE_PN_",
+   "u_ot_pr_core.u_h.host.u_hi.u_eng.apb_blk[28]$_DFFE_PN_/D"
+  ],
+  "depth_levels": 20,
+  "reach_worst_um": 0.7,
+  "reach_violations": 0,
+  "util": 0.5513
+ },
+ "top": "dsdv_sh_lk",
+ "netlist": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk-20261019-070646/routes/gate/work/orfs/results/asap7/opentallas_dsdv_sh_lk_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 4.9,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0,
+  "reset_ports": "rst_n"
+ },
+ "clock_rule": {
+  "max_root_sinks": 26100,
+  "root": "port:ck",
+  "ok": true,
+  "text": "26,100 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 26,100 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "clock_domain: clock root port ck: 26,100 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | high_fanout: reset u_ot_pr_core.u_h.host.u_hi.u_rsc.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,074 loads (1,066 flops, e.g. u_ot_pr_core.u_h.host.u_hi.csr_seam$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region) | logic_depth: reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.ap1_gs[7]$_DFFE_PN_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.apb_blk[28]$_DFFE_PN_/D: ~753 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage | clock_guidance: clock root port:ck: 26,100 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 26,100 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+}

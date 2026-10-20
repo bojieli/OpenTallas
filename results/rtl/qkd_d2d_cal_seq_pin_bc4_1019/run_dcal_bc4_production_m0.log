@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+image K22: e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae  rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh
+target11: rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh SEG2 TX 9 RX 10
+PASS kv_dcal_bootcfg mut0 bootwrites66 admissions2 tokens2 layers36 events2809 adm_ev6 tok_ev280 runtime_writes6
+- rtl/test/qwen_static_kv/tb_kv_dcal_bc4.sv:160: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 0.162 s; speed 15.992 ms/s
+- Verilator: cpu 0.161 s on 1 threads; allocated 7 MB
+DCALBC_PASS mut0
+rc=0

@@ -1,0 +1,87 @@
+MODEL recurrence PASS: 16 initial states x16 reset masks, same-root and independently stopped relay; causal omitted-stage failures retained. NOT RTL/production reachability.
+[
+  {
+    "name": "sw_stage0_phase_conditional",
+    "converted_existing_ff": 5,
+    "added_state_bits": 0,
+    "added_payload_ff": 0,
+    "data_edge_delta": 0,
+    "liberty_arithmetic": {
+      "TT": {
+        "area_delta_um2": 0.43739999999999973,
+        "clock_cap_delta_fF": -0.05918499999999993,
+        "new_RESETN_load_fF": 3.69895,
+        "new_SETN_tie_load_fF": 5.39725
+      },
+      "FF": {
+        "area_delta_um2": 0.43739999999999973,
+        "clock_cap_delta_fF": -0.09428999999999965,
+        "new_RESETN_load_fF": 4.014545,
+        "new_SETN_tie_load_fF": 5.8223
+      }
+    }
+  },
+  {
+    "name": "six_authority_stage0_phase_conditional",
+    "converted_existing_ff": 30,
+    "added_state_bits": 0,
+    "added_payload_ff": 0,
+    "data_edge_delta": 0,
+    "liberty_arithmetic": {
+      "TT": {
+        "area_delta_um2": 2.6243999999999983,
+        "clock_cap_delta_fF": -0.3551099999999996,
+        "new_RESETN_load_fF": 22.1937,
+        "new_SETN_tie_load_fF": 32.3835
+      },
+      "FF": {
+        "area_delta_um2": 2.6243999999999983,
+        "clock_cap_delta_fF": -0.5657399999999979,
+        "new_RESETN_load_fF": 24.08727,
+        "new_SETN_tie_load_fF": 34.933800000000005
+      }
+    }
+  },
+  {
+    "name": "sw_all_stages_local_only",
+    "converted_existing_ff": 20,
+    "added_state_bits": 0,
+    "added_payload_ff": 0,
+    "data_edge_delta": 0,
+    "liberty_arithmetic": {
+      "TT": {
+        "area_delta_um2": 1.749599999999999,
+        "clock_cap_delta_fF": -0.23673999999999973,
+        "new_RESETN_load_fF": 14.7958,
+        "new_SETN_tie_load_fF": 21.589
+      },
+      "FF": {
+        "area_delta_um2": 1.749599999999999,
+        "clock_cap_delta_fF": -0.3771599999999986,
+        "new_RESETN_load_fF": 16.05818,
+        "new_SETN_tie_load_fF": 23.2892
+      }
+    }
+  },
+  {
+    "name": "six_authority_all_stages",
+    "converted_existing_ff": 120,
+    "added_state_bits": 0,
+    "added_payload_ff": 0,
+    "data_edge_delta": 0,
+    "liberty_arithmetic": {
+      "TT": {
+        "area_delta_um2": 10.497599999999993,
+        "clock_cap_delta_fF": -1.4204399999999984,
+        "new_RESETN_load_fF": 88.7748,
+        "new_SETN_tie_load_fF": 129.534
+      },
+      "FF": {
+        "area_delta_um2": 10.497599999999993,
+        "clock_cap_delta_fF": -2.2629599999999916,
+        "new_RESETN_load_fF": 96.34908,
+        "new_SETN_tie_load_fF": 139.73520000000002
+      }
+    }
+  }
+]

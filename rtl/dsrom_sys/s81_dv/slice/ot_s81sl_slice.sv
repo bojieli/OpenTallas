@@ -131,7 +131,7 @@ module ot_s81sl_slice #(
     input  wire [1103:0]   ri_w, input wire [1103:0] ri_e, output wire [1103:0] ro_e, output wire [1103:0] ro_w,
     input  wire [275:0]    vi,   output wire [275:0] vo,
     // band port (C3)
-    input  wire [1103:0]   bi,   output wire [1103:0] bo,
+    input  wire [1103:0]   bi,   output wire [512:0] bo,
     // x chains: 0 / 1 = down (W / E frame of row 1), 2 / 3 = up (row 2)
     output wire [4*1104-1:0] xc,
     // frame return lanes (cfifo rd)
@@ -206,7 +206,7 @@ module ot_s81sl_slice #(
             .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
-        assign bo = 1104'd0;     // C1 has no band port: the C1 cluster master does not expose bi / bo
+        assign bo = 513'd0;      // C1 has no band port: the C1 cluster master does not expose bi / bo
     end endgenerate
     // xfin (S81-DV leaf): sid = the slice strap (RTL-BUILD-S81: was unconnected); mode ENG -> e_* -> eg
     ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv),
@@ -224,7 +224,7 @@ module ot_s81sl_slice #(
     ot_s81sl_rly #(.W(8 * 70), .D(DR)) u_rt (.clk(clk), .d(rt), .q(rt_q));
     // cap ports (e979ee6a7): rt_w = lanes 0..3 (W frame column), rt_e = lanes 4..7; capture writes to leaves 0..2 on its
     // S face and leaves 3, 4 on its N face, 2 ports a leaf (leaf-major, as cw_*_x)
-    ot_s81sl_cap u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d),
+    ot_s81sl_capc2 u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d),
         .cw_s_v(cw_v_x[5:0]), .cw_s_a(cw_a_x[71:0]), .cw_s_d(cw_d_x[191:0]),
         .cw_n_v(cw_v_x[9:6]), .cw_n_a(cw_a_x[119:72]), .cw_n_d(cw_d_x[319:192]), .fault(f_cap));
     // x chains: the frame cfifo ingress word (dsfd_cfifo_crs): xd = {record xw[564:0], marker} (566 b, lanes 0..2),

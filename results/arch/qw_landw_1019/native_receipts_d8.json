@@ -1,0 +1,402 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "lane": "QW-LANDW",
+ "generated": "2026-10-19 22:05 PT",
+ "tool": "tools/hier_contract/native_pin_audit.py @ origin/main 34428d840 (--view --cell --case k0,k1,k2,k3); en capture = TT setup_rising(en vs ck_s) + R(ck_s) = insertion.json clock_measurements.ck_s.tt.boundary.mean",
+ "note": "The 8 CLOSED D8 landh0 views (QW-LAND8 l8a routes, main). en (the hop-0 ICG enable source) now lands on the en_s0 flop: native capture 36.7..55.3 ps vs the 190 ps budget (the D4 landh0_548 view read 351.4 ps). Every record PASS: launch <= 170.7 ps (fault), capture <= 154.1 ps, comb 0, pin-flop spread <= 5.6 ps TT/FF. k0..k3 are case straps (die ties + set_case_analysis).",
+ "all_pass": true,
+ "records": [
+  {
+   "cell": "qfd_landh0d8_10_EW_19x19",
+   "view": "physical/ref_tile/qfwd_landh0d8_10_ew_19x19/views/qfd_landh0d8_10_EW_19x19",
+   "lib_cell": "qfd_landh0d8_10_EW_19x19",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 125.7,
+   "spread_ps": 2.2,
+   "outputs": 11,
+   "inputs": 12,
+   "launch_ps": 164.5,
+   "launch_pin": "fault",
+   "capture_ps": 143.1,
+   "capture_pin": "a[8]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 49.4,
+    "k1": 49.4,
+    "k2": 49.1,
+    "k3": 49.6
+   },
+   "ff_spread_ps": 1.8,
+   "ff_launch_min_ps": 96.7,
+   "ff_hold_need_ps": -19.3,
+   "pass": true,
+   "fail_why": "",
+   "en_capture_ps": 42.8,
+   "en_setup_tt_ps": -82.9,
+   "en_R_ck_s_tt_ps": 125.7,
+   "en_pass": true,
+   "job": "qfwd_landh0d8_10_ew_19x19"
+  },
+  {
+   "cell": "qfd_landh0d8_1_EW_16x16",
+   "view": "physical/ref_tile/qfwd_landh0d8_1_ew_16x16/views/qfd_landh0d8_1_EW_16x16",
+   "lib_cell": "qfd_landh0d8_1_EW_16x16",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 118.7,
+   "spread_ps": 1.3,
+   "outputs": 2,
+   "inputs": 3,
+   "launch_ps": 170.7,
+   "launch_pin": "fault",
+   "capture_ps": 143.4,
+   "capture_pin": "a[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 48.8,
+    "k1": 49.0,
+    "k2": 49.2,
+    "k3": 48.6
+   },
+   "ff_spread_ps": 1.2,
+   "ff_launch_min_ps": 97.2,
+   "ff_hold_need_ps": -15.4,
+   "pass": true,
+   "fail_why": "",
+   "en_capture_ps": 36.7,
+   "en_setup_tt_ps": -82.0,
+   "en_R_ck_s_tt_ps": 118.7,
+   "en_pass": true,
+   "job": "qfwd_landh0d8_1_ew_16x16"
+  },
+  {
+   "cell": "qfd_landh0d8_32_EW_28x26",
+   "view": "physical/ref_tile/qfwd_landh0d8_32_ew_28x26/views/qfd_landh0d8_32_EW_28x26",
+   "lib_cell": "qfd_landh0d8_32_EW_28x26",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 121.0,
+   "spread_ps": 3.6,
+   "outputs": 33,
+   "inputs": 34,
+   "launch_ps": 160.2,
+   "launch_pin": "fault",
+   "capture_ps": 152.5,
+   "capture_pin": "a[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 48.3,
+    "k1": 48.8,
+    "k2": 48.8,
+    "k3": 48.3
+   },
+   "ff_spread_ps": 3.1,
+   "ff_launch_min_ps": 95.4,
+   "ff_hold_need_ps": -6.4,
+   "pass": true,
+   "fail_why": "",
+   "en_capture_ps": 45.4,
+   "en_setup_tt_ps": -75.6,
+   "en_R_ck_s_tt_ps": 121.0,
+   "en_pass": true,
+   "job": "qfwd_landh0d8_32_ew_28x26"
+  },
+  {
+   "cell": "qfd_landh0d8_3_EW_17x17",
+   "view": "physical/ref_tile/qfwd_landh0d8_3_ew_17x17/views/qfd_landh0d8_3_EW_17x17",
+   "lib_cell": "qfd_landh0d8_3_EW_17x17",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 121.1,
+   "spread_ps": 1.6,
+   "outputs": 4,
+   "inputs": 5,
+   "launch_ps": 166.0,
+   "launch_pin": "fault",
+   "capture_ps": 131.7,
+   "capture_pin": "a[1]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 48.6,
+    "k1": 48.9,
+    "k2": 48.9,
+    "k3": 48.6
+   },
+   "ff_spread_ps": 1.4,
+   "ff_launch_min_ps": 98.5,
+   "ff_hold_need_ps": -15.8,
+   "pass": true,
+   "fail_why": "",
+   "en_capture_ps": 37.4,
+   "en_setup_tt_ps": -83.7,
+   "en_R_ck_s_tt_ps": 121.1,
+   "en_pass": true,
+   "job": "qfwd_landh0d8_3_ew_17x17"
+  },
+  {
+   "cell": "qfd_landh0d8n_10_EW_19x19",
+   "view": "physical/ref_tile/qfwd_landh0d8n_10_ew_19x19/views/qfd_landh0d8n_10_EW_19x19",
+   "lib_cell": "qfd_landh0d8n_10_EW_19x19",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 85.4,
+   "spread_ps": 5.5,
+   "outputs": 11,
+   "inputs": 12,
+   "launch_ps": 162.8,
+   "launch_pin": "fault",
+   "capture_ps": 148.2,
+   "capture_pin": "a[4]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 48.3,
+    "k1": 48.3,
+    "k2": 48.2,
+    "k3": 48.3
+   },
+   "ff_spread_ps": 5.6,
+   "ff_launch_min_ps": 99.8,
+   "ff_hold_need_ps": -18.9,
+   "pass": true,
+   "fail_why": "",
+   "en_capture_ps": 55.3,
+   "en_setup_tt_ps": -30.1,
+   "en_R_ck_s_tt_ps": 85.4,
+   "en_pass": true,
+   "job": "qfwd_landh0d8n_10_ew_19x19"
+  },
+  {
+   "cell": "qfd_landh0d8n_1_EW_16x16",
+   "view": "physical/ref_tile/qfwd_landh0d8n_1_ew_16x16/views/qfd_landh0d8n_1_EW_16x16",
+   "lib_cell": "qfd_landh0d8n_1_EW_16x16",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 64.4,
+   "spread_ps": 1.4,
+   "outputs": 2,
+   "inputs": 3,
+   "launch_ps": 163.2,
+   "launch_pin": "fault",
+   "capture_ps": 126.1,
+   "capture_pin": "a[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 49.0,
+    "k1": 49.0,
+    "k2": 49.1,
+    "k3": 48.9
+   },
+   "ff_spread_ps": 1.1,
+   "ff_launch_min_ps": 101.7,
+   "ff_hold_need_ps": -20.0,
+   "pass": true,
+   "fail_why": "",
+   "en_capture_ps": 45.2,
+   "en_setup_tt_ps": -19.2,
+   "en_R_ck_s_tt_ps": 64.4,
+   "en_pass": true,
+   "job": "qfwd_landh0d8n_1_ew_16x16"
+  },
+  {
+   "cell": "qfd_landh0d8n_32_EW_28x26",
+   "view": "physical/ref_tile/qfwd_landh0d8n_32_ew_28x26/views/qfd_landh0d8n_32_EW_28x26",
+   "lib_cell": "qfd_landh0d8n_32_EW_28x26",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 90.8,
+   "spread_ps": 4.3,
+   "outputs": 33,
+   "inputs": 34,
+   "launch_ps": 160.3,
+   "launch_pin": "fault",
+   "capture_ps": 154.1,
+   "capture_pin": "a[9]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 49.3,
+    "k1": 49.2,
+    "k2": 49.3,
+    "k3": 49.4
+   },
+   "ff_spread_ps": 4.8,
+   "ff_launch_min_ps": 95.5,
+   "ff_hold_need_ps": -19.9,
+   "pass": true,
+   "fail_why": "",
+   "en_capture_ps": 52.0,
+   "en_setup_tt_ps": -38.8,
+   "en_R_ck_s_tt_ps": 90.8,
+   "en_pass": true,
+   "job": "qfwd_landh0d8n_32_ew_28x26"
+  },
+  {
+   "cell": "qfd_landh0d8n_3_EW_17x17",
+   "view": "physical/ref_tile/qfwd_landh0d8n_3_ew_17x17/views/qfd_landh0d8n_3_EW_17x17",
+   "lib_cell": "qfd_landh0d8n_3_EW_17x17",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 64.8,
+   "spread_ps": 1.4,
+   "outputs": 4,
+   "inputs": 5,
+   "launch_ps": 167.7,
+   "launch_pin": "fault",
+   "capture_ps": 131.0,
+   "capture_pin": "a[1]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 48.9,
+    "k1": 48.9,
+    "k2": 48.8,
+    "k3": 49.3
+   },
+   "ff_spread_ps": 1.1,
+   "ff_launch_min_ps": 96.6,
+   "ff_hold_need_ps": -7.5,
+   "pass": true,
+   "fail_why": "",
+   "en_capture_ps": 45.0,
+   "en_setup_tt_ps": -19.8,
+   "en_R_ck_s_tt_ps": 64.8,
+   "en_pass": true,
+   "job": "qfwd_landh0d8n_3_ew_17x17"
+  }
+ ]
+}

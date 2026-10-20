@@ -1,0 +1,17 @@
+XDIE_TXDP compute seam 2,2,2,3,2,2 (from /srv/opentallas-scratch/claude/qw-tok/xdie_dh2/die_dv2f18dh2.v) | KV seam 11,11,9,9,9,9,9 | image TXDP C [8,3,1,10] K [21,4,3,3] | image die stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 3, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 9, 'SK_TXP': 9}
+XDIE_TXDP compiled {'C': [8, 3, 1, 10], 'K': [21, 4, 3, 3]} image {'C': [8, 3, 1, 10], 'K': [21, 4, 3, 3]}
+pair expect=PASS got=PASS -> OK
+pair_gen_txdp expect=PASS got=PASS -> OK
+pair_l0 expect=PASS got=PASS -> OK
+pair_l0_phy9 expect=PASS got=PASS -> OK
+pair_mut_kseam_rx_torn expect=FAIL got=FAIL -> OK
+pair_mut_kseam_tx_torn expect=FAIL got=FAIL -> OK
+pair_mut_phy_bit expect=FAIL got=FAIL -> OK
+pair_mut_result_bit expect=FAIL got=FAIL -> OK
+pair_mut_status_done expect=FAIL got=FAIL -> OK
+pair_mut_txdp_c_off1 expect=FAIL got=FAIL -> OK
+pair_phy9 expect=PASS got=PASS -> OK
+pair_t8192 expect=PASS got=PASS -> OK
+pair_gen_txdp expect=FAIL got=FAIL -> OK
+pair_gen_txdp expect=FAIL got=FAIL -> OK
+XDIE_TXDP_PASS

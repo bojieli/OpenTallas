@@ -72,6 +72,8 @@ def main():
                     help='MUTANT: TXDP the die masters are built with, C0..3/K0..3 (default: the compiled TXDP; '
                          'e.g. the r4..r9 hard-wired 3,3,1,4/3,4,3,3)')
     ap.add_argument('--c-real', type=int, default=1, help='1: qfd_native59_dv_service is the compute producer/consumer')
+    ap.add_argument('--kv-codec', type=int, default=1, choices=(1, 2),
+                    help='KV attention programme codec edges of the vehicle: 1 = LAND 0 (as-built), 2 = LAND 1 (OT_KV_ATTN_LAND)')
     ap.add_argument('--k-real', type=int, default=1, help='1/2: the kvs_attn programme is the KV producer/consumer')
     ap.add_argument('--qgap', type=int, default=0,
                     help='idle link slots between CMD and Q beat 0: 0 = the compiler law (d2d_link_calendar layer_msgs, Q beat b '
@@ -89,7 +91,7 @@ def main():
     # codec at an unreal end has raw 1 (KVN 2) and no seam
     S = dict(CS_TXS=CS_TXS, CS_RXV=CS_RXV, CS_RXP=CS_RXP, CS_X3S=CS_X3S, SC_TX=SC_TX, SC_X3=SC_X3, KS_RXV=KS_RXV,
              KS_RXP=KS_RXP, KS_TXS=KS_TXS, KS_TXK=KS_TXK, KS_TXB=KS_TXB, SK_TXV=SK_TXV, SK_TXP=SK_TXP)
-    law = L.producer_txd(S)
+    law = L.producer_txd(S, kv_codec=a.kv_codec)
     raw_c = law['C'] if a.c_real else [1, 1, 1, 2]
     raw_k = law['K']
     if a.txd_override:

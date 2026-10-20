@@ -1,0 +1,265 @@
+{
+  "scalar_banks": [
+    {
+      "target": "amnb",
+      "bits": 6,
+      "lsb": 0
+    },
+    {
+      "target": "eps",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "eps",
+      "bits": 8,
+      "lsb": 24
+    },
+    {
+      "target": "fuse",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "kk",
+      "bits": 5,
+      "lsb": 0
+    },
+    {
+      "target": "nb",
+      "bits": 6,
+      "lsb": 0
+    },
+    {
+      "target": "rdir",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "root",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "rx",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "ss",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "am2",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "am2_u",
+      "bits": 2,
+      "lsb": 0
+    },
+    {
+      "target": "am2_val",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "am2_val",
+      "bits": 8,
+      "lsb": 24
+    },
+    {
+      "target": "dn_o",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "dn_o",
+      "bits": 24,
+      "lsb": 24
+    },
+    {
+      "target": "up_o",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "up_o",
+      "bits": 24,
+      "lsb": 24
+    },
+    {
+      "target": "cnt",
+      "bits": 6,
+      "lsb": 0
+    },
+    {
+      "target": "trig",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "candidate_count",
+      "bits": 2,
+      "lsb": 0
+    },
+    {
+      "target": "candidate_mix",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "candidate_v",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "mg_u",
+      "bits": 2,
+      "lsb": 0
+    },
+    {
+      "target": "am_best",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "am_best",
+      "bits": 24,
+      "lsb": 24
+    },
+    {
+      "target": "am_best",
+      "bits": 9,
+      "lsb": 48
+    },
+    {
+      "target": "amc",
+      "bits": 6,
+      "lsb": 0
+    },
+    {
+      "target": "di",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "tk_send",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "tok_idx",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "tok_own",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "tok_user",
+      "bits": 2,
+      "lsb": 0
+    },
+    {
+      "target": "tok_v",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "tok_val",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "tok_val",
+      "bits": 8,
+      "lsb": 24
+    },
+    {
+      "target": "ui",
+      "bits": 24,
+      "lsb": 0
+    },
+    {
+      "target": "w1_we",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "bc",
+      "bits": 7,
+      "lsb": 0
+    },
+    {
+      "target": "busy",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "fault",
+      "bits": 1,
+      "lsb": 0
+    }
+  ],
+  "ot_hdc_fp32_add_fast": [
+    {
+      "target": "s1_v",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "s2_v",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "err",
+      "bits": 2,
+      "lsb": 0
+    },
+    {
+      "target": "valid_out",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "y",
+      "bits": 32,
+      "lsb": 0
+    }
+  ],
+  "ot_hdc_fp32_mul_fast": [
+    {
+      "target": "s1_v",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "s2_v",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "err",
+      "bits": 2,
+      "lsb": 0
+    },
+    {
+      "target": "valid_out",
+      "bits": 1,
+      "lsb": 0
+    },
+    {
+      "target": "y",
+      "bits": 32,
+      "lsb": 0
+    }
+  ],
+  "cfg_setup_added_edges": 2,
+  "cfg_valid_leaf_copies": 106
+}

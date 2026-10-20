@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.qwen_compute.die_clock_config.v1",
+ "lane": "QW-DIECLK2 (LEAD2-QW), 10-19 16:55 PT; consumer QW-GEN2 (successor of dv2f18dh2)",
+ "diagnosis": {
+  "trial": "QW-DIECLK rA/rB (bbe250fb5) terminal FAIL: intra 38/655, 446 links / 186,347 bits unlanded, rA lane drift 424.6 ps",
+  "root_cause_intra": "114 of 115 over-budget intra pairs have BOTH clock entries inside the 17.28-um abutment gaps between hard columns (c_b16_dv / dv_slice2 at 2462.4 pitch, blocks 2445.1 wide). 2919 of 10880 clock entries sit in those gaps. tools/hbm_die_v15 dct.Grid blocks every 10-um cell a block touches, so the gaps had ZERO free cells: leaf buffers landed mm away, region trees reached 13-15 ns (r34 target TT 14.9 ns / FF 12.7 ns, r219 13.3 / 12.1 ns) and 400-650 ps flop spread. Failing pairs are rst_field relay hops (220 um, 100-133 ps) and rst_field -> c_b16 ck pin (15 um apart, 430-530 ps).",
+  "assumed_R": "NOT the cause: rst_field pairs have real R (qfd_rst_rep 33.6 ps TT) on both ends; c_b16 R is ASSUMED 0 because qfd_c_b16_dv has no closed view (CB16 parent unclosed). Measured per-pin R comes from the CB16 parent's native insertion when it closes; until then the die keeps R=0 at the 16 tile pins (their tiles are separate CB16 regions, see R1).",
+  "root_cause_drift": "same giant region trees (insertion x TT/FF ratio); expected to fall with R3."
+ },
+ "topology": {
+  "regions": "one local tree per region at a regional entry (sink median); judged intra only, pin-flop spread / pairs <= 80 ps TT and FF",
+  "spine": "ONE forwarded spine from clk_rx/pll_d2d[0], balance=false (no pads, no region compensation), repeaters <= 200 um",
+  "crossings": "every cross-region data crossing LANDED (landing_list.json), fixed latency, no backpressure",
+  "tool": "tools/die_clock qwen_compute_dieclk.sh regional + DC_GRID_CENTER=1 (claude/qw-dieclk2-1019 f3e34c03d)",
+  "verdict": "tools/die_clock/regional_verdict.py: intra ok + 0 unlanded + landed-lane drift |dck_FF-dck_TT| <= T/2 + unpadded spine"
+ },
+ "gen_rules": {
+  "R1_c_b16": "keep each qfd_c_b16_dv as its own die region set: the CB16 fabric (qc_gen Q-CLUSTER16/LANDALL) already gives every tile (c,r) its own root ck_c<c>r<r>, lands every tile-seam crossing (qfd_c_land_w/r, D4, E=K=2) and registers rst_c<c>r<r> at its region entry. If rC still fails a c_b16 region intra, give each tile pin its own clk_rx region output (768 roots) -- no die-level pair exists between two pins of one cluster.",
+  "R2_no_shared_regions": "no region root may feed two hard instances: split clk_rx/pll_r48 (c16_E0_0+c16_W0_0), r90, r93, r94 (c16_E0_x+c16_E1_x), r95 (dvs_E0+dvs_E1), r99. Adds the dvs_E0<->dvs_E1 hops to the landing list (2 links, 5,498 bits, same kits).",
+  "R3_gap_clock_slots": "the 17.28-um column gaps are clock channels: keep one free 1.62 x 0.27 site run every <= 220 um of each gap (do not fill gaps with rst_rep columns) so grid_center legality finds sites. FALLBACK if rC intra still fails in gap regions: widen every gap to 60.48 um (column pitch 57 -> 58 x 43.2 = 2505.6 um): +475 um die width, +11.5 mm2 (+1.5%), 0 cycles.",
+  "R4_cb16_pins_on_faces": "c_b16 clock pins stay on faces next to channels/gaps. The qc_gen note 'centre-fed (die area pin)' would put pins up to 1.2 mm inside the block, beyond MAX_RUN 400 um over blocks: unreachable by die clock buffers. The CB16 parent forwards from its face pins internally.",
+  "R5_landings": "instantiate every row of landing_list.json at the RECEIVER's regional-parent boundary (CB16 face for c_b16-bound buses; slice face for dv_slice2-bound; abutted slices have 0-um gaps, so their landing sits inside the receiving slice face); ck_s = sender region root forwarded with the bus; +3 edges each into the compiler schedule."
+ },
+ "landings": "landing_list.json (446 links, 186,347 bits; 1,154,266 FF; 13.08 mm2 = 1.7% of the 771 mm2 die; +45 cycles/layer worst case = +1,620 cycles/token = +1.35 us/token at 1.2 GHz)",
+ "trial_next": "ot-epyc6 /srv/opentallas-scratch/claude/qw-dieclk2-1019 (rC = forwarded spine + grid_center, rD = ideal entries + grid_center), same dh2 floorplan copy"
+}

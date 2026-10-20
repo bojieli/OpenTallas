@@ -1,0 +1,255 @@
+{
+ "name": "qkd_kvs_pc_h_rl1-rl1-COMMIT",
+ "block": "qkd_kvs_pc_h",
+ "ref_tile": true,
+ "owner": "Claude:REFILL-1330/KV-PC",
+ "purpose": "KV-PC 10-19 (safe-design redo of qkd_kvs_pc_h_k1 route eb7cbd435 NEEDS_RTL TT -50.35 + pc_h_mu1 gate FAIL): MU 1 + DOMSPLIT ports (i_grp_h / o_grp_h) + reset landing per domain in RTL (OT_KV_PC_RLAND) + KEPT strap pin registers before u_pce; tile file qkd_kvs_tiles_hroot_ff_k_mu_ds_rl.sv.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/kv-pc-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch",
+   "results/arch/qwen_kv_domsplit_1019/ports",
+   "results/arch/qwen_kv_kits_b_1018",
+   "results/arch/qwen_kv_static_programme_1017/die/target6.hex",
+   "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018",
+   "rtl",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv",
+   "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_emb.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds.sv",
+   "rtl/test/mu_qwen_1018/lists/lint_mu_kv_tiles.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_pc_path_rows.f",
+   "rtl/test/mu_qwen_1018/run_mu_kv.sh",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv",
+   "rtl/test/qwen_static_kv/kvpc_rland",
+   "tools/qwen_kv_die",
+   "tools/qwen_kv_die/kvs_pc_rland_bench.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_pc_h u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pc_h_rland_m0",
+    "cmd": "python3 tools/qwen_kv_die/kvs_pc_rland_bench.py --tile pc_h --mut 0 --out {RUN}/bench/rl_pc_h_m0 > {RUN}/bench/rl_pc_h_m0.log 2>&1; rc=$?; cat {RUN}/bench/rl_pc_h_m0.log; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^KVPC_RLAND PASS tile=pc_h .* errors=0 mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_rland_1019/pc_h_m0.log"
+   },
+   {
+    "name": "pc_h_rland_m1",
+    "cmd": "python3 tools/qwen_kv_die/kvs_pc_rland_bench.py --tile pc_h --mut 1 --out {RUN}/bench/rl_pc_h_m1 > {RUN}/bench/rl_pc_h_m1.log 2>&1; rc=$?; cat {RUN}/bench/rl_pc_h_m1.log; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^KVPC_RLAND FAIL tile=pc_h .* mut=1",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_rland_1019/pc_h_m1.log"
+   },
+   {
+    "name": "pc_h_rland_m2",
+    "cmd": "python3 tools/qwen_kv_die/kvs_pc_rland_bench.py --tile pc_h --mut 2 --out {RUN}/bench/rl_pc_h_m2 > {RUN}/bench/rl_pc_h_m2.log 2>&1; rc=$?; cat {RUN}/bench/rl_pc_h_m2.log; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^KVPC_RLAND FAIL tile=pc_h .* mut=2",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_rland_1019/pc_h_m2.log"
+   },
+   {
+    "name": "pc_h_rland_m3",
+    "cmd": "python3 tools/qwen_kv_die/kvs_pc_rland_bench.py --tile pc_h --mut 3 --out {RUN}/bench/rl_pc_h_m3 > {RUN}/bench/rl_pc_h_m3.log 2>&1; rc=$?; cat {RUN}/bench/rl_pc_h_m3.log; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^KVPC_RLAND FAIL tile=pc_h .* mut=3",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_rland_1019/pc_h_m3.log"
+   },
+   {
+    "name": "pc_h_rland_m4",
+    "cmd": "python3 tools/qwen_kv_die/kvs_pc_rland_bench.py --tile pc_h --mut 4 --out {RUN}/bench/rl_pc_h_m4 > {RUN}/bench/rl_pc_h_m4.log 2>&1; rc=$?; cat {RUN}/bench/rl_pc_h_m4.log; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^KVPC_RLAND FAIL tile=pc_h .* mut=4",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_rland_1019/pc_h_m4.log"
+   },
+   {
+    "name": "pc_h_rland_m5",
+    "cmd": "python3 tools/qwen_kv_die/kvs_pc_rland_bench.py --tile pc_h --mut 5 --out {RUN}/bench/rl_pc_h_m5 > {RUN}/bench/rl_pc_h_m5.log 2>&1; rc=$?; cat {RUN}/bench/rl_pc_h_m5.log; exit $rc",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^KVPC_RLAND FAIL tile=pc_h .* mut=5",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_rland_1019/pc_h_m5.log"
+   },
+   {
+    "name": "pc_h_mu_lint",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu lint_mu_kv_tiles; rc=$?; cat {RUN}/bench/mu/lint_mu_kv_tiles.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS LINT_MU_KV_TILES",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu/lint_mu_kv_tiles.log"
+   },
+   {
+    "name": "pc_h_mu_read_rows",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu tb_mu_kv_pc_path_rows; rc=$?; cat {RUN}/bench/mu/tb_mu_kv_pc_path_rows.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS MU_KV_READ_ROWS users4",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu/tb_mu_kv_pc_path_rows.log"
+   },
+   {
+    "name": "pc_h_mu_mk1",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu mk1; rc=$?; cat {RUN}/bench/mu/mk1.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL MU_KV_READ_ROWS act_bad=144 disjoint_bad=288",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mut/mk1.log"
+   },
+   {
+    "name": "pc_h_mu_mk3",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu mk3; rc=$?; cat {RUN}/bench/mu/mk3.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL MU_KV_READ_ROWS act_bad=96 disjoint_bad=64",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mut/mk3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_pc_h_rl1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_pc_h_rl1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_pc_h_rl1 --out {RUN}/record/views/qkd_kvs_pc_h  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_pc_h_rl1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_pc_h_rl1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_pc_h_rl1/qkd_kvs_pc_h_rl1-rl1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-PC 10-19 (safe-design redo of qkd_kvs_pc_h_k1 route eb7cbd435 NEEDS_RTL TT -50.35 + pc_h_mu1 gate FAIL): MU 1 + DOMSPLIT ports (i_grp_h / o_grp_h) + reset landing per domain in RTL (OT_KV_PC_RLAND) + KEPT strap pin registers before u_pce; tile file qkd_kvs_tiles_hroot_ff_k_mu_ds_rl.sv."
+}

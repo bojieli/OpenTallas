@@ -1,0 +1,16 @@
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-4151280-1792401659 after 0 s
+COLL_VMRT PASS LAT74 VM_RT74 pairs1792 lanes_padded_to_budget
+COLL_VMRT mismatch out0 pair0 cyc94 exp_cyc94
+COLL_VMRT mismatch out1 pair1 cyc94 exp_cyc94
+COLL_VMRT mismatch out2 pair2 cyc94 exp_cyc94
+MUT1 rejected
+COLL_VMRT mismatch out0 pair0 cyc94 exp_cyc94
+COLL_VMRT mismatch out1 pair1 cyc94 exp_cyc94
+COLL_VMRT mismatch out2 pair2 cyc94 exp_cyc94
+MUT2 rejected
+COLL_VMRT mismatch out0 pair1 cyc94 exp_cyc94
+COLL_VMRT mismatch out1 pair3 cyc94 exp_cyc94
+COLL_VMRT mismatch out2 pair1 cyc95 exp_cyc94
+MUT3 rejected
+COLL_VMRT GATE PASS LAT74
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-4151280-1792401659): exit 0

@@ -1,0 +1,13 @@
+# leg amix_G1 mem 16 threads 8 2026-10-19T12:29:31-07:00
+# cmd: bash results/rtl/mu_qwen_1018/amix/run_group.sh G1 /srv/opentallas-scratch/claude/refill-1225/QWREG/out/amix_w/G1
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc7       admits   903 GB (avail 733, growth 101, headroom 0, waiters 0/0 GB) load 104/96 running 63 disk 6315 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4131433-1792438171 after 1 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4131433-1792438171): exit 0
+# ot-run rc=0 2026-10-19T12:59:52-07:00

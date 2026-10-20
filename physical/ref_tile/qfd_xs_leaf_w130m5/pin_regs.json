@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qfd_xs_leaf",
+ "enable": false,
+ "reason": "same RTL / params as the CLOSED qfd_xs_leaf_w130 view (NCH 4, READ_PIN_PIPE 1 = one raw pin capture of r_v/r_t/r_ep/r_p, FILL_PIPE 1 = every wo_*/co_* output from its own register at the output face; w_*/c_* chain inputs land in the leaf's slot registers); the leaf latency is contract (heads LEAF_READ_PIN_PIPE 1, DX 14, measured dvm_minus_ref_edges 5): an extra kit pin register would change it. The M5 re-kit changes only the E/W pin layer (M6 -> M4)."
+}

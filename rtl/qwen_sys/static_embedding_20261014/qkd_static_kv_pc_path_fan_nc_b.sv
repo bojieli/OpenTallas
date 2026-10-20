@@ -293,6 +293,15 @@ module qkd_static_kv_pc_path_fan_nc_b #(parameter integer MU = 0) (   // MU-ADOP
     wire s_emb_scale;
     wire [15:0] s_emb_epoch;
     wire s_emb_return_slot;
+    // ---- strap pin registers (KV-PC 2026-10-19, safe-design item 1/4) ----
+    // pc / cfg_stack are die-top identity straps (constants on the die).  The chain station registers its own copy
+    // (f985bf9d9); the PC path (u_pce: es-merge strap compare, controller, calendar) took them straight from the tile
+    // pins into a 6-11 level input cone (SAFE-AUDIT-KV pc/pc_h: pc__cfg_stack -> emb/slot decode, -605 ps SS).  One
+    // KEPT pin register per strap: every strap cone starts at a local flop.  Constant straps: identical behaviour from
+    // the first core edge (reset is held for far longer); no edge age, calendar slot or relay stage changes (0 cycles).
+    (* keep *) reg [4:0] pc_sr;
+    (* keep *) reg [1:0] st_sr;
+    always @(posedge ck) begin pc_sr <= pc; st_sr <= cfg_stack; end
     // hard child: no #() overrides (MUT 0 is the production value)
     qkd_kv_pc_chain_station_b u_chain (
         .ck(ck), .rst_n(rsi), .pc(pc), .cfg_stack(cfg_stack), .di(chain_i), .dout(chain_o),
@@ -312,7 +321,7 @@ module qkd_static_kv_pc_path_fan_nc_b #(parameter integer MU = 0) (   // MU-ADOP
         .hrst(hrst),
         .ck(ck),
         .rsi(rsi),
-        .pc(pc),
+        .pc(pc_sr),
         .wes(s_wes),
         .er(er),
         .po(po),
@@ -321,7 +330,7 @@ module qkd_static_kv_pc_path_fan_nc_b #(parameter integer MU = 0) (   // MU-ADOP
         .ko(ko),
         .fi(fi),
         .fo(fo),
-        .cfg_stack(cfg_stack),
+        .cfg_stack(st_sr),
         .es_context(s_es_context),
         .es_expected_valid(s_es_expected_valid),
         .es_expected_identity(s_es_expected_identity),

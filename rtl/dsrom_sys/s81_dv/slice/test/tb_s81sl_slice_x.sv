@@ -9,7 +9,7 @@ module tb_s81sl_slice_x;
     reg clk = 1'b0; always #0.5 clk = ~clk;
     reg rst_n = 1'b0;
     reg [1103:0] ri_w, ri_e, bi; reg [275:0] vi; reg [559:0] rt;
-    wire [1103:0] ro_e_a, ro_w_a, bo_a, ro_e_b, ro_w_b, bo_b; wire [275:0] vo_a, vo_b; wire [4415:0] xc_a, xc_b;
+    wire [1103:0] ro_e_a, ro_w_a, ro_e_b, ro_w_b; wire [512:0] bo_a, bo_b; wire [275:0] vo_a, vo_b; wire [4415:0] xc_a, xc_b;
     wire [15:0] cl_a, cl_b, cx_a, cx_b; wire [1:0] cv_a, cv_b; wire [7:0] cr_a, cr_b; wire f_a, f_b;
     ot_s81sl_slice #(.HB(HB)) u_a (.clk(clk), .rst_n(rst_n), .sid(4'd3), .ri_w(ri_w), .ri_e(ri_e), .ro_e(ro_e_a), .ro_w(ro_w_a),
         .vi(vi), .vo(vo_a), .bi(bi), .bo(bo_a), .xc(xc_a), .rt(rt), .ck_line(cl_a), .ck_v(cv_a), .ck_xc(cx_a), .ck_rt(cr_a),

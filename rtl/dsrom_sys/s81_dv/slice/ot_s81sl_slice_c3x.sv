@@ -14,7 +14,7 @@ module ot_s81sl_slice_c3x #(
     input  wire [3:0]      sid,
     input  wire [1103:0]   ri_w, input wire [1103:0] ri_e, output wire [1103:0] ro_e, output wire [1103:0] ro_w,
     input  wire [275:0]    vi,   output wire [275:0] vo,
-    input  wire [1103:0]   bi,   output wire [1103:0] bo,
+    input  wire [1103:0]   bi,   output wire [512:0] bo,
     output wire [4415:0]   xc,
     input  wire [559:0]    rt,
     output wire [15:0]     ck_line,
@@ -95,7 +95,7 @@ module ot_s81sl_slice_c3x #(
         .i_kk(xe_kk), .i_dd(xe_dd), .g_v(eg_v), .g_c(eg_c), .g(eg_d), .fault(f_eg));
     wire [559:0] rt_q;
     ot_s81sl_rly #(.W(560), .D(DR)) u_rt (.clk(clk), .d(rt), .q(rt_q));
-    ot_s81sl_cap u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d),
+    ot_s81sl_capc2 u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d),
         .cw_s_v(cw_v_x[5:0]), .cw_s_a(cw_a_x[71:0]), .cw_s_d(cw_d_x[191:0]),
         .cw_n_v(cw_v_x[9:6]), .cw_n_a(cw_a_x[119:72]), .cw_n_d(cw_d_x[319:192]), .fault(f_cap));
     wire [1:0] mkq; wire [1103:0] xw4;

@@ -1,0 +1,5 @@
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2387290-1792471013 after 1 s
+E2E rtlmut_OT_S81SL_RSTOP_MUT_CIXB expect=fail smwire=FAIL caught=NO -> OK | SMWIRE stats mut=0 route=1 gather s3=0 s4=192 s2=192 n3=0 lat(head0 beat -> port) s3=-1 s4=18 s2=18 n3=-1 head1 +tree hop: s3=-1 checks=393216 faults sot 00 gw 00 land 0 xr 0 rstop 0000
+E2E_DONE bad=0 define=OT_S81SL_RSTOP_MUT_CIXB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2387290-1792471013): exit 0

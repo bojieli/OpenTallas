@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-dcal2-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-dcal2-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-dcal2-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-dcal2-1019
+ot-run: ot-epyc9       admits  1233 GB (avail 949, growth 86, headroom 0, waiters 0/0 GB) load 67/128 running 18 disk 725 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-dcal2-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-dcal2-1019
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-162516-1792460174 after 1 s
+OK  lint expect=pass rc=0
+OK  kpv_lockstep_miter_and_lane_injection expect=pass rc=0
+OK  mut1_lanes_ignored_old_wiring expect=fail rc=1
+MRGBENCH ot_qkh_ktree_lk: 3 stages, 0 unexpected (Verilator 5.050 2026-07-01 rev v5.050)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-162516-1792460174): exit 0

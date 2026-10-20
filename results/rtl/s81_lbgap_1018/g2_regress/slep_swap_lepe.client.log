@@ -1,0 +1,12 @@
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1767513-1792350472 after 0 s
+MISMATCH A->B 0 cyc 8059 b09d9a13718b3daf
+MISMATCH A->B 1 cyc 8061 abd7eae07bd29b6d
+MISMATCH B->A 0 cyc 8063 20fa8588754ea88f
+MISMATCH A->B 2 cyc 8064 19a60dc724872c1f
+MISMATCH B->A 1 cyc 8065 c0f11da43f570e1b
+SLEP_STATS A->B 69/200 B->A 75/200 mismatches 144 fault A 1 B 1
+FAIL slice_lep
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=swap_lepe
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1767513-1792350472): exit 0
+EXIT 0

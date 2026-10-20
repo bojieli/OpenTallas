@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dsdv_sh_sq-dsdv_sh_sq-baa6e2280 bench bench_seqhost_mutorder host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/dsdv_sh_sq-dsdv_sh_sq-baa6e2280 log cl/bench_seqhost_mutorder.a1b1.log captured 2026-10-19T07:37:44-07:00
+# fail_regex '^SEQHOST FAIL timeout .*sealed=0/1'
+SEQHOST FAIL timeout (launch0=-1 hsp=320/320 sealed=0/1)

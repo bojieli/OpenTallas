@@ -1,0 +1,7 @@
+RST_EPOCH_MISMATCH L2 MUT1 cycle101 highage2
+RST_EPOCH_MISMATCH L3 MUT1 cycle102 highage3
+RST_EPOCH_MISMATCH L4 MUT1 cycle103 highage4
+RST_EPOCH_MISMATCH L18 MUT1 cycle117 highage18
+[10006000] %Fatal: tb_qfd_c_reset_epoch.sv:25: Assertion failed in tb: RST_EPOCH_FAIL MUT1 errors21
+%Error: rtl/test/tb_qfd_c_reset_epoch.sv:25: Verilog $stop
+Aborting...

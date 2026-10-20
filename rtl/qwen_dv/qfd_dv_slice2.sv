@@ -15,6 +15,8 @@
 // No per-instance strap: the slice id comes from the SETID chain enumeration (cmd kind 7: latch id, forward id + 1).
 // Chain-end inputs (E5: ch_up_i, st_dn_i, sc_dn_i, l9_i of an unpaired slice; W5: st_up_i, sc_up_i, ch_dn_i before
 // the edge endpoints answer) take the idle word (all zero): a zero word is "no word" on every one of these ports.
+// MUT 14 = qfd_dv_redstn2 last-k selection off (kcm1 ignored; dv_bench2 k must FAIL).
+// MUT 15 = kcm1 read from the pre-fix field cmd[58:51] (overlaps the MU STN user [52:51]; dv_bench2 q must FAIL).
 // MUT as qfd_dv_slice, plus 10: SETID forwards the id unincremented (must FAIL the enumeration bench); 11: XC COLL
 // takes the mode from bit 7 (must FAIL bench i); 12: the cross-die gather lets a later rank win a tie (bench j).
 // Q-SLICE 10-17 (coordinator 0de): the lateral direction is COMPILE-TIME.  This core keeps role names (dn = toward W5);
@@ -37,8 +39,12 @@
 module qfd_dv_slice2 #(
     parameter integer MUT = 0,
     parameter integer SU_TLS = 1,
-    parameter integer MU_NU = 1,               // MU-QWEN R4: users of the LM-head running argmax (1 = single-user, today)
-    parameter integer DIR = 0                   // documentation of the face wrapper (0 W row, 1 E row); no logic
+    parameter integer DIR = 0,                  // documentation of the face wrapper (0 W row, 1 E row); no logic
+    // S-QSLICE 10-18 hardening options (opt-in, off = the benched RTL; PARTITION.md in
+    // results/arch/qwen_split_compute_1014/q_slice_1017/hardening):
+    parameter integer SU_LT = 0,                // 1: the 8 SU lanes are the hard lane tile qfd_dv_su_lane (LT/LOFF/RTREE 1)
+    parameter integer HD_W130 = 0,              // 1: the heads are qfd_dv_heads_w130 (closed qfd_xs_leaf_w130 leaves)
+    parameter integer MU_NU = 1                 // MU-QWEN R4: users of the LM-head running argmax (1 = single-user, today)
 ) (
     input  wire           ck,
     input  wire           rst_n,
@@ -137,7 +143,8 @@ module qfd_dv_slice2 #(
     wire [15:0]   su_prog, su_rows;
     wire [7:0]    su_infl;
     wire [7:0]    ck8 = {8{ck}};
-    qfd_dv_su8_entries #(.TLS(SU_TLS), .SW(8), .LV(4), .WR(16), .AW(24), .NW(18), .KV_FP8(1), .ML(1)) u_su (
+    qfd_dv_su8_entries #(.TLS(SU_TLS), .SW(8), .LV(4), .WR(16), .AW(24), .NW(18), .KV_FP8(1), .ML(1),
+                         .LOFF(SU_LT), .RTREE(SU_LT), .LT(SU_LT), .LTD(SU_LT), .RD(2)) u_su (
         .ck_head(ck8), .ck_exp(ck8), .ck_rcp(ck8), .ck_rsq(ck8), .ck_lane(ck8), .ck_red({9{ck}}),
         .clk(ck), .rst_n(rst), .go(su_go), .ready(su_ready), .idle(su_idle),
         .i_nout(si[18:1]), .i_nin(si[36:19]),
@@ -177,6 +184,7 @@ module qfd_dv_slice2 #(
     wire [511:0] r_d;
     qfd_dv_redstn2 #(.MUT(MUT)) u_stn (.ck(ck), .rst_n(rst),
         .cfg_v(c_stn), .cfg_mode(cmd_q[5:4]), .cfg_wsrc(cmd_q[6]), .cfg_nwords(cmd_q[14:7]), .cfg_sbase(cmd_q[23:15]),
+        .cfg_kcm1((MUT == 15) ? cmd_q[58:51] : cmd_q[66:59]),   // MU-SLICE-GATE 10-19: was [58:51], which overlapped the MU STN user cmd[52:51]; MUT 15 = the old field (bench q FAILs)
         .rs_s(rss_q), .rs_n(rsn_q), .nb_i(nb_q), .nb_o(l9_o),
         .bt_re(bt_re), .bt_word(bt_word), .bt_q(bt_q),
         .r_v(r_v), .r_idx(r_idx), .r_last(r_last), .r_d(r_d), .fault(stn_fault));
@@ -240,10 +248,21 @@ module qfd_dv_slice2 #(
     assign {cw_n3, cw_n2, cw_n1, cw_n0} = n_d;
     assign {cw_s3, cw_s2, cw_s1, cw_s0} = s_d;
     wire hv = hr_q[0];
+    generate if (HD_W130 != 0) begin : g_hdw
+`ifdef OT_DV_SLICE_HARD
+        qfd_dv_heads_w130 u_hd (.ck(ck), .rst_n(rst), .sid(sid_q),
+`else
+        qfd_dv_heads_w130 #(.HEAD_MUT((MUT == 8) ? 3 : 0)) u_hd (.ck(ck), .rst_n(rst), .sid(sid_q),
+`endif
+            .xpf({hr_q[72:2], hr_q[1] & hv}), .gi({hr_q[451:73], hr_q[452] & hv}),
+            .sw_v(xt_v), .sw_a(xt_a), .sw_d(xt_f), .fe_i(xt_bad),
+            .n_d(n_d), .s_d(s_d), .fault(hd_fault));
+    end else begin : g_hd0
     qfd_dv_heads #(.HEAD_MUT((MUT == 8) ? 3 : 0)) u_hd (.ck(ck), .rst_n(rst), .sid(sid_q),
         .xpf({hr_q[72:2], hr_q[1] & hv}), .gi({hr_q[451:73], hr_q[452] & hv}),
         .sw_v(xt_v), .sw_a(xt_a), .sw_m({64{1'b1}}), .sw_d(xt_f), .fe_i(xt_bad),
         .n_d(n_d), .s_d(s_d), .fault(hd_fault));
+    end endgenerate
     // ------------------------------------------------------------------ VM write merge (16-el and 1-el sources)
     wire ar_v = ar_q[517] && ar_en && !g_arm, dd_v = dd_q[519] && !dd_q[518] && dd_en, em_v = dd_q[519] && dd_q[518] && em_en;
     wire [23:0] em_wa = em_base + {12'd0, em_k, 4'd0};
@@ -365,6 +384,6 @@ module qfd_dv_slice2 #(
         if (!rst) ag_dn_o <= 10'd0;
         else ag_dn_o <= agu_q | {stn_busy, any_fault, su_fault, vm_fault, stn_fault, sc_fault, stm_fault, port_fault,
                                  !su_idle, sc_busy};
-    initial if (MUT < 0 || MUT > 12) $fatal(1, "qfd_dv_slice2: MUT %0d undefined", MUT);
+    initial if (MUT < 0 || (MUT > 12 && MUT != 14 && MUT != 15)) $fatal(1, "qfd_dv_slice2: MUT %0d undefined", MUT);  // 14 = redstn2 kcm1 ignored, 15 = kcm1 at [58:51]
     initial if (DIR < 0 || DIR > 1) $fatal(1, "qfd_dv_slice2: DIR %0d undefined", DIR);
 endmodule

@@ -1,0 +1,14 @@
+{
+  "name": "input_next",
+  "changed_source": "private/qkd_host_native_owner_join_rc.sv",
+  "original_sha256": "21b19c6b9be842638c6f26860a131182ec7b0570ace36aa15e024e78097d4a1e",
+  "mutated_sha256": "bc4bd156f3a0b0b9af055cfb70a77833c18ce24f8437a844e30db8d2e1fc9a00",
+  "old": "certificate_key == expected_key",
+  "new": "(certificate_key&87'h7fffffffffff80001fffff)==(expected_key&87'h7fffffffffff80001fffff)",
+  "case": 13,
+  "required_fail_regex": "MALFORMED_CERTIFICATE_ADVANCED_COMMITTED_OR_EVENT|MISSING_ATOMIC_CERTIFICATE_VETO",
+  "extra_condition": null,
+  "verdict": "NOT_RUN",
+  "caught_requires": "baseline same negative/healthy case passes; mutated application fails named invariant with committed trace; timeout alone is not causal evidence",
+  "fixture_watchdog": 4194304
+}

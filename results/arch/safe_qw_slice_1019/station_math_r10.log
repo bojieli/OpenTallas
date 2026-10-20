@@ -1,0 +1,7 @@
+ot-heavy: admitted on regular-crane as oth-ubuntu-6821-1792433617 after 0 s
+STATION_MATH_EQ PASS cycles10000 resets2 add8518 mul8520 fullwidth/directed/RNE/ties/zero/subnormal/Inf/NaN
+- rtl/test/qwen_dv/safe_storage/tb_station_math.sv:42: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100us; walltime 0.136 s; speed 734.722 us/s
+- Verilator: cpu 0.136 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-6821-1792433617): exit 0

@@ -13,8 +13,14 @@
 // provider SRAM and scale register; (5) RESULT carries the sequencer's argmax and the token loop feeds it to dh;
 // (6) no fault anywhere.  MUT 1/2/3 (face parameter) and 4 (D2D sequencer layer-5 start +1: the face must flag the
 // calendar disagreement) must FAIL.  MUT 5: a one-edge embedding-provider fault pulse must reach the face fault and FAIL.
+// MU 1 (MU-DQ-SYSFACE 2026-10-19, run_sys_face_bench.sh D2D_MU=1): the face is built #(MU 1) with the MU D2D image; after
+// the HOST context lands, the ctlm head drives layer contexts of user 0 (the HOST token / position, stage 2) and of the
+// fillers 1..3 (user on tt_native_pos[17:16], their own token / position, stages 3..5): (7) none may fault.
+// MUT 6 (MU 1): the face checks filler contexts against the HOST tag (the closed MU 0 face) -> FAIL; MUT 7 (MU 1, bench):
+// a filler context at position 8192 (pos[15:13] != 0) -> FAIL.
 module tb_qfd_sys_face;
     parameter integer MUT = 0;
+    parameter integer MU = 0;
     parameter IMG = "img";
     reg ck = 0; always #0.4167 ck = ~ck;
     reg rst_n = 0;
@@ -48,10 +54,11 @@ module tb_qfd_sys_face;
     wire ew_v, ew_s, ex_s, ex_sc, fb; wire [511:0] ew_d; wire [17:0] ew_t, ex_t, f_t; wire [5:0] ew_i, ex_w; wire [15:0] ew_e, ex_e, f_e, c_e;
     wire face_fault;
     reg fwd_epoch = 0;
+    reg hc_v = 0; reg [5:0] hc_st = 0; reg [17:0] hc_tok = 0, hc_pos = 0; integer n_hc = 0;
     // MUT 5 (Q-STUB 10-17): one-edge provider fault pulse after reset -- the face must latch it (face_fault / fab) and FAIL
     wire prov_fault; reg prov_inj = 0; integer rel_cyc = -1;
     always @(posedge ck) begin if (rst_n && rel_cyc < 0) rel_cyc = cyc; prov_inj <= (MUT == 5) && rel_cyc >= 0 && cyc == rel_cyc + 50; end
-    qfd_sys_face #(.MUT((MUT == 4 || MUT == 5) ? 0 : MUT), .GO_OFS(GO_OFS), .START_ADJ(MUT == 4 ? (720'd1 << (20 * 5)) : 720'd0), .ROM_VIAMAP({IMG, "/sys_face_cfg.viamap.hex"})) u_dut (
+    qfd_sys_face #(.MUT((MUT == 4 || MUT == 5 || MUT == 7) ? 0 : MUT), .MU(MU), .GO_OFS(GO_OFS), .START_ADJ(MUT == 4 ? (720'd1 << (20 * 5)) : 720'd0), .ROM_VIAMAP({IMG, "/sys_face_cfg.viamap.hex"})) u_dut (
         .ck(ck), .rst_n(rst_n),
         .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg), .fwd_epoch(fwd_epoch),
         .rx_payload(rx_payload), .prog_rx_v(prog_rx_v), .prog_witness_slot(prog_witness_slot), .prog_auth_slot(prog_auth_slot),
@@ -61,8 +68,8 @@ module tb_qfd_sys_face;
         .execution_active(exa), .admit_ready(adm), .result_v(rv), .result_done(rd), .result_fault(rf), .result_cause(rc),
         .result_tag(rt), .result_gen(rg), .result_token(rtok), .result_value(rval), .result_cycles(rcyc),
         .seq_dc(seq_dc), .seq_program_obs(seq_obs), .seq_descriptor_obs(dsc_obs), .seq_cfg_image_ready(seq_rdy), .seq_dh(dh),
-        .tt_program_obs(tt_obs), .tt_control_stores_ready(tt_rdy), .tt_layer_context_v(1'b0), .tt_command_stage(6'd0),
-        .tt_native_tok(18'd0), .tt_native_pos(18'd0), .tt_pw(tt_pw), .tt_kok(kok), .tt_kwd(kwd), .tt_fab(fab),
+        .tt_program_obs(tt_obs), .tt_control_stores_ready(tt_rdy), .tt_layer_context_v(hc_v), .tt_command_stage(hc_st),
+        .tt_native_tok(hc_tok), .tt_native_pos(hc_pos), .tt_pw(tt_pw), .tt_kok(kok), .tt_kwd(kwd), .tt_fab(fab),
         .host_epoch_valid(hev), .host_fused_capability(hcap), .host_epoch(hep), .host_tag(htag), .host_generation(hgen),
         .q_slot(qs), .q_slot_beat(qb), .kv_word_slot(kvs), .kv_word_index(kvi), .visibility_slot(vis), .complete_slot(cpl),
         .native_fault(1'b0),
@@ -229,6 +236,22 @@ module tb_qfd_sys_face;
         seq_dc = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 18'd777, 32'h0000abcd};
         c_send = 1; @(negedge ck); c_send = 0;
         wait (t0 >= 0);
+        // (7) MU head contexts: user 0 = the HOST context's token / position, fillers 1..3 their own (pos[17:16] = user)
+        if (MU) fork
+            begin : mu_hc
+                integer u;
+                repeat (6) @(negedge ck);
+                if (!hev) err("HOST context not valid before the head contexts");
+                hc_v = 1; hc_st = 6'd2; hc_tok = TOK0; hc_pos = POS0; n_hc = n_hc + 1; @(negedge ck);
+                for (u = 1; u < 4; u = u + 1) begin
+                    hc_v = 1; hc_st = 6'(2 + u); hc_tok = 18'(4000 + 111 * u);
+                    hc_pos = {2'(u), (MUT == 7 && u == 2) ? 3'd1 : 3'd0, 13'(300 + 7 * u)}; n_hc = n_hc + 1; @(negedge ck);
+                end
+                hc_v = 0; hc_st = 0; hc_tok = 0; hc_pos = 0;
+                repeat (2) @(negedge ck);
+                if (face_fault) err("MU head context faulted the face");
+            end
+        join_none
         // embedding row: the compute end's emb_rx_v edge is the E word event's calendar edge (pin cycle - 1)
         fork
             begin
@@ -262,8 +285,9 @@ module tb_qfd_sys_face;
             $display("  missing event class %0d arg %0d at T+%0d", ev_k[i], ev_a[i], ev_t[i]); err("compiled event missing"); end
         if (face_fault || prov_fault || a_f || c_f || w_f || fab) err("fault raised");
         if (adm_cyc < 0 || tok_cyc < 0) err("admission / first-token D2D start not seen");
-        if (errs == 0) $display("SYS_FACE_PASS MUT=%0d boot %0d records, PW %0d DW %0d, %0d events exact, row 64+scale exact",
-                                MUT, wi, pw_seen, dw_seen, n_ev);
+        if (MU && n_hc != 4) err("MU head contexts not driven");
+        if (errs == 0) $display("SYS_FACE_PASS MUT=%0d MU=%0d head contexts %0d, boot %0d records, PW %0d DW %0d, %0d events exact, row 64+scale exact",
+                                MUT, MU, n_hc, wi, pw_seen, dw_seen, n_ev);
         else $display("SYS_FACE_FAIL MUT=%0d errors %0d (face_fault %0d prov_fault %0d)", MUT, errs, face_fault, prov_fault);
         $finish;
     end

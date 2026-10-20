@@ -1,28 +1,30 @@
 {
   "name": "dsdv_mu_hslot",
-  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max -2.804273480094821e-10 min 3.330152820169019e-11",
+      "ws": "OT_WS max -2.571526325212403e-10 min 3.8623965137318805e-11",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/record/views/dsdv_mu_hslot:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/record/views/dsdv_mu_hslot:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/src/physical/ref_tile/dsdv_mu_hslot/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/ref_tile/dsdv_mu_hslot/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs:/work:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs:/work:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/src:/src:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src:/src:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/cl/routed_ioref.a1_meas:/meas:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2:/mv0:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -33,24 +35,26 @@
     "ff": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max 2.44947950811536e-10 min 2.7304603023026175e-11",
+      "ws": "OT_WS max 2.2501955854181688e-10 min 1.9034593345956807e-11",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/record/views/dsdv_mu_hslot:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/record/views/dsdv_mu_hslot:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/src/physical/ref_tile/dsdv_mu_hslot/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/ref_tile/dsdv_mu_hslot/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs:/work:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs:/work:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/src:/src:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src:/src:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/cl/routed_ioref.a1_meas:/meas:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2:/mv0:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -61,24 +65,26 @@
     "tt": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max 7.021888626113082e-11 min 3.013575500254717e-11",
+      "ws": "OT_WS max 5.272920988730334e-11 min 2.92002533264224e-11",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/record/views/dsdv_mu_hslot:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/record/views/dsdv_mu_hslot:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/src/physical/ref_tile/dsdv_mu_hslot/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/ref_tile/dsdv_mu_hslot/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs:/work:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs:/work:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/src:/src:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src:/src:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/cl/routed_ioref.a1_meas:/meas:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2:/mv0:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -88,51 +94,59 @@
     }
   },
   "interface_sdc": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/src/physical/ref_tile/dsdv_mu_hslot/signoff.sdc",
-    "sha256": "ea139fa8fd9b21e5fe5fac3031836ebb04bdd3fc26ea39a4a8ccd22d1629c7a5",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/ref_tile/dsdv_mu_hslot/signoff.sdc",
+    "sha256": "2a65fa220aabe95e1ab534d78007bed2b300cff76696b87cab48567e363f23ce",
     "purpose": "interface timing extraction, not a new leaf signoff verdict",
     "in_verdict_sequence": true
   },
   "verdict": {
-    "json": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/cl/routed_ioref.a1.json",
-    "sha256": "8882475194568ae9f59b58a41a911a64f7eba2b262eca0b5606f910427b76d32",
+    "json": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/cl/routed_ioref.a1.json",
+    "sha256": "38bc51f74d244b520e21c2fcb97d136c1cfcc8396fcab5c7d8ce6dd216bca2f6",
     "expect_ps": {
-      "tt": 70.22,
-      "ff": 27.3
+      "tt": 52.73,
+      "ff": 19.03
     },
     "tol_ps": 0.05,
-    "work": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs",
+    "work": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs",
     "files": {
       "/meas/app0_io_ref_routed.sdc": {
-        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
         "sha256": "f699526a8ba290418e4a65a3c2e418ccfbdd41a8b13256dff5e11a9d5233e029"
       },
-      "/work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.odb": {
-        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.odb",
-        "sha256": "14c5ee6b01757480e5cecbd275d58868b709e7395949619e05201e25f3e924d5"
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+        "sha256": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063"
       },
-      "/work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.sdc": {
-        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.sdc",
-        "sha256": "694570e861e119e4f35def82ae002c09b4fd7669187bf818dafdf65198182f2b"
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+        "sha256": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1"
       },
-      "/work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.spef": {
-        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.spef",
-        "sha256": "ebb8556200cd960c74be4679f1fb7ef52142d8074cef58a4bc8c2a5965d8d9ff"
+      "/work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.odb",
+        "sha256": "a4f18ccc5ff3d01e9b1a66a4df3e0184c9eb6e57f8ef2b3c3e7c7949f68b1bcf"
+      },
+      "/work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.sdc",
+        "sha256": "d73f25d2df7c99451dda26cc33421589cee4e1265b44b9bec50d6555684c131e"
+      },
+      "/work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.spef",
+        "sha256": "03fbfbe1738a228066e385f4d2fe008f84da4bf402c0c966484875ed7faa584c"
       },
       "/work/w18_extra.sdc": {
-        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-28a8118d5/routes/dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/work/orfs/w18_extra.sdc",
-        "sha256": "ea139fa8fd9b21e5fe5fac3031836ebb04bdd3fc26ea39a4a8ccd22d1629c7a5"
+        "host": "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/w18_extra.sdc",
+        "sha256": "2a65fa220aabe95e1ab534d78007bed2b300cff76696b87cab48567e363f23ce"
       }
     },
     "check": {
       "ff": {
-        "export_ps": 27.304603023026175,
-        "verdict_ps": 27.3,
+        "export_ps": 19.034593345956807,
+        "verdict_ps": 19.03,
         "ok": true
       },
       "tt": {
-        "export_ps": 70.21888626113082,
-        "verdict_ps": 70.22,
+        "export_ps": 52.72920988730334,
+        "verdict_ps": 52.73,
         "ok": true
       }
     }
@@ -141,10 +155,11 @@
     "ss": {
       "mode": "verdict",
       "tcl": [
-        "read_db /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.odb",
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib]",
+        "read_db /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.odb",
         "set ::ot_ce_corner ss",
-        "read_sdc /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.sdc",
-        "read_spef /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.spef",
+        "read_sdc /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.spef",
         "set_propagated_clock [all_clocks]",
         "read_sdc /work/w18_extra.sdc",
         "read_sdc /meas/app0_io_ref_routed.sdc"
@@ -153,10 +168,11 @@
     "ff": {
       "mode": "verdict",
       "tcl": [
-        "read_db /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.odb",
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib]",
+        "read_db /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.odb",
         "set ::ot_ce_corner ff",
-        "read_sdc /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.sdc",
-        "read_spef /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.spef",
+        "read_sdc /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.spef",
         "set_propagated_clock [all_clocks]",
         "read_sdc /work/w18_extra.sdc",
         "read_sdc /meas/app0_io_ref_routed.sdc"
@@ -165,22 +181,29 @@
     "tt": {
       "mode": "verdict",
       "tcl": [
-        "read_db /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.odb",
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib]",
+        "read_db /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.odb",
         "set ::ot_ce_corner tt",
-        "read_sdc /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.sdc",
-        "read_spef /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_28a8118d5/base/6_final.spef",
+        "read_sdc /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.spef",
         "set_propagated_clock [all_clocks]",
         "read_sdc /work/w18_extra.sdc",
         "read_sdc /meas/app0_io_ref_routed.sdc"
       ]
     }
   },
-  "macro_views": [],
+  "macro_views": [
+    "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "abstract": {
+    "mode": "default",
+    "default_pin_access_violations": 0
+  },
   "files": {
-    "dsdv_mu_hslot.lef": "8bf97920d76b37ef3095c78c8793a1fc065fc4c188691353fc96bd1c398b87aa",
-    "dsdv_mu_hslot_ff.lib": "0ef5b182e3ebd757cd71d07b81b5910d9235228cd35267b7bbfd5e842eddfb47",
-    "dsdv_mu_hslot_ss.lib": "2d117ff7585da52df8917f0541004f78db8033297b014ce69155df7a5d5d18a8",
-    "dsdv_mu_hslot_tt.lib": "73448cd7add0ca3d933b8e4b28a16fb482892662e346af45483c7e738f9df72e"
+    "dsdv_mu_hslot.lef": "aa88a4bdbfbd0edb7fa968df5cac9708248c6a39b38944afaf7ce77d88b3cc2d",
+    "dsdv_mu_hslot_ff.lib": "6b4083e6eaa26d8c56762e38a6b6bdd8abd163bfca656fa718839296282ab74a",
+    "dsdv_mu_hslot_ss.lib": "3cce8841b67ae84c77108de271abeed17b18b26c9cac3a5235d815f089f8c771",
+    "dsdv_mu_hslot_tt.lib": "b5b832ce32e13b4b17be40e0d10b22dd5756b539cfbcb11f41f354970342da18"
   },
   "ok": true,
   "checked": true

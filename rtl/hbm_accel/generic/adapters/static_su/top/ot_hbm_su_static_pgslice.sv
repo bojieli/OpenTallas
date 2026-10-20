@@ -135,9 +135,12 @@ module ot_hbm_su_static_pgslice #(
  // Serial fill destination delay and stream leaf tap return are different
  // contracts at3:4. n+12 response is sampled into fill at n+13; pinned store
  // macros commit n+15. Stream leaf retains its native10/7 edge contract.
- localparam integer RR=MULTIRATE ? 12 : READ_RETURN;
- initial if(MULTIRATE && (READ_RETURN!=10 || WRITE_RETURN!=7))
-  $fatal(1,"SU multirate candidate requires source-proven stream tap10/7");
+ // HBM-BANKLAT-SU 2026-10-19: READ_RETURN/WRITE_RETURN = the stream LG round trip the die binds (10/7 = zero-lane
+ // non-pin bank; the d4g faces bank + relay lanes need more). MULTIRATE: serial fill delay = the bridge's serial read
+ // edge SRD = ceil((3*READ_RETURN+18)/4) (12 at 10; su_multirate_compile.srd), fill commit n+SRD+3.
+ localparam integer RR=MULTIRATE ? (3*READ_RETURN+18+3)/4 : READ_RETURN;
+ initial if(MULTIRATE && (READ_RETURN<10 || WRITE_RETURN<7 || WRITE_RETURN>READ_RETURN))
+  $fatal(1,"SU multirate candidate requires stream tap round trip >= 10/7");
  function automatic integer lid(input integer n); lid=(n<16)?16*G+n:64+16*G+(n-16); endfunction
  // ------------------------------------------------------------------ position (STRAP)
  wire [1:0] q_id=(STRAP!=0)?pos[3:2]:2'(QID);
@@ -308,7 +311,7 @@ module ot_hbm_su_static_pgslice #(
  end
  for(genvar h=0;h<2;h=h+1)begin:g_leaf
   if(MULTIRATE)begin:g_multirate
-   ot_hbm_su_multirate_bridge u_bridge(
+   ot_hbm_su_multirate_bridge #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_bridge(
     .serial_clk(clk_ctl),.stream_clk(pg_clk),.rst_n(bridge_rst_n),
     .serial_rq(su_rq[h*17+:17]),.serial_wq(su_wq[h*281+:281]),
     .serial_rr(su_rr[h*257+:257]),.serial_done(su_w_done[h]),

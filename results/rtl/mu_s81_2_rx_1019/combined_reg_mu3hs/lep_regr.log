@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc7       admits   927 GB (avail 749, growth 101, headroom 0, waiters 2/32 GB) load 51/96 running 36 disk 6319 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4120606-1792438136 after 1 s
+regr_lep s1: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_lep s7: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_nh s1: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_host s3: PASS lep_host: H->A 233 ring + 84 HOST + 83 KS, A->H 592 frames (51 THOST incl. 1 merge, 52 TKD) bit-exact in order; f_lf live
+regr_swap: FAIL lep: mismatches 963 recv 482/1000 481/1000 fault_main 1 overflow_fault 1
+LEP_MU_GATE PASS
+LEG lep_regr rc=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120606-1792438136): exit 0

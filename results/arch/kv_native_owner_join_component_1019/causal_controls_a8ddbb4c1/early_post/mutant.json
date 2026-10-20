@@ -1,0 +1,14 @@
+{
+  "name": "early_post",
+  "changed_source": "baseline/rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+  "original_sha256": "1d8e481b09e822cb0b02bf57c9d2906b0c9aa210f102a3908213f32c5dde5cdc",
+  "mutated_sha256": "966883e335886b0b61edc817ab460b37b824be39fef1ae2777daf48002c297ea",
+  "old": "(!cq_needed||cq_seen||MUT==1)",
+  "new": "1'b1",
+  "case": 3,
+  "required_fail_regex": "POST_BEFORE_REAL_CQB",
+  "extra_condition": null,
+  "verdict": "NOT_RUN",
+  "caught_requires": "baseline same negative/healthy case passes; mutated application fails named invariant with committed trace; timeout alone is not causal evidence",
+  "fixture_watchdog": 4194304
+}

@@ -1,0 +1,79 @@
+{
+ "dir": ".",
+ "calendar": {
+  "mode": "pipeline",
+  "period": 124,
+  "cfg_lead": 50,
+  "acc_gap": 10,
+  "retire_gap": 6,
+  "tags": [
+   0,
+   2
+  ],
+  "cal_rows": 1022
+ },
+ "returns": 625,
+ "missing": 0,
+ "unknown": 0,
+ "words_equal_P600_tagmasked": false,
+ "only_new": 581,
+ "only_600": 581,
+ "tb_errors": 3,
+ "tb_epoch_attribution_errs": 2,
+ "tb_control_mismatch": [
+  "gos15 ends1 gws1 macwrites40 lastcommit1260"
+ ],
+ "residual_errors": 0,
+ "reads_reattributed": [
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24
+ ],
+ "reads_expected": [
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24,
+  24
+ ],
+ "reads_unattributed": 0,
+ "read_parity_bad": 0,
+ "gos": 15,
+ "element_faults": 17460,
+ "cfg7_faults": 0,
+ "other_mismatch": {
+  "qout": 0,
+  "macro": 0,
+  "src": 0
+ },
+ "trace_end": [
+  "CAPfault=1 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL"
+ ],
+ "CAPcause": "0102",
+ "first_capture": 1573,
+ "last_return": 3532,
+ "span_edges": 1960,
+ "PASS": false
+}

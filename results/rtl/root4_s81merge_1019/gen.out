@@ -1,0 +1,6 @@
+ot-run: -> ot-epyc7
+ot-heavy: request 32G is charged 12G (class 'gen.sh' measured peak 3.3G, n=6+0 proved); the cap stays 32G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2347726-1792470714 after 0 s
+MAIN_RC 0
+DIE_PORT_BIND PASS masters=42 instances=9868 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=40 pad_bits=210532 spare_out_bits=202130 unresolved_children=0 ambiguous_children=0 variant_children=16 landing_reset_mismatch=0 landing_reset_unresolved=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2347726-1792470714): exit 0

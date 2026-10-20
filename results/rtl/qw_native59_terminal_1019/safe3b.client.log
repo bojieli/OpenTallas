@@ -1,0 +1,22 @@
+GATE WARN clock_span: 518.4 x 648.0 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: RTL is flop-first at every pin (Q-N59 dd73225e0: every input lands in a p_* pin register, every output is a flop; the die calendar already counts those +1 edges); OT_PIN_REGS would add a second edge and break the benched edge contract
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN rtl: runtime_partselect: 4 runtime-indexed part-select(s), 656 bits (3 >= 64 b; e.g. ot_qfd_su_kv_static_posted: bytes_n[8*idx+:8] (512 b write), ot_qfd_su_kv_static_posted: seen[64*selected+:64] (64 b), ot_qfd_su_kv_static_posted: seen[64*selected+:64] (64 b)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory  -> FIX: decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)
+GATE INFO remote: ot-run selected ot-epyc7 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_native59_dv_service_safe3b_20261019-113209.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_native59_dv_service_safe3b_20261019-113209.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qfd_native59_dv_service_safe3b-20261019-113209
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 1705 s (gate total 16218 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 3956, 'pin_rectangles': 3956, 'pin_track_checked': 3956, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 34fb362359032409566824c0c7cdc773cfa68b87b7dfa7774e5a27b4df4cbac1
+GATE INFO util: synthesized std area 20454 um2 + macros 101967 in core 330903: util 10% (std-cell density 9.9% of placeable 206961 um2; total fill 37.0%)
+GATE INFO textbook: WARN qfd_native59_dv_service_r1 cells 150,174 flops 23,413 depth 561.8 ps util 0.3721 reach 82.9 um (8.1 s)
+GATE WARN textbook.clock_domain: clock root port ck: 23,413 flops > 15,000 on one root (+0 ICGs, 8 macro clock pins; e.g. dr_o[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_guidance: clock root port:ck: 23,421 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 23,421 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=137 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN clock_rule: root port:ck: 23,421 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 23,421 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-n59s3/physical/ref_tile/qfd_native59_dv_service_safe3b/gate_layout/floorplan.png
+GATE WARN fill: fill 37% = (hard macros 101966.7 + synthesized std cells 21150.5) / outline 335923.2 um2; pin demand per face: S 1586 pins over 516.1/518.4 um (100%), N 1706 pins over 516.1/518.4 um (100%), W 760 pins over 645.0/648.0 um (100%), E 96 pins over 0.0/648.0 um (0%) (< 50%)
+PRE_ROUTE_GATE: FAIL (1 fail, 8 warn)
+GATE: qfd_native59_dv_service_safe3b/gate_result.json written (exact staged source binding; commit it with the kit)
