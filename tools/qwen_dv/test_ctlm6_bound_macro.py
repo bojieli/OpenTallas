@@ -113,6 +113,31 @@ def main():
     badzero = copy.deepcopy(zero)
     badzero['real_memory']['input_loads']['D'][0] = -1
     rejects(design, badzero, 'terminal loads')
+    # Real top synthesis emits asynchronous enabled FFs. Lowering must keep
+    # the asynchronous reset and exactly select D versus old Q at the edge.
+    for reset_pol in 'NP':
+        for reset_value in '01':
+            for enable_pol in 'PN':
+                enabled = copy.deepcopy(design)
+                cell = enabled['modules']['top']['cells']['producer']
+                cell['type'] = '$_DFFE_P'+reset_pol+reset_value+enable_pol+'_'
+                cell['connections']['E'] = [21]
+                cell['port_directions']['E'] = 'input'
+                text, helpers_e, rec_e = run(enabled, contracts)
+                row = rec_e['normalized_enabled_flops'][0]
+                assert row['emitted_type'] == '$_DFF_P'+reset_pol+reset_value+'_'
+                graph_text = text+'\n'+'\n'.join(helpers_e)
+                assert 'posedge C or '+('negedge' if reset_pol=='N' else 'posedge')+' R' in graph_text
+                for oldq in (0,1):
+                    for data in (0,1):
+                        for ena in (0,1):
+                            selected = data if (ena == (enable_pol=='P')) else oldq
+                            muxed = ((data if enable_pol=='P' else oldq) if ena else
+                                     (oldq if enable_pol=='P' else data))
+                            assert selected == muxed
+    bad_enabled = copy.deepcopy(design)
+    bad_enabled['modules']['top']['cells']['producer']['type'] = '$_DFFE_NN0P_'
+    rejects(bad_enabled, contracts, 'unsupported enabled FF ABI')
     for mutate, phrase in [
         ('missing_direction', 'ports differ'), ('wrong_width', 'direction/width mismatch'),
         ('no_clock_role', 'boolean clock'), ('not_blackbox', 'not an actual declared blackbox'),
