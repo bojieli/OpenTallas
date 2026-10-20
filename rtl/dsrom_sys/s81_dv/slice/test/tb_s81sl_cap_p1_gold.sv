@@ -74,7 +74,7 @@ module tb_s81sl_cap_p1_gold;
             if (r != 1) break;
             if (kind[7:0] == "A") begin
                 r = $fscanf(fe, "%d %d %h %h", i0, i1, x0, x1);
-                ea_e[nA] = i0 + 1 - (i1 >= 4 ? RE : 0);   // probe = tree pin flop: after u_ld3 (lane 3), before u_ed (E) ea_l[nA] = i1; ea_hit[nA] = 0; nA = nA + 1;
+                ea_e[nA] = i0 + 1 - (i1 >= 4 ? RE : 0); ea_l[nA] = i1; ea_hit[nA] = 0; nA = nA + 1;  // probe = tree pin flop: after u_ld3, before u_ed
             end else begin
                 r = $fscanf(fe, "%d %d %d %d %h %d %d %d", i0, i1, i2, i3, x0, i4, i5, i6);
                 ew_e[nE] = i0 + 2; ew_l[nE] = i1; ew_p[nE] = i2; ew_a[nE] = i3; ew_d[nE] = x0; ew_la[nE] = i6 + 1;

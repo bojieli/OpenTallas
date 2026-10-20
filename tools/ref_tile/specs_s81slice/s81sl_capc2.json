@@ -32,7 +32,7 @@
    "inst": "u_p.u_core.g_hard.u_tw",
    "at": [
     43.2,
-    259.2
+    302.4
    ]
   },
   {
@@ -41,7 +41,7 @@
    "inst": "u_p.u_core.g_hard.u_te",
    "at": [
     216,
-    259.2
+    302.4
    ]
   },
   {
@@ -50,7 +50,7 @@
    "inst": "u_p.u_core.g_ed.u_ed",
    "at": [
     216,
-    172.8
+    216
    ]
   },
   {
@@ -59,7 +59,7 @@
    "inst": "u_p.u_core.g_ld3.u_ld3",
    "at": [
     43.2,
-    172.8
+    216
    ]
   }
  ],
@@ -87,8 +87,8 @@
   ]
  },
  "outline": {
-  "w": 345.6,
-  "h": 388.8
+  "w": 329.184,
+  "h": 411.48
  },
  "layer_cap": "M5",
  "clock": "spine",
@@ -106,8 +106,8 @@
    "v": "M3 M5"
   }
  },
- "structural_change": "LEAD2-S81/CAPC2 10-19 S81.STA.PAR.1: the CAPC cluster gains the two TOK.DS.BENCH.1 calendar leaves as hard children -- u_ed ot_s81sl_cap_ed (D 24, E tree word -> n6) and u_ld3 ot_s81sl_cap_ld (D 16, W lane 3 -> u_tw) -- in a non-parameterised top ot_s81sl_capc2 = ot_s81sl_cap_p1 #(PINPIPE 1, EDLY 24, WL3DLY 16) (hard views carry no parameters). Same closed rt/tr child views and PINPIPE 1 face registers as CLOSED 267b (s81sl_capc_p1_die_slew); trees moved up 43.2 so the rt-to-tree seam (99.36) holds ED under u_te and LD under u_tw on the 43.2 lattice; outline 345.6 x 388.8.",
- "why_floorplan": "Closed children at R0 on the 43.2 lattice: rt (43.2,43.2), tw (43.2,259.2), te (216,259.2), ED (216,172.8) between u_te S-face outputs and rt N-face e_* pins, LD (43.2,172.8) between the W-face lane-3 pin registers and u_tw; full-width south 43.2 std band and the 82.08 tree-to-tree channel unchanged; height +43.2 only for the delay leaves (halo 5.4 both sides).",
+ "structural_change": "LEAD2-S81/CAPC2 10-19 S81.STA.PAR.1: the CAPC cluster gains the two TOK.DS.BENCH.1 calendar leaves as hard children -- u_ed ot_s81sl_cap_ed (D 24, E tree word -> n6) and u_ld3 ot_s81sl_cap_ld (D 16, W lane 3 -> u_tw) -- in a non-parameterised top ot_s81sl_capc2 = ot_s81sl_cap_p1 #(PINPIPE 1, EDLY 24, WL3DLY 16) (hard views carry no parameters). Same closed rt/tr child views and PINPIPE 1 face registers as CLOSED 267b (s81sl_capc_p1_die_slew); trees moved up 86.4 so the rt-to-tree seam (142.56) holds ED under u_te and LD under u_tw on the 43.2 lattice with >= 20 um channels (56.16 below, 38.88 above); outline 329.184 x 411.48 (closed-children stack + 20 um core channels; fill 38 %).",
+ "why_floorplan": "Closed children at R0 on the 43.2 lattice: rt (43.2,43.2), tw (43.2,302.4), te (216,302.4), ED (216,216) between u_te S-face outputs and rt N-face e_* pins, LD (43.2,216) between the W-face lane-3 pin registers and u_tw; channels rt-ED/LD 56.16, ED/LD-trees 38.88 (gen channel rule >= 20; the 43.2 lattice gives no 99.36 seam with both >= 20), full-width south 43.2 std band and the 82.08 tree-to-tree channel unchanged. Outline = the child stack + the 20 um core-edge channels (rt/te right edges 302.4/306.72 + 22.16; trees top 388.8 + 22.68) on the 0.054 / 0.27 site grid: 329.184 x 411.48, fill 38 % WARN (set by the closed children and the lattice, not std area).",
  "job": {
   "owner": "Claude:LEAD2-S81/CAPC2",
   "branch": "claude/s81-capc2-cal-1019",
@@ -115,28 +115,36 @@
   "purpose": "S81.STA.PAR.1 release CAPC cluster: closed rt/tr + new ED24/LD16 calendar leaves, PINPIPE 1 faces; bench vs closed 3-child RTL",
   "benches": [
    {
+    "name": "cap_gold_base",
+    "cmd": "bash tools/s81_slice/cap_p1_gold_bench.sh {RUN}/gold_base {RUN}/slcap_vec_gbase 24 16",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "pass_regex": "^PASS cap_p1_gold DE=24 DL=16 slcap_vec_gbase$"
+   },
+   {
+    "name": "cap_gold_m23",
+    "cmd": "bash tools/s81_slice/cap_p1_gold_bench.sh {RUN}/gold_m23 {RUN}/slcap_vec_gm23 23 16 raw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "^CAP_GOLD_MUTANT_DETECTED DE=23 DL=16 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc2_1019/gold_m23.out"
+   },
+   {
+    "name": "cap_gold_m15",
+    "cmd": "bash tools/s81_slice/cap_p1_gold_bench.sh {RUN}/gold_m15 {RUN}/slcap_vec_gm15 24 15 raw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "^CAP_GOLD_MUTANT_DETECTED DE=24 DL=15 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc2_1019/gold_m15.out"
+   },
+   {
     "name": "cap_cal_base",
     "cmd": "bash tools/s81_slice/cap_p1_cal_bench.sh {RUN}/cal_base {RUN}/slcap_vec_cal 24 16",
     "expect": "pass",
     "pass_regex": "^PASS cap_p1_cal DE=24 DL=16 slcap_vec_cal$",
-    "threads": 4,
-    "peak_ram_gb": 16
-   },
-   {
-    "name": "cap_cal_m23",
-    "cmd": "bash tools/s81_slice/cap_p1_cal_bench.sh {RUN}/cal_m23 {RUN}/slcap_vec_m23 23 16 raw",
-    "expect": "fail",
-    "fail_regex": "^CAP_CAL_MUTANT_DETECTED DE=23 DL=16 ",
-    "fail_witness": "results/rtl/s81_slice_1017/capc2_1019/cal_m23.out",
-    "threads": 4,
-    "peak_ram_gb": 16
-   },
-   {
-    "name": "cap_cal_m15",
-    "cmd": "bash tools/s81_slice/cap_p1_cal_bench.sh {RUN}/cal_m15 {RUN}/slcap_vec_m15 24 15 raw",
-    "expect": "fail",
-    "fail_regex": "^CAP_CAL_MUTANT_DETECTED DE=24 DL=15 ",
-    "fail_witness": "results/rtl/s81_slice_1017/capc2_1019/cal_m15.out",
     "threads": 4,
     "peak_ram_gb": 16
    },
@@ -238,7 +246,7 @@
   ],
   "cw_s_d": [
    188,
-   343.44
+   327.02
   ],
   "cfg_v": [
    2.16,
@@ -258,15 +266,15 @@
   ],
   "cw_n_d": [
    224,
-   343.44
+   327.02
   ],
   "rt_w": [
    2.16,
-   386.64
+   409.32
   ],
   "rt_e": [
    2.16,
-   386.64
+   409.32
   ]
  },
  "hold_budget": "tile",
