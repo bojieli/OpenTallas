@@ -11,7 +11,7 @@ module tb_qkd_attn_cal_gen_r17_rst;
   .done(done),.valid(valid),.fault(fault));
  integer nz=0,i;
  task chk(input [1023:0] v,input integer w,input [8*8-1:0] n);
-  if(v[w-1:0]!=0)begin nz=nz+1; $display("NONZERO %0s",n); end
+  if(v!=0)begin nz=nz+1; $display("NONZERO %0s",n); end
  endtask
  initial begin
   repeat(4)@(posedge ck); #0.1;
