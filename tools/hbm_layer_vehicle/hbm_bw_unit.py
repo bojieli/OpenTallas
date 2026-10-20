@@ -98,6 +98,7 @@ def run(a):
     defs = (["H9B"] if a.h9b else (["MR","SAFE"] if a.safe else (["MR"] if a.mr else []))) + (["MRKEY0"] if a.mrkey0 else []) + (["GAPS"] if a.gaps else [])
     defs += ["OT_PC_CFG_MUT_PC"] if a.pc_mut else []
     defs += ["BURST_GAPS"] if a.burst else []
+    defs += ["EXPOSE"] if a.expose else []          # HBM-MC2: SAFE exposed-bank-latency census (observation only)
     tag = "_".join(defs) or "base"
     import hashlib
     h = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in FILES)).hexdigest()[:10]
@@ -121,7 +122,8 @@ def run(a):
     res = dict(schema="opentallas.hbm_bw_unit.v1", pattern=a.pattern, defines=defs, seed=a.seed, layers=a.layers,
                blocks=len(blks), rc=r.returncode, bw=m.group(0) if m else None,
                pcs=re.findall(r"^PC\d .*$", log, re.M), fault=re.findall(r"^(?:FAULT|%Error|.*fatal).*$", log, re.M)[:5],
-               done=re.findall(r"^DONE .*$", log, re.M))
+               done=re.findall(r"^DONE .*$", log, re.M),
+               expose=[dict((k, int(v)) for k, v in re.findall(r"(\w+)=(\d+)", l)) for l in re.findall(r"^EXPOSE .*$", log, re.M)])
     if m:
         kv = dict(re.findall(r"(\w+)=([\d.]+)", m.group(0)))
         res.update(B_per_edge=float(kv["B_per_edge"]), steady_B_per_edge=float(kv["steady_B_per_edge"]),
@@ -138,7 +140,7 @@ def main():
     g.add_argument("--layers", type=int, default=4); g.add_argument("--seed", type=int, default=1)
     r = sp.add_parser("run"); r.add_argument("--work", required=True); r.add_argument("--pattern", required=True)
     r.add_argument("--burst", action="store_true"); r.add_argument("--pc-mut", action="store_true"); r.add_argument("--h9b", action="store_true"); r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
-    r.add_argument("--gaps", action="store_true"); r.add_argument("--layers", type=int, default=4)
+    r.add_argument("--gaps", action="store_true"); r.add_argument("--expose", action="store_true"); r.add_argument("--layers", type=int, default=4)
     r.add_argument("--seed", type=int, default=1); r.add_argument("--warm", type=int, default=8)
     a = ap.parse_args()
     if a.cmd == "gen":

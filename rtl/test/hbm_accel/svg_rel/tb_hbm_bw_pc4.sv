@@ -110,6 +110,26 @@ module tb_hbm_bw_pc4;
    if(pcf[p]||owf[p])begin $display("FAULT pc%0d pc_fault %0d owner_fault %0d cyc %0d",p,pcf[p],owf[p],cyc);$fatal(1,"leaf fault");end
   end
  end
+`ifdef EXPOSE
+ // HBM-MC2 (10-19): exposed-bank-latency census of the SAFE controller (MR+SAFE only).  Every HBM edge of each PC between
+ // its first request and its last response is classified by the in-order column head: busy (a column issued), empty
+ // (no queued entry: request/response-reservation side), refresh (head bank in tRFCpb), closed (head bank not open:
+ // waiting tRP/tRRD/tFAW/ACT select), conflict (head bank open on another row: PRE+ACT), trcd (open on the row, tRCD
+ // timer running), other (tCCD_L / RD-WR turnaround / precharge flag).  Pure observation, no DUT change.
+ integer ex_busy[0:3],ex_empty[0:3],ex_ref[0:3],ex_closed[0:3],ex_conf[0:3],ex_rcd[0:3],ex_oth[0:3];
+ initial for(integer p=0;p<4;p=p+1)begin ex_busy[p]=0;ex_empty[p]=0;ex_ref[p]=0;ex_closed[p]=0;ex_conf[p]=0;ex_rcd[p]=0;ex_oth[p]=0;end
+ for(genvar p=0;p<4;p=p+1)begin:g_ex
+  always @(posedge hbm)if(rst_n&&owner_enable&&first_at[p]>=0&&done_at[p]<0)begin
+   if(col_v[p])ex_busy[p]=ex_busy[p]+1;
+   else if(!g_pc[p].u.u_cfg.controller.q_ne)ex_empty[p]=ex_empty[p]+1;
+   else if(g_pc[p].u.u_cfg.controller.blk[g_pc[p].u.u_cfg.controller.hb])ex_ref[p]=ex_ref[p]+1;
+   else if(!g_pc[p].u.u_cfg.controller.open[g_pc[p].u.u_cfg.controller.hb])ex_closed[p]=ex_closed[p]+1;
+   else if(!g_pc[p].u.u_cfg.controller.head_row_match[g_pc[p].u.u_cfg.controller.hb])ex_conf[p]=ex_conf[p]+1;
+   else if(!g_pc[p].u.u_cfg.controller.head_timer_ready[g_pc[p].u.u_cfg.controller.hb])ex_rcd[p]=ex_rcd[p]+1;
+   else ex_oth[p]=ex_oth[p]+1;
+  end
+ end
+`endif
  initial begin
   if(!$value$plusargs("BLK=%s",fb)||!$value$plusargs("NB=%d",nb))$fatal(1,"plusargs");
   if(!$value$plusargs("WARM=%d",warm))warm=8;
@@ -133,6 +153,10 @@ module tb_hbm_bw_pc4;
    $display("BW blocks=%0d sectors_per_pc=%0d hbm_cycles=%0d B_per_edge=%.2f steady_blocks=%0d steady_cycles=%0d steady_B_per_edge=%.2f peak=104.17",
     nb,secs,tot,bpe,nb-warm,totw,bpe_st);
    for(integer p=0;p<4;p=p+1)$display("PC%0d cols=%0d returns=%0d acts=%0d refs=%0d gaps>8=%0d gap_cycles=%0d first=%0d done=%0d",p,cols[p],ret[p],acts[p],refs[p],gap_n[p],gap_cyc[p],first_at[p],done_at[p]);
+`ifdef EXPOSE
+   for(integer p=0;p<4;p=p+1)$display("EXPOSE pc%0d busy=%0d empty=%0d refresh=%0d closed=%0d conflict=%0d trcd=%0d other=%0d acts=%0d",
+    p,ex_busy[p],ex_empty[p],ex_ref[p],ex_closed[p],ex_conf[p],ex_rcd[p],ex_oth[p],acts[p]);
+`endif
    for(integer b=0;b<nb&&b<400;b=b+1)$display("BLK %0d row %0d slot %0d words %0d ret %0d %0d %0d %0d",b,blk_m[b][25:11],blk_m[b][10:8],blk_m[b][7:0],blk_ret[0][b],blk_ret[1][b],blk_ret[2][b],blk_ret[3][b]);
   end
   $display("DONE dram_reads=%0d refreshes=%0d",dram.reads,dram.refreshes);
