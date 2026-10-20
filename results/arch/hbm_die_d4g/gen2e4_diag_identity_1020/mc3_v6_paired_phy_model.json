@@ -1,0 +1,6242 @@
+{
+  "status": "MODEL ONLY intended child pins vs actual PHY pins; no routing/closure/binding",
+  "inputs": {
+    "phy_lef": {
+      "path": "/home/ubuntu/artifacts/codex-gen2e4-diag-s3-1020/phy_actual.lef",
+      "sha256": "5112c676cb94ece49c98092fad8612c142e3ee7124788ab1d42229ba4ab568cf"
+    },
+    "pin_plan": {
+      "path": "/home/ubuntu/wt/codex-hbm-mc3-v4-1020/results/rtl/hbm_ds_layer_tput_1018/hbm_bw_safe_1019/mc3c/v6_lattice_plan/pin_plan.json",
+      "sha256": "4f8613c4bf0b46b542be76d487f27a3a2baa3003911affaf6559206ade528ebd"
+    },
+    "manifest": {
+      "path": "/home/ubuntu/artifacts/codex-gen2e4-diag-s3-1020/manifest_identity3.json",
+      "sha256": "3f04a7030a6b5467532f8cfccfaaaf97c943d9ad027a96cc5708a6424aed7361"
+    }
+  },
+  "pair_basis": "Current GEN12PHY/controller ports, lo/hi bit pairing pc*width+bit; no bus-centroid reach claim",
+  "controllers": 64,
+  "bits_checked": 37440,
+  "phy_outline_um": [
+    8500.032,
+    1177.2
+  ],
+  "child_outline_um": [
+    388.8,
+    388.8
+  ],
+  "reservations": "Alternating parity two rows; same-rank pitch531.168, clearance142.368; gap10.8 toPHY and21.6 betweenrows",
+  "max_um": 575.0920000000024,
+  "over405": 18720,
+  "rows": [
+    {
+      "instance": "ctl_SW_p00",
+      "rank": 0,
+      "placement": {
+        "x": 5463.504,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.52400000000057,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.37999999999943,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.53200000000038,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.53200000000038,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.52400000000057,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p01",
+      "rank": 1,
+      "placement": {
+        "x": 5728.968,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 575.0440000000006,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.6919999999998,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.6919999999998,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.6919999999998,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.6919999999998,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.6919999999998,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.6919999999998,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.6919999999998,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.6919999999998,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6599999999996,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.05200000000036,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.05200000000036,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0440000000006,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p02",
+      "rank": 0,
+      "placement": {
+        "x": 5994.648,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.548,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.38799999999924,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.38799999999924,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.356,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.555999999999813,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.555999999999813,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.548,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p03",
+      "rank": 1,
+      "placement": {
+        "x": 6260.112,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 575.068,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.66799999999944,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.66799999999944,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.66799999999944,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.66800000000035,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.66800000000035,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.66799999999944,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.66800000000035,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.66800000000035,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6359999999993,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.0760000000007,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.0759999999998,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.068,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p04",
+      "rank": 0,
+      "placement": {
+        "x": 6525.792,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.57199999999943,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.363999999999805,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.363999999999805,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.363999999999805,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.363999999999805,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.363999999999805,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.363999999999805,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.363999999999805,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.363999999999805,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.33200000000056,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.580000000000155,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.580000000000155,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.57199999999943,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p05",
+      "rank": 1,
+      "placement": {
+        "x": 6791.256,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 575.0920000000003,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.644,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.644,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.644,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.644,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.644,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.644,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.644,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.644,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6119999999999,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.10000000000014,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.0999999999992,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0920000000003,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p06",
+      "rank": 0,
+      "placement": {
+        "x": 7056.936,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.59600000000069,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.3079999999993,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.604000000000497,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.604000000000497,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.59600000000069,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p07",
+      "rank": 1,
+      "placement": {
+        "x": 7322.616,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.9000000000003,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.8359999999991,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.836,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.836,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.836,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.8359999999991,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.836,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.836,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.836,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.8039999999999,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.90800000000013,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.90800000000013,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9000000000003,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p08",
+      "rank": 0,
+      "placement": {
+        "x": 7588.08,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.62000000000012,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.31599999999912,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.31599999999912,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.31599999999912,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.31600000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.31600000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.31599999999912,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.31600000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.31600000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.28399999999988,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.627999999999929,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.627999999999929,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.62000000000012,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p09",
+      "rank": 1,
+      "placement": {
+        "x": 7853.76,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.9239999999998,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.81199999999967,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.81199999999967,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.81199999999967,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.81199999999967,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.81199999999967,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.81199999999967,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.81199999999967,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.81199999999967,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7799999999995,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.93200000000047,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.93199999999956,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9239999999998,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p10",
+      "rank": 0,
+      "placement": {
+        "x": 8119.224,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.64400000000046,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.29199999999878,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.2920000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.2920000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.2920000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.29199999999878,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.2920000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.2920000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.2920000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.25999999999954,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.65200000000118,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.651999999999362,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.64400000000046,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p11",
+      "rank": 1,
+      "placement": {
+        "x": 8384.904,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.9480000000001,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.78800000000024,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.78800000000206,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.78800000000206,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.78800000000206,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.78800000000024,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.78800000000206,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.78800000000206,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.78800000000206,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.756000000001,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.9560000000017,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.9559999999999,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9480000000001,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p12",
+      "rank": 0,
+      "placement": {
+        "x": 8650.368,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.66799999999898,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.26799999999935,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.2360000000001,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.676000000000613,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.676000000000613,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.66799999999898,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p13",
+      "rank": 1,
+      "placement": {
+        "x": 8916.048,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.9719999999977,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.763999999999,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.7640000000008,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.7640000000008,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.7640000000008,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.7640000000008,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.7640000000008,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.7640000000026,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.7640000000026,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7319999999997,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.98000000000116,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.97999999999934,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9719999999977,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p14",
+      "rank": 0,
+      "placement": {
+        "x": 9181.512,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.69199999999842,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.243999999999915,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.24400000000173,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.24400000000173,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.24400000000173,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.243999999999915,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.24400000000173,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.24400000000173,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.24400000000173,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.21200000000067,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.700000000000045,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.699999999998226,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.69199999999842,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p15",
+      "rank": 1,
+      "placement": {
+        "x": 9447.192,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.9960000000008,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.73999999999955,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.73999999999955,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.73999999999955,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.73999999999955,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.73999999999955,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.73999999999955,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.73999999999955,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.73999999999955,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7079999999985,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.0040000000024,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.0040000000006,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9960000000008,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p16",
+      "rank": 0,
+      "placement": {
+        "x": 9712.872,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.49999999999932,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.43599999999719,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.43600000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.43600000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.43600000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.43599999999901,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.43599999999901,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.43600000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.43600000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.40399999999795,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.508000000002767,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.508000000000948,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.49999999999932,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p17",
+      "rank": 1,
+      "placement": {
+        "x": 9978.336,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 575.0199999999984,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.7159999999983,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.7160000000001,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.7160000000001,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.7160000000001,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.7159999999983,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.7160000000001,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.7160000000001,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.7160000000001,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6839999999991,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.02800000000184,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.028,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0199999999984,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p18",
+      "rank": 0,
+      "placement": {
+        "x": 10244.016,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.52400000000057,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.4120000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.4120000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.4120000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.41199999999958,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.4120000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.4120000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.4120000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.38000000000034,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.5320000000022,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.53200000000038,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.52400000000057,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p19",
+      "rank": 1,
+      "placement": {
+        "x": 10509.48,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 575.0439999999996,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.6920000000007,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.6920000000007,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.6920000000007,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.6920000000007,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.6920000000007,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.69199999999887,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.6920000000007,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.6920000000007,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6599999999978,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.0520000000031,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.05200000000127,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0439999999996,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p20",
+      "rank": 0,
+      "placement": {
+        "x": 10775.16,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.54799999999818,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.38799999999833,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.388000000001966,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.38799999999833,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.38800000000015,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.388000000001966,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.388000000001966,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.35599999999909,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.556000000001632,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.555999999999813,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.54799999999818,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p21",
+      "rank": 1,
+      "placement": {
+        "x": 11040.624,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 575.0680000000009,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.66799999999944,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.66800000000126,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.66800000000126,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.66800000000126,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.66799999999944,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.66800000000126,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.66800000000126,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.66800000000126,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6360000000002,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.0760000000025,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.0759999999989,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0680000000009,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p22",
+      "rank": 0,
+      "placement": {
+        "x": 11306.304,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.57199999999943,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.364000000000715,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.364000000000715,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.364000000000715,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.364000000000715,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.364000000000715,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.364000000000715,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.364000000000715,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.364000000000715,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.33199999999965,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.580000000001064,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.580000000001064,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.57199999999943,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p23",
+      "rank": 1,
+      "placement": {
+        "x": 11571.768,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 575.0919999999985,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.6439999999982,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.6440000000018,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.6440000000018,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.6440000000018,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.6439999999982,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.644,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.6440000000018,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.6440000000018,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.611999999999,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.10000000000196,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.10000000000014,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0919999999985,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p24",
+      "rank": 0,
+      "placement": {
+        "x": 11837.448,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.59599999999887,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.34000000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.34000000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.34000000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.33999999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.34000000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.34000000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.34000000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.30800000000022,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.604000000002316,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.603999999998678,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.59599999999887,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p25",
+      "rank": 1,
+      "placement": {
+        "x": 12103.128,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.8999999999994,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.8360000000009,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.8360000000009,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.8360000000009,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.83600000000274,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.8360000000009,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.83600000000274,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.83600000000274,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.83600000000274,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.8040000000017,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.90800000000104,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.90800000000104,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.8999999999994,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p26",
+      "rank": 0,
+      "placement": {
+        "x": 12368.592,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.6199999999983,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.31600000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.31600000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.31600000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.31600000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.31600000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.31600000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.31600000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.31600000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.28399999999897,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.628000000001748,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.627999999999929,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.6199999999983,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p27",
+      "rank": 1,
+      "placement": {
+        "x": 12634.272,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.923999999997,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.81199999999967,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.8120000000015,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.8120000000015,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.8120000000015,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.81199999999967,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.8120000000015,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.8120000000015,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.8120000000015,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7800000000004,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.93200000000047,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.93199999999865,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.923999999997,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p28",
+      "rank": 0,
+      "placement": {
+        "x": 12899.736,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.64399999999955,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.2920000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.29200000000242,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.29200000000242,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.29200000000242,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.2920000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.29200000000242,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.29200000000242,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.29200000000242,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.26000000000136,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.65200000000118,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.651999999997543,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.64399999999955,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p29",
+      "rank": 1,
+      "placement": {
+        "x": 13165.416,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.9480000000001,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.78800000000024,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.78800000000024,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.78800000000024,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.78800000000024,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.78800000000024,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.7879999999984,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.78800000000024,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.78800000000024,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7559999999974,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.9560000000017,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.9560000000017,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9480000000001,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p30",
+      "rank": 0,
+      "placement": {
+        "x": 13430.88,
+        "y": 1209.6,
+        "orient": "R0"
+      },
+      "max_um": 164.66799999999898,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.26799999999753,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.26799999999753,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.26799999999935,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.268000000001166,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.23599999999828,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.676000000002432,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.676000000000613,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.66799999999898,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_SW_p31",
+      "rank": 1,
+      "placement": {
+        "x": 13696.56,
+        "y": 1620.0,
+        "orient": "R0"
+      },
+      "max_um": 574.9719999999977,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.763999999999,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.7640000000008,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.7640000000008,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.7640000000008,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.763999999999,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.7640000000008,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.7640000000008,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.7640000000026,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7319999999997,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.98000000000116,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.97999999999934,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9719999999977,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p00",
+      "rank": 0,
+      "placement": {
+        "x": 5463.504,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.52400000000125,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.3800000000001,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.532000000001062,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.532000000001062,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.52400000000125,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p01",
+      "rank": 1,
+      "placement": {
+        "x": 5728.968,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 575.0440000000026,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.6920000000018,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.6920000000018,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.6920000000018,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.6920000000018,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.6920000000018,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.6920000000018,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.6920000000018,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.6920000000018,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6600000000017,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.0520000000024,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.0520000000024,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0440000000026,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p02",
+      "rank": 0,
+      "placement": {
+        "x": 5994.648,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.54800000000068,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.38799999999992,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.38799999999992,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.35600000000068,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.556000000000495,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.556000000000495,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.54800000000068,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p03",
+      "rank": 1,
+      "placement": {
+        "x": 6260.112,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 575.068000000002,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.6680000000015,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.6680000000015,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.6680000000015,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.6680000000024,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.6680000000024,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.6680000000015,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.6680000000024,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.6680000000024,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6360000000013,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.07600000000275,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.07600000000184,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.068000000002,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p04",
+      "rank": 0,
+      "placement": {
+        "x": 6525.792,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.57200000000012,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.36400000000049,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.36400000000049,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.36400000000049,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.36400000000049,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.36400000000049,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.36400000000049,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.36400000000049,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.36400000000049,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.33200000000124,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.580000000000837,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.580000000000837,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.57200000000012,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p05",
+      "rank": 1,
+      "placement": {
+        "x": 6791.256,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 575.0920000000024,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.64400000000205,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.64400000000205,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.64400000000205,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.64400000000205,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.64400000000205,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.64400000000205,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.64400000000205,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.64400000000205,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6120000000019,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.1000000000022,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.1000000000013,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0920000000024,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p06",
+      "rank": 0,
+      "placement": {
+        "x": 7056.936,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.59600000000137,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.308,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.604000000001179,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.604000000001179,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.59600000000137,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p07",
+      "rank": 1,
+      "placement": {
+        "x": 7322.616,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9000000000024,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.83600000000115,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.83600000000206,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.83600000000206,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.83600000000206,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.83600000000115,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.83600000000206,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.83600000000206,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.83600000000206,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.8040000000019,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.9080000000022,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.9080000000022,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9000000000024,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p08",
+      "rank": 0,
+      "placement": {
+        "x": 7588.08,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.6200000000008,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.3159999999998,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.3159999999998,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.3159999999998,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.31600000000071,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.31600000000071,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.3159999999998,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.31600000000071,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.31600000000071,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.28400000000056,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.628000000000611,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.628000000000611,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.6200000000008,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p09",
+      "rank": 1,
+      "placement": {
+        "x": 7853.76,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9240000000018,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.8120000000017,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.8120000000017,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.8120000000017,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.8120000000017,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.8120000000017,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.8120000000017,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.8120000000017,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.8120000000017,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7800000000016,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.9320000000025,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.9320000000016,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9240000000018,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p10",
+      "rank": 0,
+      "placement": {
+        "x": 8119.224,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.64400000000114,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.29199999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.29200000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.29200000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.29200000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.29199999999946,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.29200000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.29200000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.29200000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.26000000000022,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.652000000001863,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.652000000000044,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.64400000000114,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p11",
+      "rank": 1,
+      "placement": {
+        "x": 8384.904,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9480000000021,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.7880000000023,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.7880000000041,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.7880000000041,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.7880000000041,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.7880000000023,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.7880000000041,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.7880000000041,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.7880000000041,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.756000000003,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.95600000000377,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.95600000000195,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9480000000021,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p12",
+      "rank": 0,
+      "placement": {
+        "x": 8650.368,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.66799999999967,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.26800000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.2360000000008,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.676000000001295,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.676000000001295,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.66799999999967,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p13",
+      "rank": 1,
+      "placement": {
+        "x": 8916.048,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9719999999998,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.76400000000103,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.76400000000285,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.76400000000285,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.76400000000285,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.76400000000285,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.76400000000285,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.76400000000467,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.76400000000467,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7320000000018,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.9800000000032,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.9800000000014,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9719999999998,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p14",
+      "rank": 0,
+      "placement": {
+        "x": 9181.512,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.6919999999991,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.2440000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.244000000002416,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.244000000002416,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.244000000002416,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.2440000000006,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.244000000002416,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.244000000002416,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.244000000002416,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.21200000000135,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.700000000000728,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.699999999998909,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.6919999999991,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p15",
+      "rank": 1,
+      "placement": {
+        "x": 9447.192,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9960000000028,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.7400000000016,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.7400000000016,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.7400000000016,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.7400000000016,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.7400000000016,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.7400000000016,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.7400000000016,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.7400000000016,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7080000000005,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.00400000000445,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.00400000000263,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9960000000028,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p16",
+      "rank": 0,
+      "placement": {
+        "x": 9712.872,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.5,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.435999999997875,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.43600000000151,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.43600000000151,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.43600000000151,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.435999999999694,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.435999999999694,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.43600000000151,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.43600000000151,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.40399999999863,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.508000000003449,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.50800000000163,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.5,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p17",
+      "rank": 1,
+      "placement": {
+        "x": 9978.336,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 575.0200000000004,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.71600000000035,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.71600000000217,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.71600000000217,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.71600000000217,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.71600000000035,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.71600000000217,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.71600000000217,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.71600000000217,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6840000000011,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.0280000000039,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.02800000000207,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0200000000004,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p18",
+      "rank": 0,
+      "placement": {
+        "x": 10244.016,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.52400000000125,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.41200000000208,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.41200000000208,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.41200000000208,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.41200000000026,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.41200000000208,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.41200000000208,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.41200000000208,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.38000000000102,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.532000000002881,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.532000000001062,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.52400000000125,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p19",
+      "rank": 1,
+      "placement": {
+        "x": 10509.48,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 575.0440000000017,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.69200000000274,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.69200000000274,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.69200000000274,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.69200000000274,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.69200000000274,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.6920000000009,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.69200000000274,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.69200000000274,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6599999999999,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.05200000000514,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.0520000000033,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0440000000017,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p20",
+      "rank": 0,
+      "placement": {
+        "x": 10775.16,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.54799999999886,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.38799999999901,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.38800000000265,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.38799999999901,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.38800000000083,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.38800000000265,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.38800000000265,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.35599999999977,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.556000000002314,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.556000000000495,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.54799999999886,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p21",
+      "rank": 1,
+      "placement": {
+        "x": 11040.624,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 575.0680000000029,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.6680000000015,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.6680000000033,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.6680000000033,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.6680000000033,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.6680000000015,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.6680000000033,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.6680000000033,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.6680000000033,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.6360000000022,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.07600000000457,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.07600000000093,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0680000000029,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p22",
+      "rank": 0,
+      "placement": {
+        "x": 11306.304,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.57200000000012,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.3640000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.3640000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.3640000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.3640000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.3640000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.3640000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.3640000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.3640000000014,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.33200000000033,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.580000000001746,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.580000000001746,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.57200000000012,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p23",
+      "rank": 1,
+      "placement": {
+        "x": 11571.768,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 575.0920000000006,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.64400000000023,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.64400000000387,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.64400000000387,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.64400000000387,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.64400000000023,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.64400000000205,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.64400000000387,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.64400000000387,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.612000000001,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 426.100000000004,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 426.1000000000022,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 575.0920000000006,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p24",
+      "rank": 0,
+      "placement": {
+        "x": 11837.448,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.59599999999955,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.340000000001965,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.340000000001965,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.340000000001965,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.340000000000146,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.340000000001965,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.340000000001965,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.340000000001965,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.3080000000009,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.604000000002998,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.60399999999936,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.59599999999955,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p25",
+      "rank": 1,
+      "placement": {
+        "x": 12103.128,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9000000000015,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.83600000000297,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.83600000000297,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.83600000000297,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.8360000000048,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.83600000000297,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.8360000000048,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.8360000000048,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.8360000000048,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.8040000000037,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.9080000000031,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.9080000000031,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9000000000015,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p26",
+      "rank": 0,
+      "placement": {
+        "x": 12368.592,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.61999999999898,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.31600000000071,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.31600000000253,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.31600000000253,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.31600000000253,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.31600000000071,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.31600000000071,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.31600000000253,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.31600000000253,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.28399999999965,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.62800000000243,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.628000000000611,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.61999999999898,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p27",
+      "rank": 1,
+      "placement": {
+        "x": 12634.272,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9239999999991,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.8120000000017,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.81200000000354,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.81200000000354,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.81200000000354,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.8120000000017,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.81200000000354,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.81200000000354,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.81200000000354,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7800000000025,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.9320000000025,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.9320000000007,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9239999999991,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p28",
+      "rank": 0,
+      "placement": {
+        "x": 12899.736,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.64400000000023,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.29200000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.2920000000031,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.2920000000031,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.2920000000031,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.29200000000128,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.2920000000031,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.2920000000031,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.2920000000031,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.26000000000204,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.652000000001863,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.651999999998225,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.64400000000023,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p29",
+      "rank": 1,
+      "placement": {
+        "x": 13165.416,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9480000000021,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.7880000000023,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.7880000000023,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.7880000000023,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.7880000000023,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.7880000000023,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.78800000000047,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.7880000000023,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.7880000000023,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7559999999994,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.95600000000377,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.95600000000377,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9480000000021,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p30",
+      "rank": 0,
+      "placement": {
+        "x": 13430.88,
+        "y": 30175.120000000003,
+        "orient": "MX"
+      },
+      "max_um": 164.66799999999967,
+      "over405": 0,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 55.26799999999821,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 55.26799999999821,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 55.26800000000003,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 55.26800000000185,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 147.23599999999897,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 15.676000000003114,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 15.676000000001295,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 164.66799999999967,
+          "over405": 0,
+          "minimum_extra_hops_lb": 0
+        }
+      ]
+    },
+    {
+      "instance": "ctl_NW_p31",
+      "rank": 1,
+      "placement": {
+        "x": 13696.56,
+        "y": 29764.72,
+        "orient": "MX"
+      },
+      "max_um": 574.9719999999998,
+      "over405": 585,
+      "ports": [
+        {
+          "port": "row_v",
+          "bits": 1,
+          "max_um": 465.76400000000103,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_op",
+          "bits": 3,
+          "max_um": 465.76400000000285,
+          "over405": 3,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_bank",
+          "bits": 5,
+          "max_um": 465.76400000000285,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "row_row",
+          "bits": 19,
+          "max_um": 465.76400000000285,
+          "over405": 19,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_v",
+          "bits": 1,
+          "max_um": 465.76400000000103,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_we",
+          "bits": 1,
+          "max_um": 465.76400000000285,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_bank",
+          "bits": 5,
+          "max_um": 465.76400000000285,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_col",
+          "bits": 5,
+          "max_um": 465.76400000000467,
+          "over405": 5,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_data",
+          "bits": 256,
+          "max_um": 557.7320000000018,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "col_strb",
+          "bits": 32,
+          "max_um": 425.9800000000032,
+          "over405": 32,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rvalid",
+          "bits": 1,
+          "max_um": 425.9800000000014,
+          "over405": 1,
+          "minimum_extra_hops_lb": 1
+        },
+        {
+          "port": "dram_rdata",
+          "bits": 256,
+          "max_um": 574.9719999999998,
+          "over405": 256,
+          "minimum_extra_hops_lb": 1
+        }
+      ]
+    }
+  ],
+  "qualification": "Child pins intended only, not native; no corridor/relay escape/nonoverlap with other die children proof. Lower bound hop counts do not prove legal relay placement. Exact equal-age padding/calendar price, reset and clock producers still OPEN."
+}
