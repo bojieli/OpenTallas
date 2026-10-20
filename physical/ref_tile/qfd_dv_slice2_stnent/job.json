@@ -1,5 +1,5 @@
 {
- "name": "qfd_dv_slice2_stnent-g1a-37f72ed9f",
+ "name": "qfd_dv_slice2_stnent-g1a-3fb182a3d",
  "block": "qfd_dv_redstn2_ef_lp",
  "ref_tile": true,
  "owner": "Claude:QW-SLICE4",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/qw-slice4-1019",
-  "commit": "37f72ed9f",
+  "commit": "3fb182a3d",
   "extra_paths": [
    "rtl/qwen_dv",
    "rtl/hdc",
@@ -166,7 +166,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_dv_slice2_stnent/qfd_dv_slice2_stnent-g1a-37f72ed9f"
+   "to": "results/rtl/ref_tile/qfd_dv_slice2_stnent/qfd_dv_slice2_stnent-g1a-3fb182a3d"
   }
  ],
  "cycles_added": 0,
