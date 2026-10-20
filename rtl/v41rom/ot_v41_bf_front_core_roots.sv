@@ -211,6 +211,11 @@ module ot_v41_bf_front_core_roots #(
     // Programme ports are synchronous to the actual core issue edge. No
     // availability signal may qualify this strobe or advance its calendar.
     parameter integer STATIC_PROGRAM = 0,
+    // SOQ (S81-RTAG 2026-10-20, default 0 = unchanged): the output label tables so_* switch SOQ_SWD edges after each
+    // go (ot_s81_so_label_q, snapshot of the live tables at go) instead of following the configuration writes, so a
+    // static BF phase sequence is no longer bounded by the next phase's configuration landing on draining partials.
+    parameter integer SOQ = 0,
+    parameter integer SOQ_SWD = 160,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -589,7 +594,38 @@ module ot_v41_bf_front_core_roots #(
     reg [15:0] so_row [0:NB*NSEG-1];
     reg [4:0]  so_idx [0:NSEG-1];
     reg [4:0]  so_n   [0:NSEG-1];
-    if (QK != 0) begin : g_cso
+    wire soq_fault;
+    if (SOQ != 0) begin : g_soq
+        wire [16*NB*NSEG-1:0] l_row, q_row;
+        wire [5*NSEG-1:0]     l_idx, l_n, q_idx, q_n;
+        genvar si;
+        for (si = 0; si < NB * NSEG; si = si + 1) begin : g_lr
+            assign l_row[16*si +: 16] = s_row[si];
+        end
+        for (si = 0; si < NSEG; si = si + 1) begin : g_li
+            assign l_idx[5*si +: 5] = s_idx[si]; assign l_n[5*si +: 5] = s_n[si];
+        end
+        ot_s81_so_label_q #(.NSEG(NSEG), .NB(NB), .SWD(SOQ_SWD), .NQ(2)) u_soq (.clk(fclk), .rst_n(rst_n), .go(go_e),
+            .s_row(l_row), .s_idx(l_idx), .s_n(l_n), .so_row(q_row), .so_idx(q_idx), .so_n(q_n), .fault(soq_fault));
+        integer sk;
+        always @* begin
+`ifdef OT_S81_SOQ_MUT_LIVE
+            // negative control: labels from the live tables (no go alignment; worse than the QK-delayed original)
+            for (sk = 0; sk < NB * NSEG; sk = sk + 1) so_row[sk] = l_row[16*sk +: 16];
+            for (sk = 0; sk < NSEG; sk = sk + 1) begin so_idx[sk] = l_idx[5*sk +: 5]; so_n[sk] = l_n[5*sk +: 5]; end
+`else
+            for (sk = 0; sk < NB * NSEG; sk = sk + 1) so_row[sk] = q_row[16*sk +: 16];
+            for (sk = 0; sk < NSEG; sk = sk + 1) begin so_idx[sk] = q_idx[5*sk +: 5]; so_n[sk] = q_n[5*sk +: 5]; end
+`endif
+        end
+    end else begin : g_nsoq
+        assign soq_fault = 1'b0;
+    end
+`ifdef OT_SOQ_TRACE
+    always @(posedge fclk) if (go_e) $display("SOQT GO %0t %m", $time);
+    always @(posedge fclk) if (cfg_v_e && cfg_a_e == 5'd0) $display("SOQT CFG0 %0t %m", $time);
+`endif
+    if (QK != 0 && SOQ == 0) begin : g_cso
         reg [QK:0]     dcv;
         reg [5*QK+4:0] dca;
         reg [48*QK+47:0] dcd;
@@ -1188,7 +1224,7 @@ module ot_v41_bf_front_core_roots #(
         reg [QK:0] busy_d, ff_d;
         always @(posedge fclk or negedge rst_n)
             if (!rst_n) begin busy_d <= '0; ff_d <= '0; end
-            else begin busy_d <= {busy_d[QK-1:0], busy_c}; ff_d <= {ff_d[QK-1:0], ffault}; end
+            else begin busy_d <= {busy_d[QK-1:0], busy_c}; ff_d <= {ff_d[QK-1:0], ffault | soq_fault}; end
         assign busy = busy_d[QK-1];
         if (QY != 0) begin : g_qyf
             // fault port from a register: ff_d one more stage, the halves' registered ORs (bk_fault_r), then the OR

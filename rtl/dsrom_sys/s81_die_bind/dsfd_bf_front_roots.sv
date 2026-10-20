@@ -3,6 +3,13 @@
 // Actual compiler-programmed BF front: old xb physical ABI split by face;
 // f_prog[37:0] captured at pins, core consumes +1 edge, CPIN adds +1 column edge.
 // Requires its own static physical view; historical CLOSED view is not substituted.
+// S81-RTAG 2026-10-20: go-aligned output label tables (rate plan F4); off unless DSFD_BF_SOQ is defined to 1.
+`ifndef DSFD_BF_SOQ
+`define DSFD_BF_SOQ 0
+`endif
+`ifndef DSFD_BF_SOQ_SWD
+`define DSFD_BF_SOQ_SWD 160
+`endif
 module dsfd_bf_front_roots #(parameter INSTANCE = "") (
     output wire [775:0] c0,
     output wire [775:0] c1,
@@ -3308,7 +3315,7 @@ module dsfd_bf_front_roots #(parameter INSTANCE = "") (
     assign w_xb_d[1022] = xb[1066];
     assign w_xb_d[1023] = xb[1067];
     /* verilator lint_off PINCONNECTEMPTY */
-    ot_s81_bf_front_roots #(.PINREG(1), .HITFIX(1), .RECUT(2), .QZE(1), .TCG(1), .HCOL(1), .BXST(2), .FXST(2), .PINLAT(1), .STATIC_PROGRAM(1), .CPIN(1), .INSTANCE(INSTANCE)) u_view (
+    ot_s81_bf_front_roots #(.PINREG(1), .HITFIX(1), .RECUT(2), .QZE(1), .TCG(1), .HCOL(1), .BXST(2), .FXST(2), .PINLAT(1), .STATIC_PROGRAM(1), .CPIN(1), .SOQ(`DSFD_BF_SOQ), .SOQ_SWD(`DSFD_BF_SOQ_SWD), .INSTANCE(INSTANCE)) u_view (
         .busy(w_busy),
         .c0_a_ctr(w_c0_a_ctr),
         .c0_i1_bf(w_c0_i1_bf),

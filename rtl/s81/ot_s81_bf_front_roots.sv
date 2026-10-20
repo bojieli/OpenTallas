@@ -76,6 +76,8 @@ module ot_s81_bf_front_roots #(
     // Uniform fixed egress stage per column face; +1 cycle, no scheduling feedback.
     parameter integer CPIN = 0,
     parameter integer STATIC_PROGRAM = 0,
+    parameter integer SOQ = 0,          // S81-RTAG: go-aligned output label tables (ot_s81_so_label_q), default off
+    parameter integer SOQ_SWD = 160,
     // PINLAT (BF-PINCLK 2026-10-09, default 0; requires PINREG): a lockup latch, transparent while clk is LOW, between each
     // pin-capture data register and the element.  Routed full-rate dbs miss FF hold on g_pin.r_* -> u_elem b_* (pin group
     // ungated, capture on the deeper ICG-gated eclk tree: 1,407 endpoints, -37 ps).  Through the latch the element sees
@@ -404,7 +406,7 @@ module ot_s81_bf_front_roots #(
         ot_v41_bf_front_core_roots #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
-            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM)) u_front (
+            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM), .SOQ(SOQ), .SOQ_SWD(SOQ_SWD)) u_front (
             .prog_issue_pin(programme_lat[0]), .prog_addr_pin(programme_lat[14:1]),
             .prog_operand_pin(programme_lat[29:15]), .prog_segment_pin(programme_lat[32:30]),
             .prog_half_pin(programme_lat[33]), .prog_chain_pin(programme_lat[37:34]),
