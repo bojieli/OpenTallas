@@ -11,12 +11,12 @@
  "layers": 4,
  "blocks": 368,
  "rc": 0,
- "bw": "BW blocks=368 sectors_per_pc=22208 hbm_cycles=22806 B_per_edge=101.44 steady_blocks=360 steady_cycles=22177 steady_B_per_edge=101.76 peak=104.17",
+ "bw": "BW blocks=368 sectors_per_pc=22208 hbm_cycles=22820 B_per_edge=101.37 steady_blocks=360 steady_cycles=22191 steady_B_per_edge=101.69 peak=104.17",
  "pcs": [
-  "PC0 cols=22208 returns=22208 acts=1472 refs=201 gaps>8=12 gap_cycles=295 first=1 done=22796",
-  "PC1 cols=22208 returns=22208 acts=1472 refs=201 gaps>8=11 gap_cycles=291 first=1 done=22799",
-  "PC2 cols=22208 returns=22208 acts=1472 refs=201 gaps>8=12 gap_cycles=290 first=1 done=22804",
-  "PC3 cols=22208 returns=22208 acts=1472 refs=201 gaps>8=12 gap_cycles=296 first=1 done=22807"
+  "PC0 cols=22208 returns=22208 acts=1472 refs=201 gaps>8=12 gap_cycles=318 first=1 done=22810",
+  "PC1 cols=22208 returns=22208 acts=1472 refs=201 gaps>8=11 gap_cycles=314 first=1 done=22813",
+  "PC2 cols=22208 returns=22208 acts=1472 refs=201 gaps>8=12 gap_cycles=313 first=1 done=22818",
+  "PC3 cols=22208 returns=22208 acts=1472 refs=201 gaps>8=12 gap_cycles=319 first=1 done=22821"
  ],
  "fault": [],
  "done": [
@@ -27,44 +27,44 @@
    "busy": 22208,
    "empty": 31,
    "refresh": 0,
+   "closed": 138,
+   "conflict": 0,
+   "trcd": 234,
+   "other": 198,
+   "acts": 1472
+  },
+  {
+   "busy": 22208,
+   "empty": 31,
+   "refresh": 0,
+   "closed": 141,
+   "conflict": 0,
+   "trcd": 233,
+   "other": 199,
+   "acts": 1472
+  },
+  {
+   "busy": 22208,
+   "empty": 31,
+   "refresh": 0,
    "closed": 124,
    "conflict": 0,
-   "trcd": 229,
-   "other": 203,
+   "trcd": 252,
+   "other": 202,
    "acts": 1472
   },
   {
    "busy": 22208,
    "empty": 31,
    "refresh": 0,
-   "closed": 127,
+   "closed": 129,
    "conflict": 0,
-   "trcd": 228,
-   "other": 204,
-   "acts": 1472
-  },
-  {
-   "busy": 22208,
-   "empty": 31,
-   "refresh": 0,
-   "closed": 110,
-   "conflict": 0,
-   "trcd": 247,
-   "other": 207,
-   "acts": 1472
-  },
-  {
-   "busy": 22208,
-   "empty": 31,
-   "refresh": 0,
-   "closed": 115,
-   "conflict": 0,
-   "trcd": 246,
-   "other": 206,
+   "trcd": 251,
+   "other": 201,
    "acts": 1472
   }
  ],
- "B_per_edge": 101.44,
- "steady_B_per_edge": 101.76,
- "hbm_cycles": 22806
+ "B_per_edge": 101.37,
+ "steady_B_per_edge": 101.69,
+ "hbm_cycles": 22820
 }

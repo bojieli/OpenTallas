@@ -9,8 +9,8 @@ Measured on the MC3b successor (tb_hbm_bw_pc4 +EXPOSE, Verilator 5.050; results/
     48 exposed cyc/ACT, 875 refresh stalls/PC), 76.7 with 68-word blocks, 52-54 mixed into weight streams -> new check
     R4 in hbm_bank_layout (a: a new row on the set used 2 blocks earlier needs a >= 64-word block between; b: any 8
     consecutive blocks use >= 3 sets); one v3 KV run 0,1,2,1 (68-word blocks) a layer = 99.3 (R4-clean);
-  * lookups as tokens of the first layer's stream (this module's law): DS 2 copies 101.2-101.8, Qwen 4 copies 103.8,
-    Qwen 8 copies long run 96.0-97.4;
+  * lookups as tokens of the first layer's stream (this module's law): DS 2 copies 101.7, Qwen 4 copies 103.9,
+    Qwen 8 copies long run 97.4;
   * one copy on random home sets = 60.1 (v3 census, refused).
 
 THE law (phase copies) and where lookups go:

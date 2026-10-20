@@ -72,8 +72,45 @@ Refused layouts, measured on the same RTL:
 
 Diagnostic: random rows with a +1 rotation (rand_rot) reach 102.95, so the row order does not matter; the set sequence does.
 
+## Table copies priced + table image compiler (HBM-ROTLAYOUT-TBL, branch `claude/hbm-rotlayout-tbl-1019`)
+
+`tools/hbm_layer_vehicle/hbm_table_images.py` (layout_stream, plan, Allocator, compile_table, readback, price). Price in `tables/price.{json,txt}`, selftest `tables/selftest.txt`, census `census_tbl/` (MC3b, tb_hbm_bw_pc4 +EXPOSE, Verilator 5.050, ot-epyc5).
+
+Per-die HBM 144 GB (4 x 36 GB). Tables placed in HBM:
+
+| design | table | rows / die | row | raw | v3 copies | chosen |
+|---|---|---:|---:|---:|---:|---:|
+| HBM-DS (96 dies) | embedding (replicated) | 129,280 | 10,240 B | 1.32 GB | 4 copies 9.00 GB | **2 copies 4.50 GB** |
+| HBM-DS | Engram L1 / L14 (id mod 96) | 4.0 M each | 264 B | 1.06 GB each | 8 copies 278.5 GB each: **does not fit** | **1-copy sector rows 1.06 GB each** |
+| HBM-Qwen (4 dies) | embedding (replicated) | 151,936 | 4,128 B | 0.63 GB | 8 copies 10.58 GB | **4 copies 5.29 GB** |
+
+LM head (both designs) is streamed in full every token (embed_head class, 103.9), not row-gathered: no copies. RoPE / norm tables are POS-indexed static rows: no copies. Routed experts x3 position copies (DS) are priced as well: 9.0 GB/die.
+
+Totals per die with the chosen laws: **HBM-DS 16.1 GB (11.2 %), HBM-Qwen 10.2 GB (7.1 %)**. Both fit. With the v3 copies for the embeddings (and sector rows for Engram) they would be 20.6 / 15.5 GB, which also fits. Only v3 block copies for Engram would not fit.
+
+Law: an entry is nb = ceil(lines/64) balanced blocks, and copy j sits on sets j*nb.. of the entry's row index. A short lookup run (AR 1, DS MTP 2) cannot sit between two streams: every 1-3 block run between a HEAD-compatible tail and HEAD breaks R2 or R4. So lookups are **tokens of the first layer's weight stream** (`layout_stream` beam search). Each lookup takes the copy that continues the rotation, and the stream is checked R1..R4 behind the actual LM-head tail and wrapped into HEAD. `min_copies` picks the fewest copies that pass every run length the design issues (DS {1, 2}, Qwen {1, 8, 16}).
+
+Measured (B/edge/SM steady):
+
+| pattern | layout | B/edge/SM | verdict |
+|---|---|---:|---|
+| tables_mix_ds2 s1/s2 | DS: LM-head run, then 1 or 2 lookups (2 copies) + L14 weights | 101.69 / 101.69 | ROTATED |
+| tables_mix_q4 s1/s2 | Qwen: LM-head run, then 1/8/16 lookups (4 copies) + layer weights | 103.86 / 103.85 | ROTATED |
+| tables_q8 s1 | Qwen 31-line entries, 8 copies, 128 back-to-back lookups | 97.38 | ROTATED |
+| kv4 | v3 att_images KV run 0,1,2,1 (68-word blocks), read twice per layer | 99.3 | ROTATED (R4-clean) |
+| tables_pp / ppq | 1 copy, every lookup on sets 0,1 (41 / 36-word blocks) | 16.0 / 14.3 | REFUSED by R4a |
+| pp68 | sets 0,1,0,1 with 68-word blocks | 76.7 | REFUSED by R4b |
+| tables_ppmix | the 1-copy lookups mixed into weight streams | 52.4-53.5 | REFUSED by R4a |
+
+**New check R4** (`hbm_bank_layout`). The pingpong layouts pass R1/R2 but measure 16-77, so R1/R2 alone are not sufficient.
+- R4a: a new row on the set used 2 blocks earlier needs a block of at least 64 words in between.
+- R4b: any 8 consecutive blocks must use at least 3 sets.
+
+With R4 the smb kinds L00/L02 get new set sequences: the old ones re-opened a set 2 blocks later with a short block between. L14, head and the KV images are unchanged. The images were regenerated (`images/`), and the full96 functional rerun is in `full96_tbl/` (pending at commit time).
+
 ## Open (not done here)
 
-- **Table copies.** Runtime-indexed tables need 4x capacity (2-block entries x 4 phase copies) for embedding / engram rows. This is not priced. No d4g table image compiler exists on this vehicle yet; the layout function and check are ready for it.
-- **Qwen compiler.** `toksim_smhbm.compile_qwen` (TOKSIM-HBM-smhbm branch) places blocks at `desc_index * S.BSCALE`. With BSCALE now 1 that is slot-packed (+1 rotation). It should call `BL.check_addrs("weights", ...)`.
+- **Table copies**: priced and compiled (section above).
+- **Qwen compiler**: done on branch `claude/toksim-hbm-smhbm-rotchk-1019` (bf2cea8c0, on claude/toksim-hbm-smhbm-1019). compile_qwen now lays the blocks out with `BL.static_run` and calls `BL.check_addrs`; the result goes in `budget.rotlayout`.
+- **Integration (LEAD2-HBM compiler mainline)**: the DS / Qwen program compilers must place embedding lookups as tokens of the first layer's stream (`hbm_table_images.layout_stream`). Engram rows stay indexed-DMA sector rows.
 - **KV and other streams.** The KV write-back / DMA linear byte streams follow the kport law (the set changes every 128 words per PC), so they are rotated by construction. They are single-row writes per token, not block streams.

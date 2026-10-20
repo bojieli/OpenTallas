@@ -11,12 +11,12 @@
  "layers": 1,
  "blocks": 1177,
  "rc": 0,
- "bw": "BW blocks=1177 sectors_per_pc=79161 hbm_cycles=79518 B_per_edge=103.70 steady_blocks=1169 steady_cycles=78889 steady_B_per_edge=103.81 peak=104.17",
+ "bw": "BW blocks=1177 sectors_per_pc=79161 hbm_cycles=79478 B_per_edge=103.75 steady_blocks=1169 steady_cycles=78849 steady_B_per_edge=103.86 peak=104.17",
  "pcs": [
-  "PC0 cols=79161 returns=79161 acts=4708 refs=681 gaps>8=3 gap_cycles=72 first=1 done=79508",
-  "PC1 cols=79161 returns=79161 acts=4708 refs=681 gaps>8=2 gap_cycles=68 first=1 done=79511",
-  "PC2 cols=79161 returns=79161 acts=4708 refs=681 gaps>8=2 gap_cycles=68 first=1 done=79516",
-  "PC3 cols=79161 returns=79161 acts=4708 refs=681 gaps>8=2 gap_cycles=74 first=1 done=79519"
+  "PC0 cols=79161 returns=79161 acts=4708 refs=681 gaps>8=3 gap_cycles=48 first=1 done=79468",
+  "PC1 cols=79161 returns=79161 acts=4708 refs=681 gaps>8=2 gap_cycles=44 first=1 done=79471",
+  "PC2 cols=79161 returns=79161 acts=4708 refs=681 gaps>8=2 gap_cycles=44 first=1 done=79476",
+  "PC3 cols=79161 returns=79161 acts=4708 refs=681 gaps>8=2 gap_cycles=50 first=1 done=79479"
  ],
  "fault": [],
  "done": [
@@ -27,44 +27,44 @@
    "busy": 79161,
    "empty": 31,
    "refresh": 0,
-   "closed": 43,
+   "closed": 19,
    "conflict": 0,
-   "trcd": 71,
-   "other": 201,
+   "trcd": 63,
+   "other": 193,
    "acts": 4708
   },
   {
    "busy": 79161,
    "empty": 31,
    "refresh": 0,
-   "closed": 42,
+   "closed": 18,
    "conflict": 0,
-   "trcd": 74,
-   "other": 202,
+   "trcd": 66,
+   "other": 194,
    "acts": 4708
   },
   {
    "busy": 79161,
    "empty": 31,
    "refresh": 0,
-   "closed": 43,
+   "closed": 19,
    "conflict": 0,
-   "trcd": 76,
-   "other": 204,
+   "trcd": 68,
+   "other": 196,
    "acts": 4708
   },
   {
    "busy": 79161,
    "empty": 31,
    "refresh": 0,
-   "closed": 48,
+   "closed": 24,
    "conflict": 0,
-   "trcd": 75,
-   "other": 203,
+   "trcd": 67,
+   "other": 195,
    "acts": 4708
   }
  ],
- "B_per_edge": 103.7,
- "steady_B_per_edge": 103.81,
- "hbm_cycles": 79518
+ "B_per_edge": 103.75,
+ "steady_B_per_edge": 103.86,
+ "hbm_cycles": 79478
 }
