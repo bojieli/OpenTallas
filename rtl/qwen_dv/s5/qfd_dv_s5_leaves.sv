@@ -50,8 +50,26 @@ module qfd_dv_s5_fdn #(parameter integer HARD = 1) (
     output wire           pc_bad,
     input  wire [9:0]     agu_q,
     input  wire [9:0]     ag_own,
-    output reg  [9:0]     ag_dn_o
+    output reg  [9:0]     ag_dn_o,
+    // face pass-throughs (wires): outputs of the core leaves leaving at this face, inputs entering here for them
+    input  wire [1087:0]  st_dn_c,        // stream so_w
+    output wire [1087:0]  st_dn_o,
+    input  wire [47:0]    sc_dn_c,        // scalar dn_o
+    output wire [47:0]    sc_dn_o,
+    input  wire [106:0]   st_c,           // status (ctl)
+    output wire [106:0]   st,
+    input  wire [49:0]    cc_c,           // collective command (ctl)
+    output wire [49:0]    cc_o,
+    input  wire [513:0]   l9_i,           // neighbour L9 word -> station regions
+    output wire [8*66-1:0] l9_r,          // per station region k: {nb_c 2, nb_d 64}
+    output wire [8:0]     treq_c          // PRIVATE_CALR request lane -> tload (raw, its own face register)
 );
+    assign st_dn_o = st_dn_c; assign sc_dn_o = sc_dn_c; assign st = st_c; assign cc_o = cc_c;
+    genvar k;
+    generate for (k = 0; k < 8; k = k + 1) begin : g_l9
+        assign l9_r[66*k +: 66] = {l9_i[513:512], l9_i[64*k +: 64]};
+    end endgenerate
+    assign treq_c = treq_i;
     wire rst;
     qfd_dv_s5_rst2 u_rl (.ck(ck), .rst_n(rst_n), .rst(rst));
     always @(posedge ck or negedge rst)
@@ -89,8 +107,23 @@ module qfd_dv_s5_fup #(parameter integer MUT = 0) (
     output reg  [1094:0]  chu_q,
     output reg  [9:0]     agu_q,
     input  wire [115:0]   cmd_q,
-    output reg  [115:0]   cmd_o
+    output reg  [115:0]   cmd_o,
+    // face pass-throughs (wires)
+    input  wire [1087:0]  st_up_c,        // stream so_e
+    output wire [1087:0]  st_up_o,
+    input  wire [47:0]    sc_up_c,        // scalar up_o
+    output wire [47:0]    sc_up_o,
+    input  wire [452:0]   hr_c,           // the dn-face head-row pin register (1 edge a hop)
+    output wire [452:0]   hr_o,
+    input  wire [1037:0]  chr_c,          // the dn-face return-chain pin register (1 edge a hop)
+    output wire [1037:0]  ch_up_o,
+    input  wire [8:0]     treq_c,         // the dn-face request-lane register
+    output wire [8:0]     treq_o,
+    input  wire [513:0]   l9_c,           // station L9 word
+    output wire [513:0]   l9_o
 );
+    assign st_up_o = st_up_c; assign sc_up_o = sc_up_c; assign hr_o = hr_c; assign ch_up_o = chr_c; assign treq_o = treq_c;
+    assign l9_o = l9_c;
     wire rst;
     qfd_dv_s5_rst2 u_rl (.ck(ck), .rst_n(rst_n), .rst(rst));
     wire setid = cmd_q[0] && cmd_q[3:1] == 3'd7;
@@ -102,25 +135,55 @@ module qfd_dv_s5_fup #(parameter integer MUT = 0) (
         end
 endmodule
 
+// ---------------------------------------------------------------------------------------------------------- fn / fs
+// The N / S face entry points of the N->S corridor (wires): rs_n enters at the N face and leaves toward the station
+// regions (S band); the column heads' cw_s words leave at the S face.  In the landed slice the landing ring half sits in
+// the face region (flop at the pin) and the read half beside the reader.
+module qfd_dv_s5_fn (
+    input  wire [1027:0]  rs_n,
+    output wire [8*132-1:0] rs_n_r          // per station region k: {c 4, hi 64, lo 64}
+);
+    genvar k;
+    generate for (k = 0; k < 8; k = k + 1) begin : g_r
+        assign rs_n_r[132*k +: 132] = {rs_n[1027:1026], rs_n[513:512], rs_n[514+64*k +: 64], rs_n[64*k +: 64]};
+    end endgenerate
+endmodule
+// the S-face entry of rs_s (directly under the station row): the same per-region split
+module qfd_dv_s5_frs (
+    input  wire [1027:0]  rs_s,
+    output wire [8*132-1:0] rs_s_r
+);
+    genvar k;
+    generate for (k = 0; k < 8; k = k + 1) begin : g_r
+        assign rs_s_r[132*k +: 132] = {rs_s[1027:1026], rs_s[513:512], rs_s[514+64*k +: 64], rs_s[64*k +: 64]};
+    end endgenerate
+endmodule
+module qfd_dv_s5_fs (
+    input  wire [4*516-1:0] cw_s_c,
+    output wire [515:0]   cw_s0, cw_s1, cw_s2, cw_s3
+);
+    assign {cw_s3, cw_s2, cw_s1, cw_s0} = cw_s_c;
+endmodule
+
 // ---------------------------------------------------------------------------------------------------------- spin
 // HARD 0 only (qfd_dv_s5_flat0): the rs_s / rs_n / l9 pin registers of qfd_dv_slice2.  In the hardened slice the closed
 // stnrgc regions take these ports straight into their own PIN_IN registers (the same edge), so this leaf is absent.
 module qfd_dv_s5_spin (
     input  wire           ck,
     input  wire           rst_n,
-    input  wire [1027:0]  rs_s,
-    input  wire [1027:0]  rs_n,
-    input  wire [513:0]   l9_i,
-    output reg  [1027:0]  rss_q,
-    output reg  [1027:0]  rsn_q,
-    output reg  [513:0]   nb_q,
+    input  wire [8*132-1:0] rs_s,
+    input  wire [8*132-1:0] rs_n,
+    input  wire [8*66-1:0] l9_i,
+    output reg  [8*132-1:0] rss_q,
+    output reg  [8*132-1:0] rsn_q,
+    output reg  [8*66-1:0] nb_q,
     output wire           stn_rst_n       // the slice synchroniser's reset for the 8 station regions (flat0 only)
 );
     wire rst;
     qfd_dv_s5_rst2 u_rl (.ck(ck), .rst_n(rst_n), .rst(rst));
     assign stn_rst_n = rst;
     always @(posedge ck or negedge rst)
-        if (!rst) begin rss_q <= 1028'd0; rsn_q <= 1028'd0; nb_q <= 514'd0; end
+        if (!rst) begin rss_q <= '0; rsn_q <= '0; nb_q <= '0; end
         else begin rss_q <= rs_s; rsn_q <= rs_n; nb_q <= l9_i; end
 endmodule
 
