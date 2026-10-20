@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       admits   942 GB (avail 773, growth 113, headroom 0, waiters 0/0 GB) load 62/128 running 35 disk 43 GB 
+ot-run: ot-epyc6       admits  1021 GB (avail 828, growth 113, headroom 0, waiters 0/0 GB) load 57/128 running 38 disk 4611 GB 
+ot-run: ot-epyc7       admits   514 GB (avail 461, growth 101, headroom 0, waiters 0/0 GB) load 70/96 running 50 disk 5663 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-hwin-private-package-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-hwin-private-package-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-hwin-private-package-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3308118-1792488588 after 0 s
+CAMPAIGN_EXIT=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3308118-1792488588): exit 0
