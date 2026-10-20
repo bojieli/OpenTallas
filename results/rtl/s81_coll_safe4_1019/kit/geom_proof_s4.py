@@ -8,12 +8,13 @@ ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(ROOT / "tools/ref_tile"))
 from measured_band_fill import lattice_band_errors
 out = {}
+SUF = sys.argv[1] if len(sys.argv) > 1 else "s4"
 for side in ("w", "e"):
-    k = ROOT / f"physical/ref_tile/dscoll_lane_{side}_s4"
+    k = ROOT / f"physical/ref_tile/dscoll_lane_{side}_{SUF}"
     s, fp = json.loads((k / "spec.json").read_text()), json.loads((k / "floorplan.json").read_text())
     W, H = fp["die"][2], fp["die"][3]
     blocks = [b for b in fp["blocks"] if b["kind"] == "macro"]
-    lo, hi = 345.6, 385.2
+    lo, hi = {"s4": (345.6, 385.2), "s4b": (259.2, 288.0)}[SUF]
     q = copy.deepcopy(s)
     q["fill_reason"] = {"lattice_channel_bound": {"why": "proof run", "approved_by": "ROOT", "std_band_y_um": [lo, hi]}}
     errs = lattice_band_errors(q, W, H, blocks, s["std_area_um2"])

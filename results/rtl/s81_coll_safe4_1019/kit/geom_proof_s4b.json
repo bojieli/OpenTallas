@@ -1,0 +1,152 @@
+{
+ "w": {
+  "die": [
+   706.32,
+   540.0
+  ],
+  "macros": 55,
+  "lattice_band_errors": [],
+  "min_macro_gap_um": 25.896,
+  "min_core_edge_um": 21.288,
+  "band": [
+   259.2,
+   288.0
+  ],
+  "band_density_synth": 0.4672,
+  "pin_face_channels": [
+   {
+    "x": 77.784,
+    "width_um": 51.816,
+    "face_contacts": 1666,
+    "m3_m5_tracks": 2518,
+    "use": 0.662
+   },
+   {
+    "x": 164.184,
+    "width_um": 51.816,
+    "face_contacts": 1469,
+    "m3_m5_tracks": 2518,
+    "use": 0.583
+   },
+   {
+    "x": 250.584,
+    "width_um": 51.816,
+    "face_contacts": 1272,
+    "m3_m5_tracks": 2518,
+    "use": 0.505
+   },
+   {
+    "x": 336.984,
+    "width_um": 51.816,
+    "face_contacts": 1272,
+    "m3_m5_tracks": 2518,
+    "use": 0.505
+   },
+   {
+    "x": 423.384,
+    "width_um": 51.816,
+    "face_contacts": 1272,
+    "m3_m5_tracks": 2518,
+    "use": 0.505
+   },
+   {
+    "x": 509.784,
+    "width_um": 51.816,
+    "face_contacts": 1469,
+    "m3_m5_tracks": 2518,
+    "use": 0.583
+   },
+   {
+    "x": 596.184,
+    "width_um": 51.816,
+    "face_contacts": 1563,
+    "m3_m5_tracks": 2518,
+    "use": 0.621
+   }
+  ],
+  "macro_to_band_um_near_face": 198.7,
+  "macro_to_band_um_far_corner": 216.0,
+  "pin_to_band_um_max": 257.04,
+  "bus_pin_density_per_um": {
+   "rx": 1.95,
+   "tx": 1.93,
+   "lo_d": 2.21,
+   "li_d": 2.24
+  }
+ },
+ "e": {
+  "die": [
+   706.32,
+   540.0
+  ],
+  "macros": 55,
+  "lattice_band_errors": [],
+  "min_macro_gap_um": 25.896,
+  "min_core_edge_um": 21.288,
+  "band": [
+   259.2,
+   288.0
+  ],
+  "band_density_synth": 0.4672,
+  "pin_face_channels": [
+   {
+    "x": 77.784,
+    "width_um": 51.816,
+    "face_contacts": 1563,
+    "m3_m5_tracks": 2518,
+    "use": 0.621
+   },
+   {
+    "x": 164.184,
+    "width_um": 51.816,
+    "face_contacts": 1469,
+    "m3_m5_tracks": 2518,
+    "use": 0.583
+   },
+   {
+    "x": 250.584,
+    "width_um": 51.816,
+    "face_contacts": 1272,
+    "m3_m5_tracks": 2518,
+    "use": 0.505
+   },
+   {
+    "x": 336.984,
+    "width_um": 51.816,
+    "face_contacts": 1272,
+    "m3_m5_tracks": 2518,
+    "use": 0.505
+   },
+   {
+    "x": 423.384,
+    "width_um": 51.816,
+    "face_contacts": 1272,
+    "m3_m5_tracks": 2518,
+    "use": 0.505
+   },
+   {
+    "x": 509.784,
+    "width_um": 51.816,
+    "face_contacts": 1469,
+    "m3_m5_tracks": 2518,
+    "use": 0.583
+   },
+   {
+    "x": 596.184,
+    "width_um": 51.816,
+    "face_contacts": 1666,
+    "m3_m5_tracks": 2518,
+    "use": 0.662
+   }
+  ],
+  "macro_to_band_um_near_face": 198.7,
+  "macro_to_band_um_far_corner": 216.0,
+  "pin_to_band_um_max": 257.04,
+  "bus_pin_density_per_um": {
+   "rx": 1.95,
+   "tx": 1.93,
+   "lo_d": 2.21,
+   "li_d": 2.24
+  }
+ }
+}
