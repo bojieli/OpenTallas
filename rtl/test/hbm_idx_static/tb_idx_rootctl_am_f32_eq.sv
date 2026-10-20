@@ -2,7 +2,7 @@
 `default_nettype none
 // HBM-IDX6 2026-10-20: FAN32 equivalence of the d4g IDX root. REF = ot_hbm_idx_rootctl_static_am #(VM_RT 65, CR_RT 36,
 // SEL_LAT 30, RSTL 1, FAN32 0) (the g2d elaboration), DUT = the same with FAN32 1. Both see the SAME inputs every edge;
-// EVERY output port must be identical (!==, X-exact) on EVERY edge. Stimulus, three overlapping phases per record:
+// EVERY output port must be identical (!==, X-exact) on EVERY edge after reset release. Stimulus, three overlapping phases per record:
 //   TOPK: random legal / illegal descriptors (k 1..8, n k..k+120, m 1..4, mirrors, unaligned bases, strides, has_r),
 //         scores from a hash or (1 in 3 records) a tie-heavy set {+0, -0, +-1, +-2, 3} with rare NaN; VM model answers the
 //         REF's vm_rq at 7 + VM_RT (dropped 1 in 16 records: fault path), hub echo at 11 + CR_RT (dropped 1 in 16);
@@ -78,7 +78,7 @@ module tb_idx_rootctl_am_f32_eq;
     integer cyc = 0, errs = 0, nq = 0, nw = 0, ndone = 0, nflt = 0, nam = 0, nidx = 0, ncal = 0;
     always @(posedge clk) begin
         cyc <= cyc + 1;
-        if (o0 !== o1) begin
+        if (rst_n && o0 !== o1) begin   // from reset release (before it the as-built X/0 init differs only in sim)
             errs = errs + 1;
             if (errs < 6) $display("DIFF cyc %0d: sel %h/%h cq %b/%b busy %b/%b done %b/%b fault %b/%b am %b ir %b vq %b sh %b/%b",
                 cyc, {so0, sp0, sa0}, {so1, sp1, sa1}, cq0 !== cq1, 1'b0, tb0, tb1, {td0, dn0}, {td1, dn1}, {tf0, ft0}, {tf1, ft1},
@@ -92,7 +92,7 @@ module tb_idx_rootctl_am_f32_eq;
         if (so0 != 0) ncal = ncal + 1;
     end
     // ---------------- stimulus
-    integer w, rnd, busyband;
+    integer w, rnd, busyband; integer seed = `SEED;
     task automatic side_requests;     // ARGMAX / INDEX on banks 4..7 (TOPK reads whatever sector it needs: collisions = fault)
         integer b; begin
             index_rq = 0; argmax_rq = 0;
@@ -103,7 +103,7 @@ module tb_idx_rootctl_am_f32_eq;
             end
         end endtask
     initial begin
-        rnd = $urandom(`SEED);
+        rnd = $urandom(seed);
         repeat (6) @(negedge clk); rst_n = 1; repeat (8) @(negedge clk);
         // programme 8 calendar rows
         for (w = 0; w < 8; w = w + 1) begin
