@@ -284,6 +284,24 @@ def port_table(variant, env):
     T.append(dict(port="rst_c1r1", bits=1, face="S", clock=CK[REG], dir="in", range_um=[round(cx + 2, 3), round(cx + 2.3, 3)], layer="M5"))
     T.append(dict(port="far", bits=1, face="S", clock=CK[REG], dir="strap", range_um=[round(cx + 4, 3), round(cx + 4.3, 3)], layer="M5"))
     T.append(dict(port="cid", bits=12, face="S", clock=CK[REG], dir="strap", range_um=[round(cx + 6, 3), round(cx + 12, 3)], layer="M5"))
+    # route.pin_balance needs DISJOINT per-port ranges on a face: slide every narrow port out of the bus ranges
+    for face in "NSEW":
+        fixed = [tuple(t["range_um"]) for t in T if t["face"] == face and t["bits"] > 12]
+        taken = list(fixed)
+        for t in [t for t in T if t["face"] == face and t["bits"] <= 12]:
+            a, b = t["range_um"]; w = b - a
+            for step in range(0, 4000):
+                for sgn in (1, -1):
+                    a2 = a + sgn * step * 1.0
+                    if a2 < 25 or a2 + w > (env["W"] if face in "NS" else env["H"]) - 25:
+                        continue
+                    if all(a2 + w + 1.0 <= x0 or a2 >= x1 + 1.0 for (x0, x1) in taken):
+                        break
+                else:
+                    continue
+                break
+            t["range_um"] = [round(a2, 3), round(a2 + w, 3)]
+            taken.append((a2, a2 + w))
     return T
 
 # ---------------------------------------------------------------------------------------------------------------- RTL
@@ -467,7 +485,8 @@ def spec(variant):
         outline=dict(w=round(env["W"], 3), h=round(env["H"], 3), exact=True), child_lattice_um=21.6,
         children=kids, macros=[], pins=faces,
         pin_ranges={p["port"]: p["range_um"] for p in T}, pin_layers={p["port"]: p["layer"] for p in T},
-        route=dict(pd=0.5, threads=16, peak_ram_gb=96, pin_v="M5", pin_h="M4 M6", macro_halo_um=5.4, io_hold_margin_ns=0.03, hold_margin_ns=0.03),
+        route=dict(pd=0.5, threads=16, peak_ram_gb=96, pin_v="M5", pin_h="M4 M6", macro_halo_um=5.4, io_hold_margin_ns=0.03, hold_margin_ns=0.03,
+                   pin_balance=dict(group_max=1, h="M4 M6", v="M5")),
         cluster_level=2, recipe=4, hold_budget="die", inhold=False, outhold=False,
         pin_regs=dict(enable=False, reason="every data port lands directly in a hard-half register (writer slot capture / reader "
                       "output flop, both closed views); rst_c1r1 is registered at the face (rpin_q) then 5 kept stages; lrst_* "
