@@ -20,7 +20,7 @@
 //     written every head turn and read only after a run's first chunk, exactly as before;
 //   * publication: lane select = kept one-hot copies per 32-b word, buffer = load-then-shift register with kept load /
 //     shift enables per word (no 16:1 word mux), the request's tag / node-valid are the decode's registered reads;
-//   * events: ev_q kept twice (control / tag); head-write selects kw_* kept twice per adder (16 bits each);
+//   * events: ev_q kept three times (control / tag / selects+faults); head-write selects kw_* kept twice per adder;
 //   * adders: ot_hdc_fp32_add_lat_fan32 SAFE_DIST 1 (the qualified LAT 7 / DRST 0 native fan-32 graph, main 520dbea3a;
 //     bit-exact to ot_hdc_fp32_add_lat = ot_gpu_fadd's adder; benches unpack its cells via
 //     tools/prepare_fp32_fan32_models.py).
@@ -88,14 +88,16 @@ module ot_hnx_att4_smerge_h #(
     // ---------------- input registers (+2 edges, uniform; as ot_hnx_att4_smerge step 4) ----------------------------------
     (* keep = "true" *) reg [NL-1:0] ev_q;               // control copy
     (* keep = "true" *) reg [NL-1:0] ev_qt;              // tag / node-valid-clear copy
+    (* keep = "true" *) reg [NL-1:0] ev_qs;              // operand-select / write-select / fault copy
     reg [NL*TAGW-1:0] tag_q;
     reg [NL*W-1:0]    sum_l, sum_q;
     reg               ps_l, ps_q;
+    (* keep = "true" *) reg ps_qk;                       // copy of ps_q for the 16 publication load enables
     reg [1:0]         pl_l, pl_q;
     reg [2:0]         pslot_l, pslot_q;
     always @(posedge clk or negedge rst_c)
-        if (!rst_c) begin ev_q <= {NL{1'b0}}; ev_qt <= {NL{1'b0}}; ps_l <= 1'b0; ps_q <= 1'b0; end
-        else begin ev_q <= ev; ev_qt <= ev; ps_l <= pub_start; ps_q <= ps_l; end
+        if (!rst_c) begin ev_q <= {NL{1'b0}}; ev_qt <= {NL{1'b0}}; ev_qs <= {NL{1'b0}}; ps_l <= 1'b0; ps_q <= 1'b0; ps_qk <= 1'b0; end
+        else begin ev_q <= ev; ev_qt <= ev; ev_qs <= ev; ps_l <= pub_start; ps_q <= ps_l; ps_qk <= ps_l; end
     always @(posedge clk) begin
         tag_q <= tag_d; sum_l <= sum; sum_q <= sum_l;
         pl_l <= pub_lane; pl_q <= pl_l; pslot_l <= pub_slot; pslot_q <= pslot_l;
@@ -105,20 +107,22 @@ module ot_hnx_att4_smerge_h #(
     // ph = residue at the ring heads (head stage), phn = ph + 1 (decoded this cycle).
     reg [7:0] rr_c [0:NL-1];                            // phn: entry control read, lane l
     reg [7:0] rr_t [0:NL-1];                            // phn: entry tag read
-    reg [7:0] rw_c [0:NL-1];                            // ph : entry control write
+    reg [7:0] rw_c [0:NL-1];                            // ph : entry control write (md, n, rj)
+    reg [7:0] rw_d [0:NL-1];                            // ph : entry control write (fin, rk, fb, ff)
     reg [7:0] rw_t [0:NL-1];                            // ph : entry tag write
     (* keep = "true" *) reg [7:0] rq_r, rq_n, rq_w, rv_w, rv_r;   // return ring read ph / read phn / write ph;
                                                                   // node_valid write ph / read phn
     (* keep = "true" *) reg [2:0] a_rd, a_wr;           // SRAM read address (phn) / write address (ph)
     genvar gr;
     generate for (gr = 0; gr < NL; gr = gr + 1) begin : g_rr
-        (* keep = "true" *) reg [7:0] oc, ot, wc, wt;
+        (* keep = "true" *) reg [7:0] oc, ot, wc, wd, wt;
         always @(posedge clk or negedge rcv[3 + NL + gr])
-            if (!rcv[3 + NL + gr]) begin oc <= OH_PHN; ot <= OH_PHN; wc <= OH_PH; wt <= OH_PH; end
+            if (!rcv[3 + NL + gr]) begin oc <= OH_PHN; ot <= OH_PHN; wc <= OH_PH; wd <= OH_PH; wt <= OH_PH; end
             else begin
-                oc <= {oc[6:0], oc[7]}; ot <= {ot[6:0], ot[7]}; wc <= {wc[6:0], wc[7]}; wt <= {wt[6:0], wt[7]};
+                oc <= {oc[6:0], oc[7]}; ot <= {ot[6:0], ot[7]}; wc <= {wc[6:0], wc[7]}; wd <= {wd[6:0], wd[7]};
+                wt <= {wt[6:0], wt[7]};
             end
-        always @(*) begin rr_c[gr] = oc; rr_t[gr] = ot; rw_c[gr] = wc; rw_t[gr] = wt; end
+        always @(*) begin rr_c[gr] = oc; rr_t[gr] = ot; rw_c[gr] = wc; rw_d[gr] = wd; rw_t[gr] = wt; end
     end endgenerate
     always @(posedge clk or negedge rst_r)
         if (!rst_r) begin
@@ -257,7 +261,7 @@ module ot_hnx_att4_smerge_h #(
                 d_n[l] = r_n[l]; d_rk[l] = r_rk[l]; d_rj[l] = r_rj[l];
                 d_fin[l] = r_fin[l]; d_ff[l] = r_ff[l]; d_fb[l] = r_fb[l]; d_md[l] = r_md[l];
             end
-            d_flt[l] = ev_q[l] && ((r_md[l] != IDLE) || (nret_v && nret_l == l[1:0] && nret_t == ew[l]) ||
+            d_flt[l] = ev_qs[l] && ((r_md[l] != IDLE) || (nret_v && nret_l == l[1:0] && nret_t == ew[l]) ||
                                  (cc[l] >= (1 << (LV - 1))));
             d_nvc[l] = ev_qt[l] && first;
             cand[l] = (d_md[l] != IDLE);
@@ -299,9 +303,9 @@ module ot_hnx_att4_smerge_h #(
         da_hw = {NW{1'b0}}; db_hw = {NW{1'b0}}; da_my = 1'b0; db_my = 1'b0; da_ev = {NL{1'b0}}; db_ev = {NL{1'b0}};
         for (l = 0; l < NL; l = l + 1) begin
             so[l] = (sel == l[1:0]); isl[l] = iss && so[l];
-            ca_ev[l] = ev_q[l] && ew[l] == s_a[l];
+            ca_ev[l] = ev_qs[l] && ew[l] == s_a[l];
             ca_my[l] = nret_v && nret_l == l[1:0] && nret_t == s_a[l];
-            cb_ev[l] = MUT != 1 && ev_q[l] && ew[l] == s_b[l];
+            cb_ev[l] = MUT != 1 && ev_qs[l] && ew[l] == s_b[l];
             cb_my[l] = nret_v && nret_l == l[1:0] && nret_t == s_b[l];
             da_ev[l] = so[l] && ca_ev[l];
             da_my = da_my | (so[l] && !ca_ev[l] && ca_my[l]);
@@ -314,7 +318,7 @@ module ot_hnx_att4_smerge_h #(
         end
         for (l = 0; l < NL; l = l + 1)
             for (q = 0; q < LV; q = q + 1) begin
-                dw_ev[l*LV+q] = ev_q[l] && ew[l] == q[2:0];
+                dw_ev[l*LV+q] = ev_qs[l] && ew[l] == q[2:0];
                 dw_rt[l*LV+q] = !dw_ev[l*LV+q] && nret_v && (((MUT == 2) ? (nret_l ^ 2'd1) : nret_l) == l[1:0]) &&
                                 nret_t == q[2:0];
             end
@@ -410,9 +414,10 @@ module ot_hnx_att4_smerge_h #(
             end
         always @(posedge clk) begin
             for (rr = 0; rr < 8; rr = rr + 1) begin
-                if (rw_c[gr][rr]) begin
-                    e_n[gr*8+rr] <= x_n[gr]; e_rj[gr*8+rr] <= x_rj[gr]; e_fin[gr*8+rr] <= x_fin[gr];
-                    e_rk[gr*8+rr] <= x_rk[gr]; e_fb[gr*8+rr] <= x_fb[gr]; e_ff[gr*8+rr] <= x_ff[gr];
+                if (rw_c[gr][rr]) begin e_n[gr*8+rr] <= x_n[gr]; e_rj[gr*8+rr] <= x_rj[gr]; end
+                if (rw_d[gr][rr]) begin
+                    e_fin[gr*8+rr] <= x_fin[gr]; e_rk[gr*8+rr] <= x_rk[gr]; e_fb[gr*8+rr] <= x_fb[gr];
+                    e_ff[gr*8+rr] <= x_ff[gr];
                 end
                 if (rw_t[gr][rr]) e_tag[gr*8+rr] <= x_tag[gr];
             end
@@ -439,6 +444,7 @@ module ot_hnx_att4_smerge_h #(
     // pr_q: this half of the requested lane's level LV-1 head word, one-hot lane select kept per 32-b word.
     // sh: load-then-shift buffer (load at pub_d0, shift on this half's 8 output words); pub_data = sh word 0.
     reg pub_fault, pub_d0, pub_d1, pub_active;
+    (* keep = "true" *) reg pub_d0t, pub_d1t;            // copies for the 16-bit tag enables
     reg [2:0] slot0, slot1;
     reg [1:0] lane0, lane1;
     reg [TAGW-1:0] tag0, tag1;
@@ -465,10 +471,10 @@ module ot_hnx_att4_smerge_h #(
     genvar gp;
     generate for (gp = 0; gp < 8; gp = gp + 1) begin : g_pw
         (* keep = "true" *) reg [NL-1:0] rlo;              // one-hot lane of the read, this word
-        (* keep = "true" *) reg ld, sk;                    // load (= pub_d0) / shift (this half outputs a word)
+        (* keep = "true" *) reg [1:0] ld, sk;              // load (= pub_d0) / shift (this half outputs a word), per 16 b
         always @(posedge clk) begin
             for (pw = 0; pw < NL; pw = pw + 1) rlo[pw] <= (rl_n == pw[1:0]);
-            ld <= ps_q; sk <= sk_n;
+            ld <= {2{ps_qk}}; sk <= {2{sk_n}};
         end
         reg [31:0] rw;
         integer j2;
@@ -478,15 +484,18 @@ module ot_hnx_att4_smerge_h #(
         end
         always @(posedge clk) begin
             pr_q[32*gp +: 32] <= rw;
-            if (ld) sh[32*gp +: 32] <= pr_q[32*gp +: 32];
-            else if (sk) sh[32*gp +: 32] <= (gp == 7) ? 32'd0 : sh[32*(gp+1) +: 32];
+            if (ld[0]) sh[32*gp +: 16] <= pr_q[32*gp +: 16];
+            else if (sk[0]) sh[32*gp +: 16] <= (gp == 7) ? 16'd0 : sh[32*(gp+1) +: 16];
+            if (ld[1]) sh[32*gp + 16 +: 16] <= pr_q[32*gp + 16 +: 16];
+            else if (sk[1]) sh[32*gp + 16 +: 16] <= (gp == 7) ? 16'd0 : sh[32*(gp+1) + 16 +: 16];
         end
     end endgenerate
     always @(posedge clk or negedge rst_p)
         if (!rst_p) begin
             pub_d0 <= 1'b0; pub_d1 <= 1'b0; pub_active <= 1'b0; pub_fault <= 1'b0; pub_v <= 1'b0; word_next <= 4'd0;
+            pub_d0t <= 1'b0; pub_d1t <= 1'b0;
         end else begin
-            pub_d0 <= ps_q; pub_d1 <= pub_d0;
+            pub_d0 <= ps_q; pub_d1 <= pub_d0; pub_d0t <= ps_q; pub_d1t <= pub_d0;
             pub_v <= pub_d1 || pub_active;
             if (ps_q && (!pr_nv || pr_tag[2:0] != pslot_q || (ret_v && ret_l == pl_q && ret_t == TOP) ||
                          pub_d0 || pub_d1 || (pub_active && word_next != 4'd14) || pl_q >= NL))
@@ -495,9 +504,11 @@ module ot_hnx_att4_smerge_h #(
         end
     always @(posedge clk) begin
         if (ps_q) begin slot0 <= pslot_q; lane0 <= pl_q; tag0 <= pr_tag; end
-        if (pub_d0) begin slot1 <= slot0; lane1 <= lane0; tag1 <= tag0; end
+        if (pub_d0) begin slot1 <= slot0; lane1 <= lane0; end
+        if (pub_d0t) tag1 <= tag0;
         pub_data <= sh[31:0];
-        if (pub_d1) begin pub_word <= 4'd0; pub_out_slot <= slot1; pub_out_lane <= lane1; pub_tag <= tag1; end
+        if (pub_d1t) pub_tag <= tag1;
+        if (pub_d1) begin pub_word <= 4'd0; pub_out_slot <= slot1; pub_out_lane <= lane1; end
         else if (pub_active) pub_word <= word_next;
     end
     assign fault = m_fault | pub_fault;

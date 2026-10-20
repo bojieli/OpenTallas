@@ -2,7 +2,7 @@
 
 Design and checklist: physical/hbm_next/att4/leaf_1020/README.md.
 
-## m3: census-safe core (current RTL)
+## m4: census-safe core (current RTL; m3 = the same before the last fanout splits, superseded)
 Run with `tools/hbm_next/att4_scl_matrix.sh` and `MUTS=... SEED=...`. Setup: Verilator 5.050 on ot-epyc7, HNX_ATT_SAFE_RESET=1, NL 3. The native fan-32 adders are unpacked by tools/prepare_fp32_fan32_models.py (FAN32_MODELS_PASS sha 3606964b).
 
 | run | expected | result |

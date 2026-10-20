@@ -148,11 +148,13 @@ module ot_hnx_att4_sleaf_s #(
         .pub_start(ps_g), .pub_lane(pl_g), .pub_slot(psl_g), .pub_v(c_pv), .pub_data(c_pd), .pub_word(c_pw),
         .pub_out_slot(c_ps), .pub_out_lane(c_pl), .pub_tag(c_pt), .fault(c_flt));
     // two pads = the N word's seam (N out reg + S in reg)
-    reg p1_v, p2_v, p1_f, p2_f; reg [31:0] p1_d, p2_d; reg [3:0] p1_w, p2_w; reg [2:0] p1_s, p2_s;
+    reg p1_v, p2_v, p1_f, p2_f;
+    (* keep = "true" *) reg p2_vb, p2_w3b;              // copies for the upper 16 bits of the output word mux
+    reg [31:0] p1_d, p2_d; reg [3:0] p1_w, p2_w; reg [2:0] p1_s, p2_s;
     reg [1:0] p1_l, p2_l; reg [15:0] p1_t, p2_t;
     always @(posedge clk) begin
         p1_v <= c_pv; p1_f <= c_flt; p1_d <= c_pd; p1_w <= c_pw; p1_s <= c_ps; p1_l <= c_pl; p1_t <= c_pt;
-        p2_v <= p1_v; p2_f <= p1_f; p2_d <= p1_d; p2_w <= p1_w; p2_s <= p1_s; p2_l <= p1_l; p2_t <= p1_t;
+        p2_v <= p1_v; p2_vb <= p1_v; p2_w3b <= p1_w[3]; p2_f <= p1_f; p2_d <= p1_d; p2_w <= p1_w; p2_s <= p1_s; p2_l <= p1_l; p2_t <= p1_t;
     end
     // S-face output pin registers
     always @(posedge clk or negedge g2)
@@ -160,7 +162,8 @@ module ot_hnx_att4_sleaf_s #(
         else begin pub_v <= p2_v; fault <= fault | p2_f | flt_g; end
     always @(posedge clk) begin
         pub_word <= p2_w; pub_out_slot <= p2_s; pub_out_lane <= p2_l; pub_tag <= p2_t;
-        if (p2_v) pub_data <= (p2_w[3] ^ (MUT == 9)) ? p2_d : pd_g;
+        if (p2_v)  pub_data[15:0]  <= (p2_w[3] ^ (MUT == 9)) ? p2_d[15:0]  : pd_g[15:0];
+        if (p2_vb) pub_data[31:16] <= (p2_w3b  ^ (MUT == 9)) ? p2_d[31:16] : pd_g[31:16];
     end
 endmodule
 
