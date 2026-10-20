@@ -53,7 +53,8 @@ def main():
             rows.append(dict(instance=f'ctl_{q}_p{pc:02d}', rank=rank, placement=cp,
                              max_um=max(p['max_um'] for p in ports),
                              over405=sum(p['over405'] for p in ports), ports=ports))
-    report = dict(status='MODEL ONLY intended child pins vs actual PHY pins; no routing/closure/binding',
+    report = dict(status='MODEL ONLY supplied child pins vs actual PHY pins; no routing/closure/binding',
+        child_pin_scope=plan['scope'],
         inputs={k:dict(path=v,sha256=hashlib.sha256(Path(v).read_bytes()).hexdigest())
                 for k,v in [('phy_lef',a.phy_lef),('pin_plan',a.pin_plan),('manifest',a.manifest)]},
         pair_basis='Current GEN12PHY/controller ports, lo/hi bit pairing pc*width+bit; no bus-centroid reach claim',
@@ -61,7 +62,7 @@ def main():
         phy_outline_um=[phy['w'],phy['h']], child_outline_um=[w,h],
         reservations='Alternating parity two rows; same-rank pitch531.168, clearance142.368; gap10.8 toPHY and21.6 betweenrows',
         max_um=max(r['max_um'] for r in rows), over405=sum(r['over405'] for r in rows), rows=rows,
-        qualification='Child pins intended only, not native; no corridor/relay escape/nonoverlap with other die children proof. Lower bound hop counts do not prove legal relay placement. Exact equal-age padding/calendar price, reset and clock producers still OPEN.')
+        qualification='Child pin scope is the supplied plan scope; no corridor/relay escape/nonoverlap with other die children proof. Lower bound hop counts do not prove legal relay placement. Exact equal-age padding/calendar price, reset and clock producers still OPEN.')
     if a.relay_dir:
         relays = {f:next(iter(lef(Path(a.relay_dir)/f'hbfd_rly_624_{f}.lef').values())) for f in ('NS','SN')}
         costs, boxes = [], []
@@ -106,7 +107,7 @@ def main():
             known_object_conflicts=conflicts,rows=costs,
             open='All other die children/corridors, native relay fanout/storage, reset/clock, escapes, lower-row parity compensation and static calendar price remain OPEN.')
     Path(a.out).write_text(json.dumps(report,indent=2)+'\n')
-    print(json.dumps({k:v for k,v in report.items() if k not in ('inputs','rows')}))
+    print(json.dumps({k:v for k,v in report.items() if k not in ('inputs','rows','upper_corridor_model')}))
 
 
 if __name__ == '__main__':
