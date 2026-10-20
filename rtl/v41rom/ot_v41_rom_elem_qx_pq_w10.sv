@@ -651,7 +651,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // the edges where gclk would have risen and holds otherwise (a gclk edge is clk AND the latched cg_en_g = the
     // registered z_q of the previous edge).  The enables are kept copies of the gate's register (same next state, reset
     // value 1).  The ROM macros, x boundary, lanes and chains stay on their gated clocks.  Zero cycles.
-    if (QS >= 5 && QZ != 0 && CG != 0) begin : g_wen
+    // NP (S81-QXPQ3 integration 10-20): the walker / tree registers stay on the ICG clock (g_nwen): the QS5 enable form
+    // made the registered gate enable a global clock-enable (u_we 5,404 loads + every `if (wen)` mux select); the gated
+    // clock removes that fan-out class by construction (CTS balances gclk; the clock rule judges the boundary spread).
+    if (QS >= 5 && QZ != 0 && CG != 0 && NP == 0) begin : g_wen
         wire [1:0] we;
         for (genvar k = 0; k < 2; k = k + 1) begin : g_k
             ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_we (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(we[k]));
