@@ -46,6 +46,11 @@ def log(*a):
     print(time.strftime('%H:%M:%S'), *a, flush=True)
 
 
+def sink_record(tree, sink, insertion):
+    # Coordinates are admission inputs, not display fields: retain actual ODB precision.
+    return dict(tree=tree, master=sink[1], x=sink[2], y=sink[3], R=insertion)
+
+
 class Sites:
     """legal 1.62 x 0.27 sites outside hard blocks (10-um grid, conservative) and outside existing std cells."""
 
@@ -348,8 +353,7 @@ def build(a):
                 rec.setdefault('local_root_xy', {})[root] = [round(txy[0], 3), round(txy[1], 3)]
             model = b_.build(root, txy, leaves)
             for s in sinks:
-                sink_pins[s[0]] = dict(tree=t['name'], master=s[1], x=round(s[2], 3), y=round(s[3], 3),
-                                      R=target(s[1], pin_key(s[0])[1]))
+                sink_pins[s[0]] = sink_record(t['name'], s, target(s[1], pin_key(s[0])[1]))
             rec['trees'][t['name']] = dict(root=root, root_xy=list(rxy), sinks=len(sinks), model=model)
             builders[t['name']] = b_
             log('tree', t['name'], 'sinks', len(sinks), json.dumps(model))
