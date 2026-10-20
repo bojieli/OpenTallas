@@ -6,7 +6,9 @@ module tb;
     parameter integer W = 514, D = 4, K = 2, AW = 2, N = 20000;
     reg ck = 0, rsi = 0;
     reg [W-1:0] i;
-    wire [D*W-1:0] bank_r, bank_d; wire [D*(AW+1)-1:0] epo_r, epo_d; wire [D-1:0] vld_r, vld_d;
+    localparam integer NGS = (W + 29) / 30;
+    wire [D*W-1:0] bank_r, bank_d; wire [D*(AW+1)-1:0] epo_r, epo_d; wire [D-1:0] vld_r; wire [D*NGS-1:0] vld_d;
+    reg vok; integer gg;
     wire [W-1:0] o_ref, o_dut;
     qfd_c_land_w   #(.W(W), .D(D))         uwr (.ck(ck), .rsi(rsi), .i(i), .bank(bank_r), .epo(epo_r), .vld(vld_r));
     qfd_c_land_r   #(.W(W), .D(D), .K(K))  urr (.ck(ck), .rsi(rsi), .bank(bank_r), .epo(epo_r), .vld(vld_r), .o(o_ref));
@@ -24,9 +26,10 @@ module tb;
             else rsi = 1;
             @(posedge ck); #0.1;
             if (e > 4) begin
-                if (o_ref !== o_dut || vld_r !== vld_d || (e > 12 && bank_r !== bank_d)) begin
+                vok = 1; for (gg = 0; gg < NGS; gg = gg + 1) if (vld_d[gg*D +: D] !== vld_r) vok = 0;
+                if (o_ref !== o_dut || !vok || (e > 12 && bank_r !== bank_d)) begin
                     mism = mism + 1;
-                    if (mism <= 3) $display("LAND_K_MISMATCH K=%0d edge=%0d o=%0d vld=%0d bank=%0d", K, e, o_ref !== o_dut, vld_r !== vld_d, bank_r !== bank_d);
+                    if (mism <= 3) $display("LAND_K_MISMATCH K=%0d edge=%0d o=%0d vld=%0d bank=%0d", K, e, o_ref !== o_dut, !vok, bank_r !== bank_d);
                 end
                 if (|o_ref) nz = nz + 1;
             end

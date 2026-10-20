@@ -11,55 +11,74 @@
 //                   Slot enables = rqg & woh[s] -> G data bits.  rsi loads: 1 + NG.
 //   qfd_c_land_r1k  reader: qfd_c_land_r1h with a KEPT reset copy per group (its oh / wg copies reset from it).
 //                   rsi loads: 1 + NG.
-// G = 24 (NG = 22 for W 514): every control flop drives <= G mux bits, vld[s] drives NG <= 32 select ANDs.
+// 10-20 gate census (fullk 024547) of the first form (one copy per 24 bits): 5,691 write enables of 48-49 loads (the mapped
+// enable mux uses the enable on 2 pins per bit) and vld[s] absorbed into every read bit (517 loads).  Now TWO levels:
+//   super-group of GS = 30 bits: one KEPT reset copy (rsi loads 1 + NGS = 19 for W 514/516);
+//   sub-group of N = 15 bits: one KEPT one-hot slot register; write enable = rqg & woh[s] -> 2 x 15 + 1 = 31 loads;
+//   vld is replicated per super-group in the writer (vg, set from the sub-group enable) and carried as D x NGS bits, so
+//   a reader super-group reads its own copy (<= 30 bit loads).  Reader: reset copy + warm per super-group, one-hot per
+//   sub-group.  Same epochs / latency / ports semantics; vld port is D * NGS wide (copy g = bits [g*D +: D]).
 // No added cycle, no credit, no ready: both pointers free-run (static schedule).
 module qfd_c_land_w1k #(
     parameter integer W  = 514,
     parameter integer D  = 4,
-    parameter integer G  = 24,
-    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+    parameter integer GS = 30,                         // bits per reset copy / vld copy (super-group)
+    parameter integer G  = 15,                         // bits per one-hot write-slot copy (sub-group); GS = 2 G
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D),
+    parameter integer NGS = (W + GS - 1) / GS
 ) (
     input  wire              ck,
     input  wire              rsi,
     input  wire [W-1:0]      i,
     output wire [D*W-1:0]    bank,
     output wire [D*(AW+1)-1:0] epo,                    // slot write epochs (assertion only; synthesis removes them)
-    output wire [D-1:0]      vld
+    output wire [D*NGS-1:0]  vld                       // written flags, one KEPT copy per super-group
 );
-    localparam integer NG = (W + G - 1) / G;
     reg            rq;
     reg [AW:0]     wc;
     reg [AW:0]     e [0:D-1];
-    reg [D-1:0]    v;
     always @(posedge ck) rq <= rsi;
     always @(posedge ck)
         if (!rq) wc <= {(AW + 1){1'b0}};
         else     wc <= wc + 1'b1;
-    always @(posedge ck)
-        if (!rq) v <= {D{1'b0}};
-        else     v[wc[AW-1:0]] <= 1'b1;
-    genvar g, s;
+    genvar g, h, s;
     generate for (s = 0; s < D; s = s + 1) begin : g_ep
         always @(posedge ck) if (rq && wc[AW-1:0] == s) e[s] <= wc;
         assign epo[s*(AW+1) +: AW+1] = e[s];
     end
-    for (g = 0; g < NG; g = g + 1) begin : g_grp
-        localparam integer N = (W - g * G < G) ? W - g * G : G;
-        (* keep = 1 *) reg         rqg;               // reset copy of this group (same edge as rq)
-        (* keep = 1 *) reg [D-1:0] woh;               // onehot(wc mod D) for this group
+    for (g = 0; g < NGS; g = g + 1) begin : g_grp
+        localparam integer B0 = g * GS;
+        localparam integer NS = (W - B0 < GS) ? W - B0 : GS;           // bits in this super-group
+        localparam integer NH = (NS + G - 1) / G;                        // sub-groups (1 or 2)
+        (* keep = 1 *) reg         rqg;               // reset copy of this super-group (same edge as rq)
+        (* keep = 1 *) reg [D-1:0] vg;                // written flags copy of this super-group
+        wire [D-1:0] en0;
         always @(posedge ck) rqg <= rsi;
         always @(posedge ck)
-            if (!rqg) woh <= {{(D-1){1'b0}}, 1'b1};
-            else      woh <= {woh[D-2:0], woh[D-1]};
-        for (s = 0; s < D; s = s + 1) begin : g_s
-            reg [N-1:0] b;
-            always @(posedge ck) if (rqg && woh[s]) b <= i[g*G +: N];
-            assign bank[s*W + g*G +: N] = b;
+            if (!rqg) vg <= {D{1'b0}};
+            else      vg <= vg | en0;
+        assign vld[g*D +: D] = vg;
+        for (h = 0; h < NH; h = h + 1) begin : g_sub
+            localparam integer L = B0 + h * G;
+            localparam integer N = (NS - h * G < G) ? NS - h * G : G;
+            (* keep = 1 *) reg [D-1:0] woh;           // onehot(wc mod D) for this sub-group
+            always @(posedge ck)
+                if (!rqg) woh <= {{(D-1){1'b0}}, 1'b1};
+                else      woh <= {woh[D-2:0], woh[D-1]};
+            for (s = 0; s < D; s = s + 1) begin : g_s
+                wire en = rqg && woh[s];
+                reg [N-1:0] b;
+                always @(posedge ck) if (en) b <= i[L +: N];
+                assign bank[s*W + L +: N] = b;
+                if (h == 0) begin : g_v
+                    assign en0[s] = en;
+                end
+            end
         end
     end endgenerate
-    assign vld = v;
 `ifndef SYNTHESIS
     initial if (D < 2 || (D & (D - 1)) != 0) $fatal(1, "qfd_c_land_w1k: D must be a power of two >= 2");
+    initial if (GS != 2 * G) $fatal(1, "qfd_c_land_w1k: GS must be 2 G");
 `endif
 endmodule
 
@@ -67,17 +86,18 @@ module qfd_c_land_r1k #(
     parameter integer W  = 514,
     parameter integer D  = 4,
     parameter integer K  = 2,
-    parameter integer G  = 24,
-    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+    parameter integer GS = 30,
+    parameter integer G  = 15,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D),
+    parameter integer NGS = (W + GS - 1) / GS
 ) (
     input  wire              ck,
     input  wire              rsi,
     input  wire [D*W-1:0]    bank,
     input  wire [D*(AW+1)-1:0] epo,
-    input  wire [D-1:0]      vld,
+    input  wire [D*NGS-1:0]  vld,
     output reg  [W-1:0]      o
 );
-    localparam integer NG = (W + G - 1) / G;
     localparam integer S0 = (D - K) % D;
     reg            rq;
     reg [AW:0]     rc;
@@ -89,30 +109,36 @@ module qfd_c_land_r1k #(
             rc <= rc + 1'b1;
             if (rc == K - 1) warm <= 1'b1;
         end
-    genvar g, s;
-    generate for (g = 0; g < NG; g = g + 1) begin : g_grp
-        localparam integer N = (W - g * G < G) ? W - g * G : G;
-        (* keep = 1 *) reg         rqg;               // reset copy of this group
-        (* keep = 1 *) reg [D-1:0] oh;                // onehot((rc - K) mod D) for this group
-        (* keep = 1 *) reg         wg;                // warm copy for this group
-        wire [N-1:0] term [0:D-1];
+    genvar g, h, s;
+    generate for (g = 0; g < NGS; g = g + 1) begin : g_grp
+        localparam integer B0 = g * GS;
+        localparam integer NS = (W - B0 < GS) ? W - B0 : GS;
+        localparam integer NH = (NS + G - 1) / G;
+        (* keep = 1 *) reg         rqg;               // reset copy of this super-group
+        (* keep = 1 *) reg         wg;                // warm copy of this super-group
         always @(posedge ck) rqg <= rsi;
         always @(posedge ck)
-            if (!rqg) begin oh <= {{(D-1){1'b0}}, 1'b1} << S0; wg <= 1'b0; end
-            else begin
-                oh <= {oh[D-2:0], oh[D-1]};
-                if (rc == K - 1) wg <= 1'b1;
+            if (!rqg) wg <= 1'b0;
+            else if (rc == K - 1) wg <= 1'b1;
+        for (h = 0; h < NH; h = h + 1) begin : g_sub
+            localparam integer L = B0 + h * G;
+            localparam integer N = (NS - h * G < G) ? NS - h * G : G;
+            (* keep = 1 *) reg [D-1:0] oh;            // onehot((rc - K) mod D) for this sub-group
+            wire [N-1:0] term [0:D-1];
+            always @(posedge ck)
+                if (!rqg) oh <= {{(D-1){1'b0}}, 1'b1} << S0;
+                else      oh <= {oh[D-2:0], oh[D-1]};
+            for (s = 0; s < D; s = s + 1) begin : g_s
+                assign term[s] = bank[s*W + L +: N] & {N{oh[s] & vld[g*D + s]}};
             end
-        for (s = 0; s < D; s = s + 1) begin : g_s
-            assign term[s] = bank[s*W + g*G +: N] & {N{oh[s] & vld[s]}};
+            reg [N-1:0] chosen;
+            integer t;
+            always @* begin
+                chosen = {N{1'b0}};
+                for (t = 0; t < D; t = t + 1) chosen = chosen | term[t];
+            end
+            always @(posedge ck) o[L +: N] <= wg ? chosen : {N{1'b0}};
         end
-        reg [N-1:0] chosen;
-        integer t;
-        always @* begin
-            chosen = {N{1'b0}};
-            for (t = 0; t < D; t = t + 1) chosen = chosen | term[t];
-        end
-        always @(posedge ck) o[g*G +: N] <= wg ? chosen : {N{1'b0}};
     end endgenerate
 `ifndef SYNTHESIS
     wire [AW:0]    kk = K;

@@ -7,8 +7,10 @@ Successor of qfd_c_b16_full / _fullb after their FAILED gates (10-19 ep9 191242 
 ep9 fullb 213922: GATE_STALL in the post-CTS DPL negotiation, 4,075 overflow at iteration 540; their mapped netlists also
 had reset / write-pointer drivers of 1,038-1,546 loads). One failed route = structural redesign, so this kit changes:
 - RINGS (checklist 3, native census): every soft landing ring = qfd_c_land_w1k + qfd_c_land_r1k (rtl/physical/qcluster/qfd_c_land_k.sv):
-  KEPT per-24-bit control copies (reset copy rqg, one-hot write slot woh, read one-hot oh, warm wg) -> no control flop above
-  24 mux bits; rsi drives 1 + 22 copies.  Ports, epochs, latency identical to qfd_c_land_w / _r: lockstep bench
+  TWO-LEVEL KEPT control copies: per 30-bit super-group a reset copy rqg (+ warm wg, + written-flag copy vg carried as a
+  72-bit vld bus), per 15-bit sub-group a one-hot slot register (woh / oh); write enable = rqg & woh[s] -> 2 x 15 + 1 = 31
+  loads; rsi drives 1 + 18 copies.  (First form, one copy per 24 bits, FAILED the gate census 10-20 024547 / 024710:
+  5,691 enables of 48-49 loads + vld absorbed per bit 517 loads + strap far 48; max 517.)  Ports, epochs, latency identical to qfd_c_land_w / _r: lockstep bench
   tools/qwen_cluster/bench_land_k.sh (Verilator 5.050): MUT0 K1/K2/K3 PASS (20k edges, 7 reset episodes, bank + vld + o
   compared every edge); M1 writer one-hot reset +1, M2 writer rotate reversed, M3 writes during reset, M4 reader one-hot
   reset +1 all FAIL; witnesses results/arch/qwen_cluster_1017/q_cluster16/full/bench_land_k/.
@@ -26,7 +28,8 @@ had reset / write-pointer drivers of 1,038-1,546 loads). One failed route = stru
 2. Reach: PASS (plan) -- hard single-cycle wires <= 402.8 um per bit on the real LEF pins (0 over 405); ring bay far corner
    -> its hard pin <= 267.3 um; soft->soft hops <= 159.8 um; reset copy hops <= 305.4 um;
    bank windows (landed multicycle setup 2 / hold 3, not single-cycle) <= 907.2 um.  Gate census / placed reach to confirm.
-3. Fanout: FIXED -- ring control replicated per 24 bits (KEPT); pad-ring resets no longer share the A0 leaf trst_<c>_<r>
+3. Fanout: FIXED -- ring control two-level KEPT copies (<= 31 loads by construction); static strap far registered per
+   region (u_farq_*, 16 copies x 3 sidx pins; was 48 loads); pad-ring resets no longer share the A0 leaf trst_<c>_<r>
    (was up to 4 x 515 + 1 loads).  Mapped census = the gate's PRE_GATE_NATIVE_CENSUS (limit 32, no waiver): numbers below.
 4. Depth: PASS -- no logic between stations; ring read = registered one-hot + 4-term AND-OR; write = 2:1 enable mux.
 5. Storage: ring = 4 x 514 b = 2,056 b, the LANDING-CONTRACT D4 ring (fixed rotating pointers, constant-index read, no

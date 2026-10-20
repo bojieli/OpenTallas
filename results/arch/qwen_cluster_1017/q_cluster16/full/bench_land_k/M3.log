@@ -2,6 +2,6 @@ LAND_K_MISMATCH K=2 edge=2168 o=0 vld=0 bank=1
 LAND_K_MISMATCH K=2 edge=2169 o=0 vld=0 bank=1
 LAND_K_MISMATCH K=2 edge=2170 o=0 vld=0 bank=1
 LAND_K_FAIL K=2 mism=19 nonzero=19975 resets=7
-[40001000] %Fatal: tb_land_k.sv:37: Assertion failed in tb: fail
-%Error: tools/qwen_cluster/tb_land_k.sv:37: Verilog $stop
+[40001000] %Fatal: tb_land_k.sv:40: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_k.sv:40: Verilog $stop
 Aborting...

@@ -238,6 +238,20 @@ def fabric_rtl(variant):
         # QW-CB16FULL2 census fix (checklist 3): kept per-group control copies (qfd_c_land_k.sv, bench_land_k.sh)
         nw, nr = txt.count("qfd_c_land_w #("), txt.count("qfd_c_land_r #(")
         txt = txt.replace("qfd_c_land_w #(", "qfd_c_land_w1k #(").replace("qfd_c_land_r #(", "qfd_c_land_r1k #(")
+        # written flags: one copy per 30-bit super-group (D 4 x NGS 18 = 72 bits for W 514 / 516)
+        txt, nv = re.subn(r"wire \[3:0\] (\w+_vld)\b", r"wire [71:0] \1", txt)
+        assert nv >= nw, (nv, nw)
+        # static strap far: 16 xstn x 3 sidx pins (48 loads incl. the far_n inverter) -> one KEPT register per region on its
+        # own root (checklist 1 pins registered; census <= 32): far -> 16 copies, each copy -> 3 sidx pins of its xstn
+        def _far(m):
+            inst, ck, sidx = m[1], m[2], m[3]
+            q = f"far_q_{inst[4:]}"
+            sidx2 = sidx.replace("far_n", f"{q}_n").replace("far,", f"{q},").replace("far}", f"{q}}}")
+            return (f"wire [0:0] {q};  qfd_q3h_stn #(.W(1), .N(1)) u_farq_{inst[4:]} (.ck({ck}), .d(far), .q({q}));  wire {q}_n = ~{q};   // static strap, registered per region\n    "
+                    + m[0].replace(sidx, sidx2))
+        txt, nf = re.subn(r"qfd_c_xstnw?_safe (u_x_\d_\d) \(\.ck\((\w+)\), [^;]*?\.sidx\((\{[^}]*\})\)[^;]*;", _far, txt)
+        assert nf == 16, nf
+        hdr += "// written-flag copies per 30-bit super-group (vld 72 b); static strap far registered per region (u_farq_*).\n"
         hdr += f"// soft landing rings: {nw} x qfd_c_land_w1k + {nr} x qfd_c_land_r1k (kept per-24-bit control copies, native census <= 32 loads).\n"
     elif variant not in HARD:
         # checklist 4/5: soft readers use qfd_c_land_r1h (registered one-hot AND-OR read, same ports / epochs / latency as

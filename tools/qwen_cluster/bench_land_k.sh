@@ -20,8 +20,8 @@ for C in $CASES; do
   MUT0K1) K=1;; MUT0K2) K=2;; MUT0K3) K=3;;
   M1) sed -i "s/if (!rqg) woh <= {{(D-1){1'b0}}, 1'b1};/if (!rqg) woh <= {{(D-2){1'b0}}, 2'b10};/" "$F";;
   M2) sed -i 's/else      woh <= {woh\[D-2:0\], woh\[D-1\]};/else      woh <= {woh[0], woh[D-1:1]};/' "$F";;
-  M3) sed -i 's/if (rqg \&\& woh\[s\]) b <=/if (woh[s]) b <=/' "$F";;
-  M4) sed -i 's/1.b1} << S0; wg <= 1.b0; end/1'"'"'b1} << ((S0 + 1) % D); wg <= 1'"'"'b0; end/' "$F";;
+  M3) sed -i 's/wire en = rqg \&\& woh\[s\];/wire en = woh[s];/' "$F";;
+  M4) sed -i 's/if (!rqg) oh <= {{(D-1){1.b0}}, 1.b1} << S0;/if (!rqg) oh <= {{(D-1){1'"'"'b0}}, 1'"'"'b1} << ((S0 + 1) % D);/' "$F";;
   *) echo "unknown case $C"; rc=1; continue;;
  esac
  nd=$(diff "$DUT" "$F" | grep -c '^>'); echo "== $C: K=$K source lines mutated: $nd"
