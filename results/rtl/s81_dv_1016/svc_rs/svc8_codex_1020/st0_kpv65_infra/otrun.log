@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: ot-epyc9       admits  1083 GB (avail 842, growth 84, headroom 0, waiters 0/0 GB) load 50/128 running 31 disk 115 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3828167-1792506637 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv/svc8_st0_kpv65.py", line 10, in <module>
+    digest,name=line.split('  ',1);p=Path(name);actual=hashlib.sha256(p.read_bytes()).hexdigest()
+                                                                      ~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/out_solp0/base_d0s0_pe0_ot_svc_land_sram_ot_svc_att_sram_ot_svc_att_pinreg_ot_svc_attw_lp_ot_attn_hgrp_hard/pl_dsdv_svc_rs/libdsdv_svc_rs_pl.a'
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3828167-1792506637): exit 1

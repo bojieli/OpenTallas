@@ -1,0 +1,219 @@
+{
+  "historical_executable_sha256": "not recorded at original sweep; no claim based on mtime",
+  "existing_binary": {
+    "original_path": "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv/obj_kpv66/Vtb_dsdv_svc_rs",
+    "frozen_path": "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv/kpv66_full/sim",
+    "sha256": "9ee3aa6ca7117949dcaa13cf7d309f129c77bf9b6883bee29b135ea926195ed2",
+    "bytes": 161340352,
+    "generated_command_sha256": "86d8c53fa958a0384805e3612e86c8782c00e65b091eb25604a1a8ce8e5e28a9",
+    "matches_recorded_KPV66_command": true
+  },
+  "verified_inputs": [
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/out_solp0/base_d0s0_pe0_ot_svc_land_sram_ot_svc_att_sram_ot_svc_att_pinreg_ot_svc_attw_lp_ot_attn_hgrp_hard/obj_m40000/Vtb_dsdv_svc_rs__verFiles.dat",
+      "sha256": "2646477fdddfcff1810d334ca10f2deb61f8ac20607a23676fe0a211fd4d4202",
+      "bytes": 21144
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/out_solp0/base_d0s0_pe0_ot_svc_land_sram_ot_svc_att_sram_ot_svc_att_pinreg_ot_svc_attw_lp_ot_attn_hgrp_hard/pl_dsdv_svc_rs/dsdv_svc_rs_pl.sv",
+      "sha256": "82da8f275882f28ee39dbfdf37ea790709b541e7cc71fc3bc13288f611ffd868",
+      "bytes": 10260
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/out_solp0/base_d0s0_pe0_ot_svc_land_sram_ot_svc_att_sram_ot_svc_att_pinreg_ot_svc_attw_lp_ot_attn_hgrp_hard/pl_dsdv_svc_rs_entry/dsdv_svc_rs_entry_pl.sv",
+      "sha256": "d7a003aaa6c2b44631cd57e5e7192a5026699f22836afbfa70c918b1fdf4070d",
+      "bytes": 13138
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/src_solp0/rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_rs.sv",
+      "sha256": "3292f7b08e320c94ff384c190f4dcfde4f3bca79ab6005107df429fdfba956b7",
+      "bytes": 44009
+    }
+  ],
+  "missing_archives": [
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/out_solp0/base_d0s0_pe0_ot_svc_land_sram_ot_svc_att_sram_ot_svc_att_pinreg_ot_svc_attw_lp_ot_attn_hgrp_hard/pl_dsdv_svc_rs/libdsdv_svc_rs_pl.a",
+      "original_expected_sha256": "53db976e1d5aecc5c55ddc0086c44adf227b417469cb98fc7b6772e71e7a75e1"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/out_solp0/base_d0s0_pe0_ot_svc_land_sram_ot_svc_att_sram_ot_svc_att_pinreg_ot_svc_attw_lp_ot_attn_hgrp_hard/pl_dsdv_svc_rs_entry/libdsdv_svc_rs_entry_pl.a",
+      "original_expected_sha256": "b9414d12ffa17c58accb2f59bfee35eba5138fc5a8de643d230a1a6aa5b55e4a"
+    }
+  ],
+  "cases": [
+    "full1m",
+    "short300",
+    "skew1m"
+  ],
+  "seeds": [
+    1,
+    2
+  ],
+  "vectors": [
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/cfg.hex",
+      "bytes": 288,
+      "sha256": "f022f8010ce993933728d40416d6a76ff66a18d7cc0c26f8ef465bd8b351eb5b"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/hdat.hex",
+      "bytes": 1492920,
+      "sha256": "76b61fb7dbea19085562f60015e080e2a10f348ce2d233df9769de3289c746d5"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/hkey.hex",
+      "bytes": 390456,
+      "sha256": "90ef1b9c2504c2e97d3e6238c755dd96d64c5c52451ef98ce17a39b330e45dbf"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/jobs.hex",
+      "bytes": 41,
+      "sha256": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/kv.hex",
+      "bytes": 679040,
+      "sha256": "3bccba86239bc05137831d785a9692d144d83284fa132c86c37a5460aa2c64e8"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/p.hex",
+      "bytes": 41280,
+      "sha256": "0ac0c5d23ac09d0da25016a8abb37fd64b1189d1aad87983bdec39fbc9f15074"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/pv.hex",
+      "bytes": 68096,
+      "sha256": "77568da484952acbbccaff83b7408528f0a098d983a31d66d0b2143b2d902796"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/q.hex",
+      "bytes": 32784,
+      "sha256": "7b2e93d31db91549a76f0ff7024ef58ee8f475168b3c75a01166d790d9860983"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/sc.hex",
+      "bytes": 85120,
+      "sha256": "d85437fd8f6869151278445dbad811a4333e96d496df11a186bd1e0ec9cb1f4f"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/sel.hex",
+      "bytes": 4608,
+      "sha256": "dc7845994c1a9c81e12ef128a56aef0e2a31fb05a19a76987e2bc2f03eb83400"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/full1m/win.hex",
+      "bytes": 135296,
+      "sha256": "22364d792386fcf42c8dc8804f977834f919d1f020a7709c609fcfa91ea2c243"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/cfg.hex",
+      "bytes": 288,
+      "sha256": "d81f091141b619d69abd7b9bc2a04aeb88cfb58f4f88fd2ca1d9055d536622c2"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/hdat.hex",
+      "bytes": 175500,
+      "sha256": "ff6141b042c49eabaa6ee09ca647c3f10468f3bcfae9abc8e8b52bf8800caf31"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/hkey.hex",
+      "bytes": 45900,
+      "sha256": "8e1870118bf64d9c048cf352cd6988ba3a336210b287790048a6ba620cbf1bd0"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/jobs.hex",
+      "bytes": 41,
+      "sha256": "81039bfd1839b5eaa33559825744c86bf6907cb3f5803de30675f25ac8b7f5c4"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/kv.hex",
+      "bytes": 454108,
+      "sha256": "91e98dd332bc02f89449ab775240b19f820aae2e224c34f86461b64b53e9c6d6"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/p.hex",
+      "bytes": 27606,
+      "sha256": "703fedc7824ae5341de2cb8702116ba1396750d8731742c4c78123afa334a9c3"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/pv.hex",
+      "bytes": 68096,
+      "sha256": "bc2f09e9961dde64b7d5b4325bf260ded33cc0feb9ae41b11487a29036567591"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/q.hex",
+      "bytes": 32784,
+      "sha256": "6eb504ab5adb3d0c7eaa251098b72973e88a994e99df78af25760ae7cb1286c1"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/sc.hex",
+      "bytes": 56924,
+      "sha256": "bd23fd002457263c88218ff76d9d2f82ebcda5d8650b9705d955d140750c364c"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/sel.hex",
+      "bytes": 2700,
+      "sha256": "cc6634426e52807d39501d9d1b3a5d82ee071fcad6eff7a98d0724fa10d12b15"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/short300/win.hex",
+      "bytes": 135296,
+      "sha256": "486220c8c8384ebf43c39dc3e3362ed3f24c0d66f5d93b8815eef58904f41c61"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/cfg.hex",
+      "bytes": 288,
+      "sha256": "99a8039167afb8c93d2613e1c0995b34971c49bbd49f73335347e06aebe1f14a"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/hdat.hex",
+      "bytes": 1481220,
+      "sha256": "e68281a56f4df6ad16ca3167e54b8aa7b6930a77a8ce2d7242a1aa1c645dd85d"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/hkey.hex",
+      "bytes": 387396,
+      "sha256": "96485a7f582f499dd469400eafa342da404aaf581ea29c34907e2c44af995632"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/jobs.hex",
+      "bytes": 41,
+      "sha256": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/kv.hex",
+      "bytes": 679040,
+      "sha256": "b8a59ab50f24cdabaf5d34c721cc719c673394ffe14dc85677617665967f67be"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/p.hex",
+      "bytes": 41280,
+      "sha256": "c4573a2139670d0b1d1cadd929cc438ef330db59f172b4cfb53f4253351d6a8d"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/pv.hex",
+      "bytes": 68096,
+      "sha256": "266a7a531cdd3290898ca7bccdda3cdc60735369c1d381964d25a13efc094af4"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/q.hex",
+      "bytes": 32784,
+      "sha256": "05062bad7db2436c98cf881f9485a2e993dd5e9910bc16dccd4592ab4b4995a5"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/sc.hex",
+      "bytes": 85120,
+      "sha256": "0385dd5d672159d4ca78cbec925d7f09f3c32dcc13412260302cd849fb7715f8"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/sel.hex",
+      "bytes": 4608,
+      "sha256": "b2d32fb8c6f1b301c015403dd9f80d220b58abe23ede4713a4b1a1fa6a8ba38d"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc5-1019/vec/skew1m/win.hex",
+      "bytes": 135296,
+      "sha256": "4266c24ce8295380f4bc1d7387aae2c22c938e660803dd7e9666dd2ab5f68831"
+    }
+  ]
+}
