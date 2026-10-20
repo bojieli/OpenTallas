@@ -1,0 +1,475 @@
+source_reg_bits 11254 paired_source_bits 10864 source_only 390
+source_only_sample [(['g_n[0].u_a.s1_small[27]', 'g_n[0].u_a.u_sum.b[27]'], '$dff'), (['g_n[0].u_a.b2_in[0]', 'g_n[0].u_a.dif[0]', 'g_n[0].u_a.u_cb.g_r.r[0]'], '$dff'), (['g_n[0].u_a.d2_in[103]', 'g_n[0].u_a.u_cd.g_r.r[103]', 'g_n[0].u_a.u_cd.q[103]'], '$dff'), (['g_n[0].u_a.s2_err[1]', 'g_n[0].u_a.u_cc.d[66]'], '$dff'), (['g_n[0].u_a.a2_in[116]', 'g_n[0].u_a.u_ca.g_r.r[116]', 'g_n[0].u_a.u_ca.q[116]'], '$dff'), (['g_n[0].u_a.s1_err[1]', 'g_n[0].u_a.u_cb.d[97]'], '$dff'), (['g_n[0].u_a.c2_in[66]', 'g_n[0].u_a.u_cc.g_r.r[66]', 'g_n[0].u_a.u_cc.q[66]'], '$dff'), (['g_n[0].u_a.u_ca.g_r.r[118]'], '$dff'), (['g_n[0].u_a.b2_in[27]', 'g_n[0].u_a.dif[27]', 'g_n[0].u_a.u_cb.g_r.r[27]'], '$dff'), (['g_n[0].u_a.b2_in[97]', 'g_n[0].u_a.t_err[1]', 'g_n[0].u_a.u_cb.g_r.r[97]'], '$dff'), (['g_n[0].u_a.u_cb.g_r.r[101]'], '$dff'), (['g_n[0].u_a.u_cc.g_r.r[70]'], '$dff'), (['g_n[0].u_a.d2_in[6]', 'g_n[0].u_a.lz[5]', 'g_n[0].u_a.u_cd.g_r.r[6]'], '$dff'), (['g_n[0].u_a.u_cd.g_r.r[107]'], '$dff'), (['g_n[10].u_a.s1_small[27]', 'g_n[10].u_a.u_sum.b[27]'], '$dff')]
+
+TARGET g_n[0].u_a.u_cc.g_r.r[64] bit 1883
+DEPTH 0 PAIRED Q ['g_n[0].u_a.c2_in[64]', 'g_n[0].u_a.u_cc.g_r.r[64]', 'g_n[0].u_a.u_cc.q[64]', 'g_n[0].u_a.u_code[31]'] cell $flatten\g_n[0].u_a.\u_cc.$procdff$7072 type $dff D 1451 CLK [2] ARST None
+DEPTH 1 PAIRED Q ['g_n[0].u_a.s2_code[31]', 'g_n[0].u_a.u_cc.d[64]'] cell $flatten\g_n[0].u_a.$procdff$7151 type $dff D 1419 CLK [2] ARST None
+DEPTH 2 PAIRED Q ['g_n[0].u_a.d2_in[101]', 'g_n[0].u_a.u_cd.g_r.r[101]', 'g_n[0].u_a.u_cd.q[101]', 'g_n[0].u_a.w_code[31]'] cell $flatten\g_n[0].u_a.\u_cd.$procdff$7066 type $dff D 2334 CLK [2] ARST None
+DEPTH 3 PAIRED Q ['g_n[0].u_a.b2_in[95]', 'g_n[0].u_a.t_code[31]', 'g_n[0].u_a.u_cb.g_r.r[95]', 'g_n[0].u_a.u_cb.q[95]', 'g_n[0].u_a.u_cd.d[101]'] cell $flatten\g_n[0].u_a.\u_cb.$procdff$7126 type $dff D 1595 CLK [2] ARST None
+DEPTH 4 PAIRED Q ['g_n[0].u_a.s1_code[31]', 'g_n[0].u_a.u_cb.d[95]'] cell $flatten\g_n[0].u_a.$procdff$7163 type $dff D 1563 CLK [2] ARST None
+DEPTH 5 PAIRED Q ['g_n[0].u_a.a2_in[114]', 'g_n[0].u_a.u_ca.g_r.r[114]', 'g_n[0].u_a.u_ca.q[114]', 'g_n[0].u_a.x_code[31]'] cell $flatten\g_n[0].u_a.\u_ca.$procdff$7120 type $dff D 2188 CLK [2] ARST None
+STOP 6 combinational_or_input 2188 ['g_n[0].u_a.a1[114]', 'g_n[0].u_a.bypass_code[31]', 'g_n[0].u_a.u_ca.d[114]']
+
+TARGET g_n[0].u_a.u_cc.g_r.r[32] bit 574
+DEPTH 0 PAIRED Q ['g_n[0].u_a.c2_in[32]', 'g_n[0].u_a.u_cc.g_r.r[32]', 'g_n[0].u_a.u_cc.q[32]', 'g_n[0].u_a.u_exp[7]'] cell $flatten\g_n[0].u_a.\u_cc.$procdff$7072 type $dff D 1467 CLK [2] ARST None
+DEPTH 1 PAIRED Q ['g_n[0].u_a.s2_exp[7]', 'g_n[0].u_a.u_cc.d[32]'] cell $flatten\g_n[0].u_a.$procdff$7152 type $dff D 1459 CLK [2] ARST None
+STOP 2 combinational_or_input 1459 []
+
+TARGET g_n[0].u_a.u_cc.g_r.r[31] bit 573
+DEPTH 0 PAIRED Q ['g_n[0].u_a.c2_in[31]', 'g_n[0].u_a.u_cc.g_r.r[31]', 'g_n[0].u_a.u_cc.q[31]', 'g_n[0].u_a.u_exp[6]'] cell $flatten\g_n[0].u_a.\u_cc.$procdff$7072 type $dff D 1466 CLK [2] ARST None
+DEPTH 1 PAIRED Q ['g_n[0].u_a.s2_exp[6]', 'g_n[0].u_a.u_cc.d[31]'] cell $flatten\g_n[0].u_a.$procdff$7152 type $dff D 1458 CLK [2] ARST None
+STOP 2 combinational_or_input 1458 []
+
+EXACT_DUPLICATE_D_WITH_PAIRED 30
+[
+ {
+  "unpaired": [
+   "g_n[0].u_a.b2_in[0]",
+   "g_n[0].u_a.dif[0]",
+   "g_n[0].u_a.u_cb.g_r.r[0]",
+   "g_n[0].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[0].u_a.g_hs.hq[0]",
+   "g_n[0].u_a.g_hs.u_hc.q[0]",
+   "g_n[0].u_a.p_dif[0]",
+   "g_n[0].u_a.u_cd.d[7]"
+  ],
+  "D": 2192
+ },
+ {
+  "unpaired": [
+   "g_n[0].u_a.b2_in[27]",
+   "g_n[0].u_a.dif[27]",
+   "g_n[0].u_a.u_cb.g_r.r[27]",
+   "g_n[0].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[0].u_a.g_hs.hq[27]",
+   "g_n[0].u_a.g_hs.u_hc.q[27]",
+   "g_n[0].u_a.p_dif[27]",
+   "g_n[0].u_a.u_cd.d[34]"
+  ],
+  "D": 2219
+ },
+ {
+  "unpaired": [
+   "g_n[10].u_a.b2_in[0]",
+   "g_n[10].u_a.dif[0]",
+   "g_n[10].u_a.u_cb.g_r.r[0]",
+   "g_n[10].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[10].u_a.g_hs.hq[0]",
+   "g_n[10].u_a.g_hs.u_hc.q[0]",
+   "g_n[10].u_a.p_dif[0]",
+   "g_n[10].u_a.u_cd.d[7]"
+  ],
+  "D": 6054
+ },
+ {
+  "unpaired": [
+   "g_n[10].u_a.b2_in[27]",
+   "g_n[10].u_a.dif[27]",
+   "g_n[10].u_a.u_cb.g_r.r[27]",
+   "g_n[10].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[10].u_a.g_hs.hq[27]",
+   "g_n[10].u_a.g_hs.u_hc.q[27]",
+   "g_n[10].u_a.p_dif[27]",
+   "g_n[10].u_a.u_cd.d[34]"
+  ],
+  "D": 6081
+ },
+ {
+  "unpaired": [
+   "g_n[11].u_a.b2_in[0]",
+   "g_n[11].u_a.dif[0]",
+   "g_n[11].u_a.u_cb.g_r.r[0]",
+   "g_n[11].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[11].u_a.g_hs.hq[0]",
+   "g_n[11].u_a.g_hs.u_hc.q[0]",
+   "g_n[11].u_a.p_dif[0]",
+   "g_n[11].u_a.u_cd.d[7]"
+  ],
+  "D": 9916
+ },
+ {
+  "unpaired": [
+   "g_n[11].u_a.b2_in[27]",
+   "g_n[11].u_a.dif[27]",
+   "g_n[11].u_a.u_cb.g_r.r[27]",
+   "g_n[11].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[11].u_a.g_hs.hq[27]",
+   "g_n[11].u_a.g_hs.u_hc.q[27]",
+   "g_n[11].u_a.p_dif[27]",
+   "g_n[11].u_a.u_cd.d[34]"
+  ],
+  "D": 9943
+ },
+ {
+  "unpaired": [
+   "g_n[12].u_a.b2_in[0]",
+   "g_n[12].u_a.dif[0]",
+   "g_n[12].u_a.u_cb.g_r.r[0]",
+   "g_n[12].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[12].u_a.g_hs.hq[0]",
+   "g_n[12].u_a.g_hs.u_hc.q[0]",
+   "g_n[12].u_a.p_dif[0]",
+   "g_n[12].u_a.u_cd.d[7]"
+  ],
+  "D": 13778
+ },
+ {
+  "unpaired": [
+   "g_n[12].u_a.b2_in[27]",
+   "g_n[12].u_a.dif[27]",
+   "g_n[12].u_a.u_cb.g_r.r[27]",
+   "g_n[12].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[12].u_a.g_hs.hq[27]",
+   "g_n[12].u_a.g_hs.u_hc.q[27]",
+   "g_n[12].u_a.p_dif[27]",
+   "g_n[12].u_a.u_cd.d[34]"
+  ],
+  "D": 13805
+ },
+ {
+  "unpaired": [
+   "g_n[13].u_a.b2_in[0]",
+   "g_n[13].u_a.dif[0]",
+   "g_n[13].u_a.u_cb.g_r.r[0]",
+   "g_n[13].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[13].u_a.g_hs.hq[0]",
+   "g_n[13].u_a.g_hs.u_hc.q[0]",
+   "g_n[13].u_a.p_dif[0]",
+   "g_n[13].u_a.u_cd.d[7]"
+  ],
+  "D": 17576
+ },
+ {
+  "unpaired": [
+   "g_n[13].u_a.b2_in[27]",
+   "g_n[13].u_a.dif[27]",
+   "g_n[13].u_a.u_cb.g_r.r[27]",
+   "g_n[13].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[13].u_a.g_hs.hq[27]",
+   "g_n[13].u_a.g_hs.u_hc.q[27]",
+   "g_n[13].u_a.p_dif[27]",
+   "g_n[13].u_a.u_cd.d[34]"
+  ],
+  "D": 17603
+ },
+ {
+  "unpaired": [
+   "g_n[14].u_a.b2_in[0]",
+   "g_n[14].u_a.dif[0]",
+   "g_n[14].u_a.u_cb.g_r.r[0]",
+   "g_n[14].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[14].u_a.g_hs.hq[0]",
+   "g_n[14].u_a.g_hs.u_hc.q[0]",
+   "g_n[14].u_a.p_dif[0]",
+   "g_n[14].u_a.u_cd.d[7]"
+  ],
+  "D": 21373
+ },
+ {
+  "unpaired": [
+   "g_n[14].u_a.b2_in[27]",
+   "g_n[14].u_a.dif[27]",
+   "g_n[14].u_a.u_cb.g_r.r[27]",
+   "g_n[14].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[14].u_a.g_hs.hq[27]",
+   "g_n[14].u_a.g_hs.u_hc.q[27]",
+   "g_n[14].u_a.p_dif[27]",
+   "g_n[14].u_a.u_cd.d[34]"
+  ],
+  "D": 21400
+ },
+ {
+  "unpaired": [
+   "g_n[1].u_a.b2_in[0]",
+   "g_n[1].u_a.dif[0]",
+   "g_n[1].u_a.u_cb.g_r.r[0]",
+   "g_n[1].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[1].u_a.g_hs.hq[0]",
+   "g_n[1].u_a.g_hs.u_hc.q[0]",
+   "g_n[1].u_a.p_dif[0]",
+   "g_n[1].u_a.u_cd.d[7]"
+  ],
+  "D": 25234
+ },
+ {
+  "unpaired": [
+   "g_n[1].u_a.b2_in[27]",
+   "g_n[1].u_a.dif[27]",
+   "g_n[1].u_a.u_cb.g_r.r[27]",
+   "g_n[1].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[1].u_a.g_hs.hq[27]",
+   "g_n[1].u_a.g_hs.u_hc.q[27]",
+   "g_n[1].u_a.p_dif[27]",
+   "g_n[1].u_a.u_cd.d[34]"
+  ],
+  "D": 25261
+ },
+ {
+  "unpaired": [
+   "g_n[2].u_a.b2_in[0]",
+   "g_n[2].u_a.dif[0]",
+   "g_n[2].u_a.u_cb.g_r.r[0]",
+   "g_n[2].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[2].u_a.g_hs.hq[0]",
+   "g_n[2].u_a.g_hs.u_hc.q[0]",
+   "g_n[2].u_a.p_dif[0]",
+   "g_n[2].u_a.u_cd.d[7]"
+  ],
+  "D": 29095
+ },
+ {
+  "unpaired": [
+   "g_n[2].u_a.b2_in[27]",
+   "g_n[2].u_a.dif[27]",
+   "g_n[2].u_a.u_cb.g_r.r[27]",
+   "g_n[2].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[2].u_a.g_hs.hq[27]",
+   "g_n[2].u_a.g_hs.u_hc.q[27]",
+   "g_n[2].u_a.p_dif[27]",
+   "g_n[2].u_a.u_cd.d[34]"
+  ],
+  "D": 29122
+ },
+ {
+  "unpaired": [
+   "g_n[3].u_a.b2_in[0]",
+   "g_n[3].u_a.dif[0]",
+   "g_n[3].u_a.u_cb.g_r.r[0]",
+   "g_n[3].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[3].u_a.g_hs.hq[0]",
+   "g_n[3].u_a.g_hs.u_hc.q[0]",
+   "g_n[3].u_a.p_dif[0]",
+   "g_n[3].u_a.u_cd.d[7]"
+  ],
+  "D": 32956
+ },
+ {
+  "unpaired": [
+   "g_n[3].u_a.b2_in[27]",
+   "g_n[3].u_a.dif[27]",
+   "g_n[3].u_a.u_cb.g_r.r[27]",
+   "g_n[3].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[3].u_a.g_hs.hq[27]",
+   "g_n[3].u_a.g_hs.u_hc.q[27]",
+   "g_n[3].u_a.p_dif[27]",
+   "g_n[3].u_a.u_cd.d[34]"
+  ],
+  "D": 32983
+ },
+ {
+  "unpaired": [
+   "g_n[4].u_a.b2_in[0]",
+   "g_n[4].u_a.dif[0]",
+   "g_n[4].u_a.u_cb.g_r.r[0]",
+   "g_n[4].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[4].u_a.g_hs.hq[0]",
+   "g_n[4].u_a.g_hs.u_hc.q[0]",
+   "g_n[4].u_a.p_dif[0]",
+   "g_n[4].u_a.u_cd.d[7]"
+  ],
+  "D": 36784
+ },
+ {
+  "unpaired": [
+   "g_n[4].u_a.b2_in[27]",
+   "g_n[4].u_a.dif[27]",
+   "g_n[4].u_a.u_cb.g_r.r[27]",
+   "g_n[4].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[4].u_a.g_hs.hq[27]",
+   "g_n[4].u_a.g_hs.u_hc.q[27]",
+   "g_n[4].u_a.p_dif[27]",
+   "g_n[4].u_a.u_cd.d[34]"
+  ],
+  "D": 36811
+ },
+ {
+  "unpaired": [
+   "g_n[5].u_a.b2_in[0]",
+   "g_n[5].u_a.dif[0]",
+   "g_n[5].u_a.u_cb.g_r.r[0]",
+   "g_n[5].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[5].u_a.g_hs.hq[0]",
+   "g_n[5].u_a.g_hs.u_hc.q[0]",
+   "g_n[5].u_a.p_dif[0]",
+   "g_n[5].u_a.u_cd.d[7]"
+  ],
+  "D": 40613
+ },
+ {
+  "unpaired": [
+   "g_n[5].u_a.b2_in[27]",
+   "g_n[5].u_a.dif[27]",
+   "g_n[5].u_a.u_cb.g_r.r[27]",
+   "g_n[5].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[5].u_a.g_hs.hq[27]",
+   "g_n[5].u_a.g_hs.u_hc.q[27]",
+   "g_n[5].u_a.p_dif[27]",
+   "g_n[5].u_a.u_cd.d[34]"
+  ],
+  "D": 40640
+ },
+ {
+  "unpaired": [
+   "g_n[6].u_a.b2_in[0]",
+   "g_n[6].u_a.dif[0]",
+   "g_n[6].u_a.u_cb.g_r.r[0]",
+   "g_n[6].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[6].u_a.g_hs.hq[0]",
+   "g_n[6].u_a.g_hs.u_hc.q[0]",
+   "g_n[6].u_a.p_dif[0]",
+   "g_n[6].u_a.u_cd.d[7]"
+  ],
+  "D": 44441
+ },
+ {
+  "unpaired": [
+   "g_n[6].u_a.b2_in[27]",
+   "g_n[6].u_a.dif[27]",
+   "g_n[6].u_a.u_cb.g_r.r[27]",
+   "g_n[6].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[6].u_a.g_hs.hq[27]",
+   "g_n[6].u_a.g_hs.u_hc.q[27]",
+   "g_n[6].u_a.p_dif[27]",
+   "g_n[6].u_a.u_cd.d[34]"
+  ],
+  "D": 44468
+ },
+ {
+  "unpaired": [
+   "g_n[7].u_a.b2_in[0]",
+   "g_n[7].u_a.dif[0]",
+   "g_n[7].u_a.u_cb.g_r.r[0]",
+   "g_n[7].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[7].u_a.g_hs.hq[0]",
+   "g_n[7].u_a.g_hs.u_hc.q[0]",
+   "g_n[7].u_a.p_dif[0]",
+   "g_n[7].u_a.u_cd.d[7]"
+  ],
+  "D": 48270
+ },
+ {
+  "unpaired": [
+   "g_n[7].u_a.b2_in[27]",
+   "g_n[7].u_a.dif[27]",
+   "g_n[7].u_a.u_cb.g_r.r[27]",
+   "g_n[7].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[7].u_a.g_hs.hq[27]",
+   "g_n[7].u_a.g_hs.u_hc.q[27]",
+   "g_n[7].u_a.p_dif[27]",
+   "g_n[7].u_a.u_cd.d[34]"
+  ],
+  "D": 48297
+ },
+ {
+  "unpaired": [
+   "g_n[8].u_a.b2_in[0]",
+   "g_n[8].u_a.dif[0]",
+   "g_n[8].u_a.u_cb.g_r.r[0]",
+   "g_n[8].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[8].u_a.g_hs.hq[0]",
+   "g_n[8].u_a.g_hs.u_hc.q[0]",
+   "g_n[8].u_a.p_dif[0]",
+   "g_n[8].u_a.u_cd.d[7]"
+  ],
+  "D": 52034
+ },
+ {
+  "unpaired": [
+   "g_n[8].u_a.b2_in[27]",
+   "g_n[8].u_a.dif[27]",
+   "g_n[8].u_a.u_cb.g_r.r[27]",
+   "g_n[8].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[8].u_a.g_hs.hq[27]",
+   "g_n[8].u_a.g_hs.u_hc.q[27]",
+   "g_n[8].u_a.p_dif[27]",
+   "g_n[8].u_a.u_cd.d[34]"
+  ],
+  "D": 52061
+ },
+ {
+  "unpaired": [
+   "g_n[9].u_a.b2_in[0]",
+   "g_n[9].u_a.dif[0]",
+   "g_n[9].u_a.u_cb.g_r.r[0]",
+   "g_n[9].u_a.u_cb.q[0]"
+  ],
+  "paired": [
+   "g_n[9].u_a.g_hs.hq[0]",
+   "g_n[9].u_a.g_hs.u_hc.q[0]",
+   "g_n[9].u_a.p_dif[0]",
+   "g_n[9].u_a.u_cd.d[7]"
+  ],
+  "D": 55799
+ },
+ {
+  "unpaired": [
+   "g_n[9].u_a.b2_in[27]",
+   "g_n[9].u_a.dif[27]",
+   "g_n[9].u_a.u_cb.g_r.r[27]",
+   "g_n[9].u_a.u_cb.q[27]"
+  ],
+  "paired": [
+   "g_n[9].u_a.g_hs.hq[27]",
+   "g_n[9].u_a.g_hs.u_hc.q[27]",
+   "g_n[9].u_a.p_dif[27]",
+   "g_n[9].u_a.u_cd.d[34]"
+  ],
+  "D": 55826
+ }
+]

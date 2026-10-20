@@ -1,0 +1,23 @@
+	Command being timed: "python3 /srv/opentallas-scratch/claude/kv-params2-1019/tests/tools/qwen_kv_die/kv_param_native_audit.py audit --root /srv/opentallas-scratch/claude/kv-params-1019/src --module ot_qwen_tp8_pv_wide_ctl_tb --rtl rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv --view physical/ref_tile/qkd_pv_ctl_tb1/views/ot_qwen_tp8_pv_wide_ctl_tb --params {"FIRST_INPUT_AGE": 127, "FLAG_D": 58, "MUT": 0, "RESET_PIN": 1, "TRUNK_D": 54} --archive-run /srv/opentallas-scratch/claude/kv-params-1019/arch/ot_qwen_tp8_pv_wide_ctl_tb/qkd_pv_ctl_tb1-b1-cebb296c4 --work /srv/opentallas-scratch/claude/kv-params2-1019/work/ot_qwen_tp8_pv_wide_ctl_tb --out /srv/opentallas-scratch/claude/kv-params2-1019/audits/ot_qwen_tp8_pv_wide_ctl_tb.audit.json --reset-landing /srv/opentallas-scratch/claude/kv-params-1019/src/physical/ref_tile/qkd_pv_ctl_tb1/reset_landing.json --observe-zero-regex ^u_ot_pr_core\.(state\[3\]|u_req\.nq\[[0-3]\])$ --reset-base 6"
+	User time (seconds): 599.89
+	System time (seconds): 20.12
+	Percent of CPU this job got: 105%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 9:48.31
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4996060
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2988928
+	Voluntary context switches: 171656
+	Involuntary context switches: 33057
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 6840
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

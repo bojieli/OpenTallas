@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.kv_params3_owner_pickup.v1",
+  "native_qualified": false,
+  "healthy": {
+    "rc": 1,
+    "checked_steps": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "failing_steps": [
+      7
+    ],
+    "wall_seconds": 2858.4,
+    "max_rss_KiB": 25305160
+  },
+  "native_D_rewire_mutant": {
+    "rc": 1,
+    "checked_steps": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "failing_steps": [
+      7,
+      9,
+      10
+    ],
+    "wall_seconds": 2966.75,
+    "max_rss_KiB": 25319284,
+    "causal_control_qualified": false
+  },
+  "source_map": {
+    "source_register_bits": 11254,
+    "paired_initial_source_bits": 10864,
+    "source_only_register_bits": 390,
+    "source_only_observed_metadata": 95,
+    "other_source_only_bits": 295,
+    "same_D_unpaired_bits": 30
+  },
+  "scope": "Paired-initial equivalence and source-map diagnosis; not unforced cold reset, first-use, PG, STA, die binding or throughput qualification"
+}

@@ -1,0 +1,99 @@
+ 224474 Mon Oct 19 16:33:52 2026    01:09:20 28834432 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l paired_base.log -q -s paired_base.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/base_lane8
+ession: \in_clk
+Import show expression: \in_c_in
+Import show expression: \in_bsel
+Import show expression: \trigger
+
+Solving problem with 38961962 variables and 103257357 clauses..
+
+ 391828 Mon Oct 19 16:54:08 2026       49:04 1287492 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/work/qkd_seq_xs_s_mut8
+ \S__u_q_mem_19__6_:ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \S__u_q_mem_19__70_:ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \S__u_q_mem_19__71_:ezsat
+ez
+ 402574 Mon Oct 19 16:54:09 2026       49:03 1236224 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/work/qkd_seq_xs_s_pos
+v for \S__u_q_mem_15__95_:ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \S__u_q_mem_15__96_:ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \S__u_q_mem_15__97_:ez
+1702958 Mon Oct 19 16:45:49 2026       57:23 3813120 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/work/ot_qkh_ktree
+or \S__proof_meta_030:ezsat
+ failed.
+  Trying to prove $equiv for \S__proof_meta_031:ezsat
+ failed.
+Proved 1493 previously unproven $equiv cells.
+
+11. Executing EQUIV_INDUCT pass.
+
+1706728 Mon Oct 19 16:45:50 2026       57:22 4344244 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/work/ot_qkh_lane8
+for \S__proof_meta_030:ezsat
+ failed.
+  Trying to prove $equiv for \S__proof_meta_031:ezsat
+ failed.
+Proved 221 previously unproven $equiv cells.
+
+11. Executing EQUIV_INDUCT pass.
+
+1793096 Mon Oct 19 16:45:56 2026       57:16 2769396 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/work/ot_qwen_tp8_pv_join_t
+dd_u_ca_genblk1_g_rv_rd_5_:ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \S__g_join_1__u_add_u_ca_genblk1_g_rv_rd_60_:ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv 
+2306049 Mon Oct 19 17:23:42 2026       19:30 818700 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l diag.log -q -s diag.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/base_ktree_diag
+_u_a_u_cd_g_r_r_56_ to module \gold.
+Added wire \S__g_n_8__u_a_u_cd_g_r_r_57_ to module \gold.
+Added wire \S__g_n_8__u_a_u_cd_g_r_r_58_ to module \gold.
+Added wire \S__g_n_8__u_a_u
+3168847 Mon Oct 19 16:42:19 2026    01:00:53 2460784 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l diag_induct.log -q -s diag_induct.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/seqxs
+at
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \S__q_e_13_:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \S__q_e_14_:ezsat
+ezsat
+3328722 Mon Oct 19 16:59:35 2026       43:38 1123068 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/work/pvslice_rp0
+__u_slice_reduce_a_383_ to module \gold.
+Added wire \S__u_slice_reduce_a_384_ to module \gold.
+Added wire \S__u_slice_reduce_a_385_ to module \gold.
+Added wire \S__u_slice_reduce_a
+3334304 Mon Oct 19 16:59:35 2026       43:37 1124220 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l equiv.log -q -s equiv.ys
+CWD=/srv/opentallas-scratch/claude/kv-params2-1019/work/pvslice_pos
+duce_a_58_ to module \gold.
+Added wire \S__u_slice_reduce_a_59_ to module \gold.
+Added wire \S__u_slice_reduce_a_5_ to module \gold.
+Added wire \S__u_slice_reduce_a_60_ to module \

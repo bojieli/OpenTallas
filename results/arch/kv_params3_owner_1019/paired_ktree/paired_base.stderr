@@ -1,0 +1,26 @@
+Warning: Complex async reset for dff `\IQN'.
+ERROR: Called with -verify and proof did fail!
+Command exited with non-zero status 1
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l paired_base.log -q -s paired_base.ys"
+	User time (seconds): 7350.92
+	System time (seconds): 439.07
+	Percent of CPU this job got: 272%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 47:38.40
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 25305160
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 13855367
+	Voluntary context switches: 15157654
+	Involuntary context switches: 1519114
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 36656
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
