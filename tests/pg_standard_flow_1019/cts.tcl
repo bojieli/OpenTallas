@@ -12,6 +12,26 @@ set blk [ord::get_db_block]
 # The immutable imported source ODB is never changed on disk.
 global_connect
 ot_pg_assert_all_native $blk [ot_pg_prepare $blk]
+if {$::env(CASE) eq "context"} {
+  source /src/physical/common_flow/clock_spine.tcl
+  estimate_parasitics -placement
+  if {![catch {ot_pg_require_cts_placement_or_empty_context} why] || $why ne "OT_PG_PARASITICS_EXISTING_ANNOTATION_REFUSED"} {error "OLD_SECOND_ROOT_NOT_REFUSED $why"}
+  proc stop_before_bind {command operation} {error CONTEXT_ADMITTED_BEFORE_MUTATION}
+  trace add execution ot_pg_bind_batch_before_protect enter stop_before_bind
+  set before [ot_pg_binding_state $blk]
+  if {![catch {ot_clock_spine clk} why] || $why ne "CONTEXT_ADMITTED_BEFORE_MUTATION"} {error "TRUSTED_PLACEMENT_NOT_ADMITTED $why"}
+  if {[ot_pg_binding_state $blk] ne $before} {error CONTEXT_TEST_MUTATED}
+  puts TRUSTED_SECOND_ROOT_ENTRY_PASS
+  set wire_net [$blk findNet clk]
+  set wire [odb::dbWire_create $wire_net]
+  if {![catch {ot_clock_spine clk} why] || ![string match "OT_PG_PARASITICS_ROUTED_DB_REFUSED*" $why]} {error "ROUTED_CONTEXT_NOT_REFUSED $why"}
+  odb::dbWire_destroy $wire
+  catch {read_spef /src/inputs/absent.spef}
+  if {![catch {ot_clock_spine clk} why] || $why ne "OT_PG_PARASITICS_SPEF_PROVENANCE_REFUSED"} {error "SPEF_CONTEXT_NOT_REFUSED $why"}
+  if {[ot_pg_binding_state $blk] ne $before} {error CONTEXT_REFUSAL_MUTATED}
+  puts ROUTED_AND_SPEF_SECOND_ROOT_REFUSAL_PASS
+  exit
+}
 proc repair_timing_helper {} {
   repair_timing -hold -hold_margin 30
   return actual_native_repair
