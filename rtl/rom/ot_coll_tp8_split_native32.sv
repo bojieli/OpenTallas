@@ -185,6 +185,10 @@ module ot_coll_split_q_native32 #(
     // stage (ot_coll_fold_slice_safe3_native32 DLRING/NLIVE/ADRST/RSTSPLIT).
     wire rs, rs_g, rs_t0, rs_t1, rs_x;
     (* keep_hierarchy *) ot_coll_rst_leaf u_rs (.clk(clk), .arst_n(rst_n), .q(rs));
+    // QW-ORPHANS 10-20 (census r2: u_rs drove 34 leaf RESETN): the two fold slices (u_pf, u_xf) take their reset from a
+    // second identical face leaf u_rs2 (same rst_n, same release edge; port rst_n 4 sinks)
+    wire rs2;   // used only by the FAN32/ADD_FAN32 fold branches; legacy keeps rs
+    (* keep_hierarchy *) ot_coll_rst_leaf u_rs2 (.clk(clk), .arst_n(rst_n), .q(rs2));
     ot_csp_rep_reg_native32 #(.W(1), .ID(QI*256 + 200), .RST(1)) u_rsg (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_g));
     ot_csp_rep_reg_native32 #(.W(1), .ID(QI*256 + 201), .RST(1)) u_rst0 (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_t0));
     ot_csp_rep_reg_native32 #(.W(1), .ID(QI*256 + 202), .RST(1)) u_rst1 (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_t1));
@@ -263,7 +267,7 @@ module ot_coll_split_q_native32 #(
     wire ps_v, ps_e; wire[3:0]ps_e_lane; wire [127:0] ps_sum;
     generate if(FAN32!=0 || ADD_FAN32!=0)begin:g_pf_fan32
         (* keep_hierarchy *) ot_coll_fold_slice_native32 #(.DLRING(1), .NLIVE(2), .ADRST(0), .RSTSPLIT(1), .FAN32(FAN32), .ADD_FAN32(ADD_FAN32)) u_pf (.clk(clk),
-            .rst_n(rs), .red_in(red_r), .src({256'd0,hi_q,lo_q}), .sum(ps_sum), .v_out(ps_v), .e_out(ps_e), .e_lane(ps_e_lane));
+            .rst_n(rs2), .red_in(red_r), .src({256'd0,hi_q,lo_q}), .sum(ps_sum), .v_out(ps_v), .e_out(ps_e), .e_lane(ps_e_lane));
     end else begin:g_pf_legacy
         (* keep_hierarchy *) ot_coll_fold_slice_safe3_native32 #(.DLRING(1), .NLIVE(2), .ADRST(0), .RSTSPLIT(1)) u_pf (.clk(clk),
             .rst_n(rs), .red_in(red_r), .src({256'd0,hi_q,lo_q}), .sum(ps_sum), .v_out(ps_v), .e_out(ps_e));
@@ -323,7 +327,7 @@ module ot_coll_split_q_native32 #(
 `endif
     wire xs_v, xs_e; wire [127:0] xs_sum;
     generate if(ADD_FAN32!=0)begin:g_xf_fan32
-        (* keep_hierarchy *) ot_coll_fold_slice_native32 #(.DLRING(1), .ADRST(0), .RSTSPLIT(1), .FAN32(FAN32), .ADD_FAN32(ADD_FAN32)) u_xf (.clk(clk),.rst_n(rs),
+        (* keep_hierarchy *) ot_coll_fold_slice_native32 #(.DLRING(1), .ADRST(0), .RSTSPLIT(1), .FAN32(FAN32), .ADD_FAN32(ADD_FAN32)) u_xf (.clk(clk),.rst_n(rs2),
             .red_in(red2_r),.src(xs),.sum(xs_sum),.v_out(xs_v),.e_out(xs_e),.e_lane());
     end else begin:g_xf_legacy
         (* keep_hierarchy *) ot_coll_fold_slice_safe3_native32 #(.DLRING(1), .ADRST(0), .RSTSPLIT(1)) u_xf (.clk(clk),.rst_n(rs),
