@@ -1,0 +1,62 @@
+{
+  "scope": "MODEL ONLY measured primitive geometry + source family layout, no RTL/layout admission",
+  "source": "claude/hbm-wbk2m-1020 unchanged q2, current spec hbm_wbk_q2_1020",
+  "macros": {
+    "count": 32,
+    "width_um": 94.824,
+    "height_um": 41.04,
+    "capacity_bits_each": 32768,
+    "symmetry": "X Y R90"
+  },
+  "old_outline_um": [
+    777.6,
+    518.4
+  ],
+  "old_macro_pitch_um": [
+    172.8,
+    41.04
+  ],
+  "old_y_origins": "86.4 +41.04*r, r0..7; only r0 literal43.2 grid",
+  "old_vertical_channel_um": 0,
+  "literal_R0_floorplan_bound": {
+    "columns": 4,
+    "rows": 8,
+    "origin_um": [
+      86.4,
+      86.4
+    ],
+    "pitch_um": [
+      172.8,
+      86.4
+    ],
+    "macro_right_top_um": [
+      699.624,
+      732.24
+    ],
+    "minimum_channels_um": [
+      77.976,
+      45.36
+    ],
+    "proposed_outline_um": [
+      777.6,
+      820.8
+    ],
+    "shape_ratio": 1.0556,
+    "area_mm2": 0.63825408,
+    "outline_growth_ratio": 1.5833333333333333,
+    "hard_area_um2": 124530.46272,
+    "std_area_um2": "PENDING native synthesis; no band sized until measured"
+  },
+  "source_clock_entries": [
+    "stream_clk",
+    "stream_fifo_clk[0:3]",
+    "hbm_clk"
+  ],
+  "remaining_source_requirements": [
+    "Source crossbar has an intermediate xr stage; whole-outline corner bound1598.4um exceeds two405um hops. This upper bound is not a proof of an actual violating cone. Require exact per-lane/per-PC capture endpoint and relay placement before gate; add/price registered stages wherever actual full cone would exceed405um.",
+    "Regional clocking for long source roots must use truthful hierarchy/landed crossings, no balanced zero-skew root across entire outline.",
+    "Native mapped32 count pending. Reset load/counters/ring selects must pass before layout.",
+    "Mandatory pin-face access<=6/um on actual SRAM face checked from actualLEF; symmetry permitsR90 but rotation is not assumed in this bound."
+  ],
+  "admission": "NOT RUN, no gate requested"
+}

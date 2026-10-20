@@ -1,0 +1,21 @@
+{
+  "scope": "Source-unchanged WBK q2 standalone ASAP7 mapped preflight; current mandatory census implementation; NOT actual in-gate ORFS admission",
+  "parameters": {
+    "WOPEN": 0,
+    "MUT": 0,
+    "FAW": 3
+  },
+  "mapped_sha256": "8baeef447f73cbd453f1e8b00d7f39b4444efb9a31712fbe42874b3d413bd299",
+  "roots_examined": 311111,
+  "max_dynamic_loads": 232,
+  "violations": 2219,
+  "role_errors": 0,
+  "raw_report_sha256": "0232c3db6900d3a48e9b12f4061d2f3ce33ae17859c971af2833908a3866b800",
+  "liberty_scope": "five RVT TT standard cell classes plus exact payload SRAM TT",
+  "immutable_remote": "ot-epyc5:/srv/opentallas-scratch/claude/codex-wbk-q2-native-1020",
+  "source_manifest": "sources.json",
+  "current_census_sha256": "a83ebec367621669b737b2921421eada914ae57801e56fd875dc8fe7b2e19bda",
+  "textbook_lint_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+  "qualification": false,
+  "next": "Structural control/register/reset/source partition plus legal macro lattice/channels model; no layout gate"
+}
