@@ -50,7 +50,7 @@ module tb_qkd_pv_fin_s32;
   if(dv) cold_checks=cold_checks+1;
  end
  integer cyc=0;always @(posedge ck)cyc<=cyc+1;
- integer NEG=0,NCMD=24,seed=1,errs=0,beats=0,cmd,i,a0,a1,ar,last,t,ref_out,nb,STRETCH=0,kend;
+ integer ABORT=0,NEG=0,NCMD=24,seed=1,errs=0,beats=0,cmd,i,a0,a1,ar,last,t,ref_out,nb,STRETCH=0,kend;
  reg [511:0] OA,OB;integer cmpd=0;
  function [31:0] rnd_fp(input integer kind);
   reg [31:0] r;
@@ -93,6 +93,12 @@ module tb_qkd_pv_fin_s32;
     if(NEG==2&&c==3&&k==a1+7)s1e=e^16'h1;
     if(NEG==3&&c==3&&k==a0+20)s0v=0;
     @(negedge ck);
+    if(ABORT!=0&&k==last+14)begin
+     rst_n=0;start=0;p0v=0;p1v=0;rv=0;s0v=0;s1v=0;drv=0;
+     repeat(3)@(negedge ck);rst_n=1;repeat(6)@(negedge ck);
+     $display("ABORT RESET PASS: SRAM partially written, command interrupted before result");
+     disable one;
+    end
     if(ov&&ref_out<0)begin ref_out=k;OA=oda;OB=odb;end
     if(dv)begin
      if(ref_out<0||k!=ref_out+1+nb||db!=5'(nb)||de!=e||(nb==KA&&dd!==OA)||(nb==KB&&dd!==OB))begin
@@ -110,15 +116,21 @@ module tb_qkd_pv_fin_s32;
   if($value$plusargs("SEED=%d",seed));if($value$plusargs("N=%d",NCMD));if($value$plusargs("NEG=%d",NEG));
   if($value$plusargs("STRETCH=%d",STRETCH));
   repeat(3)@(negedge ck);rst_n=1;repeat(6)@(negedge ck);
+  if(NEG==0)begin ABORT=1;one(0);ABORT=0;end
   for(cmd=0;cmd<NCMD;cmd=cmd+1)begin
+   if(NEG==0&&cmd!=0&&cmd%11==0)begin
+    @(negedge ck);rst_n=0;repeat(3)@(negedge ck);rst_n=1;repeat(6)@(negedge ck);
+   end
    one(cmd);
    if(NEG!=0&&cmd==3)begin
     if(df&&!rf)begin $display("NEG %0d: DUT fault raised (expected) -- PASS",NEG);$finish;end
     $display("NEG %0d: no DUT fault -- FAIL",NEG);$finish;
    end
   end
+  if(NEG==0)begin
   if(errs==0&&cold_errors==0&&cold_checks==32*NCMD&&cmpd==2*NCMD)$display("PASS STRETCH=%0d %0d commands, %0d beats timed, %0d blocks bit-exact vs the reference slices, beat b = ref + 1 + b",STRETCH,NCMD,beats,cmpd);
   else $display("FAIL %0d mismatches (%0d beats, %0d compared) cold_errors=%0d cold_checks=%0d",errs,beats,cmpd,cold_errors,cold_checks);
+  end
   $finish;
  end
 endmodule

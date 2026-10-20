@@ -22,7 +22,7 @@ $V --binary --timing --x-initial unique --x-assign unique -DOT_MEM_NO_INIT -j "$
    --top-module tb_qkd_pv_fin_s32 -GMUT="$M" -GSKEW=1 --Mdir "$O/obj" "${SRC[@]}" > "$O/build.log" 2>&1 \
    || { grep -m5 %Error "$O/build.log"; echo "PVFIN_KIT FAIL mut=$M build"; exit 1; }
 B=$O/obj/Vtb_qkd_pv_fin_s32
-run() { "$B" +verilator+rand+reset+2 +verilator+seed+17 "$@" 2>&1 | grep -vE '^- (S i m|Verilator:)' ; }
+run() { "$B" +verilator+rand+reset+2 +verilator+seed+${COLD_SEED:-17} "$@" 2>&1 | grep -vE '^- (S i m|Verilator:)' ; }
 if [ "$M" = 0 ]; then
   a=$(run +SEED=7 +N=40); b=$(run +SEED=9 +N=48 +STRETCH=1)
   n1=$(run +SEED=5 +N=6 +NEG=1); n2=$(run +SEED=5 +N=6 +NEG=2); n3=$(run +SEED=5 +N=6 +NEG=3)

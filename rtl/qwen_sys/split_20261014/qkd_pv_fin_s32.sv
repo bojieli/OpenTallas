@@ -135,9 +135,15 @@ module qkd_pv_fin_s32 #(
  wire [511:0] sum,product;wire [15:0] av,mv;wire [31:0] ae,me;
  genvar l;
  generate for(l=0;l<16;l=l+1)begin:g_lane
-  ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_add(.clk(ck),.rst_n(rr[28*l]),.rst_y(rr[28*l+1]),.rst_y2(2'b11),.y2(),.valid_in(add_slot&&!fault),
+  (* keep="true",dont_touch="true" *) reg add_land,mul_land,lane_active;
+  always @(posedge ck)begin
+   add_land<=active&&!fault&&win(n+16'd1,ADD_AGE);
+   mul_land<=active&&!fault&&win(n+16'd1,MUL_AGE);
+  end
+  always @(posedge ck or negedge rr[462+l])if(!rr[462+l])lane_active<=0;else lane_active<=active_d;
+  ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_add(.clk(ck),.rst_n(rr[28*l]),.rst_y(rr[28*l+1]),.rst_y2(2'b11),.y2(),.valid_in(add_land&&lane_active),
    .a(opa[32*l+:32]),.b(opb[32*l+:32]),.y(sum[32*l+:32]),.err(ae[2*l+:2]),.valid_out(av[l]));
-  ot_hdc_fp32_mul_lat_pvfin #(.LAT(MUL_LAT)) u_mul(.clk(ck),.rst_v(rr[28*l+2+:26]),.a_nrm({operand_sum[2][32*l+:32],operand_sum[1][32*l+:32]}),.valid_in(mul_slot&&!fault),
+  ot_hdc_fp32_mul_lat_pvfin #(.LAT(MUL_LAT)) u_mul(.clk(ck),.rst_v(rr[28*l+2+:26]),.a_nrm({operand_sum[2][32*l+:32],operand_sum[1][32*l+:32]}),.valid_in(mul_land&&lane_active),
    .a(saved_sum[32*l+:32]),.b(reciprocal_lane[l][0]),.b_nrm({reciprocal_lane[l][2],reciprocal_lane[l][1]}),.y(product[32*l+:32]),.err(me[2*l+:2]),.valid_out(mv[l]));
  end endgenerate
  wire bad=(p0v_q!=p0_slot)||(p1v_q!=p1_slot)||(rzv_q!=r_slot)||
