@@ -1,0 +1,20 @@
+{
+  "scope": "Exactly one original reset-CAP/F9 diagnostic; no healthy numeric/native/token claim",
+  "exit_status": 0,
+  "wall_seconds": 90.55725799396168,
+  "child_user_seconds": 90.135474,
+  "child_system_seconds": 0.239583,
+  "single_native_child_max_RSS_KiB": 297144,
+  "native_PID": 627426,
+  "native_membership_recorded": true,
+  "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-627409-1792450818.scope",
+  "cgroup_kernel_memory_peak_bytes": 228990976,
+  "cgroup_peak_includes": "launcher/input hashing and native image, including charged cache; not RSS",
+  "source_horizon": 11900,
+  "source_horizon_is_original_observation_not_deadline": true,
+  "programme_retired_or_retimed": false,
+  "adaptive_stimulus": false,
+  "CAP_config": "Original reset rcnt0/fmt1; source has0 target3 commands",
+  "numerical_PASS": null,
+  "native_phase": null
+}
