@@ -17,7 +17,7 @@ def validate(manifest):
     if not re.fullmatch('[0-9a-f]{40}', commit):
         raise ValueError('compute pair needs full source commit')
     selected = {}
-    for key in ('die_v', 'relay_stages'):
+    for key in ('die_v', 'relay_stages', 'compute_lanes'):
         entry = doc[key]
         item = Path(entry['path'])
         item = (path.parent / item).resolve() if not item.is_absolute() else item.resolve()
@@ -59,7 +59,7 @@ def main():
         if receipt['scope'] == 'diagnostic' and not a.diagnostic:
             raise ValueError('diagnostic compute pair requires OT_BIND_DIAGNOSTIC=1')
         Path(a.out).write_text(json.dumps(receipt, indent=2) + '\n')
-        for value in (receipt['files']['die_v']['path'], receipt['files']['relay_stages']['path'], receipt['source_commit']):
+        for value in (receipt['files']['die_v']['path'], receipt['files']['relay_stages']['path'], receipt['source_commit'], receipt['files']['compute_lanes']['path']):
             print(value)
     except (ValueError, KeyError, OSError) as exc:
         ap.exit(1, f'COMPUTE_PAIR FAIL {exc}\n')

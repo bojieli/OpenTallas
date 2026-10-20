@@ -39,8 +39,8 @@ if [ -z "$SCHED" ]; then
   python3 "$SRC/tools/qwen_kv_die/kv_compute_pair.py" --manifest "$OT_COMPUTE_PAIR_MANIFEST" \
     --out "$R/compute_pair_identity.json" "${CPA[@]}" > "$R/compute_pair_selected.txt" || { echo "RELAY_CHECK FAIL selected compute pair identity"; exit 1; }
   mapfile -t CP < "$R/compute_pair_selected.txt"
-  CDV=${CP[0]}; CST=${CP[1]}; CCOMMIT=${CP[2]}
-  (cd "$SRC" && python3 tools/qwen_layerbench/layer_compile.py --out "$R/layer_compile" --compute-stages "$CST" --compute-die-v "$CDV" --compute-commit "$CCOMMIT" \
+  CDV=${CP[0]}; CST=${CP[1]}; CCOMMIT=${CP[2]}; CLANES=${CP[3]}
+  (cd "$SRC" && python3 tools/qwen_layerbench/layer_compile.py --out "$R/layer_compile" --compute-stages "$CST" --compute-die-v "$CDV" --compute-commit "$CCOMMIT" --compute-lanes "$CLANES" \
      --kv-stages "$RUNT" --kv-commit "$COMMIT" ${KSM:+--kv-static-model "$KSM" --kv-die-v "$B/die_bound.v" --kv-case-die-v "$C/die.v"} ${FWDL:+--kv-fwd-lanes "$FWDL"}) || { echo "RELAY_CHECK FAIL calendar compiler (layer_compile.py) failed on this die"; exit 1; }
   # Refuse concurrent input drift before consuming the compiled calendars.
   python3 "$SRC/tools/qwen_kv_die/kv_compute_pair.py" --manifest "$OT_COMPUTE_PAIR_MANIFEST" \
