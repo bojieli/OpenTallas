@@ -15,7 +15,7 @@ git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hgi_sim tools/hdc_gold
   tools/rtl_gpu_sm_exact.py tools/rtl_hdc_v41_blockdot_campaign.py rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv \
   rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv \
   rtl/hbm_accel/sm/attn/ot_hbm_sm_i8w_front.sv rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv \
-  rtl/hbm_accel/sm/static/ot_smh_static_int8.sv | ssh "$HOST" "tar -x -C $OUT/src" || exit 2
+  rtl/hbm_accel/sm/static/ot_smh_static_int8.sv rtl/hbm_accel/sm/static/ot_smh_int8_tile.sv | ssh "$HOST" "tar -x -C $OUT/src" || exit 2
 echo "$SHA" | ssh "$HOST" "cat > $OUT/src/REV"
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/qwen_sm_mv_unit.py run --kv $KV --L $L --bundle $BUNDLE"
 /home/ubuntu/bin/ot-run --mem ${MEM:-48} --threads 16 --dir "$OUT" -- bash -c "\
