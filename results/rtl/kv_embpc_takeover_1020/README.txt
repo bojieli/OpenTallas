@@ -10,3 +10,10 @@ This is INCOMPLETE: regional reset and other wide enable/decoded comb controls s
 no census/behavioural qualification claimed for the draft. Do not gate draft.
 
 Fleet same-edge kept-valid select bench: Verilator5.050 on agidock128 exit0, m0 PASS, mutants1/2 FAIL. Witnesses collected. Only join4 mechanism qualified; full tile census still owed. PCsr7/b full BUF/INV-transparent mapped census231 over32 each (includes one physical unused SETN tie root4894);230 functional drivers over32, maximum806. Existing PC GRT jobs preserved.
+
+Second source step: NATIVE32 calendar has kept per-segment same-edge count/active replicas.
+Count copies initialize on existing ss; act reset qualifies hits, so no runtime storage array.
+Legacy-vs-safe miter PASS9991 comparisons on fleet Verilator5.050 (boot/start/randomreturns and midrun reset).
+New mapped census still REQUIRED. Mapped originals trace max593/533 to static_join.low_data enable,
+259/131/67 to static_join packed-scale selector,91 to ctx token/epoch admission; next fix is registered
+local low-capture / scale onehot controls with a priced join edge and regional reset. No gate/submit.

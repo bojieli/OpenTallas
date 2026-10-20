@@ -37,8 +37,28 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
     reg [15:0] cnt, last; reg act, slot, cf;
     reg [7:0] hit;
     integer k;
-    always @(*) for (k = 0; k < 8; k = k + 1)
-        hit[k] = (cnt >= off[k]) && ({8'd0, cnt} < {8'd0, off[k]} + {16'd0, len[k]} - ((MUT == 1 && k == 1) ? 24'd1 : 24'd0));
+    // One same-edge counter per segment bounds comparator fanout. The copies
+    // load zero at the existing start edge, so unreset count bits are never
+    // observed before initialization; act is reset and qualifies every hit.
+    generate if (NATIVE32) begin : g_native32_calendar
+        for (genvar segment = 0; segment < 8; segment = segment + 1) begin : g_segment
+            (* keep = 1, dont_touch = 1 *) reg [15:0] count_q;
+            (* keep = 1, dont_touch = 1 *) reg active_q;
+            always @(posedge ck or negedge rst_n)
+                if (!rst_n) active_q <= 1'b0;
+                else if (ss) active_q <= 1'b1;
+                else if (act && cnt == last) active_q <= 1'b0;
+            always @(posedge ck)
+                if (ss) count_q <= 16'd0;
+                else if (active_q) count_q <= count_q + 16'd1;
+            always @(*) hit[segment] = (count_q >= off[segment]) &&
+                ({8'd0, count_q} < {8'd0, off[segment]} + {16'd0, len[segment]} -
+                 ((MUT == 1 && segment == 1) ? 24'd1 : 24'd0));
+        end
+    end else begin : g_legacy_calendar
+        always @(*) for (k = 0; k < 8; k = k + 1)
+            hit[k] = (cnt >= off[k]) && ({8'd0, cnt} < {8'd0, off[k]} + {16'd0, len[k]} - ((MUT == 1 && k == 1) ? 24'd1 : 24'd0));
+    end endgenerate
     wire mine = cw && cd[63:62] == 2'd1;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
