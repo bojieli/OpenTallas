@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.qwen.shared-epoch-origin.v1",
+ "qualified": false,
+ "enabled": false,
+ "status": "BLOCKED",
+ "blockers": [
+  "UPSTREAM_CLOCK_RESET_CORRELATION_MISSING",
+  "PRODUCER_CONSUMER_ORIGIN_RECEIPT_MISSING",
+  "MISSING_NUMERIC:global_source_to_consumer_edges",
+  "MISSING_NUMERIC:source_to_native_input_edges",
+  "MISSING_NUMERIC:native_output_to_consumer_edges",
+  "MISSING_NUMERIC:cal_start_face_global_edge",
+  "MISSING_NUMERIC:face_to_cal_start_pin_edges",
+  "MISSING_NUMERIC:first_event_dt",
+  "MISSING_NUMERIC:last_cfg_core_global_edge",
+  "MISSING_NUMERIC:context_pin_global_edge",
+  "MISSING_NUMERIC:context_to_first_slot_edges",
+  "MISSING_NUMERIC:shared_epoch_global_edge",
+  "MISSING_NUMERIC:compiled_boot_edges",
+  "MISSING_NUMERIC:source_stores_ready_global_edge",
+  "NATIVE_CLASS_MISSING",
+  "COMPLETE_TTFF_CASES_REQUIRED"
+ ]
+}

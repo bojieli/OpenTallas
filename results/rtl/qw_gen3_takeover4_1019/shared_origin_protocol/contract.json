@@ -1,0 +1,135 @@
+{
+ "enabled": false,
+ "mode": "static_existing_events",
+ "upstream_clock_reset_correlated": false,
+ "origin_receipt_sha256": null,
+ "period_ps": 833.333,
+ "calendar_input_pr_edges": 1,
+ "calendar_output_pr_edges": 1,
+ "native_kind": null,
+ "cases": null,
+ "global_source_to_consumer_edges": null,
+ "source_to_native_input_edges": null,
+ "native_output_to_consumer_edges": null,
+ "cal_start_face_global_edge": null,
+ "face_to_cal_start_pin_edges": null,
+ "first_event_dt": null,
+ "last_cfg_core_global_edge": null,
+ "context_pin_global_edge": null,
+ "context_to_first_slot_edges": null,
+ "shared_epoch_global_edge": null,
+ "compiled_boot_edges": null,
+ "source_stores_ready_global_edge": null,
+ "provenance": {
+  "compute_source_commit": "6f78e3de2",
+  "netlist_sha256": "6a65da637f9bda4a6cb0ff1d2309ffc7da9fc069ebd7f833a7d2393feed00d5e",
+  "local_PR_price_scope": "actual qfd_d2d_static PR default1; prove selected parameters on a successor",
+  "current_native_class": "D4; cannot qualify D8 from this instance"
+ },
+ "actual_endpoints": {
+  "package_clock_reset": {
+   "instance": "ckb_rom",
+   "master": "qfd_ckbump",
+   "pins": {
+    "ckb_rom/pll_ck": "n_pll_fwd",
+    "ckb_rom/rs": "n_rst_fwd"
+   }
+  },
+  "forwarded_clock_roots": {
+   "instance": "clk_rx",
+   "master": "qfd_clkrx",
+   "pins": {
+    "clk_rx/pll_fwd": "n_pll_fwd",
+    "clk_rx/pll_d2d": "n_clk_d2d",
+    "clk_rx/pll_r54": "n_clk_r54",
+    "clk_rx/pll_r55": "n_clk_r55"
+   }
+  },
+  "package_run_epoch": {
+   "instance": "bump_fwd_epoch",
+   "master": "qfd_sigbump",
+   "pins": {
+    "bump_fwd_epoch/o": "n_lnk_fwd_epoch"
+   }
+  },
+  "face_run_anchor": {
+   "instance": "sys_face",
+   "master": "qfd_sys_face",
+   "pins": {
+    "sys_face/ck": "n_clk_d2d",
+    "sys_face/rst_n": "n_rst_d2d__fo2__r4__t13",
+    "sys_face/fwd_epoch": "n_lnk_fwd_epoch__fo1__r4",
+    "sys_face/cal_start": "n_sf_cal_start",
+    "sys_face/cal_seg": "n_sf_cal_seg",
+    "sys_face/tt_layer_context_v": "n_ng_tt_layer_context_v_0__fo1__r2",
+    "sys_face/tt_command_stage": "n_ng_tt_command_stage_0__fo1__r2"
+   }
+  },
+  "producer_calendar_and_slots": {
+   "instance": "d2d_rom",
+   "master": "qfd_d2d_static",
+   "pins": {
+    "d2d_rom/ck": "n_clk_d2d",
+    "d2d_rom/por_n": "n_rst_d2d__r4",
+    "d2d_rom/rst_n": "n_rst_d2d__fo1__r3__t5",
+    "d2d_rom/fwd_epoch": "n_lnk_fwd_epoch__r3",
+    "d2d_rom/cal_start": "n_sf_cal_start__r2",
+    "d2d_rom/cal_seg": "n_sf_cal_seg__r3",
+    "d2d_rom/native_tx_slot": "n_lnk_native_tx_slot",
+    "d2d_rom/native_tx_slot_kind": "n_lnk_native_tx_slot_kind",
+    "d2d_rom/native_tx_slot_beat": "n_lnk_native_tx_slot_beat"
+   }
+  },
+  "consumer_command_context": {
+   "instance": "tt_ctlm",
+   "master": "qfd_tt_ctlm_dv",
+   "pins": {
+    "tt_ctlm/ck": "n_clk_r54",
+    "tt_ctlm/rst_n": "n_rst_seq_ctlm__t22",
+    "tt_ctlm/native_cmd": "n_ng_tt_native_cmd_0",
+    "tt_ctlm/layer_context_v": "n_ng_tt_layer_context_v_0",
+    "tt_ctlm/command_stage": "n_ng_tt_command_stage_0",
+    "tt_ctlm/native_tok": "n_ng_tt_native_tok_0",
+    "tt_ctlm/native_pos": "n_ng_tt_native_pos_0",
+    "tt_ctlm/dc": "n_dvw_tt_ctlm_dc"
+   }
+  },
+  "consumer_service_inputs": {
+   "instance": "native59",
+   "master": "qfd_native59_dv_service",
+   "pins": {
+    "native59/ck": "n_clk_r54",
+    "native59/rst_n": "n_rst_seq__t74",
+    "native59/tx_slot": "n_lnk_native_tx_slot__r1",
+    "native59/tx_slot_kind": "n_lnk_native_tx_slot_kind__r1",
+    "native59/tx_slot_beat": "n_lnk_native_tx_slot_beat__r1",
+    "native59/native_cmd": "n_ng_tt_native_cmd_0",
+    "native59/layer_context_v": "n_ng_tt_layer_context_v_0",
+    "native59/command_stage": "n_ng_tt_command_stage_0"
+   }
+  },
+  "current_landing": {
+   "instance": "rly_lnk_native_tx_slot_0",
+   "master": "qfd_landh0_1_NE_65x30",
+   "pins": {
+    "rly_lnk_native_tx_slot_0/ck_s": "n_clk_d2d",
+    "rly_lnk_native_tx_slot_0/en": "n_rst_d2d__fo1__r3__t78",
+    "rly_lnk_native_tx_slot_0/ck": "n_clk_r54",
+    "rly_lnk_native_tx_slot_0/rs": "n_rst_seq__t55",
+    "rly_lnk_native_tx_slot_0/a": "n_lnk_native_tx_slot",
+    "rly_lnk_native_tx_slot_0/b": "n_lnk_native_tx_slot__r1",
+    "rly_lnk_native_tx_slot_0/k0": "n_ftk_lnk_native_tx_slot_lo",
+    "rly_lnk_native_tx_slot_0/k1": "n_ftk_lnk_native_tx_slot_hi",
+    "rly_lnk_native_tx_slot_0/k2": "n_ftk_lnk_native_tx_slot_lo"
+   }
+  }
+ },
+ "inventory_errors": [],
+ "source_gaps": [
+  "Package/PLL reset waveform and actual run-epoch strobe provider beyond hard macro bump models",
+  "One source-clocked semantic epoch receipt joining face/cal_start and tt_ctlm native context instruction origins",
+  "Actual image-pinned first dt, final cal_start transport and complete valid/kind/beat bundle ages",
+  "First-use context installation relation from selected native59 RTL (v3 alignment is unadmitted)",
+  "Actual D8 four-strap native instance, raw en/rs corner cases, phase, resets and warm/first-valid receipts"
+ ]
+}
