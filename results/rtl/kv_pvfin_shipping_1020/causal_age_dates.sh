@@ -11,7 +11,7 @@ for kind in age date; do
 from pathlib import Path
 import sys,hashlib
 p=Path(sys.argv[1]);s=p.read_text();before=hashlib.sha256(s.encode()).hexdigest()
-a,b=('age_operand<=age_d','age_operand<=age') if sys.argv[2]=='age' else ('.C(1),.IGNORE_R(1)) u_add_date','.C(2),.IGNORE_R(1)) u_add_date')
+a,b=('else if(command_accept[0])age_operand<=0;','else if(command_accept[0])age_operand<=16\'d1;') if sys.argv[2]=='age' else ('.C(1),.IGNORE_R(1)) u_add_date','.C(2),.IGNORE_R(1)) u_add_date')
 assert s.count(a)==1;s=s.replace(a,b);p.write_text(s)
 p.with_suffix('.mutation.txt').write_text(before+' '+hashlib.sha256(s.encode()).hexdigest()+' '+a+' -> '+b+'\n')
 PYM
