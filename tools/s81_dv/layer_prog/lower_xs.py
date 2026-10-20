@@ -129,9 +129,40 @@ def slice_index(die, sl):
     return sorted(s).index(sl)
 
 
-def placement(die, sl):
+def aproj_topology_enabled():
+    return os.environ.get('OT_XS_APROJ_TOPO', '0') == '1'
+
+
+def placement(die, sl, fx=None):
     frames = die.frames_of(sl)
     g = slice_index(die, sl)
+    if aproj_topology_enabled():
+        # One real phase on EVERY real frame: preserve tensor row order, keep
+        # wq_a/wkv in separate frames, and never exceed the measured four rows.
+        # CAP/gather ownership must consume this exact map before adoption.
+        assert fx is not None, 'OT_XS_APROJ_TOPO requires actual fixture shapes'
+        slices = sorted(die.slices(), key=lambda s: slice_index(die, s))
+        all_frames = [f for s in slices for f in die.frames_of(s)]
+        tensors = [('wq_a', fx['w']['wq_a'][0].shape[0]), ('wkv', fx['w']['wkv'][0].shape[0])]
+        total = sum(n for _, n in tensors)
+        numer = [n * len(all_frames) for _, n in tensors]
+        counts = [n // total for n in numer]
+        for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
+            counts[i] += 1
+        assigned, row0, fi = {}, 0, 0
+        for (name, nrows), nf in zip(tensors, counts):
+            assert 0 < nf <= nrows and nrows <= nf * ROWS_PER_FRAME, ('a_proj one-phase capacity', name, nrows, nf)
+            q, rem = divmod(nrows, nf)
+            off = row0
+            for j in range(nf):
+                n = q + (j < rem)
+                assigned[all_frames[fi]] = list(range(off, off + n))
+                off += n
+                fi += 1
+            assert off == row0 + nrows
+            row0 += nrows
+        assert fi == len(all_frames) and row0 == total
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
         r0 = ROWS_PER_SLICE * g + ROWS_PER_FRAME * j
@@ -233,8 +264,8 @@ def lower(die, op, ctx):
         import xs_place
         return xs_place.lower_placed(die, op, ctx)
     sl = ctx['slice']
-    g, pl = placement(die, sl)
-    insts = [p['frame'] for p in pl] + [sl]
+    g = slice_index(die, sl)
+    insts = die.frames_of(sl) + [sl]
     gap_rest = dict(module='ot_s81sl_xs / ot_s81sl_cap', port='pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph '
                     'np, return fields), cap cfg_d',
                     missing='the frame images, the return calendar and the xs phase / stream ROM images are lowered and '
@@ -250,6 +281,7 @@ def lower(die, op, ctx):
         return dict(rec, status='GAP', gap=dict(module='lower_xs', port='fixtures', missing='no --fixtures: the frame '
                                                 'ROM images carry the checkpoint rows of the layer'))
     fx = load_fixture(fxd)
+    g, pl = placement(die, sl, fx)
     frames = []
     for p in pl:
         if not p['rows']:
@@ -283,10 +315,10 @@ def cmd_gen(a):
     out.mkdir(parents=True, exist_ok=True)
     die = C.Die(C.die_tree(a.die_ref, a.die_src))
     sl = a.slice or next(s for s in sorted(die.slices()) if a.frame in die.frames_of(s))
-    g, pl = placement(die, sl)
+    fx = load_fixture(a.fixtures)
+    g, pl = placement(die, sl, fx)
     p = next(x for x in pl if x['frame'] == a.frame)
     assert p['rows'], f'{a.frame}: no a_proj rows'
-    fx = load_fixture(a.fixtures)
     mats, gidx = frame_mats(fx, p['rows'])
     field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'])
     names, tmp = field_images(field, qa, q, bf, a.frame, out)

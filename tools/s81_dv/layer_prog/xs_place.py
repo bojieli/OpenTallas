@@ -359,7 +359,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     q, bf = B.frame_pairs(LX.base_master(master))
     fxa = LX.load_fixture(fixd)
     fx = Fix(fixd)
-    _, pl = LX.placement(die, sl)
+    _, pl = LX.placement(die, sl, fxa)
     p0 = pl[j]
     phases = []
     if p0['rows']:
