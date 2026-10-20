@@ -186,6 +186,7 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
     // ---- level 1: leaf pairs
     reg  [2:0]  li;                        // leaf index within the copy
     reg  [31:0] h1, m1, a1, b1;
+    (* keep *) reg [31:0] h1c, a1c, b1c;      // VE4: kept second operand copies (the adder's alignment operands)
     reg         i1;
     wire hold1  = (MUT == 2) ? (li == 3'd0 || li == 3'd4 || li == 3'd6) : !li[0];
     wire stash1 = (MUT == 2) && (li == 3'd1);
@@ -198,16 +199,20 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
         end
     always @(posedge clk) begin
         if (v && hold1) h1 <= s;
+        if (v && hold1) h1c <= s;
         if (v && stash1) m1 <= s;
         a1 <= pa1;                         // MUT 2 only (the MUT 0 build drops it)
+        a1c <= pa1;
         b1 <= s;
+        b1c <= s;
     end
-    wire [31:0] s1;
+    wire [31:0] s1, s1c;
     wire        f1, r1;
-    ot_s81sl_ve_qadd #(.LAT(LA)) add1 (clk, rn, i1, (MUT == 2) ? a1 : h1, b1, s1, r1, f1);
+    ot_s81sl_ve_qadd #(.LAT(LA)) add1 (clk, rn, i1, (MUT == 2) ? a1 : h1, (MUT == 2) ? a1c : h1c, b1, b1c, s1, s1c, r1, f1);
     // ---- level 2: pairs of level-1 sums (n0,n1) -> n4, (n2,n3) -> n5
     reg         p2, i2;
     reg  [31:0] h2, b2;
+    (* keep *) reg [31:0] h2c, b2c;
     always @(posedge clk or negedge rn)
         if (!rn) begin p2 <= 1'b0; i2 <= 1'b0; end
         else begin
@@ -216,14 +221,17 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
         end
     always @(posedge clk) begin
         if (r1 && !p2) h2 <= s1;
+        if (r1 && !p2) h2c <= s1c;
         b2 <= s1;
+        b2c <= s1c;
     end
-    wire [31:0] s2;
+    wire [31:0] s2, s2c;
     wire        f2, r2;
-    ot_s81sl_ve_qadd #(.LAT(LA)) add2 (clk, rn, i2, h2, b2, s2, r2, f2);
+    ot_s81sl_ve_qadd #(.LAT(LA)) add2 (clk, rn, i2, h2, h2c, b2, b2c, s2, s2c, r2, f2);
     // ---- level 3: (n4, n5) -> n6 = the beat partial
     reg         p3, i3;
     reg  [31:0] h3, b3;
+    (* keep *) reg [31:0] h3c, b3c;
     always @(posedge clk or negedge rn)
         if (!rn) begin p3 <= 1'b0; i3 <= 1'b0; end
         else begin
@@ -232,11 +240,13 @@ module ot_s81sl_ve_tree #(parameter integer LA = 4, MUT = 0) (
         end
     always @(posedge clk) begin
         if (r2 && !p3) h3 <= s2;
+        if (r2 && !p3) h3c <= s2c;
         b3 <= s2;
+        b3c <= s2c;
     end
-    wire [31:0] s3;
+    wire [31:0] s3, s3c;
     wire        f3, r3;
-    ot_s81sl_ve_qadd #(.LAT(LA)) add3 (clk, rn, i3, h3, b3, s3, r3, f3);
+    ot_s81sl_ve_qadd #(.LAT(LA)) add3 (clk, rn, i3, h3, h3c, b3, b3c, s3, s3c, r3, f3);
     // ---- output: copy = arrival order
     reg [1:0] oc;
     always @(posedge clk or negedge rn)
@@ -258,22 +268,35 @@ endmodule
 // (data and pointer), no runtime-indexed array (rows are plain registers, the read is an AND-OR of the selected row).
 // D < 3: ot_hdc_delay (wire / one or two registers).  MUT 3 (bench only): slice 1's read select one row late.
 // ---------------------------------------------------------------------------------------------------------------------
+// VE4: q2 = a kept copy of q (the ring's output register duplicated; D = 0: q2 = d2, the caller's own copy; D = 1, 2:
+// a kept register chain from d2).  Consumers that need no copy leave q2 open (synthesis drops it).
 module ot_s81sl_ve_dly #(parameter integer W = 32, D = 1, MUT = 0) (
-    input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
+    input wire clk, input wire [W-1:0] d, input wire [W-1:0] d2, output wire [W-1:0] q, output wire [W-1:0] q2);
     generate if (D >= 3) begin : g_ring
-        ot_s81sl_ve_ring #(.W(W), .D(D), .MUT(MUT)) u (clk, d, q);
+        ot_s81sl_ve_ring #(.W(W), .D(D), .MUT(MUT)) u (clk, d, q, q2);
+    end else if (D == 0) begin : g_w
+        assign q = d;
+        assign q2 = d2;
     end else begin : g_sh
         ot_hdc_delay #(.W(W), .D(D)) u (clk, 1'b1, d, q);
+        (* keep *) reg [W-1:0] c [0:D-1];
+        integer i;
+        always @(posedge clk) begin
+            c[0] <= d2;
+            for (i = 1; i < D; i = i + 1) c[i] <= c[i - 1];
+        end
+        assign q2 = c[D - 1];
     end endgenerate
 endmodule
 
 module ot_s81sl_ve_ring #(parameter integer W = 32, D = 3, MUT = 0) (
-    input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
+    input wire clk, input wire [W-1:0] d, output wire [W-1:0] q, output wire [W-1:0] q2);
     localparam integer N = D - 2;
     localparam integer K = (N <= 2) ? 1 : $clog2(N);
     localparam [K-1:0] LAST = N - 1;
     localparam integer S = (W + 7) / 8;
     reg [W-1:0] din, dout;
+    (* keep *) reg [W-1:0] dout2;                // VE4: kept copy of the output register (same D)
     reg [K-1:0] wptr;
     wire [K-1:0] wnext = (wptr >= LAST) ? {K{1'b0}} : wptr + 1'b1;
     reg  [N-1:0] oh_d, oh_late;
@@ -303,8 +326,10 @@ module ot_s81sl_ve_ring #(parameter integer W = 32, D = 3, MUT = 0) (
         integer j;
         always @* begin rd = {SW{1'b0}}; for (j = 0; j < N; j = j + 1) rd = rd | sel[SW*j +: SW]; end
         always @(posedge clk) dout[LO +: SW] <= rd;
+        always @(posedge clk) dout2[LO +: SW] <= rd;
     end endgenerate
     assign q = dout;
+    assign q2 = dout2;
 `ifndef SYNTHESIS
     initial wptr = {K{1'b0}};
 `endif
@@ -327,22 +352,23 @@ module ot_s81sl_ve_mul4 #(parameter integer LM=5,MUT=0)(
  wire [127:0] hs,ks,hw,dot_mid;wire [15:0] f;wire [3:0] dv;
  genvar l;
  generate for(l=0;l<4;l=l+1)begin:lane
-  // one kept operand register per decode (r2: hr fed mh a, mh b and mw a; kr fed mk a, mk b and the key line)
-  (* keep = "true" *) reg [31:0] ha,hb,hwa,ka,kb,kl;
-  reg [31:0] wl;
+  // one kept operand register per decode (r2: hr fed mh a, mh b and mw a; kr fed mk a, mk b and the key line);
+  // VE4: plus a kept second copy of every multiplier operand (the unit's normalise operand: ot_s81sl_ve_fp.sv)
+  (* keep = "true" *) reg [31:0] ha,hb,hwa,ka,kb,kl,wl,ha2,hb2,hwa2,ka2,kb2,wl2;
   always @(posedge clk)begin ha<=hp[32*l+:32];hb<=hp[32*l+:32];hwa<=hp[32*l+:32];
-   ka<=kp[32*l+:32];kb<=kp[32*l+:32];kl<=kp[32*l+:32];wl<=wp[32*l+:32];end
-  wire [31:0] kd,dr;wire vh,vk,vw;
-  ot_s81sl_ve_qmul #(LM) mh(clk,rq[l],vr,ha,hb,hs[32*l+:32],vh,f[4*l]);
-  ot_s81sl_ve_qmul #(LM) mk(clk,rq[l],vr,ka,kb,ks[32*l+:32],vk,f[4*l+1]);
-  ot_s81sl_ve_qmul #(LM) mw(clk,rq[l],vr,hwa,wl,hw[32*l+:32],vw,f[4*l+2]);
-  ot_s81sl_ve_dly #(.W(32),.D(LM)) key_line(clk,kl,kd);
-  ot_s81sl_ve_qmul #(LM) md(clk,rq[l],vw,hw[32*l+:32],(MUT==1)?32'h3f800000:kd,dr,dv[l],f[4*l+3]);
+   ka<=kp[32*l+:32];kb<=kp[32*l+:32];kl<=kp[32*l+:32];wl<=wp[32*l+:32];
+   ha2<=hp[32*l+:32];hb2<=hp[32*l+:32];hwa2<=hp[32*l+:32];ka2<=kp[32*l+:32];kb2<=kp[32*l+:32];wl2<=wp[32*l+:32];end
+  wire [31:0] kd,kd2,dr,hw2,nc0,nc1,nc2;wire vh,vk,vw;
+  ot_s81sl_ve_qmul #(LM) mh(clk,rq[l],vr,ha,ha2,hb,hb2,hs[32*l+:32],nc0,vh,f[4*l]);
+  ot_s81sl_ve_qmul #(LM) mk(clk,rq[l],vr,ka,ka2,kb,kb2,ks[32*l+:32],nc1,vk,f[4*l+1]);
+  ot_s81sl_ve_qmul #(LM) mw(clk,rq[l],vr,hwa,hwa2,wl,wl2,hw[32*l+:32],hw2,vw,f[4*l+2]);
+  ot_s81sl_ve_dly #(.W(32),.D(LM)) key_line(clk,kl,kl,kd,kd2);
+  ot_s81sl_ve_qmul #(LM) md(clk,rq[l],vw,hw[32*l+:32],hw2,(MUT==1)?32'h3f800000:kd,(MUT==1)?32'h3f800000:kd2,dr,nc2,dv[l],f[4*l+3]);
   reg [31:0] dout;always @(posedge clk)dout<=dr;assign dot_mid[32*l+:32]=dout;
  end endgenerate
  wire [127:0] hmid,kmid;
- ot_s81sl_ve_dly #(.W(128),.D(LM+1)) hline(clk,hs,hmid);
- ot_s81sl_ve_dly #(.W(128),.D(LM+1)) kline(clk,ks,kmid);
+ ot_s81sl_ve_dly #(.W(128),.D(LM+1)) hline(clk,hs,hs,hmid,);
+ ot_s81sl_ve_dly #(.W(128),.D(LM+1)) kline(clk,ks,ks,kmid,);
  reg [127:0] hh_pin,kk_pin,dot_pin;
  always @(posedge clk)begin hh_pin<=hmid;kk_pin<=kmid;dot_pin<=dot_mid;end
  assign hh=hh_pin;assign kk=kk_pin;assign dot=dot_pin;
@@ -359,12 +385,16 @@ module ot_s81sl_ve_chunk8 #(parameter integer LA=4,MUT=0)(
  reg [255:0] xr;reg vr;
  always @(posedge clk or negedge rn)if(!rn)vr<=0;else vr<=v;
  always @(posedge clk)xr<=x;
- wire [31:0] acc[0:8];wire [7:0] f;wire [8:0] tv;assign acc[0]=0;assign tv[0]=vr;
+ // VE4: acc2 = the kept second copy of each adder's output (the next adder's alignment operand); xr0c a kept copy
+ // of the term-0 word (term 0 has no delay line)
+ wire [31:0] acc[0:8];wire [31:0] acc2[0:8];wire [7:0] f;wire [8:0] tv;assign acc[0]=0;assign acc2[0]=0;assign tv[0]=vr;
+ (* keep = "true" *) reg [31:0] xr0c;
+ always @(posedge clk)xr0c<=x[31:0];
  genvar t;
  generate for(t=0;t<8;t=t+1)begin:term
-  wire [31:0] xd;
-  ot_s81sl_ve_dly #(.W(32),.D(LA*t),.MUT(MUT)) operand_line(clk,xr[32*t+:32],xd);
-  ot_s81sl_ve_qadd #(.LAT(LA)) add(clk,rq[t/4],tv[t],acc[t],xd,acc[t+1],tv[t+1],f[t]);
+  wire [31:0] xd,xd2;
+  ot_s81sl_ve_dly #(.W(32),.D(LA*t),.MUT(MUT)) operand_line(clk,xr[32*t+:32],(t==0)?xr0c:xr[32*t+:32],xd,xd2);
+  ot_s81sl_ve_qadd #(.LAT(LA)) add(clk,rq[t/4],tv[t],acc[t],acc2[t],xd,xd2,acc[t+1],acc2[t+1],tv[t+1],f[t]);
  end endgenerate
  assign vo=tv[8];assign sum=acc[8];wire raw_fault=|f;
  always @(posedge clk or negedge rn)if(!rn)fault<=0;else if(raw_fault)fault<=1;
@@ -380,18 +410,19 @@ module ot_s81sl_ve_add8 #(parameter integer LM=5,LA=4)(
  wire [15:0] f;wire [7:0] av;
  genvar l;
  generate for(l=0;l<8;l=l+1)begin:lane
-  // one kept gate copy per lane (r2: one gr register -> 8 lane multipliers -> their b decodes merged, 264 loads)
-  (* keep = "true" *) reg [31:0] gl;
-  always @(posedge clk)gl<=gate;
-  wire [31:0] prod,hd,ys;wire mvo;
-  ot_s81sl_ve_qmul #(LM) mul(clk,rq[l/2],vr,valr[32*l+:32],gl,prod,mvo,f[2*l]);
-  ot_s81sl_ve_dly #(.W(32),.D(LM)) hline(clk,hr[32*l+:32],hd);
-  ot_s81sl_ve_qadd #(.LAT(LA)) add(clk,rq[l/2],mvo,hd,prod,ys,av[l],f[2*l+1]);
+  // one kept gate copy per lane (r2: one gr register -> 8 lane multipliers -> their b decodes merged, 264 loads);
+  // VE4: kept second copies of the multiplier operands, the h line's output and the product (alignment operands)
+  (* keep = "true" *) reg [31:0] gl,gl2,vl2;
+  always @(posedge clk)begin gl<=gate;gl2<=gate;vl2<=value[32*l+:32];end
+  wire [31:0] prod,prod2,hd,hd2,ys,nc;wire mvo;
+  ot_s81sl_ve_qmul #(LM) mul(clk,rq[l/2],vr,valr[32*l+:32],vl2,gl,gl2,prod,prod2,mvo,f[2*l]);
+  ot_s81sl_ve_dly #(.W(32),.D(LM)) hline(clk,hr[32*l+:32],hr[32*l+:32],hd,hd2);
+  ot_s81sl_ve_qadd #(.LAT(LA)) add(clk,rq[l/2],mvo,hd,hd2,prod,prod2,ys,nc,av[l],f[2*l+1]);
   wire [31:0] rounded=ys+32'h7fff+ys[16];
   always @(posedge clk)y[32*l+:32]<={rounded[31:16],16'd0};
  end endgenerate
  always @(posedge clk or negedge rn)if(!rn)vo<=0;else vo<=av[0];
  wire raw_fault=|f;
  always @(posedge clk or negedge rn)if(!rn)fault<=0;else if(raw_fault)fault<=1;
- ot_s81sl_ve_dly #(.W(2),.D(LM+LA+2)) copy_line(clk,copy,copy_out);
+ ot_s81sl_ve_dly #(.W(2),.D(LM+LA+2)) copy_line(clk,copy,copy,copy_out,);
 endmodule
