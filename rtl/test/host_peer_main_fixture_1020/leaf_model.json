@@ -9,7 +9,12 @@
     "link_payload_edge_delta": 0,
     "peer_rr_reset_release_edges": 3,
     "outer_reset_assert_release_edges": 2,
-    "reset_delta": 0
+    "reset_delta": 0,
+    "input_data_bits": 2798,
+    "output_data_bits": 3500,
+    "pin_station_flops": 6298,
+    "peer_rx_receiver": "root__u_root_mux.u_m.rq_d/rq_v existing capture",
+    "H_delta": 0
   },
   "ports": {
     "ck_core": {
@@ -612,5 +617,35 @@
     "reach": "pin placement/clock location exact data reach audit pending, no >405 waiver",
     "global_data_wire_span_limit_um": 405
   },
-  "do_not_promote": "No layout gate without complete native32, ROOT helper acceptance and physical slot approval."
+  "do_not_promote": "No layout gate without complete native32, ROOT helper acceptance and physical slot approval.",
+  "legacy_reset_prep_failures": [
+    {
+      "family": "coordinator",
+      "loads": 5464,
+      "copies": 28,
+      "max": 196,
+      "minimum_copies": 171
+    },
+    {
+      "family": "rankcodec",
+      "loads": 967,
+      "copies": 16,
+      "max": 61,
+      "minimum_copies": 31
+    },
+    {
+      "family": "rootmux",
+      "loads": 536,
+      "copies": 3,
+      "max": 179,
+      "minimum_copies": 17
+    },
+    {
+      "family": "tokenctrl",
+      "loads": 2619,
+      "copies": 12,
+      "max": 219,
+      "minimum_copies": 82
+    }
+  ]
 }
