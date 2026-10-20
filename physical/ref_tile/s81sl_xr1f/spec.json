@@ -89,16 +89,16 @@
   "io_hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new control-plane sub-leaf (centre leaf, C1 master, 14 per die) of the distributed-vector slice; flop-first pins, die hold budget; pin-bound square outline (7.8k pins, <= 6/um on full faces). XR2 (10-17, after EARLY_FAIL_SETUP -611 ps / 9.3k endpoints of 1dd564c6f): classify stage (+1 cycle on CTL / RD / lo / V / SC) registers the source select, CTL payload, RD row pairs and decoded per-target / per-leaf enables before any wide write (was one cycle E/N pin flop -> 1.1k-bit select -> 5x1024 unpacker enables); keep port registers for c_d / is_d / cfg_d / rb_d (synthesis had folded 960 + 160 pins onto 160 + 32 flops driving W and N faces); fixed-index pk pair writes. OWNERS-S81/XR (10-18): ported onto RTL-BUILD-S81's xr (ENG collector e_*/eg_* -> xfin s, g_* gate fan-out, CTL target 1 x_mode/x_scale; +738 pins -> 8.6k) -- outline 432 x 518.4 (W face c/sw/e/g 2,850 pins on 505 um = 5.6/um, S + x_mode/x_scale/eg). XR3 (OWNERS-S81/XR2 10-18, after --cts gate 6fe7b4ea6 pin-flop spread TT 113 / FF 103 and gate ba880f813 TT 135 / FF 120 with the late flops (+80..+135 ps, 451 of 16.2k) on the S-face pin band and the SW / SE corners): c_d / rb_* / g_* single copies fanned out in ot_s81sl_slice glue (-908 pins), clk / rst_n ranged at the E-face centre, outline 345.6 x 432, explicit CTS sink clustering (size 24 / 30 um, distance_between_buffers 15, balance_levels) so the edge pin-band leaves hang off short leaf nets. XR4 (S81-SLICEP 10-18, after gate2 2cf382261 sink clustering FAIL TT 128 / FF 113, insertion 866): 16 per-region clock roots by 2-D k-means (physical/common_flow/clock_split_km.tcl, OT_CKKM_K 16: the pin-flop ring becomes 16 arcs / core masses of <= ~140 um, one BUFx24 local root at each centroid, CTS balances the roots), explicit cts_sink clustering dropped; io_hold_margin 0.025 (KITS rule 10-18). Same RTL, port, cycles, SDC. XR5 (S81-SAFE-FIX/XR1 10-19, SAFE-DESIGN CHECKLIST after the 1dd564c6f failed route; km16 gate c0a1bbe0c WARN spread 44/39, reg->reg +54.8): checklist item 3 -- every registered select that drove > ~32 data loads is now KEPT copies registered from the master's next state (rwe_c 160 ud word enables, rwr_c 40 + un_c 160 sw_d select / row-pair mux, pkw_c 32 pk pair writes, cis_c 35 ci_r select, tg1_c 2 x_eps/x_scale, lov_c 40 lo_v input-flop copies) and the x_s word select is a registered one-hot (eoh 15 / poh 5); +~490 flops, 0 data cycles. Kit: reset_landing 2 stages (rst_n port -> 2 landing flops -> ot_rst_relay; reset assert/release +2 cycles, a scheduled constant), io_hold_margin 0.03. | XR6 (S81-SAFE-FIX/XR1 10-19): 297c9bfab --cts gate TT -110.6 ps erun -> 20-term fault OR -> fault/ot_prs launch copy; fault terms registered per region (fa/fb/fc KEPT), sticky fault ORs 3 flops (+1 fault-visibility cycle, 0 data cycles). Parallel fallback kit s81sl_xr1f (FOREG=1).",
+ "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new control-plane sub-leaf (centre leaf, C1 master, 14 per die) of the distributed-vector slice; flop-first pins, die hold budget; pin-bound square outline (7.8k pins, <= 6/um on full faces). XR2 (10-17, after EARLY_FAIL_SETUP -611 ps / 9.3k endpoints of 1dd564c6f): classify stage (+1 cycle on CTL / RD / lo / V / SC) registers the source select, CTL payload, RD row pairs and decoded per-target / per-leaf enables before any wide write (was one cycle E/N pin flop -> 1.1k-bit select -> 5x1024 unpacker enables); keep port registers for c_d / is_d / cfg_d / rb_d (synthesis had folded 960 + 160 pins onto 160 + 32 flops driving W and N faces); fixed-index pk pair writes. OWNERS-S81/XR (10-18): ported onto RTL-BUILD-S81's xr (ENG collector e_*/eg_* -> xfin s, g_* gate fan-out, CTL target 1 x_mode/x_scale; +738 pins -> 8.6k) -- outline 432 x 518.4 (W face c/sw/e/g 2,850 pins on 505 um = 5.6/um, S + x_mode/x_scale/eg). XR3 (OWNERS-S81/XR2 10-18, after --cts gate 6fe7b4ea6 pin-flop spread TT 113 / FF 103 and gate ba880f813 TT 135 / FF 120 with the late flops (+80..+135 ps, 451 of 16.2k) on the S-face pin band and the SW / SE corners): c_d / rb_* / g_* single copies fanned out in ot_s81sl_slice glue (-908 pins), clk / rst_n ranged at the E-face centre, outline 345.6 x 432, explicit CTS sink clustering (size 24 / 30 um, distance_between_buffers 15, balance_levels) so the edge pin-band leaves hang off short leaf nets. XR4 (S81-SLICEP 10-18, after gate2 2cf382261 sink clustering FAIL TT 128 / FF 113, insertion 866): 16 per-region clock roots by 2-D k-means (physical/common_flow/clock_split_km.tcl, OT_CKKM_K 16: the pin-flop ring becomes 16 arcs / core masses of <= ~140 um, one BUFx24 local root at each centroid, CTS balances the roots), explicit cts_sink clustering dropped; io_hold_margin 0.025 (KITS rule 10-18). Same RTL, port, cycles, SDC. XR5 (S81-SAFE-FIX/XR1 10-19, SAFE-DESIGN CHECKLIST after the 1dd564c6f failed route; km16 gate c0a1bbe0c WARN spread 44/39, reg->reg +54.8): checklist item 3 -- every registered select that drove > ~32 data loads is now KEPT copies registered from the master's next state (rwe_c 160 ud word enables, rwr_c 40 + un_c 160 sw_d select / row-pair mux, pkw_c 32 pk pair writes, cis_c 35 ci_r select, tg1_c 2 x_eps/x_scale, lov_c 40 lo_v input-flop copies) and the x_s word select is a registered one-hot (eoh 15 / poh 5); +~490 flops, 0 data cycles. Kit: reset_landing 2 stages (rst_n port -> 2 landing flops -> ot_rst_relay; reset assert/release +2 cycles, a scheduled constant), io_hold_margin 0.03. | XR6 (S81-SAFE-FIX/XR1 10-19): 297c9bfab --cts gate TT -110.6 ps erun -> 20-term fault OR -> fault/ot_prs launch copy; fault terms registered per region (fa/fb/fc KEPT), sticky fault ORs 3 flops (+1 fault-visibility cycle, 0 data cycles). Parallel fallback kit s81sl_xr1f (FOREG=1). | XR1F-PIN (S81-SLICE3-XR1F 10-19, after the closed 12b616b54 native audit FAIL launch 286.1 > 220 on 42 pins, all x_eps / x_scale / x_mode; capture 127 / spread 67/64 PASS): the config outputs were enable-hold flops whose QN fed their own hold mux through NAND2 -> OA21, so io_flop_at_pins (ot_of_fbonly) did not anchor them. Now KEPT masters x_*_m hold the value and the pins leave DEDICATED KEPT output copies x_*_q (D = master next state, Q only the pin): +65 flops, 0 data cycles. Pin regions unchanged: x_s at the same 5.9 pins/um (plain DFF, anchored) launches 126-145 ps, so density is not the cause and every S-face group is already ~5.9/um (widening one would push another over 6/um).",
  "job": {
-  "owner": "Claude:S81-SAFE-FIX/XR1",
-  "branch": "claude/s81-slice2-xr-1019",
+  "owner": "Claude:S81-SLICE3-XR1F",
+  "branch": "claude/s81-xr1f-1019",
   "tag": "s81sl_xr1f",
-  "purpose": "PARALLEL fallback of s81sl_xr1 (XR6 FOREG=1: dedicated fault output flop, +2 fault-visibility cycles). Same top ot_s81sl_xr1; bind whichever closes first under the SAFE checklist.",
+  "purpose": "Re-route of the CLOSED s81sl_xr1f (12b616b54, FOREG=1) after its native audit FAIL (launch 286 > 220 on x_eps / x_scale / x_mode): XR1F-PIN dedicated KEPT output copies of the config registers, anchored at the S-face pins. 0 cycles.",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/slice",
    "tools/s81_slice",
-   "results/rtl/s81_slice_1019/xr7s2"
+   "results/rtl/s81_xr1f_1019"
   ],
   "benches": [
    {
@@ -114,7 +114,7 @@
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr_muthops hops 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1019/xr7s2/fm_hops/run.log",
+    "fail_witness": "results/rtl/s81_xr1f_1019/fm_hops/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -123,7 +123,7 @@
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutrow row 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1019/xr7s2/fm_row/run.log",
+    "fail_witness": "results/rtl/s81_xr1f_1019/fm_row/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -132,7 +132,7 @@
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutporder porder 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1019/xr7s2/fm_porder/run.log",
+    "fail_witness": "results/rtl/s81_xr1f_1019/fm_porder/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -141,7 +141,16 @@
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutnocol nocol 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRILL missed=[1-9][0-9]* of 13$",
-    "fail_witness": "results/rtl/s81_slice_1019/xr7s2/fm_nocol/run.log",
+    "fail_witness": "results/rtl/s81_xr1f_1019/fm_nocol/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr_mutxhold",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutxhold xhold 1 0 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/s81_xr1f_1019/b_xhold_f1/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    }
@@ -363,5 +372,11 @@
  "reset_landing": {
   "enable": true,
   "stages": 2
+ },
+ "reroute_reason": {
+  "kind": "native_capture",
+  "cell": "ot_s81sl_xr1",
+  "source": "results/closure_loop/s81sl_xr1f-s81sl_xr1f-12b616b54/native_pin_audit_tt.json",
+  "fix": "launch side: x_eps / x_scale / x_mode were enable-hold DFFE flops (QN -> NAND2 -> OA21 -> D) that io_flop_at_pins skips (not feedback-only), so 60 output flops placed in the core (launch 286 ps). XR1F-PIN: KEPT masters hold the value, the pins leave DEDICATED KEPT output copies (D = tg ? body : master, Q drives only the pin) -> anchored at the S face; same outline / pin plan, 0 cycles; bench now checks the hold every cycle + MUT_XHOLD"
  }
 }

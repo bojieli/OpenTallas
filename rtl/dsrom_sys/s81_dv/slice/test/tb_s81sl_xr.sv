@@ -17,7 +17,7 @@
 // whenever their valid is up (ci_b / bo: the unused pack words of a short send are stale don't-care).
 // Then 13 illegal programs (14 on C3: BIND mu4 10-19 adds a dir-B send config with pairs > 2), each from reset, must raise
 // the sticky fault.  Band port B (C3) is 513 b = {pk[511:0], valid}: legal B configs carry at most 2 pairs.
-// Prints XRB ... err=<n> and PASS / FAIL.  Mutants (RTL): +define+OT_S81SL_XR_MUT_{HOPS,ROW,PORDER,NOCOL} must FAIL.
+// Prints XRB ... err=<n> and PASS / FAIL.  Mutants (RTL): +define+OT_S81SL_XR_MUT_{HOPS,ROW,PORDER,NOCOL,XHOLD} must FAIL.
 module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, parameter integer NC = 6000);
     localparam integer W = 1104, V = 276, BW = 513, NS = NC + 16;
     reg clk = 1'b0;
@@ -252,6 +252,9 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     endtask
     // ---------------------------------------------------------------- drive / check
     integer err = 0, nerr_pr = 0;
+    // XR1F-PIN (10-19): x_eps / x_scale / x_mode are config registers -- they must HOLD the last CTL target-1 value on
+    // every cycle (not only on the x_go cycle): checked every slot once a first write landed (catches MUT_XHOLD).
+    reg h_on = 1'b0; reg h_mode = 1'b0; reg [31:0] h_eps = 32'd0, h_scale = 32'd0;
     task automatic bad(input [8*16-1:0] what, input integer s);
         begin err = err + 1; if (nerr_pr < 12) begin nerr_pr = nerr_pr + 1; $display("MISMATCH %0s slot=%0d", what, s); end end
     endtask
@@ -281,6 +284,8 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                 sw_m[8 * k +: 8] !== x_swm[d][8 * k +: 8] || sw_d[256 * k +: 256] !== x_swd[d][256 * k +: 256])) bad("sw", d);
             if (x_go !== x_go_e[d] || (x_go_e[d] && x_eps !== x_eps_e[d])) bad("x_go", d);
             if (x_go_e[d] && (x_mode !== x_mode_e[d] || x_scale !== x_scale_e[d])) bad("x_mode", d);
+            if (x_go_e[d]) begin h_on = 1'b1; h_eps = x_eps_e[d]; h_scale = x_scale_e[d]; h_mode = x_mode_e[d]; end
+            if (h_on && (x_eps !== h_eps || x_scale !== h_scale || x_mode !== h_mode)) bad("x_hold", d);
             if (g_v !== 1'b0) bad("g_v", s);
             if (is_v !== x_isv[d] || (x_isv[d] && is_d !== x_isd[d])) bad("is", d);
             if (cfg_v !== x_cfgv[d] || (x_cfgv[d] && cfg_d !== x_cfgd[d])) bad("cfg", d);
