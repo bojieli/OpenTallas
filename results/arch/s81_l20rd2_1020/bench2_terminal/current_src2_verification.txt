@@ -1,0 +1,23 @@
+rtl/hdc/ot_hdc_fastfp.sv: OK
+rtl/hdc/ot_hdc_delay.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_idx.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv: OK
+rtl/lib/ot_rst_relay.sv: OK
+rtl/hdc/ot_hdc_prefix.sv: OK
+rtl/hdc/ot_hdc_fp32_add_lat.sv: OK
+rtl/hdc/ot_hdc_fp32_add_lat_nr.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv: OK
+rtl/hdc/v41x/ot_hdc_v41x_idx_chunk_el.sv: OK
+physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v: OK
+rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv: OK
+rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv: OK
+rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv: OK
+rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv: OK
+rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv: OK
+rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv: OK
+rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg2.sv: OK
+8f6dc9e856febe3edc6c7b81b77bc0db673f3bd57e20e980f45c3eb6c8987338  ../out/b2/obj/Vtb_dsdv_idx_rg2
+2026-10-20 07:09:43.000000000 -0700

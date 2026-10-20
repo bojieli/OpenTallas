@@ -1,0 +1,103 @@
+{
+  "collected_pt": "2026-10-20 08:12",
+  "status": "CAMPAIGN_FAIL",
+  "original_client": 2218953,
+  "original_unit": "oth-ubuntu-1592497-1792505460",
+  "original_host": "ot-epyc7",
+  "original_src": "/srv/opentallas-scratch/claude/s81-l20rd2-1020/src2",
+  "commit": null,
+  "identity": "21 original pre-build sha256 entries; no receiving-WT git",
+  "cases": [
+    {
+      "case": "fail_late",
+      "receipt": "IDXRD_CASE OK b2/fail_late: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 60 P 3 mut 0 sram 1 ckh 900 hdr_to_last 921 end_to_last 856 nerr 257 qerr 0 slice_err 0 | maxrss_kb=210772 wall=0:44.48"
+    },
+    {
+      "case": "pass_g2048",
+      "receipt": "IDXRD_CASE OK b2/pass_g2048: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5813 end_to_last 5620 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210116 wall=2:08.73"
+    },
+    {
+      "case": "pass_g2048p3",
+      "receipt": "IDXRD_CASE BAD b2/pass_g2048p3: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4790 end_to_last 4597 nerr 921 qerr 0 slice_err 0 | maxrss_kb=211012 wall=1:23.10"
+    },
+    {
+      "case": "pass_g2048p3s2",
+      "receipt": "IDXRD_CASE BAD b2/pass_g2048p3s2: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4790 end_to_last 4597 nerr 1015 qerr 0 slice_err 0 | maxrss_kb=210116 wall=1:30.09"
+    },
+    {
+      "case": "pass_gs",
+      "receipt": "IDXRD_CASE OK b2/pass_gs: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 256 keys 2048 words 128 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1990 end_to_last 1909 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210224 wall=0:52.09"
+    },
+    {
+      "case": "pass_l2",
+      "receipt": "IDXRD_CASE OK b2/pass_l2: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 43691 keys 43691 words 2732 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 8686 end_to_last 8621 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210320 wall=3:28.71"
+    },
+    {
+      "case": "pass_l20",
+      "receipt": "IDXRD_CASE OK b2/pass_l20: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 87382 keys 87382 words 5463 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 16879 end_to_last 16814 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210356 wall=5:23.43"
+    },
+    {
+      "case": "pass_open6",
+      "receipt": "IDXRD_CASE OK b2/pass_open6: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1261 end_to_last 1196 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210252 wall=0:38.08"
+    },
+    {
+      "case": "pass_small",
+      "receipt": "IDXRD_CASE OK b2/pass_small: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1261 end_to_last 1196 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210900 wall=0:50.03"
+    },
+    {
+      "case": "x_g_t0_1000",
+      "receipt": "IDXRD_CASE OK b2/x_g_t0_1000: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1000 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4290 end_to_last 4097 nerr 921 qerr 0 slice_err 0 | maxrss_kb=209872 wall=1:23.56"
+    },
+    {
+      "case": "x_g_t0_700",
+      "receipt": "IDXRD_CASE OK b2/x_g_t0_700: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 700 P 3 mut 0 sram 1 ckh 900 hdr_to_last 3990 end_to_last 3797 nerr 921 qerr 0 slice_err 0 | maxrss_kb=210476 wall=1:38.56"
+    },
+    {
+      "case": "x_p2",
+      "receipt": "IDXRD_CASE OK b2/x_p2: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 2 mut 0 sram 1 ckh 900 hdr_to_last 1005 end_to_last 940 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210928 wall=0:48.13"
+    },
+    {
+      "case": "x_t0_250",
+      "receipt": "IDXRD_CASE OK b2/x_t0_250: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 250 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1111 end_to_last 1046 nerr 0 qerr 0 slice_err 0 | maxrss_kb=211060 wall=0:46.61"
+    },
+    {
+      "case": "x_t0_300",
+      "receipt": "IDXRD_CASE OK b2/x_t0_300: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 300 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1161 end_to_last 1096 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210648 wall=0:47.63"
+    },
+    {
+      "case": "x_t0_350",
+      "receipt": "IDXRD_CASE OK b2/x_t0_350: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 350 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1211 end_to_last 1146 nerr 0 qerr 0 slice_err 0 | maxrss_kb=211092 wall=0:48.04"
+    }
+  ],
+  "build_sources": {
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx.sv": "a7efc680c563abca19a59f4b83c8f1f6a6d5c33390b46cdac4f354b7a9c44630",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv": "cfd24aee02f2a0171a39a123994338e6f2755b8ca1fab4cf4ab1cc11a05e01d0",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv": "b9ced19f5f40fa432f6ff75e26d61da1d4895db5f9dfbc1b77cb133ba3394b95",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv": "38b14ce7e8753bba27ddc56e88aba9c24211768109ab58dd9f81a1add4f69abb",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_chunk_el.sv": "d6117dc8e3cb12d31cb233d3d0cc72880b8c6072d39044e59614bbe240be38ac",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv": "f75f3f412fa921bdf5cfeb1f3da47918ca6f3ff9a40ff66238c2b7159c907835",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv": "8380fb0903f65d0bfdd8be5d109bd901a98edc21a525a5aea395f5e77ebad2a5",
+    "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv": "50756b83a4c8284a187a515e4521bae08f8dea8a3727622d1407eeb69c345864",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+    "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv": "ce45a65a491fcb6755b42f63ae1727a217419e0f75760caea362a188e0d04ae1",
+    "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv": "774bda8fc3ac135fc0ec9f8b9d7648b4e110e7a461d18f65c219fa707f2ab20f",
+    "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg2.sv": "3ec23d4e384ff7f2483f03e464f2d393f9c5e5f7bdbec71f01e67b401efaa9eb"
+  },
+  "bench1_to_bench2_source_changes": {
+    "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv": {
+      "bench1": "d88338140bd6b086665b36404cb9251cfea2837ab231d53a511dbbba103525ab",
+      "bench2": "774bda8fc3ac135fc0ec9f8b9d7648b4e110e7a461d18f65c219fa707f2ab20f"
+    }
+  },
+  "all_21_current_src2_hashes_match_original_build": true,
+  "new_jobs_launched": false
+}

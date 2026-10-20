@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-l20rd2-1020/src2
+ot-run: ot-epyc6       admits   767 GB (avail 650, growth 113, headroom 0, waiters 0/0 GB) load 59/128 running 32 disk 3994 GB 
+ot-run: ot-epyc7       admits   962 GB (avail 747, growth 74, headroom 0, waiters 0/0 GB) load 47/96 running 19 disk 5437 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-l20rd2-1020/src2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-l20rd2-1020/src2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-l20rd2-1020/src2
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1592497-1792505460 after 0 s
+IDXRD_CASE OK b2/pass_small: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1261 end_to_last 1196 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210900 wall=0:50.03
+IDXRD_CASE OK b2/pass_gs: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 256 keys 2048 words 128 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1990 end_to_last 1909 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210224 wall=0:52.09
+IDXRD_CASE OK b2/pass_g2048: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5813 end_to_last 5620 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210116 wall=2:08.73
+IDXRD_CASE BAD b2/pass_g2048p3: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4790 end_to_last 4597 nerr 921 qerr 0 slice_err 0 | maxrss_kb=211012 wall=1:23.10
+IDXRD_CASE BAD b2/pass_g2048p3s2: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4790 end_to_last 4597 nerr 1015 qerr 0 slice_err 0 | maxrss_kb=210116 wall=1:30.09
+IDXRD_CASE OK b2/pass_open6: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1261 end_to_last 1196 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210252 wall=0:38.08
+IDXRD_CASE OK b2/pass_l2: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 43691 keys 43691 words 2732 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 8686 end_to_last 8621 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210320 wall=3:28.71
+IDXRD_CASE OK b2/pass_l20: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 87382 keys 87382 words 5463 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 16879 end_to_last 16814 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210356 wall=5:23.43
+IDXRD_CASE OK b2/fail_late: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 60 P 3 mut 0 sram 1 ckh 900 hdr_to_last 921 end_to_last 856 nerr 257 qerr 0 slice_err 0 | maxrss_kb=210772 wall=0:44.48
+IDXRD_CASE OK b2/x_t0_250: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 250 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1111 end_to_last 1046 nerr 0 qerr 0 slice_err 0 | maxrss_kb=211060 wall=0:46.61
+IDXRD_CASE OK b2/x_t0_300: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 300 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1161 end_to_last 1096 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210648 wall=0:47.63
+IDXRD_CASE OK b2/x_t0_350: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 350 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1211 end_to_last 1146 nerr 0 qerr 0 slice_err 0 | maxrss_kb=211092 wall=0:48.04
+IDXRD_CASE OK b2/x_p2: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 2 mut 0 sram 1 ckh 900 hdr_to_last 1005 end_to_last 940 nerr 0 qerr 0 slice_err 0 | maxrss_kb=210928 wall=0:48.13
+IDXRD_CASE OK b2/x_g_t0_1000: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1000 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4290 end_to_last 4097 nerr 921 qerr 0 slice_err 0 | maxrss_kb=209872 wall=1:23.56
+IDXRD_CASE OK b2/x_g_t0_700: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 700 P 3 mut 0 sram 1 ckh 900 hdr_to_last 3990 end_to_last 3797 nerr 921 qerr 0 slice_err 0 | maxrss_kb=210476 wall=1:38.56
+IDXRD_CAMPAIGN FAIL
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1592497-1792505460): exit 1
