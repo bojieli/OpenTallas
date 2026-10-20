@@ -86,31 +86,6 @@
    ]
   },
   {
-   "name": "ot-epyc8",
-   "label": "EPYC8",
-   "cores": 128,
-   "cap": 141,
-   "base": "/srv/opentallas-scratch/claude/closure-loop",
-   "max_job_threads": 64,
-   "max_job_ram_gb": 900,
-   "min_free_disk_gb": 120,
-   "caps": [
-    "verilator",
-    "yosys",
-    "iverilog",
-    "orfs"
-   ],
-   "ram_gb": 1133,
-   "disk_roots": {
-    "/": 100
-   },
-   "note": "Onboarded 2026-10-19 (FLEET-NEW2): Cherry 1036671 'gorgeous-bird', 84.32.186.185 NL-Amsterdam, AMD EPYC 9554P 64C/128T (Zen 4), 1152 GB DDR5 (MemTotal 1133 GB), ONLY 2x 894 GB NVMe in the OS RAID1 (~820 GB free): scratch = dir on root, min_free_disk_gb 120, role smalldisk (die-level jobs rank it last: no huge die-chain scratch); max_die_jobs 1 = tile work plus at most ONE die chain (counts daemon die jobs + ot-run die units/waiters there; ot-run HOST_MAX_DIE enforces the same).",
-   "external_jobs": [],
-   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
-   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
-   "role": "smalldisk"
-  },
-  {
    "name": "ot-epyc7",
    "label": "EPYC7",
    "cores": 96,
@@ -202,5 +177,8 @@
    "bench_offload": true,
    "admission_disabled_reason": "OWNER 2026-10-08 23:35: stop all new localhost tasks after measured global OOM; existing progressing jobs preserved. New compute admitted only on remote fleet."
   }
+ ],
+ "retired_hosts": [
+  "ot-epyc8"
  ]
 }

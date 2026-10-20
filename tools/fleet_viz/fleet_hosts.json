@@ -12,7 +12,6 @@
     {"id": "ot-epyc5", "name": "EPYC5",      "ssh": "ot-epyc5",      "label": "EPYC-SIN-1",  "kind": "EPYC 9575F",               "region": "singapore"},
     {"id": "ot-epyc6", "name": "EPYC6",      "ssh": "ot-epyc6",      "label": "EPYC-STO-1",  "kind": "EPYC 9554P",               "region": "stockholm"},
     {"id": "ot-epyc7", "name": "EPYC7",      "ssh": "ot-epyc7",      "label": "EPYC-CHI-1",  "kind": "2x EPYC 7443",             "region": "chicago"},
-    {"id": "ot-epyc8", "name": "EPYC8",      "ssh": "ot-epyc8",      "label": "EPYC-AMS-1",  "kind": "EPYC 9554P",               "region": "amsterdam"},
     {"id": "localhost", "name": "localhost",     "ssh": null,            "label": "COORDINATOR", "kind": "Coordinator + RTX PRO GPU", "region": "onprem"},
     {"id": "ot-agidock128", "name": "AGIdock", "ssh": "ot-agidock128", "label": "ONPREM-1",    "kind": "Simulation VM",            "region": "onprem"},
     {"id": "ot-pve1", "name": "PVE1",       "ssh": "ot-pve1",       "label": "ONPREM-2",    "kind": "Build node",               "region": "onprem"}

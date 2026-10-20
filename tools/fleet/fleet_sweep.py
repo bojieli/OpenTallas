@@ -24,7 +24,6 @@ SWEEP_ROOTS = {"ot-epyc4": ["/srv/opentallas-scratch", "/srv/opentallas-scratch2
                "ot-epyc5": ["/srv/opentallas-scratch", "/srv/opentallas-scratch2", "/tmp"],
                "ot-epyc6": ["/srv/opentallas-scratch", "/srv/opentallas-scratch2", "/tmp"],   # FLEET-NEW 2026-10-19
                "ot-epyc7": ["/srv/opentallas-scratch", "/tmp"],                               # FLEET-NEW 2026-10-19
-               "ot-epyc8": ["/srv/opentallas-scratch", "/tmp"],                               # FLEET-NEW2 2026-10-19
                "ot-pve1": ["/srv/opentallas-scratch", "/tmp"],
                "ot-agidock128": ["/srv/opentallas-scratch", "/tmp"],
                "localhost": ["/tmp"]}
