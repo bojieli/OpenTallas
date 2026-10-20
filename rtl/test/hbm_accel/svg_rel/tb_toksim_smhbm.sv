@@ -43,7 +43,9 @@ module tb_toksim_smhbm;
  wire[31:0]kv,krdy,kwe,kdone,rv_,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[1098:0]packet;wire[82:0]command;
  reg[15:0]ids_cohort=0;always @(posedge stream)if(run_v)ids_cohort<=ids_cohort+16'd1;
- ot_hbm_svc_sm_group_rel_id #(.LBANKS(4),.NID(NID),.IDW(9),.PAW(11),.PREL(1),.DD(256),.ID_COHORT(1),.IMUT(`ifdef IMUT `IMUT `else 0 `endif)) svg(
+ ot_hbm_svc_sm_group_rel_id #(.LBANKS(4),.NID(NID),.IDW(9),.PAW(11),.PREL(1),.DD(256),.ID_COHORT(1),.IMUT(`ifdef IMUT `IMUT `else 0 `endif),
+  // HBM-SMXL: XSLOT = the descriptor's x-store slot base relocates every command's xaddr (die op_xb)
+  .XSLOT(`ifdef XSLOT 1 `else 0 `endif)) svg(
   .id_stack(2'd0),.id_sm(3'd0),
   .stream_clk(stream),.stream_rst_n(srst),.hbm_clk(hbm),.hbm_rst_n(hrst),.stream_bank_clk({2{stream}}),.hbm_fifo_clk({2{hbm}}),.hbm_pc_clk({4{hbm}}),
   .program_cfg_we(a_we),.program_cfg_addr(a_addr),.program_cfg_data(a_data),
