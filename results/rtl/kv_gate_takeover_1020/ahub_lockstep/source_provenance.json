@@ -1,0 +1,9 @@
+{
+ "schema": "opentallas.takeover.terminal_receipt.v1",
+ "source_branch": "claude/kv-ahub7-1020",
+ "golden_receipts_commit": "4b1ec9474",
+ "gate_source": "eeb5302e0",
+ "producer_scratch": "/srv/opentallas-scratch/claude/kv-ahub7b",
+ "lockstep": "flat canonical g6 vs generated lp g6, MUT0 PASS / MUT1,2,4 expectedFAIL, BENCH_EXIT0, remote ot-run exit0",
+ "note": "Collected existing terminal logs without rerun or touching Claude WT. Gate live; this is behavioural evidence, not routing qualification."
+}

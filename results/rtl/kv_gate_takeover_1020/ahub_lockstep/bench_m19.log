@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   946 GB (avail 776, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 37 disk 44 GB 
+ot-run: ot-epyc6       admits  1033 GB (avail 837, growth 113, headroom 0, waiters 0/0 GB) load 56/128 running 35 disk 4613 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-ahub7b/src
+ot-run: ot-epyc9       admits   783 GB (avail 690, growth 142, headroom 0, waiters 0/0 GB) load 55/128 running 30 disk 166 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ahub7b/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ahub7b/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3474965-1792488555 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+AHUB_DW FAIL mut=19 first error cycle 651 pass 0: am at the ASTK pins != reference
+AHUB_DW FAIL mut=19 errors=49
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3474965-1792488555): exit 1

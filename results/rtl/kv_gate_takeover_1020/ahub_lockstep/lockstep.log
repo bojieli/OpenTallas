@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       admits   859 GB (avail 714, growth 113, headroom 0, waiters 0/0 GB) load 61/128 running 35 disk 50 GB 
+ot-run: ot-epyc6       admits  1028 GB (avail 833, growth 113, headroom 0, waiters 0/0 GB) load 52/128 running 37 disk 4616 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-ahub7b/src
+ot-run: ot-epyc9       admits   760 GB (avail 651, growth 120, headroom 0, waiters 0/0 GB) load 39/128 running 25 disk 168 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ahub7b/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ahub7b/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1778440-1792488424 after 1 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1778440-1792488424): exit 0
