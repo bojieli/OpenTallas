@@ -1,0 +1,114 @@
+{
+  "schema": "opentallas.capc_clock_copy_model_replay.v1",
+  "scope": "Placement-estimated actual native STA on owned copies, original SDC zero source latency only. Child actual boundary extrema conservatively translated. No reroute, no source gate qualification, no final signoff. No original gate ODB modified.",
+  "source_manifest": {
+    "kind": "diagnostic copy, no gate qualification",
+    "original_odb_sha256": "bd9e861f4ab75e6757ca721ac5781a72662e12dd82e3d05cfa0938ff3b7d4706",
+    "variants": [
+      {
+        "odb": "rt3_ld4.odb",
+        "sha256": "26cf0d5bf6c589fc63690305a1501cea59339ca5a400a9c11f580f3c71f98164",
+        "changes": [
+          {
+            "pin": "clkbuf_sp_L4/A",
+            "old_net": "clkbuf_sp_N35_net",
+            "new_net": "clkbuf_sp_N38_net",
+            "protected_after_reconnect": true
+          },
+          {
+            "pin": "clkbuf_sp_L1/A",
+            "old_net": "clkbuf_sp_L1_p5_net",
+            "new_net": "clkbuf_sp_L1_p1_net",
+            "protected_after_reconnect": true
+          }
+        ]
+      },
+      {
+        "odb": "rt3_ld5.odb",
+        "sha256": "a0a471c8f0a92a0c98a16ad2ff1d0f183456a5e29596a513773632de14057f17",
+        "changes": [
+          {
+            "pin": "clkbuf_sp_L4/A",
+            "old_net": "clkbuf_sp_N35_net",
+            "new_net": "clkbuf_sp_N38_net",
+            "protected_after_reconnect": true
+          },
+          {
+            "pin": "clkbuf_sp_L1/A",
+            "old_net": "clkbuf_sp_L1_p5_net",
+            "new_net": "clkbuf_sp_N36_net",
+            "protected_after_reconnect": true
+          }
+        ]
+      }
+    ]
+  },
+  "replay_sha256": "95986c717ec7a5bd12bde0844b2263423a3679fa6b95dbf734b9d6feb202e7ed",
+  "results": {
+    "rt3_ld4": {
+      "tt": {
+        "root": "core_clk",
+        "profile_count": 1179,
+        "earliest": {
+          "pin": "u_p.u_core.g_hard.u_rt/clk",
+          "min": 763.4408443679818,
+          "max": 827.1408443679817
+        },
+        "latest": {
+          "pin": "u_p.g_pin.wq[122]$_DFF_P_/CLK",
+          "min": 846.6016810337911,
+          "max": 846.6016810337911
+        },
+        "root_boundary_envelope_ps": 83.16083666580937
+      },
+      "ff": {
+        "root": "core_clk",
+        "profile_count": 1179,
+        "earliest": {
+          "pin": "u_p.g_pin.eq[167]$_DFF_P_/CLK",
+          "min": 614.3138244884842,
+          "max": 614.3138244884842
+        },
+        "latest": {
+          "pin": "u_p.u_core.g_hard.u_rt/clk",
+          "min": 633.779848194348,
+          "max": 694.279848194348
+        },
+        "root_boundary_envelope_ps": 79.96602370586379
+      }
+    },
+    "rt3_ld5": {
+      "tt": {
+        "root": "core_clk",
+        "profile_count": 1179,
+        "earliest": {
+          "pin": "u_p.u_core.g_ld3.u_ld3/clk",
+          "min": 707.0171075394119,
+          "max": 723.8171075394118
+        },
+        "latest": {
+          "pin": "u_p.g_pin.wq[122]$_DFF_P_/CLK",
+          "min": 846.6016810337911,
+          "max": 846.6016810337911
+        },
+        "root_boundary_envelope_ps": 139.58457349437924
+      },
+      "ff": {
+        "root": "core_clk",
+        "profile_count": 1179,
+        "earliest": {
+          "pin": "u_p.u_core.g_ld3.u_ld3/clk",
+          "min": 583.0518935157337,
+          "max": 600.3518935157338
+        },
+        "latest": {
+          "pin": "u_p.u_core.g_hard.u_rt/clk",
+          "min": 633.779848194348,
+          "max": 694.279848194348
+        },
+        "root_boundary_envelope_ps": 111.22795467861431
+      }
+    }
+  },
+  "verdict": "NO dual-corner candidate. RT3LD4 nearTT83.16084/FF79.96602 has inadequate margin; physical source tree regeneration/multicorner balance needed, not waiver."
+}
