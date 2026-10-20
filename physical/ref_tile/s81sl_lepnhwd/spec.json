@@ -253,14 +253,11 @@
   "io_hold_margin_ns": 0.03,
   "synth_keep_modules": [
    "ot_sram_showahead_hit5",
-   "ot_s81sl_lep_rx_control",
    "ot_s81sl_lep_host_event",
    "ot_s81sl_lep_tx_push",
    "ot_s81sl_lep_stamp",
    "ot_s81sl_lep_vcopy",
-   "ot_s81sl_lep_status_region",
    "ot_s81sl_lep_pair_ready",
-   "ot_s81sl_lep_return8",
    "ot_sram_showahead_readptr",
    "ot_s81sl_lep_std_enable",
    "ot_s81sl_std_tx_qualify"

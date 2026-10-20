@@ -5,7 +5,7 @@ copy at the same WREG edge drives only its macro's wd_in). Evidence: results/rtl
 Geometry = Codex std32 draft (20 SRAMs: 2 TX columns x 5 banks on the 86.4 pitch, 2 RX rows of 5; 475.2 x 561.6), plus ONE
 full-width std-cell band y 259.2..291.6 / x 2.16..473.04 (120 rows): lep_rows.tcl (end of place.tcl, before tapcell) removes
 every row outside it; lep_band.tcl (PRE_GLOBAL_PLACE[_SKIP_IO] / PRE_DETAIL_PLACE) fences every movable std cell to the band
-(main physical/dscoll_cx/native_cell_fence.tcl, EXCLUSIVE region) and adopts later-born cells. Codex's birth-manifest audit
+(INCLUSIVE native region; gate 053145 showed an EXCLUSIVE fence + band-only rows leaves GPL top-level all-fixed with the tie cells in it, GPL-0301) and adopts later-born cells. Codex's birth-manifest audit
 layer (codex/s81-lep-physical-preflight-1020) is not used; the gate's placed-cell checks + this fence are the guarantee.
 
 ## SAFE-DESIGN checklist (owner 10-19) -- pre-gate
