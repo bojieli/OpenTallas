@@ -22,7 +22,10 @@ SOURCES={
 BOOTAGE_SOURCES={
 # KV-BIND3 10-19: re-pinned after e4eb15c83 (one line: attn_cal STATUS_DELAY default 0 in boot_ages_join; the attention
 # calendar tile, not a PV trunk/replica row -- previous pin bc8a613d...).
- 'tools/qwen_kv_die/kv_bootage.py':'9e5721ba45a8521a1dcb92e8fa756b2ac60f84f1dbc7e54d97f378ade6d5ebfe',
+# KV-BIND9 10-20: re-pinned after 6f5ecb234 (D_QK = kv_qkh_safe32.calendar_d_qk, opt-in OT_KV_QKH_SAFE32, default byte-identical;
+# attention-calendar D_QK only, not a PV trunk/replica row). Re-proof: pvw_variant/boot_ages_join source unchanged and
+# pvw_variant(qkd_pvw_die_t.sv 4601aa6d) == b15daa62 (committed _ba.sv) under old and new -- previous pin 9e5721ba...
+ 'tools/qwen_kv_die/kv_bootage.py':'48d676c2b33b063a66310c43c0cbb272b24dd8acd207c743ea46dacc02fbb1ff',
  'rtl/qwen_sys/split_20261014/qkd_pvw_die_t_ba.sv':'b15daa62c06da889ee7e0db600b08079e45862397208329b9d2e886b26ba5dad',
 }
 
