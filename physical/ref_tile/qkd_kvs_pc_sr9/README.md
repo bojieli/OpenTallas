@@ -25,3 +25,9 @@ logic_depth 895 / 942 ps; PRE-CTS full stage graph 493 pairs > 405 um (all N <->
 8 Schedule: static, no credits; 0 added edges (reset release edge unchanged).
 
 Benches (Verilator 5.050, 20000 edges, lockstep vs the original modules): results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/.
+
+KV-PC9 r9 (10-20, kit only, RTL = r8 528d8460a): gate pc_sr9 114327 crashed in the CTS setup repair with
+[ERROR ODB-0373] connect iterm to dont_touch net ot_inhold_n00124 (i_next[0] HB2 pad -> ot_ihdrv_00124 BUF -> 24 flop D
+pins, flop-direct): repair_timing's CloneMove / UnbufferMove on the inhold driver reconnects the dont_touch pad net.
+Kit orfs_vars SKIP_GATE_CLONING=1 + SKIP_BUFFER_REMOVAL=1 keep the pad pair intact (sizing, buffering, load splitting
+remain). Checklist items 1-8 unchanged.

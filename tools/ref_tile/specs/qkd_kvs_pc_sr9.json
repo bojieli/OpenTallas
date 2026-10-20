@@ -911,6 +911,8 @@
   "max_loads": 32
  },
  "orfs_vars": {
-  "OT_RST_COPIES_WIDE": "1"
+  "OT_RST_COPIES_WIDE": "1",
+  "SKIP_GATE_CLONING": "1",
+  "SKIP_BUFFER_REMOVAL": "1"
  }
 }

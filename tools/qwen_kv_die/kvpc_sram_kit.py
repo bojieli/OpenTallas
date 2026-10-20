@@ -175,6 +175,13 @@ def derive(tile, tag, variant):
     s['reset_relay_split'] = dict(max_loads=32)
     ov = dict(s.get('orfs_vars', {}))
     ov['OT_RST_COPIES_WIDE'] = '1'      # kept copy families that select wide words / flop-array reads (item 3)
+    if tag in SR9:
+        # KV-PC9 10-20: gate pc_sr9 114327 CTS crashed in setup repair ([ERROR ODB-0373] connect iterm to dont_touch net
+        # ot_inhold_n00124 = i_next[0] HB2 pad -> ot_ihdrv_00124 BUF -> 24 flop D pins): repair_timing cloned / removed the
+        # inhold driver BUF, which reconnects its input on the dont_touch pad net.  Keep the pad pair intact: no gate
+        # cloning and no buffer removal; sizing, buffering and load splitting on the driver's output side stay on.
+        ov['SKIP_GATE_CLONING'] = '1'
+        ov['SKIP_BUFFER_REMOVAL'] = '1'
     s['orfs_vars'] = ov
     why = ('KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the '
            'five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, '
