@@ -1,6 +1,6 @@
 c60cba8ee6d87e8a05813ebc73a8fe2788a2bdebff08f5efe41358be932e03c7  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv
 ff2d528dd9c0fc9b1f86fb1aaf27908517e672b4cfee0c95644203553ecf4f0c  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles_ref.sv
-894f8f996c26494ea13c5a5012ee0a931905066a68ab31d58ff3fe18aafaa1a1  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_lt.sv
+c6c5142f1274631121731b9145edf3730af6d48ff15345a4cdea82e5e44ea255  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_lt.sv
 33090faa944a5827c7a04031b6aff5f46830e13e2c35643f589abf543f0591f6  rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv
 364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9  rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv
 6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102  rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv
@@ -10,4 +10,4 @@ ff2d528dd9c0fc9b1f86fb1aaf27908517e672b4cfee0c95644203553ecf4f0c  rtl/hbm_accel/
 4887a66fadff60f476846ed61f6c607fd161adfa2e3e8f07fbb1c667eb8b7769  tools/hbm_die_v16/vms_glue_tile_equiv.py
 799b4ca0b26d799d6b9b7680094011845eaaee8911c9a64e587a02e268bd4eee  tools/hbm_die_v16/gen_vms_glue_tiles.py
 a296758bd24ad79797ee40ba8c4ad40b9a4270563a2d7b6d47fb18ed3bccaf65  tools/hbm_die_v16/run_vms_glue_tile_equiv.sh
-source commit 9ee4878 (RTL identical at 794d33e4d)
+source commit b8b9bd43c (g6 r2), Verilator 5.050 ot-epyc7
