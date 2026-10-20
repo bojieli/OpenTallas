@@ -1,0 +1,191 @@
+{
+ "name": "smh_pvm_ref_s4a",
+ "top": "ot_hbm_sm_pv_merge_s3",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv"
+ ],
+ "defines": [],
+ "params": {
+  "TAGW": 16,
+  "LV": 4,
+  "PUBLISH": 1,
+  "TURNREG": 1,
+  "SAFE": 2
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 9023.13918,
+ "pg_layer": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "at": [
+    86.4,
+    43.2
+   ],
+   "orient": "R180"
+  }
+ ],
+ "pins": {
+  "N": [
+   "ev",
+   "sum",
+   "tag_d",
+   "clk",
+   "rst_n",
+   "pv_v",
+   "pv_y",
+   "pv_tag",
+   "pub_start",
+   "pub_slot",
+   "fold_start",
+   "fold_a",
+   "fold_b",
+   "pub_v",
+   "pub_data",
+   "pub_word",
+   "pub_out_slot",
+   "pub_tag",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware"
+  },
+  "pin_min_tracks": 4
+ },
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-SMATT",
+  "branch": "claude/hbm-pvm-s4-1019",
+  "tag": "smh_pvm_ref_s4a",
+  "purpose": "H.STA.BLK.14.3 PVM structural SAFE successor of smh_pvm_ref_s3 (GRT 508 N-band stripe, TT reg->macro -418.8, textbook roots 2063/1587/1045): RTL SAFE 2 = SAFE 1 + kept per-slice select copies (fd0/fd1/turn-state x32 slices, word_next x32) cycle-identical; floorplan macro x 86.4 / y 43.2 (R180): W band 84 um, E band 86 um beside the two data-contact faces, N band 103 um; single centre root; Codex one_north_band/macro_regions/io_exact hooks dropped (standard placement).",
+  "benches": [
+   {
+    "name": "pvm_exact",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_s3_bench.sh {RUN}/pvm_exact 0 2 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_s4_1019/bench/exact.log"
+   },
+   {
+    "name": "pvm_tight",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_s3_bench.sh {RUN}/pvm_tight 0 2 1 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_s4_1019/bench/tight.log"
+   },
+   {
+    "name": "pvm_mut1",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_s3_bench.sh {RUN}/pvm_mut1 1 2 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_s4_1019/bench/mut1.log"
+   },
+   {
+    "name": "pvm_mut4",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_s3_bench.sh {RUN}/pvm_mut4 4 2 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_s4_1019/bench/mut4.log"
+   },
+   {
+    "name": "pvm_mut5",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_s3_bench.sh {RUN}/pvm_mut5 5 2 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_s4_1019/bench/mut5.log"
+   },
+   {
+    "name": "pvm_pubearly",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_s3_bench.sh {RUN}/pvm_pubearly 0 2 1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_s4_1019/bench/pubearly.log"
+   },
+   {
+    "name": "pvm_mut3",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_s3_bench.sh {RUN}/pvm_mut3 3 2 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_s4_1019/bench/mut3.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/sm/attn/test",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "results/arch/hbm_pvm_s4_1019"
+  ],
+  "views_to": "physical/ref_tile/smh_pvm_ref_s4a/views",
+  "record_to": "results/rtl/ref_tile/smh_pvm_ref_s4a"
+ },
+ "layer_cap": "M5",
+ "outline": {
+  "w": 345.6,
+  "h": 302.4
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 16
+  }
+ },
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 8,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "pin_order_waiver": {
+  "sum": "Channel-routed standalone PVM arithmetic input, not an abutted bit-matched neighbour face. Shared N86.4..259.2 envelope constrains actual macro reach; overlaps other real input groups and does not specify a die joint. Any later abutted integration needs a separate exact bit-order contract."
+ },
+ "orfs_vars": {
+  "MACRO_ROWS_HALO_X": "6.48",
+  "MACRO_ROWS_HALO_Y": "2.16"
+ }
+}
