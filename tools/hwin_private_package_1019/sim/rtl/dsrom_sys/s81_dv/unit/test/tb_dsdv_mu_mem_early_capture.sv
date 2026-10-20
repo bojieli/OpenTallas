@@ -5,14 +5,16 @@ module tb_dsdv_mu_mem_early_capture;
 `endif
  localparam integer W=`EC_WIDTH, S=(W+7)/8;
  reg ck=0; always #0.5 ck=~ck;
- reg [7:0] rst_n=0; reg we=0; reg [5:0] wa=0,ra=0,next_ra=0;
+ reg [7:0] rst_n=0; reg we=0; reg [5:0] wa=0,ra=0,next_ra=0,ra2=0;
  reg [62:0] wd=0; wire [62:0] oldq,newq;
- dsdv_mu_mem #(.W(W)) anchor(.ck(ck),.rst_n(rst_n[S-1:0]),.we(we),.wa(wa),.wd(wd[W-1:0]),.ra(ra),.q(oldq));
- dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(W)) dut(.ck(ck),.rst_n(rst_n[S-1:0]),.we(we),.wa(wa),.wd(wd[W-1:0]),.ra_current(ra),.ra_next(next_ra),.q(newq));
+ // HWIN21cb registered-address contract: the head address is ra2 (= next_ra two edges later); the DUT gets the
+ // address one edge ahead of the current head as its register D (ra_d = next_ra) and loads when the head moves.
+ dsdv_mu_mem #(.W(W)) anchor(.ck(ck),.rst_n(rst_n[S-1:0]),.we(we),.wa(wa),.wd(wd[W-1:0]),.ra(ra2),.q(oldq));
+ dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(W),.RA_RESET(0)) dut(.ck(ck),.rst_n(rst_n[S-1:0]),.we(we),.wa(wa),.wd(wd[W-1:0]),.ra_current(ra2),.ra_d(next_ra),.load_d(ra!=ra2),.q(newq));
  integer i,checks=0; reg compare=0;
- always @(posedge ck) ra<=next_ra;
+ always @(posedge ck) begin ra<=next_ra; ra2<=ra; end
  always @(negedge ck) if(compare) begin
-   if(oldq!==newq) $fatal(1,"EC_MEM IDENTITY edge%0d ra%0d old%h new%h",checks,ra,oldq,newq);
+   if(oldq!==newq) $fatal(1,"EC_MEM IDENTITY edge%0d ra%0d old%h new%h",checks,ra2,oldq,newq);
    checks=checks+1;
  end
  initial begin

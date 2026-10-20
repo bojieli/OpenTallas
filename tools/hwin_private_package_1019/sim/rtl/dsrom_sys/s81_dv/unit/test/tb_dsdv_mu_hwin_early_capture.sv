@@ -241,10 +241,11 @@ ROUNDS=4, T0=1000+32*NS;
     initial force dut.due=retire_due_delay;
 `endif
 `ifdef NEXT_WRAP_MUTANT
-    // HWIN21cb: the wrong-wrap mutant corrupts the registered read-address precompute at the wrap edge.
-    initial force dut.g_event_mem[0].ra_after =
-       (dut.g_event_mem[0].event_wrap && dut.adv[0] && dut.rr[1]) ? (dut.g_event_mem[0].ra_adv ^ SI'(1)) :
-       !dut.rr[1] ? dut.g_event_mem[0].ra_zero : dut.adv[0] ? dut.g_event_mem[0].ra_adv : dut.g_event_mem[0].ra_hold;
+    // HWIN21cb: the wrong-wrap mutant sends the registered read-address precompute to slot 1 instead of 0
+    // whenever the next head wraps (the anchor-era mutant forced the removed pb_next wire to 1 on wrap).
+    wire [SI-1:0] wrap_mut_ok = !dut.rr[1] ? dut.g_event_mem[0].ra_zero :
+       dut.adv[0] ? dut.g_event_mem[0].ra_adv : dut.g_event_mem[0].ra_hold;
+    initial force dut.g_event_mem[0].ra_after = (dut.rr[1] && wrap_mut_ok==SI'(0)) ? SI'(1) : wrap_mut_ok;
 `endif
 `ifdef RESET_VALID_MUTANT
     reg [NS-1:0] old_vld_snapshot;
