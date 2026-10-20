@@ -1,0 +1,2227 @@
+{
+ "schema": "opentallas.qwen.dv-layer-composition.v1",
+ "tool": "tools/qwen_layerbench/dv_layer.py",
+ "stage": 1,
+ "qualification": {
+  "status": "UNMEASURED",
+  "measured_layer_cycles": null,
+  "reason": "Analytic diagnostic only: unresolved native paths, image capacity, priced attention and tile delivery prevent a production layer run."
+ },
+ "die": "dv2f14bi (lane ages results/rtl/qwen_layer_tput_1018/ctlm_prog/lane_ages_dv2f14bi.json)",
+ "tile_first": 40,
+ "ar_order": "row",
+ "composition": {
+  "rule": "stages in dependency order; each lowered family span from its own compiled schedule (RTL-measured ages, benched on its edges); the ctlm plan gaps between dependent ops kept; attention = ctlm price (KV die); all-reduce = measured TP8 collective E (+2 LS 378); chained period = residual-2 x stream end + PC15->PC16 gap - PC1 issue; L0 cold = stage-0 embedding + layer latency",
+  "stages": [
+   {
+    "stage": "rmsnorm1 SSQ + fused ROOT r (DV)",
+    "pcs": [
+     0,
+     2
+    ],
+    "start": 26,
+    "end": 235,
+    "cycles": 209,
+    "priced_start": 26,
+    "priced_end": 111,
+    "priced_cycles": 85,
+    "source": "dv_lower (slice_ages.json measured); r of PC2 = fused ROOT (no command)"
+   },
+   {
+    "stage": "qkv matvec L9 -> VM QKV (column tiles + STN)",
+    "pcs": [
+     1
+    ],
+    "start": 41,
+    "end": 300,
+    "cycles": 259,
+    "priced_start": 41,
+    "priced_end": 300,
+    "priced_cycles": 259,
+    "source": "dv_lower_mat STN (stn_ages.json); tile_first 40 = ME issue -> first far word (PARAMETER: no tool compiles the xhead / ROM tile delivery)"
+   },
+   {
+    "stage": "QK-norm / RoPE / v*r -> D2D q,k,v (DV)",
+    "pcs": [
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "start": 302,
+    "end": 664,
+    "cycles": 362,
+    "priced_start": 300,
+    "priced_end": 535,
+    "priced_cycles": 235,
+    "source": "dv_lower_vec qk (vec_ages.json measured)"
+   },
+   {
+    "stage": "attention (KV die native, PRICED)",
+    "pcs": [
+     11
+    ],
+    "start": 672,
+    "end": 2353,
+    "cycles": 1681,
+    "priced_start": 543,
+    "priced_end": 2224,
+    "priced_cycles": 1681,
+    "source": "ctlm plan price: the KV die step is QW-KVATTN (not composed from a measurement here)"
+   },
+   {
+    "stage": "o_proj matvec L8 -> AR words + XC (column tiles + STN)",
+    "pcs": [
+     12,
+     13
+    ],
+    "start": 2361,
+    "end": 2728,
+    "cycles": 367,
+    "priced_start": 2232,
+    "priced_end": 2607,
+    "priced_cycles": 375,
+    "source": "dv_lower_mat (stagger, XC dst 0)"
+   },
+   {
+    "stage": "all-reduce 1 (TP8 collective)",
+    "pcs": [],
+    "start": 2473,
+    "end": 3014,
+    "cycles": 541,
+    "priced_start": 2608,
+    "priced_end": 3464,
+    "priced_cycles": 856,
+    "source": "lanes/TOKEN-XDIE-QTP8.md + results/rtl/xdie_qtp8_1018/record.json (claude/xdie-qtp8-1018 fed8119c7): AR 256 x 512 b, production LU 53 / LS 376, Verilator 5.050; bi LS 378 (Q-COLLCAL3 e1a641d23) : last in -> first out; priced = XC at -> done - 256"
+   },
+   {
+    "stage": "residual 1: AR landing + post-scale + add + SSQ + x stream (DV)",
+    "pcs": [
+     14,
+     15
+    ],
+    "start": 3014,
+    "end": 3519,
+    "cycles": 505,
+    "priced_start": 3464,
+    "priced_end": 3875,
+    "priced_cycles": 411,
+    "source": "dv_lower_vec resid ar_order=row (first AR return word -> last x word at E5)"
+   },
+   {
+    "stage": "gate/up matvec L7 -> VM GU (column tiles + STN)",
+    "pcs": [
+     16
+    ],
+    "start": 3527,
+    "end": 4089,
+    "cycles": 562,
+    "priced_start": 3883,
+    "priced_end": 4445,
+    "priced_cycles": 562,
+    "source": "dv_lower_mat STN; tile_first PARAMETER"
+   },
+   {
+    "stage": "SiLU x up (GU*r, act stream) (DV)",
+    "pcs": [
+     17,
+     18,
+     19
+    ],
+    "start": 4091,
+    "end": 4341,
+    "cycles": 250,
+    "priced_start": 4445,
+    "priced_end": 4559,
+    "priced_cycles": 114,
+    "source": "dv_lower_vec silu; r of PC17 = fused ROOT of PC15 (no command)"
+   },
+   {
+    "stage": "down matvec L8 -> AR words + XC (column tiles + STN)",
+    "pcs": [
+     20,
+     21
+    ],
+    "start": 4349,
+    "end": 4713,
+    "cycles": 364,
+    "priced_start": 4567,
+    "priced_end": 4823,
+    "priced_cycles": 256,
+    "source": "dv_lower_mat (stagger, XC dst 0)"
+   },
+   {
+    "stage": "all-reduce 2 (TP8 collective)",
+    "pcs": [],
+    "start": 4458,
+    "end": 4999,
+    "cycles": 541,
+    "priced_start": 4824,
+    "priced_end": 5538,
+    "priced_cycles": 714,
+    "source": "lanes/TOKEN-XDIE-QTP8.md + results/rtl/xdie_qtp8_1018/record.json (claude/xdie-qtp8-1018 fed8119c7): AR 256 x 512 b, production LU 53 / LS 376, Verilator 5.050; bi LS 378 (Q-COLLCAL3 e1a641d23)"
+   },
+   {
+    "stage": "residual 2 + SSQ + x stream (DV)",
+    "pcs": [
+     22,
+     23
+    ],
+    "start": 4999,
+    "end": 5504,
+    "cycles": 505,
+    "priced_start": 5538,
+    "priced_end": 5949,
+    "priced_cycles": 411,
+    "source": "dv_lower_vec resid ar_order=row"
+   }
+  ],
+  "layer_latency": 5504,
+  "chained_period": 5471,
+  "priced_chained_period": 6843,
+  "priced_plan_period": 6583,
+  "l0_cold": 5966,
+  "l0_cold_rule": "embedding 256 words landed + x stream (resid XS span) + PC15->PC16 gap + layer (qkv issue .. residual-2 x stream end)",
+  "l0_cold_priced": 6029,
+  "embed_stage0": {
+   "cycles": 263,
+   "priced": 80,
+   "rule": "arm enters t_b - s - 1, disarm t_b + 7 - s (t_b = word 8 b at the W5 return pin)"
+  },
+  "xs_span": 230,
+  "tile": [
+   {
+    "matvec": "qkv",
+    "tile_first_eff": 198,
+    "dv_tail": 40,
+    "land": 300,
+    "priced_done": 300
+   },
+   {
+    "matvec": "o",
+    "tile_first_eff": 43,
+    "priced_done": 2728
+   },
+   {
+    "matvec": "gu",
+    "tile_first_eff": 515,
+    "dv_tail": 26,
+    "land": 4089,
+    "priced_done": 4089
+   },
+   {
+    "matvec": "down",
+    "tile_first_eff": 40,
+    "priced_done": 4597
+   }
+  ],
+  "tile_mode": "priced",
+  "lowered_minus_priced": -445
+ },
+ "calendar": {
+  "model": {
+   "ok": true,
+   "entries": 390,
+   "last_issue": 5794
+  },
+  "entries": 390,
+  "clashes": [],
+  "occupancy_clashes": [],
+  "shifts": {
+   "qk": 270,
+   "resid1": 2942,
+   "silu": 4059,
+   "resid2": 4927
+  },
+  "families": {
+   "ssq": 12,
+   "mat": 90,
+   "qk": 26,
+   "resid1": 112,
+   "silu": 36,
+   "resid2": 112,
+   "ctlm": 2
+  }
+ },
+ "capacity": {
+  "cmd_ceil_pw": 976,
+  "meta_base_pw": 480,
+  "decode_entries": 390,
+  "boot_entries_est": 21,
+  "table_words": {
+   "prog": 72,
+   "btab": 188,
+   "crom_per_layer": 528,
+   "crom_rope_per_token": 4
+  },
+  "pw_needed": 13910,
+  "fits": false
+ },
+ "gaps": [
+  "IMAGE CAPACITY: the full layer needs 13910 PW words (calendar 822 + tables 12608 = (PROG 72 + BTAB 188 + CROM 528) x 16) > CMD_CEIL 976: tt_ctlm cannot hold one layer's slice tables + calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream (ROM-resident slice tables or a table DMA) is needed",
+  "ATTENTION OUTPUT PATH (PC11 -> PC12): the KV die returns the attention output on the D2D return chain; no lowering lands it / streams it to the o_proj column heads (PORTS dd_en windows + x-stream of the 512 attn elements are not emitted by any family)",
+  "COLUMN-HEAD x CONSUMER: the qkv / gu / down / o matvecs read x from the slice x stream; the hr / xpf control that makes the column heads tap those words on the compiled edges is not lowered (QLB-C4b/3a left)",
+  "TILE DELIVERY: tile_first 40 (ME issue -> first far cluster word) and the AR stagger (slice s gets block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar",
+  "PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image blocks only (no producer of the per-token row on the die)",
+  "AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last only on the message last word; slice2 sends tag = row address, last per STN op (fault_code[2])"
+ ],
+ "notes": [
+  "XC ORDER: CLOSED in the spliced calendar (o / down XC at word0 - XC_TO_WORD0 - xc_cc: 2469 / 4454 vs word0 2473 / 4458); ctlm_image XC-after-END is the priced plan only and is not emitted"
+ ],
+ "events": [
+  {
+   "edge_w5": 26,
+   "cmd": "b0000000000000000000000000003",
+   "label": "SSQ s11 blocks [11, 23]"
+  },
+  {
+   "edge_w5": 27,
+   "cmd": "a0000000000000000000000000003",
+   "label": "SSQ s10 blocks [10, 22]"
+  },
+  {
+   "edge_w5": 28,
+   "cmd": "90000000000000000000000000003",
+   "label": "SSQ s9 blocks [9, 21]"
+  },
+  {
+   "edge_w5": 29,
+   "cmd": "80000000000000000000000000003",
+   "label": "SSQ s8 blocks [8, 20]"
+  },
+  {
+   "edge_w5": 30,
+   "cmd": "70000000000000000000000000003",
+   "label": "SSQ s7 blocks [7, 19, 31]"
+  },
+  {
+   "edge_w5": 31,
+   "cmd": "60000000000000000000000000003",
+   "label": "SSQ s6 blocks [6, 18, 30]"
+  },
+  {
+   "edge_w5": 32,
+   "cmd": "50000000000000000000000000003",
+   "label": "SSQ s5 blocks [5, 17, 29]"
+  },
+  {
+   "edge_w5": 33,
+   "cmd": "40000000000000000000000000003",
+   "label": "SSQ s4 blocks [4, 16, 28]"
+  },
+  {
+   "edge_w5": 34,
+   "cmd": "30000000000000000000000000003",
+   "label": "SSQ s3 blocks [3, 15, 27]"
+  },
+  {
+   "edge_w5": 35,
+   "cmd": "20000000000000000000000000003",
+   "label": "SSQ s2 blocks [2, 14, 26]"
+  },
+  {
+   "edge_w5": 36,
+   "cmd": "10000000000000000000000000003",
+   "label": "SSQ s1 blocks [1, 13, 25]"
+  },
+  {
+   "edge_w5": 37,
+   "cmd": "00000000000000000000000000003",
+   "label": "SSQ s0 blocks [0, 12, 24]"
+  },
+  {
+   "edge_w5": 232,
+   "cmd": "b0000000000000000000000000435",
+   "label": "qkv: STN qkv r0 s11 snd"
+  },
+  {
+   "edge_w5": 234,
+   "cmd": "a000000000000000000fa01000425",
+   "label": "qkv: STN qkv r0 s10 fin"
+  },
+  {
+   "edge_w5": 236,
+   "cmd": "90000000000000000000000000435",
+   "label": "qkv: STN qkv r0 s9 snd"
+  },
+  {
+   "edge_w5": 238,
+   "cmd": "8000000000000000000fa01000425",
+   "label": "qkv: STN qkv r0 s8 fin"
+  },
+  {
+   "edge_w5": 240,
+   "cmd": "70000000000000000000000000435",
+   "label": "qkv: STN qkv r0 s7 snd"
+  },
+  {
+   "edge_w5": 242,
+   "cmd": "6000000000000000000fa01000425",
+   "label": "qkv: STN qkv r0 s6 fin"
+  },
+  {
+   "edge_w5": 244,
+   "cmd": "50000000000000000000000000435",
+   "label": "qkv: STN qkv r0 s5 snd"
+  },
+  {
+   "edge_w5": 246,
+   "cmd": "4000000000000000000fa01000425",
+   "label": "qkv: STN qkv r0 s4 fin"
+  },
+  {
+   "edge_w5": 248,
+   "cmd": "30000000000000000000000000435",
+   "label": "qkv: STN qkv r0 s3 snd"
+  },
+  {
+   "edge_w5": 250,
+   "cmd": "2000000000000000000fa01000425",
+   "label": "qkv: STN qkv r0 s2 fin"
+  },
+  {
+   "edge_w5": 252,
+   "cmd": "10000000000000000000000000435",
+   "label": "qkv: STN qkv r0 s1 snd"
+  },
+  {
+   "edge_w5": 254,
+   "cmd": "0000000000000000000fa01000425",
+   "label": "qkv: STN qkv r0 s0 fin"
+  },
+  {
+   "edge_w5": 302,
+   "cmd": "00000000000000000000000000043",
+   "label": "qk: q*r+SS s0"
+  },
+  {
+   "edge_w5": 303,
+   "cmd": "20000000000000000000000000043",
+   "label": "qk: q*r+SS s2"
+  },
+  {
+   "edge_w5": 304,
+   "cmd": "40000000000000000000000000043",
+   "label": "qk: q*r+SS s4"
+  },
+  {
+   "edge_w5": 305,
+   "cmd": "60000000000000000000000000043",
+   "label": "qk: q*r+SS s6"
+  },
+  {
+   "edge_w5": 306,
+   "cmd": "80000000000000000000000000043",
+   "label": "qk: k*r+SS s8"
+  },
+  {
+   "edge_w5": 307,
+   "cmd": "a0000000000000000000000000043",
+   "label": "qk: V*r s10 -> KV fp8"
+  },
+  {
+   "edge_w5": 393,
+   "cmd": "00000000000000000000000000053",
+   "label": "qk: RS s0"
+  },
+  {
+   "edge_w5": 394,
+   "cmd": "20000000000000000000000000053",
+   "label": "qk: RS s2"
+  },
+  {
+   "edge_w5": 395,
+   "cmd": "40000000000000000000000000053",
+   "label": "qk: RS s4"
+  },
+  {
+   "edge_w5": 396,
+   "cmd": "60000000000000000000000000053",
+   "label": "qk: RS s6"
+  },
+  {
+   "edge_w5": 397,
+   "cmd": "80000000000000000000000000053",
+   "label": "qk: RS s8"
+  },
+  {
+   "edge_w5": 464,
+   "cmd": "00000000000000000000000000063",
+   "label": "qk: QN s0"
+  },
+  {
+   "edge_w5": 465,
+   "cmd": "20000000000000000000000000063",
+   "label": "qk: QN s2"
+  },
+  {
+   "edge_w5": 466,
+   "cmd": "40000000000000000000000000063",
+   "label": "qk: QN s4"
+  },
+  {
+   "edge_w5": 467,
+   "cmd": "60000000000000000000000000063",
+   "label": "qk: QN s6"
+  },
+  {
+   "edge_w5": 468,
+   "cmd": "80000000000000000000000000063",
+   "label": "qk: QN s8"
+  },
+  {
+   "edge_w5": 513,
+   "cmd": "00000000000000000000000000073",
+   "label": "qk: rlo s0 (q)"
+  },
+  {
+   "edge_w5": 514,
+   "cmd": "20000000000000000000000000073",
+   "label": "qk: rlo s2 (q)"
+  },
+  {
+   "edge_w5": 515,
+   "cmd": "40000000000000000000000000073",
+   "label": "qk: rlo s4 (q)"
+  },
+  {
+   "edge_w5": 516,
+   "cmd": "60000000000000000000000000073",
+   "label": "qk: rlo s6 (q)"
+  },
+  {
+   "edge_w5": 554,
+   "cmd": "00000000000000000000000000083",
+   "label": "qk: rhi s0 (q)"
+  },
+  {
+   "edge_w5": 555,
+   "cmd": "20000000000000000000000000083",
+   "label": "qk: rhi s2 (q)"
+  },
+  {
+   "edge_w5": 556,
+   "cmd": "40000000000000000000000000083",
+   "label": "qk: rhi s4 (q)"
+  },
+  {
+   "edge_w5": 557,
+   "cmd": "60000000000000000000000000083",
+   "label": "qk: rhi s6 (q)"
+  },
+  {
+   "edge_w5": 558,
+   "cmd": "80000000000000000000000000073",
+   "label": "qk: rlo s8 (k)"
+  },
+  {
+   "edge_w5": 599,
+   "cmd": "80000000000000000000000000083",
+   "label": "qk: rhi s8 (k)"
+  },
+  {
+   "edge_w5": 2441,
+   "cmd": "00000000000000000000002040415",
+   "label": "o: STN o r0 s0 fin"
+  },
+  {
+   "edge_w5": 2445,
+   "cmd": "10000000000000000000202040415",
+   "label": "o: STN o r0 s1 fin"
+  },
+  {
+   "edge_w5": 2449,
+   "cmd": "20000000000000000000402040415",
+   "label": "o: STN o r0 s2 fin"
+  },
+  {
+   "edge_w5": 2453,
+   "cmd": "30000000000000000000602040415",
+   "label": "o: STN o r0 s3 fin"
+  },
+  {
+   "edge_w5": 2457,
+   "cmd": "40000000000000000000802040415",
+   "label": "o: STN o r0 s4 fin"
+  },
+  {
+   "edge_w5": 2461,
+   "cmd": "50000000000000000000a02040415",
+   "label": "o: STN o r0 s5 fin"
+  },
+  {
+   "edge_w5": 2465,
+   "cmd": "60000000000000000000c02040415",
+   "label": "o: STN o r0 s6 fin"
+  },
+  {
+   "edge_w5": 2468,
+   "cmd": "70000000000000000000e02040415",
+   "label": "o: STN o r0 s7 fin"
+  },
+  {
+   "edge_w5": 2469,
+   "cmd": "00000000000000000000000008001",
+   "label": "o: XC tag 0 words 256 mode 0 dst 0"
+  },
+  {
+   "edge_w5": 2473,
+   "cmd": "80000000000000000001002040415",
+   "label": "o: STN o r0 s8 fin"
+  },
+  {
+   "edge_w5": 2477,
+   "cmd": "90000000000000000001202040415",
+   "label": "o: STN o r0 s9 fin"
+  },
+  {
+   "edge_w5": 2481,
+   "cmd": "a0000000000000000001402040415",
+   "label": "o: STN o r0 s10 fin"
+  },
+  {
+   "edge_w5": 2485,
+   "cmd": "b0000000000000000001602040415",
+   "label": "o: STN o r0 s11 fin"
+  },
+  {
+   "edge_w5": 2537,
+   "cmd": "00000000000000000001802080415",
+   "label": "o: STN o r1 s0 fin"
+  },
+  {
+   "edge_w5": 2541,
+   "cmd": "10000000000000000001a02080415",
+   "label": "o: STN o r1 s1 fin"
+  },
+  {
+   "edge_w5": 2545,
+   "cmd": "20000000000000000001c02080415",
+   "label": "o: STN o r1 s2 fin"
+  },
+  {
+   "edge_w5": 2549,
+   "cmd": "30000000000000000001e02080415",
+   "label": "o: STN o r1 s3 fin"
+  },
+  {
+   "edge_w5": 2553,
+   "cmd": "40000000000000000002002080415",
+   "label": "o: STN o r1 s4 fin"
+  },
+  {
+   "edge_w5": 2557,
+   "cmd": "50000000000000000002202080415",
+   "label": "o: STN o r1 s5 fin"
+  },
+  {
+   "edge_w5": 2561,
+   "cmd": "60000000000000000002402080415",
+   "label": "o: STN o r1 s6 fin"
+  },
+  {
+   "edge_w5": 2565,
+   "cmd": "70000000000000000002602080415",
+   "label": "o: STN o r1 s7 fin"
+  },
+  {
+   "edge_w5": 2569,
+   "cmd": "80000000000000000002802080415",
+   "label": "o: STN o r1 s8 fin"
+  },
+  {
+   "edge_w5": 2573,
+   "cmd": "90000000000000000002a02080415",
+   "label": "o: STN o r1 s9 fin"
+  },
+  {
+   "edge_w5": 2577,
+   "cmd": "a0000000000000000002c02080415",
+   "label": "o: STN o r1 s10 fin"
+  },
+  {
+   "edge_w5": 2581,
+   "cmd": "b0000000000000000002e02080415",
+   "label": "o: STN o r1 s11 fin"
+  },
+  {
+   "edge_w5": 2633,
+   "cmd": "000000000000000000030020c0415",
+   "label": "o: STN o r2 s0 fin"
+  },
+  {
+   "edge_w5": 2637,
+   "cmd": "100000000000000000032020c0415",
+   "label": "o: STN o r2 s1 fin"
+  },
+  {
+   "edge_w5": 2641,
+   "cmd": "200000000000000000034020c0415",
+   "label": "o: STN o r2 s2 fin"
+  },
+  {
+   "edge_w5": 2645,
+   "cmd": "300000000000000000036020c0415",
+   "label": "o: STN o r2 s3 fin"
+  },
+  {
+   "edge_w5": 2649,
+   "cmd": "400000000000000000038020c0415",
+   "label": "o: STN o r2 s4 fin"
+  },
+  {
+   "edge_w5": 2653,
+   "cmd": "50000000000000000003a020c0415",
+   "label": "o: STN o r2 s5 fin"
+  },
+  {
+   "edge_w5": 2657,
+   "cmd": "60000000000000000003c020c0415",
+   "label": "o: STN o r2 s6 fin"
+  },
+  {
+   "edge_w5": 2661,
+   "cmd": "70000000000000000003e020c0415",
+   "label": "o: STN o r2 s7 fin"
+  },
+  {
+   "edge_w5": 2974,
+   "cmd": "00000c358637bd0001908000c0417",
+   "label": "resid1: ROOT s0"
+  },
+  {
+   "edge_w5": 2975,
+   "cmd": "100000000000000001900000c0407",
+   "label": "resid1: ROOT s1"
+  },
+  {
+   "edge_w5": 2976,
+   "cmd": "200000000000000001900000c0407",
+   "label": "resid1: ROOT s2"
+  },
+  {
+   "edge_w5": 2977,
+   "cmd": "300000000000000001900000c0407",
+   "label": "resid1: ROOT s3"
+  },
+  {
+   "edge_w5": 2978,
+   "cmd": "400000000000000001900000c0407",
+   "label": "resid1: ROOT s4"
+  },
+  {
+   "edge_w5": 2979,
+   "cmd": "500000000000000001900000c0407",
+   "label": "resid1: ROOT s5"
+  },
+  {
+   "edge_w5": 2980,
+   "cmd": "600000000000000001900000c0407",
+   "label": "resid1: ROOT s6"
+  },
+  {
+   "edge_w5": 2981,
+   "cmd": "700000000000000001900000c0407",
+   "label": "resid1: ROOT s7"
+  },
+  {
+   "edge_w5": 2982,
+   "cmd": "800000000000000001900000c0407",
+   "label": "resid1: ROOT s8"
+  },
+  {
+   "edge_w5": 2983,
+   "cmd": "900000000000000001900000c0407",
+   "label": "resid1: ROOT s9"
+  },
+  {
+   "edge_w5": 2984,
+   "cmd": "a00000000000000001900000c0407",
+   "label": "resid1: ROOT s10"
+  },
+  {
+   "edge_w5": 2985,
+   "cmd": "b00000000000000001900000c0407",
+   "label": "resid1: ROOT s11"
+  },
+  {
+   "edge_w5": 2986,
+   "cmd": "0000000000000000000000000005b",
+   "label": "resid1: STREAM s0 dirs 1 tag 1"
+  },
+  {
+   "edge_w5": 2987,
+   "cmd": "1000000000000000000000000007b",
+   "label": "resid1: STREAM s1 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2988,
+   "cmd": "2000000000000000000000000007b",
+   "label": "resid1: STREAM s2 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2989,
+   "cmd": "3000000000000000000000000007b",
+   "label": "resid1: STREAM s3 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2990,
+   "cmd": "4000000000000000000000000007b",
+   "label": "resid1: STREAM s4 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2991,
+   "cmd": "5000000000000000000000000007b",
+   "label": "resid1: STREAM s5 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2992,
+   "cmd": "6000000000000000000000000007b",
+   "label": "resid1: STREAM s6 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2993,
+   "cmd": "7000000000000000000000000007b",
+   "label": "resid1: STREAM s7 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2994,
+   "cmd": "8000000000000000000000000007b",
+   "label": "resid1: STREAM s8 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2995,
+   "cmd": "9000000000000000000000000007b",
+   "label": "resid1: STREAM s9 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2996,
+   "cmd": "a000000000000000000000000007b",
+   "label": "resid1: STREAM s10 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 2997,
+   "cmd": "b000000000000000000000000007b",
+   "label": "resid1: STREAM s11 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 3013,
+   "cmd": "00000000000000010000000001a09",
+   "label": "resid1: PORTS s0 AR on (T+0) b0"
+  },
+  {
+   "edge_w5": 3020,
+   "cmd": "10000000000000010000000001a09",
+   "label": "resid1: PORTS s1 AR on (T+0) b1"
+  },
+  {
+   "edge_w5": 3021,
+   "cmd": "00000000000000000000000001a09",
+   "label": "resid1: PORTS s0 AR off b0"
+  },
+  {
+   "edge_w5": 3027,
+   "cmd": "20000000000000010000000001a09",
+   "label": "resid1: PORTS s2 AR on (T+0) b2"
+  },
+  {
+   "edge_w5": 3028,
+   "cmd": "10000000000000000000000001a09",
+   "label": "resid1: PORTS s1 AR off b1"
+  },
+  {
+   "edge_w5": 3034,
+   "cmd": "30000000000000010000000001a09",
+   "label": "resid1: PORTS s3 AR on (T+0) b3"
+  },
+  {
+   "edge_w5": 3035,
+   "cmd": "20000000000000000000000001a09",
+   "label": "resid1: PORTS s2 AR off b2"
+  },
+  {
+   "edge_w5": 3041,
+   "cmd": "40000000000000010000000001a09",
+   "label": "resid1: PORTS s4 AR on (T+0) b4"
+  },
+  {
+   "edge_w5": 3042,
+   "cmd": "30000000000000000000000001a09",
+   "label": "resid1: PORTS s3 AR off b3"
+  },
+  {
+   "edge_w5": 3048,
+   "cmd": "50000000000000010000000001a09",
+   "label": "resid1: PORTS s5 AR on (T+0) b5"
+  },
+  {
+   "edge_w5": 3049,
+   "cmd": "40000000000000000000000001a09",
+   "label": "resid1: PORTS s4 AR off b4"
+  },
+  {
+   "edge_w5": 3055,
+   "cmd": "60000000000000010000000001a09",
+   "label": "resid1: PORTS s6 AR on (T+0) b6"
+  },
+  {
+   "edge_w5": 3056,
+   "cmd": "50000000000000000000000001a09",
+   "label": "resid1: PORTS s5 AR off b5"
+  },
+  {
+   "edge_w5": 3062,
+   "cmd": "70000000000000010000000001a09",
+   "label": "resid1: PORTS s7 AR on (T+0) b7"
+  },
+  {
+   "edge_w5": 3063,
+   "cmd": "60000000000000000000000001a09",
+   "label": "resid1: PORTS s6 AR off b6"
+  },
+  {
+   "edge_w5": 3069,
+   "cmd": "80000000000000010000000001a09",
+   "label": "resid1: PORTS s8 AR on (T+0) b8"
+  },
+  {
+   "edge_w5": 3070,
+   "cmd": "70000000000000000000000001a09",
+   "label": "resid1: PORTS s7 AR off b7"
+  },
+  {
+   "edge_w5": 3076,
+   "cmd": "90000000000000010000000001a09",
+   "label": "resid1: PORTS s9 AR on (T+0) b9"
+  },
+  {
+   "edge_w5": 3077,
+   "cmd": "80000000000000000000000001a09",
+   "label": "resid1: PORTS s8 AR off b8"
+  },
+  {
+   "edge_w5": 3083,
+   "cmd": "a0000000000000010000000001a09",
+   "label": "resid1: PORTS s10 AR on (T+0) b10"
+  },
+  {
+   "edge_w5": 3084,
+   "cmd": "90000000000000000000000001a09",
+   "label": "resid1: PORTS s9 AR off b9"
+  },
+  {
+   "edge_w5": 3090,
+   "cmd": "b0000000000000010000000001a09",
+   "label": "resid1: PORTS s11 AR on (T+0) b11"
+  },
+  {
+   "edge_w5": 3091,
+   "cmd": "a0000000000000000000000001a09",
+   "label": "resid1: PORTS s10 AR off b10"
+  },
+  {
+   "edge_w5": 3098,
+   "cmd": "b0000000000000000000000001a09",
+   "label": "resid1: PORTS s11 AR off b11"
+  },
+  {
+   "edge_w5": 3109,
+   "cmd": "00000000000000010000000002209",
+   "label": "resid1: PORTS s0 AR on (T+128) b12"
+  },
+  {
+   "edge_w5": 3116,
+   "cmd": "10000000000000010000000002209",
+   "label": "resid1: PORTS s1 AR on (T+128) b13"
+  },
+  {
+   "edge_w5": 3117,
+   "cmd": "00000000000000000000000002209",
+   "label": "resid1: PORTS s0 AR off b12"
+  },
+  {
+   "edge_w5": 3123,
+   "cmd": "20000000000000010000000002209",
+   "label": "resid1: PORTS s2 AR on (T+128) b14"
+  },
+  {
+   "edge_w5": 3124,
+   "cmd": "10000000000000000000000002209",
+   "label": "resid1: PORTS s1 AR off b13"
+  },
+  {
+   "edge_w5": 3130,
+   "cmd": "30000000000000010000000002209",
+   "label": "resid1: PORTS s3 AR on (T+128) b15"
+  },
+  {
+   "edge_w5": 3131,
+   "cmd": "20000000000000000000000002209",
+   "label": "resid1: PORTS s2 AR off b14"
+  },
+  {
+   "edge_w5": 3137,
+   "cmd": "40000000000000010000000002209",
+   "label": "resid1: PORTS s4 AR on (T+128) b16"
+  },
+  {
+   "edge_w5": 3138,
+   "cmd": "30000000000000000000000002209",
+   "label": "resid1: PORTS s3 AR off b15"
+  },
+  {
+   "edge_w5": 3144,
+   "cmd": "50000000000000010000000002209",
+   "label": "resid1: PORTS s5 AR on (T+128) b17"
+  },
+  {
+   "edge_w5": 3145,
+   "cmd": "40000000000000000000000002209",
+   "label": "resid1: PORTS s4 AR off b16"
+  },
+  {
+   "edge_w5": 3151,
+   "cmd": "60000000000000010000000002209",
+   "label": "resid1: PORTS s6 AR on (T+128) b18"
+  },
+  {
+   "edge_w5": 3152,
+   "cmd": "50000000000000000000000002209",
+   "label": "resid1: PORTS s5 AR off b17"
+  },
+  {
+   "edge_w5": 3158,
+   "cmd": "70000000000000010000000002209",
+   "label": "resid1: PORTS s7 AR on (T+128) b19"
+  },
+  {
+   "edge_w5": 3159,
+   "cmd": "60000000000000000000000002209",
+   "label": "resid1: PORTS s6 AR off b18"
+  },
+  {
+   "edge_w5": 3165,
+   "cmd": "80000000000000010000000002209",
+   "label": "resid1: PORTS s8 AR on (T+128) b20"
+  },
+  {
+   "edge_w5": 3166,
+   "cmd": "70000000000000000000000002209",
+   "label": "resid1: PORTS s7 AR off b19"
+  },
+  {
+   "edge_w5": 3172,
+   "cmd": "90000000000000010000000002209",
+   "label": "resid1: PORTS s9 AR on (T+128) b21"
+  },
+  {
+   "edge_w5": 3173,
+   "cmd": "80000000000000000000000002209",
+   "label": "resid1: PORTS s8 AR off b20"
+  },
+  {
+   "edge_w5": 3179,
+   "cmd": "a0000000000000010000000002209",
+   "label": "resid1: PORTS s10 AR on (T+128) b22"
+  },
+  {
+   "edge_w5": 3180,
+   "cmd": "90000000000000000000000002209",
+   "label": "resid1: PORTS s9 AR off b21"
+  },
+  {
+   "edge_w5": 3181,
+   "cmd": "80000000000000000000000000013",
+   "label": "resid1: RES1 s8 blocks [8, 20]"
+  },
+  {
+   "edge_w5": 3186,
+   "cmd": "b0000000000000010000000002209",
+   "label": "resid1: PORTS s11 AR on (T+128) b23"
+  },
+  {
+   "edge_w5": 3187,
+   "cmd": "a0000000000000000000000002209",
+   "label": "resid1: PORTS s10 AR off b22"
+  },
+  {
+   "edge_w5": 3188,
+   "cmd": "90000000000000000000000000013",
+   "label": "resid1: RES1 s9 blocks [9, 21]"
+  },
+  {
+   "edge_w5": 3194,
+   "cmd": "b0000000000000000000000002209",
+   "label": "resid1: PORTS s11 AR off b23"
+  },
+  {
+   "edge_w5": 3195,
+   "cmd": "a0000000000000000000000000013",
+   "label": "resid1: RES1 s10 blocks [10, 22]"
+  },
+  {
+   "edge_w5": 3202,
+   "cmd": "b0000000000000000000000000013",
+   "label": "resid1: RES1 s11 blocks [11, 23]"
+  },
+  {
+   "edge_w5": 3205,
+   "cmd": "00000000000000010000000002a09",
+   "label": "resid1: PORTS s0 AR on (T+256) b24"
+  },
+  {
+   "edge_w5": 3212,
+   "cmd": "10000000000000010000000002a09",
+   "label": "resid1: PORTS s1 AR on (T+256) b25"
+  },
+  {
+   "edge_w5": 3213,
+   "cmd": "00000000000000000000000002a09",
+   "label": "resid1: PORTS s0 AR off b24"
+  },
+  {
+   "edge_w5": 3219,
+   "cmd": "20000000000000010000000002a09",
+   "label": "resid1: PORTS s2 AR on (T+256) b26"
+  },
+  {
+   "edge_w5": 3220,
+   "cmd": "10000000000000000000000002a09",
+   "label": "resid1: PORTS s1 AR off b25"
+  },
+  {
+   "edge_w5": 3221,
+   "cmd": "00000000000000000000000000013",
+   "label": "resid1: RES1 s0 blocks [0, 12, 24]"
+  },
+  {
+   "edge_w5": 3226,
+   "cmd": "30000000000000010000000002a09",
+   "label": "resid1: PORTS s3 AR on (T+256) b27"
+  },
+  {
+   "edge_w5": 3227,
+   "cmd": "20000000000000000000000002a09",
+   "label": "resid1: PORTS s2 AR off b26"
+  },
+  {
+   "edge_w5": 3228,
+   "cmd": "10000000000000000000000000013",
+   "label": "resid1: RES1 s1 blocks [1, 13, 25]"
+  },
+  {
+   "edge_w5": 3233,
+   "cmd": "40000000000000010000000002a09",
+   "label": "resid1: PORTS s4 AR on (T+256) b28"
+  },
+  {
+   "edge_w5": 3234,
+   "cmd": "30000000000000000000000002a09",
+   "label": "resid1: PORTS s3 AR off b27"
+  },
+  {
+   "edge_w5": 3235,
+   "cmd": "20000000000000000000000000013",
+   "label": "resid1: RES1 s2 blocks [2, 14, 26]"
+  },
+  {
+   "edge_w5": 3240,
+   "cmd": "50000000000000010000000002a09",
+   "label": "resid1: PORTS s5 AR on (T+256) b29"
+  },
+  {
+   "edge_w5": 3241,
+   "cmd": "40000000000000000000000002a09",
+   "label": "resid1: PORTS s4 AR off b28"
+  },
+  {
+   "edge_w5": 3242,
+   "cmd": "30000000000000000000000000013",
+   "label": "resid1: RES1 s3 blocks [3, 15, 27]"
+  },
+  {
+   "edge_w5": 3247,
+   "cmd": "60000000000000010000000002a09",
+   "label": "resid1: PORTS s6 AR on (T+256) b30"
+  },
+  {
+   "edge_w5": 3248,
+   "cmd": "50000000000000000000000002a09",
+   "label": "resid1: PORTS s5 AR off b29"
+  },
+  {
+   "edge_w5": 3249,
+   "cmd": "40000000000000000000000000013",
+   "label": "resid1: RES1 s4 blocks [4, 16, 28]"
+  },
+  {
+   "edge_w5": 3254,
+   "cmd": "70000000000000010000000002a09",
+   "label": "resid1: PORTS s7 AR on (T+256) b31"
+  },
+  {
+   "edge_w5": 3255,
+   "cmd": "60000000000000000000000002a09",
+   "label": "resid1: PORTS s6 AR off b30"
+  },
+  {
+   "edge_w5": 3256,
+   "cmd": "50000000000000000000000000013",
+   "label": "resid1: RES1 s5 blocks [5, 17, 29]"
+  },
+  {
+   "edge_w5": 3262,
+   "cmd": "70000000000000000000000002a09",
+   "label": "resid1: PORTS s7 AR off b31"
+  },
+  {
+   "edge_w5": 3263,
+   "cmd": "60000000000000000000000000013",
+   "label": "resid1: RES1 s6 blocks [6, 18, 30]"
+  },
+  {
+   "edge_w5": 3270,
+   "cmd": "70000000000000000000000000013",
+   "label": "resid1: RES1 s7 blocks [7, 19, 31]"
+  },
+  {
+   "edge_w5": 3289,
+   "cmd": "80000000000000000000000000033",
+   "label": "resid1: XS s8"
+  },
+  {
+   "edge_w5": 3298,
+   "cmd": "90000000000000000000000000033",
+   "label": "resid1: XS s9"
+  },
+  {
+   "edge_w5": 3344,
+   "cmd": "00000000000000000000000000033",
+   "label": "resid1: XS s0"
+  },
+  {
+   "edge_w5": 3351,
+   "cmd": "10000000000000000000000000033",
+   "label": "resid1: XS s1"
+  },
+  {
+   "edge_w5": 3358,
+   "cmd": "20000000000000000000000000033",
+   "label": "resid1: XS s2"
+  },
+  {
+   "edge_w5": 3365,
+   "cmd": "30000000000000000000000000033",
+   "label": "resid1: XS s3"
+  },
+  {
+   "edge_w5": 3388,
+   "cmd": "40000000000000000000000000033",
+   "label": "resid1: XS s4"
+  },
+  {
+   "edge_w5": 3395,
+   "cmd": "50000000000000000000000000033",
+   "label": "resid1: XS s5"
+  },
+  {
+   "edge_w5": 3402,
+   "cmd": "60000000000000000000000000033",
+   "label": "resid1: XS s6"
+  },
+  {
+   "edge_w5": 3409,
+   "cmd": "70000000000000000000000000033",
+   "label": "resid1: XS s7"
+  },
+  {
+   "edge_w5": 3432,
+   "cmd": "a0000000000000000000000000033",
+   "label": "resid1: XS s10"
+  },
+  {
+   "edge_w5": 3439,
+   "cmd": "b0000000000000000000000000033",
+   "label": "resid1: XS s11"
+  },
+  {
+   "edge_w5": 3739,
+   "cmd": "e00000000000000000000000000e5",
+   "label": "SEG base 14"
+  },
+  {
+   "edge_w5": 4035,
+   "cmd": "b000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s11 fin"
+  },
+  {
+   "edge_w5": 4037,
+   "cmd": "a000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s10 fin"
+  },
+  {
+   "edge_w5": 4039,
+   "cmd": "9000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s9 fin"
+  },
+  {
+   "edge_w5": 4041,
+   "cmd": "8000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s8 fin"
+  },
+  {
+   "edge_w5": 4043,
+   "cmd": "7000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s7 fin"
+  },
+  {
+   "edge_w5": 4045,
+   "cmd": "6000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s6 fin"
+  },
+  {
+   "edge_w5": 4047,
+   "cmd": "5000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s5 fin"
+  },
+  {
+   "edge_w5": 4049,
+   "cmd": "4000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s4 fin"
+  },
+  {
+   "edge_w5": 4051,
+   "cmd": "3000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s3 fin"
+  },
+  {
+   "edge_w5": 4053,
+   "cmd": "2000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s2 fin"
+  },
+  {
+   "edge_w5": 4055,
+   "cmd": "1000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s1 fin"
+  },
+  {
+   "edge_w5": 4057,
+   "cmd": "0000000000000000000fc01100805",
+   "label": "gu: STN gu r0 s0 fin"
+  },
+  {
+   "edge_w5": 4091,
+   "cmd": "000000000000000000000000000db",
+   "label": "silu: STREAM s0 dirs 1 tag 3"
+  },
+  {
+   "edge_w5": 4092,
+   "cmd": "100000000000000000000000000fb",
+   "label": "silu: STREAM s1 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4093,
+   "cmd": "200000000000000000000000000fb",
+   "label": "silu: STREAM s2 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4094,
+   "cmd": "300000000000000000000000000fb",
+   "label": "silu: STREAM s3 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4095,
+   "cmd": "400000000000000000000000000fb",
+   "label": "silu: STREAM s4 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4096,
+   "cmd": "500000000000000000000000000fb",
+   "label": "silu: STREAM s5 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4097,
+   "cmd": "600000000000000000000000000fb",
+   "label": "silu: STREAM s6 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4098,
+   "cmd": "700000000000000000000000000fb",
+   "label": "silu: STREAM s7 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4099,
+   "cmd": "800000000000000000000000000fb",
+   "label": "silu: STREAM s8 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4100,
+   "cmd": "900000000000000000000000000fb",
+   "label": "silu: STREAM s9 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4101,
+   "cmd": "a00000000000000000000000000fb",
+   "label": "silu: STREAM s10 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4102,
+   "cmd": "b00000000000000000000000000fb",
+   "label": "silu: STREAM s11 dirs 3 tag 3"
+  },
+  {
+   "edge_w5": 4105,
+   "cmd": "00000000000000000000000000093",
+   "label": "silu: GU*r s0"
+  },
+  {
+   "edge_w5": 4106,
+   "cmd": "10000000000000000000000000093",
+   "label": "silu: GU*r s1"
+  },
+  {
+   "edge_w5": 4107,
+   "cmd": "20000000000000000000000000093",
+   "label": "silu: GU*r s2"
+  },
+  {
+   "edge_w5": 4108,
+   "cmd": "30000000000000000000000000093",
+   "label": "silu: GU*r s3"
+  },
+  {
+   "edge_w5": 4109,
+   "cmd": "40000000000000000000000000093",
+   "label": "silu: GU*r s4"
+  },
+  {
+   "edge_w5": 4110,
+   "cmd": "50000000000000000000000000093",
+   "label": "silu: GU*r s5"
+  },
+  {
+   "edge_w5": 4111,
+   "cmd": "60000000000000000000000000093",
+   "label": "silu: GU*r s6"
+  },
+  {
+   "edge_w5": 4112,
+   "cmd": "70000000000000000000000000093",
+   "label": "silu: GU*r s7"
+  },
+  {
+   "edge_w5": 4113,
+   "cmd": "80000000000000000000000000093",
+   "label": "silu: GU*r s8"
+  },
+  {
+   "edge_w5": 4114,
+   "cmd": "90000000000000000000000000093",
+   "label": "silu: GU*r s9"
+  },
+  {
+   "edge_w5": 4115,
+   "cmd": "a0000000000000000000000000093",
+   "label": "silu: GU*r s10"
+  },
+  {
+   "edge_w5": 4116,
+   "cmd": "b0000000000000000000000000093",
+   "label": "silu: GU*r s11"
+  },
+  {
+   "edge_w5": 4170,
+   "cmd": "000000000000000000000000000a3",
+   "label": "silu: SILU s0"
+  },
+  {
+   "edge_w5": 4171,
+   "cmd": "100000000000000000000000000a3",
+   "label": "silu: SILU s1"
+  },
+  {
+   "edge_w5": 4172,
+   "cmd": "200000000000000000000000000a3",
+   "label": "silu: SILU s2"
+  },
+  {
+   "edge_w5": 4173,
+   "cmd": "300000000000000000000000000a3",
+   "label": "silu: SILU s3"
+  },
+  {
+   "edge_w5": 4182,
+   "cmd": "400000000000000000000000000a3",
+   "label": "silu: SILU s4"
+  },
+  {
+   "edge_w5": 4183,
+   "cmd": "500000000000000000000000000a3",
+   "label": "silu: SILU s5"
+  },
+  {
+   "edge_w5": 4184,
+   "cmd": "600000000000000000000000000a3",
+   "label": "silu: SILU s6"
+  },
+  {
+   "edge_w5": 4185,
+   "cmd": "700000000000000000000000000a3",
+   "label": "silu: SILU s7"
+  },
+  {
+   "edge_w5": 4194,
+   "cmd": "800000000000000000000000000a3",
+   "label": "silu: SILU s8"
+  },
+  {
+   "edge_w5": 4195,
+   "cmd": "900000000000000000000000000a3",
+   "label": "silu: SILU s9"
+  },
+  {
+   "edge_w5": 4196,
+   "cmd": "a00000000000000000000000000a3",
+   "label": "silu: SILU s10"
+  },
+  {
+   "edge_w5": 4197,
+   "cmd": "b00000000000000000000000000a3",
+   "label": "silu: SILU s11"
+  },
+  {
+   "edge_w5": 4426,
+   "cmd": "00000000000000000000002180415",
+   "label": "down: STN down r0 s0 fin"
+  },
+  {
+   "edge_w5": 4430,
+   "cmd": "10000000000000000000202180415",
+   "label": "down: STN down r0 s1 fin"
+  },
+  {
+   "edge_w5": 4434,
+   "cmd": "20000000000000000000402180415",
+   "label": "down: STN down r0 s2 fin"
+  },
+  {
+   "edge_w5": 4438,
+   "cmd": "30000000000000000000602180415",
+   "label": "down: STN down r0 s3 fin"
+  },
+  {
+   "edge_w5": 4442,
+   "cmd": "40000000000000000000802180415",
+   "label": "down: STN down r0 s4 fin"
+  },
+  {
+   "edge_w5": 4446,
+   "cmd": "50000000000000000000a02180415",
+   "label": "down: STN down r0 s5 fin"
+  },
+  {
+   "edge_w5": 4450,
+   "cmd": "60000000000000000000c02180415",
+   "label": "down: STN down r0 s6 fin"
+  },
+  {
+   "edge_w5": 4453,
+   "cmd": "70000000000000000000e02180415",
+   "label": "down: STN down r0 s7 fin"
+  },
+  {
+   "edge_w5": 4454,
+   "cmd": "00000000000000000000000008001",
+   "label": "down: XC tag 0 words 256 mode 0 dst 0"
+  },
+  {
+   "edge_w5": 4458,
+   "cmd": "80000000000000000001002180415",
+   "label": "down: STN down r0 s8 fin"
+  },
+  {
+   "edge_w5": 4462,
+   "cmd": "90000000000000000001202180415",
+   "label": "down: STN down r0 s9 fin"
+  },
+  {
+   "edge_w5": 4466,
+   "cmd": "a0000000000000000001402180415",
+   "label": "down: STN down r0 s10 fin"
+  },
+  {
+   "edge_w5": 4470,
+   "cmd": "b0000000000000000001602180415",
+   "label": "down: STN down r0 s11 fin"
+  },
+  {
+   "edge_w5": 4522,
+   "cmd": "000000000000000000018021c0415",
+   "label": "down: STN down r1 s0 fin"
+  },
+  {
+   "edge_w5": 4526,
+   "cmd": "10000000000000000001a021c0415",
+   "label": "down: STN down r1 s1 fin"
+  },
+  {
+   "edge_w5": 4530,
+   "cmd": "20000000000000000001c021c0415",
+   "label": "down: STN down r1 s2 fin"
+  },
+  {
+   "edge_w5": 4534,
+   "cmd": "30000000000000000001e021c0415",
+   "label": "down: STN down r1 s3 fin"
+  },
+  {
+   "edge_w5": 4538,
+   "cmd": "400000000000000000020021c0415",
+   "label": "down: STN down r1 s4 fin"
+  },
+  {
+   "edge_w5": 4542,
+   "cmd": "500000000000000000022021c0415",
+   "label": "down: STN down r1 s5 fin"
+  },
+  {
+   "edge_w5": 4546,
+   "cmd": "600000000000000000024021c0415",
+   "label": "down: STN down r1 s6 fin"
+  },
+  {
+   "edge_w5": 4550,
+   "cmd": "700000000000000000026021c0415",
+   "label": "down: STN down r1 s7 fin"
+  },
+  {
+   "edge_w5": 4554,
+   "cmd": "800000000000000000028021c0415",
+   "label": "down: STN down r1 s8 fin"
+  },
+  {
+   "edge_w5": 4558,
+   "cmd": "90000000000000000002a021c0415",
+   "label": "down: STN down r1 s9 fin"
+  },
+  {
+   "edge_w5": 4562,
+   "cmd": "a0000000000000000002c021c0415",
+   "label": "down: STN down r1 s10 fin"
+  },
+  {
+   "edge_w5": 4566,
+   "cmd": "b0000000000000000002e021c0415",
+   "label": "down: STN down r1 s11 fin"
+  },
+  {
+   "edge_w5": 4618,
+   "cmd": "00000000000000000003002200415",
+   "label": "down: STN down r2 s0 fin"
+  },
+  {
+   "edge_w5": 4622,
+   "cmd": "10000000000000000003202200415",
+   "label": "down: STN down r2 s1 fin"
+  },
+  {
+   "edge_w5": 4626,
+   "cmd": "20000000000000000003402200415",
+   "label": "down: STN down r2 s2 fin"
+  },
+  {
+   "edge_w5": 4630,
+   "cmd": "30000000000000000003602200415",
+   "label": "down: STN down r2 s3 fin"
+  },
+  {
+   "edge_w5": 4634,
+   "cmd": "40000000000000000003802200415",
+   "label": "down: STN down r2 s4 fin"
+  },
+  {
+   "edge_w5": 4638,
+   "cmd": "50000000000000000003a02200415",
+   "label": "down: STN down r2 s5 fin"
+  },
+  {
+   "edge_w5": 4642,
+   "cmd": "60000000000000000003c02200415",
+   "label": "down: STN down r2 s6 fin"
+  },
+  {
+   "edge_w5": 4646,
+   "cmd": "70000000000000000003e02200415",
+   "label": "down: STN down r2 s7 fin"
+  },
+  {
+   "edge_w5": 4959,
+   "cmd": "00000c358637bd0001908000c0417",
+   "label": "resid2: ROOT s0"
+  },
+  {
+   "edge_w5": 4960,
+   "cmd": "100000000000000001900000c0407",
+   "label": "resid2: ROOT s1"
+  },
+  {
+   "edge_w5": 4961,
+   "cmd": "200000000000000001900000c0407",
+   "label": "resid2: ROOT s2"
+  },
+  {
+   "edge_w5": 4962,
+   "cmd": "300000000000000001900000c0407",
+   "label": "resid2: ROOT s3"
+  },
+  {
+   "edge_w5": 4963,
+   "cmd": "400000000000000001900000c0407",
+   "label": "resid2: ROOT s4"
+  },
+  {
+   "edge_w5": 4964,
+   "cmd": "500000000000000001900000c0407",
+   "label": "resid2: ROOT s5"
+  },
+  {
+   "edge_w5": 4965,
+   "cmd": "600000000000000001900000c0407",
+   "label": "resid2: ROOT s6"
+  },
+  {
+   "edge_w5": 4966,
+   "cmd": "700000000000000001900000c0407",
+   "label": "resid2: ROOT s7"
+  },
+  {
+   "edge_w5": 4967,
+   "cmd": "800000000000000001900000c0407",
+   "label": "resid2: ROOT s8"
+  },
+  {
+   "edge_w5": 4968,
+   "cmd": "900000000000000001900000c0407",
+   "label": "resid2: ROOT s9"
+  },
+  {
+   "edge_w5": 4969,
+   "cmd": "a00000000000000001900000c0407",
+   "label": "resid2: ROOT s10"
+  },
+  {
+   "edge_w5": 4970,
+   "cmd": "b00000000000000001900000c0407",
+   "label": "resid2: ROOT s11"
+  },
+  {
+   "edge_w5": 4971,
+   "cmd": "0000000000000000000000000005b",
+   "label": "resid2: STREAM s0 dirs 1 tag 1"
+  },
+  {
+   "edge_w5": 4972,
+   "cmd": "1000000000000000000000000007b",
+   "label": "resid2: STREAM s1 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4973,
+   "cmd": "2000000000000000000000000007b",
+   "label": "resid2: STREAM s2 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4974,
+   "cmd": "3000000000000000000000000007b",
+   "label": "resid2: STREAM s3 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4975,
+   "cmd": "4000000000000000000000000007b",
+   "label": "resid2: STREAM s4 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4976,
+   "cmd": "5000000000000000000000000007b",
+   "label": "resid2: STREAM s5 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4977,
+   "cmd": "6000000000000000000000000007b",
+   "label": "resid2: STREAM s6 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4978,
+   "cmd": "7000000000000000000000000007b",
+   "label": "resid2: STREAM s7 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4979,
+   "cmd": "8000000000000000000000000007b",
+   "label": "resid2: STREAM s8 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4980,
+   "cmd": "9000000000000000000000000007b",
+   "label": "resid2: STREAM s9 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4981,
+   "cmd": "a000000000000000000000000007b",
+   "label": "resid2: STREAM s10 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4982,
+   "cmd": "b000000000000000000000000007b",
+   "label": "resid2: STREAM s11 dirs 3 tag 1"
+  },
+  {
+   "edge_w5": 4998,
+   "cmd": "00000000000000010000000001a09",
+   "label": "resid2: PORTS s0 AR on (T+0) b0"
+  },
+  {
+   "edge_w5": 5005,
+   "cmd": "10000000000000010000000001a09",
+   "label": "resid2: PORTS s1 AR on (T+0) b1"
+  },
+  {
+   "edge_w5": 5006,
+   "cmd": "00000000000000000000000001a09",
+   "label": "resid2: PORTS s0 AR off b0"
+  },
+  {
+   "edge_w5": 5012,
+   "cmd": "20000000000000010000000001a09",
+   "label": "resid2: PORTS s2 AR on (T+0) b2"
+  },
+  {
+   "edge_w5": 5013,
+   "cmd": "10000000000000000000000001a09",
+   "label": "resid2: PORTS s1 AR off b1"
+  },
+  {
+   "edge_w5": 5019,
+   "cmd": "30000000000000010000000001a09",
+   "label": "resid2: PORTS s3 AR on (T+0) b3"
+  },
+  {
+   "edge_w5": 5020,
+   "cmd": "20000000000000000000000001a09",
+   "label": "resid2: PORTS s2 AR off b2"
+  },
+  {
+   "edge_w5": 5026,
+   "cmd": "40000000000000010000000001a09",
+   "label": "resid2: PORTS s4 AR on (T+0) b4"
+  },
+  {
+   "edge_w5": 5027,
+   "cmd": "30000000000000000000000001a09",
+   "label": "resid2: PORTS s3 AR off b3"
+  },
+  {
+   "edge_w5": 5033,
+   "cmd": "50000000000000010000000001a09",
+   "label": "resid2: PORTS s5 AR on (T+0) b5"
+  },
+  {
+   "edge_w5": 5034,
+   "cmd": "40000000000000000000000001a09",
+   "label": "resid2: PORTS s4 AR off b4"
+  },
+  {
+   "edge_w5": 5040,
+   "cmd": "60000000000000010000000001a09",
+   "label": "resid2: PORTS s6 AR on (T+0) b6"
+  },
+  {
+   "edge_w5": 5041,
+   "cmd": "50000000000000000000000001a09",
+   "label": "resid2: PORTS s5 AR off b5"
+  },
+  {
+   "edge_w5": 5047,
+   "cmd": "70000000000000010000000001a09",
+   "label": "resid2: PORTS s7 AR on (T+0) b7"
+  },
+  {
+   "edge_w5": 5048,
+   "cmd": "60000000000000000000000001a09",
+   "label": "resid2: PORTS s6 AR off b6"
+  },
+  {
+   "edge_w5": 5054,
+   "cmd": "80000000000000010000000001a09",
+   "label": "resid2: PORTS s8 AR on (T+0) b8"
+  },
+  {
+   "edge_w5": 5055,
+   "cmd": "70000000000000000000000001a09",
+   "label": "resid2: PORTS s7 AR off b7"
+  },
+  {
+   "edge_w5": 5061,
+   "cmd": "90000000000000010000000001a09",
+   "label": "resid2: PORTS s9 AR on (T+0) b9"
+  },
+  {
+   "edge_w5": 5062,
+   "cmd": "80000000000000000000000001a09",
+   "label": "resid2: PORTS s8 AR off b8"
+  },
+  {
+   "edge_w5": 5068,
+   "cmd": "a0000000000000010000000001a09",
+   "label": "resid2: PORTS s10 AR on (T+0) b10"
+  },
+  {
+   "edge_w5": 5069,
+   "cmd": "90000000000000000000000001a09",
+   "label": "resid2: PORTS s9 AR off b9"
+  },
+  {
+   "edge_w5": 5075,
+   "cmd": "b0000000000000010000000001a09",
+   "label": "resid2: PORTS s11 AR on (T+0) b11"
+  },
+  {
+   "edge_w5": 5076,
+   "cmd": "a0000000000000000000000001a09",
+   "label": "resid2: PORTS s10 AR off b10"
+  },
+  {
+   "edge_w5": 5083,
+   "cmd": "b0000000000000000000000001a09",
+   "label": "resid2: PORTS s11 AR off b11"
+  },
+  {
+   "edge_w5": 5094,
+   "cmd": "00000000000000010000000002209",
+   "label": "resid2: PORTS s0 AR on (T+128) b12"
+  },
+  {
+   "edge_w5": 5101,
+   "cmd": "10000000000000010000000002209",
+   "label": "resid2: PORTS s1 AR on (T+128) b13"
+  },
+  {
+   "edge_w5": 5102,
+   "cmd": "00000000000000000000000002209",
+   "label": "resid2: PORTS s0 AR off b12"
+  },
+  {
+   "edge_w5": 5108,
+   "cmd": "20000000000000010000000002209",
+   "label": "resid2: PORTS s2 AR on (T+128) b14"
+  },
+  {
+   "edge_w5": 5109,
+   "cmd": "10000000000000000000000002209",
+   "label": "resid2: PORTS s1 AR off b13"
+  },
+  {
+   "edge_w5": 5115,
+   "cmd": "30000000000000010000000002209",
+   "label": "resid2: PORTS s3 AR on (T+128) b15"
+  },
+  {
+   "edge_w5": 5116,
+   "cmd": "20000000000000000000000002209",
+   "label": "resid2: PORTS s2 AR off b14"
+  },
+  {
+   "edge_w5": 5122,
+   "cmd": "40000000000000010000000002209",
+   "label": "resid2: PORTS s4 AR on (T+128) b16"
+  },
+  {
+   "edge_w5": 5123,
+   "cmd": "30000000000000000000000002209",
+   "label": "resid2: PORTS s3 AR off b15"
+  },
+  {
+   "edge_w5": 5129,
+   "cmd": "50000000000000010000000002209",
+   "label": "resid2: PORTS s5 AR on (T+128) b17"
+  },
+  {
+   "edge_w5": 5130,
+   "cmd": "40000000000000000000000002209",
+   "label": "resid2: PORTS s4 AR off b16"
+  },
+  {
+   "edge_w5": 5136,
+   "cmd": "60000000000000010000000002209",
+   "label": "resid2: PORTS s6 AR on (T+128) b18"
+  },
+  {
+   "edge_w5": 5137,
+   "cmd": "50000000000000000000000002209",
+   "label": "resid2: PORTS s5 AR off b17"
+  },
+  {
+   "edge_w5": 5143,
+   "cmd": "70000000000000010000000002209",
+   "label": "resid2: PORTS s7 AR on (T+128) b19"
+  },
+  {
+   "edge_w5": 5144,
+   "cmd": "60000000000000000000000002209",
+   "label": "resid2: PORTS s6 AR off b18"
+  },
+  {
+   "edge_w5": 5150,
+   "cmd": "80000000000000010000000002209",
+   "label": "resid2: PORTS s8 AR on (T+128) b20"
+  },
+  {
+   "edge_w5": 5151,
+   "cmd": "70000000000000000000000002209",
+   "label": "resid2: PORTS s7 AR off b19"
+  },
+  {
+   "edge_w5": 5157,
+   "cmd": "90000000000000010000000002209",
+   "label": "resid2: PORTS s9 AR on (T+128) b21"
+  },
+  {
+   "edge_w5": 5158,
+   "cmd": "80000000000000000000000002209",
+   "label": "resid2: PORTS s8 AR off b20"
+  },
+  {
+   "edge_w5": 5164,
+   "cmd": "a0000000000000010000000002209",
+   "label": "resid2: PORTS s10 AR on (T+128) b22"
+  },
+  {
+   "edge_w5": 5165,
+   "cmd": "90000000000000000000000002209",
+   "label": "resid2: PORTS s9 AR off b21"
+  },
+  {
+   "edge_w5": 5166,
+   "cmd": "80000000000000000000000000013",
+   "label": "resid2: RES1 s8 blocks [8, 20]"
+  },
+  {
+   "edge_w5": 5171,
+   "cmd": "b0000000000000010000000002209",
+   "label": "resid2: PORTS s11 AR on (T+128) b23"
+  },
+  {
+   "edge_w5": 5172,
+   "cmd": "a0000000000000000000000002209",
+   "label": "resid2: PORTS s10 AR off b22"
+  },
+  {
+   "edge_w5": 5173,
+   "cmd": "90000000000000000000000000013",
+   "label": "resid2: RES1 s9 blocks [9, 21]"
+  },
+  {
+   "edge_w5": 5179,
+   "cmd": "b0000000000000000000000002209",
+   "label": "resid2: PORTS s11 AR off b23"
+  },
+  {
+   "edge_w5": 5180,
+   "cmd": "a0000000000000000000000000013",
+   "label": "resid2: RES1 s10 blocks [10, 22]"
+  },
+  {
+   "edge_w5": 5187,
+   "cmd": "b0000000000000000000000000013",
+   "label": "resid2: RES1 s11 blocks [11, 23]"
+  },
+  {
+   "edge_w5": 5190,
+   "cmd": "00000000000000010000000002a09",
+   "label": "resid2: PORTS s0 AR on (T+256) b24"
+  },
+  {
+   "edge_w5": 5197,
+   "cmd": "10000000000000010000000002a09",
+   "label": "resid2: PORTS s1 AR on (T+256) b25"
+  },
+  {
+   "edge_w5": 5198,
+   "cmd": "00000000000000000000000002a09",
+   "label": "resid2: PORTS s0 AR off b24"
+  },
+  {
+   "edge_w5": 5204,
+   "cmd": "20000000000000010000000002a09",
+   "label": "resid2: PORTS s2 AR on (T+256) b26"
+  },
+  {
+   "edge_w5": 5205,
+   "cmd": "10000000000000000000000002a09",
+   "label": "resid2: PORTS s1 AR off b25"
+  },
+  {
+   "edge_w5": 5206,
+   "cmd": "00000000000000000000000000013",
+   "label": "resid2: RES1 s0 blocks [0, 12, 24]"
+  },
+  {
+   "edge_w5": 5211,
+   "cmd": "30000000000000010000000002a09",
+   "label": "resid2: PORTS s3 AR on (T+256) b27"
+  },
+  {
+   "edge_w5": 5212,
+   "cmd": "20000000000000000000000002a09",
+   "label": "resid2: PORTS s2 AR off b26"
+  },
+  {
+   "edge_w5": 5213,
+   "cmd": "10000000000000000000000000013",
+   "label": "resid2: RES1 s1 blocks [1, 13, 25]"
+  },
+  {
+   "edge_w5": 5218,
+   "cmd": "40000000000000010000000002a09",
+   "label": "resid2: PORTS s4 AR on (T+256) b28"
+  },
+  {
+   "edge_w5": 5219,
+   "cmd": "30000000000000000000000002a09",
+   "label": "resid2: PORTS s3 AR off b27"
+  },
+  {
+   "edge_w5": 5220,
+   "cmd": "20000000000000000000000000013",
+   "label": "resid2: RES1 s2 blocks [2, 14, 26]"
+  },
+  {
+   "edge_w5": 5225,
+   "cmd": "50000000000000010000000002a09",
+   "label": "resid2: PORTS s5 AR on (T+256) b29"
+  },
+  {
+   "edge_w5": 5226,
+   "cmd": "40000000000000000000000002a09",
+   "label": "resid2: PORTS s4 AR off b28"
+  },
+  {
+   "edge_w5": 5227,
+   "cmd": "30000000000000000000000000013",
+   "label": "resid2: RES1 s3 blocks [3, 15, 27]"
+  },
+  {
+   "edge_w5": 5232,
+   "cmd": "60000000000000010000000002a09",
+   "label": "resid2: PORTS s6 AR on (T+256) b30"
+  },
+  {
+   "edge_w5": 5233,
+   "cmd": "50000000000000000000000002a09",
+   "label": "resid2: PORTS s5 AR off b29"
+  },
+  {
+   "edge_w5": 5234,
+   "cmd": "40000000000000000000000000013",
+   "label": "resid2: RES1 s4 blocks [4, 16, 28]"
+  },
+  {
+   "edge_w5": 5239,
+   "cmd": "70000000000000010000000002a09",
+   "label": "resid2: PORTS s7 AR on (T+256) b31"
+  },
+  {
+   "edge_w5": 5240,
+   "cmd": "60000000000000000000000002a09",
+   "label": "resid2: PORTS s6 AR off b30"
+  },
+  {
+   "edge_w5": 5241,
+   "cmd": "50000000000000000000000000013",
+   "label": "resid2: RES1 s5 blocks [5, 17, 29]"
+  },
+  {
+   "edge_w5": 5247,
+   "cmd": "70000000000000000000000002a09",
+   "label": "resid2: PORTS s7 AR off b31"
+  },
+  {
+   "edge_w5": 5248,
+   "cmd": "60000000000000000000000000013",
+   "label": "resid2: RES1 s6 blocks [6, 18, 30]"
+  },
+  {
+   "edge_w5": 5255,
+   "cmd": "70000000000000000000000000013",
+   "label": "resid2: RES1 s7 blocks [7, 19, 31]"
+  },
+  {
+   "edge_w5": 5274,
+   "cmd": "80000000000000000000000000033",
+   "label": "resid2: XS s8"
+  },
+  {
+   "edge_w5": 5283,
+   "cmd": "90000000000000000000000000033",
+   "label": "resid2: XS s9"
+  },
+  {
+   "edge_w5": 5329,
+   "cmd": "00000000000000000000000000033",
+   "label": "resid2: XS s0"
+  },
+  {
+   "edge_w5": 5336,
+   "cmd": "10000000000000000000000000033",
+   "label": "resid2: XS s1"
+  },
+  {
+   "edge_w5": 5343,
+   "cmd": "20000000000000000000000000033",
+   "label": "resid2: XS s2"
+  },
+  {
+   "edge_w5": 5350,
+   "cmd": "30000000000000000000000000033",
+   "label": "resid2: XS s3"
+  },
+  {
+   "edge_w5": 5373,
+   "cmd": "40000000000000000000000000033",
+   "label": "resid2: XS s4"
+  },
+  {
+   "edge_w5": 5380,
+   "cmd": "50000000000000000000000000033",
+   "label": "resid2: XS s5"
+  },
+  {
+   "edge_w5": 5387,
+   "cmd": "60000000000000000000000000033",
+   "label": "resid2: XS s6"
+  },
+  {
+   "edge_w5": 5394,
+   "cmd": "70000000000000000000000000033",
+   "label": "resid2: XS s7"
+  },
+  {
+   "edge_w5": 5417,
+   "cmd": "a0000000000000000000000000033",
+   "label": "resid2: XS s10"
+  },
+  {
+   "edge_w5": 5424,
+   "cmd": "b0000000000000000000000000033",
+   "label": "resid2: XS s11"
+  },
+  {
+   "edge_w5": 5813,
+   "cmd": "e0000000000000000000000000165",
+   "label": "SEG base 22"
+  }
+ ]
+}

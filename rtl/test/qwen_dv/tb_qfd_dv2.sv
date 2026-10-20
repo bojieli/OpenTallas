@@ -11,6 +11,9 @@
 // Events (+EV): "cycle port hex": 0 CMD (s0.cmd_i), 1 ARET, 40 DRET, 41 SWI, 2+2k RSS(k), 3+2k RSN(k).
 // Log: S0AR / S0DD (W5 edge), S<k>SU / S<k>SD (scalar words leaving slice k up / down), S<N-1>E (up-end stream),
 // S<k>TOK (status token), S<k>ST at the end.
+// +define+DV2_XHEAD (QW-XHEAD 10-19): port 42 HR (s0.hr_i, 453 b), and per slice S<k>XT (the heads' x write xt_v: xt_a),
+// S<k>CW (the 8 column-head corridor go bits {n3..n0, s3..s0}), S<k>XL (edges with a corridor x line: the tag valid
+// bits of the 8 corridor words), S<k>HF (the heads' fault, first edge).
 module tb_qfd_dv2 (input wire ck);
     parameter integer MUT = 0, N = 2, SU_LT = 0, HD_W130 = 0;   // MU-SLICE-GATE: the kitted slice is SU_LT 1, HD_W130 1
     parameter integer MU_NU = 1;     // MU-ADOPT-SLICE: qfd_dv_slice2 MU_NU (R4 per-user LM-head argmax)
@@ -31,18 +34,32 @@ module tb_qfd_dv2 (input wire ck);
     wire [1037:0] chr [0:N];
     wire [513:0]  l9o [0:N-1];
     wire [106:0]  st [0:N-1];
+`ifdef DV2_XHEAD
+    wire [N-1:0]  xh_xtv, xh_hf;
+    wire [24*N-1:0] xh_xta;
+    wire [8*N-1:0] xh_go, xh_xl;
+    reg  [N-1:0]  xh_hf_seen;
+`endif
     assign cmdc[0] = cmd0; assign hrc[0] = hr0; assign stu[0] = swi; assign scu[0] = 48'd0; assign chr[0] = ret0;
     assign std_[N] = 1088'd0; assign scd[N] = 48'd0; assign cho[N] = 1095'd0; assign agc[N] = 10'd0;
     genvar k;
     generate for (k = 0; k < N; k = k + 1) begin : g_s
+        wire [515:0] cn0, cn1, cn2, cn3, cs0, cs1, cs2, cs3;
         wire [513:0] l9i = (k % 2 == 0) ? ((k + 1 < N) ? l9o[k+1] : 514'd0) : l9o[k-1];
         tb_dv2_slice #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .FACE(FACE)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
             .hr_i(hrc[k]), .hr_o(hrc[k+1]), .rs_s(rss[k]), .rs_n(rsn[k]), .l9_i(l9i), .l9_o(l9o[k]),
             .st_up_i(stu[k]), .st_up_o(stu[k+1]), .st_dn_i(std_[k+1]), .st_dn_o(std_[k]),
             .sc_up_i(scu[k]), .sc_up_o(scu[k+1]), .sc_dn_i(scd[k+1]), .sc_dn_o(scd[k]),
             .ch_up_i(cho[k+1]), .ch_dn_o(cho[k]), .ch_dn_i(chr[k]), .ch_up_o(chr[k+1]),
-            .cw_n0(), .cw_n1(), .cw_n2(), .cw_n3(), .cw_s0(), .cw_s1(), .cw_s2(), .cw_s3(), .st(st[k]),
+            .cw_n0(cn0), .cw_n1(cn1), .cw_n2(cn2), .cw_n3(cn3), .cw_s0(cs0), .cw_s1(cs1), .cw_s2(cs2), .cw_s3(cs3), .st(st[k]),
             .cc_o(cc[k]), .ag_up_i(agc[k+1]), .ag_dn_o(agc[k]));
+`ifdef DV2_XHEAD
+        // corridor word {tag 8 [515:508], xl 128, ib 379, go [0]}; tag = {vB, sB 3, vA, sA 3}
+        assign xh_xtv[k] = u.xt_v; assign xh_xta[24*k +: 24] = u.xt_a; assign xh_hf[k] = u.hd_fault;
+        assign xh_go[8*k +: 8] = {cn3[0], cn2[0], cn1[0], cn0[0], cs3[0], cs2[0], cs1[0], cs0[0]};
+        assign xh_xl[8*k +: 8] = {cn3[515] | cn3[511], cn2[515] | cn2[511], cn1[515] | cn1[511], cn0[515] | cn0[511],
+                                  cs3[515] | cs3[511], cs2[515] | cs2[511], cs1[515] | cs1[511], cs0[515] | cs0[511]};
+`endif
     end endgenerate
     integer fd, lg, cyc, ncyc, ec, ep, r, i, pre = 0;
     reg dbg_pf = 0;
@@ -61,6 +78,9 @@ module tb_qfd_dv2 (input wire ck);
             else if (p == 1) ret0 = ret0 | {v[517:0], 520'd0};
             else if (p == 40) ret0 = ret0 | {518'd0, v[519:0]};
             else if (p == 41) swi = v;
+`ifdef DV2_XHEAD
+            else if (p == 42) hr0 = v[452:0];
+`endif
             else if (p >= 2 && p < 2 + 2 * N) begin
                 if (p % 2 == 0) rss[(p - 2) / 2] = rss[(p - 2) / 2] | v[1027:0];
                 else rsn[(p - 3) / 2] = rsn[(p - 3) / 2] | v[1027:0];
@@ -73,6 +93,9 @@ module tb_qfd_dv2 (input wire ck);
         if (!$value$plusargs("NCYC=%d", ncyc)) ncyc = 20000;
         fd = $fopen(evf, "r"); lg = $fopen(lgf, "w");
         clear;
+`ifdef DV2_XHEAD
+        xh_hf_seen = 0;
+`endif
         cyc = 0;
         r = $fscanf(fd, "%d %d %h\n", ec, ep, ev); have = (r == 3);
     end
@@ -88,6 +111,15 @@ module tb_qfd_dv2 (input wire ck);
                 if (cc[i][49])    $fdisplay(lg, "%0d S%0dCC %h", cyc, i, cc[i]);
             end
             if (stu[N][1087]) $fdisplay(lg, "%0d S%0dE %h", cyc, N - 1, stu[N]);
+`ifdef DV2_XHEAD
+            for (i = 0; i < N; i = i + 1) begin
+                if (xh_xtv[i]) $fdisplay(lg, "%0d S%0dXT %h", cyc, i, xh_xta[24*i +: 24]);
+                if (|xh_go[8*i +: 8]) $fdisplay(lg, "%0d S%0dCW %h", cyc, i, xh_go[8*i +: 8]);
+                if (|xh_xl[8*i +: 8]) $fdisplay(lg, "%0d S%0dXL %h", cyc, i, xh_xl[8*i +: 8]);
+                if (xh_hf[i] && !xh_hf_seen[i]) $fdisplay(lg, "%0d S%0dHF 1", cyc, i);
+            end
+            xh_hf_seen = xh_hf_seen | xh_hf;
+`endif
 `ifdef DV2_DEBUG
             if (g_s[0].u.g_m.u.su_go || g_s[0].u.g_m.u.c_su || g_s[0].u.g_m.u.c_prt)
                 $display("%0d s0 c_su %0d su_go %0d ready %0d pidx %0d si_lo %h cmdq %h", cyc, g_s[0].u.g_m.u.c_su,

@@ -29,6 +29,19 @@ results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/program.hex,
      on D2D kind 0, k on D2D kind 1 in FP8 E4M3 (DST_KV), v = v * r on D2D kind 2 in FP8 (PC3).
  (4) SiLU x up (PC18 + PC19) on the gate/up L7 slices (slice s owns gate block s + up block s: hdc_program interleave
      per 128 rows): GU *= r, act = (g sigm(-g)) u -> BF16 stream (the down matvec's x), eaddr = 128 s + i.
+ (5) ATTENTION OUTPUT RETURN (PC11 -> PC12, QW-ATTNRET 10-19).  The KV die's result face (qkd_attn_result_face: the
+     16,384-b finalize vector, element e = 32 e .. 32 e + 31, shifted out as 32 beats x 512 b, beat b on consecutive
+     edges, b ascending) reaches native59 (qfd_native59_static_service: result_count == result_slot_beat, so beats
+     arrive in order 0..31) and leaves as qfd_native59_dv_service.dr_o group 0 = {v 1, em 0, 0, beat 5, data 512}
+     (lane j = element 16 b + j) into dvs_W5.ch_dn_i [519:0]; every slice taps the return chain and lands a group-0
+     word at dd_base + 16 beat when dd_en (qfd_dv_slice2 dd_v / dd_wa: the beat IS the address).  The lowering splits
+     the 512 elements into 4 o-proj x blocks of 128 (beats 8 i .. 8 i + 7); block i's owner slice lands exactly its 8
+     beats into its ATT region (dd_base = ATT - 128 i, PORTS windows by the AR row rule: on entering tb - s - 1, off
+     entering tb + 7 - s, tb = beat 8 i at the W5 return pin) and streams BF16(ATT) as the o_proj x (one SU op, the
+     resid x packer: RNE, 64-element beats, eaddr = 128 i + 64 j, stream tag 2).  Owners are chosen (search over
+     slice sets, block order = slice order) for the earliest moment every slice has seen every x word.
+     PORTS writes all landing fields: a dd PORTS clears ar_en / em_en of that slice (no AR / embedding landing is
+     live between attention and o_proj).
 
 Timing constants are MEASURED on the slice2 RTL (rtl/test/qwen_dv/dv_lower_vec_bench.py calibrate, Verilator 5.050)
 into results/rtl/qlb_c4b_1018/dv_lower_vec/vec_ages.json; the compiler refuses to schedule without them.
@@ -57,7 +70,8 @@ AD_BYP, AD_Q, AD_C, AD_NEGB, AD_IMM = range(5)
 SFU_NONE, SFU_EXP, SFU_RECIP, SFU_RSQRT, SFU_SIGM = range(5)
 DST_NONE, DST_VM, DST_KV = range(3)
 KV_K, KV_V = 1 << 22, 2 << 22                    # DST_KV address [23:22] = D2D kind (1 K, 2 V)
-PIDX = dict(ssq=0, res1=1, res2=2, xs=3, qkr=4, rs=5, qn=6, rlo=7, rhi=8, gur=9, silu=10)
+PIDX = dict(ssq=0, res1=1, res2=2, xs=3, qkr=4, rs=5, qn=6, rlo=7, rhi=8, gur=9, silu=10, xa=11)
+ATT_BEATS, ATT_BLK, ATT_TAG = 32, 4, 2                # dr beats (16 FP32 each), o x blocks of 128, x stream tag
 MARGIN = 8                                        # edges between a VM-only producer's measured last write and a reader
 LowerError = D.LowerError
 
@@ -123,7 +137,9 @@ def vm_map_vec(own):
                           ('SS', 16, 'head sum of squares (reducer window 00)'),
                           ('RS', 16, 'head rsqrt'),
                           ('QN', HD, 'QK-normed head'),
-                          ('GU', 2 * BLOCK, 'gate block s (0..127) + up block s (128..255): the L7 station landing')):
+                          ('GU', 2 * BLOCK, 'gate block s (0..127) + up block s (128..255): the L7 station landing'),
+                          ('ATT', BLOCK, 'attention output block i (o_proj x elements 128 i ..) landed from the D2D '
+                                         'return chain (dd_en window, dd_base = ATT - 128 i)')):
         a = (a + 15) // 16 * 16
         vm[n] = dict(base=a, size=size, what=what)
         a += size
@@ -166,7 +182,7 @@ def gu_check(own):
 
 
 # ------------------------------------------------------------------------------------------------ SU words
-def words(s, own, vm, cr, isa, mutant=None):
+def words(s, own, vm, cr, isa, mutant=None, att=None):
     bl = own['residual']['blocks_per_slice'][s]
     st = bl[1] - bl[0] if len(bl) > 1 else 0
     n = len(bl)
@@ -201,6 +217,10 @@ def words(s, own, vm, cr, isa, mutant=None):
     W['gur'] = D.su_word(nout=1, nin=2 * BLOCK, a=gu, asi=1, b=vm['RX']['base'], ma=MA_AB, dst=DST_VM, d=gu, dsi=1)
     W['silu'] = D.su_word(nout=1, nin=BLOCK, a=gu, asi=1, ma=MA_AIMM, imm1=isa['sigm_imm'], sfu=SFU_SIGM, c=gu, csi=1,
                           mc=1, b=gu + BLOCK, bsi=1, md=1, dst=DST_VM, d=D.W_X | (BLOCK * s), dsi=1)
+    for i, so in enumerate(att or []):
+        if so == s:
+            W['xa'] = D.su_word(nout=1, nin=BLOCK, a=vm['ATT']['base'], aso=BLOCK, asi=1, dst=DST_VM,
+                                d=D.W_X | (BLOCK * i), dso=BLOCK, dsi=1)
     return W
 
 
@@ -313,15 +333,66 @@ def span(ages, op):
     return max(ages['d2d'][op]) if op in ages['d2d'] else 0
 
 
+def attn_schedule(S, owners, t, ages, vm, mutant=None):
+    """family 5 on Sched S from local edge t: STREAM cfg of the owners, the dr return calendar (beat b at the W5 return
+    pin on r0 + b), per block one dd PORTS window on its owner, the owner's x stream op once its 8 beats landed.
+    Returns (r0, dr calendar, expected x words)."""
+    arr, O = S.arr, ages['xs_out']
+    for k, s in enumerate(sorted(owners)):
+        S.cmd(t + k, D.cmd_stream(s, 1 if s == 0 else 3, ATT_TAG), f'STREAM s{s} dirs {1 if s == 0 else 3} tag {ATT_TAG}')
+    t += len(owners) + 2
+    r0 = t + N + 2
+    cal = [dict(edge=r0 + b, beat=b) for b in range(ATT_BEATS)]
+    per = ATT_BEATS // ATT_BLK
+    for i, s in enumerate(owners):
+        tb = r0 + per * i
+        early = 1 if mutant == 'ddwin' else 0
+        base = vm['ATT']['base'] - (0 if mutant == 'ddbase' else BLOCK * i)
+        S.cmd(tb - s - 1 - early, D.cmd_ports(s, dd_base=base, dd_en=1), f'PORTS s{s} DD on (ATT - {BLOCK * i}) blk{i}')
+        S.cmd(tb + per - 1 - s - early, D.cmd_ports(s, dd_base=base, dd_en=0), f'PORTS s{s} DD off blk{i}')
+    xs = []
+    for i, s in enumerate(owners):
+        ready = r0 + per * i + per - 1 - s + 8          # as resid: after the slice's last landed word (+8)
+        e = S.place(s, D.cmd_su(PIDX['xa'], s), f'XA s{s} blk{i}', ready, 'x', O[:2], span=O[1])
+        for j in range(2):
+            c = e + arr[s] + O[j]
+            xs.append(dict(slice=s, eaddr=BLOCK * i + 64 * j, edge_e5=c + 2 * (N - 1 - s),
+                           edge_all=c + 2 * max(s, N - 1 - s)))
+    return r0, cal, xs
+
+
+def attn_owners(smap, ages):
+    """block i -> owner slice: the slice set (ascending by block) whose x words have reached every slice earliest
+    (tie: earliest last word at E5, then lowest slices); only collision-free, clash-free schedules"""
+    import itertools
+    vm = vm_map_vec(D.ownership())
+    best = None
+    for comb in itertools.combinations(range(N), ATT_BLK):
+        S = Sched(smap)
+        try:
+            r0, _, xs = attn_schedule(S, list(comb), 0, ages, vm)
+        except LowerError:
+            continue
+        if S.collisions():
+            continue
+        key = (max(x['edge_all'] for x in xs) - r0, max(x['edge_e5'] for x in xs) - r0, comb)
+        best = min(best, key) if best else key
+    if not best:
+        raise LowerError('attn: no collision-free owner set')
+    return list(best[2])
+
+
 def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='slice'):
     """mode resid (families 1 + 2), qk (3), silu (4).  Mutants (bench witnesses): resid 'arwin' (PORTS on windows one
     edge early: slice k > 0 also lands the last t word of slice k - 1), 'xslot' (x stream entries without the stream occupancy check); qk 'ropesign' (lo / hi signs swapped);
-    silu 'nor' (the gate/up * r op dropped).
+    silu 'nor' (the gate/up * r op dropped); attn 'ddwin' (every dd PORTS window, on and off, one edge early: the owner
+    misses its block's last beat), 'ddbase' (dd_base = ATT for every block: ignores that the dr word carries the
+    GLOBAL beat, blocks 1..3 land outside ATT).
     ar_order (QW-CLAYER 10-18): 'slice' = the slice-major AR return calendar (QLB-C4b/3a assumption); 'row' = the
     io_collective message order (word w = 8 b + j, global row order: what qfd_io_collective_static returns and what
     dv_lower_mat's o / down AR messages send): per owned block one PORTS arm (ar_base = T + 128 i) entering t_b - s - 1
     and one disarm entering t_b + 7 - s (t_b = return word 8 b at the dvs_W5 return pin), the stage-0 embedding rule."""
-    if mode not in ('resid', 'qk', 'silu'):
+    if mode not in ('resid', 'qk', 'silu', 'attn'):
         raise LowerError(f'mode {mode}')
     smap, own = D.slice_map(), D.ownership()
     vm, cr = vm_map_vec(own), crom_map(own)
@@ -332,18 +403,19 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
     consts = consts or {}
     k, eps = isa_n['rsqrt'][0]['k'], isa_n['rsqrt'][0]['eps']
     blocks = own['residual']['blocks_per_slice']
+    att = attn_owners(smap, ages)
     Wd, img = {}, {}
     for s in range(N):
         bl = blocks[s]
         ssq = D.su_word(nout=len(bl), nin=BLOCK, a=vm['X']['base'], aso=BLOCK, asi=1, red=1, redsq=1,
                         rb=D.W_SC | bl[0], rso=bl[1] - bl[0] if len(bl) > 1 else 0)
-        Wd[s] = words(s, own, vm, cr, isa, mutant)
+        Wd[s] = words(s, own, vm, cr, isa, mutant, att)
         img[s] = image(s, Wd[s], ssq)
     S = Sched(smap)
     tables = crom_table(own, cr, consts)
     tw = [dict(edge=i, dst=d, eaddr=a, payload=f'{p:0256x}') for i, (d, a, p) in enumerate(tables)]
     t = len(tw) + 2 * N + 8                    # every table word has passed slice 11 before the first op lands
-    ar_cal, expect = [], dict(psum={}, x=[], d2d=[])
+    ar_cal, dd_cal, dd_r0, expect = [], [], None, dict(psum={}, x=[], d2d=[])
     if mode == 'resid':
         for s in range(N):                     # ROOT cfg: root dvs_W5, fused r (as dv_lower)
             S.cmd(t + s, D.cmd_root(s, int(s == 0), len(sum(blocks, [])), vm['SSX']['base'], fuse=int(s == 0),
@@ -425,6 +497,8 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
                 expect['d2d'] += [dict(slice=s, op=f'{nm}_{role}', word=j, edge_w5=e + smap['cmd_arrival'][s] + o + 2 * s)
                                   for j, o in enumerate(a[op])]
                 prev = e
+    elif mode == 'attn':
+        dd_r0, dd_cal, expect['x'] = attn_schedule(S, att, t, ages, vm, mutant)
     else:
         for s in range(N):
             S.cmd(t + s, D.cmd_stream(s, 1 if s == 0 else 3, 3), f'STREAM s{s} dirs {1 if s == 0 else 3} tag 3')
@@ -444,11 +518,11 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
         raise LowerError(f'collisions {coll[:3]}')
     return dict(
         schema='opentallas.qwen.dv-lowering-vec.v1', tool='tools/qwen_layerbench/dv_lower_vec.py', mode=mode,
-        mutant=mutant, ar_order=ar_order, ar_r0=r0 if mode == 'resid' else None, slice_map=smap, ownership=own, vm=vm, crom=cr, qkv_roles=roles, isa=isa, isa_rmsnorm=isa_n,
+        mutant=mutant, ar_order=ar_order, ar_r0=r0 if mode == 'resid' else None, dd_r0=dd_r0, attn_owners=att, slice_map=smap, ownership=own, vm=vm, crom=cr, qkv_roles=roles, isa=isa, isa_rmsnorm=isa_n,
         ages=ages, pidx=PIDX,
         prog={s: [f'{w:0115x}' for w in ws] for s, ws in img.items()},
         prog_stream={s: [dict(eaddr=a_, payload=f'{p:0256x}') for a_, p in D.prog_words(ws)] for s, ws in img.items()},
-        crom_table=tw, ar_return=ar_cal, commands=S.commands(), expected=expect,
+        crom_table=tw, ar_return=ar_cal, dd_return=dd_cal, commands=S.commands(), expected=expect,
         collisions=[[list(k_), v] for k_, v in coll],
         assumptions=['AR return calendar slice-major (slice 0 owned blocks ascending, then slice 1, ...): the io_collective '
                      'all-reduce must return the reduced t words in this order (the return word has no address)',
@@ -466,7 +540,7 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
 def main():
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument('--mode', required=True, choices=('resid', 'qk', 'silu'))
+    ap.add_argument('--mode', required=True, choices=('resid', 'qk', 'silu', 'attn'))
     ap.add_argument('--out', required=True)
     ap.add_argument('--mutant')
     a = ap.parse_args()

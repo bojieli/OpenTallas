@@ -14,6 +14,11 @@ landed over the AR return chain with generous PORTS windows.  Checks (PASS needs
   qk:    q heads (rope(QN), FP32, D2D kind 0), k (fp8, kind 1), v (fp8(v r), kind 2) bit-exact on their compiled W5
          edges; no fault.
   silu:  the 24 BF16 act words (to_bf16(silu(g r) (u r))) at the E5 end on their compiled edges; no fault.
+  attn:  (QW-ATTNRET 10-19) the 32 attention-result words enter dvs_W5.ch_dn_i (TB port 40) in the exact
+         qfd_native59_dv_service.dr_o group-0 format {v, em 0, 0, beat 5, data 512 (lane j = element 16 b + j)} on the
+         compiled dr calendar (beat b on consecutive edges, ascending, as qkd_attn_result_face emits them); checks:
+         (1) the 8 BF16 o_proj x words (to_bf16(attn), eaddr 128 i + 64 j) at the E5 end on their compiled edges, each
+         once, nothing else; (2) no fault; prints the MEASURED span first dr word at the W5 pin -> last x word at E5.
 calibrate measures every timing constant the compiler schedules with -> DIR/vec_ages.json.
 """
 from __future__ import annotations
@@ -444,6 +449,48 @@ def run_silu(work, lw, rng, tag):
     return ok, n, errs, f'act words={len(lw["expected"]["x"])} {span} {gold["info"]}'
 
 
+def dr_word(beat, vals):
+    """qfd_native59_dv_service dr_o group 0: {1'b1, 1'b0, 1'b0, beat[4:0], data[511:0]}"""
+    data = sum(int(v) << (32 * j) for j, v in enumerate(B.fbits(np.asarray(vals, dtype=F))))
+    return (1 << 519) | (beat << 512) | data
+
+
+def run_attn(work, lw, rng, tag):
+    att = (rng.standard_normal(512) * np.repeat(F(10.0) ** rng.uniform(-2, 1.5, 32).astype(F), 16)).astype(F)
+    att[:4] = F([0.0, 7.5, 1.00390625, -1.01171875])  # zero, exact value, exact BF16 ties (RNE even / odd)
+    ev = LB.Events()
+    t = boot(ev, bench_words(lw))
+    base = t + 8
+    for d in lw['dd_return']:
+        b = d['beat']
+        ev.at(base + d['edge'], 40, dr_word(b, att[16 * b:16 * b + 16]))
+    end = lowered(ev, lw, base) + 900
+    log = LB.run(work, f'run_{tag}', ev, end)
+    errs = B2.status_ok2(log)
+    hb = bf16_bits(att)
+    e5 = e5_words(log)
+    bad = []
+    for xw in lw['expected']['x']:
+        c = base + xw['edge_e5']
+        got = e5.get(c)
+        pay = sum(int(h) << (16 * i) for i, h in enumerate(hb[xw['eaddr']:xw['eaddr'] + 64]))
+        if got is None or got[1] != xw['eaddr'] or got[2] != pay:
+            bad.append((xw['slice'], xw['eaddr'], c, None if got is None else got[1]))
+    seen = sorted(c for c in e5 if c >= base)
+    ok = 0
+    if bad or len(seen) != len(lw['expected']['x']):
+        errs.append(f'o_proj x stream: {len(bad)}/{len(lw["expected"]["x"])} words wrong / off edge (first {bad[:3]}), '
+                    f'{len(seen)} x words at E5')
+    else:
+        ok = 1
+    first = base + lw['dd_r0']
+    span = (seen[-1] - first) if seen else None
+    info = (f'owners={lw["attn_owners"]} x_words={len(seen)} MEASURED_SPAN first dr word at W5 pin (edge {first}) -> '
+            f'last x word at E5 (edge {seen[-1] if seen else None}) = {span} edges (compiled '
+            f'{max(x["edge_e5"] for x in lw["expected"]["x"]) - lw["dd_r0"]})')
+    return ok, 1, errs, info
+
+
 def main_run(work, mode, mutant, seed, ages, ar_order='slice', fixture=None):
     rng = np.random.default_rng(seed)
     consts = consts_for(rng)
@@ -462,7 +509,7 @@ def main_run(work, mode, mutant, seed, ages, ar_order='slice', fixture=None):
     lw['_consts'] = consts
     lw['_fix'] = fix
     tag = f'{mode}_{mutant or "m0"}'
-    ok, n, errs, info = dict(resid=run_resid, qk=run_qk, silu=run_silu)[mode](work, lw, rng, tag)
+    ok, n, errs, info = dict(resid=run_resid, qk=run_qk, silu=run_silu, attn=run_attn)[mode](work, lw, rng, tag)
     verdict = 'PASS' if ok == n and not errs else 'FAIL'
     print(f'DV_LOWER_VEC {mode} {verdict} {ok}/{n} mutant={mutant or 0} commands={len(lw["commands"])} '
           f'collisions={len(lw["collisions"])} ar_order={ar_order} fixture={Path(fixture).name if fixture else 0} {info}')
@@ -474,7 +521,7 @@ def main_run(work, mode, mutant, seed, ages, ar_order='slice', fixture=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--work', required=True)
-    ap.add_argument('--mode', required=True, choices=('calibrate', 'resid', 'qk', 'silu'))
+    ap.add_argument('--mode', required=True, choices=('calibrate', 'resid', 'qk', 'silu', 'attn'))
     ap.add_argument('--mutant')
     ap.add_argument('--ar-order', choices=('slice', 'row'), default='slice',
                     help='residual AR return order; row matches the production collective')

@@ -82,6 +82,8 @@ PROG_CONSTANTS = dict(
 )
 
 ME_ROWS, XPF_N, CMD_CEIL = 8, 4, 976
+HEAD_PLAN = 'results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/token_source_plan.json'
+G_XPF_N = 3
 SEG_STAGE0, SEG_DECODE, SEG_HEAD, SEG_BOOT = 0, 1, 2, 3
 
 
@@ -169,7 +171,7 @@ def su_cycles(op, C):
     return C['SU_LAT'] + (el + C['SU_LANES'] - 1) // C['SU_LANES']
 
 
-def plan_stage(ops, segs, win, C, R, lead, period):
+def plan_stage(ops, segs, win, C, R, lead, period, pc_window=None):
     """Static plan of one decode stage, in edges after edge 0 (dh h_start captured at tt_ctlm).
 
     SU op:   'at'   = edge its command is at the dvs_W5 cmd_wi pin (the slices' compiled issue).  The slice SU takes one
@@ -197,10 +199,11 @@ def plan_stage(ops, segs, win, C, R, lead, period):
         return int(w['cycles'])
 
     notes = ['residual window: base cycles %d (token path %d incl. the pre-DV ROM split-station adder)'
-             % (wlen('residual'), int(win['residual']['cycles']))]
+             % (wlen('residual'), int(win['residual']['cycles']))] if 'residual' in win else []
+    PCW = PC_WINDOW if pc_window is None else pc_window
     groups = {}
     for pc in range(len(ops)):
-        groups.setdefault(PC_WINDOW[pc], []).append(pc)
+        groups.setdefault(PCW[pc], []).append(pc)
     seg_of = {pc: k for k, sg in enumerate(segs) for pc in range(sg['first'], sg['end'] + 1)}
     plan, done_by_pc = [], {}
     t_su = 0                       # earliest next SU command at the W5 pin (previous SU op's slice-side end)
@@ -211,7 +214,7 @@ def plan_stage(ops, segs, win, C, R, lead, period):
     k_seg = 0
     dep_me_issue = -(1 << 20)
     for pc, op in enumerate(ops):
-        name = PC_WINDOW[pc]
+        name = PCW[pc]
         k = seg_of[pc]
         if k != k_seg:             # a new ME segment: collective of the previous one, then LOCAL SEG
             prev = segs[k_seg]
@@ -270,13 +273,13 @@ def plan_stage(ops, segs, win, C, R, lead, period):
 
 
 # ------------------------------------------------------------------------------------------------ ME head image
-def me_rows(plan, C):
+def me_rows(plan, C, pc_off=0):
     rows = []
     for p in [q for q in plan if q['unit'] in (0, 1)]:
         cyc = p['at'] - C['HEAD0']
         if cyc < 2:
             raise CompileError('ME issue before the head calendar start-up (cycle >= 2)')
-        rows.append(dict(pc=p['pc'], unit=p['unit'], cycle=cyc))
+        rows.append(dict(pc=p['pc'] + pc_off, unit=p['unit'], cycle=cyc))
     rows.sort(key=lambda r: r['cycle'])
     for a, b in zip(rows, rows[1:]):
         if b['cycle'] <= a['cycle']:
@@ -522,6 +525,121 @@ def digest(words):
     return d
 
 
+# ------------------------------------------------------------------------------------------------ LM head (QLB-C4b)
+def lm_head_programme(plan_path: Path):
+    """The DV (TP8) LM-head ME programme: final RMSNorm (sum of squares, rsqrt, gain apply -> VM 8192, the head
+    profile's three SU ops) -> ONE AMAX matvec over the die's head rows (head_geometry: rows, tiles a round, rounds;
+    the profile's chunk-0 matvec fields with the DV geometry: no chunking, the 25-round DV schedule streams them) -> END.
+    Source: token_source_plan head_geometry + head_profiles[0] (the die-0 ISA profile)."""
+    p = json.loads(plan_path.read_text())
+    geo, prof = p['head_geometry'], p['head_profiles'][0]
+    pw = [int(h, 16) for h in prof['program_hex']]
+    ops = [ISA.decode_instruction(w) for w in pw]
+    if [o['unit'] for o in ops[:4]] != [2, 2, 2, 1] or not ops[3]['me_amax'] or ops[-1]['unit'] != 0:
+        raise CompileError('head profile is not norm (3 SU) + AMAX matvec ... END')
+    me = dict(ops[3])
+    me.update(me_nout=geo['rows'], me_tiles=geo['tiles_per_round'], me_wbase=0, me_wcs=0, me_obase=0, me_row0=0,
+              me_amc=0)
+    if (geo['rows'] + geo['tiles_per_round'] * geo['rounds'] - 1) // (geo['tiles_per_round'] * geo['rounds']) > 128:
+        raise CompileError('head rows exceed tiles x rounds x 128')
+    fields = [ops[0], ops[1], ops[2], me, ops[-1]]
+    words = [ISA.encode_instruction(f) for f in fields]
+    for w, f in zip(words, fields):
+        g = ISA.decode_instruction(w)
+        if any(g[k] != f[k] for k in f):
+            raise CompileError('head instruction does not round-trip')
+    return words, [ISA.decode_instruction(w) for w in words], dict(geometry=geo, profile=prof['schema'],
+                                                                     profile_die=prof['die'])
+
+
+def compile_head(a, C, R, dec_words, stage, xpf_edges):
+    """stage LAST_STAGE: the calendar's head segment starts the LM-head ME programme with a LOCAL SEG at its base
+    (= the decode words) on edge E_SEG; every head event is planned on that start (the SEG edge plays edge 0: the
+    segment start reaches the head calendar and the G XPF schedule SEG_TO_HEAD = HEAD0 = XPF0 edges later)."""
+    if C['SEG_TO_HEAD'] != C['HEAD0'] or C['XPF0'] != C['HEAD0']:
+        raise CompileError('segment start offsets differ from the stage start offsets')
+    words, ops, src = lm_head_programme(ROOT / a.head_plan)
+    B = len(dec_words)
+    tp = json.loads(gzip.open(ROOT / a.token_path).read())
+    hn = next(n for n in tp['nodes'] if n['id'] == 'head.lm_head')
+    win = {'lm_head': dict(start=0, end=int(hn['cycles']), cycles=int(hn['cycles']), base=hn.get('base_cycles'),
+                           adders=[])}
+    lead = C['CAL_S'] + C['FIRST_T'] + R['R_CMD'] + a.lead_margin
+    period = int(hn['cycles']) + lead + 2 * C['DEP'] + 32
+    segs = [dict(first=0, end=len(ops) - 1, desc=None)]
+    plan, notes = plan_stage(ops, segs, win, C, R, lead, period, pc_window={pc: 'lm_head' for pc in range(len(ops))})
+    e_seg = C['CAL_S'] + C['FIRST_T']
+    ev = [(e_seg, cmdw(1, 2, B, 14), f'SEG base {B}')]
+    for p in plan:
+        if p['kind'] == 'SU':
+            ev.append((e_seg + p['at'] - R['R_CMD'], cmdw(1, 1, B + p['pc'], 15), f'SU PC{B + p["pc"]}'))
+        elif p['kind'] not in ('ME', 'END'):
+            raise CompileError(f'head plan op {p["kind"]} not supported')
+    cal = cal_entries(ev, C['CAL_S'], C)
+    if cal_model(cal, C['CAL_S']) != [C['CAL_S'] + t for t in _acc(cal)]:
+        raise CompileError('cmd_cal model: head issue edges differ from the compiled entry times')
+    rows = me_rows(plan, C, pc_off=B)
+    stop = rows[-1]['cycle']
+
+    def xpf_ev(r):
+        pp = r['producer']
+        if pp['unit'] == 1:
+            raise CompileError('head XPF producer must be an SU op')
+        return (pp['at'] - R['R_CMD']) + 3 - C['XPF0'] - 1, pp['at'] + a.su_first_write - C['XPF0'] - 1
+    recs = xpf_records(plan, ops, dict(fused_output_element_base=0, fused_output_elements=0))
+    for r in recs:
+        r['consumer_pc'] += B
+        r['producer_pc'] += B
+    xrows = xpf_pack(recs, stage, C, xpf_edges, xpf_ev)
+    if len(xrows) > G_XPF_N:
+        raise CompileError(f'{len(xrows)} head XPF records > {G_XPF_N}')
+    xstop = max(stop + C['HEAD0'] - C['XPF0'], max(r['issue_cycle'] for r in xrows) + 1,
+                max(r['first_write_cycle'] for r in xrows) + 1)
+    sh = lambda e: e_seg + e
+    exp = dict(
+        cmd_at_tt_ctlm=[dict(edge=C['CAL_S'] + t, cmd=f'{c:029x}', label=l) for t, (d, c, l) in zip(_acc(cal), cal)
+                        if l != 'NOP' and (c >> 112) != 14],
+        local_at_tt_ctlm=[dict(edge=C['CAL_S'] + t + C['LOC_EDGES'], kind='SEG', base=(c >> 4) & 0xFFF, label=l)
+                          for t, (d, c, l) in zip(_acc(cal), cal) if (c >> 112) == 14],
+        me_issue=[dict(head_cycle=r['cycle'], edge=sh(r['cycle'] + C['HEAD0']), pc=r['pc'], unit=r['unit']) for r in rows],
+        xpf_arm_at_tt_ctlm=[dict(edge=sh(C['XPF0'] + r['arm_cycle'] + C['XPF_ARM_EDGE']), xpf72=r['xpf72'],
+                                 consumer_pc=r['consumer_pc']) for r in xrows])
+    exp['rom_go_at_tt_ctlm'] = [dict(edge=e['edge'] + C['ISSUE_TO_ROM'], pc=e['pc']) for e in exp['me_issue'] if e['unit'] == 1]
+    status = [dict(s, edge=sh(s['edge'])) for s in status_timeline(plan, R, C)]
+    return dict(base=B, words=words, ops_source=src, seg_edge=e_seg, period_check=period, plan=plan, plan_notes=notes,
+                rows=rows, stop_cycle=stop, xpf_rows=xrows, xpf_stop=xstop, expected=exp, status=status,
+                programme_hex=[f'{w:0256x}' for w in words], cal=cal)
+
+
+def check_head_image(image, head, stage, xpf_edges):
+    """seal rules of ot_qwen_fixed_issue_seg_pw (G rows / CALG / CALB) and qfd_dv_xpf_seg_loader, on the emitted words"""
+    pw = image[:PW]
+    if head is None:
+        assert all(pw[k] == 0 for k in range(984, 1004))
+        return
+    gd, gs = pw[993], pw[992]
+    cnt, base = (gd >> 24) & 15, gd & 0xFFF
+    assert gd >> 32 == 0x43414C42 and (gd >> 28) & 15 == 0 and (gd >> 12) & 0xFFF == 0 and base and 0 < cnt <= 8
+    assert gs >> 32 == 0x43414C47 and gs & 0xFFFFFFFF
+    for k in range(8):
+        r = pw[984 + k]
+        if k < cnt:
+            assert r >> 47 == 0 and ((r >> 46) & 1) == int(k == cnt - 1) and not (r >> 45) & 1
+        else:
+            assert r == 0
+    pad, n = False, 0
+    for k in range(3):
+        v = pw[994 + 3 * k] | (pw[995 + 3 * k] << 64) | (pw[996 + 3 * k] << 128)
+        assert pw[996 + 3 * k] >> 60 == 0
+        if v == 0:
+            pad = True
+            continue
+        assert not pad and v & 1 and (v >> 86) & 63 == stage and (v >> 84) & 3 != 0
+        assert (v >> 156) >= ((v >> 92) & 0xFFFFFFFF) + xpf_edges + 3
+        n += 1
+    assert n >= 1 and pw[1003] >> 32 == 0x58505447 and pw[1003] & 0xFFFFFFFF
+
+
 # ------------------------------------------------------------------------------------------------ main compile
 plan_meta = {}
 
@@ -608,12 +726,19 @@ def compile_image(a):
 
     # ---------------- assemble PW / DW
     pw = [0] * PW
-    for pc, w in enumerate(words):
+    head = compile_head(a, C, R, words, stage, xpf_edges) if a.lm_head else None
+    all_words = words + (head['words'] if head else [])
+    if len(all_words) >= 60:
+        raise CompileError(f'{len(all_words)} programme words exceed the 59-instruction ME store reservation')
+    for pc, w in enumerate(all_words):
         for b in range(16):
             pw[16 * pc + b] = (w >> (64 * b)) & ((1 << 64) - 1)
-    meta_rows = len(words)
+    meta_rows = len(all_words)
     base = (16 * meta_rows + 7) // 8 * 8
-    cpw, dw, cdesc, ents = cal_image({SEG_BOOT: boot, SEG_STAGE0: stage0, SEG_DECODE: decode}, base, meta_rows)
+    segs_e = {SEG_BOOT: boot, SEG_STAGE0: stage0, SEG_DECODE: decode}
+    if head is not None:
+        segs_e[SEG_HEAD] = head['cal']
+    cpw, dw, cdesc, ents = cal_image(segs_e, base, meta_rows)
     tl_blocks = {}
     if tl_tab:
         row0 = (base + 2 * len(ents) + 15) // 16
@@ -623,7 +748,8 @@ def compile_image(a):
         it = iter(range(len(tl_tab)))
         boot = [(d, cmd_tload(row0 + next(it), *[(c >> s) & m for s, m in ((10, 7), (13, 15), (21, (1 << 24) - 1))]), l)
                 if is_tload(c) else (d, c, l) for d, c, l in boot]
-        cpw, dw, cdesc, ents = cal_image({SEG_BOOT: boot, SEG_STAGE0: stage0, SEG_DECODE: decode}, base, meta_rows)
+        segs_e[SEG_BOOT] = boot
+        cpw, dw, cdesc, ents = cal_image(segs_e, base, meta_rows)
         for i, (k_, d_, e_, pay) in enumerate(tl_tab):
             for b in range(16):
                 tl_blocks[16 * (row0 + i) + b] = (pay >> (64 * b)) & ((1 << 64) - 1)
@@ -650,8 +776,18 @@ def compile_image(a):
     pw[1022] = (0x58504654 << 32) | xpf_stop
     cap = native_capability(words, stage)
     pw[1023] = (0x58504631 << 32) | (int(cap) << 12) | (stage << 6) | (len(xrows) << 2) | 2
+    if head is not None:
+        for n, r in enumerate(head['rows']):
+            pw[984 + n] = int(r['hex'], 16)
+        pw[992] = (0x43414C47 << 32) | head['stop_cycle']
+        pw[993] = (0x43414C42 << 32) | (len(head['rows']) << 24) | head['base']
+        for n, r in enumerate(head['xpf_rows']):
+            for b in range(3):
+                pw[994 + 3 * n + b] = (r['value'] >> (64 * b)) & ((1 << 64) - 1)
+        pw[1003] = (0x58505447 << 32) | head['xpf_stop']
     image = pw + dw
     check_image(image, meta_rows, len(rows), len(xrows), stage, xpf_edges)
+    check_head_image(image, head, stage, xpf_edges)
 
     # ---------------- expected events (bench contract)
     exp_cmd = [dict(edge=C['CAL_S'] + t, cmd=f'{c:029x}', label=l) for t, (d, c, l) in zip(_acc(decode), decode)
@@ -671,7 +807,8 @@ def compile_image(a):
               '(STAGE_ME 1 required: stage-0 / LM-head h_start must not restart the layer ME programme)',
         inputs={**({a.lane_ages: sha(ROOT / a.lane_ages)} if a.lane_ages else {}), a.program: sha(ROOT / a.program), a.lowering: sha(ROOT / a.lowering),
                 a.token_path: sha(ROOT / a.token_path), a.relay: sha(ROOT / a.relay),
-                a.sys_face_events: sha(ROOT / a.sys_face_events)},
+                a.sys_face_events: sha(ROOT / a.sys_face_events),
+                **({a.head_plan: sha(ROOT / a.head_plan)} if head is not None else {})},
         stage_starts_T=[dict(cycle=c, stage=st) for c, st in starts],
         constants=C, relay=R, stage_label=stage, period=a.period, lead=lead, xpf_transport_edges=xpf_edges,
         me_observe_edges=a.me_observe_edges, su_first_write=a.su_first_write,
@@ -700,12 +837,18 @@ def compile_image(a):
                       stage0_local=[dict(edge=C['CAL_S'] + t + C['LOC_EDGES'], kind='EMB', label=l)
                                     for t, (d, c, l) in zip(_acc(stage0), stage0)]),
         status=status, tload=tl_rec,
+        lm_head=None if head is None else {k: v for k, v in head.items() if k not in ('words', 'cal', 'xpf_rows')} | dict(
+            cal=[dict(delta=d, cmd=f'{c:029x}', label=l) for d, c, l in head['cal']],
+            xpf_records=[{k: v for k, v in r.items() if k != 'value'} for r in head['xpf_rows']]),
         digest=f'{digest(image):016x}', footer=f'{pw[1023]:016x}',
         not_compiled=[
             'G-C4 DV slice lowering: slice PROG image (the 457-b SU words of the SU commands\' pidx = ISA PC), STN / ROOT / '
             'STREAM / PORTS / AMAX command fields (need the DV row->slice ownership and slice-local VM address maps)',
             'stage-0 slice commands beyond the LOCAL EMB start (E calendar / embedding landing not compiled)',
-            'LM-head (stage 37) ME programme: the head has one fixed-issue calendar per image, armed at base 0 only',
+            ('LM-head (stage 37) ME programme: compiled (--lm-head: segment-G calendar + G XPF, needs qfd_tt_ctlm_dv '
+             'SEG_CAL 1); its SU ops still go out as broadcast SU commands (no DV slice lowering of the head)')
+            if head is not None else
+            'LM-head (stage 37) ME programme: not compiled (run with --lm-head; RTL needs qfd_tt_ctlm_dv SEG_CAL 1)',
             'per-layer ROM relocation needs qfd_tt_ctlm_dv STAGE_ME 1 (command_stage = running stage)'])
     if getattr(a, 'dv_lower', False):
         rec.update(dv_lower_section(rec))
@@ -727,9 +870,9 @@ def dv_lower_section(rec):
     nc.append('decode calendar still issues the sum-of-squares ops as broadcast SU commands (%s): dv_lower --mutant '
               'broadcast shows that schedule collides on the scalar chain (%d collisions); the calendar must take '
               "dv_lower's per-slice entries (ssq_entry) -- next step" % (', '.join(su_bc), len(DL.lower('broadcast')['expected']['collisions'])))
-    nc.append('RTL GAP (LM head): ot_qfd_tt_ctlm_head_static_rk / split_static arm the fixed-issue calendar only at '
-              'prog_base 0 (u_fixed_issue .start(q_h_start && q_prog_base == 0)) and PW976..983 hold ONE 8-row '
-              'calendar per image: an LM-head ME programme at another base cannot issue on a compiled cycle')
+    if rec.get('lm_head') is None:
+        nc.append('LM head: compile with --lm-head (RTL gap closed by QLB-C4b: qfd_tt_ctlm_head_static SEGCAL / '
+                  'qfd_tt_ctlm_dv SEG_CAL = per-segment fixed-issue calendar + segment-G XPF schedule)')
     return dict(not_compiled=nc, dv_lowering=dict(
         tool='tools/qwen_layerbench/dv_lower.py', slices=lw['slice_map']['names'], cmd_arrival=lw['slice_map']['cmd_arrival'],
         residual_blocks=lw['ownership']['residual']['blocks_per_slice'], vm=lw['vm'], root=lw['root'],
@@ -825,8 +968,13 @@ def main():
     ap.add_argument('--me-observe-edges', type=int, default=1, help='head fixed issue -> actual_me_observe edges')
     ap.add_argument('--su-first-write', type=int, default=12, help='SU command at the W5 pin -> its first VM write')
     ap.add_argument('--dv-lower', action='store_true', help='attach the DV slice lowering (dv_lower.py, G-C4)')
+    ap.add_argument('--lm-head', action='store_true',
+                    help='compile the LM-head (stage 37) ME programme at base = decode words: segment-G calendar '
+                         'PW984..993 + G XPF PW993..1003 (QLB-C4b; RTL qfd_tt_ctlm_dv SEG_CAL 1)')
+    ap.add_argument('--head-plan', default=HEAD_PLAN, help='token source plan (head_geometry + head_profiles)')
     ap.add_argument('--tload', action='store_true',
-                    help='compile BOOT table-load entries and payload blocks for tt_ctlm.tl -> dvs_W5.st_wi')
+                    help='QLB-C4b: compile the slice table words (dv_lower PROG streams) into the image as BOOT TLOAD '
+                         'entries + PW blocks (the die load path tt_ctlm.tl -> dvs_W5.st_wi)')
     a = ap.parse_args()
     try:
         image, rec = compile_image(a)
