@@ -1,0 +1,20 @@
+# Standalone PC SRAM experimental gate packet — no parent adoption
+
+Current-main042aa171b mandatory pre-route/refroute/native-census hooks are consumed before source freeze. Dedicated logical top qkd_hr_cdc_pc_sram; no original top/default source edits. input_sha256.json pins all sources, keep hook, actual macro model/BB/LEF/corners and mandatory gate helpers. Old mapped qualification354cfb82a9473cac045bb8932912cc519f06f6e454d4a41322c79cac6cdba1eb (actual5SS libraries+two macroSS): PASS maximum32,13560 roots,0 role errors/violations. Fresh production preflight must reproduce source-native<=32 before floorplan; old coupon is not substituted for that gate.
+
+floorplan_plan.png and density_budget_plan.png are planned geometry/synthesis budgets, NOT layout/density receipts. Four177.768x160.392 macros at(43.2,43.2),(259.2,43.2),(43.2,302.4),(259.2,302.4), R0, halo10.8. Horizontal pinface gap38.232/clear16.632 after halos; vertical gap98.808/clear77.208. All origins43.2*k, macro faces0.192 pitch <=5.21signals/um. Outline475.2x518.4; core[2.16,2.16,473.04,516.24]. SRAM114050.260224+std2931.761156=116982.02138um2 (47.49% outline/48.33% core). No density waiver: parent-approved40–60% envelope; generator WARN under50 is preserved.
+
+|SAFE item|Preflight status and next physical obligation|
+|---|---|
+|1 registered data/reset boundary|PASS source: exact generated OT pin wrapper/table archived; core recipe4 stations retained; noncore data pins already terminate/launch in channel's same-family state. Outer host_rst_n2core-edge landing; inner domain conditioning stays2edges. No reset/transfer edge changed. Physical every exposed port/register and actual reset fanout must be re-read.|
+|2 landed reach|PLANNED: input/async macro pair by channel; local kept bypass/source state, data pipeline between macro and exposed face. Long N/S macro-to-face spans require distributing existing stages; gate must inspect actual reach and reject over405um without a real station. No extra stage is assumed.|
+|3 native dynamic loads|PASS prior fullwrapper actualLib BUF/INV terminal union max32 (including reset/macrocontacts); fresh mandatory currentmain native census remains required before floorplan.|
+|4 depth and budgets|Prior fullwrapper depth278.4ps; priced macro TT clk->q373.5ps. Same route core770ps/PHY963.732385493ps, signoff833.333/1043ps, setup60ps/hold25ps; no timing exception or relaxed period. Actual CTS/TT/FF/SS owed.|
+|5 SRAM runtime storage|PASS source: both input and crossing rings in four actual1R1W macros, effective depths4/8 preserved; masks functional, no tied data/control. Models are calibrated analytical abstracts, not transistor layout.|
+|6 physical packing/pin faces|PLANNED as exact image/coordinates above. W/E546-bit data ranges[204,302] gives~5.58signals/um inclclock. Clock ck_core W[242,260], ck_phy_fam E[260,278]. N/S wide buses spread fullface. Layout PNG/contact/PG/macro-pin escape remain owed.|
+|7 clocks/PG/reset|Two actual independent roots, both leaf CTS trees must satisfy rule independently; centered entries, propagated boundary references and ordinary recovery/removal preserved. Macro pg_layerM5/strapM6 contract and signal capM5; actual native macro PG connectivity and all-root clockspread checked by gate.|
+|8 schedule/throughput|Exact3431sent/received plus two causal mutant failures. Saturation4185transfers,1408frames/1761readedges=.7995>=.5 budget; no steady channel edges. Parent repack/wire hops/calendar and fullrealSerDes H are unmeasured.|
+
+Actual die inventory (actual_die_inventory.json): d5p54e9 has0hardPC/0hardcluster replicas, exactlyone qkd_host_rt frame (777.576x518.376) at6349.536,26462.160 R0; its actual source has one functional RX/TX channel pair. Replacing that source with a hardened cluster is still future explicit work; +223482.24um2 per future PCleaf envelope, no128 multiplier. This standalone experiment grants no parent fit or production binding.
+
+Gate run must use --remote auto --cts from currentmain-based frozen commit. ROOT reviews this concrete packet before launch. No closure-loop submit, REVIEW.json, or production adoption is requested here.
