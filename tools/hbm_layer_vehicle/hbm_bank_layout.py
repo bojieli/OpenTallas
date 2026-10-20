@@ -32,7 +32,9 @@ Check (check_stream), from the controller contract (aq_pc_safe.sv:14-20): in a s
   R2 no block's set is d = 4 or 5 ahead (mod 8) of any earlier block less than REF_WIN = 160 column words (calibrated,
      LEAD + tRFCpb = 244 HBM cycles) before it -- those are the sets REFpb may be refreshing since the earlier block was the newest
      queued entry (protected d = 6, 7, 0..3; measured: short blocks + plain +1 rotation stall ~100-180 cycles);
-  R3 a stream of > 1 block uses more than one set.
+  R3 a stream of > 1 block uses more than one set;
+  R4 (census_tbl, MC3b) a) a new row on the set used 2 blocks earlier needs a full block (>= 64 words) between; b) any
+     8 consecutive blocks use >= 3 sets (sets 0,1,0,1 pass R1/R2 but measure 16.0 (41-word blocks) / 76.7 (68-word)).
 Any violation is a refusal (SystemExit 'ROTLAYOUT REFUSED'), not a warning: the compiler never emits an unrotated stream.
 
   python3 tools/hbm_layer_vehicle/hbm_bank_layout.py selftest      # measured layouts: rotated PASS, unrotated REFUSED
@@ -48,6 +50,11 @@ REF_WIN = 160                  # column words (hard refusal); calibrated on the 
                                # set is d = 4/5 ahead of a block < 160 words back stalls 26-44 % of the time (mean +20-71
                                # cycles), 160-199: 18 % (+11), 200-239: 0.7 %, >= 240: 0 (LEAD 48 + tRFCpb 196 = 244)
 REF_BACK = 8                   # blocks of a tail the wrap / pair checks carry
+R4_GAP = 64                    # R4a (HBM-ROTLAYOUT-TBL census_tbl, MC3b): a set re-opened on a new row 2 blocks after it was
+                               # left needs a full block (>= 64 words) between; R4b: any 8 consecutive blocks use >= 3 sets.
+R4_WIN, R4_MINSETS = 8, 3      # Measured: sets 0,1,0,1 with 41-word blocks = 16.0 B/edge/SM (48 exposed cyc/ACT, 875
+                               # refresh stalls/PC); 0,1,0,1 with 68-word blocks = 76.7 (refresh 196); one 0,1,2,1 KV run
+                               # (68-word blocks) a layer = 99.3; 3-set cycles 1,2,3,1,2,3 (33-word blocks) = 103.8
 CLASSES = ("weights", "experts", "kv", "embed_head", "tables")
 HEAD = (0, 1, 2)               # every stream starts here (the wrap check appends it after every stream's tail)
 LINE_B, WORD_B = 136, 128
@@ -73,8 +80,28 @@ def split(addr):
 
 
 # ------------------------------------------------------------------------------------------------ the check
+def _r4(seq, i):
+    """R4a: a new row on the set used 2 blocks earlier needs >= R4_GAP words between; R4b: the last R4_WIN blocks use
+    >= R4_MINSETS sets (a stream that stays on two sets starves the controller: 16-77 B/edge measured)"""
+    r, s, _ = seq[i]
+    if i >= 2:
+        rj, sj, _w = seq[i - 2]
+        if sj == s and (r is None or rj is None or rj != r) and seq[i - 1][2] < R4_GAP:
+            return (f"R4a block {i} (row {r}, set {s}) re-opens set {s} 2 blocks after block {i - 2} (row {rj}) with only "
+                    f"{seq[i - 1][2]} words between (< {R4_GAP}; measured 16 B/edge/SM for 0,1,0,1 41-word blocks)")
+    if i >= R4_WIN - 1:
+        used = {x[1] for x in seq[i - R4_WIN + 1:i + 1]}
+        if len(used) < R4_MINSETS:
+            return (f"R4b blocks {i - R4_WIN + 1}..{i} use only sets {sorted(used)} (< {R4_MINSETS} in {R4_WIN} blocks; "
+                    f"measured 16-77 B/edge/SM: the sets must advance)")
+    return None
+
+
 def _r1(seq, i, t_hide=T_HIDE):
     r, s, _ = seq[i]
+    err = _r4(seq, i)
+    if err:
+        return err
     acc = 0
     for j in range(i - 1, -1, -1):
         rj, sj, wj = seq[j]
@@ -113,6 +140,9 @@ def check_stream(cls, seq, what="", t_hide=T_HIDE):
         if not 0 <= s < NSETS:
             raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: block {i} bank set {s} outside 0..{NSETS - 1}")
         sets_used.add(s)
+        err = _r4(seq, i)                                                 # R4
+        if err:
+            raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: {err}")
         acc = 0
         for j in range(i - 1, -1, -1):                                   # R1
             rj, sj, wj = seq[j]
