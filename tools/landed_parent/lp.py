@@ -79,6 +79,10 @@ SPEC (JSON; paths relative to the repo root):
                  compiler block lists the lag: the status those pins carry reaches the reader's outputs lag edges late.
   mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
                  outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
+  regional_reset_ports  {"stages": N >= 2, "why": ..}  (L2H-PSLICE 10-19, opt-in; absent = byte-identical): NO reset root
+                 and NO cross-region reset hop.  The parent reset port is replaced by one port <reset_port>_<region> per
+                 region, each landed by N plain stages on that region's own clock beside its pin (u_lpr_<r>, ot_pl_pad);
+                 the die releases every regional reset on the same edge (die obligation in the record).  RB = N.
 Child clock pins wider than one bit (a child with several entry clocks in one region) get {W{ck_<r>}}.
 """
 from __future__ import annotations
@@ -455,6 +459,12 @@ class Parent:
         self.ports = {p["name"]: p for p in self.mod["ports"]}
         self.ck = set(spec.get("clock_ports") or [])
         self.rst = spec.get("reset_port")
+        self.rports = spec.get("regional_reset_ports")
+        if self.rports is not None:
+            if not isinstance(self.rports, dict) or type(self.rports.get("stages")) is not int or self.rports["stages"] < 2:
+                raise SystemExit('regional_reset_ports: {"stages": N >= 2, "why": ...}')
+            if not self.rst or spec.get("landing_reset_forest"):
+                raise SystemExit("regional_reset_ports needs reset_port and excludes landing_reset_forest")
         self.static = set(spec.get("static") or [])
         self.loose = set(spec.get("loose") or [])
         self.regions = [r["name"] for r in spec["regions"]]
@@ -469,6 +479,23 @@ class Parent:
         self.direct_timing = bool(spec.get("landing_direct_timing", False))
         self.chunk_bits = int(spec.get("landing_chunk_bits", 0))
         self.reset_forest = spec.get("landing_reset_forest", False)
+        # QW-CTLM3 10-19: landing_reset_lead -- the ring / read rq (their own re-registering flop) released at the SAME
+        # edge as a t = 0 child (regional run RB - 2 stages + rq), not one edge after it.  Without it a ring misses the
+        # first word its source (child or input port) presents on the first post-reset edge: the flat reference accepts
+        # it, the landed parent loses it (CTLM MUT0 first-token loss, ss5 cycle 19).  Opt-in (committed records keep
+        # their bytes); MUT 5 = the old late landing release (must FAIL lockstep).
+        self.reset_lead = spec.get("landing_reset_lead", False)
+        if type(self.reset_lead) is not bool:
+            raise SystemExit("landing_reset_lead must be an explicit boolean")
+        if self.reset_lead and self.reset_forest:
+            raise SystemExit("landing_reset_lead is not implemented with landing_reset_forest")
+        if self.reset_lead and self.rports is not None:
+            raise SystemExit("landing_reset_lead is not implemented with regional_reset_ports")
+        # QW-CTLM3 10-19: landing_mcp false -- NO data multicycle: ring -> read is timed single-cycle (conservative: the
+        # read samples a slot written >= K edges earlier), every cone (slot data, valid, selectors) at full STA.
+        self.mcp = spec.get("landing_mcp", True)
+        if type(self.mcp) is not bool:
+            raise SystemExit("landing_mcp must be an explicit boolean")
         if type(self.reset_forest) is not bool:
             raise SystemExit("landing_reset_forest must be an explicit boolean")
         if self.reset_forest and not self.chunk_bits:
@@ -704,6 +731,8 @@ class Parent:
 
     # ---------------------------------------------------------------------------------------------------- emitters
     def reset_tree(self):
+        if self.rports is not None:     # regional reset ports: every region lands its own reset, no hops
+            return None, {r: 0 for r in self.regions}, int(self.rports["stages"])
         rr = (self.S.get("reset_region") or self.regions[0])
         cen = {r["name"]: r.get("centre") for r in self.S["regions"]}
         reach = float(self.S.get("reach_um", 405))
@@ -770,8 +799,11 @@ class Parent:
         L = []
         w = L.append
         # header
-        items = [full_item(p) for p in self.mod["ports"] if p["name"] not in self.ck]
+        items = [full_item(p) for p in self.mod["ports"] if p["name"] not in self.ck
+                 and not (self.rports is not None and p["name"] == self.rst)]
         items += [f"input wire ck_{r}" for r in self.regions]
+        if self.rports is not None:
+            items += [f"input wire {self.rst}_{r}" for r in self.regions]
         par = (self.mod["params_txt"] + ",\n    " if self.mod["params_txt"] and self.mod["params_txt"].strip() else "")
         w("`timescale 1ns/1ps")
         w(f"// GENERATED by tools/landed_parent/lp.py from {S['top']} ({', '.join(S['sources'])}) -- do not edit.")
@@ -779,7 +811,8 @@ class Parent:
           f"{len(P['lands'])} landed crossings (D {D}, E = K = {E}, +{self.A} edges each), {len(P['pads'])} alignment pads,")
         w(f"// regional reset runs depth {RB} (+ t(child) per child).  Record: {S.get('record_dir', S['out_dir'])}/{top_lp}_record.json")
         w(f"// MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,")
-        w(f"//     4 = child reset run of '{self.mut_child(P)}' one stage long")
+        w(f"//     4 = child reset run of '{self.mut_child(P)}' one stage long"
+          + (", 5 = landing rq released one edge late (pre-landing_reset_lead)" if self.reset_lead else ""))
         w(f"module {top_lp} #(\n    {par}parameter integer MUT = 0\n) (\n    " + ",\n    ".join(items) + "\n);")
         body = self.mod["body"]
         # strip instance statements; they are re-emitted below
@@ -806,7 +839,11 @@ class Parent:
               f"(.ck(ck_{P['nreg'][f'port:{p}']}), .d({p}__o), .q({p}));")
         # reset tree
         w(f"    // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region {rr} holds the root)")
-        w(f"    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root));")
+        if self.rports is not None:
+            w(f"    // L2H-PSLICE 10-19 regional_reset_ports: one reset port per region, landed {RB} stages on its own root")
+            w(f"    // beside its pin; no reset root, no cross-region reset path (the die releases all on one edge)")
+        else:
+            w(f"    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root));")
         if forest:
             for r in self.regions:
                 expression = '+'.join(forest['regions'][r]['terms'])
@@ -818,6 +855,14 @@ class Parent:
                 w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
                 w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
                   f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
+            elif self.rports is not None:
+                w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB})) u_lpr_{r} (.ck(ck_{r}), .d({self.rst}_{r}), .q(lpr_{r}));"
+                  f"   // regional reset port landed on ck_{r}")
+            elif self.reset_lead:
+                w(f"    wire lpr_{r}_l;  ot_pl_pad #(.W(1), .N({RB - 2})) u_lpr_{r}_l (.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_l));"
+                  f"   // {hops[r]} hop(s) from {rr}; landing rq release = RB (landing_reset_lead)")
+                w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N(1)) u_lpr_{r} (.ck(ck_{r}), .d(lpr_{r}_l), .q(lpr_{r}));")
+                w(f"    wire lpr_{r}_lw = " + (f"(MUT == 5) ? lpr_{r} : lpr_{r}_l;" if mut else f"lpr_{r}_l;"))
             else:
                 w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB - 1})) u_lpr_{r} (.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}));"
                   f"   // {hops[r]} hop(s) from {rr}")
@@ -830,7 +875,7 @@ class Parent:
             primitive = "ot_pl_land_vector_reset" if forest else ("ot_pl_land_chunk" if self.chunk_bits else "ot_pl_land")
             def reset_input(role, region):
                 if not forest:
-                    return f'lpr_{region}'
+                    return f'lpr_{region}_lw' if self.reset_lead else f'lpr_{region}'
                 binding = next(v for v in forest['regions'][region]['bindings'] if v['landing']==n and v['role']==role)
                 return f'lpr_{region}_leaves[({binding["first_expr"]}) +: {binding["chunks_expr"]}]'
             cp = f", .CHUNK_BITS({self.chunk_bits})" if self.chunk_bits else ""
@@ -950,13 +995,19 @@ class Parent:
         if rest:
             lst = " ".join(f"ck_{r}" for r in rest)
             o += [f"set_clock_uncertainty -setup 60 [get_clocks {{{lst}}}]", f"set_clock_uncertainty -hold 25 [get_clocks {{{lst}}}]"]
-        o.append(f"# 1-bit reset runs {rr} -> every region: single-cycle with the {res}-ps die residual on top of 60 / 25")
-        for r in self.regions:
+        if self.rports is not None:
+            o.append("# regional_reset_ports: every region lands its own reset port; no cross-region reset hop")
+        else:
+            o.append(f"# 1-bit reset runs {rr} -> every region: single-cycle with the {res}-ps die residual on top of 60 / 25")
+        for r in (self.regions if self.rports is None else []):
             if r != rr:
                 for f_, t_ in ((rr, r), (r, rr)):
                     o.append(f"set_clock_uncertainty -setup {60 + res} -from [get_clocks {clk[f_]}] -to [get_clocks {clk[t_]}]")
                     o.append(f"set_clock_uncertainty -hold {25 + res} -from [get_clocks {clk[f_]}] -to [get_clocks {clk[t_]}]")
-        if P["lands"] and not self.direct_timing:
+        if P["lands"] and not self.direct_timing and not self.mcp:
+            o.append(f"# {len(P['lands'])} landings: NO data multicycle (landing_mcp false): ring -> read timed single-cycle "
+                     f"at full STA (conservative; read age K = {E} edges), all cones incl. slot data / valid / selectors")
+        if P["lands"] and not self.direct_timing and self.mcp:
             o.append(f"# {len(P['lands'])} landings (LANDING-CONTRACT L5): ring -> read multicycle -setup {E} -hold {D - 1}, "
                      f"window ({E} - {D}) T + t_hold < dL < {E} T - t_cq - t_setup")
             shared = any(L.get("ring_of", L["name"]) != L["name"] for L in P["lands"])
@@ -1023,7 +1074,7 @@ class Parent:
                               (2 if L.get("ring_of", L["name"]) == L["name"] else 1) for L in P["lands"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
         flops_oreg = sum(eval_width(self.ports[p]["range"], self.env) * k for p, k in (P.get("oregs") or {}).items())
-        flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
+        flops_rst = (len(self.regions) * rt["RB"] if self.rports is not None else 1 + len(self.regions) * (rt["RB"] - 1)) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
             pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items()))
         # emit() creates a distinct W1 u_lprb pad for EVERY regional reset
         # vector bit, in addition to the ordinary scalar child reset pad.
@@ -1037,7 +1088,8 @@ class Parent:
         if forest:
             flops_rst += forest['incremental_FFs']
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
-        rpairs = sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})
+        rpairs = [] if self.rports is not None else \
+            sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})
         port_in = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"]
                    if p["dir"] == "in" and p["name"] not in self.ck | self.static | {self.rst}}
         port_out = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"] if p["dir"] == "out"}
@@ -1055,8 +1107,8 @@ class Parent:
                     f"({self.E} - {self.D}) T + t_hold < dL < {self.E} T - t_cq - t_setup at TT and FF"),
             landings=[dict(L, ring=f"u_lpl_{L.get('ring_of', L['name'])}_w (ck_{L['src_region']})",
                            read=f"u_lpl_{L['name']}_r (ck_{L['dst_region']})", added_edges=self.A,
-                           sdc=(f"direct related-root quarter-T setup envelope, setup60+res{S.get('residual_ps', 60)}ps, hold25+res" if self.direct_timing else f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L.get('ring_of', L['name'])}_w.* "
-                               f"-to u_lpl_{L['name']}_r.*"))
+                           sdc=(f"direct related-root quarter-T setup envelope, setup60+res{S.get('residual_ps', 60)}ps, hold25+res" if self.direct_timing else (f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L.get('ring_of', L['name'])}_w.* "
+                               f"-to u_lpl_{L['name']}_r.*" if self.mcp else "none: single-cycle full STA (landing_mcp false)")))
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
             loose_status=dict(nets=sorted(self.loose), lag=P.get("loose_lag", []),
@@ -1064,6 +1116,8 @@ class Parent:
                               note="sticky status flags (no reservation / valid / payload effect): landed, outside the "
                                    "offset solve; the reader sees each flag lag_edges later than the flat parent"),
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
+                       **(dict(regional_ports={r: f"{self.rst}_{r}" for r in self.regions}, stages=rt["RB"],
+                               why=self.rports.get("why", "")) if self.rports is not None else {}),
                        **(dict(same_depth_forest=forest) if forest else {}),
                        **(dict(regional_vector_padding_FFs=regional_reset_FFs,
                                regional_vector_padding=regional_reset_pads) if regional_reset_pads else {}),
@@ -1093,8 +1147,10 @@ class Parent:
             **({} if not (S.get("bench") or {}).get("mut_waivers") else dict(mutant_waivers=S["bench"]["mut_waivers"])),
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
-            **({} if not (self.chunk_bits or self.direct_timing) else dict(
+            **({} if not (self.chunk_bits or self.direct_timing or not self.mcp or self.reset_lead) else dict(
                 landing_implementation=dict(chunk_bits=self.chunk_bits, direct_quarter_period_timing=self.direct_timing,
+                                            **({"no_data_multicycle": True} if not self.mcp else {}),
+                                            **({"reset_lead": True} if self.reset_lead else {}),
                                             compensated_phase_T=[-0.75, 0.75], sample_age_T=[1.25, 2.75],
                                             overwrite_gap_min_T=1.25))),
             **({} if not self.regional_bindings else dict(
@@ -1108,7 +1164,10 @@ class Parent:
             die_obligations=[
                 "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
                 "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
-                f"reset-hop pairs {rpairs}: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+                (f"reset-hop pairs {rpairs}: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)"
+                 if self.rports is None else
+                 f"regional reset ports {', '.join(self.rst + '_' + r for r in self.regions)}: the die releases every one "
+                 "on the SAME edge (its own landed reset distribution, fixed depth), each timed on its region clock"),
                 "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"])
 
     def tb(self, P, top_lp, rt):
@@ -1153,7 +1212,8 @@ class Parent:
         ck = sorted(self.ck)
         fc = [f".{c}(clk)" if W.get(c, 1) == 1 else f".{c}({{{W[c]}{{clk}}}})" for c in ck] + [f".{self.rst}(rst_f)"] + [f".{p['name']}(fi_{p['name']})" for p in ins] + \
              [f".{p['name']}(fo_{p['name']})" for p in outs]
-        lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{self.rst}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
+        lc = [f".ck_{r}(clk)" for r in self.regions] + ([f".{self.rst}_{r}(rst)" for r in self.regions]
+                                                         if self.rports is not None else [f".{self.rst}(rst)"]) + [f".{p['name']}(li_{p['name']})" for p in ins] + \
              [f".{p['name']}(lo_{p['name']})" for p in outs]
         pv = ", ".join(f".{k}({v})" for k, v in (S.get("params") or {}).items())
         pr = ", ".join(f".{k}({v})" for k, v in ((S.get("ref_params") if self.reference else None) or S.get("params") or {}).items())
@@ -1247,7 +1307,8 @@ class Parent:
         return "\n".join(L) + "\n"
 
     def bench_sh(self, top_lp, rel_out, P=None):
-        muts = [0] + ([1, 2] if P and P["lands"] else []) + ([3] if P and P["pads"] else []) + ([4] if self.mut_child(P) else [])
+        muts = [0] + ([1, 2] if P and P["lands"] else []) + ([3] if P and P["pads"] else []) + ([4] if self.mut_child(P) else []) + \
+            ([5] if self.reset_lead and P and P["lands"] else [])
         waived = {int(k): v for k, v in ((self.S.get("bench") or {}).get("mut_waivers") or {}).items()}
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
@@ -1325,6 +1386,13 @@ def audit(spec: dict, rtl_text: str) -> dict:
             if dirs[i["module"]].get(pin) == "out":
                 for n in idents(ex):
                     drv.setdefault(n, set()).add(i["inst"])
+    # OWN-QWEN/SLICE-E 10-18 (ported by QW-CTLM3 10-19; main had lost it): input ports placed by port_regions are drivers
+    # in THAT region, so a port -> reader crossing without its ring / read is an UNLANDED crossing too (else the
+    # --mut-unland mutant passes the audit whenever landing 0 comes from a port).
+    for p, r in (spec.get("port_regions") or {}).items():
+        if any(q["name"] == p and q["dir"] == "in" for q in mod["ports"]):
+            drv.setdefault(p, set()).add(f"port:{p}")
+            reg[f"port:{p}"] = r
     for _ in range(len(assigns) + 1):
         for lhs, rhs in assigns:
             src = set().union(*(drv.get(n, set()) for n in rhs)) if rhs else set()
@@ -1338,6 +1406,9 @@ def audit(spec: dict, rtl_text: str) -> dict:
             for n in idents(ex):
                 for d in drv.get(n, ()):
                     if reg[d] == reg[i["inst"]]:
+                        continue
+                    if d.startswith("port:"):
+                        fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
                     if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
