@@ -1,0 +1,3686 @@
+{
+  "blocking_obligations": [
+    "GEN must acknowledge current actual clock/phase table; historical input is not current binding authority",
+    "All fields of packed coherent bundle use same clock/en/reset/K and first-valid age; no old +3 control with +5 payload",
+    "107/116 flop masters HELD by mapped fanout failures; small flop widths need full mapped census evidence",
+    "No padding, tied functional inputs, implicit K defaults or unqualified 512/514 widths",
+    "Actual per-instance phase/reset/warm/first-use proof plus exact compiler pricing before emitting RTL",
+    "Physical face area/pins/reach/clock references and 43.2um lattice remain unplanned"
+  ],
+  "clock_groups": [
+    {
+      "bits": 1705,
+      "ck_s": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_E0",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "E"
+      ],
+      "links": 4,
+      "src": "dvs_W0"
+    },
+    {
+      "bits": 2241,
+      "ck_s": [
+        "clk_rx/pll_r116[0]"
+      ],
+      "dst": "dvs_E1",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "W"
+      ],
+      "links": 9,
+      "src": "dvs_E2"
+    },
+    {
+      "bits": 2743,
+      "ck_s": [
+        "clk_rx/pll_r95[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "E"
+      ],
+      "links": 10,
+      "src": "dvs_E1"
+    },
+    {
+      "bits": 2755,
+      "ck_s": [
+        "clk_rx/pll_r109[0]"
+      ],
+      "dst": "dvs_E2",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "W"
+      ],
+      "links": 10,
+      "src": "dvs_E3"
+    },
+    {
+      "bits": 2743,
+      "ck_s": [
+        "clk_rx/pll_r116[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "E"
+      ],
+      "links": 10,
+      "src": "dvs_E2"
+    },
+    {
+      "bits": 2241,
+      "ck_s": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E3",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "W"
+      ],
+      "links": 9,
+      "src": "dvs_E4"
+    },
+    {
+      "bits": 2743,
+      "ck_s": [
+        "clk_rx/pll_r109[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "E"
+      ],
+      "links": 10,
+      "src": "dvs_E3"
+    },
+    {
+      "bits": 2755,
+      "ck_s": [
+        "clk_rx/pll_r103[0]"
+      ],
+      "dst": "dvs_E4",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "W"
+      ],
+      "links": 10,
+      "src": "dvs_E5"
+    },
+    {
+      "bits": 2743,
+      "ck_s": [
+        "clk_rx/pll_r106[0]"
+      ],
+      "dst": "dvs_E5",
+      "dst_master": "qfd_dv_slice2_e",
+      "faces": [
+        "E"
+      ],
+      "links": 10,
+      "src": "dvs_E4"
+    },
+    {
+      "bits": 1136,
+      "ck_s": [
+        "clk_rx/pll_r95[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "E"
+      ],
+      "links": 2,
+      "src": "dvs_E0"
+    },
+    {
+      "bits": 3257,
+      "ck_s": [
+        "clk_rx/pll_r119[0]"
+      ],
+      "dst": "dvs_W0",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "W"
+      ],
+      "links": 11,
+      "src": "dvs_W1"
+    },
+    {
+      "bits": 2241,
+      "ck_s": [
+        "clk_rx/pll_r96[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "E"
+      ],
+      "links": 9,
+      "src": "dvs_W0"
+    },
+    {
+      "bits": 2743,
+      "ck_s": [
+        "clk_rx/pll_r121[0]"
+      ],
+      "dst": "dvs_W1",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "W"
+      ],
+      "links": 10,
+      "src": "dvs_W2"
+    },
+    {
+      "bits": 2241,
+      "ck_s": [
+        "clk_rx/pll_r119[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "E"
+      ],
+      "links": 9,
+      "src": "dvs_W1"
+    },
+    {
+      "bits": 3257,
+      "ck_s": [
+        "clk_rx/pll_r125[0]"
+      ],
+      "dst": "dvs_W2",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "W"
+      ],
+      "links": 11,
+      "src": "dvs_W3"
+    },
+    {
+      "bits": 2241,
+      "ck_s": [
+        "clk_rx/pll_r121[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "E"
+      ],
+      "links": 9,
+      "src": "dvs_W2"
+    },
+    {
+      "bits": 2743,
+      "ck_s": [
+        "clk_rx/pll_r128[0]"
+      ],
+      "dst": "dvs_W3",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "W"
+      ],
+      "links": 10,
+      "src": "dvs_W4"
+    },
+    {
+      "bits": 2241,
+      "ck_s": [
+        "clk_rx/pll_r125[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "E"
+      ],
+      "links": 9,
+      "src": "dvs_W3"
+    },
+    {
+      "bits": 3257,
+      "ck_s": [
+        "clk_rx/pll_r135[0]"
+      ],
+      "dst": "dvs_W4",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "W"
+      ],
+      "links": 11,
+      "src": "dvs_W5"
+    },
+    {
+      "bits": 2241,
+      "ck_s": [
+        "clk_rx/pll_r128[0]"
+      ],
+      "dst": "dvs_W5",
+      "dst_master": "qfd_dv_slice2_w",
+      "faces": [
+        "E"
+      ],
+      "links": 9,
+      "src": "dvs_W4"
+    }
+  ],
+  "historical_bits": 50267,
+  "historical_input_provenance": {
+    "landing_list": "origin/claude/qw-gen3-1019:results/arch/qw_dieclk2_1019/landing_list.json",
+    "landing_list_sha256": "589248ca5b72371416fcc1653bc6e46843c8eb53fd611685d0d5d9b0055fabec",
+    "masters_ref": "origin/main",
+    "relay_stages": "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/relay_stages.json",
+    "relay_stages_sha256": "e047322d50e87c8665ff0824895b5acab53e5b64428525bbab8e432f3edc7300"
+  },
+  "historical_input_sha256": "5bf6744e8414025f27dcf9adc61bc0060babd5c10b3b71619ab2765681f314f5",
+  "historical_links": 182,
+  "nominal_sram_edges_vs_flop": 2,
+  "qualified_sram_widths_native32": [
+    151,
+    173,
+    174,
+    182,
+    183
+  ],
+  "schema": "opentallas.qw_slice6.face_contract.v1",
+  "sram_calendar": {
+    "K": "(L+G-R0-2) mod 16",
+    "first_output": "zero until R0+4+K",
+    "write_to_read_age": "(L-3)*T+phi in [1.25*T,4.125*T]"
+  },
+  "sram_master_pattern": "qfd_landh0d8s_{W}_EW_98x171",
+  "status": "MODEL_ONLY_NO_RTL_BIND_OR_K_EMIT",
+  "units": [
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "E",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E1_rt_rv",
+          "dst_port": "rv_ei",
+          "link_index": 7,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E1_rt_re",
+          "dst_port": "re_ei",
+          "link_index": 4,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E1_rt_rr",
+          "dst_port": "rr_ei",
+          "link_index": 6,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_E1_rt_rl",
+          "dst_port": "rl_ei",
+          "link_index": 5,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E1_rt_rd",
+          "dst_port": "rd_ei",
+          "link_index": 3,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_E1_dr_dr",
+          "dst_port": "dr_ei",
+          "link_index": 2,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_E1",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_E1",
+      "face": "W",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E1_ar_arv",
+          "dst_port": "arv_wi",
+          "link_index": 17,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E1_ar_art",
+          "dst_port": "art_wi",
+          "link_index": 16,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_E1_ar_arm",
+          "dst_port": "arm_wi",
+          "link_index": 15,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E1_ar_arl",
+          "dst_port": "arl_wi",
+          "link_index": 14,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E1_ar_ard",
+          "dst_port": "ard_wi",
+          "link_index": 13,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_E1_dd_dd",
+          "dst_port": "dd_wi",
+          "link_index": 18,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E2",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "E",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E2_rt_rv",
+          "dst_port": "rv_ei",
+          "link_index": 26,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E2_rt_re",
+          "dst_port": "re_ei",
+          "link_index": 23,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E2_rt_rr",
+          "dst_port": "rr_ei",
+          "link_index": 25,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_E2_rt_rl",
+          "dst_port": "rl_ei",
+          "link_index": 24,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E2_rt_rd",
+          "dst_port": "rd_ei",
+          "link_index": 22,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_E2_dr_dr",
+          "dst_port": "dr_ei",
+          "link_index": 21,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_E2",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "W",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E2_ar_arv",
+          "dst_port": "arv_wi",
+          "link_index": 36,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E2_ar_art",
+          "dst_port": "art_wi",
+          "link_index": 35,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_E2_ar_arm",
+          "dst_port": "arm_wi",
+          "link_index": 34,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E2_ar_arl",
+          "dst_port": "arl_wi",
+          "link_index": 33,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E2_ar_ard",
+          "dst_port": "ard_wi",
+          "link_index": 32,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_E2_dd_dd",
+          "dst_port": "dd_wi",
+          "link_index": 37,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E3",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "E",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E3_rt_rv",
+          "dst_port": "rv_ei",
+          "link_index": 46,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E3_rt_re",
+          "dst_port": "re_ei",
+          "link_index": 43,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E3_rt_rr",
+          "dst_port": "rr_ei",
+          "link_index": 45,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_E3_rt_rl",
+          "dst_port": "rl_ei",
+          "link_index": 44,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E3_rt_rd",
+          "dst_port": "rd_ei",
+          "link_index": 42,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_E3_dr_dr",
+          "dst_port": "dr_ei",
+          "link_index": 41,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_E3",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "W",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E3_ar_arv",
+          "dst_port": "arv_wi",
+          "link_index": 56,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E3_ar_art",
+          "dst_port": "art_wi",
+          "link_index": 55,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_E3_ar_arm",
+          "dst_port": "arm_wi",
+          "link_index": 54,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E3_ar_arl",
+          "dst_port": "arl_wi",
+          "link_index": 53,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E3_ar_ard",
+          "dst_port": "ard_wi",
+          "link_index": 52,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_E3_dd_dd",
+          "dst_port": "dd_wi",
+          "link_index": 57,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E4",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_E5",
+      "face": "E",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E4_rt_rv",
+          "dst_port": "rv_ei",
+          "link_index": 65,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E4_rt_re",
+          "dst_port": "re_ei",
+          "link_index": 62,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E4_rt_rr",
+          "dst_port": "rr_ei",
+          "link_index": 64,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_E4_rt_rl",
+          "dst_port": "rl_ei",
+          "link_index": 63,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E4_rt_rd",
+          "dst_port": "rd_ei",
+          "link_index": 61,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_E4_dr_dr",
+          "dst_port": "dr_ei",
+          "link_index": 60,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_E4",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "W",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E4_ar_arv",
+          "dst_port": "arv_wi",
+          "link_index": 75,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E4_ar_art",
+          "dst_port": "art_wi",
+          "link_index": 74,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_E4_ar_arm",
+          "dst_port": "arm_wi",
+          "link_index": 73,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E4_ar_arl",
+          "dst_port": "arl_wi",
+          "link_index": 72,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_E4_ar_ard",
+          "dst_port": "ard_wi",
+          "link_index": 71,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_E4_dd_dd",
+          "dst_port": "dd_wi",
+          "link_index": 76,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E5",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "E",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W0_ar_arv",
+          "dst_port": "arv_ei",
+          "link_index": 89,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W0_ar_art",
+          "dst_port": "art_ei",
+          "link_index": 88,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_W0_ar_arm",
+          "dst_port": "arm_ei",
+          "link_index": 87,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W0_ar_arl",
+          "dst_port": "arl_ei",
+          "link_index": 86,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W0_ar_ard",
+          "dst_port": "ard_ei",
+          "link_index": 85,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W0_dd_dd",
+          "dst_port": "dd_ei",
+          "link_index": 90,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W0",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_W0",
+      "face": "W",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W0_rt_rv",
+          "dst_port": "rv_wi",
+          "link_index": 98,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W0_rt_re",
+          "dst_port": "re_wi",
+          "link_index": 95,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W0_rt_rr",
+          "dst_port": "rr_wi",
+          "link_index": 97,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_W0_rt_rl",
+          "dst_port": "rl_wi",
+          "link_index": 96,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W0_rt_rd",
+          "dst_port": "rd_wi",
+          "link_index": 94,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W0_dr_dr",
+          "dst_port": "dr_wi",
+          "link_index": 93,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_W1",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "E",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W1_ar_arv",
+          "dst_port": "arv_ei",
+          "link_index": 109,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W1_ar_art",
+          "dst_port": "art_ei",
+          "link_index": 108,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_W1_ar_arm",
+          "dst_port": "arm_ei",
+          "link_index": 107,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W1_ar_arl",
+          "dst_port": "arl_ei",
+          "link_index": 106,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W1_ar_ard",
+          "dst_port": "ard_ei",
+          "link_index": 105,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W1_dd_dd",
+          "dst_port": "dd_ei",
+          "link_index": 110,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W1",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "W",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W1_rt_rv",
+          "dst_port": "rv_wi",
+          "link_index": 118,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W1_rt_re",
+          "dst_port": "re_wi",
+          "link_index": 115,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W1_rt_rr",
+          "dst_port": "rr_wi",
+          "link_index": 117,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_W1_rt_rl",
+          "dst_port": "rl_wi",
+          "link_index": 116,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W1_rt_rd",
+          "dst_port": "rd_wi",
+          "link_index": 114,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W1_dr_dr",
+          "dst_port": "dr_wi",
+          "link_index": 113,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_W2",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "E",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W2_ar_arv",
+          "dst_port": "arv_ei",
+          "link_index": 128,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W2_ar_art",
+          "dst_port": "art_ei",
+          "link_index": 127,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_W2_ar_arm",
+          "dst_port": "arm_ei",
+          "link_index": 126,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W2_ar_arl",
+          "dst_port": "arl_ei",
+          "link_index": 125,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W2_ar_ard",
+          "dst_port": "ard_ei",
+          "link_index": 124,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W2_dd_dd",
+          "dst_port": "dd_ei",
+          "link_index": 129,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W2",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "W",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W2_rt_rv",
+          "dst_port": "rv_wi",
+          "link_index": 137,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W2_rt_re",
+          "dst_port": "re_wi",
+          "link_index": 134,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W2_rt_rr",
+          "dst_port": "rr_wi",
+          "link_index": 136,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_W2_rt_rl",
+          "dst_port": "rl_wi",
+          "link_index": 135,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W2_rt_rd",
+          "dst_port": "rd_wi",
+          "link_index": 133,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W2_dr_dr",
+          "dst_port": "dr_wi",
+          "link_index": 132,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_W3",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "E",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W3_ar_arv",
+          "dst_port": "arv_ei",
+          "link_index": 148,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W3_ar_art",
+          "dst_port": "art_ei",
+          "link_index": 147,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_W3_ar_arm",
+          "dst_port": "arm_ei",
+          "link_index": 146,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W3_ar_arl",
+          "dst_port": "arl_ei",
+          "link_index": 145,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W3_ar_ard",
+          "dst_port": "ard_ei",
+          "link_index": 144,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W3_dd_dd",
+          "dst_port": "dd_ei",
+          "link_index": 149,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W3",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "W",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W3_rt_rv",
+          "dst_port": "rv_wi",
+          "link_index": 157,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W3_rt_re",
+          "dst_port": "re_wi",
+          "link_index": 154,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W3_rt_rr",
+          "dst_port": "rr_wi",
+          "link_index": 156,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_W3_rt_rl",
+          "dst_port": "rl_wi",
+          "link_index": 155,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W3_rt_rd",
+          "dst_port": "rd_wi",
+          "link_index": 153,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W3_dr_dr",
+          "dst_port": "dr_wi",
+          "link_index": 152,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_W4",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_W5",
+      "face": "E",
+      "kind": "outbound_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W4_ar_arv",
+          "dst_port": "arv_ei",
+          "link_index": 167,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W4_ar_art",
+          "dst_port": "art_ei",
+          "link_index": 166,
+          "lsb": 1,
+          "width": 32
+        },
+        {
+          "bus": "n_dv_ch_W4_ar_arm",
+          "dst_port": "arm_ei",
+          "link_index": 165,
+          "lsb": 33,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W4_ar_arl",
+          "dst_port": "arl_ei",
+          "link_index": 164,
+          "lsb": 34,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W4_ar_ard",
+          "dst_port": "ard_ei",
+          "link_index": 163,
+          "lsb": 35,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W4_dd_dd",
+          "dst_port": "dd_ei",
+          "link_index": 168,
+          "lsb": 547,
+          "width": 548
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        182,
+        182,
+        182,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W4",
+      "width": 1095
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "W",
+      "kind": "return_ch",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W4_rt_rv",
+          "dst_port": "rv_wi",
+          "link_index": 176,
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W4_rt_re",
+          "dst_port": "re_wi",
+          "link_index": 173,
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W4_rt_rr",
+          "dst_port": "rr_wi",
+          "link_index": 175,
+          "lsb": 2,
+          "width": 3
+        },
+        {
+          "bus": "n_dv_ch_W4_rt_rl",
+          "dst_port": "rl_wi",
+          "link_index": 174,
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "bus": "n_dv_ch_W4_rt_rd",
+          "dst_port": "rd_wi",
+          "link_index": 172,
+          "lsb": 6,
+          "width": 512
+        },
+        {
+          "bus": "n_dv_ch_W4_dr_dr",
+          "dst_port": "dr_wi",
+          "link_index": 171,
+          "lsb": 518,
+          "width": 520
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        173,
+        173,
+        173,
+        173,
+        173
+      ],
+      "src": "dvs_W5",
+      "width": 1038
+    },
+    {
+      "K": null,
+      "dst": "dvs_W0",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_x0_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 0,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E0",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W0",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_x0_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 1,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E0",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E1_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_ei",
+              "src_port": "cmd_wo",
+              "width": 116
+            }
+          ],
+          "link_index": 8,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E1",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E1_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_ei",
+              "src_port": "hr_wo",
+              "width": 453
+            }
+          ],
+          "link_index": 9,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_E1",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E1_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 10,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E1",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E1_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 11,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E1",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E1",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E1_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_wi",
+              "src_port": "ag_eo",
+              "width": 10
+            }
+          ],
+          "link_index": 12,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E2",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_E1",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E1_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 19,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E2",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E1",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E1_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 20,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E2",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E2_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_ei",
+              "src_port": "cmd_wo",
+              "width": 116
+            }
+          ],
+          "link_index": 27,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E2",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E2_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_ei",
+              "src_port": "hr_wo",
+              "width": 453
+            }
+          ],
+          "link_index": 28,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_E2",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E2_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 29,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E2",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E2_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 30,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E2",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E2_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_wi",
+              "src_port": "ag_eo",
+              "width": 10
+            }
+          ],
+          "link_index": 31,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_l9_E2",
+          "dst_ports": [
+            {
+              "port": "l9_wi",
+              "src_port": "l9_eo",
+              "width": 514
+            }
+          ],
+          "link_index": 38,
+          "lsb": 0,
+          "width": 514
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 514
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E2_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 39,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E2_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 40,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E3",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E3_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_ei",
+              "src_port": "cmd_wo",
+              "width": 116
+            }
+          ],
+          "link_index": 47,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E3_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_ei",
+              "src_port": "hr_wo",
+              "width": 453
+            }
+          ],
+          "link_index": 48,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_E3",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E3_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 49,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E3_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 50,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E3",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E3_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_wi",
+              "src_port": "ag_eo",
+              "width": 10
+            }
+          ],
+          "link_index": 51,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E4",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E3_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 58,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E4",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E3",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E3_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 59,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E4",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E5",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E4_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_ei",
+              "src_port": "cmd_wo",
+              "width": 116
+            }
+          ],
+          "link_index": 66,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E4",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_E5",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E4_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_ei",
+              "src_port": "hr_wo",
+              "width": 453
+            }
+          ],
+          "link_index": 67,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_E4",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_E5",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E4_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 68,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E4",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E5",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E4_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 69,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E4",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_E4_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_wi",
+              "src_port": "ag_eo",
+              "width": 10
+            }
+          ],
+          "link_index": 70,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E5",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_l9_E4",
+          "dst_ports": [
+            {
+              "port": "l9_wi",
+              "src_port": "l9_eo",
+              "width": 514
+            }
+          ],
+          "link_index": 77,
+          "lsb": 0,
+          "width": 514
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E5",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 514
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E4_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 78,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_E5",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_E4_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 79,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_E5",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_E0",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_x0_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_ei",
+              "src_port": "cmd_eo",
+              "width": 116
+            }
+          ],
+          "link_index": 80,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W0",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_E0",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_x0_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_ei",
+              "src_port": "hr_eo",
+              "width": 453
+            }
+          ],
+          "link_index": 81,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_W0",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_E0",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_x0_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 82,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W0",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_E0",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_x0_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 83,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W0",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W0_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_ei",
+              "src_port": "ag_wo",
+              "width": 10
+            }
+          ],
+          "link_index": 84,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W0",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W0_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 91,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W0",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W0_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 92,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W0",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W0",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_l9_W0",
+          "dst_ports": [
+            {
+              "port": "l9_wi",
+              "src_port": "l9_eo",
+              "width": 514
+            }
+          ],
+          "link_index": 99,
+          "lsb": 0,
+          "width": 514
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W1",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 514
+    },
+    {
+      "K": null,
+      "dst": "dvs_W0",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W0_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_wi",
+              "src_port": "cmd_eo",
+              "width": 116
+            }
+          ],
+          "link_index": 100,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W1",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_W0",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W0_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_wi",
+              "src_port": "hr_eo",
+              "width": 453
+            }
+          ],
+          "link_index": 101,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_W1",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_W0",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W0_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 102,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W1",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W0",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W0_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 103,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W1",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W1_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_ei",
+              "src_port": "ag_wo",
+              "width": 10
+            }
+          ],
+          "link_index": 104,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W1",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W1_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 111,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W1",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W1_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 112,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W1",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W1_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_wi",
+              "src_port": "cmd_eo",
+              "width": 116
+            }
+          ],
+          "link_index": 119,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W2",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W1_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_wi",
+              "src_port": "hr_eo",
+              "width": 453
+            }
+          ],
+          "link_index": 120,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_W2",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W1_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 121,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W2",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W1",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W1_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 122,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W2",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W2_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_ei",
+              "src_port": "ag_wo",
+              "width": 10
+            }
+          ],
+          "link_index": 123,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W2",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W2_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 130,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W2",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W2_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 131,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W2",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_l9_W2",
+          "dst_ports": [
+            {
+              "port": "l9_wi",
+              "src_port": "l9_eo",
+              "width": 514
+            }
+          ],
+          "link_index": 138,
+          "lsb": 0,
+          "width": 514
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 514
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W2_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_wi",
+              "src_port": "cmd_eo",
+              "width": 116
+            }
+          ],
+          "link_index": 139,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W2_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_wi",
+              "src_port": "hr_eo",
+              "width": 453
+            }
+          ],
+          "link_index": 140,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_W3",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W2_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 141,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W2",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W2_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 142,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W3",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W3_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_ei",
+              "src_port": "ag_wo",
+              "width": 10
+            }
+          ],
+          "link_index": 143,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W3_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 150,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W3",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W3_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 151,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W3",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W3_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_wi",
+              "src_port": "cmd_eo",
+              "width": 116
+            }
+          ],
+          "link_index": 158,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W4",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W3_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_wi",
+              "src_port": "hr_eo",
+              "width": 453
+            }
+          ],
+          "link_index": 159,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_W4",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W3_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 160,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W4",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W3",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W3_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 161,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W4",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W5",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_ch_W4_ag_ag",
+          "dst_ports": [
+            {
+              "port": "ag_ei",
+              "src_port": "ag_wo",
+              "width": 10
+            }
+          ],
+          "link_index": 162,
+          "lsb": 0,
+          "width": 10
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W4",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 10
+    },
+    {
+      "K": null,
+      "dst": "dvs_W5",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W4_sc_d_sc",
+          "dst_ports": [
+            {
+              "port": "sc_ei",
+              "src_port": "sc_wo",
+              "width": 48
+            }
+          ],
+          "link_index": 169,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W4",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W5",
+      "face": "E",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W4_st_d_st",
+          "dst_ports": [
+            {
+              "port": "st_ei",
+              "src_port": "st_wo",
+              "width": 1088
+            }
+          ],
+          "link_index": 170,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W4",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_l9_W4",
+          "dst_ports": [
+            {
+              "port": "l9_wi",
+              "src_port": "l9_eo",
+              "width": 514
+            }
+          ],
+          "link_index": 177,
+          "lsb": 0,
+          "width": 514
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W5",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 514
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W4_cmd_cmd",
+          "dst_ports": [
+            {
+              "port": "cmd_wi",
+              "src_port": "cmd_eo",
+              "width": 116
+            }
+          ],
+          "link_index": 178,
+          "lsb": 0,
+          "width": 116
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W5",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 116
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W4_hr_hr",
+          "dst_ports": [
+            {
+              "port": "hr_wi",
+              "src_port": "hr_eo",
+              "width": 453
+            }
+          ],
+          "link_index": 179,
+          "lsb": 0,
+          "width": 453
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        151,
+        151,
+        151
+      ],
+      "src": "dvs_W5",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 453
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W4_sc_u_sc",
+          "dst_ports": [
+            {
+              "port": "sc_wi",
+              "src_port": "sc_eo",
+              "width": 48
+            }
+          ],
+          "link_index": 180,
+          "lsb": 0,
+          "width": 48
+        }
+      ],
+      "nominal_added_edges": null,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": null,
+      "src": "dvs_W5",
+      "status": "NEEDS_QUALIFIED_EXACT_WIDTH_MASTER",
+      "width": 48
+    },
+    {
+      "K": null,
+      "dst": "dvs_W4",
+      "face": "W",
+      "kind": "single_bus",
+      "low_to_high_fields": [
+        {
+          "bus": "n_dv_st_W4_st_u_st",
+          "dst_ports": [
+            {
+              "port": "st_wi",
+              "src_port": "st_eo",
+              "width": 1088
+            }
+          ],
+          "link_index": 181,
+          "lsb": 0,
+          "width": 1088
+        }
+      ],
+      "nominal_added_edges": 5,
+      "phase_proof": null,
+      "reset_first_use_proof": null,
+      "sram_slice_widths_low_to_high": [
+        173,
+        183,
+        183,
+        183,
+        183,
+        183
+      ],
+      "src": "dvs_W5",
+      "status": "SRAM_NATIVE32_ONLY_PHASE_OWED",
+      "width": 1088
+    }
+  ]
+}

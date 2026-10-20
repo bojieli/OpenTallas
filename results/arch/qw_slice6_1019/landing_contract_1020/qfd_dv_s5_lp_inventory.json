@@ -1,0 +1,2128 @@
+{
+  "D": 4,
+  "K": 2,
+  "added_receiver_edges": 3,
+  "banks": [
+    {
+      "id": "0",
+      "net": "chu_q",
+      "payload_storage_bits": 4380,
+      "readers": [
+        "u_lpl_0_r (ck_r_fw)"
+      ],
+      "src_region": "r_fe",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1095,
+      "writer": "u_lpl_0_w (ck_r_fe)"
+    },
+    {
+      "id": "1",
+      "net": "own_ch",
+      "payload_storage_bits": 4380,
+      "readers": [
+        "u_lpl_1_r (ck_r_fw)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1095,
+      "writer": "u_lpl_1_w (ck_r_ctl)"
+    },
+    {
+      "id": "2",
+      "net": "agu_q",
+      "payload_storage_bits": 40,
+      "readers": [
+        "u_lpl_2_r (ck_r_fw)"
+      ],
+      "src_region": "r_fe",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 10,
+      "writer": "u_lpl_2_w (ck_r_fe)"
+    },
+    {
+      "id": "3",
+      "net": "ag_own",
+      "payload_storage_bits": 40,
+      "readers": [
+        "u_lpl_3_r (ck_r_fw)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 10,
+      "writer": "u_lpl_3_w (ck_r_ctl)"
+    },
+    {
+      "id": "4",
+      "net": "so_w",
+      "payload_storage_bits": 4352,
+      "readers": [
+        "u_lpl_4_r (ck_r_fw)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1088,
+      "writer": "u_lpl_4_w (ck_r_stm)"
+    },
+    {
+      "id": "5",
+      "net": "sc_dn_c",
+      "payload_storage_bits": 192,
+      "readers": [
+        "u_lpl_5_r (ck_r_fw)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 48,
+      "writer": "u_lpl_5_w (ck_r_sc)"
+    },
+    {
+      "id": "6",
+      "net": "st_c",
+      "payload_storage_bits": 428,
+      "readers": [
+        "u_lpl_6_r (ck_r_fw)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 107,
+      "writer": "u_lpl_6_w (ck_r_ctl)"
+    },
+    {
+      "id": "7",
+      "net": "cc_c",
+      "payload_storage_bits": 200,
+      "readers": [
+        "u_lpl_7_r (ck_r_fw)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 50,
+      "writer": "u_lpl_7_w (ck_r_ctl)"
+    },
+    {
+      "id": "8",
+      "net": "cmd_q",
+      "payload_storage_bits": 464,
+      "readers": [
+        "u_lpl_8_r (ck_r_fe)",
+        "u_lpl_27_r (ck_r_ctl)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 116,
+      "writer": "u_lpl_8_w (ck_r_fw)"
+    },
+    {
+      "id": "9",
+      "net": "so_e",
+      "payload_storage_bits": 4352,
+      "readers": [
+        "u_lpl_9_r (ck_r_fe)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1088,
+      "writer": "u_lpl_9_w (ck_r_stm)"
+    },
+    {
+      "id": "10",
+      "net": "sc_up_c",
+      "payload_storage_bits": 192,
+      "readers": [
+        "u_lpl_10_r (ck_r_fe)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 48,
+      "writer": "u_lpl_10_w (ck_r_sc)"
+    },
+    {
+      "id": "11",
+      "net": "hr_q",
+      "payload_storage_bits": 1812,
+      "readers": [
+        "u_lpl_11_r (ck_r_fe)",
+        "u_lpl_162_r (ck_r_tap)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 453,
+      "writer": "u_lpl_11_w (ck_r_fw)"
+    },
+    {
+      "id": "12",
+      "net": "chd_q",
+      "payload_storage_bits": 4152,
+      "readers": [
+        "u_lpl_12_r (ck_r_fe)",
+        "u_lpl_28_r (ck_r_ctl)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1038,
+      "writer": "u_lpl_12_w (ck_r_fw)"
+    },
+    {
+      "id": "13",
+      "net": "treq_q",
+      "payload_storage_bits": 36,
+      "readers": [
+        "u_lpl_13_r (ck_r_fe)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 9,
+      "writer": "u_lpl_13_w (ck_r_fw)"
+    },
+    {
+      "id": "14",
+      "net": "l9d0",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_14_r (ck_r_fe)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_14_w (ck_r_st0)"
+    },
+    {
+      "id": "15",
+      "net": "l9d1",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_15_r (ck_r_fe)"
+      ],
+      "src_region": "r_st1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_15_w (ck_r_st1)"
+    },
+    {
+      "id": "16",
+      "net": "l9d2",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_16_r (ck_r_fe)"
+      ],
+      "src_region": "r_st2",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_16_w (ck_r_st2)"
+    },
+    {
+      "id": "17",
+      "net": "l9d3",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_17_r (ck_r_fe)"
+      ],
+      "src_region": "r_st3",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_17_w (ck_r_st3)"
+    },
+    {
+      "id": "18",
+      "net": "l9d4",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_18_r (ck_r_fe)"
+      ],
+      "src_region": "r_st4",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_18_w (ck_r_st4)"
+    },
+    {
+      "id": "19",
+      "net": "l9d5",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_19_r (ck_r_fe)"
+      ],
+      "src_region": "r_st5",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_19_w (ck_r_st5)"
+    },
+    {
+      "id": "20",
+      "net": "l9d6",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_20_r (ck_r_fe)"
+      ],
+      "src_region": "r_st6",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_20_w (ck_r_st6)"
+    },
+    {
+      "id": "21",
+      "net": "l9d7",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_21_r (ck_r_fe)"
+      ],
+      "src_region": "r_st7",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_21_w (ck_r_st7)"
+    },
+    {
+      "id": "22",
+      "net": "oc0",
+      "payload_storage_bits": 8,
+      "readers": [
+        "u_lpl_22_r (ck_r_fe)",
+        "u_lpl_40_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 2,
+      "writer": "u_lpl_22_w (ck_r_st0)"
+    },
+    {
+      "id": "23",
+      "net": "cs0",
+      "payload_storage_bits": 2064,
+      "readers": [
+        "u_lpl_23_r (ck_r_stm)"
+      ],
+      "src_region": "r_hc0",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 516,
+      "writer": "u_lpl_23_w (ck_r_hc0)"
+    },
+    {
+      "id": "24",
+      "net": "cs1",
+      "payload_storage_bits": 2064,
+      "readers": [
+        "u_lpl_24_r (ck_r_stm)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 516,
+      "writer": "u_lpl_24_w (ck_r_hc1)"
+    },
+    {
+      "id": "25",
+      "net": "cs2",
+      "payload_storage_bits": 2064,
+      "readers": [
+        "u_lpl_25_r (ck_r_stm)"
+      ],
+      "src_region": "r_hc2",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 516,
+      "writer": "u_lpl_25_w (ck_r_hc2)"
+    },
+    {
+      "id": "26",
+      "net": "cs3",
+      "payload_storage_bits": 2064,
+      "readers": [
+        "u_lpl_26_r (ck_r_stm)"
+      ],
+      "src_region": "r_hc3",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 516,
+      "writer": "u_lpl_26_w (ck_r_hc3)"
+    },
+    {
+      "id": "29",
+      "net": "rv0",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_29_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_29_w (ck_r_st0)"
+    },
+    {
+      "id": "30",
+      "net": "ri0",
+      "payload_storage_bits": 32,
+      "readers": [
+        "u_lpl_30_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 8,
+      "writer": "u_lpl_30_w (ck_r_st0)"
+    },
+    {
+      "id": "31",
+      "net": "rl0",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_31_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_31_w (ck_r_st0)"
+    },
+    {
+      "id": "32",
+      "net": "r_d0",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_32_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_32_w (ck_r_st0)"
+    },
+    {
+      "id": "33",
+      "net": "r_d1",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_33_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_33_w (ck_r_st1)"
+    },
+    {
+      "id": "34",
+      "net": "r_d2",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_34_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st2",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_34_w (ck_r_st2)"
+    },
+    {
+      "id": "35",
+      "net": "r_d3",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_35_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st3",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_35_w (ck_r_st3)"
+    },
+    {
+      "id": "36",
+      "net": "r_d4",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_36_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st4",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_36_w (ck_r_st4)"
+    },
+    {
+      "id": "37",
+      "net": "r_d5",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_37_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st5",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_37_w (ck_r_st5)"
+    },
+    {
+      "id": "38",
+      "net": "r_d6",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_38_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st6",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_38_w (ck_r_st6)"
+    },
+    {
+      "id": "39",
+      "net": "r_d7",
+      "payload_storage_bits": 256,
+      "readers": [
+        "u_lpl_39_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st7",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 64,
+      "writer": "u_lpl_39_w (ck_r_st7)"
+    },
+    {
+      "id": "41",
+      "net": "fl0",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_41_r (ck_r_ctl)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_41_w (ck_r_st0)"
+    },
+    {
+      "id": "42",
+      "net": "L_vm_we",
+      "payload_storage_bits": 32,
+      "readers": [
+        "u_lpl_42_r (ck_r_ctl)",
+        "u_lpl_88_r (ck_r_sc)",
+        "u_lpl_99_r (ck_r_stm)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 8,
+      "writer": "u_lpl_42_w (ck_r_su)"
+    },
+    {
+      "id": "43",
+      "net": "L_vm_waddr",
+      "payload_storage_bits": 768,
+      "readers": [
+        "u_lpl_43_r (ck_r_ctl)",
+        "u_lpl_100_r (ck_r_stm)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 192,
+      "writer": "u_lpl_43_w (ck_r_su)"
+    },
+    {
+      "id": "44",
+      "net": "L_vm_wdata",
+      "payload_storage_bits": 1024,
+      "readers": [
+        "u_lpl_44_r (ck_r_ctl)",
+        "u_lpl_101_r (ck_r_stm)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 256,
+      "writer": "u_lpl_44_w (ck_r_su)"
+    },
+    {
+      "id": "45",
+      "net": "L_kv_we",
+      "payload_storage_bits": 32,
+      "readers": [
+        "u_lpl_45_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 8,
+      "writer": "u_lpl_45_w (ck_r_su)"
+    },
+    {
+      "id": "46",
+      "net": "L_kv_waddr",
+      "payload_storage_bits": 768,
+      "readers": [
+        "u_lpl_46_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 192,
+      "writer": "u_lpl_46_w (ck_r_su)"
+    },
+    {
+      "id": "47",
+      "net": "L_kv_wdata",
+      "payload_storage_bits": 1024,
+      "readers": [
+        "u_lpl_47_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 256,
+      "writer": "u_lpl_47_w (ck_r_su)"
+    },
+    {
+      "id": "48",
+      "net": "su_nr",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_48_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_48_w (ck_r_su)"
+    },
+    {
+      "id": "49",
+      "net": "su_idle",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_49_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_49_w (ck_r_su)"
+    },
+    {
+      "id": "50",
+      "net": "su_fault",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_50_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_50_w (ck_r_su)"
+    },
+    {
+      "id": "51",
+      "net": "su_prog",
+      "payload_storage_bits": 64,
+      "readers": [
+        "u_lpl_51_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 16,
+      "writer": "u_lpl_51_w (ck_r_su)"
+    },
+    {
+      "id": "52",
+      "net": "su_rows",
+      "payload_storage_bits": 64,
+      "readers": [
+        "u_lpl_52_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 16,
+      "writer": "u_lpl_52_w (ck_r_su)"
+    },
+    {
+      "id": "53",
+      "net": "vm_fault",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_53_r (ck_r_ctl)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_53_w (ck_r_su)"
+    },
+    {
+      "id": "54",
+      "net": "red_we",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_54_r (ck_r_ctl)",
+        "u_lpl_85_r (ck_r_sc)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_54_w (ck_r_su)"
+    },
+    {
+      "id": "55",
+      "net": "red_addr",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_55_r (ck_r_ctl)",
+        "u_lpl_86_r (ck_r_sc)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_55_w (ck_r_su)"
+    },
+    {
+      "id": "56",
+      "net": "red_data",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_56_r (ck_r_ctl)",
+        "u_lpl_87_r (ck_r_sc)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_56_w (ck_r_su)"
+    },
+    {
+      "id": "57",
+      "net": "sc_w1_we",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_57_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_57_w (ck_r_sc)"
+    },
+    {
+      "id": "58",
+      "net": "sc_w1_addr",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_58_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_58_w (ck_r_sc)"
+    },
+    {
+      "id": "59",
+      "net": "sc_w1_data",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_59_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_59_w (ck_r_sc)"
+    },
+    {
+      "id": "60",
+      "net": "tok_v",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_60_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_60_w (ck_r_sc)"
+    },
+    {
+      "id": "61",
+      "net": "tok_idx",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_61_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_61_w (ck_r_sc)"
+    },
+    {
+      "id": "62",
+      "net": "tok_own",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_62_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_62_w (ck_r_sc)"
+    },
+    {
+      "id": "63",
+      "net": "tok_val",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_63_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_63_w (ck_r_sc)"
+    },
+    {
+      "id": "64",
+      "net": "tok_user",
+      "payload_storage_bits": 8,
+      "readers": [
+        "u_lpl_64_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 2,
+      "writer": "u_lpl_64_w (ck_r_sc)"
+    },
+    {
+      "id": "65",
+      "net": "sc_busy",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_65_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_65_w (ck_r_sc)"
+    },
+    {
+      "id": "66",
+      "net": "sc_fault",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_66_r (ck_r_ctl)"
+      ],
+      "src_region": "r_sc",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_66_w (ck_r_sc)"
+    },
+    {
+      "id": "67",
+      "net": "stm_fault",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_67_r (ck_r_ctl)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_67_w (ck_r_stm)"
+    },
+    {
+      "id": "68",
+      "net": "tld_fault",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_68_r (ck_r_ctl)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_68_w (ck_r_stm)"
+    },
+    {
+      "id": "69",
+      "net": "fch0",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_69_r (ck_r_ctl)"
+      ],
+      "src_region": "r_hc0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_69_w (ck_r_hc0)"
+    },
+    {
+      "id": "70",
+      "net": "pc_bad",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_70_r (ck_r_ctl)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_70_w (ck_r_fw)"
+    },
+    {
+      "id": "71",
+      "net": "su_cmd",
+      "payload_storage_bits": 40,
+      "readers": [
+        "u_lpl_71_r (ck_r_su)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 10,
+      "writer": "u_lpl_71_w (ck_r_ctl)"
+    },
+    {
+      "id": "72",
+      "net": "w16_we",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_72_r (ck_r_su)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_72_w (ck_r_ctl)"
+    },
+    {
+      "id": "73",
+      "net": "w16_addr",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_73_r (ck_r_su)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_73_w (ck_r_ctl)"
+    },
+    {
+      "id": "74",
+      "net": "w16_data",
+      "payload_storage_bits": 2048,
+      "readers": [
+        "u_lpl_74_r (ck_r_su)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 512,
+      "writer": "u_lpl_74_w (ck_r_ctl)"
+    },
+    {
+      "id": "75",
+      "net": "w1_we",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_75_r (ck_r_su)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_75_w (ck_r_ctl)"
+    },
+    {
+      "id": "76",
+      "net": "w1_addr",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_76_r (ck_r_su)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_76_w (ck_r_ctl)"
+    },
+    {
+      "id": "77",
+      "net": "w1_data",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_77_r (ck_r_su)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_77_w (ck_r_ctl)"
+    },
+    {
+      "id": "78",
+      "net": "tw_we",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_78_r (ck_r_su)",
+        "u_lpl_103_r (ck_r_st0)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_78_w (ck_r_stm)"
+    },
+    {
+      "id": "79",
+      "net": "tw_kind",
+      "payload_storage_bits": 8,
+      "readers": [
+        "u_lpl_79_r (ck_r_su)",
+        "u_lpl_104_r (ck_r_st0)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 2,
+      "writer": "u_lpl_79_w (ck_r_stm)"
+    },
+    {
+      "id": "80",
+      "net": "tw_addr",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_80_r (ck_r_su)",
+        "u_lpl_105_r (ck_r_st0)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_80_w (ck_r_stm)"
+    },
+    {
+      "id": "81",
+      "net": "tw_data",
+      "payload_storage_bits": 4096,
+      "readers": [
+        "u_lpl_81_r (ck_r_su)",
+        "u_lpl_106_r (ck_r_st0)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1024,
+      "writer": "u_lpl_81_w (ck_r_stm)"
+    },
+    {
+      "id": "82",
+      "net": "sc_cfg",
+      "payload_storage_bits": 404,
+      "readers": [
+        "u_lpl_82_r (ck_r_sc)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 101,
+      "writer": "u_lpl_82_w (ck_r_ctl)"
+    },
+    {
+      "id": "83",
+      "net": "scd_q",
+      "payload_storage_bits": 192,
+      "readers": [
+        "u_lpl_83_r (ck_r_sc)"
+      ],
+      "src_region": "r_fe",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 48,
+      "writer": "u_lpl_83_w (ck_r_fe)"
+    },
+    {
+      "id": "84",
+      "net": "scu_q",
+      "payload_storage_bits": 192,
+      "readers": [
+        "u_lpl_84_r (ck_r_sc)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 48,
+      "writer": "u_lpl_84_w (ck_r_fw)"
+    },
+    {
+      "id": "89",
+      "net": "sc_win0",
+      "payload_storage_bits": 8,
+      "readers": [
+        "u_lpl_89_r (ck_r_sc)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 2,
+      "writer": "u_lpl_89_w (ck_r_su)"
+    },
+    {
+      "id": "90",
+      "net": "sc_wd0",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_90_r (ck_r_sc)"
+      ],
+      "src_region": "r_su",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_90_w (ck_r_su)"
+    },
+    {
+      "id": "91",
+      "net": "am_v",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_91_r (ck_r_sc)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_91_w (ck_r_ctl)"
+    },
+    {
+      "id": "92",
+      "net": "am_idx",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_92_r (ck_r_sc)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_92_w (ck_r_ctl)"
+    },
+    {
+      "id": "93",
+      "net": "am_val",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_93_r (ck_r_sc)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_93_w (ck_r_ctl)"
+    },
+    {
+      "id": "94",
+      "net": "am_u",
+      "payload_storage_bits": 8,
+      "readers": [
+        "u_lpl_94_r (ck_r_sc)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 2,
+      "writer": "u_lpl_94_w (ck_r_ctl)"
+    },
+    {
+      "id": "95",
+      "net": "sid",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_95_r (ck_r_stm)",
+        "u_lpl_161_r (ck_r_tap)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_95_w (ck_r_ctl)"
+    },
+    {
+      "id": "96",
+      "net": "stm_cfg",
+      "payload_storage_bits": 124,
+      "readers": [
+        "u_lpl_96_r (ck_r_stm)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 31,
+      "writer": "u_lpl_96_w (ck_r_ctl)"
+    },
+    {
+      "id": "97",
+      "net": "sw_q",
+      "payload_storage_bits": 4352,
+      "readers": [
+        "u_lpl_97_r (ck_r_stm)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1088,
+      "writer": "u_lpl_97_w (ck_r_fw)"
+    },
+    {
+      "id": "98",
+      "net": "se_q",
+      "payload_storage_bits": 4352,
+      "readers": [
+        "u_lpl_98_r (ck_r_stm)"
+      ],
+      "src_region": "r_fe",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1088,
+      "writer": "u_lpl_98_w (ck_r_fe)"
+    },
+    {
+      "id": "102",
+      "net": "treq_c",
+      "payload_storage_bits": 36,
+      "readers": [
+        "u_lpl_102_r (ck_r_stm)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 9,
+      "writer": "u_lpl_102_w (ck_r_fw)"
+    },
+    {
+      "id": "107",
+      "net": "stn_cfg",
+      "payload_storage_bits": 116,
+      "readers": [
+        "u_lpl_107_r (ck_r_st0)",
+        "u_lpl_112_r (ck_r_st1)",
+        "u_lpl_119_r (ck_r_st2)",
+        "u_lpl_126_r (ck_r_st3)",
+        "u_lpl_133_r (ck_r_st4)",
+        "u_lpl_140_r (ck_r_st5)",
+        "u_lpl_147_r (ck_r_st6)",
+        "u_lpl_154_r (ck_r_st7)"
+      ],
+      "src_region": "r_ctl",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 29,
+      "writer": "u_lpl_107_w (ck_r_ctl)"
+    },
+    {
+      "id": "108",
+      "net": "rsn_r0",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_108_r (ck_r_st0)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_108_w (ck_r_hc1)"
+    },
+    {
+      "id": "109",
+      "net": "nb_r0",
+      "payload_storage_bits": 264,
+      "readers": [
+        "u_lpl_109_r (ck_r_st0)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 66,
+      "writer": "u_lpl_109_w (ck_r_fw)"
+    },
+    {
+      "id": "110",
+      "net": "flt_b2",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_110_r (ck_r_st0)"
+      ],
+      "src_region": "r_st2",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_110_w (ck_r_st2)"
+    },
+    {
+      "id": "111",
+      "net": "flt_v2",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_111_r (ck_r_st0)"
+      ],
+      "src_region": "r_st2",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_111_w (ck_r_st2)"
+    },
+    {
+      "id": "113",
+      "net": "rss_r1",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_113_r (ck_r_st1)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_113_w (ck_r_st0)"
+    },
+    {
+      "id": "114",
+      "net": "rsn_r1",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_114_r (ck_r_st1)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_114_w (ck_r_hc1)"
+    },
+    {
+      "id": "115",
+      "net": "nb_r1",
+      "payload_storage_bits": 264,
+      "readers": [
+        "u_lpl_115_r (ck_r_st1)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 66,
+      "writer": "u_lpl_115_w (ck_r_fw)"
+    },
+    {
+      "id": "116",
+      "net": "bt_q1",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_116_r (ck_r_st1)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_116_w (ck_r_st0)"
+    },
+    {
+      "id": "117",
+      "net": "flt_b0",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_117_r (ck_r_st1)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_117_w (ck_r_st0)"
+    },
+    {
+      "id": "118",
+      "net": "flt_v0",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_118_r (ck_r_st1)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_118_w (ck_r_st0)"
+    },
+    {
+      "id": "120",
+      "net": "rss_r2",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_120_r (ck_r_st2)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_120_w (ck_r_st0)"
+    },
+    {
+      "id": "121",
+      "net": "rsn_r2",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_121_r (ck_r_st2)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_121_w (ck_r_hc1)"
+    },
+    {
+      "id": "122",
+      "net": "nb_r2",
+      "payload_storage_bits": 264,
+      "readers": [
+        "u_lpl_122_r (ck_r_st2)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 66,
+      "writer": "u_lpl_122_w (ck_r_fw)"
+    },
+    {
+      "id": "123",
+      "net": "bt_q2",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_123_r (ck_r_st2)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_123_w (ck_r_st0)"
+    },
+    {
+      "id": "124",
+      "net": "flt_b4",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_124_r (ck_r_st2)"
+      ],
+      "src_region": "r_st4",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_124_w (ck_r_st4)"
+    },
+    {
+      "id": "125",
+      "net": "flt_v4",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_125_r (ck_r_st2)"
+      ],
+      "src_region": "r_st4",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_125_w (ck_r_st4)"
+    },
+    {
+      "id": "127",
+      "net": "rss_r3",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_127_r (ck_r_st3)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_127_w (ck_r_st0)"
+    },
+    {
+      "id": "128",
+      "net": "rsn_r3",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_128_r (ck_r_st3)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_128_w (ck_r_hc1)"
+    },
+    {
+      "id": "129",
+      "net": "nb_r3",
+      "payload_storage_bits": 264,
+      "readers": [
+        "u_lpl_129_r (ck_r_st3)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 66,
+      "writer": "u_lpl_129_w (ck_r_fw)"
+    },
+    {
+      "id": "130",
+      "net": "bt_q3",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_130_r (ck_r_st3)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_130_w (ck_r_st0)"
+    },
+    {
+      "id": "131",
+      "net": "flt_b1",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_131_r (ck_r_st3)"
+      ],
+      "src_region": "r_st1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_131_w (ck_r_st1)"
+    },
+    {
+      "id": "132",
+      "net": "flt_v1",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_132_r (ck_r_st3)"
+      ],
+      "src_region": "r_st1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_132_w (ck_r_st1)"
+    },
+    {
+      "id": "134",
+      "net": "rss_r4",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_134_r (ck_r_st4)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_134_w (ck_r_st0)"
+    },
+    {
+      "id": "135",
+      "net": "rsn_r4",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_135_r (ck_r_st4)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_135_w (ck_r_hc1)"
+    },
+    {
+      "id": "136",
+      "net": "nb_r4",
+      "payload_storage_bits": 264,
+      "readers": [
+        "u_lpl_136_r (ck_r_st4)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 66,
+      "writer": "u_lpl_136_w (ck_r_fw)"
+    },
+    {
+      "id": "137",
+      "net": "bt_q4",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_137_r (ck_r_st4)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_137_w (ck_r_st0)"
+    },
+    {
+      "id": "138",
+      "net": "flt_b6",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_138_r (ck_r_st4)"
+      ],
+      "src_region": "r_st6",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_138_w (ck_r_st6)"
+    },
+    {
+      "id": "139",
+      "net": "flt_v6",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_139_r (ck_r_st4)"
+      ],
+      "src_region": "r_st6",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_139_w (ck_r_st6)"
+    },
+    {
+      "id": "141",
+      "net": "rss_r5",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_141_r (ck_r_st5)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_141_w (ck_r_st0)"
+    },
+    {
+      "id": "142",
+      "net": "rsn_r5",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_142_r (ck_r_st5)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_142_w (ck_r_hc1)"
+    },
+    {
+      "id": "143",
+      "net": "nb_r5",
+      "payload_storage_bits": 264,
+      "readers": [
+        "u_lpl_143_r (ck_r_st5)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 66,
+      "writer": "u_lpl_143_w (ck_r_fw)"
+    },
+    {
+      "id": "144",
+      "net": "bt_q5",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_144_r (ck_r_st5)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_144_w (ck_r_st0)"
+    },
+    {
+      "id": "145",
+      "net": "flt_b3",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_145_r (ck_r_st5)"
+      ],
+      "src_region": "r_st3",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_145_w (ck_r_st3)"
+    },
+    {
+      "id": "146",
+      "net": "flt_v3",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_146_r (ck_r_st5)"
+      ],
+      "src_region": "r_st3",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_146_w (ck_r_st3)"
+    },
+    {
+      "id": "148",
+      "net": "rss_r6",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_148_r (ck_r_st6)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_148_w (ck_r_st0)"
+    },
+    {
+      "id": "149",
+      "net": "rsn_r6",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_149_r (ck_r_st6)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_149_w (ck_r_hc1)"
+    },
+    {
+      "id": "150",
+      "net": "nb_r6",
+      "payload_storage_bits": 264,
+      "readers": [
+        "u_lpl_150_r (ck_r_st6)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 66,
+      "writer": "u_lpl_150_w (ck_r_fw)"
+    },
+    {
+      "id": "151",
+      "net": "bt_q6",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_151_r (ck_r_st6)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_151_w (ck_r_st0)"
+    },
+    {
+      "id": "152",
+      "net": "flt_b7",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_152_r (ck_r_st6)"
+      ],
+      "src_region": "r_st7",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_152_w (ck_r_st7)"
+    },
+    {
+      "id": "153",
+      "net": "flt_v7",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_153_r (ck_r_st6)"
+      ],
+      "src_region": "r_st7",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_153_w (ck_r_st7)"
+    },
+    {
+      "id": "155",
+      "net": "rss_r7",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_155_r (ck_r_st7)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_155_w (ck_r_st0)"
+    },
+    {
+      "id": "156",
+      "net": "rsn_r7",
+      "payload_storage_bits": 528,
+      "readers": [
+        "u_lpl_156_r (ck_r_st7)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 132,
+      "writer": "u_lpl_156_w (ck_r_hc1)"
+    },
+    {
+      "id": "157",
+      "net": "nb_r7",
+      "payload_storage_bits": 264,
+      "readers": [
+        "u_lpl_157_r (ck_r_st7)"
+      ],
+      "src_region": "r_fw",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 66,
+      "writer": "u_lpl_157_w (ck_r_fw)"
+    },
+    {
+      "id": "158",
+      "net": "bt_q7",
+      "payload_storage_bits": 128,
+      "readers": [
+        "u_lpl_158_r (ck_r_st7)"
+      ],
+      "src_region": "r_st0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 32,
+      "writer": "u_lpl_158_w (ck_r_st0)"
+    },
+    {
+      "id": "159",
+      "net": "flt_b5",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_159_r (ck_r_st7)"
+      ],
+      "src_region": "r_st5",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_159_w (ck_r_st5)"
+    },
+    {
+      "id": "160",
+      "net": "flt_v5",
+      "payload_storage_bits": 16,
+      "readers": [
+        "u_lpl_160_r (ck_r_st7)"
+      ],
+      "src_region": "r_st5",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 4,
+      "writer": "u_lpl_160_w (ck_r_st5)"
+    },
+    {
+      "id": "163",
+      "net": "xt_v",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_163_r (ck_r_tap)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_163_w (ck_r_stm)"
+    },
+    {
+      "id": "164",
+      "net": "xt_a",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_164_r (ck_r_tap)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_164_w (ck_r_stm)"
+    },
+    {
+      "id": "165",
+      "net": "xt_d",
+      "payload_storage_bits": 4096,
+      "readers": [
+        "u_lpl_165_r (ck_r_tap)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1024,
+      "writer": "u_lpl_165_w (ck_r_stm)"
+    },
+    {
+      "id": "166",
+      "net": "xt_bad",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_166_r (ck_r_tap)"
+      ],
+      "src_region": "r_stm",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_166_w (ck_r_stm)"
+    },
+    {
+      "id": "167",
+      "net": "lqb0",
+      "payload_storage_bits": 32,
+      "readers": [
+        "u_lpl_167_r (ck_r_tap)"
+      ],
+      "src_region": "r_hc0",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 8,
+      "writer": "u_lpl_167_w (ck_r_hc0)"
+    },
+    {
+      "id": "168",
+      "net": "lqb1",
+      "payload_storage_bits": 32,
+      "readers": [
+        "u_lpl_168_r (ck_r_tap)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 8,
+      "writer": "u_lpl_168_w (ck_r_hc1)"
+    },
+    {
+      "id": "169",
+      "net": "lqb2",
+      "payload_storage_bits": 32,
+      "readers": [
+        "u_lpl_169_r (ck_r_tap)"
+      ],
+      "src_region": "r_hc2",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 8,
+      "writer": "u_lpl_169_w (ck_r_hc2)"
+    },
+    {
+      "id": "170",
+      "net": "lqb3",
+      "payload_storage_bits": 32,
+      "readers": [
+        "u_lpl_170_r (ck_r_tap)"
+      ],
+      "src_region": "r_hc3",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 8,
+      "writer": "u_lpl_170_w (ck_r_hc3)"
+    },
+    {
+      "id": "171",
+      "net": "cid",
+      "payload_storage_bits": 96,
+      "readers": [
+        "u_lpl_171_r (ck_r_hc0)",
+        "u_lpl_174_r (ck_r_hc1)",
+        "u_lpl_177_r (ck_r_hc2)",
+        "u_lpl_180_r (ck_r_hc3)"
+      ],
+      "src_region": "r_tap",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 24,
+      "writer": "u_lpl_171_w (ck_r_tap)"
+    },
+    {
+      "id": "172",
+      "net": "fch1",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_172_r (ck_r_hc0)"
+      ],
+      "src_region": "r_hc1",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_172_w (ck_r_hc1)"
+    },
+    {
+      "id": "173",
+      "net": "hw",
+      "payload_storage_bits": 6268,
+      "readers": [
+        "u_lpl_173_r (ck_r_hc0)",
+        "u_lpl_176_r (ck_r_hc1)",
+        "u_lpl_179_r (ck_r_hc2)",
+        "u_lpl_182_r (ck_r_hc3)"
+      ],
+      "src_region": "r_tap",
+      "storage_requirement": "SRAM_REQUIRED",
+      "width": 1567,
+      "writer": "u_lpl_173_w (ck_r_tap)"
+    },
+    {
+      "id": "175",
+      "net": "fch2",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_175_r (ck_r_hc1)"
+      ],
+      "src_region": "r_hc2",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_175_w (ck_r_hc2)"
+    },
+    {
+      "id": "178",
+      "net": "fch3",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_178_r (ck_r_hc2)"
+      ],
+      "src_region": "r_hc3",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_178_w (ck_r_hc3)"
+    },
+    {
+      "id": "181",
+      "net": "tap_fault",
+      "payload_storage_bits": 4,
+      "readers": [
+        "u_lpl_181_r (ck_r_hc3)"
+      ],
+      "src_region": "r_tap",
+      "storage_requirement": "bounded_native_census_required",
+      "width": 1,
+      "writer": "u_lpl_181_w (ck_r_tap)"
+    }
+  ],
+  "blocking_obligations": [
+    "Joint canonical ot_pl_land_w/r SRAM backend and generator opt-in, preserving shared writers",
+    "Actual mapped all-driver census <=32 including wc/rc/decode/warm/reset; physicalchunk24 alone is insufficient",
+    "Per-reader actual writer/reader phase, K, epoch, reset release and first-use proof",
+    "405um clock/data/reset reach plus registered boundary pins and hard-child clock references",
+    "Compile offsets and exact composed serial-chain price after qualified leaf bindings"
+  ],
+  "over_2k_banks": 14,
+  "over_2k_payload_bits": 53036,
+  "payload_storage_bits": 80604,
+  "reader_count": 183,
+  "reader_width_sum": 28312,
+  "record_flops": {
+    "landing": 111063,
+    "pads": 0,
+    "reset": 172
+  },
+  "record_sha256": "851d1a020228a6528280b96ed8bbda97cbfeb24702a126129b32ba3f5595834a",
+  "regions": {
+    "r_ctl": {
+      "children": [
+        "u_ctl"
+      ],
+      "clock_port": "ck_r_ctl"
+    },
+    "r_fe": {
+      "children": [
+        "u_fup"
+      ],
+      "clock_port": "ck_r_fe"
+    },
+    "r_fw": {
+      "children": [
+        "u_fdn"
+      ],
+      "clock_port": "ck_r_fw"
+    },
+    "r_hc0": {
+      "children": [
+        "u_xh0",
+        "u_xl0_0",
+        "u_xl0_1",
+        "u_xl0_2",
+        "u_xl0_3",
+        "u_xl0_4",
+        "u_xl0_5",
+        "u_xl0_6",
+        "u_xl0_7"
+      ],
+      "clock_port": "ck_r_hc0"
+    },
+    "r_hc1": {
+      "children": [
+        "u_fn",
+        "u_xh1",
+        "u_xl1_0",
+        "u_xl1_1",
+        "u_xl1_2",
+        "u_xl1_3",
+        "u_xl1_4",
+        "u_xl1_5",
+        "u_xl1_6",
+        "u_xl1_7"
+      ],
+      "clock_port": "ck_r_hc1"
+    },
+    "r_hc2": {
+      "children": [
+        "u_xh2",
+        "u_xl2_0",
+        "u_xl2_1",
+        "u_xl2_2",
+        "u_xl2_3",
+        "u_xl2_4",
+        "u_xl2_5",
+        "u_xl2_6",
+        "u_xl2_7"
+      ],
+      "clock_port": "ck_r_hc2"
+    },
+    "r_hc3": {
+      "children": [
+        "u_xh3",
+        "u_xl3_0",
+        "u_xl3_1",
+        "u_xl3_2",
+        "u_xl3_3",
+        "u_xl3_4",
+        "u_xl3_5",
+        "u_xl3_6",
+        "u_xl3_7"
+      ],
+      "clock_port": "ck_r_hc3"
+    },
+    "r_sc": {
+      "children": [
+        "u_sc"
+      ],
+      "clock_port": "ck_r_sc"
+    },
+    "r_st0": {
+      "children": [
+        "u_btab",
+        "u_frs",
+        "u_r0"
+      ],
+      "clock_port": "ck_r_st0"
+    },
+    "r_st1": {
+      "children": [
+        "u_r1"
+      ],
+      "clock_port": "ck_r_st1"
+    },
+    "r_st2": {
+      "children": [
+        "u_r2"
+      ],
+      "clock_port": "ck_r_st2"
+    },
+    "r_st3": {
+      "children": [
+        "u_r3"
+      ],
+      "clock_port": "ck_r_st3"
+    },
+    "r_st4": {
+      "children": [
+        "u_r4"
+      ],
+      "clock_port": "ck_r_st4"
+    },
+    "r_st5": {
+      "children": [
+        "u_r5"
+      ],
+      "clock_port": "ck_r_st5"
+    },
+    "r_st6": {
+      "children": [
+        "u_r6"
+      ],
+      "clock_port": "ck_r_st6"
+    },
+    "r_st7": {
+      "children": [
+        "u_r7"
+      ],
+      "clock_port": "ck_r_st7"
+    },
+    "r_stm": {
+      "children": [
+        "u_fs",
+        "u_stm"
+      ],
+      "clock_port": "ck_r_stm"
+    },
+    "r_su": {
+      "children": [
+        "u_exp0",
+        "u_exp1",
+        "u_exp2",
+        "u_exp3",
+        "u_exp4",
+        "u_exp5",
+        "u_exp6",
+        "u_exp7",
+        "u_head0",
+        "u_head1",
+        "u_head2",
+        "u_head3",
+        "u_head4",
+        "u_head5",
+        "u_head6",
+        "u_head7",
+        "u_lrly0",
+        "u_lrly1",
+        "u_lrly2",
+        "u_lrly3",
+        "u_lrly4",
+        "u_lrly5",
+        "u_lrly6",
+        "u_lrly7",
+        "u_rcp0",
+        "u_rcp1",
+        "u_rcp2",
+        "u_rcp3",
+        "u_rcp4",
+        "u_rcp5",
+        "u_rcp6",
+        "u_rcp7",
+        "u_red",
+        "u_rsq0",
+        "u_rsq1",
+        "u_rsq2",
+        "u_rsq3",
+        "u_rsq4",
+        "u_rsq5",
+        "u_rsq6",
+        "u_rsq7",
+        "u_suvm"
+      ],
+      "clock_port": "ck_r_su"
+    },
+    "r_tap": {
+      "children": [
+        "u_tap"
+      ],
+      "clock_port": "ck_r_tap"
+    }
+  },
+  "reset": {
+    "depth": 10,
+    "hops": {
+      "r_ctl": 4,
+      "r_fe": 6,
+      "r_fw": 0,
+      "r_hc0": 6,
+      "r_hc1": 7,
+      "r_hc2": 8,
+      "r_hc3": 9,
+      "r_sc": 5,
+      "r_st0": 2,
+      "r_st1": 2,
+      "r_st2": 2,
+      "r_st3": 3,
+      "r_st4": 3,
+      "r_st5": 3,
+      "r_st6": 3,
+      "r_st7": 4,
+      "r_stm": 5,
+      "r_su": 6,
+      "r_tap": 7
+    },
+    "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)",
+    "port": "rst_n",
+    "root_region": "r_fw"
+  },
+  "shared_writer_count": 154,
+  "source": "rtl/qwen_dv/s5/lp/qfd_dv_s5_lp.sv",
+  "source_sha256": "7927680937e9fce9215f8d302dd2354f8091288c976c56f1c0d32d85055b3cba",
+  "status": "BLOCKED_NO_PARENT_GATE",
+  "top": "qfd_dv_s5_lp",
+  "unique_writer_width_sum": 20151
+}
