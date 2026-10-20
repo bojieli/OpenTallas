@@ -14,7 +14,7 @@ python3 $T/pv_merge_golden.py gen "$W/stim.hex"
 EXTRA=""
 if [ "$FAN" != 0 ]; then
  python3 tools/prepare_fp32_fan32_models.py --out "$W/native_cells.v" || exit 2
- EXTRA="rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v $W/native_cells.v"
+ EXTRA="rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v rtl/hdc/ot_hdc_fp32_add_lat_fan32_bindfirst.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_bindfirst_native.v $W/native_cells.v"
 fi
 CORE=rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed_core.sv
 if [ "$M" = 12 ]; then

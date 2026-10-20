@@ -172,7 +172,14 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             if (FAN32 != 0) begin : g_fan32
                 // Exact root-approved LAT7/DRST0/CUTS=-1 component; no new edges.
                 // Unsupported ALAT/FAN32 profiles fail closed in the wrapper.
-                ot_hdc_fp32_add_lat_fan32 #(.LAT(ALAT), .DRST(0), .CUTS(-1), .SAFE_DIST(FAN32)) u_m (
+                // Kit-private source opt-in: immutable cell graph/keep1, with
+                // physical DNT deferred until canonical PG binding at birth.
+`ifdef OT_PVM_NATIVE_BIND_FIRST
+                ot_hdc_fp32_add_lat_fan32_bindfirst
+`else
+                ot_hdc_fp32_add_lat_fan32
+`endif
+                    #(.LAT(ALAT), .DRST(0), .CUTS(-1), .SAFE_DIST(FAN32)) u_m (
                     .clk(clk), .rst_n(rst_core_n[1+l/4]), .valid_in(ov), .a(oa[32*l +: 32]),
                     .b(ob[32*l +: 32]), .y(my[32*l +: 32]), .err(er), .valid_out(vo));
             end else begin : g_released

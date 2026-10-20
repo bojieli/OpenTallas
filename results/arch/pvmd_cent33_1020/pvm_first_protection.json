@@ -1,0 +1,262 @@
+[
+  {
+    "stage": "1_synth.odb",
+    "global_connect_rules": 0,
+    "counts": {
+      "cells": 56000,
+      "protected_cells": 56000,
+      "pg_terms": 112000,
+      "unbound_pg_terms": 112000
+    },
+    "first": {
+      "name": "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.c0",
+      "master": "OR4x1_ASAP7_75t_R",
+      "protected": true,
+      "ports": [
+        [
+          "A",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[29\\]",
+          "SIGNAL"
+        ],
+        [
+          "B",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[28\\]",
+          "SIGNAL"
+        ],
+        [
+          "C",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[27\\]",
+          "SIGNAL"
+        ],
+        [
+          "D",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[26\\]",
+          "SIGNAL"
+        ],
+        [
+          "VDD",
+          "",
+          "POWER"
+        ],
+        [
+          "VSS",
+          "",
+          "GROUND"
+        ],
+        [
+          "Y",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.n953",
+          "SIGNAL"
+        ]
+      ]
+    }
+  },
+  {
+    "stage": "2_floorplan.odb",
+    "global_connect_rules": 5,
+    "counts": {
+      "cells": 56000,
+      "protected_cells": 56000,
+      "pg_terms": 112000,
+      "unbound_pg_terms": 112000
+    },
+    "first": {
+      "name": "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.c0",
+      "master": "OR4x1_ASAP7_75t_R",
+      "protected": true,
+      "ports": [
+        [
+          "A",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[29\\]",
+          "SIGNAL"
+        ],
+        [
+          "B",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[28\\]",
+          "SIGNAL"
+        ],
+        [
+          "C",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[27\\]",
+          "SIGNAL"
+        ],
+        [
+          "D",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[26\\]",
+          "SIGNAL"
+        ],
+        [
+          "VDD",
+          "",
+          "POWER"
+        ],
+        [
+          "VSS",
+          "",
+          "GROUND"
+        ],
+        [
+          "Y",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.n953",
+          "SIGNAL"
+        ]
+      ]
+    }
+  },
+  {
+    "stage": "2_4_floorplan_pdn.odb",
+    "global_connect_rules": 5,
+    "counts": {
+      "cells": 56000,
+      "protected_cells": 56000,
+      "pg_terms": 112000,
+      "unbound_pg_terms": 112000
+    },
+    "first": {
+      "name": "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.c0",
+      "master": "OR4x1_ASAP7_75t_R",
+      "protected": true,
+      "ports": [
+        [
+          "A",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[29\\]",
+          "SIGNAL"
+        ],
+        [
+          "B",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[28\\]",
+          "SIGNAL"
+        ],
+        [
+          "C",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[27\\]",
+          "SIGNAL"
+        ],
+        [
+          "D",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[26\\]",
+          "SIGNAL"
+        ],
+        [
+          "VDD",
+          "",
+          "POWER"
+        ],
+        [
+          "VSS",
+          "",
+          "GROUND"
+        ],
+        [
+          "Y",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.n953",
+          "SIGNAL"
+        ]
+      ]
+    }
+  },
+  {
+    "stage": "3_2_place_iop.odb",
+    "global_connect_rules": 5,
+    "counts": {
+      "cells": 56000,
+      "protected_cells": 56000,
+      "pg_terms": 112000,
+      "unbound_pg_terms": 112000
+    },
+    "first": {
+      "name": "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.c0",
+      "master": "OR4x1_ASAP7_75t_R",
+      "protected": true,
+      "ports": [
+        [
+          "A",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[29\\]",
+          "SIGNAL"
+        ],
+        [
+          "B",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[28\\]",
+          "SIGNAL"
+        ],
+        [
+          "C",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[27\\]",
+          "SIGNAL"
+        ],
+        [
+          "D",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[26\\]",
+          "SIGNAL"
+        ],
+        [
+          "VDD",
+          "",
+          "POWER"
+        ],
+        [
+          "VSS",
+          "",
+          "GROUND"
+        ],
+        [
+          "Y",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.n953",
+          "SIGNAL"
+        ]
+      ]
+    }
+  },
+  {
+    "stage": "3_3_place_gp-failed.odb",
+    "global_connect_rules": 5,
+    "counts": {
+      "cells": 56000,
+      "protected_cells": 56000,
+      "pg_terms": 112000,
+      "unbound_pg_terms": 112000
+    },
+    "first": {
+      "name": "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.c0",
+      "master": "OR4x1_ASAP7_75t_R",
+      "protected": true,
+      "ports": [
+        [
+          "A",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[29\\]",
+          "SIGNAL"
+        ],
+        [
+          "B",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[28\\]",
+          "SIGNAL"
+        ],
+        [
+          "C",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[27\\]",
+          "SIGNAL"
+        ],
+        [
+          "D",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.b\\[26\\]",
+          "SIGNAL"
+        ],
+        [
+          "VDD",
+          "",
+          "POWER"
+        ],
+        [
+          "VSS",
+          "",
+          "GROUND"
+        ],
+        [
+          "Y",
+          "u_core.g_safe.g_madd\\[0\\].g_fan32.u_m.genblk1.g_native7.u_native.n953",
+          "SIGNAL"
+        ]
+      ]
+    }
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.native_bindfirst_source_identity.v1",
+  "original_sha256": "5bd2448e4914cefa7b1d8dd8ffa294dd3c3e69e24910658d994a564b7593e5a7",
+  "private_sha256": "4f9d3c6f49f0eaf05ef07882dafd36526a173adb6d1e89953afa25a2fffd08e9",
+  "normalized_graph_sha256": "7816d0922078b37b6060acb814fd5349875bd91a93c970a9bdee20d833deb881",
+  "primitive_instances": 3500,
+  "physical_DNT_attrs_deferred": 3500,
+  "keep_attrs_retained": 3500,
+  "changes": [
+    "private module identifier only",
+    "omit literal dont_touch attribute before cell creation"
+  ],
+  "original_file_unchanged": true,
+  "clock_reset_data_port_graph_unchanged": true,
+  "logical_cycle_delta": 0
+}
