@@ -1,0 +1,598 @@
+{
+  "flat_sha256": "133b4cfe1d2e5e7fe640eb0fa2f4e5fe27c61817102b5166066dc1affaa6d1b2",
+  "cells": 7273,
+  "ff": 1914,
+  "roots": 5659,
+  "over32_non_tie": 5,
+  "max_non_tie": 128,
+  "violations": [
+    {
+      "root": "u_land.k_q[0]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": 128,
+      "examples": [
+        "_083_/B",
+        "_085_/B",
+        "_090_/A",
+        "_105_/A",
+        "_116_/A",
+        "_138_/A"
+      ]
+    },
+    {
+      "root": "_105_/Y",
+      "kind": "comb",
+      "loads": 121,
+      "examples": [
+        "u_land.exp_d[0]$_DFF_P_/D",
+        "u_land.g_region[0].u_region._308_/B2",
+        "u_land.g_region[0].u_region._312_/B2",
+        "u_land.g_region[0].u_region._316_/A3",
+        "u_land.g_region[0].u_region._318_/A3",
+        "u_land.g_region[10].u_region._308_/B2"
+      ]
+    },
+    {
+      "root": "_085_/Y",
+      "kind": "comb",
+      "loads": 90,
+      "examples": [
+        "u_land.g_region[0].u_region._305_/A",
+        "u_land.g_region[0].u_region._312_/A1",
+        "u_land.g_region[0].u_region._315_/A",
+        "u_land.g_region[10].u_region._305_/A",
+        "u_land.g_region[10].u_region._312_/A1",
+        "u_land.g_region[10].u_region._315_/A"
+      ]
+    },
+    {
+      "root": "_102_/Y",
+      "kind": "comb",
+      "loads": 90,
+      "examples": [
+        "u_land.g_region[0].u_region._306_/A",
+        "u_land.g_region[0].u_region._316_/A1",
+        "u_land.g_region[0].u_region._318_/A1",
+        "u_land.g_region[10].u_region._306_/A",
+        "u_land.g_region[10].u_region._316_/A1",
+        "u_land.g_region[10].u_region._318_/A1"
+      ]
+    },
+    {
+      "root": "_097_/Y",
+      "kind": "comb",
+      "loads": 60,
+      "examples": [
+        "u_land.g_region[0].u_region._304_/A2",
+        "u_land.g_region[0].u_region._310_/A2",
+        "u_land.g_region[10].u_region._304_/A2",
+        "u_land.g_region[10].u_region._310_/A2",
+        "u_land.g_region[11].u_region._304_/A2",
+        "u_land.g_region[11].u_region._310_/A2"
+      ]
+    }
+  ],
+  "constant_functional_outputs": {},
+  "top": [
+    {
+      "root": "u_land.k_q[0]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": 128,
+      "examples": [
+        "_083_/B",
+        "_085_/B",
+        "_090_/A",
+        "_105_/A",
+        "_116_/A",
+        "_138_/A"
+      ]
+    },
+    {
+      "root": "_105_/Y",
+      "kind": "comb",
+      "loads": 121,
+      "examples": [
+        "u_land.exp_d[0]$_DFF_P_/D",
+        "u_land.g_region[0].u_region._308_/B2",
+        "u_land.g_region[0].u_region._312_/B2",
+        "u_land.g_region[0].u_region._316_/A3",
+        "u_land.g_region[0].u_region._318_/A3",
+        "u_land.g_region[10].u_region._308_/B2"
+      ]
+    },
+    {
+      "root": "_085_/Y",
+      "kind": "comb",
+      "loads": 90,
+      "examples": [
+        "u_land.g_region[0].u_region._305_/A",
+        "u_land.g_region[0].u_region._312_/A1",
+        "u_land.g_region[0].u_region._315_/A",
+        "u_land.g_region[10].u_region._305_/A",
+        "u_land.g_region[10].u_region._312_/A1",
+        "u_land.g_region[10].u_region._315_/A"
+      ]
+    },
+    {
+      "root": "_102_/Y",
+      "kind": "comb",
+      "loads": 90,
+      "examples": [
+        "u_land.g_region[0].u_region._306_/A",
+        "u_land.g_region[0].u_region._316_/A1",
+        "u_land.g_region[0].u_region._318_/A1",
+        "u_land.g_region[10].u_region._306_/A",
+        "u_land.g_region[10].u_region._316_/A1",
+        "u_land.g_region[10].u_region._318_/A1"
+      ]
+    },
+    {
+      "root": "_097_/Y",
+      "kind": "comb",
+      "loads": 60,
+      "examples": [
+        "u_land.g_region[0].u_region._304_/A2",
+        "u_land.g_region[0].u_region._310_/A2",
+        "u_land.g_region[10].u_region._304_/A2",
+        "u_land.g_region[10].u_region._310_/A2",
+        "u_land.g_region[11].u_region._304_/A2",
+        "u_land.g_region[11].u_region._310_/A2"
+      ]
+    },
+    {
+      "root": "u_land.en_s0$_DFF_PN0_/QN",
+      "kind": "ff",
+      "loads": 32,
+      "examples": [
+        "u_land.en_icg$_DFF_PN0_/RESETN",
+        "u_land.en_qm$_DFF_PN0_/RESETN",
+        "u_land.g_region[0].u_region.en_q$_DFF_PN0_/RESETN",
+        "u_land.g_region[10].u_region.en_q$_DFF_PN0_/RESETN",
+        "u_land.g_region[11].u_region.en_q$_DFF_PN0_/RESETN",
+        "u_land.g_region[12].u_region.en_q$_DFF_PN0_/RESETN"
+      ]
+    },
+    {
+      "root": "_146_/Y",
+      "kind": "comb",
+      "loads": 31,
+      "examples": [
+        "u_land.g_region[0].u_region.warm_q$_DFF_PN0_/D",
+        "u_land.g_region[10].u_region.warm_q$_DFF_PN0_/D",
+        "u_land.g_region[11].u_region.warm_q$_DFF_PN0_/D",
+        "u_land.g_region[12].u_region.warm_q$_DFF_PN0_/D",
+        "u_land.g_region[13].u_region.warm_q$_DFF_PN0_/D",
+        "u_land.g_region[14].u_region.warm_q$_DFF_PN0_/D"
+      ]
+    },
+    {
+      "root": "u_land.rs0$_DFF_PN0_/QN",
+      "kind": "ff",
+      "loads": 31,
+      "examples": [
+        "u_land.g_region[0].u_region.rs1$_DFF_PN0_/RESETN",
+        "u_land.g_region[10].u_region.rs1$_DFF_PN0_/RESETN",
+        "u_land.g_region[11].u_region.rs1$_DFF_PN0_/RESETN",
+        "u_land.g_region[12].u_region.rs1$_DFF_PN0_/RESETN",
+        "u_land.g_region[13].u_region.rs1$_DFF_PN0_/RESETN",
+        "u_land.g_region[14].u_region.rs1$_DFF_PN0_/RESETN"
+      ]
+    },
+    {
+      "root": "_084_/Y",
+      "kind": "comb",
+      "loads": 30,
+      "examples": [
+        "u_land.g_region[0].u_region._303_/B",
+        "u_land.g_region[10].u_region._303_/B",
+        "u_land.g_region[11].u_region._303_/B",
+        "u_land.g_region[12].u_region._303_/B",
+        "u_land.g_region[13].u_region._303_/B",
+        "u_land.g_region[14].u_region._303_/B"
+      ]
+    },
+    {
+      "root": "_149_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "port:tie_hi",
+        "u_land.en_icg$_DFF_PN0_/D",
+        "u_land.en_icg$_DFF_PN0_/SETN",
+        "u_land.en_qm$_DFF_PN0_/D",
+        "u_land.en_qm$_DFF_PN0_/SETN",
+        "u_land.en_s0$_DFF_PN0_/D"
+      ]
+    },
+    {
+      "root": "u_land.g_region[0].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[0].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[0].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[0].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[0].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[0].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[0].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[10].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[10].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[10].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[10].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[10].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[10].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[10].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[11].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[11].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[11].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[11].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[11].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[11].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[11].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[12].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[12].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[12].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[12].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[12].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[12].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[12].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[13].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[13].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[13].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[13].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[13].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[13].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[13].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[14].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[14].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[14].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[14].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[14].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[14].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[14].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[15].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[15].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[15].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[15].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[15].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[15].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[15].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[16].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[16].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[16].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[16].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[16].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[16].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[16].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[17].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[17].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[17].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[17].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[17].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[17].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[17].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[18].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[18].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[18].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[18].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[18].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[18].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[18].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[19].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[19].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[19].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[19].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[19].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[19].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[19].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[1].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[1].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[1].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[1].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[1].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[1].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[1].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[20].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[20].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[20].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[20].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[20].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[20].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[20].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[21].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[21].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[21].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[21].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[21].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[21].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[21].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[22].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[22].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[22].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[22].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[22].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[22].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[22].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[23].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[23].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[23].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[23].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[23].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[23].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[23].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[24].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[24].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[24].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[24].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[24].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[24].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[24].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[25].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[25].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[25].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[25].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[25].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[25].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[25].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[26].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[26].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[26].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[26].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[26].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[26].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[26].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[27].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[27].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[27].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[27].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[27].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[27].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[27].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[28].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[28].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[28].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[28].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[28].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[28].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[28].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[2].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[2].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[2].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[2].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[2].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[2].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[2].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[3].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[3].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[3].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[3].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[3].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[3].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[3].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[4].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[4].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[4].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[4].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[4].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[4].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[4].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[5].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[5].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[5].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[5].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[5].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[5].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[5].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[6].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[6].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[6].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[6].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[6].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[6].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[6].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[7].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[7].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[7].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[7].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[7].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[7].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[7].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[8].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[8].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[8].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[8].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[8].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[8].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[8].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.g_region[9].u_region._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.g_region[9].u_region.en_q$_DFF_PN0_/D",
+        "u_land.g_region[9].u_region.en_q$_DFF_PN0_/SETN",
+        "u_land.g_region[9].u_region.rs1$_DFF_PN0_/D",
+        "u_land.g_region[9].u_region.rs1$_DFF_PN0_/SETN",
+        "u_land.g_region[9].u_region.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.g_region[9].u_region.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "root": "u_land.u_meta._348_/H",
+      "kind": "tie",
+      "loads": 21,
+      "examples": [
+        "u_land.u_meta.en_q$_DFF_PN0_/D",
+        "u_land.u_meta.en_q$_DFF_PN0_/SETN",
+        "u_land.u_meta.rs1$_DFF_PN0_/D",
+        "u_land.u_meta.rs1$_DFF_PN0_/SETN",
+        "u_land.u_meta.vld_o[0]$_DFF_PN0_/SETN",
+        "u_land.u_meta.vld_o[1]$_DFF_PN0_/SETN"
+      ]
+    }
+  ]
+}

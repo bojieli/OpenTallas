@@ -1,0 +1,42 @@
+{
+  "status": "SOURCE_MODEL_ONLY_NOT_MAPPED_QUALIFIED",
+  "clock_domains": [
+    "ck_s source",
+    "ck receiver"
+  ],
+  "storage": "Direct8slot ring each <=928bits; no array above2kb; original source word/capture/read/warm/reset epoch unchanged",
+  "models": [
+    {
+      "width": 107,
+      "old_regions": 7,
+      "new_regions": 27,
+      "ring_storage_bits": 856,
+      "modeled_extra_region_control_ff": 540,
+      "en_s0_max_sinks": 30,
+      "warm_decode_data_sinks_max": 32,
+      "modeled_latency_delta_edges": 0,
+      "modeled_II_delta": 0,
+      "outline_estimate_um": [
+        60,
+        60
+      ],
+      "outline_basis": "provisional50percent density; replace from actual mappedarea before gate"
+    },
+    {
+      "width": 116,
+      "old_regions": 8,
+      "new_regions": 29,
+      "ring_storage_bits": 928,
+      "modeled_extra_region_control_ff": 567,
+      "en_s0_max_sinks": 32,
+      "warm_decode_data_sinks_max": 32,
+      "modeled_latency_delta_edges": 0,
+      "modeled_II_delta": 0,
+      "outline_estimate_um": [
+        60,
+        60
+      ],
+      "outline_basis": "provisional50percent density; replace from actual mappedarea before gate"
+    }
+  ]
+}
