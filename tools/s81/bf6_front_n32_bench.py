@@ -4,7 +4,8 @@ label tables, SWD 160), inside the full BF die pair against the independent orac
 
   --case n32soq        positive: must PASS (exact transactions, QP_CHECK / QT_CHECK on)
   --case mroh          mutant: one-hot read pointer copy of slice 0 stalls on pop (OT_BF6_MUT_ROH): must FAIL (DIFF TXN)
-  --case mwsel         mutant: write slice 0 loses the BF16 slice-1 write select (OT_BF6_MUT_WSEL): must FAIL (DIFF TXN)
+  --case mwsel         mutant: write slice 0 loses the BF16 slice-1 write select (OT_BF6_MUT_WSEL)
+  --case mwself        mutant: write slice 0 loses the FP8 beat write select (OT_BF6_MUT_WSELF)
 """
 import argparse
 import json
@@ -14,7 +15,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = 'DSFD_BF_N32=1,DSFD_BF_SOQ=1,DSFD_BF_SOQ_SWD=160'
-MUT = {'mroh': 'OT_BF6_MUT_ROH', 'mwsel': 'OT_BF6_MUT_WSEL'}
+MUT = {'mroh': 'OT_BF6_MUT_ROH', 'mwsel': 'OT_BF6_MUT_WSEL', 'mwself': 'OT_BF6_MUT_WSELF'}
 
 
 def main():

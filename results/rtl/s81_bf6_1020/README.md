@@ -46,7 +46,7 @@ Zero added cycles. Every copy is the same register function of the same inputs. 
 
 ## Pre-gate native census (tools/ref_tile/native_census.py from origin/main; census/census_named_l.sh)
 - Flow: ASAP7 RVT TT, ot_keep_regs, synth -flatten, rename -wire, latch map (cells_latch_R.v), dfflibmap, abc.
-- Final (commit 8a3f4e60c RTL): **PASS max 32, 0 drivers > 32, 0 role errors, 71,461 roots** (census/final/summary.json).
+- Final RTL (this commit): **PASS max 32, 0 drivers > 32, 0 role errors** in both flows: census/final (plain abc, 73,208 roots) and census/final_orfs (the ORFS synthesis: abc_speed.script, dont_use xp/x1p/SDF/ICG, -D 770, abc.constr; 75,103 roots). The first gate (8a3f4e60c) showed the plain-abc pass is not enough: the ORFS flow found 18 drivers > 32 (max 85: w_q / n_q into the sbf lookahead, non-kept originals merged into their kept copies), fixed by keeping the originals and more per-group copies.
   The SOQ base was 75.2k cells; N32 is 81.1k.
 - Iterations: 3224 -> 532 -> 294 -> 83 -> 72 -> 40 -> 35 -> 32.
 - The rtag-era script had no latch map, so its 2,595 "undriven" role errors were the lockup latches. Base and N32 both

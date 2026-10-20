@@ -1,0 +1,387 @@
+
+60. Printing statistics.
+
+=== ot_bf6_kor ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        3 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 cells
+        1   OR2x6_ASAP7_75t_R
+
+=== ot_bf6_kand ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        3 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 cells
+        1   AND2x4_ASAP7_75t_R
+
+=== $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+        5 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        2 cells
+        1   DFFASRHQNx1_ASAP7_75t_R
+        1   INVx3_ASAP7_75t_R
+
+=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       43 wire bits
+        7 public wires
+       43 public wire bits
+        5 ports
+       39 port bits
+       39 submodules
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+       35   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        2   ot_bf6_kor
+
+=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+        8 wire bits
+        7 public wires
+        8 public wire bits
+        5 ports
+        6 port bits
+        4 submodules
+        1   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+
+=== $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+        5 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        2 cells
+        1   DFFASRHQNx1_ASAP7_75t_R
+        1   INVx3_ASAP7_75t_R
+
+=== $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+        5 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        2 cells
+        1   DFFHQNx1_ASAP7_75t_R
+        1   INVx3_ASAP7_75t_R
+
+=== dsfd_bf_front_roots ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    84899 wires
+   132950 wire bits
+     1800 public wires
+    49469 public wire bits
+       18 ports
+     3272 port bits
+    92669 cells
+       28   $scopeinfo
+     2563   AND2x2_ASAP7_75t_R
+        3   AND2x4_ASAP7_75t_R
+      527   AND3x1_ASAP7_75t_R
+        4   AND3x2_ASAP7_75t_R
+        1   AND3x4_ASAP7_75t_R
+      386   AND4x1_ASAP7_75t_R
+        1   AND4x2_ASAP7_75t_R
+      330   AND5x1_ASAP7_75t_R
+        5   AO211x2_ASAP7_75t_R
+     5748   AO21x1_ASAP7_75t_R
+        1   AO21x2_ASAP7_75t_R
+      168   AO221x1_ASAP7_75t_R
+       34   AO222x2_ASAP7_75t_R
+      297   AO22x1_ASAP7_75t_R
+        7   AO31x2_ASAP7_75t_R
+      189   AO32x1_ASAP7_75t_R
+       19   AO33x2_ASAP7_75t_R
+       62   AOI211x1_ASAP7_75t_R
+     2992   AOI21x1_ASAP7_75t_R
+       31   AOI221x1_ASAP7_75t_R
+       92   AOI22x1_ASAP7_75t_R
+     6568   BUFx2_ASAP7_75t_R
+       72   BUFx3_ASAP7_75t_R
+        1   BUFx4_ASAP7_75t_R
+        3   BUFx4f_ASAP7_75t_R
+        5   BUFx6f_ASAP7_75t_R
+      549   DFFASRHQNx1_ASAP7_75t_R
+    17707   DFFHQNx1_ASAP7_75t_R
+     2596   DLLx1_ASAP7_75t_R
+    13528   INVx1_ASAP7_75t_R
+        8   INVx2_ASAP7_75t_R
+      577   MAJx2_ASAP7_75t_R
+    11087   NAND2x1_ASAP7_75t_R
+       32   NAND3x1_ASAP7_75t_R
+     2326   NOR2x1_ASAP7_75t_R
+        3   NOR2x2_ASAP7_75t_R
+       19   NOR3x1_ASAP7_75t_R
+     7951   OA211x2_ASAP7_75t_R
+     7991   OA21x2_ASAP7_75t_R
+        3   OA221x2_ASAP7_75t_R
+       69   OA222x2_ASAP7_75t_R
+     1214   OA22x2_ASAP7_75t_R
+       33   OA31x2_ASAP7_75t_R
+        5   OA33x2_ASAP7_75t_R
+      354   OAI21x1_ASAP7_75t_R
+     1260   OAI22x1_ASAP7_75t_R
+     2470   OR2x2_ASAP7_75t_R
+      793   OR3x1_ASAP7_75t_R
+        1   OR3x2_ASAP7_75t_R
+      132   OR4x1_ASAP7_75t_R
+      289   OR5x1_ASAP7_75t_R
+        3   XNOR2x1_ASAP7_75t_R
+      981   XNOR2x2_ASAP7_75t_R
+        2   XOR2x1_ASAP7_75t_R
+      549   XOR2x2_ASAP7_75t_R
+      276 submodules
+        5   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+       46   $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
+      109   $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000000010
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000010110
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100010
+        3   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100011
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001000000
+        2   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001100101
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010110110
+      102   ot_bf6_kand
+        4   ot_bf6_kor
+
+=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010110110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+      198 wire bits
+        7 public wires
+      198 public wire bits
+        5 ports
+      186 port bits
+      194 submodules
+        6   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+      182   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        6   ot_bf6_kor
+
+=== $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+        5 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        2 cells
+        1   DFFASRHQNx1_ASAP7_75t_R
+        1   INVx3_ASAP7_75t_R
+
+=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001100101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+      113 wire bits
+        7 public wires
+      113 public wire bits
+        5 ports
+      105 port bits
+      109 submodules
+        4   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+      101   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        4   ot_bf6_kor
+
+=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000010110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       28 wire bits
+        7 public wires
+       28 public wire bits
+        5 ports
+       26 port bits
+       24 submodules
+        1   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+       22   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+
+=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       72 wire bits
+        7 public wires
+       72 public wire bits
+        5 ports
+       68 port bits
+       68 submodules
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+       64   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        2   ot_bf6_kor
+
+=== $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       42 wire bits
+        7 public wires
+       42 public wire bits
+        5 ports
+       38 port bits
+       38 submodules
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+       34   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        2   ot_bf6_kor
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+    94395 dsfd_bf_front_roots
+        2 $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2 $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
+        2 $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+        2   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        1   ot_bf6_kor
+        1 ot_bf6_kand
+        1 ot_bf6_kor
+
+        +----------Count including submodules.
+        | 
+    89350 wires
+   138034 wire bits
+     5454 public wires
+    53756 public wire bits
+     3652 ports
+     7507 port bits
+        - memories
+        - memory bits
+        - processes
+    94395 cells
+       28   $scopeinfo
+     2563   AND2x2_ASAP7_75t_R
+      105   AND2x4_ASAP7_75t_R
+      527   AND3x1_ASAP7_75t_R
+        4   AND3x2_ASAP7_75t_R
+        1   AND3x4_ASAP7_75t_R
+      386   AND4x1_ASAP7_75t_R
+        1   AND4x2_ASAP7_75t_R
+      330   AND5x1_ASAP7_75t_R
+        5   AO211x2_ASAP7_75t_R
+     5748   AO21x1_ASAP7_75t_R
+        1   AO21x2_ASAP7_75t_R
+      168   AO221x1_ASAP7_75t_R
+       34   AO222x2_ASAP7_75t_R
+      297   AO22x1_ASAP7_75t_R
+        7   AO31x2_ASAP7_75t_R
+      189   AO32x1_ASAP7_75t_R
+       19   AO33x2_ASAP7_75t_R
+       62   AOI211x1_ASAP7_75t_R
+     2992   AOI21x1_ASAP7_75t_R
+       31   AOI221x1_ASAP7_75t_R
+       92   AOI22x1_ASAP7_75t_R
+     6568   BUFx2_ASAP7_75t_R
+       72   BUFx3_ASAP7_75t_R
+        1   BUFx4_ASAP7_75t_R
+        3   BUFx4f_ASAP7_75t_R
+        5   BUFx6f_ASAP7_75t_R
+      735   DFFASRHQNx1_ASAP7_75t_R
+    18318   DFFHQNx1_ASAP7_75t_R
+     2596   DLLx1_ASAP7_75t_R
+    13528   INVx1_ASAP7_75t_R
+        8   INVx2_ASAP7_75t_R
+      797   INVx3_ASAP7_75t_R
+      577   MAJx2_ASAP7_75t_R
+    11087   NAND2x1_ASAP7_75t_R
+       32   NAND3x1_ASAP7_75t_R
+     2326   NOR2x1_ASAP7_75t_R
+        3   NOR2x2_ASAP7_75t_R
+       19   NOR3x1_ASAP7_75t_R
+     7951   OA211x2_ASAP7_75t_R
+     7991   OA21x2_ASAP7_75t_R
+        3   OA221x2_ASAP7_75t_R
+       69   OA222x2_ASAP7_75t_R
+     1214   OA22x2_ASAP7_75t_R
+       33   OA31x2_ASAP7_75t_R
+        5   OA33x2_ASAP7_75t_R
+      354   OAI21x1_ASAP7_75t_R
+     1260   OAI22x1_ASAP7_75t_R
+     2470   OR2x2_ASAP7_75t_R
+       30   OR2x6_ASAP7_75t_R
+      793   OR3x1_ASAP7_75t_R
+        1   OR3x2_ASAP7_75t_R
+      132   OR4x1_ASAP7_75t_R
+      289   OR5x1_ASAP7_75t_R
+        3   XNOR2x1_ASAP7_75t_R
+      981   XNOR2x2_ASAP7_75t_R
+        2   XOR2x1_ASAP7_75t_R
+      549   XOR2x2_ASAP7_75t_R
+      276 submodules
+        5   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+       46   $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
+      109   $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000000010
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000010110
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100010
+        3   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000000100011
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001000000
+        2   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000001100101
+        1   $paramod\ot_bf6_cen_pool\N=s32'00000000000000000000000010110110
+      102   ot_bf6_kand
+        4   ot_bf6_kor
+

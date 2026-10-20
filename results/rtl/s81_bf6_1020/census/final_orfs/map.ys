@@ -1,0 +1,18 @@
+read_verilog -lib /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v
+read_verilog -lib /src/physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v
+read_verilog -sv -DSYNTHESIS -DDSFD_BF_SOQ=1 -DDSFD_BF_SOQ_SWD=160 -DDSFD_BF_N32=1 /src/rtl/s81/ot_s81_bf_native.sv /src/rtl/common/ot_prefix.sv /src/rtl/hdc/ot_hdc_cg.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /src/rtl/hdc/ot_hdc_fpu.sv /src/rtl/proto/ot_fp32_add_rne_pipe.sv /src/rtl/v41rom/ot_v41_bf16_lanes.sv /src/rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv /src/rtl/v41rom/ot_v41_bmul2.sv /src/rtl/v41rom/ot_v41_bterm.sv /src/rtl/v41rom/ot_v41_bterm2_w10.sv /src/rtl/v41rom/ot_v41_chain.sv /src/rtl/v41rom/ot_v41_chain2.sv /src/rtl/v41rom/ot_v41_fadd.sv /src/rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv /src/rtl/v41rom/ot_v41_segtree.sv /src/rtl/v41rom/ot_v41_segtree2.sv /src/rtl/v41rom/ot_v41_bmul2_rne_prepare.sv /src/rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv /src/rtl/v41rom/ot_v41_rom_elem_qx_w10.sv /src/rtl/v41rom/ot_v41_chain2u2.sv /src/rtl/v41rom/ot_v41_kreg.sv /src/rtl/v41rom/ot_v41_chain3.sv /src/rtl/v41rom/ot_v41_chain4.sv /src/rtl/v41rom/ot_v41_fadd2.sv /src/rtl/v41rom/ot_v41_bterm3_w10.sv /src/rtl/v41rom/ot_v41_bterm4_w10.sv /src/rtl/v41rom/ot_v41_bterm5_w10.sv /src/rtl/v41rom/ot_v41_bf16_lanes3.sv /src/rtl/v41rom/ot_v41_tile_clk.sv /src/rtl/v41rom/ot_bf_hdly.sv /src/rtl/v41rom/ot_v41_bf_col.sv /src/rtl/v41rom/ot_v41_segtree3.sv /src/rtl/v41rom/ot_v41_segtree4.sv /src/rtl/v41rom/ot_v41_segtree5.sv /src/rtl/v41rom/ot_v41_segtree6.sv /src/rtl/s81/ot_s81_bf_front_roots.sv /src/rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv /src/rtl/v41rom/ot_v41_bf_front_core_roots.sv /src/rtl/s81/ot_s81_bf_seam_roots.sv /src/rtl/v41rom/ot_s81_so_label_q.sv /src/rtl/lib/ot_rst_relay.sv /src/rtl/v41rom/ot_bf6_n32.sv 
+read_liberty -lib /tmp/lib/SIMPLE.lib
+read_liberty -lib /tmp/lib/AO.lib
+read_liberty -lib /tmp/lib/OA.lib
+read_liberty -lib /tmp/lib/INVBUF.lib
+read_liberty -lib /tmp/lib/SEQ.lib
+hierarchy -check -top dsfd_bf_front_roots
+tcl /src/physical/common_flow/ot_keep_regs.tcl
+synth -top dsfd_bf_front_roots -flatten
+rename -wire
+techmap -map /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v
+dfflibmap -liberty /tmp/lib/SEQ.lib
+abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /tmp/lib/AO.lib -liberty /tmp/lib/INVBUF.lib -liberty /tmp/lib/OA.lib -liberty /tmp/lib/SEQ.lib -liberty /tmp/lib/SIMPLE.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /tmp/abc.constr -D 770.0
+opt_clean
+tee -o /out/stat.txt stat
+write_verilog -noattr /out/mapped.v

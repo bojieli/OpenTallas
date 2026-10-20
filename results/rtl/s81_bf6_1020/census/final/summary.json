@@ -3,62 +3,9 @@
  "top": "dsfd_bf_front_roots",
  "status": "PASS",
  "limit": 32,
- "roots_examined": 71461,
+ "roots_examined": 73208,
  "max_dynamic_loads": 32,
- "functional_pin_contract": "NOT_EVALUATED",
- "pin_registration_contract": "NOT_EVALUATED",
- "storage_contract": "NOT_EVALUATED",
  "violations": 0,
  "role_errors": 0,
- "netlist_sha256": "8dc6f99dec6b2442f3540a578ad77ef422a9f02c126ade06df15834281b0a5bc",
- "top_drivers": [
-  {
-   "driver": "u_view.g_hc.u_front.g_cenn.u_pool.g_o[0].u_or._0_/Y",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_l[146].u_ce.q$_DFF_P_/QN",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_l[147].u_ce.q$_DFF_P_/QN",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_l[24].u_ce.q$_DFF_P_/QN",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_l[25].u_ce.q$_DFF_P_/QN",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_l[26].u_ce.q$_DFF_P_/QN",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_l[37].u_ce.q$_DFF_P_/QN",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_o[0].u_or._0_/Y",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_o[1].u_or._0_/Y",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_o[2].u_or._0_/Y",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_cpm.u_pool.g_o[3].u_or._0_/Y",
-   "loads": 32
-  },
-  {
-   "driver": "u_view.g_hc.u_front.g_e11n.u_pool.g_l[0].u_ce.q$_DFF_P_/QN",
-   "loads": 32
-  }
- ]
+ "netlist_sha256": "4af00aa23501b1f7a0a4f5d6b3c7ca98ebf73edcb241ffd13af63e23d2492b57"
 }
