@@ -7,7 +7,7 @@ module qfd_kvn_static_transport #(parameter integer LOCAL32=0,LOCAL_MUT=0)(
  input wire word_v,input wire[10:0]word_tag,input wire[511:0]word_data,
  input wire[58:0]word_identity,input wire[1:0]word_generation,
  input wire slot_v,
- input wire[15:0]word_ctl_pub,input wire[3:0]slot_pub,
+ input wire[39:0]word_ctl_pub,input wire[9:0]slot_pub,
  output reg[523:0]x3,output reg[58:0]x3_identity,output reg[1:0]x3_generation,
  output reg fault
 );
@@ -25,12 +25,12 @@ module qfd_kvn_static_transport #(parameter integer LOCAL32=0,LOCAL_MUT=0)(
   end
  end
  // Fixed 11-bit payload groups each own their pointer, occupancy and fault feedback.
- // The four incoming control publications are captured at the ORIGINAL producer edge.
+ // The ten incoming control publications are captured at the ORIGINAL producer edge.
  generate if(LOCAL32)begin:g_local
   wire[583:0]data_in={word_generation,word_identity,word_tag,word_data};
   wire[583:0]data_out;
   for(genvar g=0;g<54;g=g+1)begin:g_word
-   localparam integer LO=11*g,W=(584-LO<11)?584-LO:11,R=g/14;
+   localparam integer LO=11*g,W=(584-LO<11)?584-LO:11,R=g/6;
    (* keep = "true" *) reg lr,lw,lf;
    (* keep = "true" *) reg[1:0]ln;
    reg[W-1:0]s0,s1,out_q;

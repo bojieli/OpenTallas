@@ -19,7 +19,7 @@ module ot_qfd_su_kv_static_posted #(
  output wire epoch_idle,output wire drained,
  output reg word_v,output reg [10:0] word_tag,output reg [511:0] word_data,
  input wire word_slot,input wire [1:0] word_index,
- output wire[15:0]word_ctl_pub,
+ output wire[39:0]word_ctl_pub,
  output reg fault,output reg [7:0] fault_code
 );
  // Every arriving face bit is captured before decode/arbitration.
@@ -160,7 +160,7 @@ module ot_qfd_su_kv_static_posted #(
  end
  // Same-edge control publications for bounded KVN consumer groups (no new edge).
  generate if(LOCAL_CTL)begin:g_ctl_pub
-  for(genvar cp=0;cp<4;cp=cp+1)begin:g_copy
+  for(genvar cp=0;cp<10;cp=cp+1)begin:g_copy
    (* keep = "true" *) reg[3:0]q;
    always @(posedge clk or negedge rst_n)begin
     if(!rst_n)q<=0;
@@ -172,7 +172,7 @@ module ot_qfd_su_kv_static_posted #(
    assign word_ctl_pub[4*cp+:4]=q;
   end
  end else begin:g_ctl_alias
-  assign word_ctl_pub={4{word_v,word_tag[10:8]}};
+  assign word_ctl_pub={10{word_v,word_tag[10:8]}};
  end endgenerate
  // Epoch-begin broadcast replicated per byte segment (QW-N59 10-19): the 256-seat seen / bytes_r assembly bank took its
  // clear / hold select from one eb_q flop (synthesis merged it with the service's iss[0]: 4,826 loads > 3,000).  EBC kept

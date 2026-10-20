@@ -247,7 +247,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // Family widths = ceil(region reset loads / 28) from the SAFE2 synthesized netlist (textbook 10-19: fmt 5,517,
  // svc 2,830, pin 2,173, rec 2,139, top 1,599, land 1,420 bit loads (safe3 gate), x3 577, ctx < 256); the pass re-points loads,
  // the gate's high_fanout lint on 1_2_yosys.v is the witness.
- (* keep = "true" *) reg[199:0]rst_cp_fmt;(* keep = "true" *) reg[(LOCAL32?34:24)-1:0]rst_cp_x3;(* keep = "true" *) reg[103:0]rst_cp_svc;
+ (* keep = "true" *) reg[199:0]rst_cp_fmt;(* keep = "true" *) reg[(LOCAL32?80:24)-1:0]rst_cp_x3;(* keep = "true" *) reg[103:0]rst_cp_svc;
  (* keep = "true" *) reg[79:0]rst_cp_rec;(* keep = "true" *) reg[11:0]rst_cp_ctx;(* keep = "true" *) reg[55:0]rst_cp_land;
  (* keep = "true" *) reg[79:0]rst_cp_pin;(* keep = "true" *) reg[47:0]rst_cp_top;   // QW-N59-4: qseen/qctx moved to the bank (1,599 - ~520 loads)
  always @(posedge ck or negedge rst_n)
@@ -262,14 +262,14 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  reg p_hev,p_hfc;reg[15:0]p_he;reg[58:0]p_ht;reg[1:0]p_hg;
  reg p_lcv;reg[5:0]p_stage;reg[17:0]p_tok,p_pos;reg[379:0]p_cmd;reg[547:0]p_dd;
  reg p_kvs,p_x3s;reg[1:0]p_kvi;
- wire[3:0]x3_slot_pub;
+ wire[9:0]x3_slot_pub;
  generate if(LOCAL32)begin:g_x3_slot_pub
-  (* keep = "true" *) reg[3:0]q;
+  (* keep = "true" *) reg[9:0]q;
   always @(posedge ck or negedge rst_pin)
-   if(!rst_pin)q<=0;else q<={4{bnd_kv_x3_slot}};
+   if(!rst_pin)q<=0;else q<={10{bnd_kv_x3_slot}};
   assign x3_slot_pub=q;
  end else begin:g_x3_slot_alias
-  assign x3_slot_pub={4{p_x3s}};
+  assign x3_slot_pub={10{p_x3s}};
  end endgenerate
  reg p_ts;reg[3:0]p_tk;reg[4:0]p_tb;reg p_rv;reg[547:0]p_rp;reg p_rs;reg[3:0]p_rk;reg[4:0]p_rb;
  reg[511:0]p_ecq;reg[15:0]p_esq;reg p_vis,p_cs;
@@ -386,7 +386,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[1:0]kv_kind=iss[0]?2'd0:iss[1]?2'd1:2'd2;
  wire[17:0]kv_nin=iss[0]?18'd128:18'd64;
  wire formatter_fault,formatter_idle,formatter_drained,kvn_v;wire[7:0]formatter_fault_code;
- wire[10:0]kvn_tag;wire[511:0]kvn_data;wire[15:0]kvn_ctl_pub;
+ wire[10:0]kvn_tag;wire[511:0]kvn_data;wire[39:0]kvn_ctl_pub;
  ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1),.SAFE(SAFE),.LOCAL_CTL(LOCAL32))u_formatter(
  .clk(ck),.rst_n(rst_fmt),.epoch_begin(native_context),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
@@ -398,8 +398,8 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   if(!rst_top)begin formatter_identity<=0;formatter_generation<=0;end
   else if(native_context)begin formatter_identity<=begin_tag;formatter_generation<=p_hg;end
  wire x3_fault;
- qfd_kvn_static_transport #(.LOCAL32(LOCAL32),.LOCAL_MUT(LOCAL_MUT)) u_kvn(.ck(ck),.rst_n(rst_x3),.word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),
- .word_identity(formatter_identity),.word_generation(formatter_generation),.slot_v(p_x3s),.word_ctl_pub(kvn_ctl_pub),.slot_pub(x3_slot_pub),
+ qfd_kvn_static_transport #(.LOCAL32(LOCAL32),.LOCAL_MUT(LOCAL_MUT)) u_kvn(.ck(ck),.rst_n(rst_x3),.word_v(LOCAL32?kvn_ctl_pub[39]:kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),
+ .word_identity(formatter_identity),.word_generation(formatter_generation),.slot_v(LOCAL32?x3_slot_pub[9]:p_x3s),.word_ctl_pub(kvn_ctl_pub),.slot_pub(x3_slot_pub),
  .x3(x3),.x3_identity(x3_identity),.x3_generation(x3_generation),.fault(x3_fault));
  // ---------------------------------------------------------------- operation context slots (MU-D2D-OVL; NS = 1: as built)
  localparam integer NS=(MCTX!=0)?2:1;
