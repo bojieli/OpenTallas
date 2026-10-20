@@ -304,6 +304,31 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    p_rs<=bnd_rx_slot;p_rk<=bnd_rx_slot_kind;p_rb<=bnd_rx_slot_beat;p_ecq<=bnd_emb_code_q;p_esq<=bnd_emb_scale_q;
    p_vis<=bnd_visibility_slot;p_cs<=bnd_complete_slot;
   end
+ // R3d (QW-N59-6 10-20, LOCAL32): kept same-D copies of the landed pin registers p_lcv / p_stage (5) and of the dd word's
+ // valid / kind / mask field p_dd[547:537] (24 = 3 per lane), same async rst_pin clear and same D as the originals, so
+ // every copy equals its original on every edge.  nc_pub[k] == native_context; ddc[k] == p_dd[547:537].  Consumers:
+ // nc_pub 0 formatter eb_q, 1/2 formatter eb_r halves, 3/4 formatter_identity low/high + generation; ddc 3l+0 lane l
+ // we + waddr (25 loads), 3l+1 / 3l+2 lane l wdata low / high 16 bits.  R3c census: one OR3 per lane drove 57 loads and
+ // native_context 281.  0 added edges.  Other parameterisations alias the originals (no added flops).
+ wire[4:0]nc_pub;wire[10:0]ddc[0:23];
+ generate if(LOCAL32)begin:g_pin_pub
+  (* keep = "true" *) reg[4:0]lcv_c;(* keep = "true" *) reg[5:0]stage_c[0:4];(* keep = "true" *) reg[10:0]dd_c[0:23];
+  integer pk;
+  always @(posedge ck or negedge rst_pin)
+   if(!rst_pin)begin lcv_c<=0;for(pk=0;pk<5;pk=pk+1)stage_c[pk]<=0;for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=0;end
+   else begin lcv_c<={5{bnd_layer_context_v}};for(pk=0;pk<5;pk=pk+1)stage_c[pk]<=bnd_command_stage;for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=bnd_dd_i[547:537];end
+  for(genvar k=0;k<5;k=k+1)begin:g_nc
+   assign nc_pub[k]=lcv_c[k]&&stage_c[k]>=1&&stage_c[k]<=36;
+  end
+  for(genvar k=0;k<24;k=k+1)begin:g_ddc
+   assign ddc[k]=dd_c[k];
+  end
+ end else begin:g_pin_alias
+  assign nc_pub={5{p_lcv&&p_stage>=1&&p_stage<=36}};
+  for(genvar k=0;k<24;k=k+1)begin:g_ddc
+   assign ddc[k]=p_dd[547:537];
+  end
+ end endgenerate
  // ---------------------------------------------------------------- command context (unchanged child)
  wire[94:0]service_ret_raw;
  always @(posedge ck or negedge rst_pin)
@@ -395,7 +420,14 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   if(dd_kv)for(l=0;l<8;l=l+1)if(dd_mask[l])begin
    ka=p_dd[345+24*l+:24];
    if((dd_kind==2'd1)?(|ka[23:20]):((|ka[23:21])||!ka[20]))kv_in_bad=1;
-   kv_we[l]=1'b1;kv_waddr[24*l+:24]=ka^((MUT==2)?24'd1:24'd0);kv_wdata[32*l+:32]=p_dd[89+32*l+:32];
+  end
+  // R3d: each lane's we / waddr / wdata halves are gated by that lane's own kept field copies (== dd_kv && dd_mask[l]).
+  for(l=0;l<8;l=l+1)begin
+   if(ddc[3*l][10]&&(ddc[3*l][9:8]==2'd1||ddc[3*l][9:8]==2'd2)&&ddc[3*l][l])begin
+    kv_we[l]=1'b1;kv_waddr[24*l+:24]=p_dd[345+24*l+:24]^((MUT==2)?24'd1:24'd0);
+   end
+   if(ddc[3*l+1][10]&&(ddc[3*l+1][9:8]==2'd1||ddc[3*l+1][9:8]==2'd2)&&ddc[3*l+1][l])kv_wdata[32*l+:16]=p_dd[89+32*l+:16];
+   if(ddc[3*l+2][10]&&(ddc[3*l+2][9:8]==2'd1||ddc[3*l+2][9:8]==2'd2)&&ddc[3*l+2][l])kv_wdata[32*l+16+:16]=p_dd[89+32*l+16+:16];
   end
  end
  reg[2:0]iss;
@@ -406,7 +438,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire formatter_fault,formatter_idle,formatter_drained,kvn_v;wire[7:0]formatter_fault_code;
  wire[10:0]kvn_tag;wire[511:0]kvn_data;wire[39:0]kvn_ctl_pub;
  ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1),.SAFE(SAFE),.LOCAL_CTL(LOCAL32))u_formatter(
- .clk(ck),.rst_n(rst_fmt),.epoch_begin(native_context),.epoch_pos(c_pos),
+ .clk(ck),.rst_n(rst_fmt),.epoch_begin(LOCAL32?nc_pub[0]:native_context),.epoch_begin_pub(nc_pub[2:1]),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_idle(formatter_idle),.drained(formatter_drained),
  .word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),.word_ctl_pub(kvn_ctl_pub),.word_index_pub(fmt_index_pub),.word_slot(p_kvs),.word_index(p_kvi),
@@ -414,7 +446,10 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  reg[58:0]formatter_identity;reg[1:0]formatter_generation;
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin formatter_identity<=0;formatter_generation<=0;end
-  else if(native_context)begin formatter_identity<=begin_tag;formatter_generation<=p_hg;end
+  else begin
+   if(nc_pub[3])formatter_identity[29:0]<=begin_tag[29:0];
+   if(nc_pub[4])begin formatter_identity[58:30]<=begin_tag[58:30];formatter_generation<=p_hg;end
+  end
  wire x3_fault;
  qfd_kvn_static_transport #(.LOCAL32(LOCAL32),.LOCAL_MUT(LOCAL_MUT)) u_kvn(.ck(ck),.rst_n(rst_x3),.word_v(LOCAL32?kvn_ctl_pub[39]:kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),
  .word_identity(formatter_identity),.word_generation(formatter_generation),.slot_v(LOCAL32?x3_slot_pub[9]:p_x3s),.word_ctl_pub(kvn_ctl_pub),.slot_pub(x3_slot_pub),

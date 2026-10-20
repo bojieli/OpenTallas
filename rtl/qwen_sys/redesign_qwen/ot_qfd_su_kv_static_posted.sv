@@ -21,6 +21,7 @@ module ot_qfd_su_kv_static_posted #(
  input wire word_slot,input wire [1:0] word_index,
  output wire[39:0]word_ctl_pub,
  input wire[15:0] word_index_pub, // opt-in same-age source copies; LOCAL_CTL=0 ignores
+ input wire[1:0] epoch_begin_pub, // R3d opt-in same-edge copies of epoch_begin (eb_r halves); LOCAL_CTL=0 ignores
  output reg fault,output reg [7:0] fault_code
 );
  // Every arriving face bit is captured before decode/arbitration.
@@ -86,7 +87,7 @@ module ot_qfd_su_kv_static_posted #(
   if(choose)sent_n[selected]=1;
 
  end
- end else begin:g_safe
+ end else if(LOCAL_CTL==0)begin:g_safe
   // Native59 has eight active lanes. Encode and validate each lane locally,
   // then register its byte-seat address before the constant-index seat decode.
   (* keep = "true" *) reg[7:0]dv[0:15];
@@ -132,6 +133,71 @@ module ot_qfd_su_kv_static_posted #(
    if(slot_q&&(!active||sent[selected]||!(&seen[64*selected+:64])))err[6]=1;
    if(choose)sent_n[selected]=1;
   end
+ end else begin:g_safe32
+  // R3d (QW-N59-6 10-20, LOCAL_CTL): the g_safe seat decode with the lane seat address PREDECODED at the same edge.
+  // g_safe registered per 16-seat segment the 8-bit seat address di and valid dv, then decoded di==seat for all 256
+  // seats: the shared partial decodes drove 41-57 mapped loads each (229 census nets).  Here each segment registers,
+  // per lane, hv = dv && (seat address[7:4] == segment) and lo = one-hot(seat address[3:0]) at the edge that captured
+  // di/dv, so hits[seat][lane] = hv[seat/16][lane] && lo[seat/16][lane][seat%16] == dv && (di == seat) on every edge
+  // (reset: hv 0 == dv 0).  Exact; 0 added edges.  Loads: hv 16 seats, lo 1, dc 16 seats.
+  (* keep = "true" *) reg[7:0]hv[0:15];
+  (* keep = "true" *) reg[15:0]lo[0:15][0:7];
+  (* keep = "true" *) reg[63:0]dc[0:15];reg[7:0]de;
+  integer j,seg;reg[23:0]da;reg[19:0]aa;reg[16:0]ww;reg[12:0]dp;
+  reg[7:0]ix;reg[8:0]co;reg[2:0]permit;
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin for(seg=0;seg<16;seg=seg+1)begin hv[seg]<=0;dc[seg]<=0;for(j=0;j<8;j=j+1)lo[seg][j]<=0;end de<=0;end
+   else begin
+    de<=0;
+    permit=issued;if(iv_q&&ik_q<3)permit[ik_q]=1;
+    if(|we_q[63:8])de[0]<=1;
+    for(j=0;j<8;j=j+1)begin
+     da=wa_q[24*j+:24];aa=da[23:4];ww=aa-VBASE;co=encode(wd_q[32*j+:32]);
+     if(aa<VBASE)begin ix={1'b0,aa[6:0]};dp={aa[15:7],da[3:0]};end
+     else begin ix={1'b1,ww[2:0],da[3:0]};dp=ww[15:3];end
+     ix=ix^8'(MUT_LANE!=0);
+     for(seg=0;seg<16;seg=seg+1)begin
+      hv[seg][j]<=we_q[j]&&(ix[7:4]==4'(seg));lo[seg][j]<=16'd1<<ix[3:0];dc[seg][8*j+:8]<=co[7:0];
+     end
+     if(we_q[j])begin
+      if(!active||aa>=2*VBASE||(aa<VBASE?aa[16]:ww[16])||dp!=pos)de[0]<=1;
+      if(co[8]||KV_FP8==0)de[1]<=1;
+      if(!(aa<VBASE?permit[aa[6]?2:1]:permit[0]))de[2]<=1;
+     end
+    end
+   end
+  end
+  integer seat,lane;reg[7:0]hits;reg[7:0]value;
+  always_comb begin
+   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=de;
+   allowed=issued;e=0;a=0;w=0;pp=0;code=0;dim=0;head=0;kind=0;idx=0;halfidx=0;li=0;
+   hits=0;value=0;
+   for(seat=0;seat<NBYTES;seat=seat+1)begin
+    hits=0;value=bytes_r[8*seat+:8];
+    for(lane=0;lane<8;lane=lane+1)begin
+     hits[lane]=hv[seat/16][lane]&&lo[seat/16][lane][seat%16];
+     if(hits[lane])value=dc[seat/16][8*lane+:8];
+    end
+    if(|hits)begin
+     if(seen[seat]||(|(hits&(hits-8'd1))))err[3]=1;
+     seen_n[seat]=1;bytes_n[8*seat+:8]=value;
+    end
+   end
+   choose=slot_q;selected=slot_index_q;
+   if(slot_q&&(!active||sent[selected]||!(&seen[64*selected+:64])))err[6]=1;
+   if(choose)sent_n[selected]=1;
+  end
+ end endgenerate
+ // R3d (LOCAL_CTL): 26 kept same-D copies of slot_q (D word_slot, async clear) -- 16 for the 4-byte word_data capture
+ // groups, 10 for the KVN control publications -- so the emission predicate is one distinct gate per <= 32 capture
+ // flops instead of one 528-load AND (R3c census).  cq[k] == slot_q == choose on every edge: exact.
+ wire[25:0]cq;
+ generate if(LOCAL_CTL)begin:g_choose_pub
+  (* keep = "true" *) reg[25:0]q;
+  always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<={26{word_slot}};
+  assign cq=q;
+ end else begin:g_choose_alias
+  assign cq={26{slot_q}};
  end endgenerate
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;if(LOCAL_CTL==0)word_data<=0;fault<=0;fault_code<=0;end
@@ -172,7 +238,7 @@ module ot_qfd_su_kv_static_posted #(
     else sel<=4'b0001<<word_index_pub[2*(wb/8)+:2];
    always @(posedge clk or negedge rst_n)
     if(!rst_n)word_data[8*wb+:8]<=0;
-    else if(ENABLE!=0&&!eb_q&&!fault&&!(|err)&&choose&&(!word_v||take))begin
+    else if(ENABLE!=0&&!eb_q&&!fault&&!(|err)&&cq[wb/4]&&(!word_v||take))begin
      word_data[8*wb+:8]<=({8{sel[0]}}&bytes_r[8*wb+:8]) |
                         ({8{sel[1]}}&bytes_r[512+8*wb+:8]) |
                         ({8{sel[2]}}&bytes_r[1024+8*wb+:8]) |
@@ -188,7 +254,7 @@ module ot_qfd_su_kv_static_posted #(
    always @(posedge clk or negedge rst_n)begin
     if(!rst_n)q<=0;
     else if(ENABLE!=0&&!eb_q)begin
-     if(!fault&&!(|err)&&choose&&(!word_v||take))q<={1'b1,3'b010};
+     if(!fault&&!(|err)&&cq[16+cp]&&(!word_v||take))q<={1'b1,3'b010};
      else if(take||fault||(|err))q[3]<=0;
     end
    end
@@ -200,11 +266,17 @@ module ot_qfd_su_kv_static_posted #(
  // Epoch-begin broadcast replicated per byte segment (QW-N59 10-19): the 256-seat seen / bytes_r assembly bank took its
  // clear / hold select from one eb_q flop (synthesis merged it with the service's iss[0]: 4,826 loads > 3,000).  EBC kept
  // copies of the same register, one per NBYTES/EBC-byte segment; function unchanged (the same cycle and condition).
- localparam integer EBC=16, NB=NBYTES/EBC;
+ localparam integer EBC=(LOCAL_CTL!=0)?32:16, NB=NBYTES/EBC;   // R3d: 32 copies under LOCAL_CTL (8 seats each)
  (* keep = "true" *) reg [EBC-1:0] eb_r;
- always @(posedge clk or negedge rst_n)if(!rst_n)eb_r<=0;else eb_r<={EBC{epoch_begin}};
- wire eb_clear_ok=!(active||word_v||fault||ep_q>=8192);
  genvar gs;
+ // R3d: under LOCAL_CTL each half of the copies takes its own parent publication of epoch_begin (same value, same edge),
+ // so no epoch_begin net drives more than 16 copy flops.
+ wire[EBC-1:0]eb_d;
+ for(gs=0;gs<EBC;gs=gs+1)begin:g_ebd
+  assign eb_d[gs]=(LOCAL_CTL!=0)?epoch_begin_pub[(gs*2)/EBC]:epoch_begin;
+ end
+ always @(posedge clk or negedge rst_n)if(!rst_n)eb_r<=0;else eb_r<=eb_d;
+ wire eb_clear_ok=!(active||word_v||fault||ep_q>=8192);
  generate for(gs=0;gs<EBC;gs=gs+1)begin:g_ebseg
   always @(posedge clk or negedge rst_n)
    if(!rst_n)begin seen[NB*gs+:NB]<=0;bytes_r[8*NB*gs+:8*NB]<=0;end
