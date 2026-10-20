@@ -2,6 +2,7 @@
 // L2H-SM9 (from the lp.py tb): lockstep ot_hbm_smh_rp4_flat (flat, reset delayed 3) vs ot_hbm_smh_rp4h2 (two hardened halves, same lp offsets); every input presented off_in edges later, every output compared off_out edges later.
 module tb_ot_hbm_smh_rp4h2;
     parameter integer MUT = 0;
+    parameter integer SOFTBEAT = 0;
     reg clk = 1'b0;  always #0.5 clk = ~clk;
     reg rst = 0;  reg [2:0] rst_dl;
     wire rst_f = rst_dl[2];
@@ -51,7 +52,7 @@ module tb_ot_hbm_smh_rp4h2;
     wire [199:0] fo_gout, lo_gout;  reg [199:0] dlo_gout [0:3];
     always @(posedge clk) begin : g_dlo_gout integer j; dlo_gout[0] <= fo_gout; for (j = 1; j <= 3; j = j + 1) dlo_gout[j] <= dlo_gout[j - 1]; end
     ot_hbm_smh_rp4_flat u_flat (.clk(clk), .rst_n(rst_f), .xs_a1(fi_xs_a1), .xs_g1(fi_xs_g1), .xs_a2(fi_xs_a2), .xs_g2(fi_xs_g2), .xss_a1(fi_xss_a1), .xss_g1(fi_xss_g1), .xss_a2(fi_xss_a2), .xss_g2(fi_xss_g2), .rin_n(fi_rin_n), .rin_s(fi_rin_s), .bin(fi_bin), .gin(fi_gin), .rout_n(fo_rout_n), .rout_s(fo_rout_s), .bout(fo_bout), .gout(fo_gout));
-    ot_hbm_smh_rp4h2 #(.MUT(MUT)) u_lp (.ck_n(clk), .ck_s(clk), .rst_n(rst), .xs_a1(li_xs_a1), .xs_g1(li_xs_g1), .xs_a2(li_xs_a2), .xs_g2(li_xs_g2), .xss_a1(li_xss_a1), .xss_g1(li_xss_g1), .xss_a2(li_xss_a2), .xss_g2(li_xss_g2), .rin_n(li_rin_n), .rin_s(li_rin_s), .bin(li_bin), .gin(li_gin), .rout_n(lo_rout_n), .rout_s(lo_rout_s), .bout(lo_bout), .gout(lo_gout));
+    ot_hbm_smh_rp4h2 #(.MUT(MUT), .SOFTBEAT(SOFTBEAT)) u_lp (.ck_n(clk), .ck_s(clk), .rst_n(rst), .xs_a1(li_xs_a1), .xs_g1(li_xs_g1), .xs_a2(li_xs_a2), .xs_g2(li_xs_g2), .xss_a1(li_xss_a1), .xss_g1(li_xss_g1), .xss_a2(li_xss_a2), .xss_g2(li_xss_g2), .rin_n(li_rin_n), .rin_s(li_rin_s), .bin(li_bin), .gin(li_gin), .rout_n(lo_rout_n), .rout_s(lo_rout_s), .bout(lo_bout), .gout(lo_gout));
     function [31:0] rnd; input integer k; rnd = $urandom; endfunction
     integer cyc, nc, bad;
     initial begin
@@ -90,7 +91,7 @@ module tb_ot_hbm_smh_rp4h2;
                 nc = nc + 1; if (lo_gout !== dlo_gout[2]) begin bad = bad + 1; if (bad <= 5) $display("H2_MISMATCH port=gout cycle=%0d flat=%h landed=%h", cyc, dlo_gout[2], lo_gout); end
             end
         end
-        if (bad == 0 && nc > 0) $display("H2_LOCKSTEP PASS MUT=%0d compared=%0d cycles=4000 warm=800", MUT, nc);
+        if (bad == 0 && nc > 0) $display("H2_LOCKSTEP PASS MUT=%0d compared=%0d cycles=4000 warm=800 SOFTBEAT=%0d", MUT, nc, SOFTBEAT);
         else $display("H2_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d", MUT, bad, nc);
         $finish;
     end

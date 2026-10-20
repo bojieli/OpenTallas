@@ -55,7 +55,7 @@ module ot_rp4h_xreg #(parameter integer W = 8, parameter [W-1:0] VMASK = 0) (
     assign q = r;
 endmodule
 
-module ot_hbm_smh_rp4h_n #(parameter integer MUT = 0) (
+module ot_hbm_smh_rp4h_n #(parameter integer MUT = 0, parameter integer SOFTBEAT = 0) (
     input wire clk, input wire rst_n,
     input wire [8:0] xs_a1, input wire [4:0] xs_g1, input wire [6:0] xs_a2, input wire [4:0] xs_g2,
     input wire [817:0] rin_n, input wire [2068:0] bin, input wire [99:0] gin,
@@ -73,10 +73,21 @@ module ot_hbm_smh_rp4h_n #(parameter integer MUT = 0) (
     ot_rp4l_pinrow u_pr_n (.clk(clk), .rst_n(r[0]), .d(rin_n), .q(rl_n));
     ot_rp4l_pinbeat u_pb (.clk(clk), .rst_n(r[1]), .d(bin), .q(bin_l));
     ot_smh_tr_group_row_w u_row0 (.clk(clk), .rst_a(r[2]), .d(rl_n), .first(rl1_n), .last(rpm_n));
-    ot_smh_tr_group_beat_e u_beat_t (.clk(clk), .rst_a(r[3]), .d(bin_l), .last(bm));
+    // SOFTBEAT 1 (kit smh_rp4hn_b): the two 2-stage beat transits (hard 43.2 x 216 ot_smh_tr_group_beat_e columns at the
+    // W and E faces) become soft kept registers with the same 2 + 2 edges and the same valid-bit clear; the placer spreads
+    // them along the W -> E path (no 216-um macro band: the n half fits 864 um).
+    wire [2068:0] bt1, be1;
+    generate if (SOFTBEAT != 0) begin : g_sbeat
+        ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_bt1 (.clk(clk), .rst_n(r[3]), .d(bin_l), .q(bt1));
+        ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_bt2 (.clk(clk), .rst_n(r[3]), .d(bt1), .q(bm));
+        ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_be1 (.clk(clk), .rst_n(r[6]), .d(bm), .q(be1));
+        ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_be2 (.clk(clk), .rst_n(r[6]), .d(be1), .q(bout));
+    end else begin : g_hbeat
+        ot_smh_tr_group_beat_e u_beat_t (.clk(clk), .rst_a(r[3]), .d(bin_l), .last(bm));
+        ot_smh_tr_group_beat_e u_beate (.clk(clk), .rst_a(r[6]), .d(bm), .last(bout));
+    end endgenerate
     ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_landn (.clk(clk), .rst_n(r[4]), .d(bin_l), .q(bk1_n));
     ot_smh_tr_group_row_e u_rowe0 (.clk(clk), .rst_a(r[5]), .d(rpm_n), .last(rout_n));
-    ot_smh_tr_group_beat_e u_beate (.clk(clk), .rst_a(r[6]), .d(bm), .last(bout));
     ot_rp4l_leaf u_lf0 (.clk(clk), .rst_n(r[7]), .st(st_n), .rl1(rl1_n), .bk1(bk1_n), .g(g0));
     ot_rp4l_gn u_gn (.clk(clk), .rst_n(r[8]), .g0(g0), .gin(gin), .g0m(g0m), .gpm(gpm));
     // n -> s crossing (lp +3 split: bin 3 here + the s landing register; gather 1 here + 2 in s)
@@ -130,7 +141,7 @@ module ot_hbm_smh_rp4h_s #(parameter integer MUT = 0) (
 endmodule
 
 // the SM frame slot: both halves abutted (die binder form; also the bench DUT). Port names = ot_hbm_smh_rp4_flat_lp.
-module ot_hbm_smh_rp4h2 #(parameter integer MUT = 0) (
+module ot_hbm_smh_rp4h2 #(parameter integer MUT = 0, parameter integer SOFTBEAT = 0) (
     input wire rst_n,
     input wire [8:0] xs_a1, input wire [4:0] xs_g1, input wire [6:0] xs_a2, input wire [4:0] xs_g2,
     input wire [8:0] xss_a1, input wire [4:0] xss_g1, input wire [6:0] xss_a2, input wire [4:0] xss_g2,
@@ -140,7 +151,7 @@ module ot_hbm_smh_rp4h2 #(parameter integer MUT = 0) (
     input wire ck_n, input wire ck_s
 );
     wire [2068:0] x_b; wire [49:0] x_g0; wire [99:0] x_gp;
-    ot_hbm_smh_rp4h_n #(.MUT(MUT)) u_n (.clk(ck_n), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
+    ot_hbm_smh_rp4h_n #(.MUT(MUT), .SOFTBEAT(SOFTBEAT)) u_n (.clk(ck_n), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
         .rin_n(rin_n), .bin(bin), .gin(gin), .rout_n(rout_n), .bout(bout), .xo_b(x_b), .xo_g0(x_g0), .xo_gp(x_gp));
     ot_hbm_smh_rp4h_s #(.MUT(MUT)) u_s (.clk(ck_s), .rst_n(rst_n), .xss_a1(xss_a1), .xss_g1(xss_g1), .xss_a2(xss_a2), .xss_g2(xss_g2),
         .rin_s(rin_s), .rout_s(rout_s), .xi_b(x_b), .xi_g0(x_g0), .xi_gp(x_gp), .gout(gout));
