@@ -1,0 +1,43 @@
+
+15. Printing statistics.
+
+=== ot_s81ph_native_sel_hist_bank ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    11342        - wires
+    11342        - wire bits
+     5255        - public wires
+     5255        - public wire bits
+      359        - ports
+      359        - port bits
+     9458 1.37E+03 cells
+      878   76.807   AND2x2_ASAP7_75t_R
+       63    5.511   AND3x1_ASAP7_75t_R
+      208   21.228   AND4x1_ASAP7_75t_R
+       64    7.465   AND5x1_ASAP7_75t_R
+      940   82.231   AO21x1_ASAP7_75t_R
+       35    4.082   AO32x1_ASAP7_75t_R
+      141   16.446   AOI21x1_ASAP7_75t_R
+       32    4.666   AOI22x1_ASAP7_75t_R
+      411  155.802   DFFASRHQNx1_ASAP7_75t_R
+     1214  354.002   DFFHQNx1_ASAP7_75t_R
+      706    30.88   INVx1_ASAP7_75t_R
+      445   58.393   MAJx2_ASAP7_75t_R
+      487   42.603   NAND2x1_ASAP7_75t_R
+      464   40.591   NOR2x1_ASAP7_75t_R
+        3     0.35   OA211x2_ASAP7_75t_R
+      276   28.169   OA21x2_ASAP7_75t_R
+       32    4.666   OA22x2_ASAP7_75t_R
+      352   41.057   OAI21x1_ASAP7_75t_R
+      400    58.32   OAI22x1_ASAP7_75t_R
+       81    7.086   OR2x2_ASAP7_75t_R
+      160   13.997   OR3x1_ASAP7_75t_R
+      336   34.292   OR4x1_ASAP7_75t_R
+      858  137.606   XNOR2x2_ASAP7_75t_R
+      872  139.851   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_s81ph_native_sel_hist_bank': 1366.102260
+     of which used for sequential elements: 509.804280 (37.32%)
+

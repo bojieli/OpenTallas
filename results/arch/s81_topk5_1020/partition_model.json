@@ -108,5 +108,21 @@
       43.2
     ],
     "fill": 0.46098437499999995
+  },
+  "native_kept_bank": {
+    "source": "742cd078c",
+    "census": "evidence/mapped_census.json",
+    "all_driver_max32": true,
+    "OVER32": 0,
+    "cells": 9458,
+    "std_area_um2": 1366.10226,
+    "seq_area_um2": 509.80428,
+    "outline_um": [
+      64.8,
+      43.2
+    ],
+    "fill": 0.4880052083333333,
+    "pins": 359,
+    "source_clock_edges": "same datastream update+gsum; gsel query capture+1, busy output+1, reset startup+3"
   }
 }

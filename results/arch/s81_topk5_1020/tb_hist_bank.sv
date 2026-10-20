@@ -35,6 +35,7 @@ initial begin: scenario
   clr=(cyc==0 || cyc==600 || cyc==601 || cyc==930);iv=(cyc<20)?1'b0:((cyc<500)?1'b1:random[4]);en=(cyc<500)?16'hffff:random[31:16];
   for(k=0;k<16;k=k+1)begin random=rnd(random);dg[8*k+:8]=(cyc<500)?8'h6d:random[7:0];end
  end
- if(!failed) $display("HIST_BANK PASS MUT=%0d checks=%0d",MUT,checks);$finish;
+ if(failed) $fatal(1,"HIST_BANK_REJECT MUT=%0d",MUT);
+ else $display("HIST_BANK PASS MUT=%0d checks=%0d",MUT,checks);$finish;
 end
 endmodule
