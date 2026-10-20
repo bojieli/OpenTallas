@@ -4,6 +4,30 @@ parameter integer RR=18,WR=15;
 reg refclk=0;always #5 refclk=~refclk;reg por_n=0;wire clk,stream,rs,rq,br,brfault;
 hfd_ckgen cg(.refclk(refclk),.por_n(por_n),.pll_stream(stream),.pll_serial(clk),.por_serial(rq),.por_stream(rs));
 ot_hbm_su_bridge_release_s rel(.clk_serial(clk),.rst_n(rq),.prog_busy(busy),.bridge_rst_n(br),.fault(brfault));
+
+// Functional PLL causality and precise simulator phase receipts.
+integer stream_edges=0, serial_edges=0;
+time previous_stream=0, previous_serial=0;
+always @(posedge stream) begin
+ stream_edges++;
+ if(stream_edges==1 && $realtime!=0.417)$fatal(1,"CLOCK_PHASE stream first=%0t",$realtime);
+ if(stream_edges>1 && ($rtoi($realtime*1000.0+0.5)-previous_stream)!=834)$fatal(1,"CLOCK_PHASE stream period");
+ previous_stream=$rtoi($realtime*1000.0+0.5);
+end
+always @(posedge clk) begin
+ serial_edges++;
+ if(serial_edges==1 && $realtime!=0.556)$fatal(1,"CLOCK_PHASE serial first=%0t",$realtime);
+ if(serial_edges>1 && ($rtoi($realtime*1000.0+0.5)-previous_serial)!=1112)$fatal(1,"CLOCK_PHASE serial period");
+ previous_serial=$rtoi($realtime*1000.0+0.5);
+end
+initial begin
+ #200;
+ if(stream_edges<2 || serial_edges<2 || !cg.locked || !rs || !rq)
+  $fatal(1,"CLOCK_CAUSAL_GUARD stream=%0d serial=%0d locked=%b rs=%b rq=%b",stream_edges,serial_edges,cg.locked,rs,rq);
+ $display("CLOCK_CAUSAL_PASS stream_half_ps=417 serial_half_ps=556 lock=%b release=%b%b",cg.locked,rs,rq);
+end
+initial begin repeat(4000)@(posedge stream);$fatal(1,"FIXED_EVENT_HORIZON incomplete after4000 stream edges");end
+
 integer st=-1,qt=-1;always @(posedge stream)if(rs)st=st+1;always @(posedge clk)if(rq)qt=qt+1;
 wire[16:0] srq_unused,rrq_unused;wire[256:0] ret;wire bf;assign srq_unused=0;
 ot_hbm_su_multirate_bridge bridge(.serial_clk(clk),.stream_clk(stream),.rst_n(br),.serial_rq(srq_unused),.serial_wq(281'b0),.stream_rq(rrq_unused),.stream_rr(257'b0),.stream_done(1'b0),.fault(bf));
