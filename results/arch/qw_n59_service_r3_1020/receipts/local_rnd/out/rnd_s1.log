@@ -1,0 +1,3 @@
+N59RND activity: tx 0 x3 0 dr0 0 dr1 7379 done 0 fault-edges 37200 ret-changes 1 q-words 9068 kv-writes 7984 bad-dd 8126; compared 37200 mism 0 probes 0/0 (svc/bank mism) of 37200
+N59RND_PASS seed 1 NU 4 MCTX 1: 37200 random edges, every output of the split == r1 (SOFF 3 BOFF 0 ROFF 4)
+- /srv/opentallas-scratch/claude/codex-qw-n59-service-r3-1020/local_rnd/src/rtl/test/qwen_split/tb_n59_split_random.sv:123: Verilog $finish
