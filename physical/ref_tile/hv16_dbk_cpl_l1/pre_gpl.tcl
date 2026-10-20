@@ -3,3 +3,4 @@
 # sourced from this kit file.
 source /src/physical/common_flow/relay_anchor.tcl
 source /src/physical/qwen_die_masters/io_flop_at_pins.tcl
+source /src/physical/common_flow/relay_anchor_post.tcl

@@ -18,7 +18,7 @@ bank_read_en[7] -> bank7 454.7/408.2, reset landing E y 2.4 -> u_rst_bk leaves 4
 * reset: rst_n port E y 195 (beside clk_rst); rl0 at the pin, rl1 + u_rst_bk sync pair at the centre station (380, 215-225),
   collar leaf in the controller|collar channel (420, 262), u_rst_ctl chain at (345, 250), bank leaves half way to their
   bank rst_n pin.  Release edges unchanged (ot_rst_relay REGIONS 9 / 1).
-* Stations: results/arch/hbm_dbkcpl_land_1020/relay_anchor_l1.txt, placed FIRM by physical/common_flow/relay_anchor.tcl
+* Stations: results/arch/hbm_dbkcpl_land_1020/relay_anchor_l1.txt (+ relay_anchor_post_l1.txt for wv_q/cv_q, after io_flop_at_pins), placed FIRM by physical/common_flow/relay_anchor.tcl (+ _post.tcl)
   (pin_hook_before_flops, before io_flop_at_pins; anchor_row_packing legalises), released before DPL.
 
 ## Cycles (static; handed to the die schedule, lanes/HBM-HC7-DBK.md)

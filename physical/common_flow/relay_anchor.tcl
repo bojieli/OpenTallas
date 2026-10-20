@@ -18,9 +18,12 @@ set ot_ra_blk [ord::get_db_block]
 set ot_ra_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ot_ra_core [$ot_ra_blk getCoreArea]
 set ot_ra_hops [expr {[info exists ::env(OT_RLY_HOPS)] && $::env(OT_RLY_HOPS) ne "" ? $::env(OT_RLY_HOPS) : 8}]
-if {![info exists ::env(OT_RLY_ANCHOR)] || ![file exists $::env(OT_RLY_ANCHOR)]} {
-  error "OT_RLY_ANCHOR: table missing ([expr {[info exists ::env(OT_RLY_ANCHOR)] ? $::env(OT_RLY_ANCHOR) : {unset}}])"
-}
+# Second pass (relay_anchor_post.tcl, spec "pin_hook_after_flops"): ::ot_ra_table names the table and ::ot_ra_append
+# keeps the first pass's list.  The post pass may re-place flops io_flop_at_pins fixed at a port (a port with two capture
+# copies: its "extra capture" allocator moves every capture and would refuse a flop FIRM from the first pass).
+set ot_ra_tab [expr {[info exists ::ot_ra_table] ? $::ot_ra_table : ([info exists ::env(OT_RLY_ANCHOR)] ? $::env(OT_RLY_ANCHOR) : "")}]
+if {$ot_ra_tab eq "" || ![file exists $ot_ra_tab]} { error "OT_RLY_ANCHOR: table missing ('$ot_ra_tab')" }
+set ot_ra_post [expr {[info exists ::ot_ra_append] && $::ot_ra_append}]
 proc ot_ra_isff {inst} { set m [[$inst getMaster] getName]; expr {[string match "DFF*" $m] || [string match "ASYNC_DFF*" $m]} }
 proc ot_ra_isbuf {inst} { set m [[$inst getMaster] getName]; expr {[string match "INV*" $m] || [string match "BUF*" $m] || [string match "HB*" $m]} }
 proc ot_ra_center {inst dbu} {
@@ -79,6 +82,7 @@ proc ot_ra_place {inst x y blk dbu} {
   set x [expr {min(max($x - $w / 2.0, $cx0), $cx1 - $w)}]
   set y [expr {min(max($y - $h / 2.0, $cy0), $cy1 - $h)}]
   set y [expr {$cy0 + round(($y - $cy0) / $h) * $h}]
+  $inst setPlacementStatus PLACED
   $inst setLocation [expr {round($x * $dbu)}] [expr {round($y * $dbu)}]
   $inst setPlacementStatus FIRM
 }
@@ -86,7 +90,7 @@ proc ot_ra_place {inst x y blk dbu} {
 set ot_ra_ffs {}
 foreach inst [$ot_ra_blk getInsts] { if {[ot_ra_isff $inst]} { lappend ot_ra_ffs [list [string map {\\ {}} [$inst getName]] $inst] } }
 set ot_ra_list {}; set ot_ra_rows {}
-set fh [open $::env(OT_RLY_ANCHOR) r]; set ot_ra_lines [split [read $fh] "\n"]; close $fh
+set fh [open $ot_ra_tab r]; set ot_ra_lines [split [read $fh] "\n"]; close $fh
 foreach line $ot_ra_lines {
   set line [string trim $line]
   if {$line eq "" || [string index $line 0] eq "#"} continue
@@ -96,7 +100,7 @@ foreach line $ot_ra_lines {
   set n 0
   foreach pair $ot_ra_ffs {
     lassign $pair name inst
-    if {![regexp -- $re $name] || [$inst isFixed]} continue
+    if {![regexp -- $re $name] || ([$inst isFixed] && !$ot_ra_post)} continue
     if {$mode eq "xy"} {
       set px [lindex $line 2]; set py [lindex $line 3]; set span 0.0; set sx $px; set sy $py; set kx $px; set ky $py
     } elseif {$mode eq "mid"} {
@@ -134,9 +138,9 @@ if {[llength $ot_ra_list]} {
   source $ot_anchor_script
   ot_anchor_pack::repair $ot_ra_blk $ot_ra_list
 }
-set fh [open $::env(RESULTS_DIR)/ot_relay_anchor.txt w]; foreach n $ot_ra_list { puts $fh $n }; close $fh
-set fh [open $::env(RESULTS_DIR)/ot_relay_anchor.tsv w]
-puts $fh "inst\trule\tmode\tsrc_x\tsrc_y\tsink_x\tsink_y\tspan_um\tplan_x\tplan_y\tfinal_x\tfinal_y"
+set fh [open $::env(RESULTS_DIR)/ot_relay_anchor.txt [expr {$ot_ra_post ? "a" : "w"}]]; foreach n $ot_ra_list { puts $fh $n }; close $fh
+set fh [open $::env(RESULTS_DIR)/ot_relay_anchor.tsv [expr {$ot_ra_post ? "a" : "w"}]]
+if {!$ot_ra_post} { puts $fh "inst\trule\tmode\tsrc_x\tsrc_y\tsink_x\tsink_y\tspan_um\tplan_x\tplan_y\tfinal_x\tfinal_y" }
 set ot_ra_disp 0.0
 foreach r $ot_ra_rows {
   set inst [$ot_ra_blk findInst [lindex $r 0]]

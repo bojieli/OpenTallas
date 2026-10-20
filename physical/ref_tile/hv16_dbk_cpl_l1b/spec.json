@@ -249,6 +249,7 @@
    "physical/common_flow/assigned_pin_exact.tcl",
    "physical/common_flow/child_pocket_guard.tcl",
    "physical/common_flow/relay_anchor.tcl",
+   "physical/common_flow/relay_anchor_post.tcl",
    "physical/common_flow/relay_anchor_release.tcl",
    "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
    "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar",
@@ -372,6 +373,10 @@
   "physical/common_flow/relay_anchor_release.tcl"
  ],
  "orfs_vars": {
-  "OT_RLY_ANCHOR": "results/arch/hbm_dbkcpl_land_1020/relay_anchor_l1.txt"
- }
+  "OT_RLY_ANCHOR": "results/arch/hbm_dbkcpl_land_1020/relay_anchor_l1.txt",
+  "OT_RLY_ANCHOR_POST": "results/arch/hbm_dbkcpl_land_1020/relay_anchor_post_l1.txt"
+ },
+ "pin_hook_after_flops": [
+  "physical/common_flow/relay_anchor_post.tcl"
+ ]
 }

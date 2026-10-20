@@ -9,7 +9,7 @@ u_rst_bk\.sync_q xy 380 225
 u_rst_bk\.rst_n\[8\] xy 420 262
 u_rst_ctl\. xy 345 250
 u_rst_bk\.rst_n\[[0-7]\] mid 0.5
-# Response landing copies: wv_q half way port -> bank write_en, cv_q half way port -> controller rr_valid_i.
+# Response landing copies wv_q / cv_q: second pass after io_flop_at_pins (relay_anchor_post_l1.txt).
 # Read relays (re/oe/rs/ra) half way controller face -> bank pins; fill relays half way controller N face -> wb ports.
-u_dbk\.L\[[0-7]\]\.(wv_q|cv_q|re_q|oe_q|rs_q|ra_q) mid 0.5
 u_dbk\.wb_fill_(start|bank|epoch) mid 0.5
+u_dbk\.L\[[0-7]\]\.(re_q|oe_q|rs_q|ra_q) mid 0.5
