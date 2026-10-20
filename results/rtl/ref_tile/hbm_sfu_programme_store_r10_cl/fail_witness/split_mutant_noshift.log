@@ -1,0 +1,18 @@
+SFU_SPLIT_EQUIV_MISMATCH edge=6030 out=0 lg_ro=0 status=1
+SFU_SPLIT_EQUIV_MISMATCH edge=6033 out=0 lg_ro=0 status=1
+SFU_SPLIT_EQUIV_MISMATCH edge=6034 out=0 lg_ro=0 status=1
+SFU_SPLIT_EQUIV_MISMATCH edge=6035 out=0 lg_ro=0 status=1
+[5605000] %Fatal: tb_hgi_sfu_split_equiv.sv:302: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=651 of 6682
+SFU_SPLIT_EQUIV_MISMATCH edge=6035 out=0 lg_ro=0 status=1
+[5605000] %Fatal: tb_hgi_sfu_split_equiv.sv:302: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=651 of 6682
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:302: Verilog $stop
+Aborting...
+SFU_SPLIT_GATE MUTANT noshift REJECTED (expected)
+SFU_SPLIT_EQUIV_MISMATCH edge=6030 out=0 lg_ro=0 status=1
+SFU_SPLIT_EQUIV_MISMATCH edge=6033 out=0 lg_ro=0 status=1
+SFU_SPLIT_EQUIV_MISMATCH edge=6034 out=0 lg_ro=0 status=1
+SFU_SPLIT_EQUIV_MISMATCH edge=6035 out=0 lg_ro=0 status=1
+[5605000] %Fatal: tb_hgi_sfu_split_equiv.sv:302: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=651 of 6682
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:302: Verilog $stop
+Aborting...
+BENCH_EXIT 1
