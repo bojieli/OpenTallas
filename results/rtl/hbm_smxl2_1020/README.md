@@ -24,8 +24,11 @@ apart, refreshes interleaved), so block 28 (64 lines) landed at 4773 = 457 edges
 | **xl_dsB_f200** | FETCH 200, MC3, xl | **PASS 24/24 ops, 169/169 GO exact** | **21,941** |
 | x13_dsA_m / x13_dsB_m | bench13 serial x (release law), MC3 | PASS (reproduces release units ratio 1.1588) | 26,518 / 27,380 |
 | xd_dsA_f200 | die x loader, serial (slot 0) | PASS 42/42 | 20,212 |
-Release c_dsA/B_g16_p80 (SAFE) were 26,726 / 27,484. Mutants mi4 (IMUT=4: RTL drops xb) / ms0 (compiler xslot0) and
-xlr / x13_f200 references: pending (ep6, see pending_results).
+| xr_dsA_f200 / xr_dsB_f200 | xlr (+ x reuse) | PASS 42/42, 24/24, all GO exact | 17,987 / 21,679 |
+| mi4_dsA_f200 (MUTANT IMUT=4: RTL drops xb from the go context) | as xl_dsA_f200 | FAIL numeric 18/42 pass, GO exact, no fault (causal) | 18,429 |
+| ms0_dsA_f200 (MUTANT compiler xslot0: no slot separation) | as xl_dsA_f200 | FAIL numeric 41/42 pass, GO exact (causal) | 18,429 |
+Release c_dsA/B_g16_p80 (SAFE) were 26,726 / 27,484. Pending (ep6, pending_results): mi4_dsB_f200, xd_dsB_f200, x13_dsA/B_f200.
+Witness logs: runs/*.witness.log (SMB_UNIT line).
 
 ## SM.MATVEC + token (census --measured info_banklat_all, --bw 98 --bridge 1)
 units_variants/smhbm_xl_f200.json: DS SM.MATVEC ratio 1.1588 -> 0.7715 (-33%). Qwen unchanged (every Qwen SM record is RAW
@@ -36,6 +39,8 @@ on its x, early issue does not apply).
 | + SMXL xl f200 | **1,367.0** (+17.6%) | 1,002.9 |
 | SU.VOP measured (HBM-SUFIX) | 1,110.1 | 417.5 |
 | SU.VOP measured + SMXL xl f200 | **1,268.3** (+14.3%) | 417.5 |
+| current: HBM-PRETREE3 305771cf6 m_pt3_tp8 (census repro 1,148.3; lane 1,148.8) | 1,148.3 | 1,000.3 |
+| **current + SMXL xl f200** (census/smxl2_pt3_xl.json) | **1,340.4** (+16.7%) | 1,000.3 |
 
 ## Priced cost / qualification boundary
 - Every added cycle is in the measured spans (the f200 slots are the static schedule; occupancy = next op's first command).
