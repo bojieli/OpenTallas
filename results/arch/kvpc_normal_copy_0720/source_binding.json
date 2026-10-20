@@ -1,0 +1,52 @@
+{
+  "source_sha256": "2e94a013a25fb97f133eea2566df947119a258a1b606f1b5da80944468de0f1b",
+  "source_commit": "406db3f21",
+  "scope": "minimum-component first-use/copy-control coupon, not full mapped equivalence, cold source closure or physical qualification",
+  "literal_source_anchors": [
+    "wire hgo_hit = dcnt == dsel;",
+    "ot_kvpc5_and2 u_go (.a(hgo_hit), .b(h_rn), .y(set_group));",
+    "if (!h_rn) hgo_qv[hg*8 +: 8] <= 8'd0;",
+    "else if (set_group) hgo_qv[hg*8 +: 8] <= 8'hff;",
+    "wire live=(ENABLE!=0) && count!=0;",
+    "wire [3:0] ctl_count_nx = count + (push ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);",
+    "if (ctl_pop_c[3] ? (ctl_hf_qv[29] || ctl_push_c[3]) : (ctl_hf_qv[28] && ctl_push_c[3]))",
+    "head_first__qv <= {2{head_first__f((ctl_pop_c[3] && ctl_hf_qv[29]) ? ctl_a1_2[9:0] : first_q)}};"
+  ],
+  "assumptions": [
+    "one actual reset capture before production observation",
+    "actual rst-conditioned ctl_hf tracks count, control copies already mature",
+    "same captured D on both head copies; choice of head-FIFO data abstracted unconstrained",
+    "hgo common physical synchronous reset and set-group AND function, no initial equality assumed"
+  ],
+  "open": [
+    "full reset-distribution boot calendar and all copies/first-use graph",
+    "actual helper before/after load remap binding",
+    "full mapped lifecycle and macro-state qualification"
+  ],
+  "canonical_helper_sha256": "546e7d94d03782f8adf7cfbd19a276f4defafbc421bcb492d568a7ad5a7c7d3c",
+  "actual_gate_helper_sha256": "546e7d94d03782f8adf7cfbd19a276f4defafbc421bcb492d568a7ad5a7c7d3c",
+  "helper_identical_to_current_main": true,
+  "actual_gate_family_summary": {
+    "both_pc_and_pc_h": {
+      "families": 100,
+      "refused": 0,
+      "over": 0,
+      "hgo_copies": 192,
+      "hgo_total_loads": 3854,
+      "hgo_max_group_loads": 21,
+      "head_first_bit_copies": 2,
+      "head_first_max_group_loads": 23
+    },
+    "gate_run": "20261020-054430",
+    "host": "ot-agidock128"
+  },
+  "proof_results": {
+    "positive": "PASS bounded16steps arbitrary initial registers; one common reset capture then release; free shared next-data and requests",
+    "mut1_invert_head_copy_D": "FAIL causal counterexample",
+    "mut2_drop_first_head_capture": "FAIL causal counterexample",
+    "mut3_incorrect_hgo_reset_value": "FAIL causal counterexample",
+    "fleet_unit": "oth-ubuntu-3081619-1792506529",
+    "fleet_host": "ot-epyc6",
+    "exit": 0
+  }
+}
