@@ -40,4 +40,4 @@ results/rtl/qwen_kv_die/kvs_grp_s3_1019/b1.
   2 per hop) and on o_dn (control fan word: 2 per hop, depth d sees the root word 2d + 1 later); reset edges unchanged.
 
 ## Gate review (PNG inspection)
-PENDING: gate --cts --remote auto launched 10-19 by KV-GRP-COLLECT (pending_results.txt).
+KV-GRP4 10-19 22:2x: WARN 0 fail. PRIMARY for qkd_kvs_grp_h (better clock than s3a: all-sink spread < 80 too). ck TT 534.9 / pin-flop 58.4 (all 67.3), FF 438.8 / 53.4 (all 69.1); hck TT 248.9-288.0 (39.1), FF 200.0-239.7 (39.7). Reset 1 sink/port. reg->reg +63.3, reg->macro +35.9, in->reg +380.9, hold +10.6; reg->out -350.1 on rsp[527] (50 paths; same rsp/krsp fork note as s3a; s4 successor if the route misses it). GRT overflow 0, M2 24.9%.

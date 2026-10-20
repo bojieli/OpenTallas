@@ -40,4 +40,4 @@ results/rtl/qwen_kv_die/kvs_grp_s3_1019/b1.
   2 per hop) and on o_dn (control fan word: 2 per hop, depth d sees the root word 2d + 1 later); reset edges unchanged.
 
 ## Gate review (PNG inspection)
-PENDING: gate --cts --remote auto launched 10-19 by KV-GRP-COLLECT (pending_results.txt).
+KV-GRP4 10-19 22:2x: WARN 0 fail. FALLBACK for qkd_kvs_grp_h. ck TT 537.6 / pin-flop 62.2 (all-sink 83.6), FF 448.1 / 52.9 (all 87.2); hck TT 245.7-288.0 (42.3), FF 199.8-239.7 (39.9). Reset 1 sink/port. reg->reg +50.4, reg->macro +19.3, in->reg +370.8, hold +8.8; reg->out -344.8 ps on rsp[527] (49 paths, TT placement RC diagnostic, pre-repair): each rsp/krsp data flop drives BOTH rsp[32+i] and krsp[1+i], ~1090 pins (~196 um) apart on the E face (grp twin +93.8: placement-dependent). Route repair can buffer a <405 um fork; if the route misses setup on rsp/krsp the structural successor is s4 = kept rsp/krsp exit copies (or per-bit interleaved E-face order), +0 cycles. GRT overflow 0, M2 24.8%. PNGs: same lattice/band/faces as grp (S face empty: H has no o_dn/i_up).

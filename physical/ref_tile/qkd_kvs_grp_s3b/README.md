@@ -40,4 +40,4 @@ results/rtl/qwen_kv_die/kvs_grp_s3_1019/b1.
   2 per hop) and on o_dn (control fan word: 2 per hop, depth d sees the root word 2d + 1 later); reset edges unchanged.
 
 ## Gate review (PNG inspection)
-PENDING: gate --cts --remote auto launched 10-19 by KV-GRP-COLLECT (pending_results.txt).
+KV-GRP4 10-19 22:2x: WARN 0 fail. FALLBACK for qkd_kvs_grp (submitted in parallel; bind first CLOSED). ck TT 533.4 / pin-flop 38.2 (all 40.7), FF 436.5 / 38.5; hck TT 240.3-278.9 (38.6), FF 192.8-230.4 (37.6): all <= 80. Reset 1 sink/port. reg->reg +84.3, reg->out +83.5, in->reg +369.4, hold +11.6. GRT overflow 0, M2 27.2%. PNGs as s3a (same floorplan; TREE_PAD spine).

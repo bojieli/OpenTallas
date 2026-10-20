@@ -40,4 +40,4 @@ results/rtl/qwen_kv_die/kvs_grp_s3_1019/b1.
   2 per hop) and on o_dn (control fan word: 2 per hop, depth d sees the root word 2d + 1 later); reset edges unchanged.
 
 ## Gate review (PNG inspection)
-PENDING: gate --cts --remote auto launched 10-19 by KV-GRP-COLLECT (pending_results.txt).
+KV-GRP4 10-19 22:2x: FAIL clock_rule: TritonCTS ck TT pin-flop spread 86.6 > 80 (all-sink 145.9; macro clk pins 413-453 vs flops 472-559). LOSER: not submitted (spine variants a/b pass).
