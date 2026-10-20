@@ -1,0 +1,56 @@
+{
+ "cls": "CAL1",
+ "written": "2026-10-20 00:40 PT",
+ "agent_branch": "claude/s81-cal1-1019@152d70002",
+ "note": "S81-CAL1 closed edge-delta ledger, applied per DAG node by tools/toksim_s81_compose.edge_delta (same rules as fold_cal1.py: field op +2 PINPIPE, +24 CAP ED/LD unless measured on the L16/E24 cap exe, +1 guard2 and +1 LEPCAP per crossing phase, +13 per attn.a_allgather, +2 LEPCAP a token). Grade priced-edge (compiled/bench edge counts, not a token measurement).",
+ "edge_ledger": {
+  "CAPC2_PINPIPE": {
+   "edges": 2,
+   "per": "field op instance",
+   "src": "claude/s81-capc2-cal-1019 1e559612c (gate 1f4c80cf6)"
+  },
+  "CAP_EDLD": {
+   "edges": 24,
+   "per": "field op instance not measured on the L16/E24 cap",
+   "src": "claude/tok2-capld-1019 636f4c670",
+   "exempt_ops": [
+    "attn.wq_b",
+    "attn.wq_b@p126"
+   ],
+   "exempt_why": "wq_b records (FIELD/WQBG fullsix 3359, RATEFIX P126 1987) ran on the L16/E24 cap exe with --shifts; every other field record (FGU/FSGU/FDOWN/FSDN/FWOA/FSMALL/FSEQ/IDXQF) is blob-identical to release 19bf4121e (no EDLY24) -> charged"
+  },
+  "XDIE_GUARD2": {
+   "edges": 1,
+   "per": "crossing phase (AR = 2)",
+   "src": "claude/xdie-s81-mu-1019 eb0d31c63; guard 2 confirmed by out_u5 / out_g2"
+  },
+  "LEPCAP_INPIPE": {
+   "edges": 1,
+   "per": "crossing phase",
+   "src": "claude/s81-lepcap-1019 bb66563eb (RTL eec2dca41)"
+  },
+  "VPX_P6": {
+   "edges": 13,
+   "per": "attn.a_allgather instance",
+   "src": "Codex 73879e4d2 + claude/s81-tok4-1019 6ea6ea0a9"
+  }
+ },
+ "per_token": {
+  "LEPCAP_INPIPE": 2
+ },
+ "mu_calendar": {
+  "ar": {
+   "users": 46,
+   "period_cycles": 989260,
+   "record": "results/arch/mu_s81_1018/calendar_ar_cal1.json (claude/s81-cal1-1019@152d70002; lemma PASS 5,474 windows 0 collisions; fleet ep5 oth-ubuntu-548701-1792476636 byte-identical)",
+   "grade": "compiled MU calendar with CAL1 edges (dv_mu_calendar --edge-deltas); slot issue measured on release seq_host/fixed_issue RTL (HEADMU)"
+  },
+  "mtp": {
+   "users": 10,
+   "period_cycles": 1312908,
+   "record": "results/arch/mu_s81_1018/calendar_mtp_cal1.json (claude/s81-cal1-1019@152d70002; 10 users + 1 filler, lemma PASS 1,309 windows 0 collisions)",
+   "grade": "compiled MU calendar with CAL1 edges (dv_mu_calendar --edge-deltas); slot issue measured on release seq_host/fixed_issue RTL (HEADMU)"
+  }
+ },
+ "ops": []
+}

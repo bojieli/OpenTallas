@@ -138,6 +138,12 @@
     "cls": "CURATION",
     "file": "results/token_pass/measured_s81_1019/elements/zz_curation.json",
     "written": "2026-10-19 19:10 PT"
+   },
+   {
+    "branch": "claude/s81-cal1-1019@152d70002",
+    "cls": "CAL1",
+    "file": "results/token_pass/measured_s81_1019/elements/zz_edges_cal1.json",
+    "written": "2026-10-20 00:40 PT"
    }
   ]
  },
@@ -165,33 +171,34 @@
  ],
  "multi_user": {
   "ar": {
-   "aggregate_tok_s": 39014.0,
+   "aggregate_tok_s": 38212.0,
    "base_aggregate_tok_s": 55780,
    "bound": "per-user token",
-   "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
-   "calendar_period_cycles": 980428,
-   "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
-   "pct_measured_per_user": 79.6,
-   "per_user_tok_s": 848.1,
+   "calendar_grade": "compiled MU calendar with CAL1 edges (dv_mu_calendar --edge-deltas); slot issue measured on release seq_host/fixed_issue RTL (HEADMU)",
+   "calendar_period_cycles": 989260,
+   "calendar_record": "results/arch/mu_s81_1018/calendar_ar_cal1.json (claude/s81-cal1-1019@152d70002; lemma PASS 5,474 windows 0 collisions; fleet ep5 oth-ubuntu-548701-1792476636 byte-identical)",
+   "pct_measured_per_user": 79.15,
+   "per_user_tok_s": 830.7,
    "users": 46
   },
   "mtp": {
-   "aggregate_tok_s": 27711.0,
+   "aggregate_tok_s": 27486.0,
    "base_aggregate_tok_s": 36985,
    "bound": "per-user token",
-   "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
-   "calendar_period_cycles": 1303400,
-   "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
-   "pct_measured_per_user": 65.12,
-   "per_user_tok_s": 2771.1,
+   "calendar_grade": "compiled MU calendar with CAL1 edges (dv_mu_calendar --edge-deltas); slot issue measured on release seq_host/fixed_issue RTL (HEADMU)",
+   "calendar_period_cycles": 1312908,
+   "calendar_record": "results/arch/mu_s81_1018/calendar_mtp_cal1.json (claude/s81-cal1-1019@152d70002; 10 users + 1 filler, lemma PASS 1,309 windows 0 collisions)",
+   "pct_measured_per_user": 64.93,
+   "per_user_tok_s": 2748.6,
    "users": 10
   }
  },
  "schema": "opentallas.toksim_s81.v1",
  "workloads": {
   "ar": {
-   "T_cycles_fixed": 1414882.7,
-   "T_cycles_solved": 1436546.2,
+   "T_cycles": 1444574.2,
+   "T_cycles_fixed": 1422962.7,
+   "T_cycles_solved": 1444574.2,
    "base_T_cycles": 989618.6,
    "base_tok_s": 1212.6,
    "by_grade": {
@@ -200,9 +207,27 @@
     "measured-old-RTL": 36322.5,
     "measured-release-RTL": 839120.0,
     "modelled-PHY": 172975.0,
-    "priced": 79361.2
+    "priced": 79361.2,
+    "priced-edge": 8080
+   },
+   "edge_delta_total": 8080,
+   "edge_deltas": {
+    "CAPC2_PINPIPE": 596,
+    "CAP_EDLD": 6192,
+    "LEPCAP_INPIPE": 387,
+    "VPX_P6": 520,
+    "XDIE_GUARD2": 385
    },
    "extra_terms": [
+    {
+     "base_cycles": 0.0,
+     "base_grade": null,
+     "cycles": 2.0,
+     "evidence": "results/token_pass/measured_s81_1019/elements/zz_edges_cal1.json",
+     "grade": "priced-edge",
+     "kind": "edge",
+     "slot": "edges.LEPCAP_INPIPE"
+    },
     {
      "base_cycles": 532.4,
      "base_grade": "priced",
@@ -699,10 +724,10 @@
      "slot": "L20.scan_d_l20split_k6"
     }
    ],
-   "pct_measured": 79.6,
-   "pct_measured_on_chip": 90.69,
-   "pct_modelled_phy": 12.23,
-   "per_accepted_cycles": 1414882.7,
+   "pct_measured": 79.15,
+   "pct_measured_on_chip": 90.1,
+   "pct_modelled_phy": 12.16,
+   "per_accepted_cycles": 1444574.2,
    "per_op": [
     {
      "cls": "field",
@@ -1270,24 +1295,44 @@
    },
    "solved_path_changed": true,
    "tau": null,
-   "tok_s": 848.1,
-   "tok_s_solved": 835.3,
+   "tok_s": 830.7,
+   "tok_s_fixed": 843.3,
+   "tok_s_solved": 830.7,
    "workload": "ar"
   },
   "mtp": {
-   "T_cycles_fixed": 1801047.4,
-   "T_cycles_solved": 1801047.4,
+   "T_cycles": 1815786.4,
+   "T_cycles_fixed": 1815786.4,
+   "T_cycles_solved": 1815786.4,
    "base_T_cycles": 1381860.8,
    "base_tok_s": 3611.7,
    "by_grade": {
     "measured-current-RTL": 116078.0,
     "measured-newest-element-RTL": 220095.0,
     "measured-old-RTL": 304417.6,
-    "measured-release-RTL": 836704.0,
+    "measured-release-RTL": 842760.0,
     "modelled-PHY": 187823.6,
-    "priced": 135929.2
+    "priced": 135929.2,
+    "priced-edge": 8683
+   },
+   "edge_delta_total": 8683,
+   "edge_deltas": {
+    "CAPC2_PINPIPE": 640,
+    "CAP_EDLD": 6648,
+    "LEPCAP_INPIPE": 419,
+    "VPX_P6": 559,
+    "XDIE_GUARD2": 417
    },
    "extra_terms": [
+    {
+     "base_cycles": 0.0,
+     "base_grade": null,
+     "cycles": 2.0,
+     "evidence": "results/token_pass/measured_s81_1019/elements/zz_edges_cal1.json",
+     "grade": "priced-edge",
+     "kind": "edge",
+     "slot": "edges.LEPCAP_INPIPE"
+    },
     {
      "base_cycles": 532.4,
      "base_grade": "priced",
@@ -1802,10 +1847,10 @@
      "slot": "wave.scan_d_l20split_k6"
     }
    ],
-   "pct_measured": 65.12,
-   "pct_measured_on_chip": 72.7,
-   "pct_modelled_phy": 10.43,
-   "per_accepted_cycles": 433048.2,
+   "pct_measured": 64.93,
+   "pct_measured_on_chip": 72.42,
+   "pct_modelled_phy": 10.34,
+   "per_accepted_cycles": 436592.1,
    "per_op": [
     {
      "cls": "field",
@@ -2077,6 +2122,16 @@
      "n_crit": 43,
      "old_cycles": 6439.9,
      "op": "ffn.hc_post"
+    },
+    {
+     "cls": "field",
+     "cycles": 6056.0,
+     "grades": {
+      "measured-release-RTL": 6056.0
+     },
+     "n_crit": 8,
+     "old_cycles": 0.0,
+     "op": "attn.idx.q_field"
     },
     {
      "cls": "select",
@@ -2848,8 +2903,9 @@
    },
    "solved_path_changed": false,
    "tau": 4.159,
-   "tok_s": 2771.1,
-   "tok_s_solved": 2771.1,
+   "tok_s": 2748.6,
+   "tok_s_fixed": 2748.6,
+   "tok_s_solved": 2748.6,
    "workload": "mtp"
   }
  },

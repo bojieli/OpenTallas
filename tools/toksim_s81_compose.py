@@ -58,10 +58,14 @@ def load_elements(d):
     """op key (dag_cls, op) -> override; slot -> override (for base layer/adjust terms); xdie part -> ratio."""
     ops, slots, xparts, files, excluded, inserts = {}, {}, {}, [], [], []
     recs = []
+    global EDGES
+    EDGES = None
     for f in sorted(glob.glob(str(d / '*.json'))):
         e = json.load(open(f))
         rel = str(Path(f).relative_to(ROOT))
         files.append(dict(file=rel, cls=e.get('cls'), written=e.get('written'), branch=e.get('agent_branch')))
+        if e.get('edge_ledger'):
+            EDGES = dict(e, file=rel)
         cur = Path(f).name.startswith('zz_curation')
         recs += [dict(o, file=rel, _curation=cur) for o in e.get('ops', [])]
     exact_ops = {o['op'] for o in recs if not o['_curation'] and o.get('bit_exact') is True}
@@ -94,11 +98,12 @@ def insert_nodes(dag, inserts):
     N = {n['id']: n for n in dag['nodes']}
     for o in inserts:
         ins = o['insert']
-        for L in ins['layers']:
-            a, b = f'L{L}.{ins["after"]}', f'L{L}.{ins["before"]}'
+        for L, pre in [(L, pre) for L in ins['layers'] for pre in ('', 'V.')]:
+            # AR DAG ids 'L<n>.<op>', MTP verify DAG ids 'V.L<n>.<op>' (TOKSIM-S81D: the MTP insert was skipped before)
+            a, b = f'{pre}L{L}.{ins["after"]}', f'{pre}L{L}.{ins["before"]}'
             if a not in N or b not in N:
                 continue
-            nid = f'L{L}.{o["op"]}'
+            nid = f'{pre}L{L}.{o["op"]}'
             nb = N[b]
             n = dict(id=nid, label=nid, group=nb.get('group'), cls=o.get('dag_cls'), op=o['op'], kind='inserted',
                      base_cycles=0.0, cycles=0.0, layer=L, critical=bool(N[a].get('critical') and nb.get('critical')),
@@ -113,6 +118,41 @@ def insert_nodes(dag, inserts):
                     es.append(e)
             dag['edges'] = es
     return dag
+
+
+EDGES = None   # closed RTL / compiler edge-delta ledger (S81-CAL1 10-19), from an element file carrying 'edge_ledger'
+
+
+def crossing_phases(n):
+    """die-die crossing phases of one coll / hop node (S81-CAL1 fold_cal1.phases, same rule)"""
+    op = n['id']
+    if n.get('cls') not in ('coll', 'hop') or op.endswith('lead_flit'):
+        return 0
+    if op.endswith('unplaced_hops'):
+        return 62
+    if op.endswith('token.return'):
+        return 8
+    return 2 if op.endswith('allreduce') else 1
+
+
+def edge_delta(n):
+    """Counter of ledger edges added to one DAG node (static schedule: fixed edges per occurrence)."""
+    d = collections.Counter()
+    if not EDGES:
+        return d
+    led = EDGES['edge_ledger']
+    if n.get('cls') == 'field':
+        if 'CAPC2_PINPIPE' in led:
+            d['CAPC2_PINPIPE'] += led['CAPC2_PINPIPE']['edges']
+        if 'CAP_EDLD' in led and n.get('op') not in set(led['CAP_EDLD'].get('exempt_ops', [])):
+            d['CAP_EDLD'] += led['CAP_EDLD']['edges']
+    p = crossing_phases(n)
+    for k in ('XDIE_GUARD2', 'LEPCAP_INPIPE'):
+        if k in led and p:
+            d[k] += led[k]['edges'] * p
+    if 'VPX_P6' in led and n['id'].endswith('attn.a_allgather'):
+        d['VPX_P6'] += led['VPX_P6']['edges']
+    return d
 
 
 def node_cycles(n, ov):
@@ -190,6 +230,7 @@ def compose(wl, base, dag, ops, slots, xparts=None):
             xd.setdefault(t['slot'], []).append(t)
     rows, cyc_new, cyc_old = [], {}, {}
     by_grade = collections.Counter()
+    edge_tot = collections.Counter()
     per_op = {}
     for n in dag['nodes']:
         L = lkey(n, gk)
@@ -230,8 +271,23 @@ def compose(wl, base, dag, ops, slots, xparts=None):
             r['grades'][g] += new
             if tail:
                 r['grades']['priced'] += tail
+    # closed edge deltas (S81-CAL1 ledger): added to every node they apply to (critical ones counted in the token)
+    for n in dag['nodes']:
+        d = edge_delta(n)
+        if not d:
+            continue
+        cyc_new[n['id']] += sum(d.values())
+        if n.get('critical'):
+            edge_tot.update(d)
+            by_grade['priced-edge'] += sum(d.values())
     # base layer / adjust terms that are not DAG nodes (p4l DV deltas, scan option D, L20 split, residual)
     extra = []
+    if EDGES and EDGES.get('per_token'):
+        for k, c in EDGES['per_token'].items():
+            extra.append(dict(slot=f'edges.{k}', kind='edge', cycles=float(c), grade='priced-edge', base_cycles=0.0,
+                              base_grade=None, evidence=EDGES['file']))
+            edge_tot[k] += c
+            by_grade['priced-edge'] += c
     for t in bterms:
         if t['kind'] == 'xdie' or t['slot'].endswith('.die'):
             continue
@@ -260,9 +316,14 @@ def compose(wl, base, dag, ops, slots, xparts=None):
     phy = by_grade.get('modelled-PHY', 0.0)
     out = dict(
         workload=wl, tau=base['workloads'][wl].get('tau'),
+        # TOKSIM-S81D 10-20: the token is the LONGEST path of the static DAG under the measured cycles.  When the measured
+        # cycles move the path (AR: measured attn.pv now outruns den+sink in every layer), the fixed sum under-counts, so
+        # the headline T / tok_s is max(fixed, solved); tok_s_fixed keeps the owner's per-type x count sum for reference.
+        T_cycles=round(max(fixed, T_solve), 1),
         T_cycles_fixed=round(fixed, 1), T_cycles_solved=round(T_solve, 1),
-        per_accepted_cycles=round(fixed / tau, 1),
-        tok_s=round(F_CLK * tau / fixed, 1), tok_s_solved=round(F_CLK * tau / T_solve, 1),
+        per_accepted_cycles=round(max(fixed, T_solve) / tau, 1),
+        tok_s=round(F_CLK * tau / max(fixed, T_solve), 1), tok_s_fixed=round(F_CLK * tau / fixed, 1),
+        tok_s_solved=round(F_CLK * tau / T_solve, 1),
         base_T_cycles=base['workloads'][wl]['T_token_cycles'], base_tok_s=base['workloads'][wl]['tok_s'],
         price_of_record=base['workloads'][wl]['price_of_record'],
         solved_path_changed=set(path) != set(crit),
@@ -270,6 +331,7 @@ def compose(wl, base, dag, ops, slots, xparts=None):
         pct_measured=round(100 * meas / tot, 2) if tot else 0.0,
         pct_measured_on_chip=round(100 * meas / (tot - phy), 2) if tot - phy else 0.0,
         pct_modelled_phy=round(100 * phy / tot, 2) if tot else 0.0,
+        edge_deltas=dict(sorted(edge_tot.items())), edge_delta_total=sum(edge_tot.values()),
         per_op=sorted(({**r, 'old_cycles': round(r['old_cycles'], 1), 'cycles': round(r['cycles'], 1),
                         'grades': {k: round(v, 1) for k, v in r['grades'].items()}} for r in per_op.values()),
                       key=lambda r: -r['cycles']),
@@ -285,13 +347,16 @@ def multi_user(base, res):
             continue
         users = b['users']
         period = b['period_cycles']
-        T_user = r['per_accepted_cycles'] if wl == 'mtp' else r['T_cycles_fixed']
+        cal = (EDGES or {}).get('mu_calendar', {}).get(wl)
+        if cal:
+            users, period, b = cal['users'], cal['period_cycles'], dict(b, record=cal['record'], grade=cal.get('grade'))
+        T_user = r['per_accepted_cycles'] if wl == 'mtp' else r['T_cycles']
         # each user emits a token (AR) / a verify step (MTP) every max(own token cycles, calendar period)
-        step = r['T_cycles_fixed'] if wl == 'mtp' else T_user
+        step = r['T_cycles'] if wl == 'mtp' else T_user
         eff = max(step, period)
         tau = r['tau'] or 1.0
         mu[wl] = dict(users=users, calendar_period_cycles=period, calendar_record=b['record'],
-                      calendar_grade='slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run',
+                      calendar_grade=b.get('grade') or 'slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run',
                       per_user_tok_s=round(F_CLK * tau / eff, 1), aggregate_tok_s=round(users * F_CLK * tau / eff, 0),
                       bound='calendar period' if period >= step else 'per-user token',
                       base_aggregate_tok_s=b['aggregate_tok_s'], pct_measured_per_user=r['pct_measured'])
@@ -339,7 +404,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     p.write_text(s)
     for wl, w in r['workloads'].items():
-        print(f'{wl}: T {w["T_cycles_fixed"]:,} cyc (solved {w["T_cycles_solved"]:,}) -> {w["tok_s"]:,} tok/s; measured '
+        print(f'{wl}: T {w["T_cycles"]:,} cyc (fixed {w["T_cycles_fixed"]:,}, solved {w["T_cycles_solved"]:,}) -> {w["tok_s"]:,} tok/s; measured '
               f'{w["pct_measured"]}% (on-chip {w["pct_measured_on_chip"]}%, PHY {w["pct_modelled_phy"]}%)')
     for wl, m in r['multi_user'].items():
         print(f'MU {wl}: {m["users"]} users -> {m["aggregate_tok_s"]:,.0f} agg ({m["per_user_tok_s"]} per user, {m["bound"]})')
