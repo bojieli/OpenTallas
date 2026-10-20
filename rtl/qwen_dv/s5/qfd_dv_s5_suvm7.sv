@@ -88,7 +88,7 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
     localparam integer NFA = 31;               // accept-only field chunks (12 b)
     localparam integer NCH = 32;               // active-updated register chunks (8 b: cur 12, row 12, rrow 3, v 2, o 2, cls 1)
     localparam integer NXS = 8;                // lane copies of the stride fields (12 b select groups)
-    localparam integer NACC = NFA + NCH + 8 + NXS; // + act_next, vl_next, ol_next/gvr, first_mark, su_prog, r_mark, su_rows, su_go
+    localparam integer NACC = NFA + NCH + 10 + NXS; // + act_next A, vl_next A, ol_next/gvr, first_mark, su_prog, r_mark, su_rows, su_go, act_next B, vl_next B
     wire c_su = su_cmd[9];
     wire [2:0] sg0;
     generate for (gi = 0; gi < 3; gi = gi + 1) begin : g_sg0
@@ -150,7 +150,7 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
     wire            acc0 = acc_k[NFA + NCH];
     // two structurally distinct copies of the next-state net (different source replicas: never merged), <= 19 D pins each
     wire act_nextA = acc0 ? 1'b1 : (act0 && vl0 && o_last_r) ? 1'b0 : act0;
-    wire act_nextB = acc_k[NFA + NCH + 3] ? 1'b1 : (act_k[NACT-6] && vl_k[NVL-4] && o_last_r) ? 1'b0 : act_k[NACT-6];
+    wire act_nextB = acc_k[NFA + NCH + 8] ? 1'b1 : (act_k[NACT-6] && vl_k[NVL-4] && o_last_r) ? 1'b0 : act_k[NACT-6];
     generate for (gi = 0; gi < NACT; gi = gi + 1) begin : g_act
         qfd_dv_s7_kffr #(.W(1), .ID(400 + gi)) u (.ck(ck), .rn(rc_k[gi % 4]), .d((gi % 2) ? act_nextB : act_nextA), .q(act_k[gi]));
     end endgenerate
@@ -160,7 +160,7 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
     wire          acc1 = acc_k[NFA + NCH + 1];
     wire          vl_stepA = (v + 2 == nvec_r), vl_one = (nvec_r == 1), vl_inA = (nvec_in == 1);
     wire          vl_nextA = acc1 ? vl_inA : act_k[NACT-2] ? (!vl_k[NVL-2] ? vl_stepA : vl_one) : vl_k[NVL-2];
-    wire          vl_nextB = acc_k[NFA + NCH + 4] ? vl_inA : act_k[NACT-6] ? (!vl_k[NVL-4] ? vl_stepA : vl_one) : vl_k[NVL-4];
+    wire          vl_nextB = acc_k[NFA + NCH + 9] ? vl_inA : act_k[NACT-6] ? (!vl_k[NVL-4] ? vl_stepA : vl_one) : vl_k[NVL-4];
     generate for (gi = 0; gi < NVL; gi = gi + 1) begin : g_vl
         qfd_dv_s7_kff #(.W(1), .ID(500 + gi)) u (.ck(ck), .d((gi % 2) ? vl_nextB : vl_nextA), .q(vl_k[gi]));
     end endgenerate
@@ -216,7 +216,7 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
     wire [4*AW-1:0] xs_in  = {i_asi, i_bsi, i_csi, i_dsi};
     wire [4*AW-1:0] xs_nx;
     generate for (gc = 0; gc < NXS; gc = gc + 1) begin : g_xs
-        assign xs_nx[12*gc +: 12] = acc_k[NFA + NCH + 8 + gc] ? xs_in[12*gc +: 12] : xs_cur[12*gc +: 12];
+        assign xs_nx[12*gc +: 12] = acc_k[NFA + NCH + 10 + gc] ? xs_in[12*gc +: 12] : xs_cur[12*gc +: 12];
     end endgenerate
     wire [4*AW-1:0] cur_l [0:3];
     wire [4*AW-1:0] xs_l [0:7];
@@ -364,43 +364,38 @@ module qfd_dv_s5_vm7 #(parameter integer MUT = 0) (
     wire [7:0] su_we_r = su_any_r ? vm_we : 8'd0;
     wire su_bank_r = su_waddr[3];
     wire w1_bank_r = w1_addr[3];
-    // hit[l][s]: lane l writes slot s; later lanes win (qfd_dv_vm loop order)
-    reg [7:0] hit_r [0:7];
-    reg [7:0] win_r [0:1][0:7];              // [bank][slot] one-hot lane (no w16 this cycle)
-    reg [7:0] gw1_r [0:1], gmx_r [0:1];      // w1 select / mask without the w16 term
-    wire [1:0] sub_r;                         // su write lands in bank b (and no w16 overrides it)
+    // hitS[s][l]: lane l writes slot s (bank-free); later lanes win (qfd_dv_vm loop order)
+    reg [7:0] off_oh [0:7];
+    reg [7:0] hitS [0:7], winS [0:7];          // [slot] lanes
+    reg [7:0] anyS;
+    reg [7:0] gw1_r [0:1], gmx_r [0:1];      // [bank] slots: w1 select / su-or-w1 mask (no w16 term)
+    wire [1:0] sub_r;                         // su write lands in bank b and no w16 overrides it
     assign sub_r[0] = !w16_we && su_any_r && !su_bank_r;
     assign sub_r[1] = !w16_we && su_any_r && su_bank_r;
     wire [1:0] w1b_r;
     assign w1b_r[0] = !w16_we && w1_we && !w1_bank_r && !(su_any_r && !su_bank_r);
     assign w1b_r[1] = !w16_we && w1_we && w1_bank_r && !(su_any_r && su_bank_r);
-    // bank-qualified lane enables first (sub_r: 8 loads each), then the slot decode (one-hot offset: 2 banks each)
-    reg [7:0] lwe_b [0:1];
-    reg [7:0] off_oh [0:7];
     always @(*) begin
-        for (l = 0; l < 8; l = l + 1) begin
-            lwe_b[0][l] = sub_r[0] && vm_we[l];
-            lwe_b[1][l] = sub_r[1] && vm_we[l];
-            off_oh[l] = 8'd1 << su_waddr[24*l +: 3];
+        for (l = 0; l < 8; l = l + 1) off_oh[l] = 8'd1 << su_waddr[24*l +: 3];
+        for (s = 0; s < 8; s = s + 1) begin
+            for (l = 0; l < 8; l = l + 1) hitS[s][l] = su_we_r[l] && off_oh[l][s];
+            anyS[s] = |hitS[s];
+            for (l = 0; l < 8; l = l + 1) begin
+                winS[s][l] = hitS[s][l];
+`ifdef OT_S7_WPRI_MUT
+                for (k = 0; k < l; k = k + 1) if (hitS[s][k]) winS[s][l] = 1'b0;   // bench mutant: EARLIER lane wins (must FAIL)
+`else
+                for (k = l + 1; k < 8; k = k + 1) if (hitS[s][k]) winS[s][l] = 1'b0;
+`endif
+            end
         end
-        for (l = 0; l < 8; l = l + 1)
-            for (s = 0; s < 8; s = s + 1) hit_r[l][s] = su_we_r[l] && off_oh[l][s];
         for (b = 0; b < 2; b = b + 1)
             for (s = 0; s < 8; s = s + 1) begin
-                for (l = 0; l < 8; l = l + 1) begin
-                    win_r[b][s][l] = lwe_b[b][l] && off_oh[l][s];
-`ifdef OT_S7_WPRI_MUT
-                    for (k = 0; k < l; k = k + 1) if (hit_r[k][s]) win_r[b][s][l] = 1'b0;   // bench mutant: EARLIER lane wins (must FAIL)
-`else
-                    for (k = l + 1; k < 8; k = k + 1) if (hit_r[k][s]) win_r[b][s][l] = 1'b0;
-`endif
-                end
                 gw1_r[b][s] = w1b_r[b] && w1_addr[2:0] == s[2:0];
-                gmx_r[b][s] = (|win_r[b][s]) || gw1_r[b][s];
+                gmx_r[b][s] = (sub_r[b] && anyS[s]) || gw1_r[b][s];
             end
     end
     // per-bank row selects (landed): w16 > su > w1 (qfd_dv_vm merge order)
-    wire [1:0] s16_r = {2{w16_we}};
     wire [1:0] ssu_r = {su_any_r && su_bank_r, su_any_r && !su_bank_r};
     wire [1:0] sw1_r = {w1_we && w1_bank_r, w1_we && !w1_bank_r};
     // write checks on the raw bundle, landed (fault = qfd_dv_s5_vm's on the one-edge-late bundle)
@@ -432,37 +427,43 @@ module qfd_dv_s5_vm7 #(parameter integer MUT = 0) (
         l_wbad <= w_bad_r || w_coll_r;
     end
     assign lvm_we = lvm_we_q;
-    wire [1:0] l_s16, l_ssu, l_sw1;
-    qfd_dv_s7_kff #(.W(2), .ID(900)) u_s16 (.ck(ck), .d(s16_r), .q(l_s16));
+    // landed controls (flop boundaries: each landed control drives <= 32 pins)
+    wire [1:0] l_r16w, l_m16, l_ssu, l_sw1;
+    qfd_dv_s7_kff #(.W(2), .ID(900)) u_r16 (.ck(ck), .d({2{w16_we}}), .q(l_r16w));     // row / we select
     qfd_dv_s7_kff #(.W(2), .ID(901)) u_ssu (.ck(ck), .d(ssu_r), .q(l_ssu));
     qfd_dv_s7_kff #(.W(2), .ID(902)) u_sw1 (.ck(ck), .d(sw1_r), .q(l_sw1));
-    wire [1:0] l_we = l_s16 | l_ssu | l_sw1;
+    qfd_dv_s7_kff #(.W(2), .ID(903)) u_m16 (.ck(ck), .d({2{w16_we}}), .q(l_m16));      // mask term: 24 OR gates each
+    wire [1:0] l_we = l_r16w | l_ssu | l_sw1;
     wire [9:0] l_row [0:1];
-    assign l_row[0] = l_s16[0] ? l_r16 : l_ssu[0] ? l_rsu : l_rw1;
-    assign l_row[1] = l_s16[1] ? l_r16 : l_ssu[1] ? l_rsu : l_rw1;
-    // kept per-(bank, slot) controls: lane one-hot (each bit drives 32 data AND pins), w16 / w1 selects, mask
+    assign l_row[0] = l_r16w[0] ? l_r16 : l_ssu[0] ? l_rsu : l_rw1;
+    assign l_row[1] = l_r16w[1] ? l_r16 : l_ssu[1] ? l_rsu : l_rw1;
+    // per-slot winning lane (bank-free), then per-(bank, slot) source selects
+    wire [255:0] dS;                          // [slot] su lane word
+    generate for (gs = 0; gs < 8; gs = gs + 1) begin : g_ws
+        wire [7:0] lw;
+        qfd_dv_s7_kff #(.W(8), .ID(1000 + gs)) u_win (.ck(ck), .d(winS[gs]), .q(lw));
+        reg [31:0] e;
+        always @(*) begin
+            e = 32'd0;
+            for (l = 0; l < 8; l = l + 1) e = e | ({32{lw[l]}} & l_sud[32*l +: 32]);
+        end
+        assign dS[32*gs +: 32] = e;
+    end endgenerate
     wire [255:0] wb_d [0:1];
     wire [255:0] wb_m [0:5];                 // [2*replica + bank]: one mask net per replica (32 macro pins each)
-    wire [5:0] l_s16m;                       // w16 mask term per replica x bank
-    qfd_dv_s7_kff #(.W(6), .ID(903)) u_s16m (.ck(ck), .d({3{s16_r}}), .q(l_s16m));
     generate for (gb = 0; gb < 2; gb = gb + 1) begin : g_wb
         for (gs = 0; gs < 8; gs = gs + 1) begin : g_s
-            wire [7:0] lw;
-            wire l16, lw1;
+            wire l16, lsu, lw1;
             wire [2:0] lmx;
-            qfd_dv_s7_kff #(.W(8), .ID(1000 + 16*gb + gs)) u_win (.ck(ck), .d(win_r[gb][gs]), .q(lw));
             qfd_dv_s7_kff #(.W(1), .ID(1100 + 16*gb + gs)) u_16 (.ck(ck), .d(w16_we), .q(l16));
+            qfd_dv_s7_kff #(.W(1), .ID(1150 + 16*gb + gs)) u_su (.ck(ck), .d(sub_r[gb]), .q(lsu));
             qfd_dv_s7_kff #(.W(1), .ID(1200 + 16*gb + gs)) u_w1 (.ck(ck), .d(gw1_r[gb][gs]), .q(lw1));
             qfd_dv_s7_kff #(.W(3), .ID(1300 + 16*gb + gs)) u_m (.ck(ck), .d({3{gmx_r[gb][gs]}}), .q(lmx));
-            reg [31:0] dsel;
-            always @(*) begin
-                dsel = ({32{lw1}} & l_w1d) | ({32{l16}} & l_w16d[256*gb + 32*gs +: 32]);
-                for (l = 0; l < 8; l = l + 1) dsel = dsel | ({32{lw[l]}} & l_sud[32*l +: 32]);
-            end
-            assign wb_d[gb][32*gs +: 32] = dsel;
-            assign wb_m[0 + gb][32*gs +: 32] = {32{l_s16m[0 + gb] | lmx[0]}};
-            assign wb_m[2 + gb][32*gs +: 32] = {32{l_s16m[2 + gb] | lmx[1]}};
-            assign wb_m[4 + gb][32*gs +: 32] = {32{l_s16m[4 + gb] | lmx[2]}};
+            assign wb_d[gb][32*gs +: 32] = ({32{l16}} & l_w16d[256*gb + 32*gs +: 32]) | ({32{lsu}} & dS[32*gs +: 32]) |
+                                           ({32{lw1}} & l_w1d);
+            assign wb_m[0 + gb][32*gs +: 32] = {32{l_m16[gb] | lmx[0]}};
+            assign wb_m[2 + gb][32*gs +: 32] = {32{l_m16[gb] | lmx[1]}};
+            assign wb_m[4 + gb][32*gs +: 32] = {32{l_m16[gb] | lmx[2]}};
         end
     end endgenerate
     // ================================================================ VM reads: 3 replicas x 2 banks (unchanged)
