@@ -357,5 +357,15 @@
   "6_floorplan": "PLAN:43.2lattice six macros; full-width std band y216..300.24; measured source area11773.81656um2, modeled density0.469; physical row hook probe PASS; final placement/PG/pin escape OPEN.",
   "7_clock": "STRUCTURAL REDESIGN: all core and boundary registers in north band, no south pins; north centre clock; TT/FFspread<=80 required, not yet measured; io_hold0.03.",
   "8_schedule": "No added edge; SRAM capacity/II1 preserved; V5.05012000cycles PASS/2source mutantsFAIL; all extraFFcopies share literalDandclock, independent4state canonicalcoupon PASS afterfirstrealclock withoutasync2sync/memoryabstraction."
+ },
+ "fill_reason": {
+  "lattice_channel_bound": {
+   "approved_by": "codex coordinator",
+   "why": "Six real p192 SRAMs occupy a 43.2 um lattice with >=34.992 um channels. A single full-width north standard-cell band at y216..300.24 is sized from measured11773.81656 um2 standard area: primary25110.2592 um2/46.89%, backup28749.4272 um2/40.95%. Actual row-hook carrier probes retain312 rows and remove792; they prove hook geometry only, not new-source placement. Planned pin densities are <=5.237/um and terminal-pair upper bounds369.359/395.239 um. The additional outline area is accepted for truthful lattice/channel/band geometry; actual placed occupancy/reach/clock/native checks remain mandatory.",
+   "std_band_y_um": [
+    216,
+    300.24
+   ]
+  }
  }
 }

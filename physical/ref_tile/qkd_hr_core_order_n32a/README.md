@@ -12,3 +12,5 @@ No gate before ROOT exact source_native registry adoption. Source and copy-state
   "7_clock": "STRUCTURAL REDESIGN: all core and boundary registers in north band, no south pins; north centre clock; TT/FFspread<=80 required, not yet measured; io_hold0.03.",
   "8_schedule": "No added edge; SRAM capacity/II1 preserved; V5.05012000cycles PASS/2source mutantsFAIL; all extraFFcopies share literalDandclock, independent4state canonicalcoupon PASS afterfirstrealclock withoutasync2sync/memoryabstraction."
 }
+
+Coordinator approved the structural model only in results/arch/host6_order_codex_1020/ORDER_BAND_REVIEW_CODEX_1020.json. Actual placed cell/row occupancy and 405um reach remain required; source-native helper adoption is still a pre-gate condition.

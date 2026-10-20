@@ -1,0 +1,63 @@
+{
+  "approved_by": "codex coordinator",
+  "reviewed_at": "2026-10-20 04:38 PT",
+  "source_branch": "codex/host6-order-1020",
+  "reviewed_source": "5ea0390d0",
+  "decision": "APPROVED_STRUCTURAL_MODEL_ONLY",
+  "fill_reason": {
+    "lattice_channel_bound": {
+      "approved_by": "codex coordinator",
+      "why": "Six real p192 SRAMs occupy a 43.2 um lattice with >=34.992 um channels. A single full-width north standard-cell band at y216..300.24 is sized from measured11773.81656 um2 standard area: primary25110.2592 um2/46.89%, backup28749.4272 um2/40.95%. Actual row-hook carrier probes retain312 rows and remove792; they prove hook geometry only, not new-source placement. Planned pin densities are <=5.237/um and terminal-pair upper bounds369.359/395.239 um. The additional outline area is accepted for truthful lattice/channel/band geometry; actual placed occupancy/reach/clock/native checks remain mandatory.",
+      "std_band_y_um": [
+        216,
+        300.24
+      ]
+    }
+  },
+  "variants": [
+    {
+      "kit": "qkd_hr_core_order_n32a",
+      "outline_um": [
+        302.4,
+        302.4
+      ],
+      "outline_area_um2": 91445.76,
+      "priority": "primary"
+    },
+    {
+      "kit": "qkd_hr_core_order_n32b",
+      "outline_um": [
+        345.6,
+        302.4
+      ],
+      "outline_area_um2": 104509.44,
+      "priority": "parallel backup"
+    }
+  ],
+  "source_artifact_sha256": {
+    "results/arch/host6_order_codex_1020/geometry_plan.json": "44dcbaaac6557c4e3ac592bbb75f930966b337a707daf7f7eca288e432f17df9",
+    "physical/qkd_host_order_codex_1020/std_band.tcl": "7b556590619b38befe30909ad1bf4c6b67f0d1cc45a5b11d98f07fd6d9461ce2",
+    "tools/qwen_kv_die/host_order_band_probe.tcl": "3ae970e1a6ae5e71032be2cb209d6b449311bba5fff7837be1cf22a1e13d97f7",
+    "physical/ref_tile/qkd_hr_core_order_n32a/spec.json": "4c23bffceb1721f9def3a4530395a62e171860df7379a187acc81fc95d32726f",
+    "physical/ref_tile/qkd_hr_core_order_n32b/spec.json": "35d23940d6f0ef164f5dc250db0111977a4334c410bd739a4ade4a133da2350b",
+    "results/arch/host6_order_codex_1020/band_probe2.log": "5fecdd6f542a329cb1a3e15d019ea4ab7946e73cc9affd74fe8080895d1e0657",
+    "results/arch/host6_order_codex_1020/band_probe3.log": "1db38dde792182f6f3f0886f40b2e6255731f712cd05b46e34172b12869df7b0"
+  },
+  "required_before_gate": [
+    "canonical source-native reset interface/proof adoption; no generic boolean skip",
+    "actual production-shape source/parameter contract and native census",
+    "all eight safe-design checklist items and exact macro-face model"
+  ],
+  "required_after_gate": [
+    "actual measured_band_fill row/cell occupancy",
+    "actual full all-driver placed reach <=405 um",
+    "TT/FF pin-flop spread <=80 ps and current timing/PG signoff",
+    "critical parent/source bindings require separate actual MU/age qualification"
+  ],
+  "not_claimed": [
+    "new source has been placed",
+    "parent slot fit or zero parent-hop cost",
+    "production MU host binding",
+    "clock/reach/native/final PG qualification"
+  ]
+}
