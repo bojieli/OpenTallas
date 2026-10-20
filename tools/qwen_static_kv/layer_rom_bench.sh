@@ -6,17 +6,23 @@ set -u
 O=$1; M=${2:-0}; NT=${3:-2}
 mkdir -p "$O"
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-# QLB-C4 10-18: the PRODUCTION calendar (tools/qwen_split/d2d_cal_image_production.sh: die seam stages + the compiled token
-# path), the one the committed die-sequencer image and layer image are compiled from (the old '--txd-c 1,1,1,2 --txd-k 1,2,1,1'
-# bench args predate the compiled TXDP and no longer match either image)
-rm -rf "$O/prod"
-bash tools/qwen_split/d2d_cal_image_production.sh "$O/prod" > "$O/calendar.log" 2>&1 || { echo "LAYER_ROM FAIL calendar compile"; exit 1; }
-rm -rf "$O/cal"; cp -r "$O/prod/program" "$O/cal"
-cmp -s "$O/prod/d2d_cal_image.svh" rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh \
+# HKV-DIE2 10-19: the PRODUCTION link calendar (kv_static_programme.LINK_ARGS + the compiled token path = the committed
+# d2d image compile); the pre-TXDP '--txd-c 1,1,1,2 --txd-k 1,2,1,1' compile no longer matches d2d_cal_image.svh
+python3 - "$O" > "$O/calendar.log" 2>&1 <<'PYEOF' || { echo "LAYER_ROM FAIL calendar compile"; exit 1; }
+import gzip, subprocess, sys
+from pathlib import Path
+sys.path.insert(0, 'tools/qwen_kv_die')
+import kv_static_programme as C
+o = Path(sys.argv[1]); o.mkdir(parents=True, exist_ok=True); tp = o / 'token_path_compiled.json'
+tp.write_bytes(gzip.decompress((C.ROOT / C.LINK_TOKEN_PATH).read_bytes()))
+cmd = [sys.executable, 'tools/qwen_split/d2d_link_calendar.py', '--out', str(o / 'cal')] + C.LINK_ARGS + ['--token-path', str(tp)]
+print(' '.join(cmd)); sys.exit(subprocess.run(cmd).returncode)
+PYEOF
+python3 tools/qwen_split/d2d_cal_seq_image.py "$O/cal" "$O/cal/img.svh" && cmp -s "$O/cal/img.svh" rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh \
   || { echo "LAYER_ROM FAIL committed link sequencer image differs from the compiler"; exit 1; }
 rm -rf "$O/lp"
 python3 tools/qwen_static_kv/layer_roots_from_link.py "$O/cal" "$O/lp" > "$O/roots.log" 2>&1 || { echo "LAYER_ROM FAIL roots compile"; tail -2 "$O/roots.log"; exit 1; }
-cmp -s "$O/lp/layer_programme_image.svh" rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh \
+cmp -s <(grep -v '^//' "$O/lp/layer_programme_image.svh") <(grep -v '^//' rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh) \
   || { echo "LAYER_ROM FAIL committed layer image differs from the compiler"; exit 1; }
 S=rtl/qwen_sys/static_kv_20261014; D=rtl/qwen_sys/d2d_static_20261015
 $VL --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH --build-jobs 4 \

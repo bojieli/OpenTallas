@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
 import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
+from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
 import abstract_pin_windows as APW   # noqa: E402
 
@@ -128,6 +129,21 @@ def closed_views(refs):
             m = re.match(r'(physical/ref_tile/[^/]+/views/([^/]+))/\2\.lef$', p)
             if m and m.group(2) not in out:
                 out[m.group(2)] = (ref, m.group(1))
+    return out
+
+
+MACRO_DIR = 'physical/asap7_memory_macros_v2'
+
+
+def macro_views(refs, masters):
+    """master -> (ref, dir) for every die-level master that is a memory / PHY macro with a real view under
+    physical/asap7_memory_macros_v2/<m>/<m>.lef (+ <m>_<corner>.lib), e.g. the K-only HBM PHY _k (S81-MU5 10-19);
+    first ref wins. Without this the macro becomes a pin-only stand-in."""
+    out = {}
+    for ref in refs:
+        for m in sorted(masters):
+            if m not in out and git(ref, f'{MACRO_DIR}/{m}/{m}.lef') is not None:
+                out[m] = (ref, f'{MACRO_DIR}/{m}')
     return out
 
 
@@ -270,6 +286,82 @@ class Placer:
         return x, y, None
 
 
+def lef_pins(path):
+    """{pin: (cx, cy, direction)} from a single-macro LEF (first RECT of each pin; line scan, LEFs are ~20 MB), plus (w, h)"""
+    pins, size, cur, d = {}, None, None, ''
+    with open(path) as fh:
+        for ln in fh:
+            t = ln.split()
+            if not t:
+                continue
+            if t[0] == 'SIZE' and size is None:
+                size = (float(t[1]), float(t[3]))
+            elif t[0] == 'PIN':
+                cur, d = t[1], ''
+            elif cur and t[0] == 'DIRECTION':
+                d = t[1].upper()
+            elif cur and t[0] == 'RECT' and cur not in pins:
+                q = [float(v) for v in t[1:5]]
+                pins[cur] = ((q[0] + q[2]) / 2, (q[1] + q[3]) / 2, d)
+            elif cur and t[0] == 'END' and len(t) > 1 and t[1] == cur:
+                cur = None
+    return size, pins
+
+
+def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0):
+    """move every fwd_<lane> (hop-0 forward cell) to the centroid of the pins that actually drive st_<lane>_0.i.
+    Returns {lane: (moved_um, n_source_pins, pin_span_um)}; lanes whose source pins cannot be found keep the plan point."""
+    mst_of = {nm: m for m, nm, _, _ in insts}
+    want = {}
+    for nm in mst_of:
+        if nm.startswith('fwd_') and f'st_{nm[4:]}_0' in ibits and 'i' in ibits[f'st_{nm[4:]}_0']:
+            want[nm] = [b for b in ibits[f'st_{nm[4:]}_0']['i'] if b[0] not in ('CONST', 'Z', 'UNDECL')]
+    need = {}
+    for f, bits in want.items():
+        for b in bits:
+            need.setdefault(b[0], set()).add(b)
+    cache, drv = {}, {}
+    for n_ in need:
+        for o in touch.get(n_, ()):
+            if o.startswith('st_') or o not in loc or o.startswith('fwd_'):
+                continue
+            cell = scell.get(o) if kind.get(o) == 'standin' else mst_of[o]
+            lp = out / 'views' / f'{cell}.lef'
+            if not lp.exists():
+                continue
+            if cell not in cache:
+                cache[cell] = lef_pins(lp)
+            _, pins = cache[cell]
+            for p, bl in ibits[o].items():
+                w = len(bl)
+                for k, b in enumerate(bl):
+                    if b[0] != n_ or b not in need[n_]:
+                        continue
+                    pn = f'{p}[{w - 1 - k}]' if f'{p}[{w - 1 - k}]' in pins else p
+                    q = pins.get(pn)
+                    if q and q[2] == 'OUTPUT':
+                        x0, y0 = loc[o][0], loc[o][1]
+                        drv[b] = (o, x0 + q[0], y0 + q[1])
+    moves = {}
+    for f, bits in sorted(want.items()):
+        pts = [drv[b] for b in bits if b in drv]
+        if not pts:
+            continue
+        srcs = collections.Counter(p[0] for p in pts)
+        o = srcs.most_common(1)[0][0]
+        pts = [p for p in pts if p[0] == o]
+        cx = sum(p[1] for p in pts) / len(pts); cy = sum(p[2] for p in pts) / len(pts)
+        span = max(p[1] for p in pts) - min(p[1] for p in pts) + max(p[2] for p in pts) - min(p[2] for p in pts)
+        bx, by, bw, bh, _ = loc[o]
+        fc = face_of(dict(x=bx, y=by, w=bw, h=bh), cx, cy)
+        dx, dy = {'W': (-gap, 0), 'E': (gap, 0), 'S': (0, -gap), 'N': (0, gap)}[fc]
+        ox, oy = loc[f][0] + 0.6, loc[f][1] + 0.3
+        px_, py_, _ = placer.put(cx + dx - 0.6, cy + dy - 0.3, 1.2, 0.6, step=1.0)
+        loc[f] = (px_, py_, 1.2, 0.6, 'PLACED')
+        moves[f[4:]] = (round(abs(px_ + 0.6 - ox) + abs(py_ + 0.3 - oy), 1), len(pts), round(span, 1))
+    return moves
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--plan', required=True, type=Path)
@@ -281,9 +373,12 @@ def main():
     ap.add_argument('--pin-window', type=float, default=3.0)
     ap.add_argument('--die-repair', action='store_true')
     ap.add_argument('--dieflow-ref', default='origin/main')
+    ap.add_argument('--signal-top-layer', choices=('M7', 'M8'), default='M7', help='M8 is die signals only; M9 stays clock/PG')
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
     ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
+    ap.add_argument('--macro-views', action='store_true',
+                    help=f'bind die-level macros with a real view under {MACRO_DIR}/<m>/ (HBM PHY _k, SRAMs) instead of a stand-in')
     a = ap.parse_args()
     out = a.out
     for d in ('views/sta', 'out', 'sta', 'dcc/tools/hbm_die_v15'):
@@ -308,6 +403,13 @@ def main():
     assigns = [x for x in insts if x[0] == '__assign__']
     insts = [x for x in insts if x[0] != '__assign__']
     views = closed_views(a.view_refs)
+    if a.macro_views:
+        for m_, v_ in macro_views(a.view_refs, {x[0] for x in insts if not x[0].endswith('_ASAP7_75t_R')} - set(views)).items():
+            views[m_] = v_
+    # MU-DIE-S81/PO2 (10-19): the bind table pins each landing master's view (land_views: record commit + kit) -- the
+    # SAME view dv_bind's landing reset check derived landing_reset_stages from; it overrides the first-ref-wins pick
+    for m_, v_ in T.get('land_views', {}).items():
+        views[m_] = (v_.get('commit') or v_['ref'], f"{v_['kit']}/views/{m_}")
     idx = rtl_ports(bc['port_bind_cmd'])
     kind = {}
     for mst, nm, _, _ in insts:
@@ -357,15 +459,14 @@ def main():
                 lib = git(ref, f'{d}/{m}_{c}.lib')
                 if lib is None:
                     raise SystemExit(f'dv_rvcase: closed view {m} has no {c} lib at {ref}:{d}')
-                if 'pin("ck_o")' in lib and m.startswith('dsfd_dvrlyh_'):
-                    # dv_sta_pilot: ETM self-related ck_o edges -> one ck -> ck_o arc, negative unate (half-cycle view)
-                    lib = SP.patch_ck_o(lib)
-                    i_ = lib.index('S81-DIE4 STA pilot: ETM self-related'); j_ = lib.rindex('timing_sense : positive_unate', 0, i_)
-                    lib = lib[:j_] + 'timing_sense : negative_unate' + lib[j_ + len('timing_sense : positive_unate'):]
-                elif 'pin("ck_o")' in lib:
-                    lib = SP.patch_ck_o(lib)
+                # Source-pinned native forwarding only: never reinterpret SELF ETM tables.
+                validate_native_forwarding(m, c, lib,
+                    lambda artifact: git(ref, f'{d}/{artifact}'))
                 (out / 'views' / 'sta' / f'{m}_{c}.lib').write_text(lib)    # STA corner libs (the GRT reads views/*.lib: TT copy below)
-            (out / 'views' / f'{m}.lib').write_text(git(ref, f'{d}/{m}_tt.lib'))
+            tt_lib = git(ref, f'{d}/{m}_tt.lib')
+            validate_native_forwarding(m, 'tt', tt_lib,
+                lambda artifact: git(ref, f'{d}/{artifact}'))
+            (out / 'views' / f'{m}.lib').write_text(tt_lib)
     placer = Placer(W, H)
     loc = {}            # inst -> (x, y lower-left, w, h, status)
     for b in blocks.values():
@@ -524,27 +625,51 @@ def main():
         (out / 'views' / f'{cell}.lib').write_text(lib_text(cell, ports, clk if clk in dirs else None,
                                                             f'{mst} bound RTL ports; ' + ('landing tile, window = land plan MCP' if is_land else 'block')))
 
-    # ------------------------------------------------------------------ case netlist (bind netlist, stand-in cells, ties -> 1-pin wires)
+    # ------------------------------------------------------------------ hop-0 forward cell at the REAL data launch point
+    # DIE-S81-LEAD 10-19 (case_p4l3_rv fclk FAIL): the hop-0 forward cell sat at the PLAN link end point, but a closed
+    # view smaller than its plan slot (dsdv_bk_col 674x648 in a 680x4179 slot) or with its own pin plan launches the
+    # data elsewhere -> fclk 2 repeaters vs data up to 27.  The forwarded clock must launch where its data launches:
+    # move fwd_<lane> to the centroid of the actual source pins of st_<lane>_0.i (closed LEF / stand-in LEF), outside
+    # that face, so fclk and data run the same wire (DIE-CLOCK +-1).
+    fwd_moves = fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell)
+    # ------------------------------------------------------------------ case netlist (bind netlist, stand-in cells, PHYSICAL ties)
+    # DIE-S81-LEAD 10-19: every constant bit is driven by its own TIEHI/TIELO cell (was a floating 1-pin wire tz_*: not
+    # physical, and the exact fclk payload audit (c5f578d5a/57459e378) counts an undriven payload bit as missing).  The
+    # ties carry no position here: run.tcl places each at its load pin and spreads them with the die repeater step's
+    # legaliser (tie_place.tcl) -- a Python nearest-free-site search stalled at abutted frames (Codex 10-18 23:39).
     tz = [0]
-    decl = []
+    decl, ties = [], []
 
-    def detie(e):
+    def detie(e, host, physical):
         def rep(m):
-            w_ = int(m.group(1)); n = f'tz_{tz[0]}'; tz[0] += 1
-            decl.append(f'  wire [{w_ - 1}:0] {n};')
+            if not physical:      # stand-in: the strap is internal to the modelled block (its LEF has the bit as an
+                w_ = int(m.group(1)); n = f'tz_{tz[0]}'; tz[0] += 1      # inner point under OBS) -> 1-pin wire, as before
+                decl.append(f'  wire [{w_ - 1}:0] {n};')
+                return n
+            bits = const_bits(m.group(0))
+            if bits is None:
+                raise SystemExit(f'dv_rvcase: unresolved constant {m.group(0)} on {host}; never float a physical input')
+            n = f'tz_{tz[0]}'; tz[0] += 1
+            decl.append(f'  wire [{len(bits) - 1}:0] {n};')
+            for k, bit in enumerate(bits):
+                mst_, pin_ = ('TIEHIx1_ASAP7_75t_R', 'H') if bit else ('TIELOx1_ASAP7_75t_R', 'L')
+                ties.append(f'  {mst_} tie_{n}_{k} (.{pin_}({n}[{k}]));')
             return n
         return CONST_RE.sub(rep, e)
     body = []
     for mst, nm, prm, cm in insts:
-        cs = ', '.join(f'.{p}({detie(e)})' for p, e in cm.items())
+        cs = ', '.join(f'.{p}({detie(e, nm, kind[nm] != "standin")})' for p, e in cm.items())
         if kind[nm] == 'standin':
             body.append(f'  {scell[nm]} {nm} ({cs});')
         else:
             body.append(f'  {mst} {nm} ({cs});')
     for _, s_, _, _ in assigns:
-        body.append('  ' + detie(s_) + ';')
+        if CONST_RE.search(s_):
+            raise SystemExit('dv_rvcase: constant assign has no physical load to place its tie at -- bind it to a port')
+        body.append('  ' + s_ + ';')
+    body += ties
     hdr = [f'// S81-DIE7 REAL-VIEW die case netlist from {a.bind_dir / "die.v"} (tools/s81_dv/dv_rvcase.py): bound instances, '
-           'stand-in cells rv_* where no closed view, tied bits -> 1-pin wires tz_*',
+           'stand-in cells rv_* where no closed view, constant bits driven by TIEHI/TIELO cells tie_tz_*',
            f'module dv_die ({", ".join(sorted(top))});']
     for n in sorted(nets):
         wv, lo = nets[n]
@@ -584,7 +709,7 @@ def main():
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
 
     # ------------------------------------------------------------------ GRT run
-    repair = DC.die_repair_tcl(out, a.dieflow_ref, skip=()) if a.die_repair else '# no die repair\n'
+    repair = DC.die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer == 'M8' else 'M4', skip=()) if a.die_repair else '# no die repair\n'
     # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
     # synchronous reset tree, not payload. Declare the width as well as the port
     # so a missing/disconnected payload bit fails the structural audit.
@@ -598,12 +723,45 @@ def main():
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
             if a.die_repair else 'estimate_parasitics -global_routing\n')
+    # DIE-S81-LEAD 10-19: physical tie placement (each tie at its single load pin, then the die repeater step's spread
+    # legaliser moves it to the nearest free slot; the legaliser's per-run caches are cleared so the repeater pass
+    # rebuilds its obstacles with the ties in place and its own slot width)
+    (out / 'tie_place.tcl').write_text('''# DIE-S81-LEAD tie placement (tools/s81_dv/dv_rvcase.py)
+proc ot_rv_place_ties {report} {
+  set blk [ord::get_db_block]; set ties {}; set bad 0
+  foreach inst [$blk getInsts] {
+    set m [[$inst getMaster] getName]
+    if {$m ne "TIEHIx1_ASAP7_75t_R" && $m ne "TIELOx1_ASAP7_75t_R"} { continue }
+    set xy {}
+    foreach o [$inst getITerms] {
+      if {[$o getIoType] ne "OUTPUT" || [$o getNet] eq "NULL"} { continue }
+      foreach it [[$o getNet] getITerms] {
+        if {[$it getIoType] ne "INPUT"} { continue }
+        set b [$it getBBox]
+        set xy [list [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]; break
+      }
+    }
+    if {![llength $xy]} { incr bad; puts "OT_TIE_NOLOAD [$inst getName]"; continue }
+    $inst setLocation {*}$xy; $inst setPlacementStatus PLACED; lappend ties $inst
+  }
+  set left [ot_die_rep_spread $ties $report 0.30 8.64 0.60 3]
+  foreach v {::ot_die_rep_slw ::ot_die_rep_obs ::ot_die_rep_occ ::ot_die_rep_onobs ::ot_die_rep_maxdisp} { unset -nocomplain $v }
+  array unset ::ot_die_rep_ob
+  puts "OT_TIES placed=[llength $ties] noload=$bad unplaced=$left"; flush stdout
+  return [expr {$bad + $left}]
+}
+''')
+    tie_step = ('source /work/die_repeaters.tcl\nsource /work/tie_place.tcl\n'
+                'if {[ot_rv_place_ties /work/out/tie_spread.json] != 0} { puts "OT_TIE_PLACE_FAIL"; exit 4 }\n') if ties else '# no tie cells\n'
+    if ties and not a.die_repair:
+        raise SystemExit('dv_rvcase: tie cells need --die-repair (the tie spread uses the die repeater legaliser)')
     tcl = f'''# S81-DIE7 REAL-VIEW die case (tools/s81_dv/dv_rvcase.py) -- census in case.json (stand-ins labelled)
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 foreach f [glob /work/views/*.lef] {{ read_lef $f }}
 read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
 read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
 foreach f [glob /work/views/*.lib] {{ read_liberty $f }}
 read_verilog /work/die.v
 link_design dv_die
@@ -621,9 +779,9 @@ set p0 [clock seconds]
 source /work/place.tcl
 puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('place', max_dpl_gsites=2.0)}
-write_db /work/out/place.odb
+{tie_step}write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer M6
+set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
 # top-port nets (regional clock roots, rst_n, PMA, land_fault): special = not die-top routing (DIE-CLOCK roots ideal here)
 set nsp 0
 foreach bt [[ord::get_db_block] getBTerms] {{ set n [$bt getNet]; if {{$n ne "NULL"}} {{ $n setSpecial; incr nsp }} }}
@@ -634,10 +792,10 @@ puts "OT_SPECIAL_TOP_NETS $nsp"
 # 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
 # (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
 {repair}{clocks_sdc}
-set_routing_layers -signal M2-M7 -clock M5-M9
+set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-M7 0.20
+set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.20
 set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
@@ -678,7 +836,7 @@ foreach f [glob /work/views/sta/*_{c}.lib] {{ read_liberty $f }}
 foreach f [glob /work/views/rv_*.lib] {{ read_liberty $f }}
 read_db /work/out/grt.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer M6
+set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
 {clocks_sdc}
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
@@ -769,7 +927,7 @@ date > $D/run_all.done; exit $sta_rc
                 closed_views={m: f'{r}:{d}' for m, (r, d) in views.items() if m in {x[0] for x in insts}},
                 standin_instances=sum(1 for v in kind.values() if v == 'standin'),
                 closed_instances=sum(1 for v in kind.values() if v == 'closed'), std_instances=sum(1 for v in kind.values() if v == 'std'),
-                tie_wires=tz[0], placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
+                tie_wires=tz[0], tie_cells=len(ties), fwd_moves_over_20um={k: v for k, v in fwd_moves.items() if v[0] > 20}, placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
                 land_plan_links_without_model=no_model, regional_roots='IDEAL top ports ck_<region> (DIE-CLOCK trees not built in this case)',
                 label=('NOT_A_DIE_RESULT: real-view case; stand-ins = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('standin:')}))
                        + ' (no closed view yet); closed = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('closed:')}))),

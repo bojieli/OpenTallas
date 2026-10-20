@@ -11,6 +11,9 @@ Classes per directed pair (launch A -> capture B, one net):
   RESET_ROOT cross-region reset/boot hop (n_rst_*): owes the die STA release window at TT + FF
   NEIGHBOUR  zero-stage cluster/slice -> cluster/slice hop across regions: allowed only neighbour-matched (v1 trim)
   GAP        any other cross-region data pair with no landing: violates the landed-regions standard (must be 0)
+  FEED       qfd_ckbump pll_ck -> qfd_clkrx pll_fwd (the clock feed; built as the 'feed' tree)
+  RESET_SYNC qfd_ckbump rs -> qfd_rstsync (async-assert / synchronised-release landing of the package reset)
+  BUMP       qfd_sigbump (off-die, forwarded with pll_fwd) -> a die-root capture: owes hop-0 on the feed clock + landing
   NO_ROOT    an endpoint has a clock pin with no die root (undriven trunk): a GEN gap, not a clocking verdict
 With measured arrivals (build.py arrivals_<c>.tsv) it also reports, per landed lane, the CLOCK part of the landing lag:
   dck_c = arrival(landing ck, dst root) - arrival(hop-0 ck / ck_s, src root) at TT and FF, and its corner drift; the
@@ -23,6 +26,7 @@ from pathlib import Path
 
 STATION = ('qfd_rlyh_', 'qfd_rlyr_')          # forwarded mid-lane stations: clocked by ckf only
 LANDING = ('qfd_landh_', 'qfd_landh0_', 'qfd_rlyrl_')
+BUMP = ('qfd_sigbump',)                        # off-die signal bumps (forwarded with the package clock pll_fwd)
 
 
 def arrivals(p):
@@ -55,6 +59,7 @@ def main():
         f = ln.split('\t'); master[f[0]] = f[1]
     cnt, ex = collections.Counter(), collections.defaultdict(list)
     gap_rp, gap_bus = collections.Counter(), collections.Counter()
+    owed = {}
     for ln in open(a.geom / 'pairs.tsv'):
         f = ln.rstrip('\n').split('\t')
         if f[0] != 'P':
@@ -68,6 +73,13 @@ def main():
             c = 'FWD'
         elif mB.startswith(LANDING) and RB:
             c = 'LANDED'
+        elif mA.startswith('qfd_ckbump') and mB.startswith('qfd_clkrx'):
+            c = 'FEED'        # QW-DIECLK4: the package clock bump -> clock receiver (the feed tree), not a data pair
+        elif mA.startswith('qfd_ckbump') and mB.startswith('qfd_rstsync') and RB:
+            c = 'RESET_SYNC'  # forwarded package reset into its 2-flop release synchroniser on the die root (async assert)
+        elif mA.startswith(BUMP) and not RA and RB:
+            c = 'BUMP'        # QW-DIECLK4: off-die input that arrives with the forwarded package clock (pll_fwd): the GEN
+            #                   owes a hop-0 on the feed clock beside the bump + a landing into the region root
         elif not RA or not RB:
             c = 'NO_ROOT'
         elif net.startswith('n_rst') or 'rst' in net:
@@ -78,11 +90,17 @@ def main():
         else:
             c = 'GAP'
         cnt[c] += 1
-        if c in ('GAP', 'NEIGHBOUR'):
+        if c in ('GAP', 'NEIGHBOUR', 'BUMP'):
             for ra in RA:
                 for rb in RB:
                     gap_rp[(ra, rb)] += 1
             gap_bus[(mA, mB, net.split('[')[0])] += 1
+            # QW-DIECLK 10-19: per instance link, the landing the GEN owes (qfd_landh0 at B: ring written on A's root
+            # = ck_s, read on B's root = ck; fixed latency, no backpressure)
+            k_ = (A, B, net.split('[')[0])
+            o_ = owed.setdefault(k_, dict(cls=c, src=A, src_master=mA, src_root=sorted(RA), dst=B, dst_master=mB,
+                                          dst_root=sorted(RB), bus=k_[2], bits=0))
+            o_['bits'] += 1
         if len(ex[c]) < 40:
             ex[c].append([A, mA, sorted(RA), B, mB, sorted(RB), net])
     lanes = json.load(open(a.lanes))['lanes']
@@ -118,7 +136,8 @@ def main():
     json.dump(dict(schema='opentallas.qwen_compute.landed_pairs.v1', summary=summ, examples=ex, lanes=lag,
                    gap_root_pairs=sorted(gap_rp), gap_root_pair_bits={f'{x}|{y}': n for (x, y), n in gap_rp.most_common()},
                    gap_buses=[[*k, n] for k, n in gap_bus.most_common()],
-                   worst_drift=worst), open(a.out, 'w'), indent=1)
+                   worst_drift=worst,
+                   land_owed=sorted(owed.values(), key=lambda o: (o['src'], o['dst'], o['bus']))), open(a.out, 'w'), indent=1)
     print('QWEN LANDED PAIRS', json.dumps(summ))
 
 

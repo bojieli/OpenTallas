@@ -646,7 +646,46 @@ def rr_spec(w: int, flow: str, owner: str, branch: str, base_dir: Path = None) -
     return s
 
 
-def write_rr_specs(names, owner: str, branch: str) -> list:
+# PIN ORDER (REFILL-0400/PO-LINK NOTICE 10-19, pin_order rule c81a8f458): the abutted-joint audit
+# (results/arch/abutted_joints_1019/handoff_hbm.md rows 1-3) found the closed 624 WE / EW / SN relays' own i / o bit order
+# chunk-scrambled (PPL ordered groups of 32); the _rr kits derive from those base specs and inherited it
+# (results/arch/abutted_joints_1019/handoff_hbm_rr.md).  These kits get route.pin_balance + equal ascending i / o ranges
+# (bit k at the same offset on the upstream and downstream faces, so a row of abutted stations wires straight through)
+# and rso at the far end of the downstream face.
+RR_PIN_ORDER = ("hbfd_rly_624_WE_rr", "hbfd_rly_624_EW_rr", "hbfd_rly_624_SN_rr")
+RR_PO_SOURCE = "results/arch/abutted_joints_1019/handoff_hbm_rr.md"
+RR_PO_MARGIN_UM = 0.6        # bus range starts this far off the corner (DRT-0255 corner-pin class)
+RR_PO_RSO_UM = (0.6, 1.4)    # rso: [L - 1.4, L - 0.6] at the far end of the downstream face, clear of the bus range
+
+
+def rr_pin_order(s: dict, flow: str) -> dict:
+    fi, fo = flow
+    L = s["outline"]["h"] if fo in "EW" else s["outline"]["w"]
+    hi = round(L - RR_PO_RSO_UM[1] - 0.6, 3)
+    s["pin_ranges"] = dict(s.get("pin_ranges") or {}, i=[RR_PO_MARGIN_UM, hi], o=[RR_PO_MARGIN_UM, hi],
+                           rso=[round(L - RR_PO_RSO_UM[1], 3), round(L - RR_PO_RSO_UM[0], 3)])
+    s["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M3 M5"}
+    s["route"]["io_hold_margin_ns"] = 0.03
+    s["route"]["hold_margin_ns"] = max(float(s["route"]["hold_margin_ns"]), 0.03)   # io <= core margin (ref_tile rule)
+    if flow == "EW":
+        # gate 10-19 06:2x (twice, ot-agidock128 + ot-epyc8): with the balanced pin layout the EW strip's 30 um2 of movable
+        # cells left GPL overflow stuck at ~0.105 (> 0.10 stop) at density 0.45 (0.12 at 0.60) and RePlAce diverged (GPL-0305);
+        # 0.35 gates WARN (GRT overflow 0, spread 5.1 / 5.5 ps); WE / SN gated at 0.45
+        s["route"]["pd"] = 0.35
+    s["job"]["tag"] = "rrpo"
+    s["reroute_reason"] = {
+        "kind": "pin_order", "source": RR_PO_SOURCE,
+        "fix": f"route.pin_balance {{group_max 1, h M4, v M3 M5}} + equal ascending per-port pin_ranges i = o = "
+               f"[{RR_PO_MARGIN_UM}, {hi}] um (bit k at the same offset on the upstream and downstream faces), rso "
+               f"[{s['pin_ranges']['rso'][0]}, {s['pin_ranges']['rso'][1]}] at the far end of the downstream face, replacing "
+               f"the closed view's PPL chunk-scrambled order inherited from the base kit (pin_order rule c81a8f458); RTL, "
+               f"outline, pin faces unchanged"}
+    s["structural_change"] += (" PIN ORDER (PO-LINK 10-19): route.pin_balance + equal ascending i / o pin_ranges, rso at "
+                               "the far end of the downstream face (abutted-joint audit handoff_hbm.md rows 1-3).")
+    return s
+
+
+def write_rr_specs(names, owner: str, branch: str, pin_order=()) -> list:
     (ROOT / RR_SPECS).mkdir(parents=True, exist_ok=True)
     out = []
     for n in names:
@@ -654,6 +693,8 @@ def write_rr_specs(names, owner: str, branch: str) -> list:
         if not m:
             raise SystemExit(f"--rr-masters: {n} is not hbfd_rly_<W>_<flow>_rr")
         s = rr_spec(int(m.group(1)), m.group(2), owner, branch)
+        if n in pin_order:
+            s = rr_pin_order(s, m.group(2))
         p = ROOT / RR_SPECS / f"{s['name']}.json"
         p.write_text(json.dumps(s, indent=1) + "\n")
         out.append(p)
@@ -694,10 +735,13 @@ def main() -> int:
     ap.add_argument("--rr", action="store_true", help="row-reset relay masters (hbfd_rly_<W>_<flow>_rr, HBM-RSTROW) instead: "
                     "regenerate hbfd_rly_rr_masters.sv and write kit specs derived from the closed base kit specs")
     ap.add_argument("--rr-masters", default=",".join(RR_DEFAULT), help="--rr: masters that get a kit spec")
+    ap.add_argument("--rr-pin-order", default=",".join(RR_PIN_ORDER),
+                    help="--rr: masters whose kit gets route.pin_balance + equal ascending i / o ranges (pin_order re-kit)")
     a = ap.parse_args()
     if a.rr:
         write_rr_masters()
-        specs = write_rr_specs([x for x in a.rr_masters.split(",") if x], a.owner, a.branch)
+        specs = write_rr_specs([x for x in a.rr_masters.split(",") if x], a.owner, a.branch,
+                               tuple(x for x in a.rr_pin_order.split(",") if x))
         print(f"RR: {len(CLASSES) * len(FLOWS)} masters in {RTL}/hbfd_rly_rr_masters.sv, {len(specs)} specs in {RR_SPECS}")
         if a.gen:
             for p in specs:

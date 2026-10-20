@@ -99,7 +99,7 @@ def face_of(b, x, y):
     return min(d, key=d.get)
 
 
-def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',)):
+def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',), *, rc_layer='M4'):
     """DIE-FLOW shared repeater step (claude/dieflow-1017 -> main): files materialised from dieflow_ref, the step tcl
     written to out/die_repeaters_step.tcl; returns the run.tcl fragment that sources it"""
     a = argparse.Namespace(dieflow_ref=dieflow_ref)
@@ -119,7 +119,7 @@ def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',)):
     libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
     t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
                         '/work/die_repeaters.json', '--legalize', 'snap',
-                        '--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', *[x for g in skip for x in ('--skip', g)], '--libs', *libs], capture_output=True, text=True, check=True).stdout
+                        '--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', '--fclk-equalize', '--rc-layer', rc_layer, *[x for g in skip for x in ('--skip', g)], '--libs', *libs], capture_output=True, text=True, check=True).stdout
     (out / 'die_repeaters_step.tcl').write_text(t)
     return f'# DIE-FLOW repeater step ({dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
 
@@ -133,6 +133,7 @@ def main():
     ap.add_argument('--die-repair', action='store_true', help='splice DIE-FLOW step output (die_repeaters_step.tcl)')
     ap.add_argument('--congestion-iterations', type=int, default=30)
     ap.add_argument('--dieflow-ref', default='origin/main')
+    ap.add_argument('--signal-top-layer', choices=('M7', 'M8'), default='M7', help='M8 is die signals only; M9 stays clock/PG')
     ap.add_argument('--relay-ref', default=None, help='git ref holding the closed dsfd_dvrly_276_{EW,WE,NS,SN} views '
                     '(276-b lane stations become real relay macros; other widths stay DFF stand-ins)')
     ap.add_argument('--relay-widths', type=int, nargs='+', default=[276],
@@ -203,6 +204,11 @@ def main():
         rec = dv_bind.emit(plan, out / 'bind', Path(a.bind_table), sdir, chain_pts,
                            land_plan=Path(a.land_plan) if a.land_plan else None)
         print(json.dumps({k: v for k, v in rec.items() if k in ('relay_masters', 'clock_forward_cells', 'reset', 'port_bind_rc')}, indent=1))
+        # A caller must never launch physical work after a failed strict bind.
+        # emit() keeps its failure record; propagate that verdict to the shell.
+        rc = rec.get('port_bind_rc')
+        if rc != 0:
+            raise SystemExit(rc if isinstance(rc, int) and rc > 0 else 1)
         return
     # ------------------------------------------------------------------ abstracts (one master per kept instance)
     for i in sorted(keep):
@@ -340,7 +346,7 @@ def main():
     (out / 'place.tcl').write_text('\n'.join(pl) + '\n')
     repair = '# no die repair (pure GRT diagnostic)\n'
     if a.die_repair:
-        repair = die_repair_tcl(out, a.dieflow_ref)
+        repair = die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer == 'M8' else 'M4')
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
             if a.die_repair else 'estimate_parasitics -global_routing\n')
@@ -369,16 +375,16 @@ puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('place', max_dpl_gsites=2.0)}
 write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer M6
+set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
 create_clock -name clk -period 833.333 [get_ports clk]
 set ck [[ord::get_db_block] findNet clk]
 if {{$ck ne "NULL"}} {{ $ck setSpecial }}
 # relay rs: regional reset tree (die reset plan) not modelled here -- special, DIAGNOSTIC (listed in case.json)
 foreach rn {{rst n_rst_dv}} {{ set r [[ord::get_db_block] findNet $rn]; if {{$r ne "NULL"}} {{ $r setSpecial }} }}
-{repair}set_routing_layers -signal M2-M7 -clock M5-M9
+{repair}set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-M7 0.20
+set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.20
 set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"

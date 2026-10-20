@@ -1,0 +1,173 @@
+{
+ "why": "QW-SLICE2R 10-20 Q.STA.SLICE.2: slice2 VM8 leaf group (6 CLOSED single-root leaves: vmr x3, crom, btab, prog) as a LANDED parent. Option P1 (each leaf its own clock region): measured leaf boundary insertion TT 264 (vmr) .. 376 (crom) ps / FF 216 .. 309 ps differs by 112 / 93 ps and the group spans ~1.1 x 1.0 mm, so one parent region (P2') would need per-leaf clock compensation plus a <= 80 ps tree over ~1 mm (vm8b measured 100 ps over 0.78 mm). Every port is in r_io (the SU / slice2-core neighbour), every port <-> leaf net lands in a D4 / E2 ring (share_rings: one write ring per bus, one read per receiving leaf).",
+ "top": "qfd_dv_s5_vm8f",
+ "top_lp": "qfd_dv_s5_vm8l",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8f.sv"
+ ],
+ "child_sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "rtl/test/qwen_dv/s5/sram_models_nofatal.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "out_dir": "rtl/qwen_dv/s5/lp",
+ "record_dir": "results/arch/qw_slice2r_1020/lp",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "D": 4,
+ "E": 2,
+ "share_rings": true,
+ "regions": [
+  {
+   "name": "r_io",
+   "insts": [
+    "u_o*"
+   ],
+   "centre": [
+    561.6,
+    86.4
+   ],
+   "why": "S band: ports (SU / slice2 core neighbour), input ring writes, answer ring reads (u_o* pass-throughs)"
+  },
+  {
+   "name": "r_cr",
+   "insts": [
+    "u_cr"
+   ],
+   "centre": [
+    216.0,
+    405.0
+   ],
+   "why": "CROM leaf (tier 1 col 0, 259.2 x 466.56)"
+  },
+  {
+   "name": "r_bt",
+   "insts": [
+    "u_bt"
+   ],
+   "centre": [
+    561.6,
+    349.9
+   ],
+   "why": "BTAB leaf (tier 1 col 1, 259.2 x 354.24)"
+  },
+  {
+   "name": "r_pg",
+   "insts": [
+    "u_pg"
+   ],
+   "centre": [
+    907.2,
+    349.9
+   ],
+   "why": "PROG leaf (tier 1 col 2, 259.2 x 354.24)"
+  },
+  {
+   "name": "r_va",
+   "insts": [
+    "u_va"
+   ],
+   "centre": [
+    216.0,
+    864.0
+   ],
+   "why": "VM replica a (tier 2 col 0)"
+  },
+  {
+   "name": "r_vb",
+   "insts": [
+    "u_vb"
+   ],
+   "centre": [
+    561.6,
+    864.0
+   ],
+   "why": "VM replica b (tier 2 col 1)"
+  },
+  {
+   "name": "r_vc",
+   "insts": [
+    "u_vc"
+   ],
+   "centre": [
+    907.2,
+    864.0
+   ],
+   "why": "VM replica c (tier 2 col 2)"
+  }
+ ],
+ "port_regions": {
+  "a_re": "r_io",
+  "b_re": "r_io",
+  "c_re": "r_io",
+  "a_addr": "r_io",
+  "b_addr": "r_io",
+  "c_addr": "r_io",
+  "a_q": "r_io",
+  "b_q": "r_io",
+  "c_q": "r_io",
+  "cr_re": "r_io",
+  "cr_addr": "r_io",
+  "cr_q": "r_io",
+  "bs_re": "r_io",
+  "bs_addr": "r_io",
+  "bs_q": "r_io",
+  "p_re": "r_io",
+  "p_idx": "r_io",
+  "p_q": "r_io",
+  "vm_we": "r_io",
+  "vm_waddr": "r_io",
+  "vm_wdata": "r_io",
+  "w16_we": "r_io",
+  "w16_addr": "r_io",
+  "w16_data": "r_io",
+  "w1_we": "r_io",
+  "w1_addr": "r_io",
+  "w1_data": "r_io",
+  "tw_we": "r_io",
+  "tw_kind": "r_io",
+  "tw_addr": "r_io",
+  "tw_data": "r_io",
+  "f_va": "r_io",
+  "f_vb": "r_io",
+  "f_vc": "r_io",
+  "f_cr": "r_io",
+  "f_bt": "r_io"
+ },
+ "mut_child": "u_va",
+ "bench": {
+  "cycles": 6000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "expr": {
+   "a_re": "(cyc < 40) ? 0 : $urandom",
+   "b_re": "(cyc < 40) ? 0 : $urandom",
+   "c_re": "(cyc < 40) ? 0 : $urandom",
+   "cr_re": "(cyc < 40) ? 0 : $urandom",
+   "bs_re": "(cyc < 40) ? 0 : $urandom",
+   "p_re": "(cyc < 40) ? 0 : $urandom",
+   "vm_we": "(cyc < 40) ? 0 : $urandom",
+   "w16_we": "(cyc < 40) ? 0 : $urandom",
+   "w1_we": "(cyc < 40) ? 0 : $urandom",
+   "tw_we": "(cyc < 40) ? 0 : $urandom"
+  },
+  "why_expr": "enables idle until cyc 40 (flat reset release cyc 20 + the leaves 2-stage internal reset landing + ring warm-up); from cyc 40 every input is $urandom for 5,960 cycles",
+  "mut_waivers": {
+   "4": "MUT 4 lengthens the u_va reset run by one edge: no VM8 leaf keeps state that survives its reset under this stimulus (enables idle until cyc 40, the leaves' SRAM write paths are not reset-gated, so the flat and landed copies see identical idle words while either is in reset); measured: bench_lp4 MUT 4 PASS (invisible), an idle window of 21 / 24 cycles makes MUT 0 itself diverge (5 / 181 of 65,582 compares, flat writes during the leaf-internal 2-stage reset landing). Reset alignment is carried by the region audit + the recorded reset depth 4 / t(child) 3"
+  }
+ },
+ "landing_chunk_bits": 12,
+ "landing_reset_forest": true,
+ "landing_kept_enables": true,
+ "why_chunks": "native census (mapped ASAP7): a chunk-24 slot enable drives 2 x (24 + 3) = 54 loads (enable mux both polarities); chunk 12 -> 30; kept per-slot enables (landing_kept_enables) remove the released-reset fanout (121 loads at chunk 24)"
+}

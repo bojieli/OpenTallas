@@ -101,7 +101,7 @@ endmodule
 // Keeping hierarchy prevents synthesis from merging the identical selectors back
 // into a bus-wide high-fanout select. At CHUNK_BITS24 each ring stores96 data bits.
 module ot_pl_land_chunk_w #(
-    parameter integer W = 514, D = 4, CHUNK_BITS = 24,
+    parameter integer W = 514, D = 4, CHUNK_BITS = 24, KEEP_EN = 0,
     parameter integer AW = (D <= 2) ? 1 : $clog2(D)
 ) (
     input wire ck, rsi,
@@ -116,7 +116,7 @@ module ot_pl_land_chunk_w #(
         wire [D*CW-1:0] cb;
         wire [D*(AW+1)-1:0] ce;
         wire [D-1:0] cv;
-        (* keep_hierarchy = "yes" *) ot_pl_land_local_w #(.W(CW), .D(D)) u_local (
+        (* keep_hierarchy = "yes" *) ot_pl_land_local_w #(.W(CW), .D(D), .KEEP_EN(KEEP_EN)) u_local (
             .ck(ck), .rsi(rsi), .i(i[c*CHUNK_BITS +: CW]), .bank(cb), .epo(ce), .vld(cv));
         for (s = 0; s < D; s = s + 1) begin : g_slot
             assign bank[s*W + c*CHUNK_BITS +: CW] = cb[s*CW +: CW];
@@ -164,6 +164,7 @@ endmodule
 // reset age remain exactly the original contract.
 module ot_pl_land_local_w #(
     parameter integer W = 24, D = 4,
+    parameter integer KEEP_EN = 0,     // 1 (QW-SLICE2R 10-20, opt-in): per-slot KEPT write-enable registers
     parameter integer AW = (D <= 2) ? 1 : $clog2(D)
 ) (
     input wire ck, rsi,
@@ -186,9 +187,22 @@ module ot_pl_land_local_w #(
             write_oh <= {write_oh[D-2:0], write_oh[D-1]};
             valid <= valid | write_oh;
         end
+    // KEEP_EN 1: the slot write enable (rq && write_oh[s]) is precomputed one edge earlier into a KEPT register per slot
+    // (wen[s] == rq && write_oh[s] at every edge: rq' = rsi, write_oh' = !rq ? 0..01 : rotate(write_oh)), so the
+    // released-reset flop rq no longer fans out to all D x (W + AW + 1) slot enables (native census: rq drove 121 loads
+    // at W 24).  Same slots, same edges, same epochs; KEEP_EN 0 is the original logic byte for byte.
+    wire [D-1:0] slot_en;
+    generate if (KEEP_EN != 0) begin : g_ken
+        (* keep *) reg [D-1:0] wen;
+        wire [D-1:0] oh_next = rq ? {write_oh[D-2:0], write_oh[D-1]} : {{(D-1){1'b0}},1'b1};
+        always @(posedge ck) wen <= rsi ? oh_next : {D{1'b0}};
+        assign slot_en = wen;
+    end else begin : g_raw
+        assign slot_en = {D{rq}} & write_oh;
+    end endgenerate
     genvar s;
     generate for (s=0;s<D;s=s+1) begin:g_slot
-        always @(posedge ck) if (rq && write_oh[s]) begin data[s] <= i; epoch[s] <= wc; end
+        always @(posedge ck) if (slot_en[s]) begin data[s] <= i; epoch[s] <= wc; end
         assign bank[s*W+:W] = data[s];
         assign epo[s*(AW+1)+:AW+1] = epoch[s];
     end endgenerate

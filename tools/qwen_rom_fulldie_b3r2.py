@@ -4001,6 +4001,76 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             _lcx.append(dict(bid=bid, cl=cl, bits=bits, src=s_, dst=d_, src_ck=_ck_of[s_], dst_ck=_ck_of[d_]))
         m['land_cross'] = dict(insts=sorted(_lc), buses=len(_lcx), bits=sum(r_['bits'] for r_ in _lcx), rows=_lcx)
         print(f'LAND_CROSS {sorted(_lc)}: {len(_lcx)} cross-root buses / {sum(r_["bits"] for r_ in _lcx)} bits get a landing station', flush=True)
+    # QW-GEN3 10-19 (QW-DIECLK2 R5, LEAD2-QW 17:00 decision): OT_SPLIT_LAND_LIST=landing_list.json -- every listed
+    # cross-REGION instance link (the die-clock regional judge's land_owed: zero-stage c_b16 / dv_slice2 neighbour hops,
+    # 446 links / 186,347 b on dv2f18dh2) gets the same LAND_CROSS landing (forwarded lanes: one-frame landh0, ring written
+    # on the sender's root, read on the receiver's root, fixed E, no backpressure), at the receiver end.  Fail closed: a
+    # listed bus missing from this GEN, or not a 2-endpoint bus between the listed src/dst, is a GEN error (no silent skip);
+    # a listed bus that already carries frames (relays / pads) is landed by its own forwarded lane and only recorded.
+    if _os.environ.get('OT_SPLIT_LAND_LIST'):
+        _ll = json.loads(Path(_os.environ['OT_SPLIT_LAND_LIST']).read_text())
+        _ckl = {}
+        for _b in m['buses']:
+            if _b[1] == 'clock_trunk':
+                for _e in _b[3][1:]:
+                    _ckl.setdefault(_e[0], _b[0])
+        _bix_l = {bid: (idx, cl, bits, eps) for idx, (bid, cl, bits, eps) in buses}
+        _lcr = m.setdefault('land_cross', dict(insts=[], buses=0, bits=0, rows=[]))
+        _have = {r_['bid'] for r_ in _lcr['rows']}
+        _bad, _framed, _same, _added = [], [], [], 0
+        # OT_SPLIT_LAND_LIST_IN_FACE=<master prefix>: rows whose src AND dst are such masters (abutted dv_slice2 pairs,
+        # 0-um gap: no die site within reach, dv2f19g3 try 1 'tree pads: no free spot for dv_ch_E3_dd_dd') are owed to the
+        # RECEIVER's face landing inside that parent (QW-DIECLK2 R5 / NB2), recorded, not built at die level
+        _inf = _os.environ.get('OT_SPLIT_LAND_LIST_IN_FACE', '')
+        _owed = []
+        for r_ in _ll['links']:
+            bid = r_['bus'][2:] if r_['bus'].startswith('n_') else r_['bus']
+            if _inf and r_['src_master'].startswith(_inf) and r_['dst_master'].startswith(_inf):
+                _owed.append(bid); continue
+            if bid not in _bix_l:
+                _bad.append(f'{bid}: not a bus of this GEN'); continue
+            idx, cl, bits, eps = _bix_l[bid]
+            if len(eps) != 2 or eps[0][0] != r_['src'] or eps[1][0] != r_['dst']:
+                _bad.append(f"{bid}: endpoints {[e[0] for e in eps]} != list {r_['src']} -> {r_['dst']}"); continue
+            if (idx in plans and plans[idx]['frames']) or bid in tpads:
+                _framed.append(bid); continue
+            if bid in _have:
+                continue
+            if _ckl.get(eps[0][0]) is not None and _ckl.get(eps[0][0]) == _ckl.get(eps[1][0]):
+                _same.append(bid)
+            tpads[bid] = 1
+            _added += 1
+            _lcr['rows'].append(dict(bid=bid, cl=cl, bits=bits, src=eps[0][0], dst=eps[1][0], src_ck=_ckl.get(eps[0][0]),
+                                     dst_ck=_ckl.get(eps[1][0]), why='OT_SPLIT_LAND_LIST (QW-DIECLK2 R5 cross-region link)'))
+        # with OT_SPLIT_REGION_ONE_HARD (R2) EVERY hard instance has its own region root, so every zero-stage data bus
+        # between two hard instances is a cross-region link: land them all (covers the R2-split pairs the rA list could
+        # not see, e.g. dvs_E0 <-> dvs_E1 on the shared pll_r95); the list stays the cross-check (each row must exist)
+        _auto = []
+        if _os.environ.get('OT_SPLIT_REGION_ONE_HARD', '0') == '1':
+            _hp = tuple(x for x in _os.environ.get('OT_SPLIT_REGION_HARD', 'qfd_c_b16_dv,qfd_dv_slice2').split(',') if x)
+            _mst = {it.name: it.master for it in m['insts']}
+            _have = {r_['bid'] for r_ in _lcr['rows']}
+            for idx, (bid, cl, bits, eps) in buses:
+                if len(eps) != 2 or cl in ('clock_trunk', 'constant', 'reset', 'link_spine', 'link_channel') or bid.endswith('_rdy'):
+                    continue
+                (s_, _), (d_, _) = eps
+                if s_ == d_ or not str(_mst.get(s_, '')).startswith(_hp) or not str(_mst.get(d_, '')).startswith(_hp):
+                    continue
+                if (idx in plans and plans[idx]['frames']) or bid in tpads or bid in _have:
+                    continue
+                tpads[bid] = 1
+                _auto.append(bid)
+                _lcr['rows'].append(dict(bid=bid, cl=cl, bits=bits, src=s_, dst=d_, src_ck=_ckl.get(s_), dst_ck=_ckl.get(d_),
+                                         why='OT_SPLIT_REGION_ONE_HARD: hard <-> hard direct bus (own region roots)'))
+        if _bad and _os.environ.get('OT_SPLIT_LAND_LIST_MISSING_OK', '0') != '1':
+            raise ValueError(f'land list: {len(_bad)} listed links not on this GEN: ' + '; '.join(_bad[:12]))
+        _lcr['buses'] = len(_lcr['rows'])
+        _lcr['bits'] = sum(r_['bits'] for r_ in _lcr['rows'])
+        m['land_list'] = dict(source=_os.environ['OT_SPLIT_LAND_LIST'], listed=len(_ll['links']), added=_added,
+                              already_framed=sorted(_framed), same_gen_root=sorted(_same), not_on_gen=_bad,
+                              auto_hard=sorted(_auto), owed_in_face=sorted(_owed), in_face_prefix=_inf)
+        print(f'LAND_LIST {len(_ll["links"])} listed: {_added} landing stations added (+{len(_auto)} hard<->hard auto), {len(_framed)} already framed, '
+              f'{len(_same)} on one GEN trunk root (regional die clock splits them), {len(_bad)} not on this GEN, {len(_owed)} owed in-face ({_inf})', flush=True)
     # QXF-SEAMC 10-18 (TOKEN-XDIE-QWEN F5 + LAYERBENCH-QWEN G-C2): LAND_CROSS and the lane pass worked BUS by bus, so a
     # record crossed the seam torn: dv2f14bn d2d_rom -> native59 rx_payload a 1-frame landing (K 2, +3 edges) beside
     # direct native_rx_v / slot / kind / beat (+0) -> rx_record fault at the first RESULT; d2d_rom -> sys_face
@@ -6821,6 +6891,27 @@ def _gen16_clock_refile(m, regs, by, per):
             per[k] = rest
         rec['rep_regions_split'] += 1
         rec['rep_segments'] += len(segs)
+    # QW-GEN3 10-19 (QW-DIECLK2 die_clock_config R2): OT_SPLIT_REGION_ONE_HARD=1 -- no region root feeds two hard
+    # instances (dv2f18dh2 pll_r48 c16_E0_0 + c16_W0_0, r90, r93, r94, r95 dvs_E0 + dvs_E1, r99): the second and later hard
+    # instances of a shared region (master prefixes OT_SPLIT_REGION_HARD, default qfd_c_b16_dv / qfd_dv_slice2) take their
+    # own region (a new root output); forwarded-lane clock pins that follow a moved instance (ck_follow) go with it; the
+    # other sinks stay.  Their buses become cross-region links that must be LANDED (OT_SPLIT_LAND_LIST rows).
+    if os.environ.get('OT_SPLIT_REGION_ONE_HARD', '0') == '1':
+        hard = tuple(x for x in os.environ.get('OT_SPLIT_REGION_HARD', 'qfd_c_b16_dv,qfd_dv_slice2').split(',') if x)
+        r2 = rec.setdefault('region_one_hard', [])
+        for k in sorted(list(per)):
+            hs = sorted({i for i, p in per[k] if by[i].master.startswith(hard)})
+            if len(hs) < 2:
+                continue
+            r0 = regs[k]
+            for j, h in enumerate(hs[1:]):
+                mv = [(i, p) for i, p in per[k] if i == h or follow.get((i, p)) == h]
+                nk = len(regs)
+                regs.append(dict(name=f"{r0['name']}_h{j + 1}", kind=r0.get('kind'), rect=list(r0['rect']),
+                                 split_of=r0['name']))
+                per[k] = [e for e in per[k] if e not in mv]
+                per[nk] = mv
+                r2.append(dict(region=r0['name'], kept=hs[0], moved=h, new_root=f'pll_r{nk}', pins=len(mv)))
 
 
 def _gen16_fwd_ck_names(m):

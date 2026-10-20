@@ -97,6 +97,7 @@ def main():
     ap.add_argument('--pin-reg', type=int, default=0, help='1: pin-registered lanes (requests +2, writes / reducer operands +4 edges)')
     ap.add_argument('--rf-local', type=int, default=0, help='1: RF broadcast local copy per slice (pgslice RF_LOCAL): classes 0..3 and 5 issued one edge earlier')
     ap.add_argument('--mlat', type=int, default=3); ap.add_argument('--alat', type=int, default=3); ap.add_argument('--leaf', type=int, default=0)
+    ap.add_argument('--read-return', type=int, default=10, help='HBM-BANKLAT-SU: stream LG read round trip the die binds (pgslice READ_RETURN; MULTIRATE fill commits at serial n+srd(RR)+3)')
     ap.add_argument('--collective-red', action='store_true', help='native sequential RED_CARRY composition candidate; requires actual cxport/ring and its programme plane')
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
@@ -108,7 +109,10 @@ def main():
     nbase = len(SAC.OPS); assert len(ctl_lines) == nbase * 176 and len(gold) == nbase * 32768
     data = seed.view(np.float32).reshape(512, 512)          # [row][global lane]
     R, FO = a.rf_relay, 8 + 23 + 4 * (a.mlat - 3) + (a.alat - 3) + a.leaf + 4 * a.pin_reg
-    S0, PER = 1040, 176
+    # first op lane load at S0 must follow the last fill commit 1023 + srd(RR) + 3 (12 at RR 10 -> 1038, 2 edges of slack)
+    import su_multirate_compile as _M; from su_multirate_compile import srd as _srd
+    _M.set_round_trip(a.read_return, a.read_return - 3)   # write round trip = read - 3 (bank commit 3 vs read 6, same lanes)
+    S0, PER = max(1040, 1023 + _srd(a.read_return) + 3 + 2), 176
     names = [n for n, _ in SAC.OPS] + ['BYP_KV', 'AB_RF']
     NOPS = len(names)
     NE = S0 + PER * NOPS + FO + 64 + 128 + 40

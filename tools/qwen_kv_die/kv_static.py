@@ -14,6 +14,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import kv_qkh_safe32 as QKH32
 
 from kv_elastic_boundary import _source, WRITER_LINK_MAP, WRITER_PROGRAMME_MAP
 from static_pc_path_sources import SOURCES as PC_SOURCES
@@ -443,17 +444,17 @@ def template(root=ROOT):
     netlist. Unknown measured latencies are null, not guessed physical values.
     """
     params={
-        'layer_programme':dict(MUT=0,**({'MU':1} if MU else {})),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0),
+        'layer_programme':dict(MUT=0,**({'MU':1} if MU else {})),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0,RETIRE_STATIC=0),
         'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0),
         'ownership':dict(MUT=0,**({'MU':1} if MU else {})),'drain_guard':dict(MUT=0),
         'pc_path':dict(MU=1 if MU else 0),'landing':dict(MUT=0,HOP_MUT=0),
         'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),
         'vport':dict(MUT=0,DQ=None,RT=None),
-        'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=13),
+        'ectla':dict(STATIC_QK=1,QK_ISSUE_AGE=34,ROW_RETURN_LAT=None,HXK=QKH32.capture_hxk()),
         'writer':dict(MUT=0,VMAP=1,**({'MU':1} if MU else {})),'writer_programme':dict(MUT=0,VMAP=1),
         'link':dict(MUT=0,NL=2,NTX=d2d_ntx_k(),PR=1,TXDP=d2d_txdp_k() if root == ROOT else compiled_txdp(root=root)),
-        'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0),'row_tx':dict(MUT=0),
+        'embgw':dict(MUT=0),'emb_return_head':dict(MUT=0),'emb_return_hop':{},'emb_join':dict(MUT=0,NATIVE32=0,PIPE_JOIN=0),'row_tx':dict(MUT=0),
         'es_fan_root':dict(MUT=0),
     }
     instances=[];lookup={};specs={}

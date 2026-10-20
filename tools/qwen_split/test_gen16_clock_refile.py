@@ -7,6 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace as N
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+_COROOT_PREV = os.environ.get('OT_SPLIT_CK_COROOT')   # ROOT4-QWMERGE: restored below (leaked into test_q3h_contract)
 os.environ['OT_SPLIT_CK_COROOT'] = 'a,b'
 import qwen_rom_fulldie_b3r2 as G  # noqa: E402
 
@@ -66,5 +67,9 @@ for j in range(12):
 G._regions_from_placement(m3)
 n3 = net_of(m3)
 assert all(n3[(f'r{j}', 'clk')] == n3[('a', 'ck')] for j in range(6)), n3
+if _COROOT_PREV is None:
+    os.environ.pop('OT_SPLIT_CK_COROOT', None)
+else:
+    os.environ['OT_SPLIT_CK_COROOT'] = _COROOT_PREV
 print('GEN16_CLOCK_REFILE PASS: landing->receiver, hop0->sender, co-root, rep columns split <=', G.REP_SEG_MM, 'mm; '
       'no-follow mutant reproduces the GAP')

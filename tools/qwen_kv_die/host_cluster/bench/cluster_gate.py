@@ -44,7 +44,11 @@ def forks():
 
 
 def sources():
-    return [l.strip() for l in SOURCES.read_text().splitlines() if l.strip()]
+    s = [l.strip() for l in SOURCES.read_text().splitlines() if l.strip()]
+    bad = [x for x in s if not x.endswith(('.v', '.sv', '.vh', '.svh'))]
+    if bad:   # KV-FIX3 10-19: a bench .sh listed here went to verilator (p6/r4 NEEDS_RTL); bench files go in the job spec
+        sys.exit(f'CLUSTER_GATE ERROR {SOURCES.name} lists non-HDL files (Verilator would parse them): {bad}')
+    return s
 
 
 def flat_sources(out):

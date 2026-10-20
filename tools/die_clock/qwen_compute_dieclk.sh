@@ -8,7 +8,7 @@
 #                                                    without a landing, budget 60 ps, judged as one family)
 # D holds tools/ (die_clock, die_clock_check.py, die_clock_geom_dump.py).  Results: D/<VARIANT>/STATUS, check_*.txt,
 # landed_pairs.json, png/.
-set -u
+set -uo pipefail
 MODE=$1; D=$2; TL=${DC_TOOLS:-tools}   # tools dir under D (a variant may bring its own copy)
 say() { echo "$(date '+%F %T %Z') QCLK $*" | tee -a $D/STATUS.log; }
 IMG=openroad/orfs:asap7lock
@@ -26,10 +26,20 @@ if [ "$MODE" = prep ]; then
     || { say "clk_rx port completion FAIL (clkrx_ports.log)"; exit 1; }
   say "$(grep -h 'QCLK_CLKRX' $D/clkrx_ports.log | tr '\n' ' ' | cut -c1-600)"
   ROOTS=$(grep -o 'qfd_clkrx clk_rx (.*' $D/die.v | grep -o '\.pll_[a-z0-9_]*' | tr -d . | grep -v pll_fwd | sed 's#^#clk_rx/#' | paste -sd,)
+  # QW-GEN5 g5: clock roots outside the receiver: the real coll_blk divider output (qfd_ckdiv6 blk_o) and the UCIe
+  # PHY FDI clock output (io_ucie lclk)
+  XR=$(python3 "$D/$TL/die_clock/extra_clock_roots.py" --die-v "$D/die.v" --port-dirs "$C/port_dirs.json") \
+    || { say "GEN5 root pin/direction validation FAIL"; exit 1; }
+  [ -n "$XR" ] && { ROOTS="$ROOTS,$XR"; say "extra clock roots (g5): $XR"; }
   $DK "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -no_init -exit /work/$TL/die_clock_geom_dump.py --odb /work/floorplan_ck.odb --out /work/geom --pairs --roots $ROOTS > /work/geom.log 2>&1" \
     || { say "geom dump FAIL"; exit 1; }
   say "geom: $(grep -c ROOT_MISSING $D/geom.log) roots missing, $(wc -l < $D/geom/clknets.tsv) entry pins, $(grep GEOM_DUMP_PAIRS $D/geom.log)"
-  python3 $D/$TL/die_clock/qwen_compute_dieclk_prep.py --geom $D/geom --clocks-dir $D/libs --out $D --die "$(basename $C)" | tee -a $D/STATUS.log
+  RECEIVER_ARGS=()
+  if [ -n "${DC_RECEIVER_RTL:-}" ]; then
+    cp "$DC_RECEIVER_RTL" "$D/receiver_model.sv" || exit 1
+    RECEIVER_ARGS=(--receiver-rtl "$D/receiver_model.sv")
+  fi
+  python3 $D/$TL/die_clock/qwen_compute_dieclk_prep.py --geom $D/geom --clocks-dir $D/libs --out $D --die "$(basename $C)" "${RECEIVER_ARGS[@]}" | tee -a $D/STATUS.log || { say "native target prep FAIL"; exit 1; }
   python3 $D/$TL/die_clock/qwen_landed_pairs.py --geom $D/geom --lanes $D/fwd_lanes.json --out $D/landed_pairs_pre.json | tee -a $D/STATUS.log
   # v1: neighbour pairs = every cross-region data pair the standard leaves unlanded (GAP), as tree names
   python3 - $D <<'PY'
@@ -75,6 +85,36 @@ if [ "$MODE" = spine ]; then
     | tee -a $D/STATUS.log || exit 1
   MODE=build
 fi
+if [ "$MODE" = regional ]; then
+  # QW-DIECLK 10-19 (landed-regions standard): local region trees at regional entries, fed by ONE forwarded UNPADDED
+  # spine (DC_REGIONAL_IDEAL=1: ideal entries, control); every region its own family; cross-region crossings LANDED
+  python3 $D/$TL/die_clock/qwen_landed_pairs.py --geom $D/geom --lanes $D/fwd_lanes.json --out $D/landed_pairs_pre.json \
+    | tee -a $D/STATUS.log || exit 1
+  # QW-DIECLK4 10-20: the clock FEED (bump qfd_ckbump pll_ck -> qfd_clkrx pll_fwd; rN 2735 um unrepeated, die_repeaters skips
+  # clock nets) is a buffered safe tree of its own (DC_FEED=0: off)
+  FEED=$(python3 - $D/die.v <<'PY'
+import re, sys
+v = open(sys.argv[1]).read()
+rx = re.search(r'qfd_clkrx\s+\S+\s*\(\s*\.pll_fwd\((\w+)\)', v)
+bp = rx and re.search(r'qfd_ckbump\s+(\S+)\s*\(\s*\.pll_ck\(' + rx.group(1) + r'\)', v)
+print(f'{bp.group(1)}/pll_ck[0]' if bp else '')
+PY
+)
+  # QW-GEN5 g5: DC_FEED_ROOT overrides the detected feed (core feed mode: the spine source is the centre bump that feeds
+  # clk_rx; the feed tree is the corner link bump ckb_rom/pll_ck[0] -> its static-link hop-0 stations)
+  [ -n "${DC_FEED_ROOT:-}" ] && FEED=$DC_FEED_ROOT
+  say "feed root: ${FEED:-none}"
+  python3 $D/$TL/die_clock/qwen_regional_spec.py --spec $D/spec.json --pairs $D/landed_pairs_pre.json --out-spec $D/spec_$3.json \
+    --out-families $D/families_$3.json --out-owed $D/land_owed_$3.json ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} \
+    $([ "${DC_REGIONAL_IDEAL:-0}" = 1 ] && echo --ideal) $([ "${DC_GRID_CENTER:-0}" = 1 ] && echo --grid-center) \
+    $([ "${DC_SAFE_TREE:-0}" = 1 ] && echo --safe-tree) $([ "${DC_NEIGHBOUR_TRIM:-0}" = 1 ] && echo --neighbours) \
+    $([ "${DC_SPINE_BALANCE:-0}" = 1 ] && echo --balance-spine) $([ "${DC_SPINE_GEOM:-0}" = 1 ] && echo --spine-geometric) --spine-topology ${DC_SPINE_TOPO:-dme} \
+    $([ "${DC_FEED:-0}" = 1 ] && [ -n "$FEED" ] && echo --feed $FEED) $([ "${DC_DISSOLVE_RX:-0}" = 1 ] && echo --dissolve-receiver) \
+    | tee -a $D/STATUS.log || exit 1
+  # QW-DIECLK3 10-19: the per-region families stay (intra judged per region); neighbour pairs are trimmed in the build
+  # and judged by the landed/unlanded verdict downstream
+  MODE=build; PER_REGION=--per-region
+fi
 V=$3; O=$D/$V; mkdir -p $O/ff; chmod a+rwx $O $O/ff   # measure_only does not create its --out dir
 DK="docker run --rm --cpus=${DC_CPUS:-8} --memory=${DC_MEM:-90}g -v $D:/work -w /work $IMG bash -lc"
 PRE='source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; for c in tt ff; do for g in $(cat /work/libs_$c.glob); do ls $g; done > /work/libs_$c.txt; done;'
@@ -86,15 +126,21 @@ fi
 $DK "$PRE openroad -python -no_init -exit /work/$TL/die_clock/build.py --measure /work/$V/tt/manifest.json --odb /work/$V/tt/clock.odb --libs /work/libs_ff.txt --corner ff --out /work/$V/ff > /work/$V/measure_ff.log 2>&1" \
   || { say "$V FF measure FAIL ($V/measure_ff.log)"; exit 1; }
 cd $O
+# QW-DIECLK3 10-19 (dv2f19g2: 281 leaf nets > 1 mm unbuffered over CB16): no clock net may reach > 405 um unbuffered and
+# the safe-tree build must record no violation; fail closed (DC_REACH_DIAG=1 continues, stamped NOT_A_DIE_RESULT)
+python3 $D/$TL/die_clock/clock_reach_check.py tt/manifest.json --out reach.json > reach.log 2>&1; RCH=$?
+say "$V $(tail -1 reach.log | cut -c1-600)"
 AT=tt/arrivals_tt.tsv; AF=$(ls ff/arrivals_ff.tsv 2>/dev/null || ls ff/*.tsv | head -1)
 python3 $D/$TL/die_clock/to_dump.py tt/manifest.json $AT dump_tt.tsv --pairs-from $D/geom/pairs.tsv
 python3 $D/$TL/die_clock/to_dump.py tt/manifest.json $AF dump_ff.tsv --pairs-from $D/geom/pairs.tsv
 python3 $D/$TL/die_clock_check.py report dump_tt.tsv --ff-dump dump_ff.tsv --targets $D/targets.json --budget-ps 80 \
-  --region-map $D/spec_$V.json --families $D/families_$V.json --out die_clock_check.json > die_clock_check.txt 2>&1 \
+  --region-map $D/spec_$V.json --families $D/families_$V.json ${PER_REGION:-} --out die_clock_check.json > die_clock_check.txt 2>&1 \
   && say "$V CHECK TT+FF: $(grep -m1 'NEIGHBOUR CHECK' die_clock_check.txt)" || say "$V CHECK report FAIL ($V/die_clock_check.txt)"
 python3 $D/$TL/die_clock/qwen_landed_pairs.py --geom $D/geom --lanes $D/fwd_lanes.json --arr-tt $AT --arr-ff $AF \
   --out landed_pairs.json > landed_pairs.log 2>&1; say "$V $(tail -1 landed_pairs.log | cut -c1-500)"
-grep -q '"spine"' $D/spec_$V.json && { python3 $D/$TL/die_clock/spine_neighbour_report.py die_clock_check.json $D/spec_$V.json \
+[ -n "${PER_REGION:-}" ] && { python3 $D/$TL/die_clock/regional_verdict.py die_clock_check.json landed_pairs.json tt/manifest.json \
+  --out regional_verdict.json > regional_verdict.log 2>&1; say "$V $(tail -1 regional_verdict.log | cut -c1-700)"; }
+[ -z "${PER_REGION:-}" ] && grep -q '"spine"' $D/spec_$V.json && { python3 $D/$TL/die_clock/spine_neighbour_report.py die_clock_check.json $D/spec_$V.json \
   --out spine_neighbour.json > spine_neighbour.log 2>&1; say "$V $(tail -1 spine_neighbour.log | cut -c1-600)"
   python3 - tt/manifest.json >> spine_neighbour.log 2>&1 <<'PY'
 import json, sys
@@ -108,3 +154,7 @@ python3 $D/$TL/die_clock/plot.py tt/manifest.json $AT $D/geom/blocks.tsv png/die
 python3 $D/$TL/die_clock/plot.py tt/manifest.json $AF $D/geom/blocks.tsv png/die_ff.png --title "Q-CLK $V FF" >> png/plot.log 2>&1
 grep -h 'cells\|iter' build_tt.log | tail -4 >> $D/STATUS.log
 say "$V done: $O/die_clock_check.txt $O/landed_pairs.json $O/png"
+if [ $RCH != 0 ]; then
+  if [ "${DC_REACH_DIAG:-0}" = 1 ]; then echo "QCLK_REACH_FAIL_DIAGNOSTIC_ONLY" >> $O/NOT_A_DIE_RESULT; say "$V REACH FAIL: DIAGNOSTIC ONLY (DC_REACH_DIAG=1)"
+  else say "$V REACH FAIL ($O/reach.json): no die clock"; exit 1; fi
+fi

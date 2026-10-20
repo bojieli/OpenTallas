@@ -142,6 +142,7 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
     fa = bool(c.pop('fclk_audit', 0))
     fg = list(c.pop('fclk_globs', None) or []) or list(c.get('repeat_nets') or [])
     fp = c.pop('fclk_policy', 'report')
+    fe = bool(c.pop('fclk_equalize', 0))
     parts = []
     for k, v in c.items():
         if isinstance(v, (list, tuple)):
@@ -160,7 +161,8 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
         bufs = c.get('buffers') or list(BUFFERS)
         prefix = str(Path(report).with_suffix('')) + '.fclk'
         pre = f'source {tcl_dir}/fclk_audit.tcl\not_die_rep_fclk_snapshot\n'
-        post = (f'set ot_die_rep_fb [ot_die_rep_fclk_audit {{{prefix}}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
+        post = ((f'ot_die_rep_fclk_equalize {{{prefix}.pre_eq}} {_tcl_list(fg)} {_tcl_list(bufs)}\n' if fe else '') +
+                f'set ot_die_rep_fb [ot_die_rep_fclk_audit {{{prefix}}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
                 f'set ::ot_die_rep_fclk_args [list {{{prefix}.post_grt}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
                 + (f'if {{$ot_die_rep_fb != 0}} {{ puts "OT_DIE_REP FAIL fclk_mismatch_hops=$ot_die_rep_fb"; flush stdout; '
                    f'write_db {{{prefix}.fail.odb}}; exit {fail_exit} }}\n' if fp == 'fail' else ''))
@@ -222,6 +224,7 @@ def main(argv=None):
                    help='forwarded-clock net globs repeated with their data bits (override the clock skips)')
     t.add_argument('--fclk-globs', nargs='*', default=None, help='forwarded-clock nets audited against their data '
                    'repeater counts (default: --repeat-nets)')
+    t.add_argument('--fclk-equalize', action='store_true', help='delay-match each forwarded clock to its bundle: BUFs in front of the capture clock pin where the deepest data bit is > 1 stage deeper (DIE-S81-LEAD 10-19)')
     t.add_argument('--fclk-policy', choices=['report', 'fail'], help='|fclk - data| > 1 on a hop: report (default) or fail')
     t.add_argument('--over-reach', choices=['report', 'fail'])
     t.add_argument('--post-drv', choices=['report', 'fail'], help='residual slew/cap violators after repair: report (default) or fail')
@@ -250,7 +253,7 @@ def main(argv=None):
     body = tcl_call(a.design, a.report, tcl_dir=a.dir, fail_exit=a.exit_code, libs=libs or None, std_corner=a.std_corner,
                     legalize=a.legalize, spread_util=a.spread_util, spread_util_hard=a.spread_util_hard, bin_um=a.bin_um, repair_passes=a.repair_passes,
                     post_grt_rounds=a.post_grt_rounds, max_wire_um=a.max_wire_um, slew_ps=a.slew_ps, receiver_slew=rs,
-                    skip_nets=a.skip, repeat_nets=a.repeat_nets, fclk_globs=a.fclk_globs, fclk_policy=a.fclk_policy,
+                    skip_nets=a.skip, repeat_nets=a.repeat_nets, fclk_globs=a.fclk_globs, fclk_policy=a.fclk_policy, fclk_equalize=1 if a.fclk_equalize else None,
                     over_reach=a.over_reach, post_drv=a.post_drv, rc_layer=a.rc_layer, repair_args=a.repair_args)
     if a.libs_file:
         body = body.replace('[dict create ', '[dict create libs [concat $ot_die_rep_libs ' + _tcl_list(libs) + '] ', 1)
