@@ -376,6 +376,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         xptr, wbusy, wown = 0, [0] * XRING, [None] * XRING     # ring pointer, last read edge + owner of every x word
         x_free, prev_r, prev_first = 0, None, None
         install_end = desc_install_t + 2 * len(descs) + 4
+        flat = [b for r_ in recs for b in r_["blocks"]]          # issue order of the kind's blocks
         for r in recs:
             fp = len(r["xw"])
             raw = prev_r is None or (prod[r["k"]] is not None and prod[r["k"]] > _fk(prev_r))
@@ -436,6 +437,14 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 lo = rc
                 if prev_go is not None:
                     lo = max(lo, prev_go + prev_len + BUSY, prev_go + (PACE_NUM * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD)
+                    if XMODE != "bench13":
+                        # HBM-SMXL drain rule: the issuer opens block n+1 when block n-1 retires (its cache bank frees),
+                        # and an open while the previous block's copy still drains is a cdc fault (measured xr_dsA r1,
+                        # S 976 after S 897).  So go(n) - go(n-1) >= the drain (= the pace) of block n+1.
+                        fi = next(i_ for i_, x_ in enumerate(flat) if x_ is b)
+                        if fi + 1 < len(flat):
+                            nl = flat[fi + 1]["n_lines"]
+                            lo = max(lo, prev_go + (PACE_NUM * nl + PACE_DEN - 1) // PACE_DEN + PACE_ADD)
                 if bi == 0:
                     lo = max(lo, x_end + X_GAP - rc0 - LAT_GO - P, cur_abs + OP_GAP - rc0 - LAT_GO - P)
                 # C2: the reserve pipeline is in order; from the first routed descriptor on, every block is fetched only

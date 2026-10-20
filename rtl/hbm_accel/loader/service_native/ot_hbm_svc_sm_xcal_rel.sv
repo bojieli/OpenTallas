@@ -11,7 +11,10 @@
 //   * DD-row descriptor table copy (256: two 128x256 macros), identity [239:232] as the svg issuer.
 // Faults and pin rules as ot_hbm_svc_sm_xcal.  MUT 1/2/3 as ot_hbm_svc_sm_xcal; MUT 4 = no RELOC stages (two edges early).
 module ot_hbm_svc_sm_xcal_rel #(parameter integer MUT = 0, parameter integer PAW = 11, parameter integer PREL = 1,
-    parameter integer DD = 256, parameter integer DAW = (DD > 128) ? 8 : 7) (
+    parameter integer DD = 256, parameter integer DAW = (DD > 128) ? 8 : 7,
+    // HBM-SMXL 2026-10-19: XSLOT 1 = descriptor [206:200] carries the svg's x-store slot base (issuer_rel XSLOT); the xc
+    // copy ignores it (no x address in cmd_ext); [231:207] must still be zero.  0 (default) = unchanged.
+    parameter integer XSLOT = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          cfg_we,
@@ -114,7 +117,7 @@ module ot_hbm_svc_sm_xcal_rel #(parameter integer MUT = 0, parameter integer PAW
                 ent_v <= 1'b1;
                 e_at <= rd[142:119]; e_base <= PAW'({rd[189], rd[91:82]}); e_limit <= (PAW+1)'({rd[190], rd[102:92]}); e_loops <= rd[118:103];
                 e_ctx <= {rd[197:195], rd[198], rd[199]};
-                if (rd[255:240] != 16'h5d15 || rd[232 +: DAW] != rp_q || (DAW == 7 && rd[239]) || rd[231:200] != 0) fault <= 1'b1;
+                if (rd[255:240] != 16'h5d15 || rd[232 +: DAW] != rp_q || (DAW == 7 && rd[239]) || rd[231:207] != 0 || (XSLOT == 0 && rd[206:200] != 0)) fault <= 1'b1;
             end
             if (go) begin
                 ent_v <= 1'b0; n_go <= n_go - 1'b1;
