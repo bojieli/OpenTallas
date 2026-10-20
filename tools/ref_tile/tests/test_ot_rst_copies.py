@@ -107,6 +107,63 @@ class T(unittest.TestCase):
         _, _, tsv = self.run_nl(nl)
         self.assertIn("u_m.rst_n_x\t3\t600", tsv)
 
+    # KV-PC6 10-20: per-group kept decision leaves (hgo of qkd_kvs_pc: 192 copies, 24 ot_kvpc5_and2 enables)
+    def leaf_nl(self, leaf_type="ot_kvpc5_and2", leaf_cells=None, bad_input=False):
+        nl = netlist(n_copies=4, loads=400, name="u_m.hgo_qv")
+        mods = nl["modules"]
+        mods["top"]["netnames"]["u_m.hgo_qv"]["attributes"] = {"ot_rst_split": "00000000000000000000000000000001"}
+        cells = mods["top"]["cells"]
+        mods[leaf_type] = {"attributes": {"keep_hierarchy": "00000000000000000000000000000001"},
+                           "ports": {"a": {"direction": "input", "bits": [2]}, "b": {"direction": "input", "bits": [3]},
+                                     "y": {"direction": "output", "bits": [4]}},
+                           "cells": leaf_cells if leaf_cells is not None else {"$and$1": {"type": "$and",
+                               "connections": {"A": [2], "B": [3], "Y": [4]}}}}
+        for k in range(4):
+            en = 60 + k
+            cells[f"u_m.g[{k}].u_go"] = {"type": leaf_type,
+                "port_directions": {"a": "input", "b": "input", "y": "output"},
+                "connections": {"a": [8 if (bad_input and k == 3) else 6], "b": [3], "y": [en]}}
+            name = next(n for n in cells if n.startswith("u_m.u_rst_relay.relay_q[0][%d]" % k))
+            cells[name] = {"type": "$_SDFFE_PN0P_", "port_directions": {"C": "input", "D": "input", "R": "input",
+                           "E": "input", "Q": "output"}, "connections": {"C": [2], "D": ["1"], "R": [3], "E": [en],
+                           "Q": [10 + k]}}
+        return nl
+
+    def test_leaf_equivalent_enables_accepted(self):
+        _, ys, tsv = self.run_nl(self.leaf_nl(), mx=100)
+        row = tsv.splitlines()[1].split("\t")
+        self.assertEqual(row[0], "u_m.hgo_qv")
+        self.assertEqual(row[6], "OK")
+        self.assertEqual(row[5], "100,100,100,100")
+        self.assertEqual(ys.count("connect -port"), 300)
+
+    def test_leaf_different_inputs_refused(self):
+        _, ys, tsv = self.run_nl(self.leaf_nl(bad_input=True))
+        self.assertIn("REFUSED copies are not identical", tsv)
+        self.assertNotIn("connect -port", ys)
+
+    def test_sequential_leaf_refused(self):
+        seq = {"r": {"type": "$dff", "connections": {"CLK": [2], "D": [3], "Q": [4]}}}
+        _, ys, tsv = self.run_nl(self.leaf_nl(leaf_type="ot_seq_leaf", leaf_cells=seq))
+        self.assertIn("REFUSED copies are not identical", tsv)
+        self.assertNotIn("connect -port", ys)
+
+    def test_undefined_leaf_refused(self):
+        nl = self.leaf_nl(leaf_type="ot_bb_leaf")
+        nl["modules"]["ot_bb_leaf"]["attributes"]["blackbox"] = "00000000000000000000000000000001"
+        _, _, tsv = self.run_nl(nl)
+        self.assertIn("REFUSED copies are not identical", tsv)
+
+    def test_primitive_and_not_looked_through(self):
+        nl = self.leaf_nl()
+        for k in range(4):
+            c = nl["modules"]["top"]["cells"][f"u_m.g[{k}].u_go"]
+            c["type"] = "$and"
+            c["port_directions"] = {"A": "input", "B": "input", "Y": "output"}
+            c["connections"] = {"A": [6], "B": [3], "Y": [60 + k]}
+        _, _, tsv = self.run_nl(nl)
+        self.assertIn("REFUSED copies are not identical", tsv)
+
     def test_single_bit_relay_untouched(self):
         nl = netlist(n_copies=1)
         _, ys, tsv = self.run_nl(nl)

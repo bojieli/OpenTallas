@@ -18,6 +18,10 @@ from pathlib import Path
 SCHEMA = "opentallas.ref_tile.source_snapshot.v1"
 EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
+# Helpers that only NEW gates execute (pre_route_gate.ship_tar ships them beside the route-plan overlays, captured at the
+# same main head), never members of a frozen route plan.  validate() must resolve their current effective bytes the
+# same way, or a byte-identical gate-only helper reads as "blob unknown" and every post-native32 gate is refused.
+GATE_ONLY_HELPERS = ("tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl")
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
               "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",
@@ -181,7 +185,7 @@ def consumed_record(paths, entries, basis):
 
 
 def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False, clock=None, tile=None,
-             gate=None):
+             gate=None, pg_strict=False):
     """Match immutable staged contents against the requested route source and current tool overlay.
 
     clock: the gate result's "clock" record.  With it, drift made only by RELAXING-ONLY rule commits
@@ -196,6 +200,11 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
         return False, "missing immutable source snapshot; legacy result is unqualified"
     if frozen_recovery and not route_overlay:
         return False, "frozen helper recovery requires executed overlay verification"
+    HO = overlay_module()
+    try:
+        HO.validate_pg_policy(binding.get("route_overlay_plan"), pg_strict=pg_strict)
+    except ValueError as ex:
+        return False, str(ex)
     entries = binding.get("files")
     if not entries or canonical_digest(entries) != binding.get("manifest_sha256"):
         return False, "source manifest missing or digest mismatch"
@@ -220,7 +229,13 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                     return False, "original gate executed-helper verification missing or mismatched"
                 effective = HO.committed_frozen_payloads(root, frozen)
             else:
-                current, effective = HO.capture_plan(daemon, root, paths=paths)
+                current, effective = HO.capture_plan(daemon, root, paths=paths, pg_strict=pg_strict)
+                gate_only = sorted(e["path"] for e in entries if e["source"] == "daemon_overlay"
+                                   and e["path"] in GATE_ONLY_HELPERS and e["path"] not in effective
+                                   and (Path(daemon) / e["path"]).exists())
+                if gate_only:   # same head as the route helpers, exactly as ship_tar captured them
+                    _, gate_bytes = HO.capture_plan(daemon, root, paths=gate_only, head=current.get("origin_main"))
+                    effective = {**effective, **gate_bytes}
         except (OSError, ValueError, subprocess.SubprocessError) as ex:
             return False, f"cannot resolve effective route helpers: {ex}"
         if frozen and not frozen_recovery:
@@ -358,7 +373,7 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                                                and (r["kind"] == "relaxing" or r.get("applies"))})))
             if rows:
                 needs = sorted({n for r in rows for n in r.pop("needs")})
-                req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root)
+                req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root, pg_strict=pg_strict)
                 if req_ok:
                     relaxed = rows
                     binding["relaxing_rule_allowlist"] = dict(
@@ -460,7 +475,7 @@ def child_flop_reference_macros(root, kit):
     return out
 
 
-def relaxed_rule_requirement(needs, clock, gate=None, root=None):
+def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=None):
     """(ok, [{"requires", "ok", "text", ...}]): the relaxed rules' own conditions, judged from the existing gate report.
     clock_pin_spread (0dq): pin-flop spread <= 80 ps at TT (required); FF too when reported, else left to the routed
     native audit.
@@ -469,6 +484,15 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
     is unchanged); a gate that ran it must show overflow 0.  Without the gate result the strict refusal stands."""
     rows = []
     for n in needs:
+        if n == "pg_strict":
+            # Only SB.validate's typed policy, checked against the immutable frozen
+            # plan before drift classification, can scope this tightening away.
+            ok = type(pg_strict) is bool and not pg_strict
+            text = ("default job: strict PG tightening does not apply" if ok else
+                    "strict job requires a current strict gate" if pg_strict is True else
+                    "authoritative typed PG policy unavailable")
+            rows.append(dict(requires=n, ok=ok, pg_strict=pg_strict, text="pg_strict: " + text))
+            continue
         if n == "trial_grt":
             tr = gate.get("trial_route") if isinstance(gate, dict) else None
             if not isinstance(gate, dict):
@@ -534,6 +558,38 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                 "multi-root kit without hard children: unchanged" if ok else
                 "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
             continue
+        if n == "child_pin_access":
+            # ROOT-RULETAG 10-19: b7918e979 (KV-ECTL5) added child_lint (i) pin access (a hard-child pin with a same-layer
+            # OBS rect closer than the wide-metal spacing FAILs) and the matching ref_tile gen refusal.  The pre-route gate
+            # runs child_lint only on spec "children", so a gate is unchanged when the kit has no hard children or none of
+            # its child view LEFs has such a pin (the detector itself, abstract_pin_stub.pin_spacing_violations, decides).
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            base = Path(root or Path(__file__).resolve().parents[2])
+            try:
+                sp = json.loads((base / "physical" / "ref_tile" / str(kit) / "spec.json").read_text())
+                views = [str(c["view"]) for c in (sp.get("children") or [])]
+                import importlib.util
+                spec_ = importlib.util.spec_from_file_location(
+                    "ot_aps_ruletag", base / "tools" / "hier_contract" / "abstract_pin_stub.py")
+                aps = importlib.util.module_from_spec(spec_)
+                spec_.loader.exec_module(aps)
+                bad = {}
+                for v in views:
+                    name = Path(v.rstrip("/")).name
+                    t = (base / v / f"{name}.lef").read_text(errors="replace")
+                    if re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", t):
+                        k = len(aps.pin_spacing_violations(t))
+                        if k:
+                            bad[name] = k
+            except Exception as ex:  # noqa: BLE001 -- unreadable spec / view / detector: strict
+                rows.append(dict(requires=n, ok=False, text=f"child_pin_access: cannot judge ({type(ex).__name__}): re-gate"))
+                continue
+            rows.append(dict(requires=n, ok=not bad, children=len(views), violations=bad,
+                             text="child_pin_access: " + (
+                                 "no hard children: the gate runs no child_lint, verdict unchanged" if not views else
+                                 f"{len(views)} hard-child view(s), 0 pin-access violations: child_lint (i) passes"
+                                 if not bad else f"hard-child pin-access violations {dict(list(bad.items())[:3])}: re-gate")))
+            continue
         if n in ("rc_cal_spine_hold", "balanced_reset_profile", "single_clock_contract"):
             # ROOT-UNBLOCK 10-19: 96f1d6e0d changes the gate only for a spine cluster (CTS hold RC applies only with a
             # spine); a6d33cc98 only for a kit whose spec sets reset_landing.first_copies.  Judged from the kit spec.
@@ -562,6 +618,34 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                 rows.append(dict(requires=n, ok=not hit, text="balanced_reset_profile: " + (
                     "kit declares reset_landing.first_copies: the balanced proof applies, re-gate" if hit else
                     "no reset_landing.first_copies: textbook_lint checks unchanged")))
+            continue
+        if n == "every_root_spread":
+            # KV-CLKFIX 10-19: pre_route_gate.other_roots judges the 0dq pin-flop spread at EVERY measured root, not only
+            # the largest.  An older gate stays valid when it measured one root, was already judged per root
+            # (multiple_cts_roots), or every other root's recorded pin-flop (boundary / child-flop) spread is <= 80 at
+            # TT and FF; a gate without per-domain records predates it and is kept (a fresh gate judges it).
+            ck = clock if isinstance(clock, dict) else {}
+            doms = [d for d in ck.get("clock_measurements") or [] if isinstance(d, dict)]
+            if ck.get("declared_clock") == "multiple_cts_roots" or "other_roots" in ck or len(doms) <= 1:
+                rows.append(dict(requires=n, ok=True, text="every_root_spread: one measured root / judged per root: unchanged"))
+                continue
+            prim = str(ck.get("measured_clock") or "")
+            bad = []
+            for d in doms:
+                if prim and d.get("clock") == prim:
+                    continue
+                for c in ("tt", "ff"):
+                    cr = d.get(c) or {}
+                    cf = cr.get("child_flop") or {}
+                    # Match pre_route_gate.corner_spreads: compensated child-flop
+                    # boundary wins over raw child clock-pin arrivals.
+                    b = (cf["boundary"] if cf.get("boundary") and cf.get("all") else
+                         cf if cf.get("min") is not None else cr.get("boundary") or {})
+                    if b.get("min") is not None and b.get("max") is not None and float(b["max"]) - float(b["min"]) > CLOCK_PIN_SPREAD_MAX_PS:
+                        bad.append(f"{d.get('source')} {c.upper()} {float(b['max']) - float(b['min']):.1f}")
+            rows.append(dict(requires=n, ok=not bad, over=bad, text="every_root_spread: " + (
+                f"every other measured root <= {CLOCK_PIN_SPREAD_MAX_PS:.0f} ps pin-flop spread" if not bad else
+                f"other root(s) over {CLOCK_PIN_SPREAD_MAX_PS:.0f} ps: {bad[:4]} (FAIL)")))
             continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})

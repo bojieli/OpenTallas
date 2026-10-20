@@ -56,3 +56,13 @@ def test_oom_retry_is_flow_failure():
 if __name__ == "__main__":
     test_runner_rc_peak_and_no_false_kill(); test_learned_ram(); test_oom_retry_is_flow_failure()
     print("test_fleet_oom PASS")
+
+
+def test_unattributed_oom_is_visible_without_retry_claim(monkeypatch):
+    from types import SimpleNamespace
+    messages = []
+    monkeypatch.setattr(cl, "ssh", lambda *a, **kw: SimpleNamespace(returncode=0,
+        stdout="\nOT_PEAK_KB 0\nOT_OOM_UNATTRIBUTED 1\n"))
+    monkeypatch.setattr(cl, "log", messages.append)
+    assert cl.stage_oom_kills(dict(name="j", host="h", run="/run", stage_tag="route.a1"), {}) == ""
+    assert len(messages) == 1 and "ownership NOT established" in messages[0]

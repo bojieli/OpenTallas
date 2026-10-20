@@ -23,6 +23,22 @@ OT_RST_COPIES_MAX is set) on the FLATTENED coarse netlist and re-points the load
     keep attribute), so opt_merge cannot fold them back; the gate's textbook_lint high_fanout check on 1_2_yosys.v is the
     independent post-synthesis witness (<= max loads per copy).
 
+  * KV-PC SAFE 2026-10-19 (opt-in, every existing family unchanged): a STRIDED family (* ot_rst_split = W *) with an
+    integer value W >= 2 is N kept copies of a W-bit register laid out copy-major (copy k = bits [k*W +: W]); it is W
+    families, one per bit position i (bits i, i+W, ...), each proven and split as above;
+  * --wide (OT_RST_COPIES_WIDE=1, opt-in): the prep also maps the memories and the coarse non-register cells that read a
+    family bit on a 1-bit port into gate-level cells (memory_collect + memory_map of those memories, techmap of those
+    cells; the flow maps them the same way later), so a register copy that selects a wide mux / memory read word is
+    split per gate (a 288-bit $mux on one select bit is otherwise one indivisible load).  Function unchanged.
+
+  * KV-PC6 2026-10-20 (leaf-equivalent controls): an input bit of a copy may differ from copy 0's if both are driven by
+    the same output of KEPT-HIERARCHY leaf cells (a user module that `flatten` left as a cell because of keep_hierarchy)
+    of one type and parameters whose module is PURELY COMBINATIONAL (no flop / latch / memory / blackbox, recursively)
+    and whose inputs are themselves equivalent (recursively, depth <= LEAF_DEPTH).  Such leaves compute the same
+    function of the same nets, so the copies are still identical registers; this is what lets N > 32 copies take their
+    set / enable from per-group kept decision leaves (each leaf <= 32 loads) instead of one N-load net.  Primitive
+    ($-type) cells are never looked through (opt_merge would fold them back into one net later).
+
   python3 ot_rst_copies.py --json in.json --max 256 --ys out.ys --tsv out.tsv [--re REGEX] [--top NAME]
 exit 0 always when the JSON parses (groups over --max are reported as OVER lines and in the table: the gate judges them);
 exit 2 on unusable input.
@@ -71,6 +87,19 @@ def flop_width(cell):
         return 1
 
 
+def split_stride(nn):
+    """the stride W of a (* ot_rst_split = W *) family (W >= 2), else 1 (a plain marker / regexp family)"""
+    v = (nn.get("attributes") or {}).get("ot_rst_split")
+    if v is None:
+        return 1
+    s = str(v).strip()
+    try:
+        w = int(s, 2) if s and set(s) <= {"0", "1"} and len(s) >= 8 else int(s)
+    except ValueError:
+        return 1
+    return w if w >= 2 else 1
+
+
 def analyse(nl, max_loads, rx, top=None):
     tname, m = top_module(nl, top)
     cells = m.get("cells") or {}
@@ -99,42 +128,115 @@ def analyse(nl, max_loads, rx, top=None):
         if key in seen or len(set(bits)) != len(bits):
             continue
         seen.add(key)
+        w = split_stride(nn) if marked else 1
+        if w > 1:
+            if len(bits) % w or len(bits) // w < 2:
+                fams.append((wn, bits))          # malformed stride: proven (and refused) as one family
+                continue
+            for i in range(w):
+                fams.append((f"{wn}__s{i}", bits[i::w]))
+            continue
         fams.append((wn, bits))
     out = []
+    canon = leaf_canon(nl, cells, drv)
     for wn, bits in fams:
-        out.append(split_family(wn, bits, cells, drv, loads, max_loads, m))
+        out.append(split_family(wn, bits, cells, drv, loads, max_loads, m, canon))
     return tname, out
 
 
-def bit_signature(cells, d):
-    """identity of the flop that drives one bit: type, params (minus WIDTH), and per-bit view of its input ports"""
+LEAF_DEPTH = 4
+COMB_PRIM = re.compile(r"^\$(_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_|buf|pos|neg|not|"
+                       r"and|or|xor|xnor|reduce_and|reduce_or|reduce_xor|reduce_xnor|reduce_bool|logic_not|logic_and|"
+                       r"logic_or|eq|ne|eqx|nex|lt|le|gt|ge|add|sub|mux|pmux|bmux|shl|shr|sshl|sshr|shift|shiftx)$")
+
+
+def comb_module_test(nl):
+    """name -> True when the module is defined in the netlist and purely combinational (recursively)"""
+    memo = {}
+
+    def ok(name, stack=()):
+        if name in memo:
+            return memo[name]
+        mod = (nl.get("modules") or {}).get(name)
+        res = mod is not None and name not in stack
+        if res:
+            a = mod.get("attributes") or {}
+            if any(k in a for k in ("blackbox", "whitebox", "lib_whitebox")):
+                res = False
+            elif any(p.get("direction") not in ("input", "output") for p in (mod.get("ports") or {}).values()):
+                res = False
+            else:
+                for c in (mod.get("cells") or {}).values():
+                    t = c.get("type", "")
+                    if not (COMB_PRIM.match(t) if t.startswith("$") else ok(t, stack + (name,))):
+                        res = False
+                        break
+        memo[name] = res
+        return res
+    return ok
+
+
+def leaf_canon(nl, cells, drv):
+    """bit -> canonical identity: the bit itself, or (leaf type, params, output port/index, canonical inputs) when the
+    bit is an output of a kept-hierarchy purely combinational leaf (see the module docstring)"""
+    ok = comb_module_test(nl)
+    memo = {}
+
+    def canon(b, depth=0):
+        if not isinstance(b, int):
+            return b
+        if b in memo:
+            return memo[b]
+        r = b
+        d = drv.get(b)
+        if d is not None and depth < LEAF_DEPTH:
+            cn, p, i = d
+            c = cells[cn]
+            t = c.get("type", "")
+            if not t.startswith("$") and ok(t):
+                dirs = c.get("port_directions") or {}
+                ins = tuple((pn, tuple(canon(x, depth + 1) for x in pb))
+                            for pn, pb in sorted((c.get("connections") or {}).items()) if dirs.get(pn) == "input")
+                r = ("leaf", t, tuple(sorted((k, str(v)) for k, v in (c.get("parameters") or {}).items())), p, i, ins)
+        memo[b] = r
+        return r
+    return canon
+
+
+def bit_signature(cells, d, canon=None):
+    """identity of the flop that drives one bit: type, params (minus WIDTH), and per-bit view of its input ports
+    (input bits through canon(): leaf-equivalent nets compare equal)"""
     cn, p, i = d
     c = cells[cn]
     if not FLOP_RE.match(c["type"]) or p != "Q":
         return None
+    cf = canon or (lambda x: x)
     w = len(c["connections"]["Q"])
     sig = [c["type"], tuple(sorted((k, str(v)) for k, v in (c.get("parameters") or {}).items() if k != "WIDTH"))]
     for pn in sorted(c["connections"]):
         if pn == "Q":
             continue
         pb = c["connections"][pn]
-        sig.append((pn, pb[i] if len(pb) == w and w > 1 else tuple(pb)))
+        sig.append((pn, cf(pb[i]) if len(pb) == w and w > 1 else tuple(cf(x) for x in pb)))
     return tuple(sig)
 
 
-def split_family(wn, bits, cells, drv, loads, max_loads, m):
-    rec = {"family": wn, "copies": len(bits), "status": "", "groups": [], "total": 0, "fixed": 0, "moves": 0, "cmds": []}
-    sigs = []
+def split_family(wn, bits, cells, drv, loads, max_loads, m, canon=None):
+    rec = {"family": wn, "copies": len(bits), "status": "", "groups": [], "total": 0, "fixed": 0, "moves": 0, "cmds": [],
+           "leaf_equiv": False}
+    sigs, raw = [], []
     for b in bits:
         d = drv.get(b)
         if d is None:
             rec["status"] = f"REFUSED bit {b} undriven"
             return rec
-        s = bit_signature(cells, d)
+        s = bit_signature(cells, d, canon)
         if s is None:
             rec["status"] = f"REFUSED bit {b} not a flop Q ({cells[d[0]]['type']}.{d[1]})"
             return rec
         sigs.append(s)
+        raw.append(bit_signature(cells, d))
+    rec["leaf_equiv"] = any(s != raw[0] for s in raw[1:])
     if any(s != sigs[0] for s in sigs[1:]):
         rec["status"] = "REFUSED copies are not identical registers (D / clock / reset / type differ)"
         return rec
@@ -212,7 +314,10 @@ def split_family(wn, bits, cells, drv, loads, max_loads, m):
     return rec
 
 
-def prep(nl, rx, top=None):
+COARSE_RE = re.compile(r"^\$(?!_)(?!mem)(?!(adff|adffe|dff|dffe|sdff|sdffe|sdffce|aldff|aldffe|dffsr|dffsre|dlatch|adlatch|dlatchsr)$)")
+
+
+def prep(nl, rx, top=None, wide=False):
     """yosys commands that map every MULTI-BIT register reset (or otherwise loaded on a 1-bit port) by a copy family to
     per-bit flops, so the split can place single flops (a 64-bit $adff on one ARST bit is one indivisible load).
     Patterns: the cell names with glob characters replaced by '?' (a wider match only maps more flops per bit:
@@ -235,13 +340,36 @@ def prep(nl, rx, top=None):
             if not SAFE_NAME.match(cn):
                 continue
             pats.append(re.sub(r"[\[\]*?\\]", "?", cn))
+    fwires, mems = [], set()
+    if wide:
+        for wn, nn in sorted((m.get("netnames") or {}).items(), key=lambda x: natural(x[0])):
+            bits = nn.get("bits") or []
+            if (len(bits) >= 2 and all(isinstance(b, int) for b in bits) and set(bits) <= fam and SAFE_NAME.match(wn)
+                    and "[" not in wn and "]" not in wn):
+                fwires.append(wn)
+        for cn, c in cells.items():
+            if not c["type"].startswith("$mem"):
+                continue
+            dirs = c.get("port_directions") or {}
+            if any(dirs.get(pn) == "input" and any(isinstance(b, int) and b in fam for b in pb)
+                   for pn, pb in (c.get("connections") or {}).items()):
+                mems.add(str((c.get("parameters") or {}).get("MEMID", cn)))
     lines = [f"cd {yname(tname)}"]
     if pats:
         lines.append("select -set ot_rc_tm " + " ".join(pats))
         lines.append("techmap @ot_rc_tm")
         lines.append("select -clear")
+    if mems:
+        lines.append("memory_collect")
+        lines.append("memory_map")      # flop arrays only (the flow maps every remaining memory to flops the same way)
+    if fwires:
+        # every coarse (non-register, non-memory) cell that reads a family wire -> gate-level cells (one load per gate)
+        sel = " ".join(f"w:{w}" for w in fwires) + " %u" * (len(fwires) - 1)
+        lines.append(f"select -set ot_rc_wm {sel} %co1 t:$* %i t:$_* %d t:$*dff* %d t:$*dlatch* %d t:$mem* %d")
+        lines.append("techmap @ot_rc_wm")
+        lines.append("select -clear")
     lines.append("cd ..")
-    return len(pats), "\n".join(lines) + "\n"
+    return len(pats) + len(fwires) + len(mems), "\n".join(lines) + "\n"
 
 
 def main(argv=None):
@@ -253,6 +381,7 @@ def main(argv=None):
     ap.add_argument("--ys", required=True)
     ap.add_argument("--tsv")
     ap.add_argument("--prep", action="store_true", help="only write the per-bit techmap script (--ys)")
+    ap.add_argument("--wide", action="store_true", help="prep also maps family-read memories / coarse cells (opt-in)")
     a = ap.parse_args(argv)
     try:
         nl = json.load(open(a.json))
@@ -260,7 +389,7 @@ def main(argv=None):
         print(f"OT_RST_COPIES ERROR {ex}")
         return 2
     if a.prep:
-        n, ys = prep(nl, a.re, a.top)
+        n, ys = prep(nl, a.re, a.top, wide=a.wide)
         open(a.ys, "w").write(ys)
         print(f"OT_RST_COPIES: {n} multi-bit registers on relay copies mapped to per-bit flops")
         return 0
@@ -272,7 +401,8 @@ def main(argv=None):
         tsv.append(f"{r['family']}\t{r['copies']}\t{r['total']}\t{r['fixed']}\t{r['moves']}\t"
                    f"{','.join(map(str, r['groups']))}\t{r['status']}")
         print(f"OT_RST_COPIES {r['family']}: {r['copies']} copies, {r['total']} loads -> "
-              f"[{','.join(map(str, r['groups']))}] ({r['moves']} ports moved) {r['status']}")
+              f"[{','.join(map(str, r['groups']))}] ({r['moves']} ports moved) {r['status']}"
+              f"{' (controls proven through kept combinational leaves)' if r.get('leaf_equiv') else ''}")
     lines.append("cd ..")
     open(a.ys, "w").write("\n".join(lines) + "\n")
     open(a.tsv, "w").write("\n".join(tsv) + "\n")
