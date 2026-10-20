@@ -21,7 +21,8 @@
   "mutants_status": "RUNNING",
   "new_causal_controls": {
     "stale_age_image": "DETECTED",
-    "shifted_add_date": "DETECTED"
+    "shifted_add_date": "DETECTED",
+    "max_preadded_overflow": "DETECTED a=fff7,b=fff8,r=fff7"
   },
   "native_reset_wrapper_sha256": "138da4e5fdc24d40409e1efa52d14c497f71e5c143858c37ad99e23a9bdd1232"
 }
