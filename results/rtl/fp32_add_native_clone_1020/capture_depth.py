@@ -22,5 +22,21 @@ for name in c:depth(name)
 outdepth={p:max([depth(drivers[b]) for b,iv in edges if b in drivers]+[0]) for p,edges in outs.items()}
 assert outdepth=={'y':7,'err':7,'valid_out':7},outdepth
 assert max(depths.values())==7
-report=dict(status='PASS_CLONE_VS_MAPPED_FEEDFORWARD_CONVERGENCE',source_sha256=hashlib.sha256(raw).hexdigest(),native_sha256=hashlib.sha256(text.encode()).hexdigest(),clones=n,cells=len(c),max_capture_depth=7,output_capture_depth=outdepth,register_types=sorted({x['type'] for x in c.values() if x['type'].startswith('DFF')}),invariant='Reproduced native primitive inputs/outputs match original family functions, including reset and clock. Acyclic capture DAG converges in <=7 captures from arbitrary independent FF initialization.',scope='Clone versus mapped graph only. Reset/first-valid and RTL arithmetic correspondence remain separate obligations.')
+# Extract the actual production-valid cone, never assume a warm-up mask.
+# ASRHQN clears QN to1 when RESETN=0, so each observed valid polarity is inverted QN.
+edge=outs['valid_out'][0];valid_chain=[];seen=set()
+clkbit=m['ports']['clk']['bits'][0];rstbit=m['ports']['rst_n']['bits'][0];vbit=m['ports']['valid_in']['bits'][0]
+while edge[0] in drivers:
+ name=drivers[edge[0]];assert name not in seen;seen.add(name)
+ x=c[name];assert x['type']=='DFFASRHQNx1_ASAP7_75t_R',(name,x['type'])
+ assert edge[1] is True,('valid reset does not clear observed polarity',name,edge)
+ assert ins[name]['CLK']==[(clkbit,False)]
+ assert ins[name]['RESETN']==[(rstbit,False)]
+ assert ins[name]['SETN']==[('1',False)]
+ valid_chain.append(dict(cell=name,origin=origins[name],type=x['type'],reset='actual rst_n async clear of observed valid',capture='same rising clk'))
+ edge=ins[name]['D'][0]
+assert edge==(vbit,False),edge
+assert len(valid_chain)==7
+valid_chain.reverse()
+report=dict(status='PASS_CLONE_VS_MAPPED_FEEDFORWARD_CONVERGENCE',source_sha256=hashlib.sha256(raw).hexdigest(),native_sha256=hashlib.sha256(text.encode()).hexdigest(),clones=n,cells=len(c),max_capture_depth=7,output_capture_depth=outdepth,actual_valid_chain=valid_chain,actual_valid_semantics='Seven actual async-cleared rising-edge pipeline stages from valid_in to valid_out; all7reset to0 at any asserted rst_n. Earliest post-reset valid needs7 captures, derived from source topology, no external warm mask.',register_types=sorted({x['type'] for x in c.values() if x['type'].startswith('DFF')}),invariant='Reproduced native primitive inputs/outputs match original family functions, including reset and clock. Acyclic capture DAG converges in <=7 captures from arbitrary independent FF initialization.',scope='Clone versus mapped graph only. Reset/first-valid and RTL arithmetic correspondence remain separate obligations.')
 print(json.dumps(report,indent=2))
