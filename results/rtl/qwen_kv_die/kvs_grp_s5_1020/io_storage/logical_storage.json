@@ -1,5 +1,5 @@
 {
-  "status": "HOLD coordinator classification of fixed two-stage2243b response pipeline; no new gate",
+  "status": "FAIL/HOLD: response payload has unchanged >=3-deep FF delay line, forbidden despite no runtime index; no gate",
   "method": "actual elaborated source semantics including width/address/enable aggregation; independent queues proven by distinct controls, no bit partition exemption",
   "families": [
     {
@@ -180,5 +180,53 @@
       "source": "qkd_kvs_grp_s2.sv47..71; qkd_kv_front_cal.sv30..39; qkd_kvs_grp_s2.sv817..829"
     }
   ],
-  "excluded_hardmacro_sim_models": "Behavioral reg mem inside exact hard SRAM model represents genuine hard SRAM, not standard-cell payload storage"
+  "excluded_hardmacro_sim_models": "Behavioral reg mem inside exact hard SRAM model represents genuine hard SRAM, not standard-cell payload storage",
+  "response_stage_map": [
+    {
+      "stage": 1,
+      "instance": "u_slg.g_pc[q].u_pc",
+      "source": "qkd_kvs_grp_s2.sv650..667",
+      "clock": "ck",
+      "operation": "capture SRAM read result, not payload computation",
+      "data_in": "u_rows.rd_out mem_q[255:0]",
+      "data_out": "out_data[255:0] -> od[256*q+:256]",
+      "bits_per_pc": 295,
+      "required_geometry": "Original source comments cite checker routing; no evidence this data capture is a separate405um crossing"
+    },
+    {
+      "stage": 2,
+      "instance": "u_slg.g_hop[q].u_rsp.u",
+      "source": "qkd_kvs_grp_s2.sv768..772 and qkd_static_kv_hop.sv5..11",
+      "clock": "ck",
+      "operation": "unchanged forward capture",
+      "bundle_map": "[294]fault,[293:288]layer,[287:272]epoch,[271]v,[270:257]t,[256:1]data,[0]valid",
+      "data_in": "od[256*q+:256]",
+      "data_out": "od_d[256*q+:256]",
+      "bits_per_pc": 295,
+      "required_geometry": "Physical branch hop declared, but whole tile388.8um; actual endpoints/crossing demand not yet measured. Cannot infer exemption."
+    },
+    {
+      "stage": 3,
+      "instance": "u_slg.u_rowctl",
+      "source": "qkd_static_kv_landing.sv267..275",
+      "clock": "ck",
+      "operation": "unchanged data capture plus independent metadata/fault alignment",
+      "data_in": "pc_data[1023:0]=od_d",
+      "data_out": "idata[1023:0]",
+      "stage_bits": 1180,
+      "required_geometry": "No actual required additional405um crossing established. Gathering four ports is wiring, not data computation."
+    },
+    {
+      "stage": 4,
+      "instance": "u_slg.u_rowctl",
+      "source": "qkd_static_kv_landing.sv273..285",
+      "clock": "ck",
+      "operation": "unchanged data forward, metadata lane selection and fault arithmetic occur separately",
+      "data_in": "idata[1023:0]",
+      "data_out": "rsp_data[1023:0] -> rsp[1055:32],krsp[1024:1]",
+      "stage_bits": 1063,
+      "required_geometry": "Same source module as stage3; no independent geometric crossing shown."
+    }
+  ],
+  "conclusion": "PCcapture -> hop -> idata -> rsp_data is four FF captures of unchanged payload after hard SRAM read; hop->idata->rsp_data alone is three-deep delay line. Fault arithmetic/metadata checks are not payload operations. Ring/SRAM backend or genuine source latency redesign and compiler/consumer age updates required; generic fanout clone does not fix this."
 }
