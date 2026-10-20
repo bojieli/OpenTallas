@@ -67,7 +67,8 @@ def main(argv=None):
         vd = ROOT / r['view']
         # v1.3: a die-placed leaf (kv_expand.py) is instantiated under its own module name with its RTL pins: identity
         # OT_KV_RLY_STD: the relay standards (qkd_rlys_*) are bound by kv_rly_std.py under their RTL pin names: identity
-        b = K.BINDINGS[mst] if not r.get('expanded_from') and not mst.startswith(('qkd_rlys_', 'qkd_rlysh', 'qkd_landsh')) else None
+        # KV-HEALTH: the health-plane joins (qkd_hp_*) are written by kv_health_plane.py under their RTL pin names: identity
+        b = K.BINDINGS[mst] if not r.get('expanded_from') and not mst.startswith(('qkd_rlys_', 'qkd_rlysh', 'qkd_landsh', 'qkd_hp_')) else None
         per = {}
         for c in CORNERS:
             lib = next(vd.glob(f'*_{c}.lib'), None)
