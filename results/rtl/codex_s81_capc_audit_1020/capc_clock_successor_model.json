@@ -1,0 +1,99 @@
+{
+  "schema": "opentallas.capc_clock_successor_model.v1",
+  "status": "MODEL ONLY; no gate and no current snapshot mutation",
+  "source": "CAPC4 exact native CTS with pinned child6_final insertion bounds",
+  "genuine_root": "clk/core_clk",
+  "cycles_added": 0,
+  "physical_change": "Increase child-insertion compensation targets RT+55ps and LD+25ps at TT so measured spine advances those leaf clocks; preserve original reach-station and pin geometry. No constraints, uncertainty, child abstracts or data RTL changed.",
+  "old_compensation_ps": {
+    "ot_s81sl_cap_rt": 258.7,
+    "ot_s81sl_cap_ld": 113.1,
+    "ot_s81sl_cap_tr": 140.7,
+    "ot_s81sl_cap_ed": 98.3
+  },
+  "proposed_compensation_ps": {
+    "ot_s81sl_cap_rt": 313.7,
+    "ot_s81sl_cap_ld": 138.1,
+    "ot_s81sl_cap_tr": 140.7,
+    "ot_s81sl_cap_ed": 98.3
+  },
+  "assumptions": [
+    "TT change acts as exact leaf advance; actual discrete buffer/tap adjustment must be measured.",
+    "FF corresponding advance assumed0.8x TT ONLY for model; must obtain actual native TT/FF endpoint profiles before any approval.",
+    "Parentsoft/otherchild arrival profiles assumed unchanged; actual regeneration may change them.",
+    "No clock or native_reach waiver; currentCAPC4 remains immutable HOLD."
+  ],
+  "corners": {
+    "tt": {
+      "rows": {
+        "parent_soft": {
+          "min": 784.5,
+          "max": 835.2,
+          "model_advance_ps": 0
+        },
+        "u_p.u_core.g_hard.u_rt": {
+          "min": 766.1,
+          "max": 829.8,
+          "model_advance_ps": 55
+        },
+        "u_p.u_core.g_hard.u_tw": {
+          "min": 809.9,
+          "max": 834.7,
+          "model_advance_ps": 0
+        },
+        "u_p.u_core.g_hard.u_te": {
+          "min": 775.7,
+          "max": 800.5,
+          "model_advance_ps": 0
+        },
+        "u_p.u_core.g_ed.u_ed": {
+          "min": 820.4,
+          "max": 829.3,
+          "model_advance_ps": 0
+        },
+        "u_p.u_core.g_ld3.u_ld3": {
+          "min": 825.4,
+          "max": 842.2,
+          "model_advance_ps": 25
+        }
+      },
+      "root_span_ps": 76.1
+    },
+    "ff": {
+      "rows": {
+        "parent_soft": {
+          "min": 614.3,
+          "max": 661.7,
+          "model_advance_ps": 0.0
+        },
+        "u_p.u_core.g_hard.u_rt": {
+          "min": 632.2,
+          "max": 692.7,
+          "model_advance_ps": 44.0
+        },
+        "u_p.u_core.g_hard.u_tw": {
+          "min": 651.0,
+          "max": 674.2,
+          "model_advance_ps": 0.0
+        },
+        "u_p.u_core.g_hard.u_te": {
+          "min": 618.7,
+          "max": 641.9,
+          "model_advance_ps": 0.0
+        },
+        "u_p.u_core.g_ed.u_ed": {
+          "min": 654.5,
+          "max": 663.6,
+          "model_advance_ps": 0.0
+        },
+        "u_p.u_core.g_ld3.u_ld3": {
+          "min": 664.9,
+          "max": 682.2,
+          "model_advance_ps": 20.0
+        }
+      },
+      "root_span_ps": 78.4
+    }
+  },
+  "next": "Before successor layout, replay concrete compensation with actual CTS/fullclock profiles and links; demonstrate finite root+linked scopes<=80 with adequate margin, preserve all reach<=405/fanout32/PG. Narrow kit may fork only after source model review."
+}
