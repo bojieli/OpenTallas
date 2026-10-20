@@ -18,8 +18,8 @@
 // Compiler checks (static calendar, never runtime):  every partial of phase k leaves the column in
 // [go_k + SWD, go_{k+1} + SWD);  no configuration write in (go_k, go_k + 1];  P >= SWD / NQ  (a go into a full queue is
 // a sticky fault, ORed into the front fault: observation only, never absorbed).
-// Safe design: every 32-bit chunk of the table has its own KEPT write-enable / pop / read-pointer copy (fanout <= 32
-// incl. the mux selects; ot_keep_regs keeps the copies); storage NQ x TW = 2 x 336 b flops (< 2 kb); no reset on the
+// Safe design: every 16-bit chunk of the table has its own KEPT write-enable / pop / read-pointer copy (16 bits x 2
+// gates = 32 loads; ot_keep_regs keeps the copies); storage NQ x TW = 2 x 336 b flops (< 2 kb); no reset on the
 // table payload (as the configuration registers), counters / valids / copies reset.  +0 data-path cycles (the label
 // switch edge is a schedule constant).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,8 @@ module ot_s81_so_label_q #(
     output reg                      fault
 );
     localparam integer TW = 16 * NB * NSEG + 10 * NSEG;
-    localparam integer NC = (TW + 31) / 32;
+    localparam integer CK = 16;                  // chunk: an enable / select drives 2 gates a bit -> 32 loads
+    localparam integer NC = (TW + CK - 1) / CK;
     localparam integer CW = $clog2(SWD + 201);   // + the MUT_LATE range (no cost in function)
     localparam integer PW = 1;
 `ifdef OT_S81_SOQ_MUT_LATE
@@ -77,17 +78,17 @@ module ot_s81_so_label_q #(
                 wp <= (wp == PW'(NQ - 1)) ? '0 : wp + 1'b1;
             end
         end
-    // ---- payload: per 32-bit chunk, kept enable / pop / pointer copies (fanout <= 32 each) ----
+    // ---- payload: per 16-bit chunk, kept enable / pop / pointer copies (fanout <= 32 each) ----
     genvar c;
     for (c = 0; c < NC; c = c + 1) begin : g_ch
-        localparam integer LO = 32 * c;
-        localparam integer W = (TW - LO) < 32 ? (TW - LO) : 32;
+        localparam integer LO = CK * c;
+        localparam integer W = (TW - LO) < CK ? (TW - LO) : CK;
         (* keep *) reg [1:0]    we;      // entry write enable copy (start && wp == entry), one edge after go_e
         (* keep *) reg          pp;      // pop copy
         (* keep *) reg          rs;      // read pointer copy at pop
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin we <= 2'b00; pp <= 1'b0; rs <= 1'b0; end
-            else begin we <= {start && wp == 1'b1, start && wp == 1'b0}; pp <= pop; rs <= rp; end
+        // no reset on the copies (reset fan-out stays on the ~24 control flops): they are registered functions of the
+        // reset control, so one clocked edge in reset clears them (start = pop = 0 while reset holds)
+        always @(posedge clk) begin we <= {start && wp == 1'b1, start && wp == 1'b0}; pp <= pop; rs <= rp; end
         reg [W-1:0] qd0, qd1, od;          // two explicit entries (NQ = 2), no runtime-indexed array
         always @(posedge clk) begin
             if (we[0]) qd0 <= live[LO +: W];
