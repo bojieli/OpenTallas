@@ -1,0 +1,72 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: ot-epyc9       admits  1020 GB (avail 823, growth 109, headroom 0, waiters 0/0 GB) load 50/128 running 34 disk 158 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/codex_st0_kpv
+ot-run: -> ot-epyc9
+ot-heavy: request 240G is charged 78G (class 'run.py' measured peak 51.9G, n=8+0 proved); the cap stays 240G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3016016-1792497666 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+ST0_KPV_BUILT 64
+ST0_KPV_BUILT 66
+ST0_KPV_BUILT 68
+ST0_KPV_BUILT 70
+ST0_KPV
+64
+1
+RC
+0
+SVCRS_SO t_sot=773 dso=1661 so_start=2434 pv_last=1992 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2551 last_w=2813 gw_first=2858 gw_last=3336 verdict=PASS
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1471 first_score=1620 last_score=1631 end=3342 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=16 pv_bad_slices=0 done=2 jd_fault=1 root_fault=1 slice_faults=0400 first_fault_code=00000000 cred_err=0 cycles=3643 verdict=FAIL
+ST0_KPV
+70
+2
+RC
+0
+SVCRS_SO t_sot=759 dso=1667 so_start=2426 pv_last=1999 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2543 last_w=2805 gw_first=2850 gw_last=3328 verdict=PASS
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1472 first_score=1621 last_score=1632 end=3334 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3635 verdict=PASS
+ST0_KPV
+64
+2
+RC
+0
+SVCRS_SO t_sot=759 dso=1661 so_start=2420 pv_last=1993 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2537 last_w=2799 gw_first=2844 gw_last=3322 verdict=PASS
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1472 first_score=1621 last_score=1632 end=3328 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=16 pv_bad_slices=0 done=2 jd_fault=1 root_fault=1 slice_faults=0400 first_fault_code=00000000 cred_err=0 cycles=3629 verdict=FAIL
+ST0_KPV
+70
+1
+RC
+0
+SVCRS_SO t_sot=773 dso=1667 so_start=2440 pv_last=1998 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2557 last_w=2819 gw_first=2864 gw_last=3342 verdict=PASS
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1471 first_score=1620 last_score=1631 end=3348 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3649 verdict=PASS
+ST0_KPV
+66
+2
+RC
+0
+SVCRS_SO t_sot=759 dso=1663 so_start=2422 pv_last=1995 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2539 last_w=2801 gw_first=2846 gw_last=3324 verdict=PASS
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1472 first_score=1621 last_score=1632 end=3330 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3631 verdict=PASS
+ST0_KPV
+66
+1
+RC
+0
+SVCRS_SO t_sot=773 dso=1663 so_start=2436 pv_last=1994 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2553 last_w=2815 gw_first=2860 gw_last=3338 verdict=PASS
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1471 first_score=1620 last_score=1631 end=3344 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3645 verdict=PASS
+ST0_KPV
+68
+2
+RC
+0
+SVCRS_SO t_sot=759 dso=1665 so_start=2424 pv_last=1997 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2541 last_w=2803 gw_first=2848 gw_last=3326 verdict=PASS
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1472 first_score=1621 last_score=1632 end=3332 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3633 verdict=PASS
+ST0_KPV
+68
+1
+RC
+0
+SVCRS_SO t_sot=773 dso=1665 so_start=2438 pv_last=1996 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2555 last_w=2817 gw_first=2862 gw_last=3340 verdict=PASS
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1471 first_score=1620 last_score=1631 end=3346 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3647 verdict=PASS
+ST0_KPV_SWEEP_COMPLETE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3016016-1792497666): exit 0

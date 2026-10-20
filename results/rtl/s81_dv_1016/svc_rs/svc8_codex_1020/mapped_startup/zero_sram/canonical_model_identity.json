@@ -1,0 +1,28 @@
+{
+ "canonical_SEQ_sha256": "6e63ff4b5587097a76bf395c6f2383035368d5c8d95dbf551ba324d3a9537fde",
+ "normalized_sha256": "b7076660faa420265ed572dc4da574dcd3706f76e3909d7c6552299878b1509c",
+ "udp_tb_sha256": "7c42903d215a352e56c44771e9ead937a121200401cdcfddb2cb476a74851d0f",
+ "checks": 544,
+ "domain": "all binary D/reset states and all16 reset-pair transitions at each stable clock level from each initial q, including both-low releases, data hold, falling clock; notifier/timing violations outside fault-free contract",
+ "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+ "plain_dff_checks": 128,
+ "plain_dff_model_sha256": "cbba1c176afe1a03e677d21ee4e095c7b3d326689d8ec5ec46640d3e43a26254",
+ "plain_dff_tb_sha256": "dfe3ca2995dca27999b208956450cdea0beed0cbcb882ae717d9a54d425e0b21",
+ "scope": "ONLY DFFHQNx1 and DFFASRHQNx1; no other library cells qualified by these coupons",
+ "imported_model_sha256": "8883a21d9557e9dc5e070cbb1cdb934529c06b324e84dc110d1e166f60ab611d",
+ "imported_results": {
+  "DFFASRHQNx1_ASAP7_75t_R": {
+   "present": true,
+   "rc": 0,
+   "pass_canonical_coupon": true,
+   "model_sha256": "34aac5d998453cafde39d52a1d3a7c2498c5d4a0e0f62c8d034200652cb93ed4"
+  },
+  "DFFHQNx1_ASAP7_75t_R": {
+   "present": true,
+   "rc": 0,
+   "pass_canonical_coupon": true,
+   "model_sha256": "c58ebb8018e197498d77409fdf798add1036d7e32b77d5207433ee54b9380fe7"
+  }
+ },
+ "normalized_library_sha256": "51c87b5d618a561bbafaaee63cd07c221807f5a4b24a57948a2faaa55fbf17fa"
+}
