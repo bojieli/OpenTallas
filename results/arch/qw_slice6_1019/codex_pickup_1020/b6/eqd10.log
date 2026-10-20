@@ -1,0 +1,27 @@
+ot-run: ot-epyc5       admits  1092 GB (avail 878, growth 113, headroom 0, waiters 0/0 GB) load 101/128 running 70 disk 163 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-slice6/src_886e32541
+ot-run: ot-epyc7       admits   560 GB (avail 493, growth 101, headroom 0, waiters 0/0 GB) load 204/96 running 47 disk 5749 GB 
+ot-run: ot-epyc9       admits   578 GB (avail 585, growth 180, headroom 0, waiters 0/0 GB) load 202/128 running 57 disk 254 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-slice6/src_886e32541
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-slice6/src_886e32541
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1146621-1792479351 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+S5_MISMATCH port=cmd_o cycle=42 ref=44ca20f9c49ecfdc77bf320a9669f dut=44ca20f9c49ecfdc77bf320a9668f
+S5_MISMATCH port=cmd_o cycle=57 ref=6653ff369072ce0fb2dd046b2adaf dut=6653ff369072ce0fb2dd046b2ad9f
+S5_MISMATCH port=cmd_o cycle=83 ref=8bb6d907e67ae711d66cebeee632f dut=8bb6d907e67ae711d66cebeee631f
+S5_MISMATCH port=cmd_o cycle=94 ref=af9f71715c79b99618caf273a522f dut=af9f71715c79b99618caf273a521f
+S5_FAULT_CYCLES any=5966 heads=5951
+S5_EQ FAIL quiet=0 hronly=0 legal=0 mismatches=339 of 124614
+S5_FAULT_CYCLES any=5964 heads=5941
+S5_EQ PASS quiet=1 hronly=0 legal=0 compared=124614 nonzero=74866 cycles=6000
+S5_FAULT_CYCLES any=5946 heads=5946
+S5_EQ PASS quiet=0 hronly=1 legal=0 compared=124614 nonzero=65274 cycles=6000
+S5_MISMATCH port=cmd_o cycle=37 ref=0000000000000000000000000001f dut=0000000000000000000000000000f
+S5_MISMATCH port=cmd_o cycle=38 ref=0000000000000000000000000001f dut=0000000000000000000000000000f
+S5_MISMATCH port=cmd_o cycle=39 ref=0000000000000000000000000001f dut=0000000000000000000000000000f
+S5_MISMATCH port=cmd_o cycle=40 ref=0000000000000000000000000001f dut=0000000000000000000000000000f
+S5_FAULT_CYCLES any=5966 heads=5950
+S5_EQ FAIL quiet=0 hronly=0 legal=1 mismatches=10 of 124614
+EQ M=d10: S5_EQ FAIL ( rand:FAIL quiet:PASS hronly:PASS legal:FAIL)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1146621-1792479351): exit 0
