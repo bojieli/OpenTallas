@@ -42,6 +42,7 @@ module ot_hbm_hc_root_static #(
     parameter integer TLA  = 7,                  // quarter tree adder stages
     parameter integer SAFE = 0,                  // HBM-HC5 10-20: 1 = SRAM mix store + tail domain TD = 2 edges later (below)
     parameter integer TAILC = 0,                 // HBM-HCROOT6 10-20: 1 = hardened tail child tiles (+2 edges, emit TE = 2 later)
+    parameter integer PTFS = 0,                  // HBM-HC7-ROOT 10-20: 1 = fanout-safe targets ot_static_program_target_fs
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -129,18 +130,38 @@ module ot_hbm_hc_root_static #(
     wire cfg_we, start_v, tbl_we_q, ptgt_fault, ttgt_fault, seq_active;
     wire [9:0] p_addr, start_base, tbl_addr_q; wire [255:0] p_data, tbl_data_q;
     wire [10:0] start_limit; wire [15:0] start_loops;
-    ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ptgt (.clk(clk), .rst_n(rst_tgt), .tgt(tgt), .cfg_v(cfg_v),
-        .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
-        .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
-        .program_cfg_we(cfg_we), .program_cfg_addr(p_addr), .program_cfg_data(p_data), .program_start_v(start_v),
-        .program_start_base(start_base), .program_start_limit(start_limit), .program_start_loops(start_loops),
-        .configured(configured), .fault(ptgt_fault));
+    // HBM-HC7-ROOT 10-20: PTFS 1 = the same target rebuilt fanout-safe (banked bitmap, kept copies; same ports, same
+    // edges; program_cfg_data loads every edge -- its consumers, the programme / table SRAM write stages, read it only
+    // with the write enable).  Equivalence: rtl/test/run_static_program_target_fs_eq.sh.
+    if (PTFS == 0) begin : g_ptr
+        ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ptgt (.clk(clk), .rst_n(rst_tgt), .tgt(tgt), .cfg_v(cfg_v),
+            .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+            .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
+            .program_cfg_we(cfg_we), .program_cfg_addr(p_addr), .program_cfg_data(p_data), .program_start_v(start_v),
+            .program_start_base(start_base), .program_start_limit(start_limit), .program_start_loops(start_loops),
+            .configured(configured), .fault(ptgt_fault));
+    end else begin : g_ptf
+        ot_static_program_target_fs #(.PCW(10), .TGT_PIN(1)) u_ptgt (.clk(clk), .rst_n(rst_tgt), .tgt(tgt), .cfg_v(cfg_v),
+            .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+            .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
+            .program_cfg_we(cfg_we), .program_cfg_addr(p_addr), .program_cfg_data(p_data), .program_start_v(start_v),
+            .program_start_base(start_base), .program_start_limit(start_limit), .program_start_loops(start_loops),
+            .configured(configured), .fault(ptgt_fault));
+    end
     // table target: only its row-write port has a consumer (a table is data; a launch on id tgt + 1 is never issued)
-    ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ttgt (.clk(clk), .rst_n(rst_tgt), .tgt(tgt + 8'd1), .cfg_v(cfg_v),
-        .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
-        .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
-        .program_cfg_we(tbl_we_q), .program_cfg_addr(tbl_addr_q), .program_cfg_data(tbl_data_q), .program_start_v(),
-        .program_start_base(), .program_start_limit(), .program_start_loops(), .configured(), .fault(ttgt_fault));
+    if (PTFS == 0) begin : g_ttr
+        ot_static_program_target #(.PCW(10), .TGT_PIN(1)) u_ttgt (.clk(clk), .rst_n(rst_tgt), .tgt(tgt + 8'd1), .cfg_v(cfg_v),
+            .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+            .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
+            .program_cfg_we(tbl_we_q), .program_cfg_addr(tbl_addr_q), .program_cfg_data(tbl_data_q), .program_start_v(),
+            .program_start_base(), .program_start_limit(), .program_start_loops(), .configured(), .fault(ttgt_fault));
+    end else begin : g_ttf
+        ot_static_program_target_fs #(.PCW(10), .TGT_PIN(1)) u_ttgt (.clk(clk), .rst_n(rst_tgt), .tgt(tgt + 8'd1), .cfg_v(cfg_v),
+            .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+            .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(seq_active),
+            .program_cfg_we(tbl_we_q), .program_cfg_addr(tbl_addr_q), .program_cfg_data(tbl_data_q), .program_start_v(),
+            .program_start_base(), .program_start_limit(), .program_start_loops(), .configured(), .fault(ttgt_fault));
+    end
 
     // ------------------------------------------------------------------ programme
     localparam integer EW = 124;

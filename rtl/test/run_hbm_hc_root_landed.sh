@@ -24,7 +24,8 @@ H=rtl/hbm_accel/generic/peers/static_hc
 src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_qeng_static.sv $H/ot_hbm_hc_qcen_static.sv
  $H/ot_hbm_hc_bankq_static.sv $H/ot_hbm_hc_eng_seq_static.sv $H/ot_hbm_hc_bank_static.sv $H/ot_hbm_hc_tail_unit_static.sv $H/ot_hbm_hc_tail_child_static.sv $H/ot_hgi_hc_tail_os_static.sv
  $H/ot_hdc_v41x_hcp_sys1_static.sv $H/ot_hgi_hc_tail_static.sv $H/ot_hbm_hc_xw_rx_static.sv
- rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv
+ rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target_fs.sv
+ rtl/hbm_accel/die_glue/ot_hbm_rly.sv
  rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/ot_hdc_prefix.sv
  rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv
  rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv
@@ -34,11 +35,11 @@ src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_
 python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 "$raw0" --rs 104 --ding "$ding" > "$out/vectors.log"
 "$vl" --binary --timing --hierarchical -j "${HC_BUILD_JOBS:-16}" -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
   --top-module tb_hbm_hc_eng4_static +define+MUT=$mut +define+OT_FP_DATA_NORST \
-  +define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_SAFE=${HC_SAFE:-0} +define+HC_TAILC=${HC_TAILC:-0} +define+HC_CPR=${HC_CPR:-0} +define+HC_QDRLY=2 +define+HC_XRD=$xrd +define+HC_XRU=$xru \
+  +define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_SAFE=${HC_SAFE:-0} +define+HC_TAILC=${HC_TAILC:-0} +define+HC_PTFS=${HC_PTFS:-0} +define+HC_CPR=${HC_CPR:-0} +define+HC_QDRLY=2 +define+HC_XRD=$xrd +define+HC_XRU=$xru \
   "+define+HC_XRDQ=$xrdq" "+define+HC_XRUQ=$xruq" "+define+HC_DIE_XRDQ=$dxd" "+define+HC_DIE_XRUQ=$dxu" -Mdir "$out/obj" -o Vroot \
   rtl/test/tb_hbm_hc_eng4_static_hier.vlt "${src[@]}" > "$out/build.log" 2>&1
 set +e; (cd "$out/case" && "$out/obj/Vroot" $(cat plus.txt)) > "$out/run.log" 2>&1; rc=$?; set -e
 grep -E "HC_ENG_DONE|HC_ENG PASS|HC_ENG FAIL|HC_ENG_FAULT|MISMATCH" "$out/run.log" || true
-echo "HC_ROOT_LANDED SAFE=${HC_SAFE:-0} TAILC=${HC_TAILC:-0} CPR=${HC_CPR:-0} MUT=$mut XRD=$xrd XRU=$xru XRDQ=$xrdq XRUQ=$xruq DIE_XRDQ=$dxd DIE_XRUQ=$dxu DING=$ding RAW0=$raw0 rc=$rc"
+echo "HC_ROOT_LANDED SAFE=${HC_SAFE:-0} TAILC=${HC_TAILC:-0} PTFS=${HC_PTFS:-0} CPR=${HC_CPR:-0} MUT=$mut XRD=$xrd XRU=$xru XRDQ=$xrdq XRUQ=$xruq DIE_XRDQ=$dxd DIE_XRUQ=$dxu DING=$ding RAW0=$raw0 rc=$rc"
 rm -rf "$out/obj"
 exit $rc
