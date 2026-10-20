@@ -43,6 +43,12 @@ module ot_hdc_fp32_add_lat_ncr #(
     wire dab_c, dba_c;
     ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
     ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
+    // R9b (gate-flow census: the exponent-difference MSB generate drove 34 one-hot compares): a second, hierarchy-kept
+    // pair of exponent subtractors (same values) decodes the upper one-hot half (j >= 14) and the >= 28 flags
+    wire [7:0] dab2, dba2;
+    wire dab2_c, dba2_c;
+    (* keep_hierarchy *) ot_hdc_ksadd_k #(.W(8)) u_dab2 (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab2), .cout(dab2_c));
+    (* keep_hierarchy *) ot_hdc_ksadd_k #(.W(8)) u_dba2 (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba2), .cout(dba2_c));
     // A1 -> A2 cut (u_ca): the valid bit is the one reset flop, the rest plain data flops
     reg         x_v;
     reg         x_byp, x_nf, x_sub, x_as, x_bs;
@@ -61,12 +67,13 @@ module ot_hdc_fp32_add_lat_ncr #(
         x_swap <= {7{!cmp_c}}; x_byp <= bypass; x_nf <= nonfinite; x_code_a<=a;x_code_b<=b;
         x_az_dist<={8{a_zero}};x_bz_dist<={8{b_zero}};x_nf_dist<={8{nonfinite}};
         x_sub <= a[31] ^ b[31]; x_as <= a[31]; x_bs <= b[31];
-        x_aexp <= a_exp; x_bexp <= b_exp; x_aman <= a_man; x_bman <= b_man; x_dab_big<=(dab>=28);x_dba_big<=(dba>=28);
+        x_aexp <= a_exp; x_bexp <= b_exp; x_aman <= a_man; x_bman <= b_man; x_dab_big<=(dab2>=28);x_dba_big<=(dba2>=28);
     end
     // ---- A2 ----------------------------------------------------------------------------------------
     genvar j;
     generate for(j=0;j<28;j=j+1)begin:jam_capture
-      always @(posedge clk)begin x_dab_oh[j]<=(dab==j);x_dba_oh[j]<=(dba==j);end
+      if(j<14)begin:lo always @(posedge clk)begin x_dab_oh[j]<=(dab==j);x_dba_oh[j]<=(dba==j);end end
+      else begin:hi always @(posedge clk)begin x_dab_oh[j]<=(dab2==j);x_dba_oh[j]<=(dba2==j);end end
     end endgenerate
     function automatic [27:0] jam28oh;
       input [23:0] man;input [27:0] oh;input big;
