@@ -510,7 +510,7 @@ module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8,LOCAL32=0)(
  output wire complete,output reg fault,
  // R3e (QW-N59-6 10-20) opt-in same-edge publications (LOCAL32; 0 ignores / aliases): request_pub[k] == request_slot,
  // emit_beat_pub == emit_beat on every edge; vm_commit_beat_pub is a kept copy of vm_commit_beat.
- input wire[7:0]request_pub,input wire[4:0]emit_beat_pub,output wire[4:0]vm_commit_beat_pub
+ input wire[7:0]request_pub,input wire[4:0]emit_beat_pub,output wire[4:0]vm_commit_beat_pub,vm_commit_beat_pub2
 );
  reg active;reg[58:0]tag;reg[31:0]issued,covered;
  reg[LAND_EDGES-1:0]pending;reg[4:0]beat_pipe[0:LAND_EDGES-1];reg[58:0]tag_pipe[0:LAND_EDGES-1];
@@ -521,22 +521,24 @@ module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8,LOCAL32=0)(
  // same reset) and of vm_commit_beat, so the commit capture (65 flops) and the covered decode each take their own driver.
  // R3f: groups of <= 16 enable bits (2 mapped loads per DFFE bit): request_pub [0..3] tag quarters, [4]/[5] issued
  // halves, [6]/[7] covered halves; pend_c [0..3] vm_commit_tag quarters, [4] vm_commit_v / beat, [5] covered decode.
- (* keep = "true" *) reg[4:0]lb_c;(* keep = "true" *) reg[5:0]pend_c;(* keep = "true" *) reg[4:0]vcb_c;
+ (* keep = "true" *) reg[4:0]lb_c,lb_c2;(* keep = "true" *) reg[5:0]pend_c;(* keep = "true" *) reg[4:0]vcb_c,vcb_c2;   // R3g: lb_c2 / vcb_c2
  wire[7:0]rp=LOCAL32?request_pub:{8{request_slot}};
  wire[4:0]ebp=LOCAL32?emit_beat_pub:emit_beat,lbc=LOCAL32?lb_c:lb;
  wire[5:0]pc=LOCAL32?pend_c:{6{pending[LAND_EDGES-1]}};
  assign vm_commit_beat_pub=LOCAL32?vcb_c:vm_commit_beat;
+ assign vm_commit_beat_pub2=LOCAL32?vcb_c2:vm_commit_beat;
+ wire[4:0]lbc2=LOCAL32?lb_c2:lb;
  wire commit_bad=!active||request_slot||tag_pipe[LAND_EDGES-1]!=tag||covered[lb];
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin
    active<=0;tag<=0;issued<=0;covered<=0;pending<=0;vm_commit_v<=0;vm_commit_beat<=0;vm_commit_tag59<=0;fault<=0;
    for(i=0;i<LAND_EDGES;i=i+1)begin beat_pipe[i]<=0;tag_pipe[i]<=0;end
-   lb_c<=0;pend_c<=0;vcb_c<=0;
+   lb_c<=0;lb_c2<=0;pend_c<=0;vcb_c<=0;vcb_c2<=0;
   end else begin
    vm_commit_v<=0;
    pending<={pending[LAND_EDGES-2:0],emit_v};
    beat_pipe[0]<=emit_beat;tag_pipe[0]<=emit_tag59;
-   lb_c<=beat_pipe[LAND_EDGES-2];pend_c<={6{pending[LAND_EDGES-2]}};
+   lb_c<=beat_pipe[LAND_EDGES-2];lb_c2<=beat_pipe[LAND_EDGES-2];pend_c<={6{pending[LAND_EDGES-2]}};
    for(i=1;i<LAND_EDGES;i=i+1)begin beat_pipe[i]<=beat_pipe[i-1];tag_pipe[i]<=tag_pipe[i-1];end
    if(request_slot)begin
     if((active&&!(&covered))||(|pending)||emit_v)fault<=1;
@@ -560,7 +562,7 @@ module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8,LOCAL32=0)(
    if(pc[1]&&!commit_bad&&!fault)vm_commit_tag59[29:15]<=tag_pipe[LAND_EDGES-1][29:15];
    if(pc[2]&&!commit_bad&&!fault)vm_commit_tag59[44:30]<=tag_pipe[LAND_EDGES-1][44:30];
    if(pc[3]&&!commit_bad&&!fault)vm_commit_tag59[58:45]<=tag_pipe[LAND_EDGES-1][58:45];
-   if(pc[4]&&!commit_bad&&!fault)begin vm_commit_v<=1;vm_commit_beat<=lb;vcb_c<=lb;end
+   if(pc[4]&&!commit_bad&&!fault)begin vm_commit_v<=1;vm_commit_beat<=lbc2;vcb_c<=lbc2;vcb_c2<=lbc2;end
    if(visibility_slot&&(!active||!(&issued)||!(&covered)||(|pending)))fault<=1;
   end
 endmodule

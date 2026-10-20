@@ -206,34 +206,75 @@ module ot_qfd_su_kv_static_posted #(
  end else begin:g_choose_alias
   assign cq={42{slot_q}};
  end endgenerate
+ generate if(LOCAL_CTL==0)begin:g_core
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;if(LOCAL_CTL==0)word_data<=0;fault<=0;fault_code<=0;end
-  else if(ENABLE!=0)begin
-   if(eb_q)begin
-    if(active||word_v||fault||ep_q>=8192)begin fault<=1;fault_code[4]<=1;end
-    else begin active<=1;pos<=ep_q[12:0];issued<=0;sent<=0;end
-   end else begin
-    sent<=sent_n;
-    if(iv_q)begin
-     if(!active||ik_q>=3||ino_q!=HEADS||ini_q!=(ik_q==0?128:64)||issued[ik_q])begin fault<=1;fault_code[5]<=1;end
-     else issued[ik_q]<=1;
-    end
-    if(|err)begin fault<=1;fault_code<=fault_code|err;end
-    if(!fault&&!(|err)&&choose&&(!word_v||take))begin
-     word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
-     if(LOCAL_CTL==0)begin
-     case(selected)
-      0:word_data<=bytes_r[0+:512];1:word_data<=bytes_r[512+:512];
-      2:word_data<=bytes_r[1024+:512];3:word_data<=bytes_r[1536+:512];
-      default:word_data<=0;
-     endcase
+   if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;if(LOCAL_CTL==0)word_data<=0;fault<=0;fault_code<=0;end
+   else if(ENABLE!=0)begin
+    if(eb_q)begin
+     if(active||word_v||fault||ep_q>=8192)begin fault<=1;fault_code[4]<=1;end
+     else begin active<=1;pos<=ep_q[12:0];issued<=0;sent<=0;end
+    end else begin
+     sent<=sent_n;
+     if(iv_q)begin
+      if(!active||ik_q>=3||ino_q!=HEADS||ini_q!=(ik_q==0?128:64)||issued[ik_q])begin fault<=1;fault_code[5]<=1;end
+      else issued[ik_q]<=1;
      end
-     if(MUT_MASK!=0&&LOCAL_CTL==0)word_data[7:0]<=0;
-    end else if(take||fault||(|err))word_v<=0;
-    if(active&&(&sent)&&!word_v&&issued==3'b111)active<=0;
+     if(|err)begin fault<=1;fault_code<=fault_code|err;end
+     if(!fault&&!(|err)&&choose&&(!word_v||take))begin
+      word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
+      if(LOCAL_CTL==0)begin
+      case(selected)
+       0:word_data<=bytes_r[0+:512];1:word_data<=bytes_r[512+:512];
+       2:word_data<=bytes_r[1024+:512];3:word_data<=bytes_r[1536+:512];
+       default:word_data<=0;
+      endcase
+      end
+      if(MUT_MASK!=0&&LOCAL_CTL==0)word_data[7:0]<=0;
+     end else if(take||fault||(|err))word_v<=0;
+     if(active&&(&sent)&&!word_v&&issued==3'b111)active<=0;
+    end
    end
   end
- end
+ end else begin:g_core32
+  // R3g (QW-N59-6 10-20, LOCAL_CTL): the same core statements split by register group so no epoch-begin flop selects
+  // more than ~25 next-state bits (R3e census: eb_q 44): eb_q -> fault / fault_code / word_v / word_tag, eb_a (kept copy,
+  // D epoch_begin == eb_q) -> pos, eb_b (kept copy) -> active / issued / sent.  Every register keeps its original
+  // statements, conditions and order; exact.
+  (* keep = "true" *) reg eb_a,eb_b;
+  always @(posedge clk or negedge rst_n)if(!rst_n)begin eb_a<=0;eb_b<=0;end else begin eb_a<=epoch_begin;eb_b<=epoch_begin;end
+  wire eb_busy=active||word_v||fault||ep_q>=8192;
+  wire bad_issue=!active||ik_q>=3||ino_q!=HEADS||ini_q!=(ik_q==0?128:64)||issued[ik_q];
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin word_v<=0;word_tag<=0;fault<=0;fault_code<=0;end
+   else if(ENABLE!=0)begin
+    if(eb_q)begin
+     if(eb_busy)begin fault<=1;fault_code[4]<=1;end
+    end else begin
+     if(iv_q&&bad_issue)begin fault<=1;fault_code[5]<=1;end
+     if(|err)begin fault<=1;fault_code<=fault_code|err;end
+     if(!fault&&!(|err)&&choose&&(!word_v||take))begin
+      word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
+     end else if(take||fault||(|err))word_v<=0;
+    end
+   end
+  end
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)pos<=0;
+   else if(ENABLE!=0&&eb_a&&!eb_busy)pos<=ep_q[12:0];
+  end
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin active<=0;issued<=0;sent<=0;end
+   else if(ENABLE!=0)begin
+    if(eb_b)begin
+     if(!eb_busy)begin active<=1;issued<=0;sent<=0;end
+    end else begin
+     sent<=sent_n;
+     if(iv_q&&!bad_issue)issued[ik_q]<=1;
+     if(active&&(&sent)&&!word_v&&issued==3'b111)active<=0;
+    end
+   end
+  end
+ end endgenerate
  // R3: one registered one-hot word selector per output byte. Source index
  // copies are registered at the parent p_kvi edge; this is the old slot_index_q
  // edge, so every payload capture/hold edge remains unchanged.

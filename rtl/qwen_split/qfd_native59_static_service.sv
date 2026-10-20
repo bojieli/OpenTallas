@@ -30,16 +30,20 @@ module qfd_native59_static_service #(
  // R3e (QW-N59-6 10-20) opt-in same-edge publications (LOCAL32; LOCAL32 0 ignores them): begin_pub[k] == begin_slot,
  // request_pub[k] == request_slot, *_beat_pub == the matching beat, on every edge (parent / landing kept copies).
  input wire[12:0]begin_pub,input wire[6:0]request_pub,
- input wire[4:0]q_slot_beat_pub,result_slot_beat_pub,vm_commit_beat_pub
+ input wire[4:0]q_slot_beat_pub,result_slot_beat_pub,vm_commit_beat_pub,
+ // R3g: third copies (== the matching beat): kernel_q_beat capture, vm_write beat / word, result_seen check mux.
+ input wire[4:0]q_slot_beat_pub2,result_slot_beat_pub2,vm_commit_beat_pub2
 );
  // R3f: groups of <= 16 enable bits (a DFFE enable costs 2 mapped loads per bit).
  wire[12:0]bp=LOCAL32?begin_pub:{13{begin_slot}};
  wire[6:0]rp=LOCAL32?request_pub:{7{request_slot}};
  wire[4:0]qsb_d=LOCAL32?q_slot_beat_pub:q_slot_beat,rsb_d=LOCAL32?result_slot_beat_pub:result_slot_beat,
-          vcb_d=LOCAL32?vm_commit_beat_pub:vm_commit_beat;
+          vcb_d=LOCAL32?vm_commit_beat_pub:vm_commit_beat,
+          qsb2=LOCAL32?q_slot_beat_pub2:q_slot_beat,rsb2=LOCAL32?result_slot_beat_pub2:result_slot_beat,
+          vcb2=LOCAL32?vm_commit_beat_pub2:vm_commit_beat;
  // Result payload holds use independently registered same-edge publications.
  // Every bit is retained on the same inactive edges as the original service.
- wire[19:0]result_word=base+result_slot_beat;
+ wire[19:0]result_word=base+((LOCAL32!=0)?result_slot_beat_pub2:result_slot_beat);   // R3g: == base + result_slot_beat
  generate if(LOCAL32)begin:g_result_payload32
   for(genvar rg=0;rg<64;rg=rg+1)begin:g_data
    always @(posedge ck or negedge rst_n)
@@ -60,7 +64,7 @@ module qfd_native59_static_service #(
   end
   always @(posedge ck or negedge rst_n)
    if(!rst_n)vm_write_beat<=0;
-   else if(result_slot_pub[75])vm_write_beat<=result_slot_beat;
+   else if(result_slot_pub[75])vm_write_beat<=rsb2;
  end endgenerate
  // R3c (QW-CB16A0 10-20): Q capture holds use the parent's same-edge kept q_slot publications ([63:0] data bytes,
  // [71:64] tag bytes, [72] beat, [73]/[74] q_seen low/high, [75] count/checks); the kernel-request and VM-write valids
@@ -80,7 +84,7 @@ module qfd_native59_static_service #(
   end
   always @(posedge ck or negedge rst_n)
    if(!rst_n)kernel_q_beat<=0;
-   else if(q_slot_pub[72])kernel_q_beat<=q_slot_beat;
+   else if(q_slot_pub[72])kernel_q_beat<=qsb2;
   for(genvar c=0;c<24;c=c+1)begin:g_kreq
    (* keep = "true" *) reg q;
    always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=rp[6]&&!fault&&!source_fault;   // R3e: == kreq_d
@@ -160,7 +164,7 @@ module qfd_native59_static_service #(
     result_seen[rsb_d]<=1;
    end
    if(vm_commit_v)begin
-    if(!active||vm_commit_tag!=tag||!result_seen[vm_commit_beat]||committed[vm_commit_beat])fault<=1;
+    if(!active||vm_commit_tag!=tag||!result_seen[vcb2]||committed[vm_commit_beat])fault<=1;
     committed[vcb_d]<=1;commit_count<=commit_count+1'b1;
    end
    if(kernel_done)begin
