@@ -22,7 +22,7 @@ def _bound():
 
 
 def test_same_length_as_unbounded_on_a_detour_grid():
-    g = Grid(3000., 3000., [(500., 0., 520., 2500.)])   # a wall with a gap at the top: path must detour
+    g = Grid(3000., 3000., [(500., 0., 520., 600.)])   # a wall with a gap above: path must detour (190 cells, cap 244)
     a, b = g.cell(100., 100.), g.cell(1000., 100.)
     ref = g._route(a, b, 5.)
     got = bounded_route(g, a, b, 5.)
