@@ -99,6 +99,40 @@ class AutoMerge(unittest.TestCase):
         self.assertIn("other", run("show", "origin/main:rtl/a.sv", cwd=self.repo) if self.main_tree() else "")
         self.assertIn("CONFLICT", (self.t / "PENDING.md").read_text())
 
+    def test_gate_rule_refusal_stops_after_one_push_and_names_commit(self):
+        real_sh = cl.sh
+        pushes = []
+
+        def reject_guard(argv, **kw):
+            if "push" in argv:
+                pushes.append(argv)
+                return subprocess.CompletedProcess(argv, 1, "", "gate_rule_guard: REFUSE abc123456 tools/ref_tile/x.py (untagged)\n"
+                    "root_pre_push: push to main REFUSED by gate_rule_guard\n")
+            return real_sh(argv, **kw)
+
+        with patch.object(cl, "sh", side_effect=reject_guard):
+            status = cl.auto_merge_closure(self.job(), {"branch_commit": self.record}, ["results/closure_loop/job1"])
+        self.assertEqual(len(pushes), 1)
+        self.assertTrue(status.startswith("GATE_RULE_GUARD job1 abc123456"), status)
+        self.assertIn(status, (self.t / "PENDING.md").read_text())
+        self.assertNotIn("results/closure_loop/job1/verdict.json", self.main_tree())
+        self.assertTrue((self.work / "results/closure_loop/job1/verdict.json").exists())
+
+    def test_transport_rejection_retains_four_race_attempts(self):
+        real_sh = cl.sh
+        pushes = []
+
+        def reject_race(argv, **kw):
+            if "push" in argv:
+                pushes.append(argv)
+                return subprocess.CompletedProcess(argv, 1, "", "remote: non-fast-forward\n")
+            return real_sh(argv, **kw)
+
+        with patch.object(cl, "sh", side_effect=reject_race):
+            status = cl.auto_merge_closure(self.job(), {"branch_commit": self.record}, ["results/closure_loop/job1"])
+        self.assertEqual(len(pushes), 4)
+        self.assertTrue(status.startswith("AUTO-MERGE PUSH-RACE"), status)
+
     def test_policy_hold_prefix(self):
         (self.state / "main_publish_owner.json").write_text(json.dumps({"auto_merge_guarded": True, "auto_merge_hold_prefixes": ["a"]}))
         self.assertIn("held by policy prefix", cl.auto_merge_closure(self.job(), {"branch_commit": self.record}, ["results/closure_loop/job1"]))

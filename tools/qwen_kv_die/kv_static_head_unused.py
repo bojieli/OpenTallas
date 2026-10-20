@@ -19,6 +19,25 @@ SOURCES={
  'tools/qwen_kv_die/head_st_rtl.py':'acfe66bc661401c27cb93443633c5cb4a9012eb2face4f400ff7c8fe1d4b1994',
 }
 PARENTS={'qkd_rhead':'ot_qkh_head_native_r4_s','qkd_rhead_ft':'ot_qkh_head_native_r4_ft_s'}
+# KV-GEN9 10-19: the expanded parameter ledger (main 00170ccbe) records EVERY expanded leaf's evaluated parameters, so a
+# lane8 child carries a row {ADD_LAT, LTW}.  The role stays exact only when that row is the module's own defaults (no
+# override): any other value, an unknown name or an unparsable literal still refuses.
+LANE8_RTL=('rtl/hdc/nearhbm/ot_qkh_subtiles.sv','22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8')
+
+
+def lane8_default_row(row,root=ROOT):
+    if not row:return True
+    import kv_expand_parameters as XP
+    src=(root/LANE8_RTL[0]).read_bytes()
+    if hashlib.sha256(src).hexdigest()!=LANE8_RTL[1]:
+        raise ValueError('static lane8 parameter source changed; re-prove default-only ledger rows: '+LANE8_RTL[0])
+    defaults=XP.integer_defaults(src.decode(),'ot_qkh_lane8')
+    for name,lit in row.items():
+        m=re.fullmatch(r"32'sb([01]{32})",lit) if isinstance(lit,str) else None
+        if name not in defaults or not m:return False
+        v=int(m[1],2);v=v-(1<<32) if m[1][0]=='1' else v
+        if v!=defaults[name]:return False
+    return True
 
 
 def derive(run,die,root=ROOT,existing=None):
@@ -50,7 +69,7 @@ def derive(run,die,root=ROOT,existing=None):
             if inst not in cells:raise ValueError('static lane child missing '+inst)
             master,prm,cm=cells[inst]
             expected=[(net,k)for k in reversed(range(64*lane,64*(lane+1)))]
-            if master!='ot_qkh_lane8' or prm or params.get(inst) or P.expr_bits(cm.get('nb',''),nets)!=expected:
+            if master!='ot_qkh_lane8' or prm or not lane8_default_row(params.get(inst),root) or P.expr_bits(cm.get('nb',''),nets)!=expected:
                 raise ValueError('static child nb identity/role changed '+inst)
             targets[inst]=master
     if target_nets & (top_inputs | top_outputs):raise ValueError('node-beat net is exposed at a top face')
