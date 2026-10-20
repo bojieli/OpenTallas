@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_redstn2_ef_lp",
+ "enable": false,
+ "reason": "every parent input lands on a child pin register (PIN_IN=1) or a landing ring in its region; every output is a child flop Q; a kit flop stage would add an edge the landed record does not price"
+}

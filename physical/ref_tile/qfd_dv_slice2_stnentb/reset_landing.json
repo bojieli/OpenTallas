@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_dv_redstn2_ef_lp",
+ "enable": false,
+ "reason": "rst_n feeds the lp reset runs (u_lpr_root + u_lpr_r<k>, 1 + 3 stages on the region roots, priced: reset release +4); each child lands its rst_n in 2 more stages on its own root"
+}

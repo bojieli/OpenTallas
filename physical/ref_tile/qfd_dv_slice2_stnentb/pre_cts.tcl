@@ -1,0 +1,13 @@
+# ref_tile PRE_CTS: independent related leaf CTS roots; measure each domain boundary after CTS
+set ::ot_ce_cts_roots {ck_r0 ck_r1 ck_r2 ck_r3 ck_r4 ck_r5 ck_r6 ck_r7}
+set ::ot_ce_landed_cluster 1
+set ::ot_ce_counts [dict create {qfd_dv_redstn2_region} 8]
+source /src/physical/common_flow/clock_entries.tcl
+source /src/physical/qwen_die_masters/repair_budget.tcl
+rename clock_tree_synthesis ::ot_ref_cts_boundary_orig
+proc clock_tree_synthesis {args} {
+  ::ot_ref_cts_boundary_orig {*}$args
+  estimate_parasitics -placement
+  set ::ot_ref_pre_cts 0
+  source /src/physical/ref_tile/qfd_dv_slice2_stnentb/clock_entry.sdc
+}

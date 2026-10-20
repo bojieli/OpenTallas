@@ -1,0 +1,586 @@
+{
+ "name": "qfd_dv_slice2_stnentb",
+ "top": "qfd_dv_redstn2_ef_lp",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/qwen_dv/lp/qfd_dv_redstn2_ef_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_r0",
+ "clock_ports": [
+  "ck_r0",
+  "ck_r1",
+  "ck_r2",
+  "ck_r3",
+  "ck_r4",
+  "ck_r5",
+  "ck_r6",
+  "ck_r7"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r0"
+   ],
+   "inputs": [
+    "rs_s_lo_r0",
+    "rs_s_hi_r0",
+    "rs_n_lo_r0",
+    "rs_n_hi_r0",
+    "nb_d_r0",
+    "bt_q_r0",
+    "cfg",
+    "rs_s_c",
+    "rs_n_c",
+    "nb_c",
+    "rst_n"
+   ],
+   "outputs": [
+    "nb_od_r0",
+    "r_d_r0",
+    "nb_oc",
+    "bt_re",
+    "bt_word",
+    "r_v",
+    "r_idx",
+    "r_last",
+    "fault"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r1"
+   ],
+   "inputs": [
+    "rs_s_lo_r1",
+    "rs_s_hi_r1",
+    "rs_n_lo_r1",
+    "rs_n_hi_r1",
+    "nb_d_r1",
+    "bt_q_r1"
+   ],
+   "outputs": [
+    "nb_od_r1",
+    "r_d_r1"
+   ]
+  },
+  "r2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r2"
+   ],
+   "inputs": [
+    "rs_s_lo_r2",
+    "rs_s_hi_r2",
+    "rs_n_lo_r2",
+    "rs_n_hi_r2",
+    "nb_d_r2",
+    "bt_q_r2"
+   ],
+   "outputs": [
+    "nb_od_r2",
+    "r_d_r2"
+   ]
+  },
+  "r3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r3"
+   ],
+   "inputs": [
+    "rs_s_lo_r3",
+    "rs_s_hi_r3",
+    "rs_n_lo_r3",
+    "rs_n_hi_r3",
+    "nb_d_r3",
+    "bt_q_r3"
+   ],
+   "outputs": [
+    "nb_od_r3",
+    "r_d_r3"
+   ]
+  },
+  "r4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r4"
+   ],
+   "inputs": [
+    "rs_s_lo_r4",
+    "rs_s_hi_r4",
+    "rs_n_lo_r4",
+    "rs_n_hi_r4",
+    "nb_d_r4",
+    "bt_q_r4"
+   ],
+   "outputs": [
+    "nb_od_r4",
+    "r_d_r4"
+   ]
+  },
+  "r5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r5"
+   ],
+   "inputs": [
+    "rs_s_lo_r5",
+    "rs_s_hi_r5",
+    "rs_n_lo_r5",
+    "rs_n_hi_r5",
+    "nb_d_r5",
+    "bt_q_r5"
+   ],
+   "outputs": [
+    "nb_od_r5",
+    "r_d_r5"
+   ]
+  },
+  "r6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r6"
+   ],
+   "inputs": [
+    "rs_s_lo_r6",
+    "rs_s_hi_r6",
+    "rs_n_lo_r6",
+    "rs_n_hi_r6",
+    "nb_d_r6",
+    "bt_q_r6"
+   ],
+   "outputs": [
+    "nb_od_r6",
+    "r_d_r6"
+   ]
+  },
+  "r7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_r7"
+   ],
+   "inputs": [
+    "rs_s_lo_r7",
+    "rs_s_hi_r7",
+    "rs_n_lo_r7",
+    "rs_n_hi_r7",
+    "nb_d_r7",
+    "bt_q_r7"
+   ],
+   "outputs": [
+    "nb_od_r7",
+    "r_d_r7"
+   ]
+  }
+ },
+ "landed_record": "results/arch/qw_slice4_1019/lp/qfd_dv_redstn2_ef_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 885.6,
+  "h": 540.0,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "count": 1,
+   "inst": "u_r0",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "count": 1,
+   "inst": "u_r1",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MX",
+   "exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "count": 1,
+   "inst": "u_r2",
+   "at": [
+    259.2,
+    345.6
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "count": 1,
+   "inst": "u_r3",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "MX",
+   "exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "count": 1,
+   "inst": "u_r4",
+   "at": [
+    475.2,
+    345.6
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "count": 1,
+   "inst": "u_r5",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "MX",
+   "exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "count": 1,
+   "inst": "u_r6",
+   "at": [
+    691.2,
+    345.6
+   ],
+   "orient": "MY",
+   "exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_dv_slice2_stnrgc/views/qfd_dv_redstn2_region",
+   "count": 1,
+   "inst": "u_r7",
+   "at": [
+    691.2,
+    43.2
+   ],
+   "orient": "MX",
+   "exact": true
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "cfg",
+   "ck_r0",
+   "ck_r2",
+   "ck_r4",
+   "ck_r6",
+   "fault",
+   "nb_c",
+   "nb_d_r0",
+   "nb_d_r2",
+   "nb_d_r4",
+   "nb_d_r6",
+   "nb_oc",
+   "nb_od_r0",
+   "nb_od_r2",
+   "nb_od_r4",
+   "nb_od_r6",
+   "rs_n_c",
+   "rs_n_hi_r0",
+   "rs_n_hi_r2",
+   "rs_n_hi_r4",
+   "rs_n_hi_r6",
+   "rs_n_lo_r0",
+   "rs_n_lo_r2",
+   "rs_n_lo_r4",
+   "rs_n_lo_r6",
+   "rs_s_c",
+   "rs_s_hi_r0",
+   "rs_s_hi_r2",
+   "rs_s_hi_r4",
+   "rs_s_hi_r6",
+   "rs_s_lo_r0",
+   "rs_s_lo_r2",
+   "rs_s_lo_r4",
+   "rs_s_lo_r6",
+   "rst_n"
+  ],
+  "S": [
+   "ck_r1",
+   "ck_r3",
+   "ck_r5",
+   "ck_r7",
+   "nb_d_r1",
+   "nb_d_r3",
+   "nb_d_r5",
+   "nb_d_r7",
+   "nb_od_r1",
+   "nb_od_r3",
+   "nb_od_r5",
+   "nb_od_r7",
+   "rs_n_hi_r1",
+   "rs_n_hi_r3",
+   "rs_n_hi_r5",
+   "rs_n_hi_r7",
+   "rs_n_lo_r1",
+   "rs_n_lo_r3",
+   "rs_n_lo_r5",
+   "rs_n_lo_r7",
+   "rs_s_hi_r1",
+   "rs_s_hi_r3",
+   "rs_s_hi_r5",
+   "rs_s_hi_r7",
+   "rs_s_lo_r1",
+   "rs_s_lo_r3",
+   "rs_s_lo_r5",
+   "rs_s_lo_r7"
+  ],
+  "W": [
+   "bt_q_r0",
+   "bt_q_r1",
+   "bt_q_r2",
+   "bt_q_r3",
+   "bt_re",
+   "bt_word",
+   "r_d_r0",
+   "r_d_r1",
+   "r_d_r2",
+   "r_d_r3",
+   "r_idx",
+   "r_last",
+   "r_v"
+  ],
+  "E": [
+   "bt_q_r4",
+   "bt_q_r5",
+   "bt_q_r6",
+   "bt_q_r7",
+   "r_d_r4",
+   "r_d_r5",
+   "r_d_r6",
+   "r_d_r7"
+  ]
+ },
+ "io_tcl": "tools/ref_tile/specs_qw_slice4/qfd_dv_slice2_stnentb_pins.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4 M6",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every parent input lands on a child pin register (PIN_IN=1) or a landing ring in its region; every output is a child flop Q; a kit flop stage would add an edge the landed record does not price"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "rst_n feeds the lp reset runs (u_lpr_root + u_lpr_r<k>, 1 + 3 stages on the region roots, priced: reset release +4); each child lands its rst_n in 2 more stages on its own root"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: every parent input lands on a child pin register (PIN_IN=1, in the child's own clock) or a landing ring (shared cfg / rs_s_c / rs_n_c / nb_c ring in r0, one read half per region); every output is a child flop Q; rst_n -> lp reset runs (u_lpr_*) -> each child's own 2-stage face landing",
+  "2_reach": "PASS: the only plain crossings are the 1-bit reset runs; ring -> read hops are E=2 multicycle landings (<= ~700 um); fault-ring hops are neighbour landings (<= ~260 um); parent pins <= ~115 um from their child pins",
+  "3_fanout": "PASS: per region one read half per landed net; reset run per region feeds <= ~8 landing halves + 1 child pin",
+  "4_depth": "PASS: landing read = 4:1 registered slot select; no combinational parent path (wires-only lp parent)",
+  "5_storage": "PASS: ring banks are D=4 fixed-latency landings; station storage is SRAM inside the closed children (5 each)",
+  "6_floorplan": "PASS: 8 children on the 43.2 lattice (pitch 216 x 302.4), 64.8-um gaps, 151.2-um channel; outline 885.6 x 540.0 (aspect 1.64); fill ~38% children + glue; parent pins <= 3.7/um per segment",
+  "7_clock": "PASS: 8 regional roots ck_r0..7, one per child, entry beside the child's ck pin; children are closed with their own trees (TT/FF insertion 277.5/231.9, spread 55/54); landed crossings between every region pair; io_hold_margin 0.03",
+  "8_schedule": "PASS: static; compiler record: regions 1..7 +3 edges vs region 0 (ports and children), reset release +4, fault ring status lag <= 6 per hop (loose sticky status, never a scheduled value)"
+ },
+ "pin_density_per_um": {
+  "W:('chan', 0)": 2.85,
+  "N:('side', 0, 'E')": 3.66,
+  "N:('side', 0, 'W')": 1.63,
+  "W:('chan', 1)": 2.86,
+  "S:('side', 1, 'E')": 3.15,
+  "S:('side', 1, 'W')": 3.13,
+  "W:('chan', 2)": 2.86,
+  "N:('side', 2, 'W')": 3.72,
+  "N:('side', 2, 'E')": 3.11,
+  "W:('chan', 3)": 2.86,
+  "S:('side', 3, 'E')": 3.15,
+  "S:('side', 3, 'W')": 3.11,
+  "E:('chan', 4)": 2.72,
+  "N:('side', 4, 'W')": 3.15,
+  "N:('side', 4, 'E')": 3.11,
+  "E:('chan', 5)": 2.72,
+  "S:('side', 5, 'E')": 3.15,
+  "S:('side', 5, 'W')": 3.11,
+  "E:('chan', 6)": 2.72,
+  "N:('side', 6, 'W')": 3.15,
+  "N:('side', 6, 'E')": 3.13,
+  "E:('chan', 7)": 2.72,
+  "S:('side', 7, 'E')": 1.55,
+  "S:('side', 7, 'W')": 3.11
+ },
+ "why_floorplan": "2 x 4 array matching the fault-ring order (0,2,4,6 top E->W, 7,5,3,1 bottom W->E): every ring hop is a neighbour; children face their N pins outward, S faces into the centre channel (bt_q / r_d -> W / E edge), W / E faces into 64.8-um gaps (rs_s / cfg / nb_od -> N / S edge); one clock entry per child",
+ "landed": {
+  "record": "results/arch/qw_slice4_1019/lp/qfd_dv_redstn2_ef_lp_record.json",
+  "landings": 44,
+  "landing_flops": 1129,
+  "reset_depth": 4,
+  "lp_spec": "tools/landed_parent/specs/qfd_dv_stn_ent.json"
+ },
+ "structural_change": "QW-SLICE4 10-19 Q.STA.SLICE.1: new hierarchical station cluster (replaces the flat station inside the failed slice2_e / slice2_wh one-root cores): 8 closed region tiles, 8 region clocks, lp landings. Variant b: 151.2-um channel, landing halves fenced beside their child (ring beside source, read beside reader)",
+ "job": {
+  "owner": "Claude:QW-SLICE4",
+  "branch": "claude/qw-slice4-1019",
+  "tag": "g1b",
+  "purpose": "QW-SLICE4: slice2 station entries cluster (8 x closed qfd_dv_redstn2_region)",
+  "views_to": "physical/ref_tile/qfd_dv_slice2_stnentb/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_slice2_stnentb",
+  "extra_paths": [
+   "rtl/qwen_dv",
+   "rtl/hdc",
+   "rtl/common/landed_parent",
+   "rtl/lib",
+   "rtl/test/qwen_dv/safe_storage",
+   "tools/landed_parent",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "physical/ref_tile/qfd_dv_slice2_stnrgc/views",
+   "results/arch/qw_slice4_1019"
+  ],
+  "benches": [
+   {
+    "name": "lp_lockstep_mut0",
+    "cmd": "MUTS=0 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_EXTRA=--timing SIM=verilator LP_ROOT=. bash rtl/qwen_dv/lp/qfd_dv_redstn2_ef_lp_bench.sh {RUN}/bench/lp0",
+    "expect": "pass",
+    "pass_regex": "MUT 0: LP_LOCKSTEP PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_mut1_bypass",
+    "cmd": "MUTS=1 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_EXTRA=--timing SIM=verilator LP_ROOT=. bash rtl/qwen_dv/lp/qfd_dv_redstn2_ef_lp_bench.sh {RUN}/bench/lp1",
+    "expect": "fail",
+    "fail_regex": "MUT 1: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice4_1019/bench_v5050/bench_summary.log"
+   },
+   {
+    "name": "lp_mut2_read_k",
+    "cmd": "MUTS=2 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_EXTRA=--timing SIM=verilator LP_ROOT=. bash rtl/qwen_dv/lp/qfd_dv_redstn2_ef_lp_bench.sh {RUN}/bench/lp2",
+    "expect": "fail",
+    "fail_regex": "MUT 2: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice4_1019/bench_v5050/bench_summary.log"
+   },
+   {
+    "name": "lp_mut4_late_reset",
+    "cmd": "MUTS=4 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_EXTRA=--timing SIM=verilator LP_ROOT=. bash rtl/qwen_dv/lp/qfd_dv_redstn2_ef_lp_bench.sh {RUN}/bench/lp4",
+    "expect": "fail",
+    "fail_regex": "MUT 4: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice4_1019/bench_v5050/bench_summary.log"
+   },
+   {
+    "name": "ef_vs_monolith",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/ef 0 0 +define+STN_EF",
+    "expect": "pass",
+    "pass_regex": "STATION_REGIONAL_EQ PASS PIN1",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ef_rmut1_btq_swap",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/efr1 0 1 +define+STN_EF",
+    "expect": "fail",
+    "fail_regex": "REGIONAL_STATION_MISMATCH",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice4_1019/bench_v5050/bench_summary.log"
+   },
+   {
+    "name": "ef_rmut2_ring_cut",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/efr2 0 2 +define+STN_EF",
+    "expect": "fail",
+    "fail_regex": "REGIONAL_FAULT_LATE|PHASE1_INJECTED_FAULT_MISSING",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice4_1019/bench_v5050/bench_summary.log"
+   }
+  ]
+ },
+ "pin_hook_before_flops": [
+  "tools/ref_tile/specs_qw_slice4/qfd_dv_slice2_stnentb_fences.tcl"
+ ]
+}
