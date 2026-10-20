@@ -131,9 +131,10 @@ module qfd_tt_ctlm_dv_gi #(
     wire        l_start = l_v && !d_start;            // the face start wins a collision
     wire        op_coll = l_v && d_start;
     wire [2:0]  ctx_mask = c_ctx[110:108];
+    wire [3:0]  ctx_mask4 = {1'b0, ctx_mask};   // CTLM7: index 3 (user 0, guarded) reads a defined 0, not X
     wire        ctx_ok = c_ctx[127:112] == 16'h4D43 && !c_ctx[111] && (({1'b0, ctx_mask} >> (NU - 1)) == 4'd0);
-    wire x_hit = x_ld && (c_ctxld_cal || (l_v && !d_start && op_user != 2'd0 && ctx_mask[op_user - 2'd1]) ||
-                                  (r_fill && ss_tu != 2'd0 && ctx_mask[ss_tu - 2'd1]));
+    wire x_hit = x_ld && (c_ctxld_cal || (l_v && !d_start && op_user != 2'd0 && ctx_mask4[op_user - 2'd1]) ||
+                                  (r_fill && ss_tu != 2'd0 && ctx_mask4[ss_tu - 2'd1]));
     wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok && !x_hit;
     wire        ctx_bad = (OPS != 0) && c_ctxld && (!ctx_ok || x_hit);
     wire u0_init_start = (INIT_U0 != 0) && init_u0_q && d_start && d_stage == 6'd0 && s_user == {UB{1'b0}};
@@ -336,7 +337,7 @@ module qfd_tt_ctlm_dv_go #(
     ot_hdc_delay #(.W(16), .D(1), .RESET(1)) u_xpf_me_face (.clk(ck), .rst_n(monitor_rs), .d(me_observe), .q(monitor_me));
     wire xpf_me_event = monitor_me[15];
     wire [11:0] xpf_me_pc = monitor_me[11:0];
-    ot_qfd_xpf_static_schedule #(.N(4), .ARM_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_xpf_schedule (.clk(ck),
+    ot_qfd_xpf_static_schedule_p #(.N(4), .ARM_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_xpf_schedule (.clk(ck),
         .rst_n(monitor_rs), .cfg_clear(cfg_clear), .cfg_v(cfg_v), .cfg_seal(cfg_seal),
         .cfg_index(cfg_index[1:0]), .cfg_data(cfg_data), .cfg_count(cfg_count[2:0]),
         .start(dvm_stage_start), .stop(xpf_active && xpf_cycle == stop_cycle), .stage(xpf_stage),

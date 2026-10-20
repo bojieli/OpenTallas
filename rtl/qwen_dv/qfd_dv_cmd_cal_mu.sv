@@ -154,8 +154,8 @@ module qfd_dv_cmd_cal_mu #(
     output wire [NU-1:0] running_u,
     output reg           done,
     output reg  [UB-1:0] done_user,
-    output reg           fault,
-    output reg  [5:0]    fault_code,
+    output wire          fault,
+    output wire [5:0]    fault_code,
     output wire [127:0]  ctx_dw,                    // {DW6, DW5} of the sealed image (CTX_DW)
     output wire          ctx_load                   // one edge: the image (with its context record) was sealed (CTX_DW)
 );
@@ -168,19 +168,50 @@ module qfd_dv_cmd_cal_mu #(
     wire [63:0] d0 = dwr[0];
     wire [9:0]  base = d0[25:16];
     wire [9:0]  nent = CALENDAR_ROM ? d0[9:0] : {1'b0, d0[8:0]};
-    reg         seal_bad;
+    // CTLM7: seal_bad was ~710 ps of record arithmetic in front of the fault chain.  Its
+    // register part is now computed from the EXACT next-state of dwr / meta_rows (dwr is
+    // written only by dw_v && dw_addr != 7, meta_rows only by pw_v at addr 0 / 1017) and
+    // registered (sb_r), so at the seal edge seal_bad = sb_r || dw_data != 0 -- bit-exact,
+    // 0 added edges.  a + b > n is evaluated as the carry of a + b + ~n (3:2 compressed).
+    wire        seal_bad;
+    reg         sb_r, sb_n;
     integer     s;
+    wire [63:0] dwr_n [0:6];
+    genvar gsb;
+    generate for (gsb = 0; gsb < 7; gsb = gsb + 1) begin : g_dwrn
+        assign dwr_n[gsb] = (dw_v && dw_addr == gsb) ? dw_data : dwr[gsb];
+    end endgenerate
+    wire [9:0]  meta_n = !pw_v ? meta_rows : (pw_addr == 10'd0) ? 10'd0 : (pw_addr == 10'd1017) ? pw_data[27:18] : meta_rows;
+    wire [63:0] d0_n = dwr_n[0];
+    wire [9:0]  base_n = d0_n[25:16];
+    wire [9:0]  nent_n = CALENDAR_ROM ? d0_n[9:0] : {1'b0, d0_n[8:0]};
+    reg  [18:0] csa_s, csa_c, csa_t;
     always @* begin
-        seal_bad = (CALENDAR_ROM ? (d0[63:32] != 32'h43414c52 || d0[31:10] != 22'd0) :
-                   (d0[63:32] != 32'h43414c44 || d0[31:26] != 6'd0 || d0[15:9] != 7'd0 || base[2:0] != 3'd0 ||
-                    {1'b0, base} + {nent, 1'b0} > 11'd976 || {4'd0, base} < {meta_rows, 4'd0})) ||
-                   nent == 10'd0 ||
-                   (CTX_DW == 0 && (dwr[5] != 64'd0 || dwr[6] != 64'd0)) || dw_data != 64'd0;
-        for (s = 1; s <= 4; s = s + 1)
-            if (dwr[s][63:32] != 32'd0 ||
-                (dwr[s][15:0] != 16'd0 && (dwr[s][17:16] != 2'd0 || {1'b0, dwr[s][31:16]} + {1'b0, dwr[s][15:0]} > {7'd0, nent})))
-                seal_bad = 1'b1;
+        sb_n = (CALENDAR_ROM ? (d0_n[63:32] != 32'h43414c52 || d0_n[31:10] != 22'd0) :
+               (d0_n[63:32] != 32'h43414c44 || d0_n[31:26] != 6'd0 || d0_n[15:9] != 7'd0 || base_n[2:0] != 3'd0 ||
+                {1'b0, base_n} + {nent_n, 1'b0} > 11'd976 || {4'd0, base_n} < {meta_n, 4'd0})) ||
+               nent_n == 10'd0 ||
+               (CTX_DW == 0 && (dwr_n[5] != 64'd0 || dwr_n[6] != 64'd0));
+        for (s = 1; s <= 4; s = s + 1) begin
+            // {1'b0,a} + {1'b0,b} > n  <=>  a + b + (2^18 - 1 - n) >= 2^18 (19-bit, 3:2 compressed)
+            csa_s = {3'd0, dwr_n[s][31:16]} ^ {3'd0, dwr_n[s][15:0]} ^ {1'b0, 8'hff, ~nent_n};
+            csa_c = {(({3'd0, dwr_n[s][31:16]} & {3'd0, dwr_n[s][15:0]}) | ({3'd0, dwr_n[s][31:16]} & {1'b0, 8'hff, ~nent_n}) |
+                      ({3'd0, dwr_n[s][15:0]} & {1'b0, 8'hff, ~nent_n})), 1'b0} & 19'h7ffff;
+            csa_t = csa_s + csa_c;
+            if (dwr_n[s][63:32] != 32'd0 ||
+                (dwr_n[s][15:0] != 16'd0 && (dwr_n[s][17:16] != 2'd0 || csa_t[18])))
+                sb_n = 1'b1;
+        end
     end
+    // CTLM7: the image end base + 2*nent (11 b, as the original expression) for the TLOAD
+    // overlap check, registered from the exact next-state of dwr[0] (0 at reset = f(0)).
+    reg  [10:0] bend_r; reg [7:0] bend_c;
+    wire [10:0] bend_n = {1'b0, base_n} + {nent_n, 1'b0};
+    wire [11:0] bend_up = {1'b0, bend_n} + 12'd15;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin sb_r <= 1'b1; bend_r <= 11'd0; bend_c <= 8'd0; end   // all-zero dwr: nent == 0 -> bad
+        else begin sb_r <= sb_n; bend_r <= bend_n; bend_c <= bend_up[11:4]; end
+    assign seal_bad = sb_r || dw_data != 64'd0;
     reg         pw_v2, pw_b2; reg [5:0] pw_row2; reg [7:0] pw_sl2; reg [63:0] pw_d2;
     reg         dw_v2; reg [2:0] dw_a2; reg [63:0] dw_d2;
     always @(posedge ck or negedge rst_n)
@@ -198,7 +229,7 @@ module qfd_dv_cmd_cal_mu #(
     wire [1:0]    m_ce = {pw_v2 && pw_b2, pw_v2 && !pw_b2};
     wire [1023:0] m_data = {2{{8{pw_d2}}}}, m_mask = {2{w_mask}};
     wire          ob_v, ob_full; wire [9:0] ob_addr; wire [63:0] ob_data;
-    qkd_program_pw_observer u_obs (.macro_ce(m_ce), .macro_row({pw_row2, pw_row2}), .macro_data(m_data),
+    qkd_program_pw_observer_p u_obs (.macro_ce(m_ce), .macro_row({pw_row2, pw_row2}), .macro_data(m_data),
         .macro_mask(m_mask), .consumed_v(ob_v), .consumed_addr(ob_addr), .consumed_data(ob_data), .full_word(ob_full));
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin program_obs <= 76'd0; descriptor_obs <= 69'd0; end
@@ -209,7 +240,15 @@ module qfd_dv_cmd_cal_mu #(
 
     // ================================================================ per-playhead state
     reg  [NU-1:0] run_q;
-    reg  [9:0]    f_idx [0:NU-1], f_rem [0:NU-1], i_rem [0:NU-1];
+    reg  [9:0]    f_rem [0:NU-1], i_rem [0:NU-1];
+    // CTLM7: f_idx split into its go-only low bits and the +4 stride high bits, so no
+    // next-state mux has an optimizer don't-care (literal-X) arm on f_idx[1:0]
+    reg  [1:0]    f_lo [0:NU-1]; reg [7:0] f_hi [0:NU-1];
+    wire [9:0]    f_idx [0:NU-1];
+    genvar gfi;
+    generate for (gfi = 0; gfi < NU; gfi = gfi + 1) begin : g_fidx
+        assign f_idx[gfi] = {f_hi[gfi], f_lo[gfi]};
+    end endgenerate
     reg  [3:0]    fifo_n [0:NU-1], infl [0:NU-1];
     reg  [NU-1:0] wh;                               // write half: a push's entry j lands in slot {wh, j}
     reg  [7:0]    rp_oh [0:NU-1];                   // one-hot read pointer
@@ -295,9 +334,10 @@ module qfd_dv_cmd_cal_mu #(
     generate for (g = 0; g < NU; g = g + 1) begin : g_fifo
         reg [2:0] rp_bin;
         integer b;
+        // CTLM7: OR encoder (rp_oh is one-hot by construction: reset / start 8'd1, rotate on pop),
+        // equal to the last-wins loop on every reachable value; was an 8-deep priority chain
         always @* begin
-            rp_bin = 3'd0;
-            for (b = 0; b < 8; b = b + 1) if (rp_oh[g][b]) rp_bin = b[2:0];
+            rp_bin = {|(rp_oh[g] & 8'hf0), |(rp_oh[g] & 8'hcc), |(rp_oh[g] & 8'haa)};
         end
         assign fq_next[g] = rp_bin + ((MUT == 33) ? 3'd0 : 3'd1);
         assign fq_ahead[g] = rp_bin + ((fire_q[g] && !frz_u[g] && !go_u[g]) ? 3'd2 : 3'd1);
@@ -309,7 +349,7 @@ module qfd_dv_cmd_cal_mu #(
         // Distinct hierarchy-kept selector flops per32-bit data chunk and
         // per source; no selector register drives a full128/512-bit mux.
         wire do_pop = fire_q[g] && !frz_u[g] && !go_u[g];
-        wire do_clear = go_u[g] && !start_bad && g_cnt != 16'd0;
+        wire do_clear = go_u[g] && !start_bad && g_cnt_nz;
         genvar q;
         for (q = 0; q < 4; q = q + 1) begin : g_sel
             wire [3:0] ws, rs, bs;
@@ -374,12 +414,24 @@ module qfd_dv_cmd_cal_mu #(
     wire [1:0] sseg = (stage == 6'd0) ? 2'd0 : (stage == LAST_STAGE[5:0]) ? 2'd2 : 2'd1;
     wire       go = start || boot_go;
     wire [1:0] gseg = boot_go ? 2'd3 : sseg;
-    wire [63:0] gd = dwr[{1'b0, gseg} + 3'd1];
+    // CTLM7: one-hot word select (gseg 0..3 -> dwr[1..4]), no index adder; the count-nonzero
+    // test is taken per word from the registered dwr so do_clear does not wait on the 64-b mux
+    wire [3:0]  gsel = {gseg == 2'd3, gseg == 2'd2, gseg == 2'd1, gseg == 2'd0};
+    wire [63:0] gd = ({64{gsel[0]}} & dwr[1]) | ({64{gsel[1]}} & dwr[2]) | ({64{gsel[2]}} & dwr[3]) | ({64{gsel[3]}} & dwr[4]);
+    wire [3:0]  dnz = {dwr[4][15:0] != 16'd0, dwr[3][15:0] != 16'd0, dwr[2][15:0] != 16'd0, dwr[1][15:0] != 16'd0};
     wire        g_rng = start && start_rng && !boot_go;
     wire [15:0] g_first = (g_rng && MUT != 21) ? {6'd0, start_first} : gd[31:16];
     wire [15:0] g_cnt = (g_rng && MUT != 21) ? {6'd0, start_cnt} : gd[15:0];
+    // CTLM7: {0,first} + {0,cnt} > {0,nent}  <=>  bit 11 of first + cnt + (2^11 - 1 - nent), 3:2 compressed
+    wire [11:0] rg_a = {2'd0, start_first}, rg_b = {2'd0, start_cnt}, rg_c = {2'b01, ~nent};
+    wire [11:0] rg_s = rg_a ^ rg_b ^ rg_c;
+    wire [11:0] rg_k = {((rg_a[10:0] & rg_b[10:0]) | (rg_a[10:0] & rg_c[10:0]) | (rg_b[10:0] & rg_c[10:0])), 1'b0};
+    wire [11:0] rg_t;
+    ot_ks_add #(.W(12)) u_rgks (.a(rg_s), .b(rg_k), .cin(1'b0), .s(rg_t));
+    wire        rng_gt = rg_t[11];
+    wire        g_cnt_nz = (g_rng && MUT != 21) ? (start_cnt != 10'd0) : |(gsel & dnz);   // == (g_cnt != 0)
     wire        rng_bad = g_rng && (start_cnt == 10'd0 || start_first[1:0] != 2'd0 ||
-                                    {1'b0, start_first} + {1'b0, start_cnt} > {1'b0, nent});
+                                    rng_gt);
     wire [UB-1:0] go_user = (NU > 1 && !boot_go) ? start_user : {UB{1'b0}};
     // a start reaches only its own playhead (MUT 15: every playhead, the single calendar's gating)
     reg  [NU-1:0] go_u, frz_u;
@@ -405,6 +457,18 @@ module qfd_dv_cmd_cal_mu #(
     reg  [TW-1:0]  nh_t [0:NU-1];
     reg  [7:0]     rpa_oh [0:NU-1];
     reg  [TW-1:0]  tdif, ht_m;
+    reg  [TW-1:0]  dq_x, dq_s; reg [TW:0] dq_c;   // CTLM7 dq_n compressor
+    reg  [TW-1:0]  dq_sa [0:NU-1], dq_ca [0:NU-1]; wire [TW-1:0] dq_ks [0:NU-1];
+    wire [4:0]     occ [0:NU-1];
+    wire [3:0]     infl_g [0:NU-1], infl_ng [0:NU-1];
+    genvar gks;
+    generate for (gks = 0; gks < NU; gks = gks + 1) begin : g_dqks
+        ot_ks_add #(.W(TW)) u_dqks (.a(dq_sa[gks]), .b(dq_ca[gks]), .cin(1'b0), .s(dq_ks[gks]));
+        ot_ks_add #(.W(5)) u_occ (.a({1'b0, fifo_n[gks]}), .b({1'b0, infl[gks]}), .cin(1'b0), .s(occ[gks]));
+        wire [3:0] rdx = rd_v[gks] ? {1'b0, rd_n[gks]} : 4'd0;
+        assign infl_ng[gks] = infl[gks] - rdx;
+        assign infl_g[gks] = infl[gks] + {1'b0, f_n[gks]} - rdx;
+    end endgenerate
     reg  [115:0]   csel;
     reg  [11:0]    dsel, dd;
     reg  [3:0]     fn_ap;
@@ -414,7 +478,8 @@ module qfd_dv_cmd_cal_mu #(
         for (u = 0; u < NU; u = u + 1) begin
             waddr[u] = base + {f_idx[u][8:0], 1'b0};
             f_n[u] = (f_rem[u] >= 10'd4) ? 3'd4 : f_rem[u][2:0];
-            can_read[u] = run_q[u] && f_rem[u] != 10'd0 && ({1'b0, fifo_n[u]} + {1'b0, infl[u]} + 5'd4 <= 5'd8);
+            // CTLM7: fifo_n + infl + 4 <= 8  <=>  fifo_n + infl <= 4 (5-bit, log-depth sum occ)
+            can_read[u] = run_q[u] && f_rem[u] != 10'd0 && occ[u][4:3] == 2'd0 && (!occ[u][2] || occ[u][1:0] == 2'd0);
             // lowest-index playhead that is not being (re)started this edge takes the read port (none on a TLOAD
             // issue edge: the block read owns the next edge's port)
             gnt[u] = can_read[u] && !frz_u[u] && !any_gnt && !tl_fire;
@@ -447,7 +512,12 @@ module qfd_dv_cmd_cal_mu #(
             nh_t[u] = ht_q[u] + {{(TW-12){1'b0}}, dd};
             fire_n[u] = run_n[u] && nh_v[u] && tdif == {{(TW-12){1'b0}}, dd};
             // FIREDQ next value on a non-frozen edge: tcount moves by run_q, ht_q by dd when nh_v
-            dq_n[u] = dq[u] + {{(TW-1){1'b0}}, run_q[u]} - (nh_v[u] ? {{(TW-12){1'b0}}, dd} : {TW{1'b0}});
+            // CTLM7: dq + run - x (mod 2^TW) = dq + run + ~x + 1: one 3:2 compressor, the +1 in the free carry LSB
+            dq_x = nh_v[u] ? {{(TW-12){1'b0}}, dd} : {TW{1'b0}};
+            dq_s = dq[u] ^ {{(TW-1){1'b0}}, run_q[u]} ^ ~dq_x;
+            dq_c = {((dq[u] & {{(TW-1){1'b0}}, run_q[u]}) | (dq[u] & ~dq_x) | ({{(TW-1){1'b0}}, run_q[u]} & ~dq_x)), 1'b1};
+            dq_sa[u] = dq_s; dq_ca[u] = dq_c[TW-1:0];
+            dq_n[u] = dq_ks[u];
         end
     end
     // CALENDAR_ROM: the granted playhead's 4-entry request goes to the two-ROM calendar (pin register inside); the
@@ -520,7 +590,8 @@ module qfd_dv_cmd_cal_mu #(
             tlk[v] = hu[115:112] == 4'hE && hu[3:1] == 3'd3;
             tlo = {1'b0, hu[9:4], 4'd0}; thi = tlo + 11'd16;
             tlb[v] = hu[12:10] == 3'd0 || hu[12] || hu[111:73] != 39'd0 || {4'd0, hu[9:4]} < meta_rows ||
-                     hu[9:4] >= 6'd61 || (tlo < {1'b0, base} + {nent, 1'b0} && thi > {1'b0, base}) || (CALENDAR_ROM != 0);
+                     hu[9:4] >= 6'd61 || ({2'd0, hu[9:4]} < bend_c && hu[9:4] >= base[9:4]) || (CALENDAR_ROM != 0);
+            // CTLM7: row*16 < bend <=> row < ceil(bend/16) (registered bend_c); row*16 + 16 > base <=> row >= base[9:4]
             // TABLE_ROM (LOCAL kind 4): explicit table-load request, checked from the registered head
             trk[v] = (TABLE_ROM != 0) && (CALENDAR_ROM != 0) && hu[115:112] == 4'hE && hu[3:1] == 3'd4;
             trb[v] = hu[111:10] != 102'd0 || hu[9:4] < 6'd1 || hu[9:4] > 6'd36;
@@ -537,11 +608,12 @@ module qfd_dv_cmd_cal_mu #(
             if (hgo[c]) begin if (i_any) i_col = 1'b1; i_any = 1'b1; end
         end
         ic = 116'd0; rc = 116'd0; r_bad = 1'b0; tl_bad = 1'b0; tl_go = 1'b0; tr_go = 1'b0; tr_bad = 1'b0; ru = {UB{1'b0}};
-        for (c = 0; c < NU; c = c + 1)
-            if (isel[c]) begin
-                ic = ic | hc_q[c]; rc = rc | rcu[c]; r_bad = r_bad | rbad[c]; tl_bad = tl_bad | tlb[c];
-                tl_go = tl_go | tlk[c]; tr_go = tr_go | trk[c]; tr_bad = tr_bad | trb[c]; ru = ru | ruu[c];
-            end
+        // CTLM7: AND-OR select (isel one-hot), no per-playhead mux chain
+        for (c = 0; c < NU; c = c + 1) begin
+            ic = ic | ({116{isel[c]}} & hc_q[c]); rc = rc | ({116{isel[c]}} & rcu[c]); r_bad = r_bad | (isel[c] & rbad[c]);
+            tl_bad = tl_bad | (isel[c] & tlb[c]); tl_go = tl_go | (isel[c] & tlk[c]); tr_go = tr_go | (isel[c] & trk[c]);
+            tr_bad = tr_bad | (isel[c] & trb[c]); ru = ru | ({UB{isel[c]}} & ruu[c]);
+        end
     end
     wire [2:0]    i_kind = ic[3:1];
     wire          i_loc = ic[115:112] == 4'hE;
@@ -556,15 +628,25 @@ module qfd_dv_cmd_cal_mu #(
     end endgenerate
 
     // ================================================================ sequential
-    integer k;
+    integer k, kk;
     reg     d_any, d_col; reg [UB-1:0] d_u;
+    reg [NU-1:0] dn;
+    reg f_g; reg [5:0] fc_g;   // CTLM7 fault = |registered site flags | f_g
+    reg [6:0] r4; reg [NU-1:0] r4g, r4h, r2, r0; reg [1:0] r3; reg r1, r5;
+    wire f_p = |{r4, r4g, r4h, r3, r2, r1, r0, r5};
+    wire [5:0] fc_p = {r5, |{r4, r4g, r4h}, |r3, |r2, r1, |r0};
+    reg [6:0] fx4; reg [NU-1:0] fx4g, fx4h, fx0, fx2; reg [1:0] fx3; reg fx1, fx5;   // CTLM7 fault-site flags
     always @(posedge ck or negedge rst_n) begin
+        // CTLM7: defined on the reset branch too (was a literal-X mux arm per d_u bit)
+        d_any = 1'b0; d_col = 1'b0; d_u = {UB{1'b0}};
+        dn = {NU{1'b0}};
+        fx4 = 7'd0; fx4g = {NU{1'b0}}; fx4h = {NU{1'b0}}; fx0 = {NU{1'b0}}; fx2 = {NU{1'b0}}; fx3 = 2'd0; fx1 = 1'b0; fx5 = 1'b0;
         if (!rst_n) begin
             loading <= 1'b0; sealed <= 1'b0; sealed_d <= 1'b0; pw_cnt <= 11'd0; dw_cnt <= 4'd0; meta_rows <= 10'd0;
             for (s = 0; s < 7; s = s + 1) dwr[s] <= 64'd0;
-            run_q <= {NU{1'b0}}; done <= 1'b0; done_user <= {UB{1'b0}}; fault <= 1'b0; fault_code <= 6'd0;
+            run_q <= {NU{1'b0}}; done <= 1'b0; done_user <= {UB{1'b0}}; f_g <= 1'b0; fc_g <= 6'd0; r4 <= 7'd0; r4g <= {NU{1'b0}}; r4h <= {NU{1'b0}}; r3 <= 2'd0; r2 <= {NU{1'b0}}; r1 <= 1'b0; r0 <= {NU{1'b0}}; r5 <= 1'b0;
             for (k = 0; k < NU; k = k + 1) begin
-                f_idx[k] <= 10'd0; f_rem[k] <= 10'd0; i_rem[k] <= 10'd0; fifo_n[k] <= 4'd0; infl[k] <= 4'd0;
+                f_lo[k] <= 2'd0; f_hi[k] <= 8'd0; f_rem[k] <= 10'd0; i_rem[k] <= 10'd0; fifo_n[k] <= 4'd0; infl[k] <= 4'd0;
                 rp_oh[k] <= 8'd1; tcount[k] <= {TW{1'b0}};
                 rrow_q[k] <= 6'd0; r_n_q[k] <= 3'd0; rd_n[k] <= 3'd0; r_n2_q[k] <= 3'd0;
                 hc_q[k] <= 116'd0; ht_q[k] <= {TW{1'b0}};
@@ -580,45 +662,45 @@ module qfd_dv_cmd_cal_mu #(
         end else begin
             sealed_d <= sealed;
             done <= 1'b0;
+            f_g <= fault; fc_g <= fault_code;   // hold (the pw addr-0 image start below overrides)
             d_any = 1'b0; d_col = 1'b0; d_u = {UB{1'b0}};
             // ---------------- image load (never while any segment plays)
             if (pw_v) begin
                 if (pw_addr == 10'd0) begin
-                    fault <= running; fault_code <= running ? 6'b010000 : 6'd0;
+                    f_g <= running; fc_g <= running ? 6'b010000 : 6'd0;
                     loading <= 1'b1; sealed <= 1'b0; pw_cnt <= 11'd1; dw_cnt <= 4'd0; meta_rows <= 10'd0;
                 end else begin
-                    if (running || !loading || {1'b0, pw_addr} != pw_cnt) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
+                    if (running || !loading || {1'b0, pw_addr} != pw_cnt) begin fx4[0] = 1'b1; end
                     pw_cnt <= pw_cnt + 11'd1;
                     if (pw_addr == 10'd1017) meta_rows <= pw_data[27:18];
                 end
             end
             if (dw_v) begin
                 if (running || !loading || pw_cnt != 11'd1024 || {1'b0, dw_addr} != dw_cnt || pw_v) begin
-                    fault <= 1'b1; fault_code[4] <= 1'b1;
+                    fx4[1] = 1'b1;
                 end
                 dw_cnt <= dw_cnt + 4'd1;
                 if (dw_addr != 3'd7) dwr[dw_addr] <= dw_data;
                 else begin
                     loading <= 1'b0;
-                    if (seal_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end else sealed <= 1'b1;
+                    if (seal_bad) begin fx4[2] = 1'b1; end else sealed <= 1'b1;
                 end
             end
-            if (m_dbl) begin fault <= 1'b1; fault_code[5] <= 1'b1; end
-            if (rom_fault || rom_mis) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
+            if (m_dbl) begin fx5 = 1'b1; end
+            if (rom_fault || rom_mis) begin fx4[3] = 1'b1; end
             if (m_rce) rdb_oh <= {m_rbank, !m_rbank};
             // ---------------- playheads
             for (k = 0; k < NU; k = k + 1) begin
                 if (go_u[k]) begin
-                    if (start_bad) begin fault <= 1'b1; fault_code[0] <= 1'b1; end
-                    else if (g_cnt != 16'd0) begin
-                        run_q[k] <= 1'b1; f_idx[k] <= g_first[9:0]; f_rem[k] <= g_cnt[9:0]; i_rem[k] <= g_cnt[9:0];
+                    if (start_bad) begin fx0[k] = 1'b1; end
+                    else if (g_cnt_nz) begin
+                        run_q[k] <= 1'b1; f_lo[k] <= g_first[1:0]; f_hi[k] <= g_first[9:2]; f_rem[k] <= g_cnt[9:0]; i_rem[k] <= g_cnt[9:0];
                         tcount[k] <= {{(TW-1){1'b0}}, 1'b1}; ht_q[k] <= {TW{1'b0}};
                         dq[k] <= (MUT == 1 || MUT == 34) ? {{(TW-1){1'b0}}, 1'b1} : {{(TW-2){1'b0}}, 2'd2};
                         fifo_n[k] <= 4'd0; infl[k] <= 4'd0; wh[k] <= 1'b0; rp_oh[k] <= 8'd1;
                         rce_q[k] <= 1'b0; rce2_q[k] <= 1'b0; rd_v[k] <= 1'b0; fire_q[k] <= 1'b0;
                     end else begin
-                        if (d_any) d_col = 1'b1;
-                        d_any = 1'b1; d_u = k[UB-1:0];
+                        dn[k] = 1'b1;
                     end
                 end else if (!frz_u[k]) begin
                     fire_q[k] <= fire_n[k];
@@ -626,32 +708,36 @@ module qfd_dv_cmd_cal_mu #(
                     if (nh_v[k]) begin hc_q[k] <= nh_c[k]; ht_q[k] <= nh_t[k]; end
                     if (run_q[k]) begin
                         tcount[k] <= tcount[k] + {{(TW-1){1'b0}}, 1'b1};
-                        if (&tcount[k]) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
+                        if (&tcount[k]) begin fx4g[k] = 1'b1; end
                     end
                     rce_q[k] <= gnt[k]; rbank_q[k] <= waddr[k][3]; rrow_q[k] <= waddr[k][9:4]; r_n_q[k] <= f_n[k];
-                    if (gnt[k]) begin f_idx[k] <= f_idx[k] + 10'd4; f_rem[k] <= f_rem[k] - {7'd0, f_n[k]}; end
+                    if (gnt[k]) begin f_hi[k] <= f_hi[k] + 8'd1; f_rem[k] <= f_rem[k] - {7'd0, f_n[k]}; end
                     rce2_q[k] <= rce_q[k]; r_n2_q[k] <= r_n_q[k];
                     rd_v[k] <= (CALENDAR_ROM != 0) ? rce2_q[k] : rce_q[k];
                     rd_n[k] <= (CALENDAR_ROM != 0) ? r_n2_q[k] : r_n_q[k];
-                    infl[k] <= infl[k] + (gnt[k] ? {1'b0, f_n[k]} : 4'd0) - (rd_v[k] ? {1'b0, rd_n[k]} : 4'd0);
+                    // CTLM7: both outcomes from registers, the late grant only selects
+                    infl[k] <= gnt[k] ? infl_g[k] : infl_ng[k];
                     if (rd_v[k]) begin
                         wh[k] <= !wh[k];
-                        if (zd[k]) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
+                        if (zd[k]) begin fx4h[k] = 1'b1; end
                     end
                     fifo_n[k] <= fifo_n[k] + {1'b0, (rd_v[k] ? rd_n[k] : 3'd0)} - (fire_q[k] ? 4'd1 : 4'd0);
-                    if (late[k]) begin fault <= 1'b1; fault_code[2] <= 1'b1; end
+                    if (late[k]) begin fx2[k] = 1'b1; end
                     if (fire_q[k]) begin
                         rp_oh[k] <= rpa_oh[k]; i_rem[k] <= i_rem[k] - 10'd1;
                         if (i_rem[k] == 10'd1) begin
                             run_q[k] <= 1'b0;
-                            if (d_any) d_col = 1'b1;
-                            d_any = 1'b1; d_u = k[UB-1:0];
+                            dn[k] = 1'b1;
                         end
                     end
                 end
             end
+            // CTLM7: at most one completion per playhead per edge; any / two-or-more / last index
+            // in parallel (was a serial chain through all NU playheads)
+            d_any = |dn; d_col = |(dn & (dn - {{(NU-1){1'b0}}, 1'b1}));
+            for (k = 0; k < NU; k = k + 1) if (dn[k]) d_u = k[UB-1:0];
             if (d_any) begin done <= 1'b1; done_user <= d_u; end
-            if (NU > 1 && d_col) begin fault <= 1'b1; fault_code[3] <= 1'b1; end
+            if (NU > 1 && d_col) begin fx3[0] = 1'b1; end
             // ---------------- issue register (one word an edge, all playheads)
             cmd <= 116'd0; loc_emb <= 1'b0; loc_seg <= 1'b0; su_issue <= 1'b0; xc_issue <= 1'b0; table_load <= 1'b0;
             // TLOAD pipeline: issue edge -> macro read -> tl register (-> +1 edge under MUT 5)
@@ -664,26 +750,38 @@ module qfd_dv_cmd_cal_mu #(
             tl_pay3 <= (MUT == 4) ? {rd[0], rd[1]} : {rd[1], rd[0]};
             if (MUT == 5) tl <= tl_v3 ? {tl_ctl3, tl_pay3} : 1088'd0;
             else          tl <= tl_v2 ? {tl_ctl2, (MUT == 4) ? {rd[0], rd[1]} : {rd[1], rd[0]}} : 1088'd0;
-            if (NU > 1 && i_col) begin fault <= 1'b1; fault_code[1] <= 1'b1; end
+            if (NU > 1 && i_col) begin fx1 = 1'b1; end
             if (i_any) begin
                 if (NU > 1) cmd_user <= ru;
-                if (NU > 1 && r_bad) begin fault <= 1'b1; fault_code[3] <= 1'b1; end
+                // fx3[1] / fx4[4..6] are set flat below (CTLM7)
                 if (i_loc) begin
                     if (i_kind == 3'd1) loc_emb <= 1'b1;
                     else if (i_kind == 3'd2) begin loc_seg <= 1'b1; loc_base <= ic[15:4]; end
                     else if (tr_go) begin
-                        if (tr_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end
-                        else begin table_load <= 1'b1; table_stage <= ic[9:4]; table_user <= 2'(ru); end
+                        if (!tr_bad) begin table_load <= 1'b1; table_stage <= ic[9:4]; table_user <= 2'(ru); end
                     end
-                    else if (i_kind == 3'd3) begin if (tl_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end end
-                    else begin fault <= 1'b1; fault_code[4] <= 1'b1; end
+                    else if (i_kind == 3'd3) begin end
+                    else begin end
                 end else begin
                     cmd <= rc;
                     su_issue <= i_kind == 3'd1; su_pidx <= rc[12:4]; xc_issue <= i_kind == 3'd0;
                 end
             end
+            // CTLM7: every fault site above sets its own flag; fault / fault_code are set
+            // once here from balanced ORs (was a serial priority chain of 15 sites).  This
+            // stays last, so it overrides the pw addr-0 'fault <= running' exactly as before.
+            // CTLM7: the issue-register fault sites, flat (same guards as the if nest above)
+            fx3[1] = i_any && (NU > 1) && r_bad;
+            fx4[4] = i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && tr_go && tr_bad;
+            fx4[5] = i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && !tr_go && i_kind == 3'd3 && tl_bad;
+            fx4[6] = i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && !tr_go && i_kind != 3'd3;
+            // the raw site flags are registered; their OR is taken after the flops (exact)
+            r4 <= fx4; r4g <= fx4g; r4h <= fx4h; r3 <= fx3; r2 <= fx2; r1 <= fx1; r0 <= fx0; r5 <= fx5;
         end
     end
+    // fault(t+1) = F(t) | (pw addr-0 ? running : fault(t)) exactly, as two registers (set / hold)
+    assign fault = f_p | f_g;
+    assign fault_code = fc_p | fc_g;
     assign image_ready = sealed && !fault;
 endmodule
 

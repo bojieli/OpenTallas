@@ -1,0 +1,10 @@
+MISMATCH t=482000 ref r1 f0 a1 c0 x000000000000000000 | dut r1 f0 a0 c0 x000000000000000000
+MISMATCH t=484000 ref r1 f0 a1 c1 x000000000000000000 | dut r1 f0 a1 c0 x000000000000000000
+MISMATCH t=486000 ref r1 f0 a1 c2 x000000000000000000 | dut r1 f0 a1 c1 x000000000000000000
+MISMATCH t=488000 ref r1 f0 a1 c3 x000000000000000000 | dut r1 f0 a1 c2 x000000000000000000
+MISMATCH t=490000 ref r1 f0 a1 c4 x000000000000000000 | dut r1 f0 a1 c3 x000000000000000000
+XPF_P_LOCKSTEP FAIL MUT=1 N=8 T=13 ML=0 compared=292249 errors=86383 episodes=4000 clean=715 faulted=3285 arms=9777
+- rtl/test/qwen_dv/ctlm7_xpf/tb_xpf_p_lockstep.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 600us; walltime 0.346 s; speed 1.734 ms/s
+- Verilator: cpu 0.346 s on 1 threads; allocated 7 MB

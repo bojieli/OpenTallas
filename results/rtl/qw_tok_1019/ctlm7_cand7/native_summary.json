@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "liberty": [
+  {
+   "path": "/work/native7/cells.lib",
+   "sha256": "31361be2c0ec1ac0794e5e1fd848e284cd61ec7511027a3327cf2d7339007668"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+   "sha256": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "sha256": "bed56e6769daf014adb1204d953c9696ae6aeab2ea3a55891d79e718878faaf6"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+   "sha256": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+  },
+  {
+   "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "sha256": "6b00b7c554b89a7d24e02281ebef210c45b9de8b659130daeb852fd159c43d54"
+  },
+  {
+   "path": "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_tt.lib",
+   "sha256": "84c9bc48dcc9221d527abf015a217036c3e6c2bdb5756fd32f0e76c8205a72c2"
+  }
+ ],
+ "netlist": {
+  "path": "/work/native7/mapped.v",
+  "sha256": "6e611fbbeb8cc7d1e87099aaebf62d4603532f8045552bd6940f33f35066212f"
+ },
+ "top": "qfd_tt_ctlm_dv_np_lp",
+ "status": "PASS",
+ "limit": 32,
+ "roots_examined": 83848,
+ "max_dynamic_loads": 32,
+ "constant_output_bits": [],
+ "functional_pin_contract": "NOT_EVALUATED",
+ "pin_registration_contract": "NOT_EVALUATED",
+ "storage_contract": "NOT_EVALUATED",
+ "independent_source_contract_audit_required": true,
+ "role_errors": [],
+ "violations": []
+}

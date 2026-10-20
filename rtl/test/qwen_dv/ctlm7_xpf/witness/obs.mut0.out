@@ -1,0 +1,5 @@
+OBS_P_EQUIV PASS MUT=0 vectors=400000 errors=0 full_word_true=21688
+- rtl/test/qwen_dv/ctlm7_xpf/tb_obs_p_equiv.sv:25: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 0.291 s; speed 1.375 ms/s
+- Verilator: cpu 0.291 s on 1 threads; allocated 7 MB

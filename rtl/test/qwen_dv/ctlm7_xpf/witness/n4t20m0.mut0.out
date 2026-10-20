@@ -1,0 +1,5 @@
+XPF_P_LOCKSTEP PASS MUT=0 N=4 T=20 ML=0 compared=276244 errors=0 episodes=4000 clean=1901 faulted=2099 arms=10861
+- rtl/test/qwen_dv/ctlm7_xpf/tb_xpf_p_lockstep.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 568us; walltime 0.225 s; speed 2.528 ms/s
+- Verilator: cpu 0.225 s on 1 threads; allocated 7 MB
