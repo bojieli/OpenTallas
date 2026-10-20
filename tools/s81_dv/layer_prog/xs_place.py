@@ -386,6 +386,10 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         sel = sel_all[c * R:(c + 1) * R]
         mat = make_mat(fx, grp, sel, op)
         npair = (len(qa) // nseg) * nseg
+        if os.environ.get('OT_XS_COMPACT_TAILS', '0') == '1' and mat.rows:
+            # The full pair budget used to allocate completely SENT superrows
+            # on short tails. Only real superrows need weight/config storage.
+            npair = min(npair, -(-mat.rows // 2) * nseg)
         k = len(field.phases)
         # Cycle the unused pair positions across phases to use all twelve ROMs.
         # The planner sees actual physical pairs; assignments are then translated
