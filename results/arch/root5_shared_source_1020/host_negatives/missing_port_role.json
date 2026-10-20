@@ -1,0 +1,19 @@
+{
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "profile": "host",
+  "source_gate": "/srv/opentallas-scratch/claude/ref_gate/qkd_hr_cdc_host_q1-20261020-040647",
+  "reviewed_helper_sha256": "375084ce607b0d9d429e2d3c56e996353305ef47b21ce3584f0948c54728fec3",
+  "dual_tcl_sha256": "c385c9bb29eae33e22e46a79f3815187ac6bc0ea9f8ae39227d65e982b38e4f5",
+  "original_sdc_sha256": "a21ed437ff204c4c4322b05f37ff3a83bf414a0f55c171c0521db4c4d468ffff",
+  "pre_cts_diagnostic": true,
+  "original_mapped_sha256": "da63c4deaace397389e12127390ff0972a3ef671b632574cc36a7c043ec4a9d8",
+  "results": {
+    "missing_port_role": {
+      "exit": 1,
+      "witness": "unreviewed actual dual SRAM input pin",
+      "netlist_sha256": "da63c4deaace397389e12127390ff0972a3ef671b632574cc36a7c043ec4a9d8",
+      "sdc_sha256": "11c135c58fdb952368a9b4b67d5fa0b16f45aea4e5d035144c6dadb6e56e5dad"
+    }
+  },
+  "claim": "mapped ownership only; not layout/signoff/adoption"
+}

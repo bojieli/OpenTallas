@@ -1,0 +1,32 @@
+{
+  "status": "FOUR_CAUSAL_NEGATIVES_REFUSED_POSITIVE_PENDING",
+  "claim": "Actual full mapped HOST helper negative controls only; no HCDC qualification, layout, signoff, or release claim",
+  "positive_pending": {
+    "host": "ot-epyc9",
+    "path": "/srv/opentallas-scratch/claude/root5-shared-source-1020/mapped_host_r3",
+    "client_pid": 2127845,
+    "session": 78608
+  },
+  "cases": {
+    "wrong_clock": {
+      "witness": "differs from its exact reviewed root",
+      "log_sha256": "348f9b92b29b45a6cb51262abcbbba9b82c68448cbf9aca406548675479deee0",
+      "exit": 1
+    },
+    "wrong_master": {
+      "witness": "master differs",
+      "log_sha256": "979a56ff09e5b7fd067ae1eb01dbe1f8a7656fd7b04ce08ed9b9aff372a256a6",
+      "exit": 1
+    },
+    "missing_port_role": {
+      "witness": "unreviewed actual dual SRAM input pin",
+      "log_sha256": "3d2342fda852ef225cbe467a78a1c005e37bc858a6639ca80d06fab8981854a4",
+      "exit": 1
+    },
+    "wrong_producer": {
+      "witness": "OT_GF: cross-family control pin u_ot_pr_core.u_rank__u_bridge__u_done.g_afw.u_af.g_mm.g_pad32.u_m/w_ce_in",
+      "log_sha256": "71fda121bcaea441c9eec17417afc5c622ebcf9b29ac69031057a86286c1e455",
+      "exit": 1
+    }
+  }
+}
