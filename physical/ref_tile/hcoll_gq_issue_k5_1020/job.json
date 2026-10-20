@@ -43,7 +43,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_gq_issue #(.VM_RT(74), .ISSUE_AHEAD(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLLQ_SRAM -DOT_GQ_FAN32 -DOT_GQ_S2TOP -DOT_GQ_P192 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_hc.sv rtl/hdc/ot_hdc_cg.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_gq_issue #(.VM_RT(74), .ISSUE_AHEAD(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLLQ_SRAM -DOT_GQ_FAN32 -DOT_GQ_S2TOP -DOT_GQ_P192 -DOT_GQ_N32 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_hc.sv rtl/hdc/ot_hdc_cg.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -53,7 +53,7 @@
    },
    {
     "name": "aq_sram_exact",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
     "expect": "pass",
     "pass_regex": "AQ_TREE13_EXACT_PASS blocks1024 elements32768",
     "threads": 4,
@@ -61,7 +61,7 @@
    },
    {
     "name": "aq_sram_mut_slot",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
     "expect": "fail",
     "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH",
     "fail_witness": "results/rtl/gqissue_sram_1019/capture_mut_slot_fail.log",
@@ -70,7 +70,7 @@
    },
    {
     "name": "aq_s2top_exact",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
     "expect": "pass",
     "pass_regex": "AQ_S2TOP_EXACT_PASS SCALE13R_EQ PASS checks=2097152 .*AQ_TREE13_EXACT_PASS blocks1024 elements32768",
     "threads": 4,
@@ -78,7 +78,7 @@
    },
    {
     "name": "aq_s2top_mut_k",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
     "expect": "fail",
     "fail_regex": "SCALE13R_EQ FAIL errors=[1-9]",
     "fail_witness": "results/rtl/gqissue_sram_1019/k4_s2top/s2top_mutk_fail.log",
@@ -87,7 +87,7 @@
    },
    {
     "name": "collq_ia_ia1",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -95,7 +95,7 @@
    },
    {
     "name": "collq_ia_ia2",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -103,7 +103,7 @@
    },
    {
     "name": "collq_ia_slot",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -112,7 +112,7 @@
    },
    {
     "name": "collq_ia_dep",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -121,7 +121,7 @@
    },
    {
     "name": "collq_ia_iaign",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,

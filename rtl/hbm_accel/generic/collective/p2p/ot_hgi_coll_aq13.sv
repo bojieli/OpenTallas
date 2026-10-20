@@ -139,9 +139,21 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= s2a_v;
     end
+`ifdef OT_GQ_N32
+    // N32 (HBM-GQ7 10-20): the 2 -> 1 compare drove all 31 select bits (62 loads); three kept chunks, each with its own
+    // compares, select <= 11 bits. Same value, same edge.
+    wire [30:0] s2_amax_d;
+    generate for (genvar c = 0; c < 3; c = c + 1) begin : g_amax_chunk
+        localparam integer LO = (c == 0) ? 0 : 1 + 10 * c, W = (c == 0) ? 11 : 10;
+        (* keep="true" *) ot_hgi_coll_aq_amax_chunk #(.LO(LO), .W(W)) u_c(.a(s2a_m[0]), .b(s2a_m[1]), .fp4(s2a_fp4),
+            .q(s2_amax_d[LO +: W]));
+    end endgenerate
+`else
+    wire [30:0] s2_amax_d = mx(mx(s2a_m[0], s2a_m[1]), s2a_fp4 ? FLOOR_FP4 : FLOOR_FP8);
+`endif
     always @(posedge clk) begin
         s2_fp4 <= s2a_fp4; s2_nf <= s2a_nf;
-        s2_amax <= mx(mx(s2a_m[0], s2a_m[1]), s2a_fp4 ? FLOOR_FP4 : FLOOR_FP8);
+        s2_amax <= s2_amax_d;
     end
 
     // -- S3-S7: amax * (1/448 or 1/6), one binary32 multiply ------------------------------
@@ -405,6 +417,14 @@ module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
 endmodule
 `endif
 
+// N32: bits [LO +: W] of max(max(a, b), floor) with the chunk's own compares (kept per chunk)
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_amax_chunk #(parameter integer LO=0,W=11)(input wire[30:0]a,b,input wire fp4,output wire[W-1:0]q);
+    wire[30:0]m=(a>=b)?a:b;
+    wire[30:0]f=fp4?31'h01c00000:31'h38d1b717;
+    wire[30:0]x=(m>=f)?m:f;
+    assign q=x[LO+:W];
+endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_aq_control_ff #(parameter integer W=11)(input wire clk,input wire[W-1:0]d,output wire[W-1:0]q);
     (* keep="true",dont_touch="true" *)reg[W-1:0]r;

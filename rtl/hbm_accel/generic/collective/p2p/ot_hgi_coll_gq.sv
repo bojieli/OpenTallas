@@ -148,6 +148,9 @@ module ot_hgi_coll_gq_issue #(
         if (V != 0 && (V < 15 || V > 80)) begin : g_v_range $error("VM_RT must be 0 or 15..80 (SRAM ring form)"); end
 `ifndef OT_GQ_FAN32
         if (IA > 0) begin : g_ia_fan $error("ISSUE_AHEAD > 0 is built on the OT_GQ_FAN32 leaf only"); end
+`ifdef OT_GQ_N32
+        if (1) begin : g_n32_fan $error("OT_GQ_N32 is built on the OT_GQ_FAN32 leaf only"); end
+`endif
 `endif
     endgenerate
     localparam integer S_QR = 0, S_PR = 15, S_QCAP = 8 + V, S_PCAP = 23 + V, S_P = 24 + V;
@@ -236,6 +239,20 @@ module ot_hgi_coll_gq_issue #(
                     rc_t[x] = rc_t[x] | (rf[j][x] & cur_ohc[c][j]);
     end
     wire [DW-1:0] rc = rc_t;
+    // N32 (HBM-GQ7 10-20, native32 census on the full mapped netlist incl. combinational drivers): rc[1] (two-ring flag)
+    // reached ~70 fire-edge loads through ONE row AND-OR (f_kn mux, qa init adders, gather / slot / flag holds). Six kept
+    // row reads of the same bit (keep_hierarchy, on cur_ohc[3], the lightest copy; every cur_ohc copy == 1 << cur), one
+    // per consumer group. Same row, same edge; without OT_GQ_N32 every copy is rc[1].
+    wire [5:0] rc1c;
+`ifdef OT_GQ_N32
+    wire [15:0] rf_b1;
+    generate for (genvar j = 0; j < 16; j = j + 1) begin : g_rf_b1 assign rf_b1[j] = rf[j][1]; end
+    for (genvar g = 0; g < 6; g = g + 1) begin : g_rc1
+        (* keep = "true" *) ot_hgi_coll_gq_row_bit u_rb(.r(rf_b1), .oh(cur_ohc[3]), .q(rc1c[g]));
+    end endgenerate
+`else
+    assign rc1c = {6{rc[1]}};
+`endif
 `ifdef OT_GQ_FAN32
     localparam integer NFP = (IA > 0) ? 4 : 3;      // ISSUE_AHEAD > 0: copy 3 loads the slot banks
     wire [NFP-1:0] fire_allow_bank,fire_time_bank;
@@ -277,7 +294,7 @@ module ot_hgi_coll_gq_issue #(
         assign f_slot = '0; assign f_sbad = 1'b0;
     end endgenerate
     wire busy_any = (IA == 0) ? busy : |live;
-    wire [9:0] f_kn = rc[1] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
+    wire [9:0] f_kn = rc1c[0] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
     wire [7:0] f_es = 8'((rc[36:29] + 8'd31) >> 5);
     wire f_bad = rc[28:19] == 10'd0 || |rc[71:69] || f_sbad ||
                  (rc[0] && (rc[36:29] == 8'd0 || rc[36:29] > 8'd64 || {2'b0, rc[28:19]} != {2'b0, rc[36:29]} + {4'b0, f_es}));
@@ -309,7 +326,7 @@ module ot_hgi_coll_gq_issue #(
     end endgenerate
 `endif
 `ifdef OT_GQ_FAN32
-    wire [78:0] gather_d = {rc[0], rc[1], rc[2], rc[28:19], rc[36:29], rc[52:37], rc[68:53], rc[84:69], f_kn};
+    wire [78:0] gather_d = {rc[0], rc1c[1], rc[2], rc[28:19], rc[36:29], rc[52:37], rc[68:53], rc[84:69], f_kn};
     wire [78:0] gather_q;
     assign {g_qbg, g_r2, g_self, g_f, g_bs, g_src, g_dst, g_str, g_kn} = gather_q;
     generate for (genvar gh = 0; gh < 5; gh = gh + 1) begin : g_gather_hold
@@ -442,7 +459,12 @@ module ot_hgi_coll_gq_issue #(
     end
     // ld_fire / ld_desc: V = 0 as built (+ the slot field at ISSUE_AHEAD > 0); V > 0 below (VM_RT ring)
     wire rg_fire; wire [SW-1:0] rg_fslot;             // fire / its slot delayed V edges (VM_RT ring; V > 0 only)
-    wire [SW-1:0] rg_fslc [0:1];                      // two copies of rg_fslot (ld_desc slot select)
+`ifdef OT_GQ_N32
+    localparam integer NFS = 4;                       // N32: four ring copies (<= 14 of the 53 ld_desc mux bits each; 2 = 55 loads)
+`else
+    localparam integer NFS = 2;
+`endif
+    wire [SW-1:0] rg_fslc [0:NFS-1];                  // copies of rg_fslot (ld_desc slot select)
     generate if (V == 0) begin : g_ld0
         always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
     end else begin : g_ldv
@@ -463,7 +485,7 @@ module ot_hgi_coll_gq_issue #(
     // the fired slot (fire copy 3, one kept AND per <= 16-b hold); read by the later stage groups and (V > 0) ld_desc
     localparam integer BW = 69;
     wire [BW-1:0] sb_q [0:NB-1];
-    wire [BW-1:0] sb_d = {rc[0], rc[1], rc[2], rc[28:19], rc[36:29], rc[52:37], rc[68:53], rc[84:69]};
+    wire [BW-1:0] sb_d = {rc[0], rc1c[1], rc[2], rc[28:19], rc[36:29], rc[52:37], rc[68:53], rc[84:69]};
     function automatic [52:0] sb_desc(input [BW-1:0] b);   // the ld_desc order {r2, self, qbg, F, Bs, dst, stride}
         sb_desc = {b[67], b[66], b[68], b[65:56], b[55:48], b[31:16], b[15:0]};
     endfunction
@@ -488,6 +510,19 @@ module ot_hgi_coll_gq_issue #(
         else begin : g_ds
             reg [52:0] dsel;
             // two ring copies of the slot select (each <= 27 of the 53 mux bits; checklist item 3)
+`ifdef OT_GQ_N32
+            always @* begin : nb_dsel
+                reg [52:0] t;
+                dsel = sb_desc(sb_q[0]);
+                for (integer j = 1; j < NB; j = j + 1) begin
+                    t = sb_desc(sb_q[j]);
+                    if (rg_fslc[0] == SW'(j)) dsel[13:0] = t[13:0];
+                    if (rg_fslc[1] == SW'(j)) dsel[26:14] = t[26:14];
+                    if (rg_fslc[2] == SW'(j)) dsel[39:27] = t[39:27];
+                    if (rg_fslc[3] == SW'(j)) dsel[52:40] = t[52:40];
+                end
+            end
+`else
             always @* begin
                 dsel = sb_desc(sb_q[0]);
                 for (integer j = 1; j < NB; j = j + 1) begin
@@ -495,6 +530,7 @@ module ot_hgi_coll_gq_issue #(
                     if (rg_fslc[1] == SW'(j)) dsel[52:27] = sb_desc(sb_q[j]) >> 27;
                 end
             end
+`endif
             always @(posedge clk) ld_desc <= {rg_fslot, dsel};
         end
     end endgenerate
@@ -562,9 +598,9 @@ module ot_hgi_coll_gq_issue #(
     generate if (IA == 0) begin : g_hold_fire
     ot_hgi_coll_gq_control_hold #(.W(14))u_flit_r2(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d(
 `ifdef OT_GQ_MUT_FLIT_CTL
-        ({14{rc[1]}}^14'h001)
+        ({14{rc1c[2]}}^14'h001)
 `else
-        {14{rc[1]}}
+        {14{rc1c[2]}}
 `endif
         ),.q(flit_r2));
     wire[191:0]src_copy;
@@ -574,15 +610,15 @@ module ot_hgi_coll_gq_issue #(
         else if(g<10)assign g_src_qc[g-2]=src_copy[16*g+:16];
         else assign g_src_pp[g-10]=src_copy[16*g+:16];
     end
-    ot_hgi_coll_gq_control_hold #(.W(16))u_em_flags(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d({{8{rc[0]}},{8{rc[1]}}}),.q({em_qbg,em_r2}));
+    ot_hgi_coll_gq_control_hold #(.W(16))u_em_flags(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d({{8{rc[0]}},{8{rc1c[2]}}}),.q({em_qbg,em_r2}));
     assign qbg_pr14 = g_qbg; assign qbg_qc = g_qbg; assign qbg_pp = g_qbg; assign bs_pp = g_bs;
     end else begin : g_hold_stage
         // issue group (flit_r2[3:0]: sfv / scd at the issue edge) stays loaded at fire
         ot_hgi_coll_gq_control_hold #(.W(4))u_flit_r2(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d(
 `ifdef OT_GQ_MUT_FLIT_CTL
-            ({4{rc[1]}}^4'h1)
+            ({4{rc1c[2]}}^4'h1)
 `else
-            {4{rc[1]}}
+            {4{rc1c[2]}}
 `endif
             ),.q(flit_r2[3:0]));
         // bank fields of every slot, slot-major (d[j*W +: W] = slot j)
@@ -647,12 +683,18 @@ module ot_hgi_coll_gq_issue #(
     // sfv[1] = 0). The QBG read request of the issue edge is then a 3-to-8 decode of registered addresses (was
     // g_r2 -> flit mux -> 13-b add -> decode in one edge, r2 route -50).
     reg [12:0] qa [0:7];
+`ifdef OT_GQ_N32
+    // N32: registered one-hot bank select of every QBG read address, updated with qa (qoh[q] == 1 << qa[q][2:0] at every
+    // edge: +4 per issue flips bit 2 = rotate by 4, +8 keeps the bank). Bank b's request mux reads only qoh[*][b] (was a
+    // 3-to-8 decode of qa[q][2:0] shared by all banks: qa[6][0] 35 loads, sfv/scd decode nets 62-106).
+    (* keep = "true", dont_touch = "true" *) reg [7:0] qoh [0:7];
+`endif
     always @(posedge clk or negedge rn)
         if (!rn) begin sfv <= 2'd0; scd <= 2'd0; end
         else if (fire) begin
             for (integer r = 0; r < 2; r = r + 1) begin : nb_s0
-                reg [10:0] i0; i0 = rc[1] ? 11'(r) : (r == 0 ? 11'd0 : 11'h7ff);
-                sfv[r] <= (r == 0 || rc[1]) && i0 < {1'b0, rc[28:19]};
+                reg [10:0] i0; i0 = rc1c[2] ? 11'(r) : (r == 0 ? 11'd0 : 11'h7ff);
+                sfv[r] <= (r == 0 || rc1c[2]) && i0 < {1'b0, rc[28:19]};
                 scd[r] <= !rc[0] || i0 < {3'b0, rc[36:29]};
             end
         end else if (ev_in_v)
@@ -662,16 +704,22 @@ module ot_hgi_coll_gq_issue #(
             end
 `ifdef OT_GQ_FAN32
     wire[7:0] qa_r2;
-    ot_hgi_coll_gq_control_hold #(.W(8)) u_qa_r2(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d({8{rc[1]}}),.q(qa_r2));
+    ot_hgi_coll_gq_control_hold #(.W(8)) u_qa_r2(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d({8{rc1c[3]}}),.q(qa_r2));
     generate for(genvar q=0;q<8;q=q+1)begin:g_qa_control
         localparam integer R=q/4,W=q%4;
         wire fire_local,ev_local;
         (* keep="true" *)ot_hgi_coll_gq_control_and u_fire(.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.q(fire_local));
         (* keep="true" *)ot_hgi_coll_gq_issue_allow u_ev(.iss(iss),.iph(iph),.q(ev_local));
-        wire[10:0] i0=rc[1]?11'(R):(R==0?11'd0:11'h7ff);
+        wire[10:0] i0=rc1c[4+(q>=6)]?11'(R):(R==0?11'd0:11'h7ff);
         always @(posedge clk)
             if(fire_local)qa[q]<=rc[49:37]+13'({i0,2'b00}+W);
             else if(ev_local)qa[q]<=qa[q]+(qa_r2[q]?13'd8:13'd4);
+`ifdef OT_GQ_N32
+        wire[2:0] qb0=rc[39:37]+3'({i0[0],2'b00}+W);
+        always @(posedge clk)
+            if(fire_local)qoh[q]<=oh8(qb0);
+            else if(ev_local&&!qa_r2[q])qoh[q]<={qoh[q][3:0],qoh[q][7:4]};
+`endif
     end endgenerate
 `else
     always @(posedge clk)
@@ -686,6 +734,9 @@ module ot_hgi_coll_gq_issue #(
     // plain-read pre-stage (@S_PR-2 -> request @S_PR-1) and quantiser-feed pre-stage (@S_QCAP-1 -> x @S_QCAP): address /
     // bank one-hots registered one edge ahead (g_src is held for the whole gather, so the result is the same)
     reg [1:0] pr_v; reg [15:0] pr_s [0:1];
+`ifdef OT_GQ_N32
+    (* keep = "true", dont_touch = "true" *) reg [7:0] pr_oh [0:1];   // N32: == 1 << pr_s[r][2:0] (registered one-hot)
+`endif
     reg [1:0] qc_v;
     // r4: 8 kept copies (one per 32-b slice of the 256-b word) of every feed / P one-hot: each bit drives 32 AND legs
     // (r3: 256)
@@ -697,8 +748,12 @@ module ot_hgi_coll_gq_issue #(
             qc_v[r] <= ev_v[S_QCAP-1] && qbg_qc && ev_f[S_QCAP-1][r] && ev_c[S_QCAP-1][r];
         end
     always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_pq
-        reg [10:0] i; reg [15:0] s;
-        pr_s[r] <= sec_add(g_src_pr[r], 13'(flit_i(ev_k[S_PR-2], r,flit_r2[4+r])));
+        reg [10:0] i; reg [15:0] s, sp;
+        sp = sec_add(g_src_pr[r], 13'(flit_i(ev_k[S_PR-2], r,flit_r2[4+r])));
+        pr_s[r] <= sp;
+`ifdef OT_GQ_N32
+        pr_oh[r] <= oh8(sp[2:0]);
+`endif
         i = flit_i(ev_k[S_QCAP-1], r,flit_r2[6+r]);
         for (integer w = 0; w < 4; w = w + 1) begin
             s = sec_add(g_src_qc[r*4+w], 13'({i, 2'b00} + w));
@@ -707,6 +762,33 @@ module ot_hgi_coll_gq_issue #(
     end
     // ------------------------------------------------------------------ VM reads (issue) + response check
     reg [7:0] rd_exp; reg [7:0] rd_exp_q;
+`ifdef OT_GQ_N32
+    // N32: per-bank request enables from 8 kept ot_hgi_coll_gq_rq_en (one per bank: the QBG issue gate qbg & iss & iph != 2
+    // & sfv & scd and the plain gate !qbg & ev & pr_v reached 100-108 loads as ONE net each) and the registered one-hot
+    // selects qoh / pr_oh. Same priority (QBG r, w ascending, then plain), same edge.
+    wire [1:0] rq_eq [0:7], rq_ep [0:7];
+    generate for (genvar b = 0; b < 8; b = b + 1) begin : g_rq_en
+        (* keep = "true" *) ot_hgi_coll_gq_rq_en u_en(.qbg(g_qbg), .iss(iss), .iph(iph), .sfv(sfv), .scd(scd), .pq(qbg_pr14),
+            .pv(ev_v[S_PR-1]), .prv(pr_v), .eq(rq_eq[b]), .ep(rq_ep[b]));
+    end endgenerate
+    always @(posedge clk or negedge rn2) begin
+        if (!rn2) begin vm_rq <= '0; rd_exp <= 8'd0; rd_exp_q <= 8'd0; end
+        else begin
+            for (integer b = 0; b < 8; b = b + 1) begin : nb_rqb
+                reg [16:0] nx;
+                nx = 17'd0;
+                for (integer r = 0; r < 2; r = r + 1)
+                    for (integer w = 0; w < 4; w = w + 1)
+                        if (rq_eq[b][r] && qoh[r*4+w][b]) nx = {1'b1, g_src[15:13], qa[r*4+w]};
+                for (integer r = 0; r < 2; r = r + 1)
+                    if (rq_ep[b][r] && pr_oh[r][b]) nx = {1'b1, pr_s[r]};
+                vm_rq[b*17 +: 17] <= nx;
+            end
+            rd_exp <= 8'd0;
+            for (integer b = 0; b < 8; b = b + 1) if (vm_rq[b*17+16]) rd_exp[b] <= 1'b1;
+        end
+    end
+`else
     always @(posedge clk or negedge rn2) begin
         if (!rn2) begin vm_rq <= '0; rd_exp <= 8'd0; rd_exp_q <= 8'd0; end
         else begin
@@ -731,6 +813,7 @@ module ot_hgi_coll_gq_issue #(
             for (integer b = 0; b < 8; b = b + 1) if (vm_rq[b*17+16]) rd_exp[b] <= 1'b1;
         end
     end
+`endif
     // read latency: rq register @n -> bank samples n+1 -> registered response n+7 -> pin capture n+8.
     // (+VM_RT: rdx[0 .. 6+TAP] flops -> ring -> rdx_v = rdx[6+V])
     reg [7:0] rdx [0:NRX-1];
@@ -759,7 +842,7 @@ module ot_hgi_coll_gq_issue #(
     // the event entry (ev[TAP] -> ev[V-1], re-registered into ev[V]), the read expectation (rdx[6+TAP] -> rdx[5+V] -> rdx_v)
     // and the fire + its slot (fire delayed TAP+1 -> delayed V = the ld_fire / ld_desc load edge). II 1, no reset on data.
     generate if (V > 0) begin : g_ring
-        localparam integer RW = 15 + 8 + 1 + ((IA > 0) ? 1 + SW + 2 * SW : 0);
+        localparam integer RW = 15 + 8 + 1 + ((IA > 0) ? 1 + SW + NFS * SW : 0);
         reg fd [0:TAP]; reg [SW-1:0] fs [0:TAP];
         always @(posedge clk or negedge rn1)
             if (!rn1) for (integer j = 0; j <= TAP; j = j + 1) fd[j] <= 1'b0;
@@ -767,18 +850,25 @@ module ot_hgi_coll_gq_issue #(
         always @(posedge clk) begin fs[0] <= f_slot; for (integer j = 1; j <= TAP; j = j + 1) fs[j] <= fs[j-1]; end
         wire [RW-1:0] rd_i, rd_o;
         if (IA > 0) begin : g_wi
+`ifdef OT_GQ_N32
+            assign rd_i = {fs[TAP], fs[TAP], fs[TAP], fs[TAP], ev_s[TAP], ev_fst[TAP], fd[TAP], rdx[6+TAP], ev_c[TAP], ev_f[TAP], ev_k[TAP], ev_v[TAP]};
+            assign {rg_fslc[3], rg_fslc[2], rg_fslc[1], rg_fslc[0], rg_s, rg_fst, rg_fire, rg_rdx, rg_c, rg_f, rg_k, rg_v} = rd_o;
+`else
             assign rd_i = {fs[TAP], fs[TAP], ev_s[TAP], ev_fst[TAP], fd[TAP], rdx[6+TAP], ev_c[TAP], ev_f[TAP], ev_k[TAP], ev_v[TAP]};
             assign {rg_fslc[1], rg_fslc[0], rg_s, rg_fst, rg_fire, rg_rdx, rg_c, rg_f, rg_k, rg_v} = rd_o;
+`endif
             assign rg_fslot = rg_fslc[0];
         end else begin : g_w0
             assign rd_i = {fd[TAP], rdx[6+TAP], ev_c[TAP], ev_f[TAP], ev_k[TAP], ev_v[TAP]};
             assign {rg_fire, rg_rdx, rg_c, rg_f, rg_k, rg_v} = rd_o;
-            assign rg_s = '0; assign rg_fst = 1'b0; assign rg_fslot = '0; assign rg_fslc[0] = '0; assign rg_fslc[1] = '0;
+            assign rg_s = '0; assign rg_fst = 1'b0; assign rg_fslot = '0;
+            for (genvar c = 0; c < NFS; c = c + 1) begin : g_fz assign rg_fslc[c] = '0; end
         end
         ot_hgi_coll_gq_vmring #(.W(RW), .D(DRING - 1)) u_vmring(.clk(clk), .rst_n(rn1), .din(rd_i), .dout(rd_o));
     end else begin : g_ring0
         assign rg_v = 1'b0; assign rg_fst = 1'b0; assign rg_k = '0; assign rg_f = '0; assign rg_c = '0; assign rg_s = '0;
-        assign rg_rdx = '0; assign rg_fire = 1'b0; assign rg_fslot = '0; assign rg_fslc[0] = '0; assign rg_fslc[1] = '0;
+        assign rg_rdx = '0; assign rg_fire = 1'b0; assign rg_fslot = '0;
+        for (genvar c = 0; c < NFS; c = c + 1) begin : g_fz assign rg_fslc[c] = '0; end
     end endgenerate
     // ------------------------------------------------------------------ quantiser feed (@9) and capture (@23)
     always @(posedge clk or negedge rn1)
@@ -1345,11 +1435,23 @@ module ot_hgi_coll_gq_vmring #(parameter integer W = 32, D = 66)(input wire clk,
             .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(wd[16*m +: 16]), .w_mask_in(16'hffff));
     end
     always @(posedge clk) in_q <= din;
+`ifdef OT_GQ_N32
+    // go(t) = filled(t-1) >= D - 2 = filled(t) >= D - 1 (filled counts 0, 1, .. D from reset, one per edge)
+    wire [1:0] go;
+    for (genvar c = 0; c < 2; c = c + 1) begin : g_go
+        ot_hgi_coll_gq_control_ff u_go(.clk(clk), .rst_n(rst_n), .d(filled >= 7'(D - 2)), .q(go[c]));
+    end
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin wp <= 6'd0; filled <= 7'd0; dout <= '0; end
         else begin
             wp <= wp + 6'd1; if (filled < 7'(D)) filled <= filled + 7'd1;
+`ifdef OT_GQ_N32
+            // N32: the output gate is two kept registered copies go[c] == (filled >= D - 1) (filled[6] drove 34 loads)
+            for (integer i = 0; i < W; i = i + 1) dout[i] <= ((i >= W / 2) ? go[1] : go[0]) ? rd[i] : 1'b0;
+`else
             dout <= (filled >= 7'(D - 1)) ? rd[W-1:0] : '0;
+`endif
         end
 endmodule
 //16x<=8-bit programme columns; one same-edge target pointer/enable percolumn.
@@ -1366,6 +1468,19 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_gq_rf_decode #(parameter integer A=0)(input wire we,input wire[3:0]addr,output wire q);
     assign q=we&&addr==4'(A);
+endmodule
+// N32 (HBM-GQ7 10-20): one row bit read through a one-hot cur copy (kept per consumer group)
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_row_bit(input wire[15:0]r,oh,output wire q);
+    assign q=|(r&oh);
+endmodule
+// N32: per-bank VM read request enables (QBG issue gate per ring, plain read gate per ring)
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_rq_en(input wire qbg,iss,input wire[1:0]iph,sfv,scd,input wire pq,pv,input wire[1:0]prv,
+    output wire[1:0]eq,ep);
+    wire e=qbg&&iss&&iph!=2'd2;
+    assign eq={e&&sfv[1]&&scd[1],e&&sfv[0]&&scd[0]};
+    assign ep={!pq&&pv&&prv[1],!pq&&pv&&prv[0]};
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_gq_em_allow(input wire ev,qbg,ef,ec,output wire q);

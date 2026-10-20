@@ -106,7 +106,21 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
         ot_gq_t16_cfg_byte u_byte(.clk(clk),.cv(cv_copy[P]),.match_ok(match_copy[P]),
             .header_ok(header_copy[P]),.flags_ok(flags_copy[P]),.data(data_q[8*g+:8]),.q(program_cfg_data[8*g+:8]));
     end endgenerate
+`ifdef OT_GQ_N32
+    // N32 (HBM-GQ7 10-20): the launch commit gate reached 34-38 loads (13 start-bank copies + the 29 start-field enables);
+    // four kept copies: [0] start-bank copies, [1] start base, [2] start limit, [3] start loops. Same edge, same function.
+    wire[3:0]launch_c;
+    generate for(genvar g=0;g<4;g=g+1)begin:g_launch_gate
+        (* keep="true" *)ot_gq_t16_launch u_gate(.lv(lv),.armed(armed),.validated(validated),.scanning(scanning),
+            .commit(commit),.active(program_active),.fault(fault),.cv(cv),.dv(dv),.q(launch_c[g]));
+    end endgenerate
+    wire launch_emit=launch_c[0];
+    always @(posedge clk)if(launch_c[1])program_start_base<=stored_base;
+    always @(posedge clk)if(launch_c[2])program_start_limit<=stored_limit;
+    always @(posedge clk)if(launch_c[3])program_start_loops<=stored_loops;
+`else
     wire launch_emit=lv&&armed&&launch_ready&&!cv&&!dv;
+`endif
     generate for(genvar g=0;g<13;g=g+1)begin:g_launch_copy
         ot_gq_t16_bitff u_v(.clk(clk),.rst_n(reset_launch),.d(
 `ifdef OT_GQ_T16_MUT_START
@@ -175,8 +189,11 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
                 armed<=0;configured<=0;
                 if(!launch_ready || cv || dv)fault<=1;
                 else begin
-                    program_start_v<=1;program_start_base<=stored_base;
+                    program_start_v<=1;
+`ifndef OT_GQ_N32
+                    program_start_base<=stored_base;
                     program_start_limit<=stored_limit;program_start_loops<=stored_loops;
+`endif
                 end
             end
         end
@@ -193,6 +210,11 @@ module ot_gq_t16_bitff(input wire clk,rst_n,d,output wire q);
     (* keep="true" *)reg r;
     always @(posedge clk or negedge rst_n)if(!rst_n)r<=0;else r<=d;
     assign q=r;
+endmodule
+// N32: kept launch commit gate (= lv && armed && launch_ready && !cv && !dv)
+(* keep_hierarchy="yes" *)
+module ot_gq_t16_launch(input wire lv,armed,validated,scanning,input wire[1:0]commit,input wire active,fault,cv,dv,output wire q);
+    assign q=lv&&armed&&validated&&!scanning&&commit==2'd0&&!active&&!fault&&!cv&&!dv;
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_gq_t16_match(input wire[7:0]a,b,output wire q);assign q=a==b;endmodule

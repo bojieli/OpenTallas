@@ -128,7 +128,7 @@
   "benches": [
    {
     "name": "aq_sram_exact",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
     "expect": "pass",
     "pass_regex": "AQ_TREE13_EXACT_PASS blocks1024 elements32768",
     "threads": 4,
@@ -136,7 +136,7 @@
    },
    {
     "name": "aq_sram_mut_slot",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
     "expect": "fail",
     "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH",
     "fail_witness": "results/rtl/gqissue_sram_1019/capture_mut_slot_fail.log",
@@ -145,7 +145,7 @@
    },
    {
     "name": "aq_s2top_exact",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
     "expect": "pass",
     "pass_regex": "AQ_S2TOP_EXACT_PASS SCALE13R_EQ PASS checks=2097152 .*AQ_TREE13_EXACT_PASS blocks1024 elements32768",
     "threads": 4,
@@ -153,7 +153,7 @@
    },
    {
     "name": "aq_s2top_mut_k",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
     "expect": "fail",
     "fail_regex": "SCALE13R_EQ FAIL errors=[1-9]",
     "fail_witness": "results/rtl/gqissue_sram_1019/k4_s2top/s2top_mutk_fail.log",
@@ -162,7 +162,7 @@
    },
    {
     "name": "collq_ia_ia1",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -170,7 +170,7 @@
    },
    {
     "name": "collq_ia_ia2",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -178,7 +178,7 @@
    },
    {
     "name": "collq_ia_slot",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -187,7 +187,7 @@
    },
    {
     "name": "collq_ia_dep",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -196,7 +196,7 @@
    },
    {
     "name": "collq_ia_iaign",
-    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -367,7 +367,8 @@
   "OT_COLLQ_SRAM",
   "OT_GQ_FAN32",
   "OT_GQ_S2TOP",
-  "OT_GQ_P192"
+  "OT_GQ_P192",
+  "OT_GQ_N32"
  ],
  "structural_change": "hcoll_gq_issue_k5b_1020: STRUCTURAL redesign of gq_issue after k3 (GRT ovf 206 in the SRAM gaps/faces) and k4/k4b (GRT congestion again): VM_RT 74 + ISSUE_AHEAD 1 RTL (HBM-COLLFUSE2-VME af944e962) with OT_GQ_P192 = the 128x256 SRAM view with pins at 0.192 um (5.1 pins/um faces, 80.472 um tall) in two regional halves: aq0 stack x86.4 R0 (busy face W), aq1 stack x345.6 MY (busy face E), each 4 macros in one abutted N-S stack (base on the 43.2 lattice, pitch 80.544 = 1678 M4 tracks, 0.072 um gap, no N/S pins), centre band 164.4 um for the shared event/VM/ring logic, clock_split_km K=8 regional roots; outline 518.4x432.0.",
  "reset_relay_split": {

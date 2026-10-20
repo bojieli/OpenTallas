@@ -13,6 +13,8 @@ MEM=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x2
 D=(-DOT_COLLQ_SRAM -DOT_GQ_FAN32 -DOT_GQ_S2TOP); [[ $MUT == 1 ]] && D+=(-DOT_GQ_MUT_S2TOP_K)
 # HBM-COLL6 10-20: OT_GQ_P192=1 = k5 leaf (p192 SRAM view)
 if [[ ${OT_GQ_P192:-0} == 1 ]]; then D+=(-DOT_GQ_P192); MEM=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v; fi
+# HBM-GQ7 10-20: OT_GQ_N32=1 = the native32 fanout pass (kept copies / registered one-hot selects, same edges)
+if [[ ${OT_GQ_N32:-0} == 1 ]]; then D+=(-DOT_GQ_N32); fi
 verilator --binary --timing -j 4 "${D[@]}" -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb_aq_scale13r_eq --Mdir "$OUT/sc" \
  "$P/tb_aq_scale13r_eq.sv" "$P/ot_hgi_coll_aq_scale13r.sv" physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv > "$OUT/sc.build.log" 2>&1 \
  || { tail -30 "$OUT/sc.build.log"; exit 2; }

@@ -133,6 +133,16 @@ module ot_hgi_coll_aq_mul13r (
     assign s1_ac[0]=s1_a;assign s1_ac[1]=s1_a;assign s1_ac[2]=s1_a;
     assign s1_ac[3]=s1_a;assign s1_ac[4]=s1_a;assign s1_ac[5]=s1_a;
 `endif
+`ifdef OT_GQ_N32
+    // N32 (HBM-GQ7 10-20): the two exponent decisions decoded s1_power through shared nets of 34 / 39 loads; four kept
+    // copies of s1_power (stage 1, same edge), one per decision half ({sub, floor, oh} / th of d47 and of d46).
+    wire [11:0] s1_pc [0:3];
+    generate for (genvar g = 0; g < 4; g = g + 1) begin : g_s1_power_copy
+        ot_hgi_coll_scale_pow_ff u_ff(.clk(clk), .d(12'(a_power + b_power)), .q(s1_pc[g]));
+    end endgenerate
+    wire [86:0] dc47h = decide($signed(s1_pc[0]), 6'd47), dc47l = decide($signed(s1_pc[1]), 6'd47);
+    wire [86:0] dc46h = decide($signed(s1_pc[2]), 6'd46), dc46l = decide($signed(s1_pc[3]), 6'd46);
+`endif
     reg        s2_v;
     reg        s2_byp, s2_sign;
     reg [1:0]  s2_err;
@@ -145,8 +155,13 @@ module ot_hgi_coll_aq_mul13r (
         s2_pp0 <= s1_inv6 ? ({8'd0,s1_ac[0]}*32'hAB) : ({8'd0,s1_ac[1]}*32'h25);
         s2_pp1 <= s1_inv6 ? ({8'd0,s1_ac[2]}*32'hAA) : ({8'd0,s1_ac[3]}*32'h49);
         s2_pp2 <= s1_inv6 ? ({8'd0,s1_ac[4]}*32'hAA) : ({8'd0,s1_ac[5]}*32'h92);
+`ifdef OT_GQ_N32
+        s2_d47 <= {dc47h[86:48], dc47l[47:0]};
+        s2_d46 <= {dc46h[86:48], dc46l[47:0]};
+`else
         s2_d47 <= decide(s1_power, 6'd47);
         s2_d46 <= decide(s1_power, 6'd46);
+`endif
     end
 
     // -- stage 3: the product, and the decision its top bit selects (as the closed pipe) -------------------------
@@ -283,6 +298,12 @@ module ot_hgi_coll_aq_top_dec(input wire[7:0]hi,input wire carry,output wire q);
     assign q=hi[7]^(carry&&(&hi[6:0]));
 endmodule
 
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_scale_pow_ff(input wire clk,input wire[11:0]d,output wire[11:0]q);
+    (* keep="true",dont_touch="true" *)reg[11:0]r;
+    always @(posedge clk)r<=d;
+    assign q=r;
+endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_scale_data_ff(input wire clk,input wire[23:0]d,output wire[23:0]q);
     (* keep="true",dont_touch="true" *)reg[23:0]r;
