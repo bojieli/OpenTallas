@@ -1,5 +1,5 @@
 {
- "name": "hbfd_pad_r17x115-p1-COMMIT",
+ "name": "hbfd_pad_r17x115-p1-b3ee9a94c",
  "block": "hbfd_pad_r17x115",
  "ref_tile": true,
  "owner": "Claude:LEAD2-HBM/L2H-PAD",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "claude/l2h-pad-ingress-1019",
-  "commit": "COMMIT",
+  "commit": "b3ee9a94c",
   "extra_paths": [
    "rtl/hbm_accel/die_glue/hbfd_pad.sv",
    "rtl/hbm_accel/die_glue/tb_hbfd_pad_storage.sv",
@@ -137,7 +137,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbfd_pad_r17x115/hbfd_pad_r17x115-p1-COMMIT"
+   "to": "results/rtl/ref_tile/hbfd_pad_r17x115/hbfd_pad_r17x115-p1-b3ee9a94c"
   }
  ],
  "cycles_added": 0,
