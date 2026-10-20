@@ -1,0 +1,15 @@
+# STOP CLAUDE IS BACK 08:13 PT
+
+No new work/launches/source edits/proofs/submits/merges after STOP. Seal only existing WIP and exact receipts. Own WT /home/ubuntu/wt/codex-hcdc-successor-0720, branch codex/hcdc-successor-0720, primary packet pushed1ad244fdb; proposals ea5df092f are NOT admitted for full P&R. Read PACKET.md.
+
+ONLY owned live fleet job: endpoint-only packing ep6 unit3210012-1792509120, tool session90031. Immutable in-hand staging /srv/opentallas-scratch/claude/codex-hcdc-successor-0720/pack_endpoints.py; outputs endpoint_pack.json and endpoint_pack_placements.json in that directory. Running OpenROAD actual ODB/source-target fixture beforeSTOP; preserve it. No terminal result collected at STOP. FF+constant targets only, macro halos/physical tap obstructions; other combinational cells not placed, frozen baseline ports (not projected230um) retained in this test. Even a PASS would not qualify a legal whole design or new pin plan.
+
+Four future gate clients remain SIGSTOP LOCAL preflight with NO remote gate children: Python2946488(pc2a/session43545),2946490(pc2b/session36672),2946491(host2a/session13389),2946489(host2b/session51788). Exact command paths /home/ubuntu/scratch/codex-hcdc-successor-0720/gate_{pc2a,pc2b,host2a,host2b}_r2.{log,json}. Do not CONT without complete source binding/ownership/packing/clock/density model. Initial sparse-source refusal logs gate_*.log/json preserved separately.
+
+All earlier owned proof jobs terminal. Exact full actual-Liberty STAGE diagnostics: PC frozen1j 17445pairs,336>405/max475.855; HOST frozenh1g3_place 25099pairs,0>405/max401.943, role-errors0 both. HOST initialplacement finished; later CTSrepair DPL failed. Direct-wire graph43036pairs/55>405 is separate. Conditional PC source-role target-box model388.752um upper bound/0fail and65.625% interiorFF-only peakbin occupancy; not total packing/legal P&R. Earlier collapsed/random targets rejected by local occupancy. No canonical physical/source reset-copy admission follows from these geometry diagnostics.
+
+Implementation gaps: hard boundary FF/hold/buffer ownership through DPL and repair-created buffers; disjoint endpoint boxes and combinational-space complement; actual all-std-cell row/bin legal packing and canonical candidate source/name bijection; source-derived first-use/sync landing constraints, literal pin/flop density, full source all-stage/wire reach, actual TT/FF clock coverage/spread. HOST retain inherited170um pin profile rather than unneeded230um; proposed kits not yet updated or admitted. Main/helper sync is ROOT-only.
+
+ROOT daemon drain is unrelated owned work: qkd_hr_cdc_host-pg2-12d9ecc9e real SS measurement finished08:00:58 then existingFF OpenROAD3186232 started08:00:58 (100%CPU at last read); parentPython3149718. Exact liveness already sent directROOT, ROOT confirmed preserve; no further investigation. Runtime stays6586 until ROOT sees inactive/PID0.
+
+Private sr9 R8 terminal exit143 during compilation; NO initial-state audit result. Normal PC6 supersedes route; oldR7 actual pcpo failures and HCDCq1/q2 failures preserved, no rerun/no masks.
