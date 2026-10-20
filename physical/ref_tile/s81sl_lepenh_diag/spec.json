@@ -214,7 +214,12 @@
   "peak_ram_gb": 128,
   "period_ps": 833.333333,
   "macro_halo_um": 5.4,
-  "hold_margin_ns": 0.03
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
  },
  "structural_change": "S81-SLICE3-LEPENH 10-19 DIAGNOSTIC parent (stand-in children, NEVER bindable): dsdv_slice_lepe_nh as a LANDED-REGION cluster (lp.py, tools/landed_parent/specs/dsdv_slice_lepe_nh.json): regions S (slice cluster) / K (lep_nh MY + 2 x dsfd_coll_lane_e at the slice E line face), 3 landings (ro_e 1104 b, ri_e 1104 b, slice fault; +3 edges RESCHEDULE on the off-die line hop), 1-bit reset runs only. Children are slice_standin.py abstracts (STANDIN_NOT_A_VIEW): slice 1252.8 x 5702.4 (PL-SLICE draft), lep_nh 475.2 sq (s81sl_lepnh pin plan), lane_e = closed lane_w plan mirrored.",
  "job": {
@@ -227,15 +232,20 @@
   "benches": [],
   "no_bench_reason": "diagnostic stand-in gate; behavioural benches run separately (lockstep + slice_lep 2-die on the landed parent)",
   "views_to": "physical/ref_tile/s81sl_lepenh_diag/views",
-  "record_to": "results/rtl/ref_tile/s81sl_lepenh_diag"
+  "record_to": "results/rtl/ref_tile/s81sl_lepenh_diag",
+  "extra_paths": [
+   "results/rtl/s81_slice3_lepenh_1019/lp"
+  ]
+ },
+ "orfs_vars": {
+  "OT_OFLOP_GAP": "4.5"
+ },
+ "io_flop_at_pins": {
+  "cols": 21
  },
  "macros": [],
  "inter": [],
  "recipe": 4,
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- },
  "inhold": true,
  "outhold": true,
  "keep_pin_regs": true,

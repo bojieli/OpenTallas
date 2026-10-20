@@ -8,7 +8,10 @@
  "peak_ram_gb": 128,
  "source": {
   "branch": "claude/s81-slice3-lepenh-1019",
-  "commit": "COMMIT"
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/rtl/s81_slice3_lepenh_1019/lp"
+  ]
  },
  "stages": {
   "bench": [
