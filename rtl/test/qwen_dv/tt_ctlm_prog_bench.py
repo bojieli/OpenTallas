@@ -158,7 +158,7 @@ def run(a):
             raise SystemExit('--bmut 3 needs an --lm-head image')
         words[984] += 1
     ev, exp, ncyc, stages = events_and_expect(img, words, a.decode, a.bmut)
-    work = Path(a.work)
+    work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     tag = f'm{a.mut}_b{a.bmut}' + ''.join(f'_{d}' for d in a.defs) + (f'_hra{a.hra}' if a.hra else '')
     evf, lgf = work / f'ev_{tag}.txt', work / f'log_{tag}.txt'
@@ -183,7 +183,7 @@ def run(a):
         if p.returncode:
             print(p.stdout[-3000:], p.stderr[-3000:])
             raise SystemExit('verilator build failed')
-    subprocess.run([str(obj / 'Vtb'), f'+EV={evf}', f'+LOG={lgf}', f'+NCYC={ncyc}'], cwd=work, check=True,
+    subprocess.run([str(obj / 'Vtb'), f'+EV={evf.name}', f'+LOG={lgf.name}', f'+NCYC={ncyc}'], cwd=work, check=True,
                    capture_output=True)
     got, errs, info = [], [], {}
     issues, roms, nats, rom_words = [], [], [], []

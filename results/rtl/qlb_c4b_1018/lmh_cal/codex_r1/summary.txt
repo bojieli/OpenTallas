@@ -1,0 +1,84 @@
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h0_b3.out
+CTLM_PROG MUT=0 BMUT=3 HARD_HR=0 HRA=0 DECODE=3: FAIL 129/131  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    unexpected ISSUE at 24860 (28, 1)
+    unexpected ROM at 24862 None
+rc=1
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h0_base.out
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=0 HRA=0 DECODE=3: PASS 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+rc=0
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h0_head.out
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=0 HRA=0 DECODE=3: PASS 131/131  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+rc=0
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h0_m36.out
+CTLM_PROG MUT=36 BMUT=0 HARD_HR=0 HRA=0 DECODE=3: FAIL 128/131  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    missing ISSUE at 27787 (29, 0)
+rc=1
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h0_m37.out
+CTLM_PROG MUT=37 BMUT=0 HARD_HR=0 HRA=0 DECODE=3: FAIL 130/131  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    fault rise at 24667: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    missing XPF at 24765 0x800112002010004001
+rc=1
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h0_segmut.out
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 293, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 278, in main
+    ok, n, errs, info = run(a)
+                        ~~~^^^
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 190, in run
+    for line in open(lgf):
+                ~~~~^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/w_h0_segmut/log_m0_b0_OT_SEG_MUT.txt'
+rc=1
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h1_b3.out
+CTLM_PROG MUT=0 BMUT=3 HARD_HR=1 HRA=0 DECODE=3: FAIL 129/131  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    unexpected ISSUE at 24860 (28, 1)
+    unexpected ROM at 24862 None
+rc=1
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h1_base.out
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+rc=0
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h1_head.out
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS 131/131  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+rc=0
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h1_m36.out
+CTLM_PROG MUT=36 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: FAIL 128/131  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    missing ISSUE at 27787 (29, 0)
+rc=1
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h1_m37.out
+CTLM_PROG MUT=37 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: FAIL 130/131  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    fault rise at 24667: head 0 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 1 cal 0
+    missing XPF at 24765 0x800112002010004001
+rc=1
+/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/h1_segmut.out
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 293, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 278, in main
+    ok, n, errs, info = run(a)
+                        ~~~^^^
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 190, in run
+    for line in open(lgf):
+                ~~~~^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/w_h1_segmut/log_m0_b0_OT_SEG_MUT.txt'
+rc=1
