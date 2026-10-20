@@ -229,8 +229,8 @@ def dup_witnesses(a, work, regs, bit_of, hit):
     masked.  Registers the passes leave alone (dead or live) stay FREE.  Returns
     [(gold_name, twin_gold_name | None, const | None, why)]."""
     (work / 'gold2.ys').write_text('\n'.join([
-        'read_rtlil gold1.il', 'opt_dff -sat', 'opt_merge -share_all', 'opt_dff -sat', 'opt_merge -share_all',
-        'opt_dff -sat', 'opt_clean', 'write_json gold2.json', '']))
+        'read_rtlil gold1.il'] + ['opt_expr -full', 'opt_dff -sat', 'opt_merge -share_all', 'opt_clean'] * 4
+        + ['write_json gold2.json', '']))
     rc, _t = run([a.yosys, '-q', '-s', 'gold2.ys'], work, 'gold2.log', a.timeout)
     if rc:
         raise SystemExit('dup-witness: gold opt failed: ' + (work / 'gold2.log').read_text()[-1500:])
