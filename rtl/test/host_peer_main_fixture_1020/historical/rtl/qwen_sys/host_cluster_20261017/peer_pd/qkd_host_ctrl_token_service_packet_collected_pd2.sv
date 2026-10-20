@@ -32,7 +32,7 @@
 // only after all copies were emitted. Routing preserves per-source FIFO order.
 // Status snapshots send on relevant-state change; active cycle counter changes
 // alone do not flood the link. Complete tk including final cycle count is sent.
-module qkd_host_ctrl_token_service_packet_collected_pd2 #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0)(
+module qkd_host_ctrl_token_service_packet_collected_pd2 #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0,CMD_READ32=0)(
  input wire ck,rst_n,input wire[2:0]die_id,
  input wire rx_v,input wire[511:0]rx_d,output reg rx_cr,
  output reg tx_v,output reg[511:0]tx_d,input wire tx_cr,
@@ -67,6 +67,32 @@ module qkd_host_ctrl_token_service_packet_collected_pd2 #(parameter integer DIE=
  reg rv,tc,cv;reg[511:0]rd;reg[181:0]cd;reg[92:0]lt;reg[9:0]lk;reg[1:0]lb;
  reg[511:0]q[0:3];reg[1:0]wp,rp;reg[2:0]count;
  reg[181:0]cq[0:3];reg[1:0]cw,cr;reg[2:0]cn;
+ // Opt-in zero-edge command read selection.728bits remain legal flop storage.
+ // Each kept onehot source drives only8data bits; four shared next-state
+ // producers each drive23register Ds. Same age as the original binary cr.
+ wire[181:0]cmd_head;
+ generate if(CMD_READ32)begin:g_cmd_read32
+  (* keep *)reg[3:0]read_oh[0:22];
+  wire[1:0]next_cr=cr+2'(load_cmd);
+  wire[3:0]next_oh=4'b0001<<next_cr;
+  for(genvar g=0;g<23;g=g+1)begin:g_slice
+   localparam integer LO=8*g,BW=(182-LO<8)?182-LO:8;
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)read_oh[g]<=4'b0001;else read_oh[g]<=next_oh;
+   reg[BW-1:0]pick;
+   always @*begin
+    pick=0;
+    for(integer row=0;row<4;row=row+1)pick=pick|(cq[row][LO+:BW]&{BW{read_oh[g][row]}});
+   end
+`ifdef OT_PEER_CMD_READ_MUT
+   assign cmd_head[LO+:BW]=g==0?pick^8'd1:pick;
+`else
+   assign cmd_head[LO+:BW]=pick;
+`endif
+  end
+ end else begin:g_cmd_read_legacy
+  assign cmd_head=cq[cr];
+ end endgenerate
  reg[7:0]credits;reg[15:0]seq_tx;reg[127:0]seqp1;reg[7:0]seq_seen;
  reg lready,biv,startup_q;reg[15:0]lepoch,bepoch,epoch,last_epoch;
  reg last_ready,begin_pending,begin_busy,epoch_active;
@@ -272,19 +298,19 @@ wire[2:0]src=h[18:16];wire[7:0]target=h[31:24];
     end else begin busy<=0;cmd_cr<=1;end
    end
    if(load_cmd)begin
-    active<=cq[cr];active_service_epoch<=ENABLE_SERVICE?epoch:16'd0;local_emitted<=0;busy<=1;dst<=1;cr<=cr+1'b1;
+    active<=cmd_head;active_service_epoch<=ENABLE_SERVICE?epoch:16'd0;local_emitted<=0;busy<=1;dst<=1;cr<=cr+1'b1;
     active_epoch_valid<=0;
-    if(ENABLE_TOKEN&&cq[cr][38])begin
+    if(ENABLE_TOKEN&&cmd_head[38])begin
      if(abort_seen||abort_q||reset_abort_seen)begin
-      active<=cq[cr]&~(182'd1<<38);hc<=cq[cr]&~(182'd1<<38);local_emitted<=1;grant_wait<=0;
-      if(!cq[cr][113]&&!cq[cr][181])begin busy<=0;cmd_cr<=1;end
+      active<=cmd_head&~(182'd1<<38);hc<=cmd_head&~(182'd1<<38);local_emitted<=1;grant_wait<=0;
+      if(!cmd_head[113]&&!cmd_head[181])begin busy<=0;cmd_cr<=1;end
      end else begin
       request_accepted<=0;cancel_consumed<=0;
-      if(cq[cr][17:13]!=0||cq[cr][35:18]>=18'd151936)fault<=1;
-      else begin grant_wait<=1;token_request_valid<=1;token_request_token<=cq[cr][35:18];
-       token_request_position<=cq[cr][17:0];token_request_generation<=cq[cr][37:36];end
+      if(cmd_head[17:13]!=0||cmd_head[35:18]>=18'd151936)fault<=1;
+      else begin grant_wait<=1;token_request_valid<=1;token_request_token<=cmd_head[35:18];
+       token_request_position<=cmd_head[17:0];token_request_generation<=cmd_head[37:36];end
      end
-    end else begin hc<=cq[cr];local_emitted<=1;grant_wait<=0;end
+    end else begin hc<=cmd_head;local_emitted<=1;grant_wait<=0;end
    end
    case({cv&&!fault&&role==0&&cn<4,load_cmd})2'b10:cn<=cn+1'b1;2'b01:cn<=cn-1'b1;default:;endcase
    if(take)begin

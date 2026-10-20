@@ -96,7 +96,7 @@ module qkd_host_ctrl_token_service_packet_collected_rr #(
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck),.rst_n_in(por_n),.rst_n(por_n_qv));
  ot_rst_relay #(.REGIONS(12),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_rst_n(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_n_qv));
 `endif
- qkd_host_ctrl_token_service_packet_collected_pd2 #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN)) u_m(
+ qkd_host_ctrl_token_service_packet_collected_pd2 #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN),.CMD_READ32(1)) u_m(
   .ck(ck),
   .rst_n(rst_n_q),
   .die_id(die_id),

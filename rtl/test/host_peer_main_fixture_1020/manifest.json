@@ -537,7 +537,7 @@
     {
       "historical_path": "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_ctrl_token_service_packet_collected_rr.sv",
       "compiled_path": "rtl/test/host_peer_main_fixture_1020/historical/rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_ctrl_token_service_packet_collected_rr.sv",
-      "sha256": "186c8f925b389287591de4c148d34162ae4b60ff3225647692f633e030538ccd",
+      "sha256": "b41c1a71541d6efad0af3ffd97fb275861f7a25273cc4e17f2c5dda0417f341d",
       "same_as_main_batch_base": false
     },
     {
@@ -555,7 +555,7 @@
     {
       "historical_path": "rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd2.sv",
       "compiled_path": "rtl/test/host_peer_main_fixture_1020/historical/rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd2.sv",
-      "sha256": "1b02deb2657f9a56eb144a7513b814c85464dba5e39506d1b707c0ce80919673",
+      "sha256": "185993f3049b89f17d492917bc4988fb450a85b4557e5f829195c73a759315c2",
       "same_as_main_batch_base": false
     },
     {
@@ -621,5 +621,15 @@
       "mailhold": 6
     },
     "status": "PASS"
+  },
+  "bounded_cmd_read_revision": {
+    "base_fixture": "8196156c1",
+    "parameter": "CMD_READ32=0 (off default); private token_rr derivative opts in",
+    "added_edges": 0,
+    "storage_bits": 728,
+    "read_copies": 23,
+    "slice_bits": 8,
+    "original_ptr_maxloads": 730,
+    "new_target": "<=32; native qualification pending"
   }
 }
