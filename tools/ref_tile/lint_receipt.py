@@ -217,7 +217,9 @@ def remote(policy, spec, root, key, error):
             raise error(f'{policy} lint: cannot ship to {host}: {up.stderr[-300:]!r}')
         cmd = (f'cd {run_dir} && OT_LINT_LOCAL=1 python3 -I tools/ref_tile/lint_receipt.py --run lint_job.json; '
                f'rc=$?; cd / && rm -rf {run_dir}; exit $rc')
-        p = subprocess.run([client, '--mem', str(mem), '--threads', '1', '--hosts', host, '--max-wait', '900',
+        # KV-HOST6 10-20: the run asks for the same 2 GB disk as the pick (ot-run's 20 GB default refused the picked
+        # host when its scratch had 2..20 GB free: 'no host qualifies', ot-epyc5 at 9 GB)
+        p = subprocess.run([client, '--mem', str(mem), '--threads', '1', '--disk', '2', '--hosts', host, '--max-wait', '900',
                             '--dir', run_dir, '--', 'bash', '-c', cmd], stdin=subprocess.DEVNULL,
                            capture_output=True, text=True)
         tried.append(host)
