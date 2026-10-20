@@ -611,6 +611,8 @@ def main():
                     help='L2H-GEN2D-RST 10-19: bound every reset route search to path <= DETOUR x Manhattan + slack cells '
                          '(0 = legacy unbounded clock-router A*, which floods the die on a walled-off target); reach unchanged')
     ap.add_argument('--route-slack', type=int, default=64)
+    ap.add_argument('--route-reuse', action='store_true',
+                    help='L2H-GEN2D-RST 10-19: stage a chain along ONE routed path (re-route only when the suffix is unusable)')
     ap.add_argument('--route-max-pops', type=int, default=3_000_000)
     ap.add_argument('--carrier-home-um', type=float, default=64.8,
                     help='L2H-GEN2D-RST 10-19: carrier station home search radius (reach-checked)')
@@ -619,6 +621,7 @@ def main():
     CARRIER_HOME_UM = a.carrier_home_um
     reset_forest_geometry.ROUTE_DETOUR, reset_forest_geometry.ROUTE_SLACK = a.route_detour, a.route_slack
     reset_forest_geometry.ROUTE_MAX_POPS = a.route_max_pops
+    reset_forest_geometry.ROUTE_REUSE = a.route_reuse
     try:
         survey = [] if a.survey else None
         carrier = None
@@ -636,7 +639,7 @@ def main():
                                            route_stats=reset_forest_geometry.ROUTE_STATS), indent=2, default=str) + '\n')
         print(f'reset forest FAIL: {e}')
         raise SystemExit(3)
-    rep['route_bound'] = dict(detour=a.route_detour, slack_cells=a.route_slack, max_pops=a.route_max_pops,
+    rep['route_bound'] = dict(detour=a.route_detour, reuse=a.route_reuse, slack_cells=a.route_slack, max_pops=a.route_max_pops,
                               carrier_home_um=a.carrier_home_um, stats=reset_forest_geometry.ROUTE_STATS)
     rep['input_sha256'] = {str(p.resolve()): hashlib.sha256(p.read_bytes()).hexdigest()
                            for p in (a.contract, a.manifest, Path(__file__), Path(__file__).with_name('reset_forest_geometry.py'), Path(__file__).with_name('reset_rows.py'),

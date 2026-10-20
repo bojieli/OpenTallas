@@ -37,6 +37,10 @@ class GeometryError(ValueError):
 ROUTE_DETOUR = 0.0
 ROUTE_SLACK = 64
 ROUTE_MAX_POPS = 3_000_000
+# ROUTE_REUSE: a chain routes ONCE and stages along the routed path; after a stage it continues on the unconsumed suffix of that
+# path (start within one relay footprint of the new stage pin) instead of re-routing the whole remaining span per hop (the bounded
+# carrhhB profile: a 7 mm NW leaf chain re-ran the full A* for each of ~20 hops).  The final pin-to-pin reach check is unchanged.
+ROUTE_REUSE = False
 ROUTE_STATS = dict(calls=0, fails=0, capped=0, pops=0, seconds=0.0, slow=[])
 
 
@@ -411,15 +415,21 @@ class Geometry:
             return []
         out = []
         point = source
+        rest = None   # L2H-GEN2D-RST ROUTE_REUSE: unconsumed suffix of the last routed path
         while md(point, end) > lim:
             a, b = self.grid.cell(*point), self.grid.cell(*end)
+            if ROUTE_REUSE and rest and md(point, self.grid.xy(rest[0])) <= 2 * self.radius + 2 * GRID:
+                path, rest = rest, None
+            else:
+                path = None
             # Leave room for the current relay reservation and endpoint pin offsets; never use the clock router's 3x
             # fallback.  FOREST2: route first on the PLACEMENT grid (reserved relays count as blocked, so every free
             # path cell is a legal stage home and greedy staging always progresses); only if that fails, on the
             # obstacle-only grid (wires overfly reserved relays) with stage homes beside the path.  Same budget.
-            try:
+            if path is None:
+              try:
                 path = bounded_route(self.grid, a, b, self.budget - 4 * GRID)
-            except SystemExit:
+              except SystemExit:
                 try:
                     path = bounded_route(self.rgrid, a, b, self.budget - 4 * GRID)
                 except SystemExit as e:
@@ -440,6 +450,7 @@ class Geometry:
                 pass
             elif options:
                 t = self.reserve('hop', points[options[-1]], max_distance=0)
+                rest = path[options[-1]:]
             else:
                 # FOREST2: the routed cells within the budget are all OCCUPIED by earlier relay reservations (wires
                 # overfly them): home the stage on the nearest free cell beside the path instead, farthest path point
@@ -454,6 +465,7 @@ class Geometry:
                         continue
                     if md(self.tile_pin(cand, 'rst_n'), end) < md(point, end) and md(point, self.tile_pin(cand, 'rst_n_in')) <= lim:
                         t = cand
+                        rest = path[i:]
                         break
                     self.unreserve(cand)
                 if t is None and self.host_mode == 'fallback':
