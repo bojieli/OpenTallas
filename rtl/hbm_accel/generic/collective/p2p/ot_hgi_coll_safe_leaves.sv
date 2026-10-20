@@ -370,6 +370,21 @@ module ot_hgi_coll_static_program_target_s128 #(
         ldh_q<=cfg_loaded || (drain_done && row==c_row);
 `endif
     end
+    // Descriptor limit uses a forwarded landing: dacc drives two kept valid
+    // copies, instead of the eight field hold muxes. The pending field is already
+    // visible to the first scan edge; the held copy commits one edge later.
+    generate if(ASSEMBLY_PIPE!=0)begin:g_limit_landing
+        (* keep = "true" *) reg [1:0] pending;
+        reg [PW:0] shadow,held;
+        always @(posedge clk)shadow<=limit_q[PW:0];
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin pending<=0;held<=0;end
+            else begin
+                pending<={2{dacc}};
+                if(pending[1])held<=shadow;
+            end
+        assign limit=pending[0]?shadow:held;
+    end endgenerate
     wire [PW-1:0] a_row=addr_q[PW+2:3];
     wire in_range={1'b0,check_row}>=base && {1'b0,check_row}<limit;
     wire [63:0] rd;
@@ -470,7 +485,7 @@ module ot_hgi_coll_static_program_target_s128 #(
             cv<=0;dv<=0;lv<=0;issuer_cfg<=0;issuer_start<=0;
             if(PCREG!=0)issuer_start_pc<=0;configured<=0;init_busy<=0;fault<=0;
             seen<=0;if(ASSEMBLY_PIPE==0)loaded<=0;row<=0;draining<=0;step<=0;
-            base<=0;limit<=0;checking<=0;check_bad<=0;check_row<=0;ld_la<=0;fw_q<=0;
+            base<=0;if(ASSEMBLY_PIPE==0)limit<=0;checking<=0;check_bad<=0;check_row<=0;ld_la<=0;fw_q<=0;
         end else begin
             cv<=cfg_v;dv<=desc_v;lv<=launch_v;
             issuer_cfg<=0;issuer_start<=0;fw_q<=fw;
@@ -512,7 +527,7 @@ module ot_hgi_coll_static_program_target_s128 #(
             if(desc)begin
                 if(!dacc)fault<=1;
                 else begin
-                    base<=base_q[PW-1:0];limit<=limit_q[PW:0];configured<=0;
+                    base<=base_q[PW-1:0];if(ASSEMBLY_PIPE==0)limit<=limit_q[PW:0];configured<=0;
 `ifndef OT_PT_MUT_LATE_SPC
                     if(PCREG!=0)issuer_start_pc<=base_q[PW-1:0];                     // mutant: start_pc only at launch (v7 start faults)
 `endif
