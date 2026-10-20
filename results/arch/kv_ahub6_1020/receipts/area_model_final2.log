@@ -1,0 +1,57 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc9       admits    75 GB (avail 272, growth 220, headroom 0, waiters 0/0 GB) load 57/128 running 36 disk 156 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-533935-1792485940 after 0 s
+{
+ "netlist_sha256": "e95402bcafd8141801f34e553bcfc1a7d28d9419a5e74f22efd2df059c80a201",
+ "std_area_um2": 24875.959,
+ "regions": {
+  "c": {
+   "cells": 106814,
+   "flops": 28800,
+   "area_um2": 15511.662
+  },
+  "w": {
+   "cells": 10349,
+   "flops": 2963,
+   "area_um2": 1564.624
+  },
+  "e": {
+   "cells": 7064,
+   "flops": 1941,
+   "area_um2": 1038.038
+  },
+  "z0": {
+   "cells": 10074,
+   "flops": 2744,
+   "area_um2": 1504.773
+  },
+  "z1": {
+   "cells": 10074,
+   "flops": 2744,
+   "area_um2": 1504.773
+  },
+  "z2": {
+   "cells": 10074,
+   "flops": 2744,
+   "area_um2": 1504.773
+  },
+  "z3": {
+   "cells": 10074,
+   "flops": 2744,
+   "area_um2": 1504.773
+  },
+  "unnamed": {
+   "cells": 8094,
+   "flops": 0,
+   "area_um2": 742.545
+  }
+ },
+ "missing_masters": [],
+ "scope": "Mapped std cells only, before CTS/repair; unnamed logic not assigned region. Full stage fence fill required."
+}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-533935-1792485940): exit 0

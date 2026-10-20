@@ -2635,6 +2635,25 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
     arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc", OFLOP_TCL, RT.ASSIGNED_PIN_EXACT_TCL,
           getattr(RT, "M6_PIN_ACCESS_TCL", "physical/common_flow/m6_pin_access.tcl")])
     sp = json.loads((dst / kit / "spec.json").read_text())
+    if RT.clock_entry_constraints.landed_cluster(sp):
+        # A derived LP record is a closed identity manifest, not permission to
+        # archive arbitrary working-tree files. Replay only exact commit bytes.
+        path = sp.get("landed_record")
+        if not isinstance(path, str) or Path(path).is_absolute() or '..' in Path(path).parts:
+            raise ValueError("landed record path must stay inside source root")
+        arch([path])
+        record = json.loads((dst / path).read_text())
+        if record.get("derived_lp") is not None or record.get("generator") != "tools/landed_parent/lp.py":
+            from derived_landed_record import materialization_entries, validate
+            import hashlib
+            entries = materialization_entries(record)
+            for entry in entries:
+                blob = subprocess.run(["git", "-C", repo, "show", f"{commit}:{entry['path']}"],
+                                      capture_output=True, check=True).stdout
+                if hashlib.sha256(blob).hexdigest() != entry['sha256']:
+                    raise ValueError("derived LP immutable materialization hash mismatch: " + entry['path'])
+            arch([entry['path'] for entry in entries])
+            validate(sp, dst, record)
     if sp.get("registered_cluster_candidate"):
         # gen_job ships the receipt and its hashed evidence; reproduce that closure during submit replay.
         candidate_job = json.loads((dst / kit / "job.json").read_text())

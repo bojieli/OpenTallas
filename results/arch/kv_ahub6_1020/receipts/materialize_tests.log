@@ -1,0 +1,25 @@
+test_missing_stale_and_escape (tools.ref_tile.test_derived_landed_record.ArtifactIdentity) ... ok
+test_canonical_generator_relabel_is_rejected (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_canonical_replay_full_record_and_actual_topology (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_changed_full_contract_field (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_copied_reset_pad_cost_is_included (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_effective_parameters_changed (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_extra_full_contract_field (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_immutable_materialisation_complete_fixture (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_immutable_materialisation_rejects_escaped_path (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_immutable_materialisation_rejects_stale_committed_source (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_missing_actual_source_identity (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_missing_provenance (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_rehashed_canonical_record_is_replayed (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_rehashed_canonical_rtl_is_replayed (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_rehashed_changed_landing_width (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_rehashed_changed_reset_leaf_expression (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_rehashed_wrong_clock_topology (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_rehashed_wrong_landing (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_stale_output_hash (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+test_stale_source_hash (tools.ref_tile.test_derived_landed_record.PairedAHUB6) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.927s
+
+OK

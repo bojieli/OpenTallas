@@ -1,0 +1,1019 @@
+{
+ "lane": "KV-AHUB6",
+ "generator": "tools/qwen_kv_die/ahub6/mk_source.py",
+ "flat": "qkd_ahub_static_dw_g3",
+ "top": "qkd_ahub_static_dw_g6_lp",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "c": {
+   "clock_port": "ck_c",
+   "children": [
+    "u_core",
+    "u_eq",
+    "u_io",
+    "u_recip",
+    "u_ri0",
+    "u_ri1",
+    "u_ri2",
+    "u_ri3",
+    "u_rx",
+    "u_ry",
+    "u_lpr_root_r0",
+    "u_lpr_root_r1",
+    "u_lpr_root_r2",
+    "u_lpr_root_r3",
+    "u_lpr_root_r4",
+    "u_lpr_root_r5",
+    "u_lpr_root_r6"
+   ]
+  },
+  "w": {
+   "clock_port": "ck_w",
+   "children": [
+    "u_amw",
+    "u_apw",
+    "u_rw"
+   ]
+  },
+  "e": {
+   "clock_port": "ck_e",
+   "children": [
+    "u_ame",
+    "u_ape"
+   ]
+  },
+  "z0": {
+   "clock_port": "ck_z0",
+   "children": [
+    "u_ro0",
+    "u_zh0"
+   ]
+  },
+  "z1": {
+   "clock_port": "ck_z1",
+   "children": [
+    "u_ro1",
+    "u_zh1"
+   ]
+  },
+  "z2": {
+   "clock_port": "ck_z2",
+   "children": [
+    "u_ro2",
+    "u_zh2"
+   ]
+  },
+  "z3": {
+   "clock_port": "ck_z3",
+   "children": [
+    "u_ro3",
+    "u_zh3"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "amw_c",
+   "src_region": "c",
+   "dst_region": "w",
+   "src_nodes": [
+    "u_core"
+   ],
+   "width": 72,
+   "readers": [
+    "u_amw.d"
+   ],
+   "ring": "u_lpl_0_w (ck_c)",
+   "read": "u_lpl_0_r (ck_w)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "ame_c",
+   "src_region": "c",
+   "dst_region": "e",
+   "src_nodes": [
+    "u_core"
+   ],
+   "width": 72,
+   "readers": [
+    "u_ame.d"
+   ],
+   "ring": "u_lpl_1_w (ck_c)",
+   "read": "u_lpl_1_r (ck_e)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "fr_epoch_i",
+   "src_region": "c",
+   "dst_region": "w",
+   "src_nodes": [
+    "u_io"
+   ],
+   "width": 16,
+   "readers": [
+    "u_rw.d"
+   ],
+   "ring": "u_lpl_2_w (ck_c)",
+   "read": "u_lpl_2_r (ck_w)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  },
+  {
+   "name": "3",
+   "net": "fr_rz_i",
+   "src_region": "c",
+   "dst_region": "w",
+   "src_nodes": [
+    "u_io"
+   ],
+   "width": 128,
+   "readers": [
+    "u_rw.d"
+   ],
+   "ring": "u_lpl_3_w (ck_c)",
+   "read": "u_lpl_3_r (ck_w)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+  },
+  {
+   "name": "4",
+   "net": "fr_valid_i",
+   "src_region": "c",
+   "dst_region": "w",
+   "src_nodes": [
+    "u_io"
+   ],
+   "width": 1,
+   "readers": [
+    "u_rw.d"
+   ],
+   "ring": "u_lpl_4_w (ck_c)",
+   "read": "u_lpl_4_r (ck_w)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "ape",
+   "src_region": "e",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_ape"
+   ],
+   "width": 86,
+   "readers": [
+    "u_core.si_valid",
+    "u_core.si_type",
+    "u_core.si_g",
+    "u_core.si_hh",
+    "u_core.si_k",
+    "u_core.si_any",
+    "u_core.si_data"
+   ],
+   "ring": "u_lpl_5_w (ck_e)",
+   "read": "u_lpl_5_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+  },
+  {
+   "name": "6",
+   "net": "apw",
+   "src_region": "w",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_apw"
+   ],
+   "width": 86,
+   "readers": [
+    "u_core.si_valid",
+    "u_core.si_type",
+    "u_core.si_g",
+    "u_core.si_hh",
+    "u_core.si_k",
+    "u_core.si_any",
+    "u_core.si_data"
+   ],
+   "ring": "u_lpl_6_w (ck_w)",
+   "read": "u_lpl_6_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+  },
+  {
+   "name": "7",
+   "net": "zo0",
+   "src_region": "z0",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_ro0"
+   ],
+   "width": 68,
+   "readers": [
+    "u_core.zh_root",
+    "u_eq.d"
+   ],
+   "ring": "u_lpl_7_w (ck_z0)",
+   "read": "u_lpl_7_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+  },
+  {
+   "name": "8",
+   "net": "zo1",
+   "src_region": "z1",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_ro1"
+   ],
+   "width": 68,
+   "readers": [
+    "u_core.zh_root",
+    "u_eq.d"
+   ],
+   "ring": "u_lpl_8_w (ck_z1)",
+   "read": "u_lpl_8_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+  },
+  {
+   "name": "9",
+   "net": "zo2",
+   "src_region": "z2",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_ro2"
+   ],
+   "width": 68,
+   "readers": [
+    "u_core.zh_root",
+    "u_eq.d"
+   ],
+   "ring": "u_lpl_9_w (ck_z2)",
+   "read": "u_lpl_9_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+  },
+  {
+   "name": "10",
+   "net": "zo3",
+   "src_region": "z3",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_ro3"
+   ],
+   "width": 68,
+   "readers": [
+    "u_core.zh_root",
+    "u_eq.d"
+   ],
+   "ring": "u_lpl_10_w (ck_z3)",
+   "read": "u_lpl_10_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
+  },
+  {
+   "name": "11",
+   "net": "zi0",
+   "src_region": "c",
+   "dst_region": "z0",
+   "src_nodes": [
+    "u_ri0"
+   ],
+   "width": 268,
+   "readers": [
+    "u_zh0.start",
+    "u_zh0.zs_we",
+    "u_zh0.sid",
+    "u_zh0.ziv",
+    "u_zh0.zg",
+    "u_zh0.zp"
+   ],
+   "ring": "u_lpl_11_w (ck_c)",
+   "read": "u_lpl_11_r (ck_z0)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
+  },
+  {
+   "name": "12",
+   "net": "zi1",
+   "src_region": "c",
+   "dst_region": "z1",
+   "src_nodes": [
+    "u_ri1"
+   ],
+   "width": 268,
+   "readers": [
+    "u_zh1.start",
+    "u_zh1.zs_we",
+    "u_zh1.sid",
+    "u_zh1.ziv",
+    "u_zh1.zg",
+    "u_zh1.zp"
+   ],
+   "ring": "u_lpl_12_w (ck_c)",
+   "read": "u_lpl_12_r (ck_z1)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
+  },
+  {
+   "name": "13",
+   "net": "zi2",
+   "src_region": "c",
+   "dst_region": "z2",
+   "src_nodes": [
+    "u_ri2"
+   ],
+   "width": 268,
+   "readers": [
+    "u_zh2.start",
+    "u_zh2.zs_we",
+    "u_zh2.sid",
+    "u_zh2.ziv",
+    "u_zh2.zg",
+    "u_zh2.zp"
+   ],
+   "ring": "u_lpl_13_w (ck_c)",
+   "read": "u_lpl_13_r (ck_z2)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
+  },
+  {
+   "name": "14",
+   "net": "zi3",
+   "src_region": "c",
+   "dst_region": "z3",
+   "src_nodes": [
+    "u_ri3"
+   ],
+   "width": 268,
+   "readers": [
+    "u_zh3.start",
+    "u_zh3.zs_we",
+    "u_zh3.sid",
+    "u_zh3.ziv",
+    "u_zh3.zg",
+    "u_zh3.zp"
+   ],
+   "ring": "u_lpl_14_w (ck_c)",
+   "read": "u_lpl_14_r (ck_z3)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_14_w.* -to u_lpl_14_r.*"
+  }
+ ],
+ "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
+ "reset": {
+  "port": "rst_n",
+  "root_region": "c",
+  "depth": 3,
+  "hops": {
+   "c": 0,
+   "w": 2,
+   "e": 1,
+   "z0": 2,
+   "z1": 1,
+   "z2": 2,
+   "z3": 2
+  },
+  "same_depth_forest": {
+   "regional_stages": 2,
+   "root_D_loads": 7,
+   "regions": {
+    "c": {
+     "leaves": 904,
+     "terms": [
+      "1",
+      "(((((71) - (0) + 1))+2-1)/2)",
+      "(((((71) - (0) + 1))+2-1)/2)",
+      "(((((15) - (0) + 1))+2-1)/2)",
+      "(((((127) - (0) + 1))+2-1)/2)",
+      "(((1)+2-1)/2)",
+      "(((((85) - (0) + 1))+2-1)/2)",
+      "(((((85) - (0) + 1))+2-1)/2)",
+      "(((((67) - (0) + 1))+2-1)/2)",
+      "(((((67) - (0) + 1))+2-1)/2)",
+      "(((((67) - (0) + 1))+2-1)/2)",
+      "(((((67) - (0) + 1))+2-1)/2)",
+      "(((((267) - (0) + 1))+2-1)/2)",
+      "(((((267) - (0) + 1))+2-1)/2)",
+      "(((((267) - (0) + 1))+2-1)/2)",
+      "(((((267) - (0) + 1))+2-1)/2)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 36,
+       "first_expr": "1",
+       "chunks_expr": "(((((71) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "1",
+       "role": "w",
+       "first_leaf": 37,
+       "chunks": 36,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((71) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "2",
+       "role": "w",
+       "first_leaf": 73,
+       "chunks": 8,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((15) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "3",
+       "role": "w",
+       "first_leaf": 81,
+       "chunks": 64,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((127) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "4",
+       "role": "w",
+       "first_leaf": 145,
+       "chunks": 1,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((1)+2-1)/2)"
+      },
+      {
+       "landing": "5",
+       "role": "r",
+       "first_leaf": 146,
+       "chunks": 43,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)",
+       "chunks_expr": "(((((85) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "6",
+       "role": "r",
+       "first_leaf": 189,
+       "chunks": 43,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((85) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "7",
+       "role": "r",
+       "first_leaf": 232,
+       "chunks": 34,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((67) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "8",
+       "role": "r",
+       "first_leaf": 266,
+       "chunks": 34,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((67) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "9",
+       "role": "r",
+       "first_leaf": 300,
+       "chunks": 34,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((67) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "10",
+       "role": "r",
+       "first_leaf": 334,
+       "chunks": 34,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((67) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "11",
+       "role": "w",
+       "first_leaf": 368,
+       "chunks": 134,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((267) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "12",
+       "role": "w",
+       "first_leaf": 502,
+       "chunks": 134,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((267) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((267) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "13",
+       "role": "w",
+       "first_leaf": 636,
+       "chunks": 134,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((267) - (0) + 1))+2-1)/2)+(((((267) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((267) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "14",
+       "role": "w",
+       "first_leaf": 770,
+       "chunks": 134,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((85) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((67) - (0) + 1))+2-1)/2)+(((((267) - (0) + 1))+2-1)/2)+(((((267) - (0) + 1))+2-1)/2)+(((((267) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((267) - (0) + 1))+2-1)/2)"
+      }
+     ],
+     "branches": 29,
+     "FFs": 933,
+     "scalar_child_pad_port_uses": 3
+    },
+    "w": {
+     "leaves": 153,
+     "terms": [
+      "1",
+      "(((((71) - (0) + 1))+2-1)/2)",
+      "(((((15) - (0) + 1))+2-1)/2)",
+      "(((((127) - (0) + 1))+2-1)/2)",
+      "(((1)+2-1)/2)",
+      "(((((85) - (0) + 1))+2-1)/2)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 36,
+       "first_expr": "1",
+       "chunks_expr": "(((((71) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "2",
+       "role": "r",
+       "first_leaf": 37,
+       "chunks": 8,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((15) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "3",
+       "role": "r",
+       "first_leaf": 45,
+       "chunks": 64,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((127) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "4",
+       "role": "r",
+       "first_leaf": 109,
+       "chunks": 1,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((1)+2-1)/2)"
+      },
+      {
+       "landing": "6",
+       "role": "w",
+       "first_leaf": 110,
+       "chunks": 43,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)+(((((15) - (0) + 1))+2-1)/2)+(((((127) - (0) + 1))+2-1)/2)+(((1)+2-1)/2)",
+       "chunks_expr": "(((((85) - (0) + 1))+2-1)/2)"
+      }
+     ],
+     "branches": 5,
+     "FFs": 158,
+     "scalar_child_pad_port_uses": 0
+    },
+    "e": {
+     "leaves": 80,
+     "terms": [
+      "1",
+      "(((((71) - (0) + 1))+2-1)/2)",
+      "(((((85) - (0) + 1))+2-1)/2)"
+     ],
+     "bindings": [
+      {
+       "landing": "1",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 36,
+       "first_expr": "1",
+       "chunks_expr": "(((((71) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "5",
+       "role": "w",
+       "first_leaf": 37,
+       "chunks": 43,
+       "first_expr": "1+(((((71) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((85) - (0) + 1))+2-1)/2)"
+      }
+     ],
+     "branches": 3,
+     "FFs": 83,
+     "scalar_child_pad_port_uses": 0
+    },
+    "z0": {
+     "leaves": 169,
+     "terms": [
+      "1",
+      "(((((67) - (0) + 1))+2-1)/2)",
+      "(((((267) - (0) + 1))+2-1)/2)"
+     ],
+     "bindings": [
+      {
+       "landing": "7",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 34,
+       "first_expr": "1",
+       "chunks_expr": "(((((67) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "11",
+       "role": "r",
+       "first_leaf": 35,
+       "chunks": 134,
+       "first_expr": "1+(((((67) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((267) - (0) + 1))+2-1)/2)"
+      }
+     ],
+     "branches": 6,
+     "FFs": 175,
+     "scalar_child_pad_port_uses": 1
+    },
+    "z1": {
+     "leaves": 169,
+     "terms": [
+      "1",
+      "(((((67) - (0) + 1))+2-1)/2)",
+      "(((((267) - (0) + 1))+2-1)/2)"
+     ],
+     "bindings": [
+      {
+       "landing": "8",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 34,
+       "first_expr": "1",
+       "chunks_expr": "(((((67) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "12",
+       "role": "r",
+       "first_leaf": 35,
+       "chunks": 134,
+       "first_expr": "1+(((((67) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((267) - (0) + 1))+2-1)/2)"
+      }
+     ],
+     "branches": 6,
+     "FFs": 175,
+     "scalar_child_pad_port_uses": 1
+    },
+    "z2": {
+     "leaves": 169,
+     "terms": [
+      "1",
+      "(((((67) - (0) + 1))+2-1)/2)",
+      "(((((267) - (0) + 1))+2-1)/2)"
+     ],
+     "bindings": [
+      {
+       "landing": "9",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 34,
+       "first_expr": "1",
+       "chunks_expr": "(((((67) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "13",
+       "role": "r",
+       "first_leaf": 35,
+       "chunks": 134,
+       "first_expr": "1+(((((67) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((267) - (0) + 1))+2-1)/2)"
+      }
+     ],
+     "branches": 6,
+     "FFs": 175,
+     "scalar_child_pad_port_uses": 1
+    },
+    "z3": {
+     "leaves": 169,
+     "terms": [
+      "1",
+      "(((((67) - (0) + 1))+2-1)/2)",
+      "(((((267) - (0) + 1))+2-1)/2)"
+     ],
+     "bindings": [
+      {
+       "landing": "10",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 34,
+       "first_expr": "1",
+       "chunks_expr": "(((((67) - (0) + 1))+2-1)/2)"
+      },
+      {
+       "landing": "14",
+       "role": "r",
+       "first_leaf": 35,
+       "chunks": 134,
+       "first_expr": "1+(((((67) - (0) + 1))+2-1)/2)",
+       "chunks_expr": "(((((267) - (0) + 1))+2-1)/2)"
+      }
+     ],
+     "branches": 6,
+     "FFs": 175,
+     "scalar_child_pad_port_uses": 1
+    }
+   },
+   "incremental_FFs": 1860,
+   "required_rtl_sources": [
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+   ],
+   "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified.",
+   "regional_root_copies": 7
+  },
+  "note": "Seven same-edge root copies; per-region branches <=32; child/reset and D4/K2 ages unchanged."
+ },
+ "flops": {
+  "landing": 38824,
+  "pads": 0,
+  "reset": 1954,
+  "model_scope": "Outer LP implementation; private core/io copies counted separately in mapped native census.",
+  "kept_epoch_ports_included": true
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "c-e",
+   "c-w",
+   "c-z0",
+   "c-z1",
+   "c-z2",
+   "c-z3"
+  ],
+  "reset_hops": [
+   "c-e",
+   "c-w",
+   "c-z0",
+   "c-z1",
+   "c-z2",
+   "c-z3"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_apw": 0,
+   "u_ape": 0,
+   "u_amw": 0,
+   "u_ame": 0,
+   "u_rw": 0,
+   "u_io": 0,
+   "u_core": 0,
+   "u_eq": 0,
+   "u_ri0": 0,
+   "u_ri1": 0,
+   "u_ri2": 0,
+   "u_ri3": 0,
+   "u_zh0": 0,
+   "u_zh1": 0,
+   "u_zh2": 0,
+   "u_zh3": 0,
+   "u_ro0": 0,
+   "u_ro1": 0,
+   "u_ro2": 0,
+   "u_ro3": 0,
+   "u_rx": 0,
+   "u_recip": 0,
+   "u_ry": 0
+  },
+  "input_port_offset_edges": {
+   "hs_start": 0,
+   "hs_ep": 0,
+   "hs_layer": 0,
+   "hs_ctx": 0,
+   "hs_cal_lo": 0,
+   "hs_cal_r": 0,
+   "ap0": 0,
+   "ap1": 0,
+   "ap2": 0,
+   "ap3": 0
+  },
+  "output_port_offset_edges": {
+   "am0": 0,
+   "am1": 0,
+   "am2": 0,
+   "am3": 0,
+   "fr_valid": 0,
+   "fr_epoch": 0,
+   "fr_rz": 0,
+   "hf": 0
+  },
+  "reset_release_added_edges": 10,
+  "status_flag_lag_edges": {},
+  "schedule": "reference: cross-region loops re-scheduled; the landed parent == the flat parent with ref_params (+E+1 per landed crossing on that path), reset delayed reset_release_added_edges, ports at offset 0",
+  "ref_params": {
+   "ZW_RLY": 3,
+   "ZR_RLY": 3,
+   "Z_LAND": 0,
+   "AP_RLY": 3,
+   "AP_LAND": 0,
+   "AM_RLY": 3,
+   "FR_RLY": 3,
+   "FR_LAND": 0
+  },
+  "max_added_edges": 0
+ },
+ "warnings": [
+  "Native admission and current physical review required; no old gate/closure is inherited."
+ ],
+ "landing_implementation": {
+  "chunk_bits": 2,
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['c-e', 'c-w', 'c-z0', 'c-z1', 'c-z2', 'c-z3']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 15,
+  "reset_hops": 6,
+  "fails": []
+ },
+ "derived_lp": {
+  "schema": "opentallas.derived_lp.ahub6.v1",
+  "canonical_record": {
+   "path": "results/arch/kv_ahub6_1020/canonical_lp/qkd_ahub_static_dw_g6_lp_record.json",
+   "sha256": "acbaa44fe235f0e114656860b057c29fe4607c6e6762517330aea3d4162ab8bb"
+  },
+  "canonical_rtl": {
+   "path": "results/arch/kv_ahub6_1020/canonical_lp/qkd_ahub_static_dw_g6_lp.sv",
+   "sha256": "121caae306c279f8b2cbc01b34fa463610bf8385210adc81be34219d31f9fb94"
+  },
+  "canonical_spec": {
+   "path": "tools/qwen_kv_die/ahub6/canonical_spec.json",
+   "sha256": "b6079e33d929779bbd12d216d997d620e6ce4e67e6fc435fe5317029ba9b2159"
+  },
+  "canonical_generator": {
+   "path": "tools/landed_parent/lp.py",
+   "sha256": "8d4b44889eb089222be1cd7fe65aab070546e8de6be0fb6cee74c0ae44727050"
+  },
+  "postprocessor": {
+   "path": "tools/qwen_kv_die/ahub6/mk_source.py",
+   "sha256": "78dae38b161eec587e418477dfcd6e84e9db6b8f8d8fbdde3db8e911bc19c328"
+  },
+  "inputs": [
+   {
+    "path": "rtl/hdc/nearhbm/ot_nhb_tiles.sv",
+    "sha256": "c4a400dfcada2f15c6ed1b32c93474bb71c20d7c98c9bc0f94c6092f19a44fa4"
+   },
+   {
+    "path": "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+    "sha256": "31f136f38313d488735b1d3e7f359667dba23136a255d9c771f7b8ab0a46af49"
+   },
+   {
+    "path": "rtl/hdc/nearhbm/ot_qkh_recip_leaf.sv",
+    "sha256": "6653404863ded7cb9a859973113bcff00ddec1ef933396b26cd9513b9026f061"
+   },
+   {
+    "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv",
+    "sha256": "417c81bbb813810131301371991cc93b8844c51fc44e0a7e7e75b8352dad9dd5"
+   },
+   {
+    "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+    "sha256": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+    "sha256": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fpu.sv",
+    "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+   },
+   {
+    "path": "rtl/lib/ot_rst_pipe.sv",
+    "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441"
+   },
+   {
+    "path": "rtl/lib/ot_rst_relay.sv",
+    "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+   },
+   {
+    "path": "tools/qwen_kv_die/ahub6/inputs/qkd_ahub_static_dw_g3.sv",
+    "sha256": "a39e7b140996689fa1560801c955120495da804b2c40bd790caf36032a268fe9"
+   },
+   {
+    "path": "tools/qwen_kv_die/ahub6/inputs/qkd_ahub_static_dw_safe.sv",
+    "sha256": "0ccf66945dbb58e5a2aae049ba407c71adebaac87de7de6a1d692f62b94606fe"
+   },
+   {
+    "path": "tools/qwen_kv_die/ahub6/mk_controls.py",
+    "sha256": "f452ec0c0373bb3f28fc798f7011fe5591812cd0c95a6a105320ae466fb51cf0"
+   },
+   {
+    "path": "tools/qwen_kv_die/ahub6/mk_kits.py",
+    "sha256": "8ab30f1055a60edab5ba729550ca056153a71d936e2b6b38b6ce422a64c35c4b"
+   }
+  ],
+  "outputs": [
+   {
+    "path": "rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g6_lp.sv",
+    "sha256": "b9ae787158db9ac30605b147a1f88b7b73d67823d1ce9cebabed2c8be83458c4"
+   },
+   {
+    "path": "rtl/hdc/nearhbm/qkd_ahub6_controls.sv",
+    "sha256": "5f49635385d0614030bd8db1804eb057b500f85f39f1db8daf6c7cab29d862f4"
+   },
+   {
+    "path": "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+    "sha256": "31f136f38313d488735b1d3e7f359667dba23136a255d9c771f7b8ab0a46af49"
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+   },
+   {
+    "path": "rtl/lib/ot_rst_pipe.sv",
+    "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441"
+   },
+   {
+    "path": "rtl/common/landed_parent/ot_pl_land.sv",
+    "sha256": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54"
+   },
+   {
+    "path": "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "sha256": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab"
+   },
+   {
+    "path": "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+    "sha256": "6c8d60d1f1d6a9b91a8a6a39015fe94811a14fb5f59f7bba17b0934678c68b71"
+   },
+   {
+    "path": "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
+    "sha256": "48bcb23847696f7e3a6256c9bcc90faa979327b40f517ba3bbad9618986fc474"
+   },
+   {
+    "path": "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v",
+    "sha256": "c1be0aa1b69c1333f048101398f711ec1dde7094a6aa343b170b821abe16014a"
+   }
+  ],
+  "params": {
+   "Z_LAND": 6,
+   "AP_LAND": 3,
+   "FR_LAND": 3
+  }
+ }
+}

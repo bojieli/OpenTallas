@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc9       admits   379 GB (avail 443, growth 178, headroom 0, waiters 0/0 GB) load 58/128 running 38 disk 159 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-510393-1792485569 after 0 s
+AHUB_DW PASS g3 CSH=0 AML=3 mut=0 passes=7 Z_IN_STRIDE=4 zwords=680 fr=1/1/1/1/1/1/1 beats=32/32/32/32/32/32/32 am=28 FR_OFS=-7 AP_OFS=ffd9ffdaffd8ffd8
+AHUB_DW FAIL mut=1 first error cycle 1880 pass 0: fr not on pvfin's R slot
+AHUB_DW FAIL mut=1 errors=11935
+AHUB_DW FAIL mut=19 first error cycle 651 pass 0: am at the ASTK pins != reference
+AHUB_DW FAIL mut=19 errors=49
+AHUB6_FINAL_FULL_SUITE_PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-510393-1792485569): exit 0
