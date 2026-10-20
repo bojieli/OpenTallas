@@ -18,8 +18,8 @@ OUT s_cr_o mismatches=357
 OUT physical_context mismatches=8606
 OUT physical_col_sr mismatches=357
 KVPC_SCHED FAIL edges=20000 checks=360000 errors=70295 active_out=156064 mut=5
-- /srv/opentallas-scratch/claude/kv-pc7/src-s9g/out/sched_x_m5/tb.sv:175: Verilog $finish
+- /srv/opentallas-scratch/claude/kv-pc7/src-s9h/out/sched_x_m5/tb.sv:175: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 20us; walltime 0.243 s; speed 84.346 us/s
-- Verilator: cpu 0.164 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 20us; walltime 0.232 s; speed 88.331 us/s
+- Verilator: cpu 0.165 s on 1 threads; allocated 7 MB
 
