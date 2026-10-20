@@ -1,0 +1,1941 @@
+[
+  {
+    "cell": 45900,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "available$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "available__ot_pr[0]"
+      ],
+      "QN": [
+        "_11723_"
+      ]
+    }
+  },
+  {
+    "cell": 46644,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "host_rst_n__ot_pr$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22148_"
+      ],
+      "QN": [
+        "_15894_"
+      ],
+      "RESETN": [
+        "u_rank__u_control__por_n__ot_rl1[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46710,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "native_request_tag__ot_q[43]$_DFF_P_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "native_request_tag[43]"
+      ],
+      "QN": [
+        "_00116_"
+      ]
+    }
+  },
+  {
+    "cell": 46711,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "native_request_tag__ot_q[44]$_DFF_P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "native_request_tag[44]"
+      ],
+      "QN": [
+        "_00117_"
+      ]
+    }
+  },
+  {
+    "cell": 46751,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__ank__u_control__u_control_u_control_u_host_u_rst_relay_rst_n__c0$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15872_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46752,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__ank__u_control__u_control_u_control_u_host_u_rst_relay_rst_n__c1$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15873_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46753,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__ank__u_control__u_control_u_control_u_host_u_rst_relay_rst_n__c2$_DFF_PN0_",
+    "copies": 9,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15874_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46754,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_csr_u_rst_relay_rst_n__c0$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15803_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46755,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_csr_u_rst_relay_rst_n__c1$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15804_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46756,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_csr_u_rst_relay_rst_n__c2$_DFF_PN0_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15805_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46758,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_csr_u_rst_relay_rst_n__c4$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15807_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46759,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_csr_u_rst_relay_rst_n__c5$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15808_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46760,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c0$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15884_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46761,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c1$_DFF_PN0_",
+    "copies": 9,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15885_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46762,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c2$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15886_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46763,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c3$_DFF_PN0_",
+    "copies": 9,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15887_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46764,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c4$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15888_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46765,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c5$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15889_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46766,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c6$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15890_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46767,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c7$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15891_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46768,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c8$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15892_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46769,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "ot_rrs__rank__u_control__u_control_u_control_u_pkg_u_rst_relay_rst_n__c9$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15893_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 46770,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "package_abort$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "package_abort__ot_pr[0]"
+      ],
+      "QN": [
+        "_13246_"
+      ]
+    }
+  },
+  {
+    "cell": 47255,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "record_fault$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "record_fault__ot_pr[0]"
+      ],
+      "QN": [
+        "_12062_"
+      ]
+    }
+  },
+  {
+    "cell": 48200,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "source_cr$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "source_cr__ot_pr[0]"
+      ],
+      "QN": [
+        "_11724_"
+      ]
+    }
+  },
+  {
+    "cell": 48738,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.root__u_records.u_m.g_mu.cv$_DFF_PN0_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_m.g_mu.u_context.send_slot"
+      ],
+      "QN": [
+        "_15751_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 49215,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.root__u_records.u_rst_relay.relay_q[0]$_DFF_PN0_",
+    "copies": 30,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15758_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 49217,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[0]"
+      ],
+      "QN": [
+        "_15759_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 49223,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__begin_image$_DFF_PN0_",
+    "copies": 5,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22397_"
+      ],
+      "QN": [
+        "u_ot_pr_core._06_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_program_rx.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 50430,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.eng_slot[0]$_DFFE_PN0P_",
+    "copies": 9,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_18513_"
+      ],
+      "QN": [
+        "_00135_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 50431,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.eng_slot[1]$_DFFE_PN0P_",
+    "copies": 5,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_19997_"
+      ],
+      "QN": [
+        "_00139_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 50875,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_m.h_araddr_i[2]$_DFFE_PN0P_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21377_"
+      ],
+      "QN": [
+        "_00240_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_rst_relay.relay_q[0][1]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 50876,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_m.h_araddr_i[3]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21376_"
+      ],
+      "QN": [
+        "_00241_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_rst_relay.relay_q[0][1]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 50877,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_m.h_araddr_i[4]$_DFFE_PN0P_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21375_"
+      ],
+      "QN": [
+        "_00242_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_rst_relay.relay_q[0][1]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 50878,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_m.h_araddr_i[5]$_DFFE_PN0P_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21374_"
+      ],
+      "QN": [
+        "_00097_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_rst_relay.relay_q[0][1]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 51288,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_m.u_core.c_rvalid$_DFFE_PN0P_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20027_"
+      ],
+      "QN": [
+        "_01843_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_csr.u_rst_relay.relay_q[0][5]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 51796,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.role_q[0]$_DFF_PN0_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "die_id__ot_q[0]"
+      ],
+      "QN": [
+        "_15619_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_rst_relay.relay_q[0][2]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 51797,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.role_q[1]$_DFF_PN0_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "die_id__ot_q[1]"
+      ],
+      "QN": [
+        "_15620_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_rst_relay.relay_q[0][2]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 51798,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.role_q[2]$_DFF_PN0_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "die_id__ot_q[2]"
+      ],
+      "QN": [
+        "_15621_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_rst_relay.relay_q[0][2]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 52495,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.d_st[12]$_DFF_PN0_",
+    "copies": 5,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16017_"
+      ],
+      "QN": [
+        "_08781_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 52496,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.d_st[13]$_DFF_PN0_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16018_"
+      ],
+      "QN": [
+        "_15739_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 52500,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.d_st[4]$_DFF_PN0_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16022_"
+      ],
+      "QN": [
+        "_08789_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 52502,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.d_st[6]$_DFF_PN0_",
+    "copies": 6,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16024_"
+      ],
+      "QN": [
+        "_08787_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 52504,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.d_st[8]$_DFF_PN0_",
+    "copies": 6,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16026_"
+      ],
+      "QN": [
+        "_08785_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 52678,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.dw[0]$_DFFE_PN0P_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_18548_"
+      ],
+      "QN": [
+        "_00130_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 52702,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.i_st[4]$_DFF_PN0_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16030_"
+      ],
+      "QN": [
+        "_15740_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.rst_n_i"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 54935,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.m_old[0]$_DFFE_PN1P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20914_"
+      ],
+      "QN": [
+        "_00197_"
+      ],
+      "RESETN": [
+        "_49203_"
+      ],
+      "SETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][3]"
+      ]
+    }
+  },
+  {
+    "cell": 54936,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.m_old[1]$_DFFE_PN0P_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20913_"
+      ],
+      "QN": [
+        "_00199_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][3]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55305,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[0][0]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21084_"
+      ],
+      "QN": [
+        "_00800_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][2]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55306,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[0][1]$_DFFE_PN0P_",
+    "copies": 8,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21083_"
+      ],
+      "QN": [
+        "_00801_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][2]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55307,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[1][0]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20896_"
+      ],
+      "QN": [
+        "_00977_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][3]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55308,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[1][1]$_DFFE_PN0P_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20895_"
+      ],
+      "QN": [
+        "_00978_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][3]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55309,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[2][0]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20770_"
+      ],
+      "QN": [
+        "_01103_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][3]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55310,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[2][1]$_DFFE_PN0P_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20769_"
+      ],
+      "QN": [
+        "_01104_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][3]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55311,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[3][0]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20600_"
+      ],
+      "QN": [
+        "_01273_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][4]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55312,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[3][1]$_DFFE_PN0P_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20599_"
+      ],
+      "QN": [
+        "_01274_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][4]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55313,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[4][0]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20434_"
+      ],
+      "QN": [
+        "_01439_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][5]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55314,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[4][1]$_DFFE_PN0P_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20433_"
+      ],
+      "QN": [
+        "_01440_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][5]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55315,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[5][0]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20862_"
+      ],
+      "QN": [
+        "_01011_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][3]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55316,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[5][1]$_DFFE_PN0P_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_20861_"
+      ],
+      "QN": [
+        "_01012_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][3]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55317,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[6][0]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21282_"
+      ],
+      "QN": [
+        "_00603_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][1]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55318,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[6][1]$_DFFE_PN0P_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21281_"
+      ],
+      "QN": [
+        "_00604_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][1]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55319,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[7][0]$_DFFE_PN0P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21280_"
+      ],
+      "QN": [
+        "_00605_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][1]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55320,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_m.u_core.u_pkg.g_mu.r_g[7][1]$_DFFE_PN0P_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_21279_"
+      ],
+      "QN": [
+        "_00606_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_pkg.u_rst_relay.relay_q[0][1]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55757,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_rst.soft_q$_DFF_PN0_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_rst.soft_rst"
+      ],
+      "QN": [
+        "_15905_"
+      ],
+      "RESETN": [
+        "u_rank__u_control__por_n__ot_rl1[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55837,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_rst.u_global.u_por.reset_pipe[1]$_DFF_PN0_",
+    "copies": 5,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_rst.u_global.u_por.reset_pipe[0]"
+      ],
+      "QN": [
+        "_15911_"
+      ],
+      "RESETN": [
+        "u_rank__u_control__por_n__ot_rl1[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 55931,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_prompt.u_m.response_valid_capture$_DFF_PN0_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_prompt.u_m.response_valid"
+      ],
+      "QN": [
+        "_15920_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_control.u_prompt.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 56163,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_control.u_prompt.u_rst_relay.relay_q[0]$_DFF_PN0_",
+    "copies": 3,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15923_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 56364,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.ar_pending$_DFF_PN0_",
+    "copies": 6,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22221_"
+      ],
+      "QN": [
+        "_15950_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 57867,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.bypass[1]$_DFF_P_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22247_"
+      ],
+      "QN": [
+        "_15996_"
+      ]
+    }
+  },
+  {
+    "cell": 57878,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.bypass[2]$_DFF_P_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22247_"
+      ],
+      "QN": [
+        "_15995_"
+      ]
+    }
+  },
+  {
+    "cell": 57884,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.bypass[6]$_DFF_P_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22247_"
+      ],
+      "QN": [
+        "_15991_"
+      ]
+    }
+  },
+  {
+    "cell": 57885,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.bypass[7]$_DFF_P_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22247_"
+      ],
+      "QN": [
+        "_15990_"
+      ]
+    }
+  },
+  {
+    "cell": 57886,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.bypass[8]$_DFF_P_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22247_"
+      ],
+      "QN": [
+        "_15989_"
+      ]
+    }
+  },
+  {
+    "cell": 57887,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.bypass[9]$_DFF_P_",
+    "copies": 2,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_22247_"
+      ],
+      "QN": [
+        "_15988_"
+      ]
+    }
+  },
+  {
+    "cell": 57907,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_rst_relay.relay_q[0]$_DFF_PN0_",
+    "copies": 18,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_15999_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 58440,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_program.u_m.index_d[0]$_DFFE_PN0P_",
+    "copies": 6,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16772_"
+      ],
+      "QN": [
+        "_00205_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_program.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 58441,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_program.u_m.index_d[1]$_DFFE_PN0P_",
+    "copies": 9,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16771_"
+      ],
+      "QN": [
+        "_05005_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_program.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 58442,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_program.u_m.index_d[2]$_DFFE_PN0P_",
+    "copies": 9,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "_16770_"
+      ],
+      "QN": [
+        "_05006_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_program.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 58478,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_program.u_m.ri_q[8]$_DFF_PN0_",
+    "copies": 5,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.u_rank__u_program.u_m.index_p[8]"
+      ],
+      "QN": [
+        "_07641_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_program.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 58479,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_program.u_m.ri_q[9]$_DFF_PN0_",
+    "copies": 9,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.u_rank__u_program.u_m.index_p[9]"
+      ],
+      "QN": [
+        "_16002_"
+      ],
+      "RESETN": [
+        "u_ot_pr_core.u_rank__u_program.u_rst_relay.relay_q[0][0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 58564,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_program.u_rst_relay.relay_q[0]$_DFF_PN0_",
+    "copies": 13,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_16003_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 59102,
+    "type": "DFFASRHQNx1_ASAP7_75t_R",
+    "original": "u_ot_pr_core.u_rank__u_program_rx.u_rst_relay.relay_q[0]$_DFF_PN0_",
+    "copies": 7,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_ot_pr_core.root__u_records.u_rst_relay.sync_q[1]"
+      ],
+      "QN": [
+        "_00263_"
+      ],
+      "RESETN": [
+        "host_rst_n__ot_pr[0]"
+      ],
+      "SETN": [
+        "_49203_"
+      ]
+    }
+  },
+  {
+    "cell": 59103,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_rank__begin_fault$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_rank__begin_fault__ot_pr[0]"
+      ],
+      "QN": [
+        "_11474_"
+      ]
+    }
+  },
+  {
+    "cell": 60333,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_rank__source_fault$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_rank__source_fault__ot_pr[0]"
+      ],
+      "QN": [
+        "_11711_"
+      ]
+    }
+  },
+  {
+    "cell": 60352,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_rank__u_control__begin_v$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_rank__u_control__begin_v__ot_pr[0]"
+      ],
+      "QN": [
+        "_11471_"
+      ]
+    }
+  },
+  {
+    "cell": 60410,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_rank__u_control__cmd_v$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_rank__u_control__cmd_v__ot_pr[0]"
+      ],
+      "QN": [
+        "_10429_"
+      ]
+    }
+  },
+  {
+    "cell": 60494,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_rank__u_control__por_n__ot_rl1$_DFF_P_",
+    "copies": 4,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_rank__u_control__por_n__ot_rl0[0]"
+      ],
+      "QN": [
+        "_11717_"
+      ]
+    }
+  },
+  {
+    "cell": 60496,
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "original": "u_rank__u_control__startup_allowed$_DFF_P_",
+    "copies": 1,
+    "pins": {
+      "CLK": [
+        "ck_core"
+      ],
+      "D": [
+        "u_rank__u_control__startup_allowed__ot_pr[0]"
+      ],
+      "QN": [
+        "_11222_"
+      ]
+    }
+  }
+]

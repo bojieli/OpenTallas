@@ -1,0 +1,90 @@
+{
+  "status": "PROPOSAL ONLY, NO source implementation; ROOT concrete-contract review required",
+  "source_owners": [
+    {
+      "mapped_cell": 60493,
+      "role": "plain first landing",
+      "source": "physical/common_flow/ot_pin_regs.tcl:137",
+      "D": "raw por_n",
+      "clock": "ck_core",
+      "old_type": "DFFHQNx1_ASAP7_75t_R",
+      "copies": 1
+    },
+    {
+      "mapped_cell": 60494,
+      "role": "plain final landing",
+      "source": "physical/common_flow/ot_pin_regs.tcl:137",
+      "D": "positive first-stage Q",
+      "clock": "ck_core",
+      "old_type": "DFFHQNx1_ASAP7_75t_R",
+      "copies": 4
+    },
+    {
+      "mapped_cell": 46644,
+      "role": "host reset publication inside source",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv:28",
+      "type": "DFFASRHQNx1_ASAP7_75t_R already asynchronous",
+      "copies": 7,
+      "problem": "its por_n source was changed to a synchronous outer landing"
+    },
+    {
+      "mapped_cell": 49217,
+      "role": "regional reset sync stage1",
+      "source": "rtl/lib/ot_rst_relay.sv:27",
+      "type": "DFFASRHQNx1_ASAP7_75t_R already asynchronous",
+      "copies": 7
+    },
+    {
+      "role": "outer public observation registers",
+      "source": "physical/common_flow/ot_pin_regs.tcl:166",
+      "old_type": "plain DFF, no reset owner"
+    }
+  ],
+  "minimal_reset_owner_change": {
+    "first_and_final_cells": "replace same five plain landing FFs by canonical ASR with RESETN=rawpor, SETN=1; preserve D/CLK/inversion/two release edges",
+    "new_stages": 0,
+    "new_FF_count": 0,
+    "raw_root_loads": 6,
+    "scope_gap": "outer plain public observation registers retain arbitrary values during stopped clock"
+  },
+  "complete_publication_ownership_option": {
+    "semantic_control_bits": 213,
+    "existing_final_reset_contacts": 106,
+    "total_contacts": 319,
+    "final_owner_copies_required": 10,
+    "maximum_contacts_per_owner": 32,
+    "added_final_owner_FFs": 6,
+    "publication_register_change": "existing control publication DFF -> ASR, same D/CLK/one-edge observation; no after-output mask or extra publication stage",
+    "raw_root_loads_without_macro_guards": 12,
+    "raw_root_loads_with_existing_10_private_macro_guards": 22,
+    "physical_area_cost": "unmeasured; six additional final-owner FFs plus ASR-vs-DFF area on213 publication bits, and keep overhead",
+    "condition": "exact reset values and semantic control/payload classification/role contract must be reviewed before implementation"
+  },
+  "role_scope": {
+    "production_host_role": 0,
+    "source_port_width": 3,
+    "allowed_source_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "restriction_in_existing_source": false,
+    "parent_restriction": "not established; no implicit input-domain waiver"
+  },
+  "required_proofs": [
+    "arbitrary all-original and new owner states before assertion",
+    "asynchronous first assertion with stopped clock before first edge",
+    "every actual reset-owner pin polarity/count/source binding",
+    "all valid/fault/control/credit unconditional first-edge behavior",
+    "all seven macro arrays and read outputs, no row masks or repair",
+    "first functional four-context use at actual release calendar",
+    "actual-role0 and explicit supported-role scope",
+    "no added D/CLK/stage age; exact release-age/cycle and area price",
+    "causal original/missing-async-owner/inverted/late owner witnesses"
+  ]
+}

@@ -1,0 +1,14 @@
+VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__u_packet__htd a=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 b=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffc000000000000000000003ffffff0006
+GUARD_VISIBLE_DIFF reset=0 n=0 port=record_fault a=0 b=1
+GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=00080000 b=00000000
+GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__source_fault a=0 b=1
+GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__u_packet__htd a=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 b=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffc000000000000000000003ffffff0006
+[1006000] %Fatal: guard_probe_tb.sv:49137: Assertion failed in tb: GUARD_VISIBLE_FAIL count=16
+%Error: guard_probe_tb.sv:49137: Verilog $stop
+Aborting...
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-host6-prompt-mu4p2-n32-codex/host_prompt_guard_probe.py", line 110, in <module>
+    assert (run.returncode==0 and 'PROMPT_N32 PASS'in t) if variant=='exact' else (run.returncode!=0 and ('GUARD_ACCESS_FAIL'in t or 'GUARD_HOLD_FAIL'in t))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,20 @@
+00 cell=59102 copy=6 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=0/0/0
+ROOT_TRACE t=35000 cell=59103 copy=0 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+ROOT_TRACE t=35000 cell=60333 copy=0 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+ROOT_TRACE t=35000 cell=60352 copy=0 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+ROOT_TRACE t=35000 cell=60410 copy=0 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+ROOT_TRACE t=35000 cell=60494 copy=0 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+ROOT_TRACE t=35000 cell=60494 copy=1 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+ROOT_TRACE t=35000 cell=60494 copy=2 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+ROOT_TRACE t=35000 cell=60494 copy=3 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+ROOT_TRACE t=35000 cell=60496 copy=0 QN gold/c0/ck=1/1/1 D=0/0/0 RESETN=1/1/1
+VALID_CONTEXT t=35000 por=0 record_v=0/0 ht=0/0 htcredit=0 cmd_v=0/0 hc_start=0/0
+[1006000] %Fatal: guard_trace_tb.sv:49137: Assertion failed in tb: GUARD_VISIBLE_FAIL count=16
+%Error: guard_trace_tb.sv:49137: Verilog $stop
+Aborting...
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-host6-prompt-mu4p2-n32-codex/host_prompt_guard_trace.py", line 139, in <module>
+    assert (run.returncode==0 and 'PROMPT_N32 PASS'in t) if variant=='exact' else (run.returncode!=0 and ('GUARD_ACCESS_FAIL'in t or 'GUARD_HOLD_FAIL'in t))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

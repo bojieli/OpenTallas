@@ -1,0 +1,14 @@
+BOOT_PIN_DIFF n=0 time=5000 macro=u57888_c0.u_cell pin=w_ce_in a=0 b=1
+BOOT_PIN_DIFF n=0 time=5000 macro=u57888_c0.u_cell pin=w_addr_in a=00 b=03
+BOOT_PIN_DIFF n=0 time=5000 macro=u57888_c0.u_cell pin=r_addr_in a=00 b=03
+BOOT_PIN_DIFF n=0 time=5000 macro=u58421_c0.u_cell pin=addr_in a=00 b=ff
+BOOT_PIN_DIFF n=0 time=5000 macro=u58421_c0.u_cell pin=wd_in a=0000000000000000 b=ffffffffffffffff
+BOOT_PIN_DIFF n=0 time=5000 macro=u58422_c0.u_cell pin=addr_in a=00 b=ff
+BOOT_PIN_DIFF n=0 time=5000 macro=u58422_c0.u_cell pin=wd_in a=0000000000000000 b=ffffffffffffffff
+BOOT_PIN_DIFF n=0 time=5000 macro=u58423_c0.u_cell pin=addr_in a=00 b=ff
+BOOT_PIN_DIFF n=0 time=5000 macro=u58423_c0.u_cell pin=wd_in a=0000000000000000 b=ffffffffffffffff
+BOOT_PIN_DIFF n=0 time=5000 macro=u58424_c0.u_cell pin=addr_in a=00 b=ff
+BOOT_PIN_DIFF n=0 time=5000 macro=u58424_c0.u_cell pin=wd_in a=0000000000000000 b=ffffffffffffffff
+[226000] %Fatal: boot_replay_tb.sv:49032: Assertion failed in tb.unnamedblk1_1.unnamedblk69: PROMPT_STATE FAIL macro_arr u57888_c0.u_cell cycle=21 row=3
+%Error: boot_replay_tb.sv:49032: Verilog $stop
+Aborting...

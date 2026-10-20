@@ -1,0 +1,284 @@
+[
+  {
+    "role": 0,
+    "requested_seed": 992,
+    "binary": "./obj_boot_replay_pass/Vtb",
+    "exitcode": 0,
+    "log": "role0_old_replay_seed992.log",
+    "first_differences": [],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 0,
+    "requested_seed": 992,
+    "binary": "./obj_guard_trace3_pass/Vtb",
+    "exitcode": 0,
+    "log": "role0_private_ce_trace_seed992.log",
+    "first_differences": [],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 1,
+    "requested_seed": 993,
+    "binary": "./obj_boot_replay_pass/Vtb",
+    "exitcode": 0,
+    "log": "role1_old_replay_seed993.log",
+    "first_differences": [
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u53679_c0.u_cell pin=wd_in a=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000dffffffc000000000000000000000 b=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009c0fffffffffffffffff80ffbffff",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u53679_c0.u_cell pin=r_addr_in a=0f b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58421_c0.u_cell pin=wd_in a=ffffffffffffffff b=0000000000000000",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58422_c0.u_cell pin=wd_in a=ffffffffffffffff b=0000000000000000",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58423_c0.u_cell pin=wd_in a=ffffffffffffffff b=0000000000000000",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58424_c0.u_cell pin=wd_in a=ffffffffffffffff b=0000000000000000"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 1,
+    "requested_seed": 993,
+    "binary": "./obj_guard_trace3_pass/Vtb",
+    "exitcode": 1,
+    "log": "role1_private_ce_trace_seed993.log",
+    "first_differences": [
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=boot_image_fault a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_tx_v a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_tx_observed_v a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_expected_pw a=7ff b=000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_expected_dw a=f b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_auth_epoch a=ffff b=0000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_auth_digest a=ffffffffffffffff b=0000000000000000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=003fffff b=0037ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=source_cr a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=available a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__ingress_fault a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__commit_fault a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__source_fault a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__begin_epoch a=0fff b=0000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__cmd_v a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__rx_v a=1 b=0"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 2,
+    "requested_seed": 994,
+    "binary": "./obj_boot_replay_pass/Vtb",
+    "exitcode": 0,
+    "log": "role2_old_replay_seed994.log",
+    "first_differences": [],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 2,
+    "requested_seed": 994,
+    "binary": "./obj_guard_trace3_pass/Vtb",
+    "exitcode": 1,
+    "log": "role2_private_ce_trace_seed994.log",
+    "first_differences": [
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=package_abort a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_tx a=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 b=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003ffffffffff000000000000000003ffffc03",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=hc a=000000000000000000000000000000000000 b=7fffffffffffff80000003ffffffffffff1f",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=irq a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__begin_epoch a=0000 b=ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__begin_fault a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__begin_v a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__startup_allowed a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=1 port=u_rank__u_control__cmd_hc a=0000000000000000000000000000000000000000000000 b=000000000000000000000000000000000000700003ffff",
+      "[1006000] %Fatal: guard_trace3_tb.sv:49137: Assertion failed in tb: GUARD_VISIBLE_FAIL count=9"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 3,
+    "requested_seed": 995,
+    "binary": "./obj_boot_replay_pass/Vtb",
+    "exitcode": 0,
+    "log": "role3_old_replay_seed995.log",
+    "first_differences": [
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u53679_c0.u_cell pin=wd_in a=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000dffffffc000000000000000000000 b=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009c0fffffffffffffffff80ffbffff",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u57888_c0.u_cell pin=r_addr_in a=03 b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58421_c0.u_cell pin=wd_in a=ffffffffffffffff b=f0000000000003c0",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58422_c0.u_cell pin=wd_in a=ffffffffffffffff b=f0000000000003c0",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58423_c0.u_cell pin=wd_in a=ffffffffffffffff b=f0000000000003c0",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58424_c0.u_cell pin=wd_in a=ffffffffffffffff b=f0000000000003c0"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 3,
+    "requested_seed": 995,
+    "binary": "./obj_guard_trace3_pass/Vtb",
+    "exitcode": 1,
+    "log": "role3_private_ce_trace_seed995.log",
+    "first_differences": [
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_epoch a=ffff b=f3fe",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_digest a=ffffffffffffffff b=0000000000000000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_tx_v a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_tx_observed_v a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_tx a=06fffffe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003fffffffffffffffffffffffffffffffffff b=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_fault a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_authorized_footer_v a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_authorized_footer64 a=ffffffffffffffff b=000003fffffffc0f",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_auth_digest a=ffffffffffffffff b=0000007ffffffc07",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=irq a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=0028ffff b=0022ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=source_cr a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=available a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=service_faults a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__source_fault a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__begin_epoch a=ffff b=0000"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 4,
+    "requested_seed": 996,
+    "binary": "./obj_boot_replay_pass/Vtb",
+    "exitcode": 0,
+    "log": "role4_old_replay_seed996.log",
+    "first_differences": [
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u53679_c0.u_cell pin=wd_in a=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009c0ffffffffffffffffffffffffff b=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000dffffffc000000000000000000000",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u57888_c0.u_cell pin=w_addr_in a=03 b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u57888_c0.u_cell pin=r_addr_in a=03 b=01",
+      "BOOT_PIN_DIFF n=0 time=15000 macro=u57888_c0.u_cell pin=w_addr_in a=03 b=00",
+      "BOOT_PIN_DIFF n=0 time=15000 macro=u57888_c0.u_cell pin=r_addr_in a=03 b=00"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 4,
+    "requested_seed": 996,
+    "binary": "./obj_guard_trace3_pass/Vtb",
+    "exitcode": 1,
+    "log": "role4_private_ce_trace_seed996.log",
+    "first_differences": [
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u57888_c0.u_cell pin=w_addr_in a=03 b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u57888_c0.u_cell pin=r_addr_in a=03 b=00",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=boot_pr a=000000000000000000000000000000000000 b=7fffffe0000ffffffffffffffffffffffbfe",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=boot_image_ready a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_epoch a=0000 b=ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_digest a=0000000000000000 b=fffffe0000000ff1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_tx a=06fffffe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003fffffffffffffffffffffffffffffffffff b=06ffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003ffffffffff00000007ffff000003ffffc63",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_authorized_footer_v a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_authorized_footer64 a=0000000000000000 b=fffffc0000001ff1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_expected_pw a=000 b=7ff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_expected_dw a=0 b=f",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_auth_epoch a=0000 b=ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=003fffff b=0028ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=source_cr a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=available a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=service_faults a=1 b=0"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 5,
+    "requested_seed": 997,
+    "binary": "./obj_boot_replay_pass/Vtb",
+    "exitcode": 1,
+    "log": "role5_old_replay_seed997.log",
+    "first_differences": [
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u56130_c0.u_cell pin=w_ce_in a=0 b=1",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u56130_c0.u_cell pin=wd_in a=0000000000000000000000000000000000000000000000000000000000000000 b=00803f4000803f4000803f4000803f4000803f4000803f4000803f4000803f40",
+      "[226000] %Fatal: boot_replay_tb.sv:49030: Assertion failed in tb.unnamedblk1_1.unnamedblk68: PROMPT_STATE FAIL macro_arr u56130_c0.u_cell cycle=21 row=0"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 5,
+    "requested_seed": 997,
+    "binary": "./obj_guard_trace3_pass/Vtb",
+    "exitcode": 1,
+    "log": "role5_private_ce_trace_seed997.log",
+    "first_differences": [
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=package_abort a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_fault a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=hc a=000000000000000000000000000000000000 b=00000000000fffffffffffffffffe00003fc",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=0028ffff b=0020ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=source_cr a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=available a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__source_fault a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__begin_fault a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__begin_v a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__startup_allowed a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__cmd_v a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__u_packet__htd a=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 b=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffc000000000000000000003ffffff0006",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=record_fault a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=00080000 b=00000000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__source_fault a=0 b=1",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__u_control__u_packet__htd a=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 b=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffc000000000000000000003ffffff0006"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 6,
+    "requested_seed": 998,
+    "binary": "./obj_boot_replay_pass/Vtb",
+    "exitcode": 0,
+    "log": "role6_old_replay_seed998.log",
+    "first_differences": [
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u53679_c0.u_cell pin=w_addr_in a=0f b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u53679_c0.u_cell pin=wd_in a=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000dffffffc000000000000000000000 b=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c003fffc000000000000000000000",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u53679_c0.u_cell pin=r_addr_in a=0f b=00"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 6,
+    "requested_seed": 998,
+    "binary": "./obj_guard_trace3_pass/Vtb",
+    "exitcode": 1,
+    "log": "role6_private_ce_trace_seed998.log",
+    "first_differences": [
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=0020ffff b=0028ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=00000000 b=00080000",
+      "[1006000] %Fatal: guard_trace3_tb.sv:49137: Assertion failed in tb: GUARD_VISIBLE_FAIL count=2"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 7,
+    "requested_seed": 999,
+    "binary": "./obj_boot_replay_pass/Vtb",
+    "exitcode": 0,
+    "log": "role7_old_replay_seed999.log",
+    "first_differences": [
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u53679_c0.u_cell pin=wd_in a=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000dffffffc000000000000000000000 b=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009c0ffffffffffffffffffffffffff",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58421_c0.u_cell pin=addr_in a=ff b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58421_c0.u_cell pin=wd_in a=ffffffffffffffff b=0000000000000000",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58422_c0.u_cell pin=addr_in a=ff b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58422_c0.u_cell pin=wd_in a=ffffffffffffffff b=0000000000000000",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58423_c0.u_cell pin=addr_in a=ff b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58423_c0.u_cell pin=wd_in a=ffffffffffffffff b=0000000000000000",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58424_c0.u_cell pin=addr_in a=ff b=00",
+      "BOOT_PIN_DIFF n=0 time=5000 macro=u58424_c0.u_cell pin=wd_in a=ffffffffffffffff b=0000000000000000"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  },
+  {
+    "role": 7,
+    "requested_seed": 999,
+    "binary": "./obj_guard_trace3_pass/Vtb",
+    "exitcode": 1,
+    "log": "role7_private_ce_trace_seed999.log",
+    "first_differences": [
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=boot_pr a=7fffffffffffffffffffffffffffffffffff b=000000000000000000000000000000000000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=boot_image_target a=f b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=boot_image_fault a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_epoch a=ffff b=0000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_digest a=ffffffffffffffff b=0000000000000000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_authorized_footer_v a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_authorized_footer64 a=ffffffffffffffff b=0000000000000000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_expected_pw a=7ff b=000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_expected_dw a=f b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_auth_epoch a=ffff b=0000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=program_auth_digest a=ffffffffffffffff b=0000000000000000",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=hc a=000000000000000000000000000000000000 b=7ffe00000000007ffffffffffffffffff0fe",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=fault_src a=003fffff b=0037ffff",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=source_cr a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=available a=1 b=0",
+      "GUARD_VISIBLE_DIFF reset=0 n=0 port=u_rank__program_fault a=1 b=0"
+    ],
+    "scope": "100-cycle source-state diagnosis; old replay output compare starts after reset; private CE trace compares every edge"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "root": {
+    "driver": "u_rank__u_control__por_n",
+    "driver_role": "input_port",
+    "net": "u_rank__u_control__por_n",
+    "loads": 11
+  },
+  "max_dynamic_loads": 32,
+  "scope": "actual Liberty-aware source-primitive connectivity; NO resynthesis/layout/reset admission"
+}

@@ -1,0 +1,127 @@
+{
+  "scope": "PRIVATE new raw-por memory-access inhibit contract; NOT plain reset admission",
+  "root": "u_rank__u_control__por_n",
+  "active_level": 0,
+  "added_released_datapath_cycles": 0,
+  "reference_and_candidate_changed": true,
+  "macro_ports": [
+    {
+      "index": 0,
+      "macro": "u53679_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.u_ev_sram.u_mem",
+      "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+      "pin": "r_ce_in",
+      "gate": "u_raw_por_mem_0_r_ce_in",
+      "original_expression": "n64646_c0",
+      "read": true,
+      "write": false
+    },
+    {
+      "index": 0,
+      "macro": "u53679_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.u_ev_sram.u_mem",
+      "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+      "pin": "w_ce_in",
+      "gate": "u_raw_por_mem_0_w_ce_in",
+      "original_expression": "n64275_c0",
+      "read": false,
+      "write": true
+    },
+    {
+      "index": 1,
+      "macro": "u56130_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_control.u_prompt.u_m.u_core.u_sram",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "pin": "r_ce_in",
+      "gate": "u_raw_por_mem_1_r_ce_in",
+      "original_expression": "i26225_c0",
+      "read": true,
+      "write": false
+    },
+    {
+      "index": 1,
+      "macro": "u56130_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_control.u_prompt.u_m.u_core.u_sram",
+      "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "pin": "w_ce_in",
+      "gate": "u_raw_por_mem_1_w_ce_in",
+      "original_expression": "i64505_c0",
+      "read": false,
+      "write": true
+    },
+    {
+      "index": 2,
+      "macro": "u57888_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.u_mem",
+      "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+      "pin": "r_ce_in",
+      "gate": "u_raw_por_mem_2_r_ce_in",
+      "original_expression": "n64646_c0",
+      "read": true,
+      "write": false
+    },
+    {
+      "index": 2,
+      "macro": "u57888_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.u_mem",
+      "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+      "pin": "w_ce_in",
+      "gate": "u_raw_por_mem_2_w_ce_in",
+      "original_expression": "i25723_c0",
+      "read": false,
+      "write": true
+    },
+    {
+      "index": 3,
+      "macro": "u58421_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_program.u_m.g_pm[0].u_pm",
+      "master": "ot_sram_1rw_256x64_m4_r2c2",
+      "pin": "ce_in",
+      "gate": "u_raw_por_mem_3_ce_in",
+      "original_expression": "n64611_c0",
+      "read": true,
+      "write": true
+    },
+    {
+      "index": 4,
+      "macro": "u58422_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_program.u_m.g_pm[1].u_pm",
+      "master": "ot_sram_1rw_256x64_m4_r2c2",
+      "pin": "ce_in",
+      "gate": "u_raw_por_mem_4_ce_in",
+      "original_expression": "n64614_c0",
+      "read": true,
+      "write": true
+    },
+    {
+      "index": 5,
+      "macro": "u58423_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_program.u_m.g_pm[2].u_pm",
+      "master": "ot_sram_1rw_256x64_m4_r2c2",
+      "pin": "ce_in",
+      "gate": "u_raw_por_mem_5_ce_in",
+      "original_expression": "n64617_c0",
+      "read": true,
+      "write": true
+    },
+    {
+      "index": 6,
+      "macro": "u58424_c0.u_cell",
+      "original": "u_ot_pr_core.u_rank__u_program.u_m.g_pm[3].u_pm",
+      "master": "ot_sram_1rw_256x64_m4_r2c2",
+      "pin": "ce_in",
+      "gate": "u_raw_por_mem_6_ce_in",
+      "original_expression": "n64620_c0",
+      "read": true,
+      "write": true
+    }
+  ],
+  "physical_gate_count": 10,
+  "read_paths": 7,
+  "write_paths": 7,
+  "proposed_root_loads": 11,
+  "original_input_sha256": "5338dddd3f89c4516c61b86c77f4c59643d8b1ceda3d53633e0e571a17014fe7",
+  "previous_candidate_sha256": "9e17bef435d22e5d4bf97e47e9e8a3d9740c43bab33922d61c96175ed6ffcedc",
+  "reference_sha256": "29bb17886af6c06e916d2464d4c914f34503711ac4ba7c78250ab6dee5fc1b89",
+  "candidate_sha256": "44b310fca7061e530f1c71796ecbd0dafbf5e8e7c0fb065fb8a304f4d5275b72"
+}
