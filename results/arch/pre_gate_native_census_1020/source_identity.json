@@ -1,0 +1,41 @@
+{
+  "baseline": "f94733d2b",
+  "candidate": "2b04da85f",
+  "source_sha256": {
+    "tools/ref_tile/native_census.py": "392f30a033a6c3c4f7790a9e51c6521406bdda2096b6661e57980325eb619a6c",
+    "tools/ref_tile/native_census.tcl": "a755c3b2c3cb079c3f60a194454c4ed161a4b0389a3211d0ffd566683daffba6",
+    "tools/ref_tile/pre_route_gate.py": "8072141f13e93d0f3e9bc841d95ebabac1272ff19f865b6b2e2bf87a68c7e010",
+    "tools/ref_tile/ref_route.sh": "dcfbb94f41e1d5306145d4916ca8fd55c00d68a924a90e5e7728813682a8da0f",
+    "tools/textbook_lint.py": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+    "tools/ref_tile/gray_fifo_cdc_constraints.py": "57830c60b72d53d4adf5ca971823f5b443fc13e54823fd3534138dcd630af406",
+    "tools/ref_tile/lint_receipt.py": "49faa43fdade42413d47e3033852eec4ce53b918ce5bf11ead5e8f12283c2ad0"
+  },
+  "archive_sha256": {
+    "completebase.tar": "444e473595f0a04cd3e8ab822f74605ea281426461d9d19935d5994a353807e6",
+    "completecand.patch": "7eba0fb98be9e4be162d6b8aa07c6fcc2801c0f1544367a3109f568bf5c7a89d"
+  },
+  "fleet_host": "ot-epyc9",
+  "fleet_unit": "oth-ubuntu-346716-1792485030",
+  "status": "PAIRED_NO_NEW_FAILURES",
+  "paired_counts": {
+    "closure_loop": {
+      "baseline": "1151 passed,19 failed,17 skipped,195 subtests",
+      "candidate": "1151 passed,19 failed,17 skipped,195 subtests"
+    },
+    "ref_tile": {
+      "baseline": "622 passed,73 failed,24 skipped,309 subtests",
+      "candidate": "643 passed,73 failed,24 skipped,309 subtests"
+    },
+    "fleet": {
+      "baseline": "52 passed,7 failed,1 deselected",
+      "candidate": "52 passed,7 failed,1 deselected"
+    },
+    "landed_parent": {
+      "baseline": "12 passed",
+      "candidate": "12 passed"
+    }
+  },
+  "new_failure_ids": [],
+  "hook_fleet_unit": "oth-ubuntu-466711-1792485171",
+  "real_coupon_fleet_unit": "oth-ubuntu-464064-1792485159"
+}

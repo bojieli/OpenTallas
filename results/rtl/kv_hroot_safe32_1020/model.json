@@ -1,0 +1,34 @@
+{
+  "top": "qkd_kvs_hroot_safe32",
+  "default_adoption": false,
+  "previous_landed_source": "048ef6067",
+  "replicas": 4,
+  "previous_HROOT_LAND_EDGES": 1,
+  "new_HROOT_LAND_EDGES": 2,
+  "cycles_added_per_word": 1,
+  "affected_word_chains_per_root": 4,
+  "throughput_items_per_cycle": 1,
+  "stall_or_credit_protocol": false,
+  "numerical_arithmetic_change": false,
+  "port_shape": "same as qkd_kvs_hroot landed; i_ctl1118 i_g144 i_r299; output ABI identical",
+  "outline_um": [
+    300.24,
+    300.24
+  ],
+  "slot_change": false,
+  "synth_vehicle": "ORFS ASAP7 RVT_FF default, synth only; no setup/hold closure claim",
+  "mapped_area_um2": 1956,
+  "generic_cells": {
+    "$_XNOR_": 118,
+    "$_AND_": 397,
+    "$_OR_": 80,
+    "$_NAND_": 3,
+    "$_NOT_": 2,
+    "$_DFF_PN0_": 7,
+    "$_DFFE_PN0P_": 773,
+    "$_DFF_P_": 4865,
+    "$scopeinfo": 2
+  },
+  "generic_ff_bits": 5645,
+  "schedule_obligation": "Adoption must set compiler/die HROOT_LAND_EDGES=2 and regenerate ages/calendar; no automatic production binding."
+}

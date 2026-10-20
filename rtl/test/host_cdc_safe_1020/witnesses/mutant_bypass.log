@@ -1,0 +1,4 @@
+FAIL SRAM transfer value mismatch time=49000 sent=12 got=0
+[49000] %Fatal: tb_safe.sv:10: Assertion failed in tb_safe.err
+%Error: rtl/test/host_cdc_safe_1020/tb_safe.sv:10: Verilog $stop
+Aborting...
