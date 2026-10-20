@@ -355,7 +355,8 @@ def cmd_bound(a):
 def enabled():
     """release default: on whenever the release ROM layout (12 q pairs) is compiled; OT_XS_CAPCHECK=0 opts out
     (component benches of one token's 6 experts only, never a die/stage image)"""
-    return os.environ.get('OT_XS_CAPCHECK', '1') == '1' and os.environ.get('OT_XS_QPAIRS', '10') == '12'
+    import xs_flags as XO   # S81-ROMOPT merge: the release default is 12 q pairs with the env unset (xs_flags)
+    return os.environ.get('OT_XS_CAPCHECK', '1') == '1' and XO.get('OT_XS_QPAIRS') == '12'
 
 
 def verdict(map_path=None, stage=None):
