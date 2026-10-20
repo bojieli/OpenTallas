@@ -69,7 +69,7 @@ def test_actual_library_positive_unary_role_required(change):
 
 def test_pinned_canonical_alternative_still_requires_full_exact_scope():
     r = actual()
-    r['netlist']['sha256'] = 'changed raw image'
+    r['netlist']['sha256'] = 'f' * 64
     assert not N.ktree_scoped_admission(r)
     r['netlist']['positive_buf_identity_sha256'] = N.KTREE_CANONICAL
     assert N.ktree_scoped_admission(r)
