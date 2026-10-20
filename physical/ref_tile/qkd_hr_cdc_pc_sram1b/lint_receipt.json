@@ -84,7 +84,7 @@
         43.2
        ],
        "count": 1,
-       "inst": "*u_rx*g_ib_mem*g_32*u_ib",
+       "inst": "u_rank__u_phy__u_rx.g_ib_mem.g_32.u_ib",
        "orient": "R0",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir"
       },
@@ -94,7 +94,7 @@
         43.2
        ],
        "count": 1,
-       "inst": "*u_rx*g_afw*u_af*g_mm*g_pad32*u_m",
+       "inst": "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m",
        "orient": "R0",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir"
       },
@@ -104,7 +104,7 @@
         345.6
        ],
        "count": 1,
-       "inst": "*u_tx*g_ib_mem*g_32*u_ib",
+       "inst": "u_rank__u_phy__u_tx.g_ib_mem.g_32.u_ib",
        "orient": "R0",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir"
       },
@@ -114,7 +114,7 @@
         345.6
        ],
        "count": 1,
-       "inst": "*u_tx*g_afw*u_af*g_mm*g_pad32*u_m",
+       "inst": "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
        "orient": "R0",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir"
       }
@@ -162,9 +162,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-20T02:22:41-0700",
+   "created": "2026-10-20T02:45:00-0700",
    "host": "ot-epyc5",
-   "key": "2e9da323f01c4aec5ec13bcfd76b6dd02051d6635a9f729f36295d9cb53b85a6",
+   "key": "2950018f4acc78aa066de432b0bc28798508974cf240bfc39dee3889afc9ef31",
    "record": {
     "counts": {
      "consumer": 0,
@@ -1058,7 +1058,7 @@
     "strap_crossings": [],
     "straps": []
    },
-   "seconds": 6
+   "seconds": 5
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"

@@ -65,7 +65,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
    "master": "ot_sram_1r1w_32x546_m1_p192_mir",
-   "inst": "*u_rx*g_ib_mem*g_32*u_ib",
+   "inst": "u_rank__u_phy__u_rx.g_ib_mem.g_32.u_ib",
    "idx": 0,
    "x": 43.2,
    "y": 43.2,
@@ -78,7 +78,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
    "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
-   "inst": "*u_rx*g_afw*u_af*g_mm*g_pad32*u_m",
+   "inst": "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m",
    "idx": 0,
    "x": 259.2,
    "y": 43.2,
@@ -91,7 +91,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
    "master": "ot_sram_1r1w_32x546_m1_p192_mir",
-   "inst": "*u_tx*g_ib_mem*g_32*u_ib",
+   "inst": "u_rank__u_phy__u_tx.g_ib_mem.g_32.u_ib",
    "idx": 0,
    "x": 43.2,
    "y": 345.6,
@@ -104,7 +104,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
    "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
-   "inst": "*u_tx*g_afw*u_af*g_mm*g_pad32*u_m",
+   "inst": "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
    "idx": 0,
    "x": 259.2,
    "y": 345.6,
@@ -182,6 +182,11 @@
   "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib",
-  "physical/ref_tile/qkd_hr_cdc_pc_sram1b/place.tcl"
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1b/place.tcl",
+  "tools/ref_tile/raw_macro_clocks.py",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_tt.lib"
  ]
 }

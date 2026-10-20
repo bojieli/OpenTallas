@@ -25,7 +25,7 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
    "count": 1,
-   "inst": "*u_rx*g_ib_mem*g_32*u_ib",
+   "inst": "u_rank__u_phy__u_rx.g_ib_mem.g_32.u_ib",
    "at": [
     43.2,
     43.2
@@ -35,7 +35,7 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
    "count": 1,
-   "inst": "*u_rx*g_afw*u_af*g_mm*g_pad32*u_m",
+   "inst": "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m",
    "at": [
     259.2,
     43.2
@@ -45,7 +45,7 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
    "count": 1,
-   "inst": "*u_tx*g_ib_mem*g_32*u_ib",
+   "inst": "u_rank__u_phy__u_tx.g_ib_mem.g_32.u_ib",
    "at": [
     43.2,
     302.4
@@ -55,7 +55,7 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
    "count": 1,
-   "inst": "*u_tx*g_afw*u_af*g_mm*g_pad32*u_m",
+   "inst": "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
    "at": [
     259.2,
     302.4
@@ -275,5 +275,35 @@
    204,
    302
   ]
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_32x546_m1_p192_mir",
+  "ot_sram_1r1w2c_32x546_m1_p192_mir"
+ ],
+ "soft_root_macro_bindings": {
+  "u_rank__u_phy__u_rx.g_ib_mem.g_32.u_ib": {
+   "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "clock_pin": "clk",
+   "root": "ck_phy_fam"
+  },
+  "u_rank__u_phy__u_tx.g_ib_mem.g_32.u_ib": {
+   "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m": {
+   "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "clock_pins": {
+    "rclk": "ck_core",
+    "wclk": "ck_phy_fam"
+   }
+  },
+  "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m": {
+   "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "clock_pins": {
+    "rclk": "ck_phy_fam",
+    "wclk": "ck_core"
+   }
+  }
  }
 }
