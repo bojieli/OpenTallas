@@ -2,7 +2,8 @@
 `default_nettype none
 // QHUB-S1 10-19 (kit hbm_hcq_hub_s1; SAFE-DESIGN item 4): ot_vms_calendar_static (rtl/hbm_accel/generic/vm/static, left
 // byte-identical for its VM users) plus ONE extra output register gb = the hc_<q> gathered-reader launch bounds check
-// (ot_hgi_hc_gathered_mix_reader_static bounds_ok over calendar fields npos [26:23], base [42:27], stride [58:43]),
+// (ot_hgi_hc_gathered_mix_reader_static bounds_ok over calendar fields npos [26:23], base [42:27], stride [58:43],
+// in an exact shallow form, see gb_last),
 // computed from the captured programme word on the SAME edge the calendar register loads it.  When the word is not
 // valid the calendar is zero (no launch), so gb is only ever consumed together with its own word: bit-identical to the
 // reader's internal check, one register earlier (the calendar -> issue_sector cone is cut, zero added edges).
@@ -64,8 +65,13 @@ module ot_hbm_hc_qcal_static #(
     // gathered-reader bounds over the captured word (same expression as the reader's bounds_ok)
     wire [3:0] gb_npos=captured[26:23];
     wire [15:0] gb_base=captured[42:27],gb_stride=captured[58:43];
-    wire [32:0] gb_last={17'd0,gb_base}+(gb_npos-1)*{17'd0,gb_stride}+2;
-    wire gb_d=gb_npos>=1&&gb_npos<=8&&!gb_base[15]&&gb_last<32768&&gb_last[14:13]==gb_base[14:13];
+    // shallow exact form (gate 10-19: the multiply form was captured -> gb 688 ps / 19 levels): the check is true only
+    // for npos 1..8, i.e. n1 = npos - 1 in 0..7, so (npos-1)*stride is three masked shifted addends (no 33-b product)
+    // and last < 2^19: last < 32768 <=> last[18:15] == 0.  Outside 1..8 the npos term is false in both forms.
+    wire [2:0] gb_n1=3'(gb_npos-4'd1);
+    wire [18:0] gb_last=19'(gb_base)+19'(2)+({19{gb_n1[0]}}&19'(gb_stride))+({19{gb_n1[1]}}&(19'(gb_stride)<<1))
+                       +({19{gb_n1[2]}}&(19'(gb_stride)<<2));
+    wire gb_d=gb_npos>=1&&gb_npos<=8&&!gb_base[15]&&gb_last[18:15]==4'd0&&gb_last[14:13]==gb_base[14:13];
     // Payload, ordinal and address identity have dedicated, nonreset rungs.
     always @(posedge clk)begin
         captured<=macro_data;

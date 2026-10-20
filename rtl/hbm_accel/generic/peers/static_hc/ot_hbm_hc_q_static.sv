@@ -42,7 +42,8 @@ module ot_hbm_hc_q_static #(
     //   fanout  the LG return is no longer gated as 2 x 2,056 data bits by the calendar's gather_phase bit: only the 8
     //           sector valid bits are steered (the data bits reach both readers; each reader samples them only on its own
     //           response edges, which the programme never overlaps -- an overlap still faults exactly as before);
-    //           the x_wave capture enable is ECOP kept copies and the beat control leaves per-face kept copies x_face_*.
+    //           the x_wave capture enable is ECOP kept copies and the beat control leaves per-face kept copies x_face_*;
+//           the gathered reader's 768-b return mux select is 24 kept copies of return_sector[2:0] (RSC, one-hot AND-OR).
     parameter integer SAFE=0
 )(
     input wire clk,rst_n,
@@ -155,7 +156,7 @@ module ot_hbm_hc_q_static #(
         .x_face_v(x_face_v),.x_face_beat(x_face_beat));
     // MUT 6 (SAFE): bounds from the previous word (a stale precompute must FAIL the bench via its out-of-range vector)
     reg gb_prev; always @(posedge clk) gb_prev<=gb;
-    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE),.EXTB((SAFE!=0)?1:0)) gather(
+    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE),.EXTB((SAFE!=0)?1:0),.RSC((SAFE!=0)?24:0)) gather(
         .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
         .base_sector(gather_base),.position_stride_sector(gather_stride),.bounds_i((MUT==6)?gb_prev:gb),
         .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),

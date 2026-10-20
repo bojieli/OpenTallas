@@ -11,7 +11,11 @@
 // the parent from the programme word one edge before it is the calendar word: ot_hbm_hc_qcal_static gb), instead of
 // the multiply/add/compare cone from the calendar register into issue_sector (~678 ps / 17 levels).  Same value on the
 // launch edge, so the reader is bit-identical; default 0 = the internal check (bounds_i unused).
-module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,parameter integer EXTB=0)(
+// RSC (QHUB-S1 10-19, SAFE-DESIGN item 3): > 0 = RSC kept copies of return_sector[2:0] (loaded with the same values on the
+// same edges), copy j*8+c selects the 32-b chunk c of return sector j through a decoded one-hot AND-OR (the single
+// return_sector register drove the 768-b 8:1 return mux, 3,088 loads).  Needs RSC = 24.  Default 0 = unchanged function
+// (rs_c is then one unused 3-b kept register).
+module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,parameter integer EXTB=0,parameter integer RSC=0)(
     input wire clk,rst_n,launch,
     input wire [3:0] npos,
     input wire [15:0] base_sector,position_stride_sector,
@@ -29,6 +33,24 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,pa
     initial if(RESP_PHASE<1||RESP_PHASE>23)$fatal(1,"RESP_PHASE must lie inside the 24-edge period");
     reg [767:0] landing;
     reg [15:0] issue_sector,return_sector,stride;
+    initial if(RSC!=0&&RSC!=24)$fatal(1,"RSC must be 0 or 24");
+    (* keep = "true", dont_touch = "true" *) reg [3*((RSC>0)?RSC:1)-1:0] rs_c;
+    wire [767:0] arrived_c;
+    generate if(RSC>0)begin:g_rsc
+        for(genvar j=0;j<3;j=j+1)begin:g_j
+            for(genvar c=0;c<8;c=c+1)begin:g_c
+                wire [2:0] rk=rs_c[(j*8+c)*3+:3]+3'(j);
+                reg [31:0] v;
+                always @*begin
+                    v=32'd0;
+                    for(integer b=0;b<8;b=b+1)v=v|({32{rk==3'(b)}}&local_rr[b*257+c*32+:32]);
+                end
+                assign arrived_c[j*256+c*32+:32]=v;
+            end
+        end
+    end else begin:g_rs0
+        assign arrived_c=768'd0;
+    end endgenerate
     reg [3:0] positions,issued,returned;
     reg [4:0] phase,next_row;
     reg [2:0] output_pos;
@@ -39,6 +61,7 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,pa
     wire bounds_ok=(EXTB!=0)?bounds_i:bounds_int;
     reg [7:0] expected_valid,actual_valid;
     reg [767:0] arrived;
+    wire [767:0] arr=(RSC>0)?arrived_c:arrived;
     always @*begin
         local_rq=0;local_read=0;expected_valid=0;actual_valid=0;arrived=0;
         for(integer b=0;b<8;b=b+1)actual_valid[b]=local_rr[b*257+256];
@@ -52,7 +75,7 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,pa
     end
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
-            active<=0;streaming<=0;phase<=0;issue_sector<=0;return_sector<=0;stride<=0;
+            active<=0;streaming<=0;phase<=0;issue_sector<=0;return_sector<=0;stride<=0;rs_c<=0;
             positions<=0;issued<=0;returned<=0;next_row<=0;output_pos<=0;
             gathered_mix_v<=0;gathered_mix_row<=0;gathered_mix_pos<=0;gathered_mix_data<=0;done<=0;fault<=0;
         end else begin
@@ -62,8 +85,9 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,pa
                 phase<=phase==23?5'd0:phase+5'd1;
                 if(request_slot)begin issue_sector<=issue_sector+stride;issued<=issued+1'b1;end
                 if(response_slot)begin
-                    landing<=arrived;returned<=returned+1'b1;return_sector<=return_sector+stride;
-                    gathered_mix_v<=1;gathered_mix_row<=0;gathered_mix_pos<=returned[2:0];gathered_mix_data<=arrived[31:0];
+                    landing<=arr;returned<=returned+1'b1;return_sector<=return_sector+stride;
+                    rs_c<={((RSC>0)?RSC:1){3'(return_sector+stride)}};
+                    gathered_mix_v<=1;gathered_mix_row<=0;gathered_mix_pos<=returned[2:0];gathered_mix_data<=arr[31:0];
                     streaming<=1;next_row<=1;output_pos<=returned[2:0];
                 end else if(streaming)begin
                     gathered_mix_v<=1;gathered_mix_row<=next_row;gathered_mix_pos<=output_pos;
@@ -79,6 +103,7 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,pa
                 if(active||!bounds_ok)fault<=1;
                 else begin
                     active<=1;streaming<=0;phase<=0;issue_sector<=base_sector;return_sector<=base_sector;
+                    rs_c<={((RSC>0)?RSC:1){base_sector[2:0]}};
                     stride<=position_stride_sector;positions<=npos;issued<=0;returned<=0;next_row<=0;output_pos<=0;
                 end
             end
