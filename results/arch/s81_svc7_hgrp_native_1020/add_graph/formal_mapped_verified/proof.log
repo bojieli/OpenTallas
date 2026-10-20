@@ -1,0 +1,905 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/proof.ys' --
+
+1. Executing Verilog-2005 frontend: /graph/native.v
+Parsing formal SystemVerilog input from `/graph/native.v' to AST representation.
+Generating RTLIL representation for module `\ot_s81svc7_add_native'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /models/cells.v
+Parsing formal SystemVerilog input from `/models/cells.v' to AST representation.
+Generating RTLIL representation for module `\A2O1A1Ixp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\A2O1A1O1Ixp25_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND2x4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND2x6_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND3x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND3x4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND4x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND4x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND5x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AND5x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO211x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO21x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO221x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO221x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO222x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO22x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO31x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO322x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO32x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO32x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO331x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO331x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO332x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO332x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO333x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO333x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AO33x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI211x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI211xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI21xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI21xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI221x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI221xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI222xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI22xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI22xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI311xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI31xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI31xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI321xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI322xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI32xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI331xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI332xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI333xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\AOI33xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx10_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx12_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx12f_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx16f_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx24_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx4f_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx6f_ASAP7_75t_R'.
+Generating RTLIL representation for module `\BUFx8_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx10_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx11_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx12_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx14_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx16_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx20_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx5p33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx6p67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx8_ASAP7_75t_R'.
+Generating RTLIL representation for module `\CKINVDCx9p33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFASRHQNx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQNx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFHQx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFLQNx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFLQNx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFLQNx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DFFLQx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DHLx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DHLx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DHLx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DLLx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DLLx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\DLLx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\FAx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HAxp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HB1xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HB2xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HB3xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\HB4xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx11_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx13_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx6_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVx8_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVxp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\INVxp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\MAJIxp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\MAJx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\MAJx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2x1p5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND2xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND3x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND3xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND4xp25_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND4xp75_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NAND5xp2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2x1p5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR2xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR3x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR3xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR4xp25_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR4xp75_ASAP7_75t_R'.
+Generating RTLIL representation for module `\NOR5xp2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\O2A1O1Ixp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\O2A1O1Ixp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA211x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA21x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA221x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA222x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA22x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA31x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA331x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA331x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA332x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA332x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA333x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA333x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OA33x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI211xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI21x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI21xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI21xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI221xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI222xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI22x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI22xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI22xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI311xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI31xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI31xp67_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI321xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI322xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI32xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI331xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI332xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI333xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OAI33xp33_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR2x4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR2x6_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR3x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR3x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR3x4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR4x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR4x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR5x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\OR5x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFHx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFHx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFHx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFHx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFLx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFLx2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFLx3_ASAP7_75t_R'.
+Generating RTLIL representation for module `\SDFLx4_ASAP7_75t_R'.
+Generating RTLIL representation for module `\TIEHIx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\TIELOx1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XNOR2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XNOR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XNOR2xp5_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XOR2x1_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XOR2x2_ASAP7_75t_R'.
+Generating RTLIL representation for module `\XOR2xp5_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /out/miter.sv
+Parsing formal SystemVerilog input from `/out/miter.sv' to AST representation.
+Generating RTLIL representation for module `\svc7_graph_miter'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /graph/mapped.v
+Parsing formal SystemVerilog input from `/graph/mapped.v' to AST representation.
+Generating RTLIL representation for module `\ot_s81svc7_add_graph_input'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \svc7_graph_miter
+Used module:     \ot_s81svc7_add_native
+Used module:         \DFFHQNx1_ASAP7_75t_R
+Used module:         \XNOR2xp5_ASAP7_75t_R
+Used module:         \XOR2xp5_ASAP7_75t_R
+Used module:         \NAND3xp33_ASAP7_75t_R
+Used module:         \NAND4xp25_ASAP7_75t_R
+Used module:         \AO21x1_ASAP7_75t_R
+Used module:         \OAI31xp33_ASAP7_75t_R
+Used module:         \DFFASRHQNx1_ASAP7_75t_R
+Used module:         \NAND2xp33_ASAP7_75t_R
+Used module:         \O2A1O1Ixp33_ASAP7_75t_R
+Used module:         \NOR5xp2_ASAP7_75t_R
+Used module:         \NOR3xp33_ASAP7_75t_R
+Used module:         \OAI21xp33_ASAP7_75t_R
+Used module:         \A2O1A1O1Ixp25_ASAP7_75t_R
+Used module:         \AND5x1_ASAP7_75t_R
+Used module:         \AND4x1_ASAP7_75t_R
+Used module:         \NAND5xp2_ASAP7_75t_R
+Used module:         \NOR2xp33_ASAP7_75t_R
+Used module:         \OAI32xp33_ASAP7_75t_R
+Used module:         \AOI211xp5_ASAP7_75t_R
+Used module:         \MAJx2_ASAP7_75t_R
+Used module:         \AND3x1_ASAP7_75t_R
+Used module:         \AOI21xp33_ASAP7_75t_R
+Used module:         \NOR4xp25_ASAP7_75t_R
+Used module:         \AND2x2_ASAP7_75t_R
+Used module:         \A2O1A1Ixp33_ASAP7_75t_R
+Used module:         \MAJIxp5_ASAP7_75t_R
+Used module:         \AOI31xp33_ASAP7_75t_R
+Used module:         \OA21x2_ASAP7_75t_R
+Used module:         \OR5x1_ASAP7_75t_R
+Used module:         \OR3x1_ASAP7_75t_R
+Used module:         \OAI321xp33_ASAP7_75t_R
+Used module:         \OAI211xp5_ASAP7_75t_R
+Used module:         \OAI221xp5_ASAP7_75t_R
+Used module:         \AOI311xp33_ASAP7_75t_R
+Used module:         \AOI32xp33_ASAP7_75t_R
+Used module:         \AOI221xp5_ASAP7_75t_R
+Used module:         \OAI22xp33_ASAP7_75t_R
+Used module:         \AOI22xp33_ASAP7_75t_R
+Used module:         \AO22x1_ASAP7_75t_R
+Used module:         \OA211x2_ASAP7_75t_R
+Used module:         \AO32x1_ASAP7_75t_R
+Used module:         \OA22x2_ASAP7_75t_R
+Used module:         \OR4x1_ASAP7_75t_R
+Used module:         \OR2x2_ASAP7_75t_R
+Used module:         \AOI321xp33_ASAP7_75t_R
+Used module:         \INVx1_ASAP7_75t_R
+Used module:     \ot_s81svc7_add_graph_input
+Used module:         \HB1xp67_ASAP7_75t_R
+
+5.2. Analyzing design hierarchy..
+Top module:  \svc7_graph_miter
+Used module:     \ot_s81svc7_add_native
+Used module:         \DFFHQNx1_ASAP7_75t_R
+Used module:         \XNOR2xp5_ASAP7_75t_R
+Used module:         \XOR2xp5_ASAP7_75t_R
+Used module:         \NAND3xp33_ASAP7_75t_R
+Used module:         \NAND4xp25_ASAP7_75t_R
+Used module:         \AO21x1_ASAP7_75t_R
+Used module:         \OAI31xp33_ASAP7_75t_R
+Used module:         \DFFASRHQNx1_ASAP7_75t_R
+Used module:         \NAND2xp33_ASAP7_75t_R
+Used module:         \O2A1O1Ixp33_ASAP7_75t_R
+Used module:         \NOR5xp2_ASAP7_75t_R
+Used module:         \NOR3xp33_ASAP7_75t_R
+Used module:         \OAI21xp33_ASAP7_75t_R
+Used module:         \A2O1A1O1Ixp25_ASAP7_75t_R
+Used module:         \AND5x1_ASAP7_75t_R
+Used module:         \AND4x1_ASAP7_75t_R
+Used module:         \NAND5xp2_ASAP7_75t_R
+Used module:         \NOR2xp33_ASAP7_75t_R
+Used module:         \OAI32xp33_ASAP7_75t_R
+Used module:         \AOI211xp5_ASAP7_75t_R
+Used module:         \MAJx2_ASAP7_75t_R
+Used module:         \AND3x1_ASAP7_75t_R
+Used module:         \AOI21xp33_ASAP7_75t_R
+Used module:         \NOR4xp25_ASAP7_75t_R
+Used module:         \AND2x2_ASAP7_75t_R
+Used module:         \A2O1A1Ixp33_ASAP7_75t_R
+Used module:         \MAJIxp5_ASAP7_75t_R
+Used module:         \AOI31xp33_ASAP7_75t_R
+Used module:         \OA21x2_ASAP7_75t_R
+Used module:         \OR5x1_ASAP7_75t_R
+Used module:         \OR3x1_ASAP7_75t_R
+Used module:         \OAI321xp33_ASAP7_75t_R
+Used module:         \OAI211xp5_ASAP7_75t_R
+Used module:         \OAI221xp5_ASAP7_75t_R
+Used module:         \AOI311xp33_ASAP7_75t_R
+Used module:         \AOI32xp33_ASAP7_75t_R
+Used module:         \AOI221xp5_ASAP7_75t_R
+Used module:         \OAI22xp33_ASAP7_75t_R
+Used module:         \AOI22xp33_ASAP7_75t_R
+Used module:         \AO22x1_ASAP7_75t_R
+Used module:         \OA211x2_ASAP7_75t_R
+Used module:         \AO32x1_ASAP7_75t_R
+Used module:         \OA22x2_ASAP7_75t_R
+Used module:         \OR4x1_ASAP7_75t_R
+Used module:         \OR2x2_ASAP7_75t_R
+Used module:         \AOI321xp33_ASAP7_75t_R
+Used module:         \INVx1_ASAP7_75t_R
+Used module:     \ot_s81svc7_add_graph_input
+Used module:         \HB1xp67_ASAP7_75t_R
+Removing unused module `\XOR2x2_ASAP7_75t_R'.
+Removing unused module `\XOR2x1_ASAP7_75t_R'.
+Removing unused module `\XNOR2x2_ASAP7_75t_R'.
+Removing unused module `\XNOR2x1_ASAP7_75t_R'.
+Removing unused module `\TIELOx1_ASAP7_75t_R'.
+Removing unused module `\TIEHIx1_ASAP7_75t_R'.
+Removing unused module `\SDFLx4_ASAP7_75t_R'.
+Removing unused module `\SDFLx3_ASAP7_75t_R'.
+Removing unused module `\SDFLx2_ASAP7_75t_R'.
+Removing unused module `\SDFLx1_ASAP7_75t_R'.
+Removing unused module `\SDFHx4_ASAP7_75t_R'.
+Removing unused module `\SDFHx3_ASAP7_75t_R'.
+Removing unused module `\SDFHx2_ASAP7_75t_R'.
+Removing unused module `\SDFHx1_ASAP7_75t_R'.
+Removing unused module `\OR5x2_ASAP7_75t_R'.
+Removing unused module `\OR4x2_ASAP7_75t_R'.
+Removing unused module `\OR3x4_ASAP7_75t_R'.
+Removing unused module `\OR3x2_ASAP7_75t_R'.
+Removing unused module `\OR2x6_ASAP7_75t_R'.
+Removing unused module `\OR2x4_ASAP7_75t_R'.
+Removing unused module `\OAI33xp33_ASAP7_75t_R'.
+Removing unused module `\OAI333xp33_ASAP7_75t_R'.
+Removing unused module `\OAI332xp33_ASAP7_75t_R'.
+Removing unused module `\OAI331xp33_ASAP7_75t_R'.
+Removing unused module `\OAI322xp33_ASAP7_75t_R'.
+Removing unused module `\OAI31xp67_ASAP7_75t_R'.
+Removing unused module `\OAI311xp33_ASAP7_75t_R'.
+Removing unused module `\OAI22xp5_ASAP7_75t_R'.
+Removing unused module `\OAI22x1_ASAP7_75t_R'.
+Removing unused module `\OAI222xp33_ASAP7_75t_R'.
+Removing unused module `\OAI21xp5_ASAP7_75t_R'.
+Removing unused module `\OAI21x1_ASAP7_75t_R'.
+Removing unused module `\OA33x2_ASAP7_75t_R'.
+Removing unused module `\OA333x2_ASAP7_75t_R'.
+Removing unused module `\OA333x1_ASAP7_75t_R'.
+Removing unused module `\OA332x2_ASAP7_75t_R'.
+Removing unused module `\OA332x1_ASAP7_75t_R'.
+Removing unused module `\OA331x2_ASAP7_75t_R'.
+Removing unused module `\OA331x1_ASAP7_75t_R'.
+Removing unused module `\OA31x2_ASAP7_75t_R'.
+Removing unused module `\OA222x2_ASAP7_75t_R'.
+Removing unused module `\OA221x2_ASAP7_75t_R'.
+Removing unused module `\O2A1O1Ixp5_ASAP7_75t_R'.
+Removing unused module `\NOR4xp75_ASAP7_75t_R'.
+Removing unused module `\NOR3x2_ASAP7_75t_R'.
+Removing unused module `\NOR3x1_ASAP7_75t_R'.
+Removing unused module `\NOR2xp67_ASAP7_75t_R'.
+Removing unused module `\NOR2x2_ASAP7_75t_R'.
+Removing unused module `\NOR2x1p5_ASAP7_75t_R'.
+Removing unused module `\NOR2x1_ASAP7_75t_R'.
+Removing unused module `\NAND4xp75_ASAP7_75t_R'.
+Removing unused module `\NAND3x2_ASAP7_75t_R'.
+Removing unused module `\NAND3x1_ASAP7_75t_R'.
+Removing unused module `\NAND2xp67_ASAP7_75t_R'.
+Removing unused module `\NAND2xp5_ASAP7_75t_R'.
+Removing unused module `\NAND2x2_ASAP7_75t_R'.
+Removing unused module `\NAND2x1p5_ASAP7_75t_R'.
+Removing unused module `\NAND2x1_ASAP7_75t_R'.
+Removing unused module `\MAJx3_ASAP7_75t_R'.
+Removing unused module `\INVxp67_ASAP7_75t_R'.
+Removing unused module `\INVxp33_ASAP7_75t_R'.
+Removing unused module `\INVx8_ASAP7_75t_R'.
+Removing unused module `\INVx6_ASAP7_75t_R'.
+Removing unused module `\INVx5_ASAP7_75t_R'.
+Removing unused module `\INVx4_ASAP7_75t_R'.
+Removing unused module `\INVx3_ASAP7_75t_R'.
+Removing unused module `\INVx2_ASAP7_75t_R'.
+Removing unused module `\INVx13_ASAP7_75t_R'.
+Removing unused module `\INVx11_ASAP7_75t_R'.
+Removing unused module `\HB4xp67_ASAP7_75t_R'.
+Removing unused module `\HB3xp67_ASAP7_75t_R'.
+Removing unused module `\HB2xp67_ASAP7_75t_R'.
+Removing unused module `\HAxp5_ASAP7_75t_R'.
+Removing unused module `\FAx1_ASAP7_75t_R'.
+Removing unused module `\DLLx3_ASAP7_75t_R'.
+Removing unused module `\DLLx2_ASAP7_75t_R'.
+Removing unused module `\DLLx1_ASAP7_75t_R'.
+Removing unused module `\DHLx3_ASAP7_75t_R'.
+Removing unused module `\DHLx2_ASAP7_75t_R'.
+Removing unused module `\DHLx1_ASAP7_75t_R'.
+Removing unused module `\DFFLQx4_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx3_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx2_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx1_ASAP7_75t_R'.
+Removing unused module `\DFFHQx4_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx3_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx2_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx9p33_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx8_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx6p67_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx5p33_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx20_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx16_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx14_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx12_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx11_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx10_ASAP7_75t_R'.
+Removing unused module `\BUFx8_ASAP7_75t_R'.
+Removing unused module `\BUFx6f_ASAP7_75t_R'.
+Removing unused module `\BUFx5_ASAP7_75t_R'.
+Removing unused module `\BUFx4f_ASAP7_75t_R'.
+Removing unused module `\BUFx4_ASAP7_75t_R'.
+Removing unused module `\BUFx3_ASAP7_75t_R'.
+Removing unused module `\BUFx2_ASAP7_75t_R'.
+Removing unused module `\BUFx24_ASAP7_75t_R'.
+Removing unused module `\BUFx16f_ASAP7_75t_R'.
+Removing unused module `\BUFx12f_ASAP7_75t_R'.
+Removing unused module `\BUFx12_ASAP7_75t_R'.
+Removing unused module `\BUFx10_ASAP7_75t_R'.
+Removing unused module `\AOI33xp33_ASAP7_75t_R'.
+Removing unused module `\AOI333xp33_ASAP7_75t_R'.
+Removing unused module `\AOI332xp33_ASAP7_75t_R'.
+Removing unused module `\AOI331xp33_ASAP7_75t_R'.
+Removing unused module `\AOI322xp5_ASAP7_75t_R'.
+Removing unused module `\AOI31xp67_ASAP7_75t_R'.
+Removing unused module `\AOI22xp5_ASAP7_75t_R'.
+Removing unused module `\AOI22x1_ASAP7_75t_R'.
+Removing unused module `\AOI222xp33_ASAP7_75t_R'.
+Removing unused module `\AOI221x1_ASAP7_75t_R'.
+Removing unused module `\AOI21xp5_ASAP7_75t_R'.
+Removing unused module `\AOI21x1_ASAP7_75t_R'.
+Removing unused module `\AOI211x1_ASAP7_75t_R'.
+Removing unused module `\AO33x2_ASAP7_75t_R'.
+Removing unused module `\AO333x2_ASAP7_75t_R'.
+Removing unused module `\AO333x1_ASAP7_75t_R'.
+Removing unused module `\AO332x2_ASAP7_75t_R'.
+Removing unused module `\AO332x1_ASAP7_75t_R'.
+Removing unused module `\AO331x2_ASAP7_75t_R'.
+Removing unused module `\AO331x1_ASAP7_75t_R'.
+Removing unused module `\AO32x2_ASAP7_75t_R'.
+Removing unused module `\AO322x2_ASAP7_75t_R'.
+Removing unused module `\AO31x2_ASAP7_75t_R'.
+Removing unused module `\AO22x2_ASAP7_75t_R'.
+Removing unused module `\AO222x2_ASAP7_75t_R'.
+Removing unused module `\AO221x2_ASAP7_75t_R'.
+Removing unused module `\AO221x1_ASAP7_75t_R'.
+Removing unused module `\AO21x2_ASAP7_75t_R'.
+Removing unused module `\AO211x2_ASAP7_75t_R'.
+Removing unused module `\AND5x2_ASAP7_75t_R'.
+Removing unused module `\AND4x2_ASAP7_75t_R'.
+Removing unused module `\AND3x4_ASAP7_75t_R'.
+Removing unused module `\AND3x2_ASAP7_75t_R'.
+Removing unused module `\AND2x6_ASAP7_75t_R'.
+Removing unused module `\AND2x4_ASAP7_75t_R'.
+Removed 144 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/models/cells.v:2712$856 in module DFFASRHQNx1_ASAP7_75t_R.
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 1 assignment to connection.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \asr_clear in `\DFFASRHQNx1_ASAP7_75t_R.$proc$/models/cells.v:2712$856'.
+Found async reset \asr_set in `\DFFASRHQNx1_ASAP7_75t_R.$proc$/models/cells.v:2712$856'.
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\DFFHQNx1_ASAP7_75t_R.$proc$/models/cells.v:2716$858'.
+Creating decoders for process `\DFFASRHQNx1_ASAP7_75t_R.$proc$/models/cells.v:2712$856'.
+     1/1: $0\QN[0:0]
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\DFFHQNx1_ASAP7_75t_R.\QN' using process `\DFFHQNx1_ASAP7_75t_R.$proc$/models/cells.v:2716$858'.
+  created $dff cell `$procdff$1830' with positive edge clock.
+Creating register for signal `\DFFASRHQNx1_ASAP7_75t_R.\QN' using process `\DFFASRHQNx1_ASAP7_75t_R.$proc$/models/cells.v:2712$856'.
+Warning: Complex async reset for dff `\QN'.
+  created $dffsr cell `$procdff$1843' with positive edge clock and multiple level-sensitive resets.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `DFFHQNx1_ASAP7_75t_R.$proc$/models/cells.v:2716$858'.
+Removing empty process `DFFASRHQNx1_ASAP7_75t_R.$proc$/models/cells.v:2712$856'.
+Cleaned up 0 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module OAI22xp33_ASAP7_75t_R.
+Optimizing module NAND2xp33_ASAP7_75t_R.
+Optimizing module AOI32xp33_ASAP7_75t_R.
+Optimizing module OA22x2_ASAP7_75t_R.
+Optimizing module AOI321xp33_ASAP7_75t_R.
+Optimizing module ot_s81svc7_add_graph_input.
+Optimizing module AOI31xp33_ASAP7_75t_R.
+Optimizing module AOI311xp33_ASAP7_75t_R.
+Optimizing module OR4x1_ASAP7_75t_R.
+Optimizing module AOI22xp33_ASAP7_75t_R.
+Optimizing module OA21x2_ASAP7_75t_R.
+Optimizing module MAJx2_ASAP7_75t_R.
+Optimizing module AOI221xp5_ASAP7_75t_R.
+Optimizing module DFFHQNx1_ASAP7_75t_R.
+Optimizing module DFFASRHQNx1_ASAP7_75t_R.
+<suppressed ~5 debug messages>
+Optimizing module AOI21xp33_ASAP7_75t_R.
+Optimizing module MAJIxp5_ASAP7_75t_R.
+Optimizing module AOI211xp5_ASAP7_75t_R.
+Optimizing module OA211x2_ASAP7_75t_R.
+Optimizing module OAI221xp5_ASAP7_75t_R.
+Optimizing module O2A1O1Ixp33_ASAP7_75t_R.
+Optimizing module NOR5xp2_ASAP7_75t_R.
+Optimizing module svc7_graph_miter.
+Optimizing module NOR4xp25_ASAP7_75t_R.
+Optimizing module NOR3xp33_ASAP7_75t_R.
+Optimizing module OAI21xp33_ASAP7_75t_R.
+Optimizing module INVx1_ASAP7_75t_R.
+Optimizing module AO32x1_ASAP7_75t_R.
+Optimizing module XNOR2xp5_ASAP7_75t_R.
+Optimizing module OAI211xp5_ASAP7_75t_R.
+Optimizing module NOR2xp33_ASAP7_75t_R.
+Optimizing module AO22x1_ASAP7_75t_R.
+Optimizing module OAI32xp33_ASAP7_75t_R.
+Optimizing module OR3x1_ASAP7_75t_R.
+Optimizing module HB1xp67_ASAP7_75t_R.
+Optimizing module OAI321xp33_ASAP7_75t_R.
+Optimizing module AO21x1_ASAP7_75t_R.
+Optimizing module NAND5xp2_ASAP7_75t_R.
+Optimizing module XOR2xp5_ASAP7_75t_R.
+Optimizing module AND5x1_ASAP7_75t_R.
+Optimizing module NAND4xp25_ASAP7_75t_R.
+Optimizing module AND4x1_ASAP7_75t_R.
+Optimizing module NAND3xp33_ASAP7_75t_R.
+Optimizing module OAI31xp33_ASAP7_75t_R.
+Optimizing module AND3x1_ASAP7_75t_R.
+Optimizing module OR5x1_ASAP7_75t_R.
+Optimizing module OR2x2_ASAP7_75t_R.
+Optimizing module AND2x2_ASAP7_75t_R.
+Optimizing module A2O1A1O1Ixp25_ASAP7_75t_R.
+Optimizing module A2O1A1Ixp33_ASAP7_75t_R.
+Optimizing module ot_s81svc7_add_native.
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module OAI22xp33_ASAP7_75t_R.
+Deleting now unused module NAND2xp33_ASAP7_75t_R.
+Deleting now unused module AOI32xp33_ASAP7_75t_R.
+Deleting now unused module OA22x2_ASAP7_75t_R.
+Deleting now unused module AOI321xp33_ASAP7_75t_R.
+Deleting now unused module ot_s81svc7_add_graph_input.
+Deleting now unused module AOI31xp33_ASAP7_75t_R.
+Deleting now unused module AOI311xp33_ASAP7_75t_R.
+Deleting now unused module OR4x1_ASAP7_75t_R.
+Deleting now unused module AOI22xp33_ASAP7_75t_R.
+Deleting now unused module OA21x2_ASAP7_75t_R.
+Deleting now unused module MAJx2_ASAP7_75t_R.
+Deleting now unused module AOI221xp5_ASAP7_75t_R.
+Deleting now unused module DFFHQNx1_ASAP7_75t_R.
+Deleting now unused module DFFASRHQNx1_ASAP7_75t_R.
+Deleting now unused module AOI21xp33_ASAP7_75t_R.
+Deleting now unused module MAJIxp5_ASAP7_75t_R.
+Deleting now unused module AOI211xp5_ASAP7_75t_R.
+Deleting now unused module OA211x2_ASAP7_75t_R.
+Deleting now unused module OAI221xp5_ASAP7_75t_R.
+Deleting now unused module O2A1O1Ixp33_ASAP7_75t_R.
+Deleting now unused module NOR5xp2_ASAP7_75t_R.
+Deleting now unused module NOR4xp25_ASAP7_75t_R.
+Deleting now unused module NOR3xp33_ASAP7_75t_R.
+Deleting now unused module OAI21xp33_ASAP7_75t_R.
+Deleting now unused module INVx1_ASAP7_75t_R.
+Deleting now unused module AO32x1_ASAP7_75t_R.
+Deleting now unused module XNOR2xp5_ASAP7_75t_R.
+Deleting now unused module OAI211xp5_ASAP7_75t_R.
+Deleting now unused module NOR2xp33_ASAP7_75t_R.
+Deleting now unused module AO22x1_ASAP7_75t_R.
+Deleting now unused module OAI32xp33_ASAP7_75t_R.
+Deleting now unused module OR3x1_ASAP7_75t_R.
+Deleting now unused module HB1xp67_ASAP7_75t_R.
+Deleting now unused module OAI321xp33_ASAP7_75t_R.
+Deleting now unused module AO21x1_ASAP7_75t_R.
+Deleting now unused module NAND5xp2_ASAP7_75t_R.
+Deleting now unused module XOR2xp5_ASAP7_75t_R.
+Deleting now unused module AND5x1_ASAP7_75t_R.
+Deleting now unused module NAND4xp25_ASAP7_75t_R.
+Deleting now unused module AND4x1_ASAP7_75t_R.
+Deleting now unused module NAND3xp33_ASAP7_75t_R.
+Deleting now unused module OAI31xp33_ASAP7_75t_R.
+Deleting now unused module AND3x1_ASAP7_75t_R.
+Deleting now unused module OR5x1_ASAP7_75t_R.
+Deleting now unused module OR2x2_ASAP7_75t_R.
+Deleting now unused module AND2x2_ASAP7_75t_R.
+Deleting now unused module A2O1A1O1Ixp25_ASAP7_75t_R.
+Deleting now unused module A2O1A1Ixp33_ASAP7_75t_R.
+Deleting now unused module ot_s81svc7_add_native.
+<suppressed ~6135 debug messages>
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \svc7_graph_miter..
+Removed 2033 unused cells and 27670 unused wires.
+<suppressed ~5721 debug messages>
+
+9. Executing ASYNC2SYNC pass.
+Replacing svc7_graph_miter.$flatten\candidate.\c2493.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2493.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2493.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2493.$0\QN[0:0], Q=\candidate.c2493.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2494.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2494.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2494.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2494.$0\QN[0:0], Q=\candidate.c2494.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2495.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2495.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2495.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2495.$0\QN[0:0], Q=\candidate.c2495.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2496.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2496.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2496.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2496.$0\QN[0:0], Q=\candidate.c2496.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2497.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2497.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2497.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2497.$0\QN[0:0], Q=\candidate.c2497.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2498.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2498.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2498.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2498.$0\QN[0:0], Q=\candidate.c2498.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2499.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2499.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2499.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2499.$0\QN[0:0], Q=\candidate.c2499.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2500.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2500.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2500.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2500.$0\QN[0:0], Q=\candidate.c2500.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2501.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2501.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2501.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2501.$0\QN[0:0], Q=\candidate.c2501.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2502.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2502.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2502.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2502.$0\QN[0:0], Q=\candidate.c2502.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2503.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2503.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2503.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2503.$0\QN[0:0], Q=\candidate.c2503.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2504.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2504.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2504.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2504.$0\QN[0:0], Q=\candidate.c2504.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2505.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2505.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2505.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2505.$0\QN[0:0], Q=\candidate.c2505.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2506.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2506.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2506.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2506.$0\QN[0:0], Q=\candidate.c2506.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2507.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2507.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2507.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2507.$0\QN[0:0], Q=\candidate.c2507.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2508.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2508.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2508.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2508.$0\QN[0:0], Q=\candidate.c2508.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2509.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2509.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2509.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2509.$0\QN[0:0], Q=\candidate.c2509.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2510.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2510.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2510.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2510.$0\QN[0:0], Q=\candidate.c2510.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2511.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2511.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2511.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2511.$0\QN[0:0], Q=\candidate.c2511.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2512.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2512.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2512.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2512.$0\QN[0:0], Q=\candidate.c2512.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2513.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2513.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2513.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2513.$0\QN[0:0], Q=\candidate.c2513.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2514.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2514.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2514.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2514.$0\QN[0:0], Q=\candidate.c2514.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2515.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2515.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2515.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2515.$0\QN[0:0], Q=\candidate.c2515.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2516.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2516.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2516.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2516.$0\QN[0:0], Q=\candidate.c2516.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2517.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2517.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2517.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2517.$0\QN[0:0], Q=\candidate.c2517.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2518.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2518.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2518.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2518.$0\QN[0:0], Q=\candidate.c2518.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2519.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2519.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2519.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2519.$0\QN[0:0], Q=\candidate.c2519.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2520.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2520.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2520.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2520.$0\QN[0:0], Q=\candidate.c2520.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2521.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2521.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2521.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2521.$0\QN[0:0], Q=\candidate.c2521.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2522.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2522.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2522.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2522.$0\QN[0:0], Q=\candidate.c2522.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2523.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2523.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2523.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2523.$0\QN[0:0], Q=\candidate.c2523.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2524.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2524.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2524.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2524.$0\QN[0:0], Q=\candidate.c2524.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2525.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2525.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2525.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2525.$0\QN[0:0], Q=\candidate.c2525.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2526.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2526.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2526.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2526.$0\QN[0:0], Q=\candidate.c2526.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2527.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2527.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2527.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2527.$0\QN[0:0], Q=\candidate.c2527.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2528.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2528.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2528.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2528.$0\QN[0:0], Q=\candidate.c2528.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2529.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2529.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2529.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2529.$0\QN[0:0], Q=\candidate.c2529.QN
+Replacing svc7_graph_miter.$flatten\candidate.\c2530.$procdff$1843 ($dffsr): SET=$flatten\candidate.\c2530.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\candidate.\c2530.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\candidate.\c2530.$0\QN[0:0], Q=\candidate.c2530.QN
+Replacing svc7_graph_miter.$flatten\original.\_4896_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4896_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4896_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4896_.$0\QN[0:0], Q=\original._4896_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4897_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4897_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4897_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4897_.$0\QN[0:0], Q=\original._4897_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4898_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4898_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4898_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4898_.$0\QN[0:0], Q=\original._4898_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4899_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4899_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4899_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4899_.$0\QN[0:0], Q=\original._4899_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4900_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4900_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4900_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4900_.$0\QN[0:0], Q=\original._4900_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4901_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4901_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4901_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4901_.$0\QN[0:0], Q=\original._4901_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4902_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4902_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4902_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4902_.$0\QN[0:0], Q=\original._4902_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4903_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4903_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4903_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4903_.$0\QN[0:0], Q=\original._4903_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4904_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4904_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4904_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4904_.$0\QN[0:0], Q=\original._4904_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4905_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4905_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4905_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4905_.$0\QN[0:0], Q=\original._4905_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4906_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4906_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4906_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4906_.$0\QN[0:0], Q=\original._4906_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4907_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4907_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4907_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4907_.$0\QN[0:0], Q=\original._4907_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4908_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4908_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4908_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4908_.$0\QN[0:0], Q=\original._4908_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4909_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4909_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4909_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4909_.$0\QN[0:0], Q=\original._4909_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4910_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4910_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4910_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4910_.$0\QN[0:0], Q=\original._4910_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4911_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4911_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4911_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4911_.$0\QN[0:0], Q=\original._4911_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4912_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4912_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4912_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4912_.$0\QN[0:0], Q=\original._4912_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4913_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4913_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4913_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4913_.$0\QN[0:0], Q=\original._4913_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4914_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4914_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4914_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4914_.$0\QN[0:0], Q=\original._4914_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4915_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4915_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4915_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4915_.$0\QN[0:0], Q=\original._4915_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4916_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4916_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4916_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4916_.$0\QN[0:0], Q=\original._4916_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4917_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4917_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4917_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4917_.$0\QN[0:0], Q=\original._4917_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4918_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4918_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4918_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4918_.$0\QN[0:0], Q=\original._4918_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4919_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4919_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4919_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4919_.$0\QN[0:0], Q=\original._4919_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4920_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4920_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4920_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4920_.$0\QN[0:0], Q=\original._4920_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4921_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4921_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4921_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4921_.$0\QN[0:0], Q=\original._4921_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4922_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4922_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4922_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4922_.$0\QN[0:0], Q=\original._4922_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4923_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4923_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4923_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4923_.$0\QN[0:0], Q=\original._4923_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4924_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4924_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4924_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4924_.$0\QN[0:0], Q=\original._4924_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4925_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4925_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4925_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4925_.$0\QN[0:0], Q=\original._4925_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4926_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4926_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4926_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4926_.$0\QN[0:0], Q=\original._4926_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4927_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4927_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4927_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4927_.$0\QN[0:0], Q=\original._4927_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4928_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4928_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4928_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4928_.$0\QN[0:0], Q=\original._4928_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4929_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4929_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4929_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4929_.$0\QN[0:0], Q=\original._4929_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4930_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4930_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4930_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4930_.$0\QN[0:0], Q=\original._4930_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4931_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4931_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4931_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4931_.$0\QN[0:0], Q=\original._4931_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4932_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4932_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4932_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4932_.$0\QN[0:0], Q=\original._4932_.QN
+Replacing svc7_graph_miter.$flatten\original.\_4933_.$procdff$1843 ($dffsr): SET=$flatten\original.\_4933_.$auto$rtlil.cc:3402:Mux$1838, CLR=$flatten\original.\_4933_.$auto$rtlil.cc:3402:Mux$1842, D=$flatten\original.\_4933_.$0\QN[0:0], Q=\original._4933_.QN
+
+10. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \svc7_graph_miter..
+
+12. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint: \clk = 1'1
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: { \rst_n \clk } = 2'01
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+No constraints for initial state found.
+
+
+Setting up time step 2:
+Import set-constraint: \clk = 1'1
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: { \rst_n \clk } = 2'01
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+
+Setting up time step 3:
+Import set-constraint: \clk = 1'1
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: { \rst_n \clk } = 2'01
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+
+Setting up time step 4:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 5:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 6:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 7:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 8:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 9:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 10:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 11:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 12:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 13:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Setting up time step 14:
+Import set-constraint: \clk = 1'1
+Final constraint equation: \clk = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \v
+Import def constraint for this timestep: \a
+Import def constraint for this timestep: \b
+Imported 29535 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \b
+Import show expression: \a
+Import show expression: \v
+Import show expression: \rst_n
+Import show expression: \clk
+Import show expression: \bad
+
+Solving problem with 4768178 variables and 12329658 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: b818652a7c, time: 1367.49s, user: 1361.25s, system: 6.87s, MEM: 5215.45 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 99% 1x sat (1364 sec), 0% 2x opt_clean (1 sec), ...

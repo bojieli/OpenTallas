@@ -3,11 +3,12 @@ set -euo pipefail
 G=$(cd "${1:?graph directory}" && pwd)
 ROOT=$PWD
 TOP=${3:-ot_s81svc7_chunk_reduce}
+SOURCE=${4:-rtl}
 O=$G/${2:-chunk_native}
 mkdir -p "$O"
 cat > "$O/map.ys" <<'YS'
 read_verilog -lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v
-read_verilog -sv /graph/native.v /src/rtl/hdc/v41x/ot_s81svc7_chunk_reduce.sv /src/rtl/hdc/v41x/ot_s81svc7_skew_sram.sv /src/rtl/hdc/v41x/ot_s81svc7_chunk_core.sv /src/rtl/hdc/v41x/ot_s81svc7_bmul_native.v
+read_verilog -sv /graph/native.v /src/rtl/hdc/v41x/ot_s81svc7_chunk_reduce.sv /src/rtl/hdc/v41x/ot_s81svc7_skew_sram.sv /src/rtl/hdc/v41x/ot_s81svc7_chunk_core.sv /src/rtl/hdc/v41x/ot_s81svc7_chunk.sv /src/rtl/hdc/v41x/ot_s81svc7_bmul_native.v
 YS
 for k in SIMPLE AO OA INVBUF SEQ;do echo "read_liberty -lib /tmp/lib/$k.lib" >> "$O/map.ys";done
 cat >> "$O/map.ys" <<'YS'
@@ -19,8 +20,16 @@ abc -liberty /tmp/lib/SIMPLE.lib -liberty /tmp/lib/AO.lib -liberty /tmp/lib/OA.l
 opt_clean
 write_verilog -noattr /out/mapped.v
 write_json /out/mapped.json
+setattr -mod -unset keep_hierarchy
+flatten
+write_verilog -noattr /out/flat.v
+write_json /out/flat.json
 YS
 sed -i "s/-top ot_s81svc7_chunk_reduce/-top $TOP/g" "$O/map.ys"
+if [ "$SOURCE" != rtl ];then
+ sed -i "\|^read_verilog -sv |c\\read_verilog /graph/$SOURCE" "$O/map.ys"
+ sha256sum "$G/$SOURCE" > "$O/generated_source_identity.sha256"
+fi
 docker run --rm -v "$ROOT:/src:ro" -v "$G:/graph:ro" -v "$O:/out" openroad/orfs:latest bash -lc '
  source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
  N=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
@@ -30,7 +39,7 @@ docker run --rm -v "$ROOT:/src:ro" -v "$G:/graph:ro" -v "$O:/out" openroad/orfs:
  cp "$N/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib" /tmp/lib/SEQ.lib
  cp /tmp/lib/*.lib /out/lib/
  cp /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib /out/lib/MACRO.lib
- sha256sum /out/lib/*.lib /src/physical/common_flow/ot_keep_regs.tcl /src/rtl/hdc/v41x/ot_s81svc7_chunk_reduce.sv /src/rtl/hdc/v41x/ot_s81svc7_skew_sram.sv /src/rtl/hdc/v41x/ot_s81svc7_chunk_core.sv /src/rtl/hdc/v41x/ot_s81svc7_bmul_native.v /graph/native.v > /out/source_identity.sha256
+ sha256sum /out/lib/*.lib /src/physical/common_flow/ot_keep_regs.tcl /src/rtl/hdc/v41x/ot_s81svc7_chunk_reduce.sv /src/rtl/hdc/v41x/ot_s81svc7_skew_sram.sv /src/rtl/hdc/v41x/ot_s81svc7_chunk_core.sv /src/rtl/hdc/v41x/ot_s81svc7_chunk.sv /src/rtl/hdc/v41x/ot_s81svc7_bmul_native.v /graph/native.v > /out/source_identity.sha256
  yosys -V > /out/tool_identity.txt
  yosys-abc -c version >> /out/tool_identity.txt
  yosys -l /out/synth.log -s /out/map.ys

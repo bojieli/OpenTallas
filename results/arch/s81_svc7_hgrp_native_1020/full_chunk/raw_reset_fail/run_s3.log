@@ -1,0 +1,6 @@
+SVC7_FULL_MISMATCH cyc=712 v=1/1 y=3f276900/00000000 f=0/0
+SVC7_FULL_MISMATCH cyc=2034 v=1/1 y=3fbbc880/00000000 f=0/0
+SVC7_FULL checks=6996 valid=5936 errors=2 verdict=FAIL
+[14000000] %Fatal: tb_svc7_full_chunk.sv:52: Assertion failed in tb_svc7_full_chunk: SVC7_FULL_FAIL
+%Error: tools/s81_dv/svc_rs/tb_svc7_full_chunk.sv:52: Verilog $stop
+Aborting...
