@@ -1,0 +1,6 @@
+CHUNK_RT_EQUIV checks 2349 outputs 1063 nonzero_sums 1063 errors 0 gapk 4 qlate 0
+CHUNK_RT_EQUIV PASS checks 2349
+- rtl/test/hbm_idx_static/tb_idx_chunk_rt_equiv.sv:72: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.525 s; speed 44.865 us/s
+- Verilator: cpu 0.525 s on 1 threads; allocated 21 MB

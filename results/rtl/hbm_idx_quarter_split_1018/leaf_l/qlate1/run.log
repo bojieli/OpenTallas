@@ -1,0 +1,6 @@
+MISMATCH cyc862 on1/1 v1/1 kvf/f f0/0 sum 4823a4004200ec404416e3203f580180 / 4823a4004201138042f000003f590580
+MISMATCH cyc1216 on1/1 v1/1 kvf/f ff/f sum bc840000be5b6000c50477acbe2eec00 / bc840000be5b6000c529b7acbe2eec00
+CHUNK_RT_EQUIV checks 2337 outputs 1063 nonzero_sums 1063 errors 2 gapk 2 qlate 1
+[23420000] %Fatal: tb_idx_chunk_rt_equiv.sv:71: Assertion failed in tb_idx_chunk_rt_equiv: CHUNK_RT_EQUIV FAIL
+%Error: rtl/test/hbm_idx_static/tb_idx_chunk_rt_equiv.sv:71: Verilog $stop
+Aborting...
