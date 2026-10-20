@@ -5,7 +5,7 @@
 // No reset/storage ECC is added to the SRAM. Two unconditional payload registers
 // avoid a W-bit hit-enable cone; reset-distinct kept flags each select <=16 bits.
 module ot_sram_showahead_1r1w #(
- parameter integer W=553, AW=3, WREG=1, NS=(W+SB-1)/SB, MUT=0, LOCAL_HIT=0, SB=16, LOCAL_RA=0, DEPTH=(1<<AW)
+ parameter integer W=553, AW=3, WREG=1, NS=(W+SB-1)/SB, MUT=0, LOCAL_HIT=0, SB=16, LOCAL_RA=0, LOCAL_WA=0, DEPTH=(1<<AW)
 )(input wire clk, input wire [NS-1:0] rst_n,
  input wire we, input wire [AW-1:0] wa, input wire [W-1:0] wd,
  input wire [AW-1:0] ra, output wire [W-1:0] q,
@@ -44,8 +44,18 @@ module ot_sram_showahead_1r1w #(
  wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}, raw;
  genvar b,s;
  generate for(b=0;b<NB;b=b+1) begin:g_bank
+  wire bank_we; wire [AW-1:0] bank_wa;
+  if(LOCAL_WA!=0 && WREG!=0) begin:g_local_write
+   // Same original WREG edge, one retained address/enable copy per128-bit
+   // physical SRAM bank. No added write/read/forwarding edge.
+   (* keep=1 *) ot_sram_showahead_writepins #(.AW(AW)) u_wp(
+    .clk(clk),.rn(rst_n[(b*128)/SB]),.we(we),.wa(wa),
+    .qwe(bank_we),.qwa(bank_wa));
+  end else begin:g_shared_write
+   assign bank_we=mw;assign bank_wa=mwa;
+  end
   ot_sram_1r1w_32x128_m1 u_m(.clk(clk),.r_ce_in(1'b1),.r_addr_in(5'(read_addr_local[b*AW+:AW])),
-   .rd_out(raw[b*128+:128]),.w_ce_in(mw),.w_addr_in(5'(mwa)),
+   .rd_out(raw[b*128+:128]),.w_ce_in(bank_we),.w_addr_in(5'(bank_wa)),
    .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
  end
  for(s=0;s<NS;s=s+1) begin:g_slice
@@ -78,4 +88,16 @@ endmodule
  wire advance=advance_a && advance_b;
  assign next_addr=advance?((ptr==AW'(DEPTH-1))?'0:ptr+1'b1):ptr;
  always @(posedge clk or negedge rn) if(!rn) ptr<=0;else ptr<=next_addr;
+endmodule
+
+// Opt-in same-age write-pin copies; distinct retained flop drivers prevent a
+// shared write address/CE net spanning all five physical SRAM banks.
+(* keep_hierarchy=1 *) module ot_sram_showahead_writepins #(
+ parameter integer AW=3)(input wire clk,rn,we,input wire [AW-1:0] wa,
+ output wire qwe,output wire [AW-1:0] qwa);
+ (* keep=1 *) reg valid_q;
+ (* keep=1 *) reg [AW-1:0] addr_q;
+ always @(posedge clk or negedge rn) if(!rn) valid_q<=0;else valid_q<=we;
+ always @(posedge clk) addr_q<=wa;
+ assign qwe=valid_q;assign qwa=addr_q;
 endmodule
