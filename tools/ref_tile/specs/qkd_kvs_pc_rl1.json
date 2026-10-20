@@ -402,5 +402,8 @@
   "enable": false,
   "reason": "Landed in RTL (OT_KV_PC_RLAND=1, kv_static_die.pc_rland_text): rst_n -> ot_reset_sync u_rland_ck on ck, hrst_n -> ot_reset_sync u_rland_hck on hck, 2 registered stages each at the face, every child reset pin on the landed net.  The flow's OT_RST_LAND lands all reset_ports on ONE clock (it would move the hck reset release onto ck)."
  },
- "safe_design_checklist": "see physical/ref_tile/qkd_kvs_pc_rl1/README.md"
+ "safe_design_checklist": "see physical/ref_tile/qkd_kvs_pc_rl1/README.md",
+ "boundary_tcl": [
+  "physical/qkd_kvs_kits/qkd_kvs_pc_rl1_hck_boundary.tcl"
+ ]
 }

@@ -1,0 +1,138 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/o/abc.ys' --
+
+1. Executing JSON frontend.
+Importing module ot_sram_1r1w_64x512_m1_r2c2 from JSON tree.
+Importing module ot_sram_1r1w_32x128_m1 from JSON tree.
+Importing module ot_sram_1r1w_128x256_m1_r2c2 from JSON tree.
+Importing module ot_qfd_tt_ctlm_static_hr_safe32 from JSON tree.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_qfd_tt_ctlm_static_hr_safe32
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_qfd_tt_ctlm_static_hr_safe32
+Removed 0 unused modules.
+
+3. Printing statistics.
+
+=== ot_qfd_tt_ctlm_static_hr_safe32 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    21222 wires
+  1146103 wire bits
+     2860 public wires
+  1095018 public wire bits
+       51 ports
+     1592 port bits
+    46450 cells
+    12554   $_AND_
+     1222   $_DFF_PN0_
+        3   $_DFF_PN1_
+     5481   $_DFF_P_
+    11973   $_MUX_
+     2629   $_NOT_
+     8966   $_OR_
+     3450   $_XOR_
+      162   $scopeinfo
+        8   ot_sram_1r1w_32x128_m1
+        2   ot_sram_1r1w_64x512_m1_r2c2
+
+4. Executing ABC pass (technology mapping using ABC).
+
+4.1. Extracting gate netlist of module `\ot_qfd_tt_ctlm_static_hr_safe32' to `<abc-temp-dir>/input.blif'..
+Replacing 24 occurrences of constant undef bits with constant zero bits
+
+4.1.1. Executed ABC.
+Extracted 39572 gates and 47062 wires to a netlist network with 7487 inputs and 9682 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:     6153
+ABC RESULTS:            ANDNOT cells:      502
+ABC RESULTS:               BUF cells:        1
+ABC RESULTS:               MUX cells:     4954
+ABC RESULTS:              NAND cells:     6153
+ABC RESULTS:               NOR cells:      742
+ABC RESULTS:               NOT cells:      484
+ABC RESULTS:                OR cells:     2013
+ABC RESULTS:             ORNOT cells:     1343
+ABC RESULTS:              XNOR cells:      297
+ABC RESULTS:               XOR cells:      841
+ABC RESULTS:        internal signals:    29893
+ABC RESULTS:           input signals:     7487
+ABC RESULTS:          output signals:     9682
+Removing temp directory.
+Removing global temp directory.
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_tt_ctlm_static_hr_safe32..
+Removed 0 unused cells and 30815 unused wires.
+<suppressed ~142 debug messages>
+
+6. Printing statistics.
+
+=== ot_qfd_tt_ctlm_static_hr_safe32 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    21377 wires
+  1112839 wire bits
+     2718 public wires
+  1094180 public wire bits
+       51 ports
+     1592 port bits
+    30360 cells
+      502   $_ANDNOT_
+     6153   $_AND_
+     1222   $_DFF_PN0_
+        3   $_DFF_PN1_
+     5481   $_DFF_P_
+     4954   $_MUX_
+     6153   $_NAND_
+      742   $_NOR_
+      484   $_NOT_
+     1343   $_ORNOT_
+     2013   $_OR_
+      297   $_XNOR_
+      841   $_XOR_
+      162   $scopeinfo
+        8   ot_sram_1r1w_32x128_m1
+        2   ot_sram_1r1w_64x512_m1_r2c2
+
+7. Executing JSON backend.
+
+End of script. Logfile hash: 54fc741df4, time: 13.04s, user: 4.61s, system: 1.08s, MEM: 954.27 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 64% 1x abc (8 sec), 20% 2x read_json (2 sec), ...

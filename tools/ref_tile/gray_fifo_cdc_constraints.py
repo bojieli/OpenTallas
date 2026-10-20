@@ -110,6 +110,12 @@ REVIEWED = {
         chains=(('wptr', 'wgray', ('wg_r1', 'wg_r2'), 'w2r'), ('rptr', 'rgray', ('rg_w1', 'rg_w2'), 'r2w')),
         valid='link', read_stage=None, min_ptr_bits=3),
 }
+# HOST-SRAM opt-in: exact reviewed source, unchanged Gray/publication/rendezvous semantics.
+REVIEWED['ot_host_async_fifo_sram'] = dict(REVIEWED['ot_qwen_async_fifo_w'], path='rtl/physical/ot_host_async_fifo_sram.sv',
+    sha256=('da2d391322e2cdb58f7d4b04028591f8bd754e7e6f63acf9631368b55a515d22',), read_stage=None)
+RESET_BANK = ('ot_host_reset_bank', 'rtl/physical/ot_host_die_cdc_sram.sv', ('a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d',))
+DUAL_SRAM = {'ot_sram_1r1w2c_32x546_m1_p192_mir': {'ot_sram_1r1w2c_32x546_m1_p192_mir.v': 'cf42d815879bb3635e92071f05ceb31a1004f64ebe1aa10e2a02c69288608841', 'ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v': 'ae8045e620759351ff9b2f5fb469c32da7e5924a51d4a8b0040261a634ee0c3d', 'ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib': '7c6833d7970e4921d3d6725af4e8dedede326fa837485bc7214a210622ba6e31', 'ot_sram_1r1w2c_32x546_m1_p192_mir_ss.lib': 'd28d59a0e127ac833916594e54a7483158c028bbf02e0462e323e80203b3da23', 'ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib': '4b7aeff31a66cae303368232b2ba8fa99f0600902e0a53a2c00e356ad761f213'}}
+
 STORAGE = re.compile(r'mem\[\d+\](?:\[\d+\])?')
 RESERVED_ATTRIBUTE = re.compile(rb'\b(?:src|hdlname|module\w*|cell_\w*|keep_hierarchy)\s*=')
 BDD_NODE_LIMIT = 2_000_000
@@ -222,9 +228,12 @@ def extensions(spec):
     ext = spec.get(EXTENSIONS)
     if ext is None:
         return None
-    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'why'}:
+    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'dual_clock_srams', 'why'}:
         raise GrayFifoError(f'reviewed_gray_fifos {EXTENSIONS} must be an object with level_synchronizers / '
                             'die_constant_inputs / why only (no false paths, groups or waivers)')
+    dual = ext.get('dual_clock_srams', [])
+    if not isinstance(dual, list) or len(set(dual)) != len(dual) or any(n not in DUAL_SRAM for n in dual):
+        raise GrayFifoError('reviewed_gray_fifos dual_clock_srams must name distinct fingerprinted supported masters')
     levels = ext.get('level_synchronizers', [])
     if not isinstance(levels, list):
         raise GrayFifoError('reviewed_gray_fifos level_synchronizers must be a list')
@@ -269,11 +278,19 @@ def _macro_clock_pins(spec, root):
         libs = sorted(view.glob(f'{master}_*.lib'))
         if not libs:
             raise GrayFifoError(f'reviewed_gray_fifos macro {master} has no Liberty view')
+        dual = master in (extensions(spec) or {}).get('dual_clock_srams', [])
+        if dual:
+            for filename, digest in DUAL_SRAM[master].items():
+                if not (view/filename).is_file() or hashlib.sha256((view/filename).read_bytes()).hexdigest() != digest:
+                    raise GrayFifoError(f'reviewed_gray_fifos dual-clock SRAM {master} source/view changed: {filename}')
+            if len(libs) != 3:
+                raise GrayFifoError('reviewed_gray_fifos dual-clock SRAM requires TT/FF/SS views')
         for lib in libs:
-            found.add(_liberty_clock(lib.read_text(), master))
+            found.add(_liberty_dual_sram(lib.read_text(), master) if dual else _liberty_clock(lib.read_text(), master))
         if len(found) != 1:
             raise GrayFifoError(f'reviewed_gray_fifos macro {master} clock pin differs between corners')
-        out[master] = found.pop()
+        value = found.pop()
+        out[master] = dict(read_clock='rclk', write_clock='wclk', pin_clock=dict(value)) if dual else value
     return out
 
 
@@ -303,6 +320,51 @@ def _liberty_clock(text, master):
     return next(iter(clocks))
 
 
+
+def _liberty_dual_sram(text, master):
+    """Exact 32x546 1R1W2C roles from each actual Liberty pin/arc, no cross-clock timing exception.
+    Every bit must have its expected direction and exactly one related clock. The caller additionally
+    binds the model, blackbox and all corner views to reviewed immutable SHA256s.
+    """
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.S).replace('\\\n', ' ')
+    stack, clocks, dirs, related = [], set(), {}, {}
+    for tok in re.finditer(r'(\w+)\s*\(([^()]*)\)\s*\{|\}|(\w+)\s*:\s*("[^"]*"|[^;{}]+);', text):
+        if tok.group(1):
+            stack.append((tok.group(1), tok.group(2).strip().strip('"'))); continue
+        if tok.group(0) == '}':
+            if stack: stack.pop()
+            continue
+        if len(stack)<2 or stack[1] != ('cell',master):continue
+        pin=next((v for k,v in reversed(stack) if k in ('pin','bus')),None)
+        if pin is None:continue
+        k,v=tok.group(3),tok.group(4).strip().strip('"')
+        if k=='clock' and v=='true':clocks.add(pin)
+        if k=='direction':dirs[pin]=v
+        if k=='related_pin':related.setdefault(pin,set()).update(v.split())
+    expected={'rclk':('input','rclk'),'wclk':('input','wclk'),
+              'r_ce_in':('input','rclk'),'w_ce_in':('input','wclk'),
+              'r_addr_in':('input','rclk'),'w_addr_in':('input','wclk'),
+              'rd_out':('output','rclk'),'wd_in':('input','wclk'),'w_mask_in':('input','wclk')}
+    if clocks!={'rclk','wclk'} or dirs!={p:d for p,(d,c) in expected.items()}:
+        raise GrayFifoError(f'dual-clock SRAM {master} clock/port directions differ from reviewed interface')
+    for pin,(d,c) in expected.items():
+        want=set() if pin in clocks else {c}
+        if related.get(pin,set())!=want:
+            raise GrayFifoError(f'dual-clock SRAM {master} pin {pin} arcs must relate only to {sorted(want)}')
+    for base,n in [('r_addr_in',5),('w_addr_in',5),('rd_out',546),('wd_in',546),('w_mask_in',546)]:
+        m=re.search(r'type\s*\(\s*'+re.escape(master+'_'+base+'_t')+r'\s*\)\s*\{([^}]+)\}',text)
+        if not m or not re.search(r'bit_width\s*:\s*'+str(n)+r'\s*;',m.group(1)):
+            raise GrayFifoError(f'dual-clock SRAM {master} wrong Liberty width for {base}')
+    return tuple(sorted((pin,c) for pin,(d,c) in expected.items()))
+
+
+def _macro_output_domain(net, cname):
+    mc=net.macros[cname];clock=mc['clock']
+    pin=clock['read_clock'] if isinstance(clock,dict) else clock
+    bits=mc['conn'].get(pin,[])
+    return net.clock_domain.get(bits[0]) if len(bits)==1 else None
+
+
 def _elaborate_sources(spec, root):
     root = Path(root)
     hashes, reviewed_files = [], {}
@@ -314,7 +376,8 @@ def _elaborate_sources(spec, root):
         digest = hashlib.sha256(content).hexdigest()
         hashes.append((path, digest))
         reviewed = [(m, r) for m, r in REVIEWED.items() if r['path'] == path] + \
-                   ([(RESET_SYNC[0], dict(path=RESET_SYNC[1], sha256=RESET_SYNC[2]))] if path == RESET_SYNC[1] else [])
+                   ([(RESET_SYNC[0], dict(path=RESET_SYNC[1], sha256=RESET_SYNC[2]))] if path == RESET_SYNC[1] else []) + \
+                   ([(RESET_BANK[0], dict(path=RESET_BANK[1], sha256=RESET_BANK[2]))] if path == RESET_BANK[1] else [])
         if reviewed:
             module, r = reviewed[0]
             if digest not in r['sha256']:
@@ -334,7 +397,7 @@ def _elaborate_sources(spec, root):
 
 
 @lru_cache(maxsize=16)
-def elaborate(root, top, sources, params, yosys, defer=False):
+def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=False):
     # Byte hashes are part of the key; no caller-supplied graph or receipt can stand in for this elaboration.
     root = Path(root)
     if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', top):
@@ -354,8 +417,9 @@ def elaborate(root, top, sources, params, yosys, defer=False):
         out = Path(tmp) / 'netlist.json'
         # (d) mode reads -defer (as the census / KV-HOSTCL-CDC2 lint): modules elaborate only with their actual
         # parameters, so a default-parameter elaboration guard ($fatal in an initial) does not fire
+        keep = f'tcl {root}/physical/common_flow/ot_keep_regs.tcl; ' if preserve_kept else ''
         cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
-               f'proc; flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
+               f'proc; {keep}flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
             raise GrayFifoError('reviewed_gray_fifos source elaboration failed: ' + (run.stdout + run.stderr)[-1500:])
@@ -522,7 +586,7 @@ def _scopes(document, spec, reviewed_files):
     module = document['modules'][spec['top']]
     found = []
     top_src = module.get('attributes', {}).get('src', '')
-    if spec['top'] in REVIEWED or spec['top'] == RESET_SYNC[0]:
+    if spec['top'] in REVIEWED or spec['top'] in (RESET_SYNC[0], RESET_BANK[0]):
         found.append(('', spec['top'], top_src))
     for name, cell in module['cells'].items():
         if cell['type'] != '$scopeinfo':
@@ -531,7 +595,7 @@ def _scopes(document, spec, reviewed_files):
         base = a.get('module_hdlname') or a.get('module', '')
         if base.startswith('$paramod'):
             base = base.rsplit('\\', 1)[-1]
-        if base in REVIEWED or base == RESET_SYNC[0]:
+        if base in REVIEWED or base in (RESET_SYNC[0], RESET_BANK[0]):
             found.append((name.lstrip('\\'), base, a.get('module_src', '')))
     out = []
     for scope, base, src in found:
@@ -559,27 +623,30 @@ def _extension_leaves(spec, ext, net, module, port_domain):
     macro_domain = {}
     for cname, mc in sorted(net.macros.items()):
         name = cname.lstrip('\\')
-        ck = mc['conn'].get(mc['clock'], [])
-        if mc['dirs'].get(mc['clock']) != 'input' or len(ck) != 1 or ck[0] not in net.clock_domain:
-            raise GrayFifoError(f'reviewed_gray_fifos macro {name} clock pin {mc["clock"]} is not tied directly to one '
-                                'declared clock root')
-        fam = macro_domain[cname] = net.clock_domain[ck[0]]
-        for pin, bits in sorted(mc['conn'].items()):
-            if pin == mc['clock'] or mc['dirs'][pin] != 'input':
-                continue
+        clock=mc['clock']
+        dual=isinstance(clock,dict)
+        clock_pins={clock['read_clock'],clock['write_clock']} if dual else {clock}
+        for cp in clock_pins:
+            ck=mc['conn'].get(cp,[])
+            if mc['dirs'].get(cp)!='input' or len(ck)!=1 or ck[0] not in net.clock_domain:
+                raise GrayFifoError(f'reviewed_gray_fifos macro {name} clock {cp} is not a declared direct root')
+        macro_domain[cname]=_macro_output_domain(net,cname)
+        for pin,bits in sorted(mc['conn'].items()):
+            if pin in clock_pins or mc['dirs'][pin]!='input':continue
+            target_clock=clock['pin_clock'].get(pin) if dual else clock
+            if target_clock is None:raise GrayFifoError(f'dual-clock SRAM {name} undeclared input role {pin}')
+            fam=net.clock_domain[mc['conn'][target_clock][0]]
             for b in bits:
                 for leaf in net.cone(b):
-                    if leaf in net.flops:
-                        ldom = net.domain(leaf)
-                    elif net.driver.get(leaf, ('',))[0] == 'macro':
-                        ldom = net.clock_domain.get(net.macros[net.driver[leaf][1]]['conn'][
-                            net.macros[net.driver[leaf][1]]['clock']][0])
-                    else:
-                        ldom = port_domain.get(leaf)
-                    if ldom != fam:
-                        what = net.key(leaf) if leaf in net.flops else (net.driver.get(leaf) or ('', str(leaf)))[1]
-                        raise GrayFifoError(f'reviewed_gray_fifos macro {name} ({fam}) input {pin} reads {what} '
-                                            f'({ldom}); a macro must sit in one clock family')
+                    if leaf in net.flops:ldom=net.domain(leaf)
+                    elif net.driver.get(leaf,('',))[0]=='macro':ldom=_macro_output_domain(net,net.driver[leaf][1])
+                    else:ldom=port_domain.get(leaf)
+                    if ldom!=fam:
+                        if not dual:
+                            what=net.key(leaf) if leaf in net.flops else (net.driver.get(leaf) or ('',str(leaf)))[1]
+                            raise GrayFifoError(f'reviewed_gray_fifos macro {name} ({fam}) input {pin} reads {what} '
+                                                f'({ldom}); a macro must sit in one clock family')
+                        raise GrayFifoError(f'reviewed_gray_fifos macro {name} input {pin} reads wrong family {ldom}; expected {fam}')
     straps = {}
     for p in ext.get('die_constant_inputs', []):
         if p not in module['ports'] or module['ports'][p]['direction'] != 'input':
@@ -801,7 +868,8 @@ def _lint(spec, root):
     ext = extensions(spec)
     hashes, reviewed_files = _elaborate_sources(spec, root)
     document = elaborate(str(Path(root).resolve()), spec['top'], hashes,
-                         tuple(sorted(spec.get('params', {}).items())), _yosys(), spec.get(S.KEY) is not None)
+                         tuple(sorted(spec.get('params', {}).items())), _yosys(), spec.get(S.KEY) is not None,
+                         preserve_kept=bool((ext or {}).get('dual_clock_srams')))
     net = _netlist(document, spec, _macro_clock_pins(spec, root), True) if ext is not None else _netlist(document, spec)
     ds = spec['clock_entry_domains']
     period = {n: FAMILIES[n] for n in ds}
@@ -850,6 +918,20 @@ def _lint(spec, root):
 
     fifos, resets, scopes, dead = {}, [], _scopes(document, spec, reviewed_files), []
     for scope, base in scopes:
+        if base == RESET_BANK[0]:
+            first=bits_of(scope,'first');last=bits_of(scope,'last')
+            if len(first)!=1 or not last or len(last)>32:
+                raise GrayFifoError('reviewed reset bank requires one landing and 1..32 kept leaves')
+            first=first[0];last=list(dict.fromkeys(last));pipe=[first]+last
+            doms={net.domain(q) for q in pipe}
+            if len(doms)!=1 or not all(net.flops[q]['pos'] for q in pipe) or net.flops[first]['d']!='1' or \
+               any(net.flops[q]['d']!=first for q in last) or len({net.flops[q]['r'] for q in pipe})!=1:
+                raise GrayFifoError('reviewed reset bank must be exactly 1 -> landing -> same-domain leaves with common async control')
+            if set(net.consumers.get(first,[]))!={(net.flops[q]['cell'],'D') for q in last}:
+                raise GrayFifoError('reviewed reset bank landing may drive only its final leaves')
+            for q in pipe:tag(q,('rst',f'r{len(resets)}','pipe',0 if q==first else 1))
+            resets.append(dict(scope=scope,domain=doms.pop(),stages=2,leaves=len(last)))
+            continue
         if base == RESET_SYNC[0]:
             pipe = bits_of(scope, 'reset_pipe')
             if len(pipe) < 2:
@@ -1182,6 +1264,33 @@ def _lint(spec, root):
         record['straps'] = sorted({p for p, _ in straps_used})
         record['strap_crossings'] = sorted(f'{p}->{d}' for p, d in straps_used)
         record['macros'] = {c.lstrip('\\'): macro_domain[c] for c in sorted(macro_domain)}
+        dual_macros = {}
+        for cname, mc in sorted(net.macros.items()):
+            if not isinstance(mc['clock'], dict):
+                continue
+            info = mc['clock']
+            clocks = {}
+            for cp in (info['read_clock'], info['write_clock']):
+                bit = mc['conn'][cp][0]
+                roots = []
+                for d in spec['clock_entry_domains'].values():
+                    for port in d['ports']:
+                        bits = m['ports'].get(port, {}).get('bits', [])
+                        bus = re.fullmatch(r'([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]', port)
+                        if not bits and bus and bus.group(1) in m['ports']:
+                            p = m['ports'][bus.group(1)]
+                            idx = int(bus.group(2)) - p.get('offset', 0)
+                            bits = [p['bits'][idx]] if not p.get('upto') and 0 <= idx < len(p['bits']) else []
+                        if bits == [bit]:
+                            roots.append(port)
+                if len(roots) != 1:
+                    raise GrayFifoError(f'dual-clock SRAM {cname}: ambiguous actual root for {cp}')
+                clocks[cp] = [roots[0], net.clock_domain[bit]]
+            dual_macros[cname.lstrip('\\')] = dict(master=mc['type'], clocks=clocks,
+                input_clocks={pin: info['pin_clock'][pin] for pin in mc['conn']
+                              if mc['dirs'][pin] == 'input' and pin not in clocks})
+        if dual_macros:
+            record['dual_clock_macros'] = dual_macros
         record['counts'].update(gated=len(gated), lsrc=len(levels), macro=len(macro_domain))
     return record
 
@@ -1326,6 +1435,14 @@ def bindings(record):
     periods = ' '.join(f'{n} {p!r}' for n, p in sorted(record['periods_ps'].items()))
     text = (f'set ::ot_gf_roles [dict create {roles}]\nset ::ot_gf_fifos [dict create {fifos}]\n'
             f'set ::ot_gf_periods [dict create {periods}]\nset ::ot_gf_uncertainty {SETUP_UNCERTAINTY_PS!r}\n')
+    if record.get('dual_clock_macros'):
+        entries = []
+        for name, m in sorted(record['dual_clock_macros'].items()):
+            clocks = ' '.join(_word(cp) + ' {' + _word(root) + ' ' + _word(domain) + '}'
+                              for cp, (root, domain) in sorted(m['clocks'].items()))
+            pins = ' '.join(_word(pin) + ' ' + _word(cp) for pin, cp in sorted(m['input_clocks'].items()))
+            entries.append(_word(name) + ' {master ' + _word(m['master']) + ' clocks {' + clocks + '} inputs {' + pins + '}}')
+        text += 'set ::ot_gf_dual_macros [dict create ' + ' '.join(entries) + ']\n'
     if 'levels' not in record:
         return text
     levels = ' '.join('{' + lid + '} {src ' + v['src'] + ' dst ' + v['dst'] + ' bound ' + repr(v['max_delay_ps']) + '}'
@@ -1349,6 +1466,22 @@ def extend(body, spec, root):
                                     '          continue\n')
     body = body.replace(ASYNC_GUARD, '    if {[dict exists $async_pins [get_full_name $pin]]} {ot_gf_async $pin $cells $inputs; continue}')
     body = body.replace(S.MARKER, '  ot_gf_complete $cells\n' + S.MARKER)
+    if record.get('dual_clock_macros'):
+        marker = '    set expected [dict get $cells $cell]\n'
+        if body.count(marker) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM input ownership hook changed')
+        body = body.replace(marker, marker + '    set expected [ot_gf_dual_input_domain $cell $pin $expected]\n')
+        start = 'proc ot_ce_leaf_ownership {inputs outputs} {\n'
+        if body.count(start) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM ownership cache boundary changed')
+        body = body.replace(start, start + '  set ::ot_gf_dual_checked {}\n  set ::ot_gf_dual_constant_counts {}\n')
+        fanin = '    foreach start [get_fanin -flat -startpoints_only -to $pin] {\n'
+        if body.count(fanin) != 1:
+            raise GrayFifoError('reviewed dual-clock SRAM fanin hook changed')
+        body = body.replace(fanin, fanin + '      if {[ot_gf_dual_constant_self $start $pin]} continue\n')
+        body = body.replace('  ot_gf_complete $cells\n',
+                            '  ot_gf_complete $cells\n  puts \"OT_GF DUAL_LIBERTY_CONSTANT_INPUTS $::ot_gf_dual_constant_counts\"\n')
+        body = DUAL_CLOCK_TCL + '\n' + body
     if 'levels' not in record:
         return bindings(record) + _event_tcl(TCL, record) + '\n' + body
     if body.count(STRAP_GUARD) != 1:
@@ -1689,5 +1822,112 @@ proc ot_gf_complete {cells} {
     if {[dict get $info store_read] && ![dict exists $::ot_gf_seen [list $f mem mem 0]]} {error "OT_GF: missing actual storage crossing $f"}
   }
   puts "OT_GF STRUCTURAL_PASS [dict size $::ot_gf_seen] crossing classes (bounded reviewed FIFO crossings only; no physical closure claim)"
+}
+'''
+
+# Only the explicitly source/three-corner-role-verified dual-clock SRAM mode uses this hook.
+# No crossing is excepted: the original ownership loop checks the same actual input cone
+# against this pin's own clock family instead of the macro output/read-clock family.
+DUAL_CLOCK_TCL = r'''
+proc ot_gf_dual_root_port {pin} {
+  set block [ord::get_db_block]
+  set instance [$block findInst [get_full_name [get_cells -of_objects $pin]]]
+  if {$instance in {"" NULL}} {error "OT_GF: missing mapped dual SRAM clock instance"}
+  set iterm [$instance findITerm [get_property $pin lib_pin_name]]
+  if {$iterm in {"" NULL}} {error "OT_GF: missing mapped dual SRAM clock pin"}
+  set net [$iterm getNet];set seen {}
+  for {set step 0} {$step < 256 && $net ni {"" NULL}} {incr step} {
+    set n [$net getName]
+    if {[dict exists $seen $n]} {error "OT_GF: cyclic dual SRAM clock cone"}
+    dict set seen $n 1
+    set ports [$net getBTerms]
+    if {[llength $ports]} {
+      if {[llength $ports] != 1 || [[lindex $ports 0] getIoType] ne "INPUT"} {
+        error "OT_GF: ambiguous dual SRAM clock port"
+      }
+      return [[lindex $ports 0] getName]
+    }
+    set drivers {}
+    foreach term [$net getITerms] {if {[$term isOutputSignal]} {lappend drivers $term}}
+    if {[llength $drivers] != 1} {error "OT_GF: missing unique dual SRAM clock driver"}
+    set driver [lindex $drivers 0];set cell [$driver getInst];set inputs {};set outputs {}
+    foreach term [$cell getITerms] {
+      if {[$term isInputSignal]} {lappend inputs $term}
+      if {[$term isOutputSignal]} {lappend outputs $term}
+    }
+    if {[llength $inputs] != 1 || [llength $outputs] != 1} {
+      error "OT_GF: dual SRAM clock cone must contain only actual unary BUF/INV functions"
+    }
+    set input [lindex $inputs 0];set input_name [[$input getMTerm] getName]
+    set master [[$cell getMaster] getName];set output_name [[$driver getMTerm] getName]
+    set truth {};set matched 0
+    foreach library [get_libs -quiet *] {
+      set lc [$library find_liberty_cell $master]
+      if {$lc in {"" NULL}} continue
+      set lp [$lc find_liberty_port $output_name]
+      if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {
+        error "OT_GF: dual SRAM clock buffer lacks actual Liberty output role"
+      }
+      set function [string map {" " "" "\t" "" "\n" "" "(" "" ")" ""} [$lp function]]
+      if {$function eq $input_name} {set value 1} elseif {$function in [list !$input_name ~$input_name ${input_name}']} {
+        set value -1
+      } else {error "OT_GF: dual SRAM clock cone is not Liberty-functional BUF/INV"}
+      dict set truth $value 1;incr matched
+    }
+    if {!$matched || [dict size $truth] != 1} {error "OT_GF: dual SRAM clock buffer Liberty corners disagree"}
+    set net [$input getNet]
+  }
+  error "OT_GF: dual SRAM clock root is not a unique declared input"
+}
+proc ot_gf_dual_constant_self {start pin} {
+  # OpenSTA constant-prunes an input's upstream graph and can return that input
+  # itself as the startpoint. Prove its OpenDB NET from actual Liberty functions;
+  # never infer constancy from a pin/cell name, clock absence, or case analysis.
+  if {[sta::object_type $start] ne "Pin" || [get_full_name $start] ne [get_full_name $pin]} {return 0}
+  set cell [get_cells -of_objects $pin];set full [string map {\\ {}} [get_full_name $cell]]
+  set reviewed 0
+  foreach n [ot_gf_names [list $full]] {if {[dict exists $::ot_gf_dual_macros $n]} {set reviewed 1}}
+  if {!$reviewed} {return 0}
+  set instance [[ord::get_db_block] findInst [get_full_name $cell]]
+  if {$instance in {"" NULL}} {return 0}
+  set iterm [$instance findITerm [get_property $pin lib_pin_name]]
+  if {$iterm in {"" NULL} || ![$iterm isInputSignal]} {return 0}
+  if {![ot_ce_constant_net [$iterm getNet] {} 64]} {return 0}
+  set base [get_property $pin lib_pin_name];regsub {\[[0-9]+\]$} $base {} base
+  dict incr ::ot_gf_dual_constant_counts "$full/$base" 1
+  return 1
+}
+proc ot_gf_dual_input_domain {cell pin fallback} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set found {}
+  foreach n [ot_gf_names [list $full]] {
+    if {[dict exists $::ot_gf_dual_macros $n]} {lappend found $n}
+  }
+  if {![llength $found]} {return $fallback}
+  if {[llength $found] != 1} {error "OT_GF: ambiguous reviewed dual SRAM identity"}
+  set info [dict get $::ot_gf_dual_macros [lindex $found 0]]
+  if {[get_property [get_cells $cell] ref_name] ne [dict get $info master]} {
+    error "OT_GF: mapped dual SRAM master differs from reviewed source/Liberty role"
+  }
+  if {![dict exists $::ot_gf_dual_checked $full]} {
+    dict for {cp role} [dict get $info clocks] {
+      lassign $role root domain
+      set pins [get_pins -quiet $cell/$cp]
+      if {[llength $pins] != 1 || [ot_gf_dual_root_port [lindex $pins 0]] ne $root} {
+        error "OT_GF: mapped dual SRAM clock $cell/$cp differs from its exact reviewed root $root"
+      }
+    }
+    if {$fallback ne [lindex [dict get $info clocks rclk] 1]} {
+      error "OT_GF: mapped dual SRAM output ownership differs from its reviewed read-clock family"
+    }
+    dict set ::ot_gf_dual_checked $full 1
+  }
+  set base [get_property $pin lib_pin_name]
+  regsub {\[[0-9]+\]$} $base {} base
+  if {![dict exists $info inputs $base] || [get_property $pin direction] ne "input"} {
+    error "OT_GF: unreviewed actual dual SRAM input pin [get_full_name $pin]"
+  }
+  set cp [dict get $info inputs $base]
+  return [lindex [dict get $info clocks $cp] 1]
 }
 '''
