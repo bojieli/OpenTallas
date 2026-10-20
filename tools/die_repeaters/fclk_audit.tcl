@@ -234,5 +234,65 @@ proc ot_die_rep_fclk_equalize {prefix globs bufs} {
     if {[llength [info procs ot_die_rep_spread]]} { set left [ot_die_rep_spread $new [file rootname $prefix].eq_spread.json] }
   }
   puts "OT_DIE_REP_FCLK_EQ hops=$hops buffers=$added unfixable=$unfix unplaced=$left"; flush stdout
+  incr unfix [ot_die_rep_fclk_equalize_data $prefix.data_pre $globs $bufs]
   return $unfix
+}
+
+# Balance the other direction as well: a wide launch face may produce a
+# shallower payload path than its clock. Add physical non-inverting buffers to
+# those declared payload bits only, never to reset/auxiliary pins. No flop,
+# protocol latency, audit threshold, or source clock arc is changed. The caller
+# still runs the original complete payload audit and post-GRT reach/STA checks.
+proc ot_die_rep_fclk_data_eq_plan {fd depth} {
+  return [expr {max(0, $fd - 1 - $depth)}]
+}
+
+proc ot_die_rep_fclk_equalize_data {prefix globs bufs} {
+  global ot_die_rep_fclk_data_ports
+  ot_die_rep_fclk_audit $prefix $globs $bufs
+  set blk [ord::get_db_block]
+  set master [[ord::get_db] findMaster [lindex $bufs 0]]
+  set f [open $prefix.tsv]; gets $f hdr; set cols [split $hdr "\t"]
+  set new {}; set added 0; set bits 0; set k 0; set unfix 0
+  while {[gets $f line] >= 0} {
+    set r [dict create]; foreach c $cols v [split $line "\t"] { dict set r $c $v }
+    if {[dict get $r broadcast] ne "0" || [dict get $r mismatch] ne "1"} { continue }
+    if {[dict get $r pairing] ne "data_port_contract"} { incr unfix; continue }
+    set cap [$blk findInst [dict get $r capture]]
+    set cm [[$cap getMaster] getName]
+    if {![info exists ot_die_rep_fclk_data_ports] || ![dict exists $ot_die_rep_fclk_data_ports $cm]} { incr unfix; continue }
+    lassign [dict get $ot_die_rep_fclk_data_ports $cm] pattern expected
+    foreach it [$cap getITerms] {
+      if {[$it getIoType] ne "INPUT" || ![string match $pattern [[$it getMTerm] getName]]} { continue }
+      if {[$it getNet] eq "NULL" || [[$it getNet] isSpecial]} { continue }
+      lassign [ot_die_rep_fclk_back $it $bufs] src depth pin
+      if {$src eq "" || $pin eq ""} { continue }
+      set sm [[[$blk findInst $src] getMaster] getName]
+      if {($sm eq "TIEHIx1_ASAP7_75t_R" && $pin eq "H") || ($sm eq "TIELOx1_ASAP7_75t_R" && $pin eq "L")} { continue }
+      set n [ot_die_rep_fclk_data_eq_plan [dict get $r fclk_repeaters] $depth]
+      if {$n == 0} { continue }
+      set b [$it getBBox]; set x0 [expr {([$b xMin] + [$b xMax]) / 2}]; set y0 [expr {([$b yMin] + [$b yMax]) / 2}]
+      set prev [$it getNet]; $it disconnect
+      for {set j 0} {$j < $n} {incr j} {
+        set nm "fclkdeq_[incr k]"
+        while {[$blk findInst $nm] ne "NULL" || [$blk findNet "${nm}_y"] ne "NULL"} { set nm "fclkdeq_[incr k]" }
+        set bi [odb::dbInst_create $blk $master $nm]
+        set nn [odb::dbNet_create $blk "${nm}_y"]
+        foreach x [$bi getITerms] {
+          if {[[$x getMTerm] getSigType] in {POWER GROUND}} { continue }
+          if {[$x getIoType] eq "INPUT"} { $x connect $prev } elseif {[$x getIoType] eq "OUTPUT"} { $x connect $nn }
+        }
+        $bi setLocation $x0 $y0; $bi setPlacementStatus PLACED
+        lappend new $bi; set prev $nn
+      }
+      $it connect $prev
+      incr bits; incr added $n
+      puts "OT_DIE_REP_FCLK_DATA_EQ capture=[dict get $r capture] pin=[[$it getMTerm] getName] old_depth=$depth buffers=$n"
+    }
+  }
+  close $f
+  set left 0
+  if {[llength $new] && [llength [info procs ot_die_rep_spread]]} { set left [ot_die_rep_spread $new $prefix.spread.json] }
+  puts "OT_DIE_REP_FCLK_DATA_EQ bits=$bits buffers=$added unfixable=$unfix unplaced=$left"; flush stdout
+  return [expr {$unfix + $left}]
 }
