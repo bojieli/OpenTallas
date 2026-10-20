@@ -41,8 +41,17 @@ module ot_rp4l_gn(input wire clk, input wire rst_n, input wire [49:0] g0, input 
   wire [49:0] gm;
   ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gin[k*50+48 +: 2]), .q(gm[49:48]));
   ot_hbm_accel_smh_kreg #(.W(48)) u_d (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gin[k*50 +: 48]), .q(gm[47:0]));
-  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm[49:48]), .q(gpm[k*50+48 +: 2]));
-  ot_hbm_accel_smh_kreg #(.W(48)) u_d2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm[47:0]), .q(gpm[k*50 +: 48]));
+  wire [49:0] gm2;
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm[49:48]), .q(gm2[49:48]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_d2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm[47:0]), .q(gm2[47:0]));
+`ifdef OT_SMH_G1_CAPTURE
+  // The +1 through-lane edge belongs in the tall north half: three planned
+  // hops (907->604.8->302.4->0) replace the original two ~455um hops.
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm2[49:48]), .q(gpm[k*50+48 +: 2]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm2[47:0]), .q(gpm[k*50 +: 48]));
+`else
+  assign gpm[k*50 +: 50] = gm2;
+`endif
  end
 endmodule
 // S-band gather: leaf 1's own-row lane (g1, g2 at the leaf), every lane's S-edge output register (u_gov/u_god,
@@ -60,16 +69,7 @@ module ot_rp4l_gs(input wire clk, input wire rst_n, input wire [49:0] g1in, inpu
  ot_hbm_accel_smh_kreg #(.W(48)) u_god0 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0m[47:0]), .q(gout[50 +: 48]));
  genvar k;
  for (k = 0; k < 2; k = k + 1) begin : g_gl
-  wire [49:0] pass;
-`ifdef OT_SMH_G1_CAPTURE
-  // Match the added leaf G1 capture edge on both through lanes. All four
-  // gout lanes therefore retain one uniform +4 age relative to flat legacy.
-  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_cap_v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50+48 +: 2]), .q(pass[49:48]));
-  ot_hbm_accel_smh_kreg #(.W(48)) u_cap_d (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50 +: 48]), .q(pass[47:0]));
-`else
-  assign pass = gpm[k*50 +: 50];
-`endif
-  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(pass[48 +: 2]), .q(gout[(2+k)*50+48 +: 2]));
-  ot_hbm_accel_smh_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(pass[0 +: 48]), .q(gout[(2+k)*50 +: 48]));
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50+48 +: 2]), .q(gout[(2+k)*50+48 +: 2]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50 +: 48]), .q(gout[(2+k)*50 +: 48]));
  end
 endmodule

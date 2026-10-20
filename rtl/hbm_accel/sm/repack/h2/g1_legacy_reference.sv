@@ -135,6 +135,23 @@ module ot_hbm_smh_rp4_flat_legacy (input wire clk, input wire rst_n,
  ot_smh_tr_group_beat_e u_beate (.clk(clk), .rst_a(rst_n), .d(bm), .last(bout));
  ot_rp4l_leaf_legacy u_lf0 (.clk(clk), .rst_n(rst_n), .st(st_n), .rl1(rl1_n), .bk1(bk1_n), .g(g0));
  ot_rp4l_leaf_legacy u_lf1 (.clk(clk), .rst_n(rst_n), .st(st_s), .rl1(rl1_s), .bk1(bk1_s), .g(g1));
- ot_rp4l_gn u_gn (.clk(clk), .rst_n(rst_n), .g0(g0), .gin(gin), .g0m(g0m), .gpm(gpm));
+ ot_rp4l_gn_legacy u_gn (.clk(clk), .rst_n(rst_n), .g0(g0), .gin(gin), .g0m(g0m), .gpm(gpm));
  ot_rp4l_gs_legacy u_gs (.clk(clk), .rst_n(rst_n), .g1in(g1), .g0m(g0m), .gpm(gpm), .gout(gout));
+endmodule
+
+module ot_rp4l_gn_legacy(input wire clk, input wire rst_n, input wire [49:0] g0, input wire [99:0] gin,
+ output wire [49:0] g0m, output wire [99:0] gpm);
+ wire [49:0] g1;
+ ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_grv1 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0[49:48]), .q(g1[49:48]));
+ ot_hbm_accel_smh_kreg #(.W(48)) u_grd1 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0[47:0]), .q(g1[47:0]));
+ ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_grv2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1[49:48]), .q(g0m[49:48]));
+ ot_hbm_accel_smh_kreg #(.W(48)) u_grd2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g1[47:0]), .q(g0m[47:0]));
+ genvar k;
+ for (k = 0; k < 2; k = k + 1) begin : g_gl
+  wire [49:0] gm;
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gin[k*50+48 +: 2]), .q(gm[49:48]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_d (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gin[k*50 +: 48]), .q(gm[47:0]));
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm[49:48]), .q(gpm[k*50+48 +: 2]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_d2 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm[47:0]), .q(gpm[k*50 +: 48]));
+ end
 endmodule
