@@ -56,8 +56,9 @@ def expected_record(canonical):
     d['reset']['note'] = 'Seven same-edge root copies; per-region branches <=32; child/reset and D4/K2 ages unchanged.'
     widths = [l['width'] for l in d['landings']]
     _require(all(type(w) is int and w > 0 for w in widths), 'nonconstant landing width')
+    # Outer IO reset pad has four copies of the original seven stages (+21 FF).
     d['flops'].update(landing=5*sum(widths)+33*sum((w+1)//2 for w in widths),
-                      reset=leaves+branches+7+52,
+                      reset=leaves+branches+7+52+3*7,
                       model_scope='Outer LP implementation; private core/io copies counted separately in mapped native census.',
                       kept_epoch_ports_included=True)
     d['regions']['c']['children'].extend('u_lpr_root_r'+str(i) for i in range(7))
