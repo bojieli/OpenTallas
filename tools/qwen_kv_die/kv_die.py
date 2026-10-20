@@ -895,6 +895,21 @@ HOST_RT_OBS = HOST_RT_MU and os.environ.get('OT_KV_HOST_OBS', '0') == '1'
 if HOST_RT_OBS:
     HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv'
     HOST_RT_MODULE = 'qkd_host_root_admission_obs'
+# KV-FRAMEPINS 10-20 (OT_KV_HOST_OBSX=1, needs OT_KV_HOST_OBS=1 + OT_KV_DCAL_BC4=1 + the static die; default off): the OBSX
+# root (gen_host_root_obs.py --ext) also reads the five die observations that had NO frame pin group (bind v2 OUTPUT_OPEN):
+# dcal adm_done / cal_ready / running (new dcal group dob, 3 b) + layer (existing group lay, 6 b) and the D2D end's
+# recovery_cycles (new d2ds group rcy, 32 b).  kv_static_die OBSX lays them as kv_oneway relayed buses to the HOST frame's
+# new groups odc / odl / odr, which feed the window snapshot above the 1,335 HOST bits (46 words, 0x1900-0x19B4).
+# Producers unchanged (closed bc4 / sfm2 view pins already exist); no tie, no stub.  Price: observation only -- 0 token /
+# calendar / STATUS edges; the snapshot sees each source (relay_stages + 1 window pin reg) edges late (all bits of a bus
+# equally late, so a multi-bit value is never torn).
+HOST_RT_OBSX = HOST_RT_OBS and os.environ.get('OT_KV_HOST_OBSX', '0') == '1'
+if HOST_RT_OBSX:
+    HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_obsx'
+OBSX_HOST_GROUPS = dict(odc=['obs_dcal_adm_done', 'obs_dcal_cal_ready', 'obs_dcal_running'], odl=['obs_dcal_layer'],
+                        odr=['obs_d2d_recovery_cycles'])       # = gen_host_root_obs.OBSX_HOST_GROUPS
+OBSX_DCAL_DOB = ['adm_done', 'cal_ready', 'running']
 HOST_RT_PT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'     # qkd_host_ingest_chain_pt (child of the admission root)
 HOST_RT_RENAMED = dict(host_drained_local='host_interface_idle')          # die port -> admission RTL port
 SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
@@ -1178,6 +1193,15 @@ RTL.update(qkd_d2ds=d2ds_kit()[1])
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
 BINDINGS.update(qkd_hslice_dn=slice_die_binding())
+if HOST_RT_OBSX:     # KV-FRAMEPINS 10-20: frame pin groups of the five die observations (see HOST_RT_OBSX)
+    _hx = BINDINGS['qkd_host_rt']['ports']
+    for _g, _ps in OBSX_HOST_GROUPS.items():
+        for _p in _ps:
+            if _hx.pop(_p, None) != [_p]:
+                raise SystemExit(f'kv_die OBSX: HOST root {HOST_RT_MODULE} has no input {_p}')
+        _hx[_g] = list(_ps)
+    BINDINGS['qkd_dcal']['ports']['dob'] = list(OBSX_DCAL_DOB)
+    BINDINGS['qkd_d2ds']['ports']['rcy'] = ['recovery_cycles']
 RTL.update(qkd_hslice_dn=SLICE_DIE_FILE)
 
 # KVJ-G2 2026-10-17 (OT_KV_STATIC_DIE=1, default off; kv_static_join_plan item 10): the 669-instance static KV subsystem
