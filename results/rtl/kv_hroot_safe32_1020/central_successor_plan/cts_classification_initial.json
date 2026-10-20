@@ -1,0 +1,159 @@
+{
+  "status": "CLASSIFICATION_ONLY_NOT_SUCCESSOR",
+  "odb_sha256": "a9d3b41971c7ef8092256e32f3e2c7c81e1fbf16c7da51fde0af9da1ab17fbe7",
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "status_counts": {
+    "PLACED": 33060,
+    "LOCKED": 8231
+  },
+  "groups": {
+    "anonymous_mapped_cone": {
+      "count": 31723,
+      "fixed": 8231,
+      "sequential": 3535,
+      "area_um2": 3767.3845200009546,
+      "unfixed_area_um2": 3527.368560000111
+    },
+    "flow_pin_helper": {
+      "count": 7213,
+      "fixed": 0,
+      "sequential": 0,
+      "area_um2": 503.1266400000296,
+      "unfixed_area_um2": 503.1266400000296
+    },
+    "control_root": {
+      "count": 18,
+      "fixed": 0,
+      "sequential": 18,
+      "area_um2": 5.64246,
+      "unfixed_area_um2": 5.64246
+    },
+    "reset_root": {
+      "count": 2,
+      "fixed": 0,
+      "sequential": 2,
+      "area_um2": 0.5832,
+      "unfixed_area_um2": 0.5832
+    },
+    "strap_root": {
+      "count": 4,
+      "fixed": 0,
+      "sequential": 4,
+      "area_um2": 1.18098,
+      "unfixed_area_um2": 1.18098
+    },
+    "relay_fan": {
+      "count": 334,
+      "fixed": 0,
+      "sequential": 334,
+      "area_um2": 97.39440000000053,
+      "unfixed_area_um2": 97.39440000000053
+    },
+    "relay_fan_c": {
+      "count": 334,
+      "fixed": 0,
+      "sequential": 334,
+      "area_um2": 98.70660000000022,
+      "unfixed_area_um2": 98.70660000000022
+    },
+    "relay_fan_mid": {
+      "count": 334,
+      "fixed": 0,
+      "sequential": 334,
+      "area_um2": 97.39440000000053,
+      "unfixed_area_um2": 97.39440000000053
+    },
+    "relay_g": {
+      "count": 144,
+      "fixed": 0,
+      "sequential": 144,
+      "area_um2": 41.99040000000005,
+      "unfixed_area_um2": 41.99040000000005
+    },
+    "relay_g_c": {
+      "count": 144,
+      "fixed": 0,
+      "sequential": 144,
+      "area_um2": 44.089919999999964,
+      "unfixed_area_um2": 44.089919999999964
+    },
+    "relay_g_mid": {
+      "count": 144,
+      "fixed": 0,
+      "sequential": 144,
+      "area_um2": 41.99040000000005,
+      "unfixed_area_um2": 41.99040000000005
+    },
+    "relay_r": {
+      "count": 299,
+      "fixed": 0,
+      "sequential": 299,
+      "area_um2": 87.18840000000044,
+      "unfixed_area_um2": 87.18840000000044
+    },
+    "relay_r_c": {
+      "count": 299,
+      "fixed": 0,
+      "sequential": 299,
+      "area_um2": 91.5478199999996,
+      "unfixed_area_um2": 91.5478199999996
+    },
+    "relay_r_mid": {
+      "count": 299,
+      "fixed": 0,
+      "sequential": 299,
+      "area_um2": 87.18840000000044,
+      "unfixed_area_um2": 87.18840000000044
+    }
+  },
+  "fixed_to_fixed_pairs": 0,
+  "fixed_to_fixed_max_um": 0,
+  "fixed_to_fixed_over405": [],
+  "fixed_to_fixed_top30": [],
+  "total_area_um2": 4965.408540002853,
+  "unfixed_area_um2": 4725.392580001991,
+  "central_fence_area_um2": 6400,
+  "role_errors": [],
+  "limitation": "CTS stage includes clock/repair cells absent at preGPL. Exact successor preGPL classification must be repeated. Instance/BPin-centre coordinate proxy."
+}

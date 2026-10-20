@@ -98,5 +98,73 @@
       "subject": "Coordinator review and adoption",
       "status": "No APPROVED receipt; planned image is not actual placement; route remains diagnostic"
     }
-  ]
+  ],
+  "classification_evidence": {
+    "pre_dpl_odb_sha256": "4ffbf6e5d8db666ab21c8d06a600b2f64c1ec95290bc3674138c8f5f27989dc6",
+    "boundary_records": 10927,
+    "boundary_records_present_cts": 10917,
+    "boundaries_method": "Exact pin-flop/hold hook identity lists plus actual Liberty cell functions; physical status alone is insufficient. 10 deleted buffer names afterCTS retained in input receipt.",
+    "boundary_to_boundary_pairs_cts": 3128,
+    "boundary_to_boundary_max_cts_um": 10.007,
+    "boundary_to_boundary_over405": 0,
+    "pre_dpl_boundary_max_um": 8.691,
+    "pre_dpl_nonboundary_cell_area_um2": 2265.89238,
+    "central_capacity_um2": 6400,
+    "planned_utilization": 0.35404568437499995,
+    "unclassified_core_sequential_resolution": {
+      "name": "rst_n__ot_rl1$_DFF_P_",
+      "classification": "second generated reset-landing stage",
+      "source": "tools/ref_tile/ref_tile.py comments98-104 and physical/common_flow/ot_pin_regs.tcl reset landing generator; functional endpoint and central member",
+      "raw_report": "one anonymous sequential kept as immutable raw observation; this explicit source-backed resolution completes the stage inventory"
+    }
+  },
+  "storage_hold": {
+    "relay": {
+      "fan": {
+        "W": 334,
+        "D": 3,
+        "clock": "ck",
+        "reset": "none",
+        "roles": [
+          "N pin capture",
+          "central middle",
+          "E/S output launch"
+        ]
+      },
+      "g": {
+        "W": 144,
+        "D": 3,
+        "clock": "ck",
+        "reset": "none",
+        "roles": [
+          "S pin capture",
+          "central middle",
+          "N output launch"
+        ]
+      },
+      "r": {
+        "W": 299,
+        "D": 3,
+        "clock": "ck",
+        "reset": "none",
+        "roles": [
+          "S pin capture",
+          "central middle",
+          "N output launch"
+        ]
+      }
+    },
+    "relay_family_total_ff_bits": 2331,
+    "head_data": {
+      "physical_data_bits_mapped_per_copy": 771,
+      "unchanged_stages": 2,
+      "third_stage": "functional head state recurrence, not unchanged word forwarding"
+    },
+    "decision": "No blanket transport exception. D3 relay unchanged delay chains require owner storage decision/ring or SRAM source choice before gate. Central placement geometry does not authorize that choice.",
+    "geometric_need": "g and r opposite-face capture/launch can exceed405 (S\u2192N plushorizontaldelta); center is a real separate station candidate. Pure storage replacement must price input capture/output launch and actual ring/SRAM timing.",
+    "source_choices": [
+      "Owner reviews exact physically distinct capture/center/launch roles; no automatic rule waiver",
+      "Replace delay family with modeled ring/SRAM and price any additional physical boundary or memory read/capture edges; repeat exact source/reset benches and actual native census"
+    ]
+  }
 }
