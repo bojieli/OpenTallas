@@ -54,6 +54,8 @@ SRC_FCF = 'rtl/hbm_accel/die_glue/hbfd_rly_fcf_masters.sv'
 DEPS_FC = ['rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv', 'rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
 DEPS_FCF = ['rtl/hbm_accel/die_glue/ot_hbm_rly_fcf.sv', 'rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
 DEPS_OLD = ['rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
+SRC_RN = 'rtl/hbm_accel/die_glue/hbfd_rlyn_masters.sv'      # HNX-DIE 10-20: reset-free plain relays (--reset-free-relays)
+DEPS_RN = ['rtl/hbm_accel/die_glue/ot_hbm_rlyn.sv']
 SRC_LANE = 'rtl/hbm_accel/die_glue/hbfd_lane_masters.sv'
 DEPS_LANE = ['rtl/hbm_accel/die_glue/ot_hbm_lane.sv', 'rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc/ot_hdc_cg.sv']
 
@@ -78,6 +80,12 @@ def main():
                     '(e.g. ^(rfr|sfr)_: the fixed-depth SU RF / SFU chains, su_chain_rehome_d4f.py)')
     ap.add_argument('--land', action='store_true', help='HBM-LANDING 10-18: half-cycle lane stations + LANDINGS (module doc)')
     ap.add_argument('--land-plan', help="--land: per-link E / K JSON {links: [{link: '<driver row>-><sink>', E, K?}]}")
+    ap.add_argument('--reset-free-relays', action='store_true',
+                    help='HNX-DIE 10-20: plain root-clocked relays (intra/neighbour-region stations and equal-age pads, '
+                         'incl. the pads after a landing) use the RESET-FREE hbfd_rlyn_<W>_<dir> (ck, i, o; no rs): data is '
+                         'flushed by the producer, which holds its reset value while the clock runs in reset (static '
+                         'schedule; same rule as the lane stations).  Only lane hop-0 en, landings and tiles stay on the '
+                         'reset forest.  Default off = byte-identical output.')
     ap.add_argument('--land-fault', choices=('pins', 'open'), default='pins',
                     help='--land: landing fault outputs -> die status pins (default) or left open (diagnostic only)')
     a = ap.parse_args()
@@ -257,6 +265,8 @@ def main():
             s = sl[i]; ncons = len(cons[i]); dr = dir_of(s)
             if kind == 'old':
                 m, src, deps = f'hbfd_rly_{W}_{dr}', SRC_OLD, DEPS_OLD; outs = ['o'] * max(1, ncons)
+                if a.reset_free_relays:
+                    m, src, deps = f'hbfd_rlyn_{W}_{dr}', SRC_RN, DEPS_RN
             elif kind == 'fc':
                 m, src, deps = f'hbfd_rly_{W}_{dr}_fc', SRC_FC, DEPS_FC; outs = ['o'] * max(1, ncons)
                 if ncons > 1:
@@ -301,7 +311,8 @@ def main():
                         edges.append(dict(src=[pn['names'][t], 'eb'] + br_, dst=[names[t], 'ea'], bits=1, clock=dom,
                                           basis='lane epoch (source released reset, one station per forwarded edge)'))
                     continue
-                clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
+                if not (kind == 'old' and a.reset_free_relays):
+                    clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
                 if kind == 'old':
                     clocks.append(dict(inst=names[t], port='ck', domain=dom, kind='clock'))
                 elif s['parent'] is None:
@@ -351,6 +362,8 @@ def main():
                             what = f'LANDING (K {K_}{"" if E_ is not None else " NO_E placeholder"}) N {N_}'
                         else:
                             m, src_f, deps = f'hbfd_rly_{W}_WE', SRC_OLD, DEPS_OLD; what = f'equal-age pad (sink root) {k}/{stages[s_] - 1}'
+                            if a.reset_free_relays:
+                                m, src_f, deps = f'hbfd_rlyn_{W}_WE', SRC_RN, DEPS_RN
                         insts.append(dict(name=names[t], master=m, source=src_f, rtl_deps=deps, params={}, slot=f'd4f_relay_sink:{r["driver"]}->{s_}',
                                           owner='HBM-LANDING / H-NETLIST',
                                           note=f'{what} at {s_} lane/tile {t}/{T}; '
@@ -377,11 +390,14 @@ def main():
                                 die_pins.append(dict(name=f'{names[t]}__fault', direction='output', bits=1, instance=names[t], port='fault'))
                         else:
                             clocks.append(dict(inst=names[t], port='ck', domain=dom, kind='clock'))
-                            clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
+                            if not a.reset_free_relays:
+                                clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
                         continue
                     rdr = 'WE'
                     if kind == 'old':
                         m, src_f, deps = f'hbfd_rly_{W}_WE', SRC_OLD, DEPS_OLD
+                        if a.reset_free_relays:
+                            m, src_f, deps = f'hbfd_rlyn_{W}_WE', SRC_RN, DEPS_RN
                     else:
                         m, src_f, deps = f'hbfd_rly_{W}_WE_fc', SRC_FC, DEPS_FC
                     insts.append(dict(name=names[t], master=m, source=src_f, rtl_deps=deps, params={}, slot=f'd4f_relay_sink:{r["driver"]}->{s_}',
@@ -390,7 +406,8 @@ def main():
                                            + (f'lane row {tag}_k{sinks.index(s_):02d}_{k:02d} {t}/{T} {rdr}; site ({round(xy[0], 1)}, {round(xy[1], 1)}) um'
                                               if a.lane_rows else f'home ({round(xy[0], 1)}, {round(xy[1], 1)}) um')))
                     tiles[m] += 1
-                    clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
+                    if not (kind == 'old' and a.reset_free_relays):
+                        clocks.append(dict(inst=names[t], port='rs', domain=dom, kind='reset'))
                     if kind == 'old':
                         clocks.append(dict(inst=names[t], port='ck', domain=dom, kind='clock'))
                     elif k == 0:
@@ -435,6 +452,9 @@ def main():
     import re as _re
     cat = collections.Counter()
     for m_, v in tiles.items():
+        mn = _re.match(r'hbfd_rlyn_(\d+)_[A-Z]+$', m_ or '')
+        if mn:
+            cat['rsfree' + mn.group(1)] += v; continue
         mm = _re.match(r'hbfd_rly_(\d+)_[A-Z]+(_fc)?(_f(\d))?$', m_ or '')
         ml = _re.match(r'hbfd_(lh0|lh|land0|land)_(\d+)_[A-Z]+(_f(\d))?$', m_ or '')
         if ml:

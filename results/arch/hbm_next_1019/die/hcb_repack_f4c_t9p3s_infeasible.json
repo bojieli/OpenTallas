@@ -1,0 +1,238 @@
+{
+ "tag": "f4c_t9p3s",
+ "src_tag": "f4c_t9p3r",
+ "gap_um": 5.4,
+ "halo_um": 5.4,
+ "rings": {
+  "SW": {
+   "envelope": [
+    9413.28,
+    13401.6,
+    11091.68,
+    15354.0
+   ],
+   "ring": [
+    9423.864,
+    13406.904,
+    11081.232,
+    15066.864
+   ],
+   "pitch": [
+    554.256,
+    555.12
+   ],
+   "hce": [
+    9453.28,
+    13461.6,
+    11051.68,
+    15060.0
+   ],
+   "bank_to_hub_um_old": [
+    18991,
+    21280
+   ],
+   "bank_to_hub_um_new": [
+    1156,
+    3374
+   ],
+   "clock_region": "core_SW"
+  },
+  "SE": {
+   "envelope": [
+    12800.16,
+    13401.6,
+    14478.56,
+    15354.0
+   ],
+   "ring": [
+    12810.744,
+    13406.904,
+    14468.112,
+    15066.864
+   ],
+   "pitch": [
+    554.256,
+    555.12
+   ],
+   "hce": [
+    12840.16,
+    13461.6,
+    14438.56,
+    15060.0
+   ],
+   "bank_to_hub_um_old": [
+    23074,
+    24790
+   ],
+   "bank_to_hub_um_new": [
+    996,
+    3214
+   ],
+   "clock_region": "core_SE"
+  },
+  "NW": {
+   "envelope": [
+    9413.28,
+    16766.0,
+    11091.68,
+    18718.4
+   ],
+   "ring": [
+    9423.864,
+    17052.984,
+    11081.232,
+    18712.944
+   ],
+   "pitch": [
+    554.256,
+    555.12
+   ],
+   "hce": [
+    9453.28,
+    17060.0,
+    11051.68,
+    18658.4
+   ],
+   "bank_to_hub_um_old": [
+    18967,
+    21256
+   ],
+   "bank_to_hub_um_new": [
+    1157,
+    3375
+   ],
+   "clock_region": "core_NW"
+  },
+  "NE": {
+   "envelope": [
+    12800.16,
+    16766.0,
+    14478.56,
+    18718.4
+   ],
+   "ring": [
+    12810.744,
+    17052.984,
+    14468.112,
+    18712.944
+   ],
+   "pitch": [
+    554.256,
+    555.12
+   ],
+   "hce": [
+    12840.16,
+    17060.0,
+    14438.56,
+    18658.4
+   ],
+   "bank_to_hub_um_old": [
+    18885,
+    21173
+   ],
+   "bank_to_hub_um_new": [
+    996,
+    3215
+   ],
+   "clock_region": "core_NE"
+  }
+ },
+ "overlaps": [
+  [
+   "hcbk_SW0",
+   "slot sfup_SW"
+  ],
+  [
+   "hcbk_SW0",
+   "slot vmh_SW"
+  ],
+  [
+   "hcbk_SW1",
+   "slot sfup_SW"
+  ],
+  [
+   "hcbk_SW2",
+   "slot sfup_SW"
+  ],
+  [
+   "hcbk_SW3",
+   "slot sfup_SW"
+  ],
+  [
+   "hcbk_SW7",
+   "slot sfup_SW"
+  ],
+  [
+   "hcbk_SW7",
+   "slot vmh_SW"
+  ],
+  [
+   "hcbk_SE0",
+   "slot sfup_SE"
+  ],
+  [
+   "hcbk_SE1",
+   "slot sfup_SE"
+  ],
+  [
+   "hcbk_SE2",
+   "slot sfup_SE"
+  ],
+  [
+   "hcbk_SE3",
+   "slot sfup_SE"
+  ],
+  [
+   "hcbk_SE7",
+   "slot sfup_SE"
+  ],
+  [
+   "hcbk_NW3",
+   "slot sfup_NW"
+  ],
+  [
+   "hcbk_NW4",
+   "slot sfup_NW"
+  ],
+  [
+   "hcbk_NW5",
+   "slot sfup_NW"
+  ],
+  [
+   "hcbk_NW6",
+   "slot sfup_NW"
+  ],
+  [
+   "hcbk_NW6",
+   "slot vmh_NW"
+  ],
+  [
+   "hcbk_NW7",
+   "slot sfup_NW"
+  ],
+  [
+   "hcbk_NW7",
+   "slot vmh_NW"
+  ],
+  [
+   "hcbk_NE3",
+   "slot sfup_NE"
+  ],
+  [
+   "hcbk_NE4",
+   "slot sfup_NE"
+  ],
+  [
+   "hcbk_NE5",
+   "slot sfup_NE"
+  ],
+  [
+   "hcbk_NE6",
+   "slot sfup_NE"
+  ],
+  [
+   "hcbk_NE7",
+   "slot sfup_NE"
+  ]
+ ]
+}

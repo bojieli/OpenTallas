@@ -7,10 +7,10 @@
 #   local driver:  nohup bash hnx_p4_chain.sh > $A/chain.log 2>&1 &
 set -o pipefail
 TAG=${TAG:-f4c_t5}; B=/srv/opentallas-scratch/claude/hnx/die_p4; S=$B/src; CA=$B/case_$TAG; PRE=$B/views/contract.json
-A=${A:-/home/ubuntu/artifacts/hnx/die_p4}; W=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd); OTRUN=/home/ubuntu/bin/ot-run; H=ot-epyc4
+A=${A:-/home/ubuntu/artifacts/hnx/die_p4}; W=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd); OTRUN=/home/ubuntu/bin/ot-run; H=${H:-ot-epyc4}; export H   # HNX-DIE 10-20: case host env
 export A W OT_RUN_PRIO_ENV="" # HBM-NEXT always normal priority, including auto-detected die commands
 RM=physical/hbm_next/die/$TAG/region_map_hnx_$TAG.json; LP=results/arch/hbm_die_d4g/landing/land_plan_d4g.json
-G2V=/srv/opentallas-scratch/claude/hd4g/gen2/views/synth      # GEN2 synth views (incl. hbfd_lh0_* / hbfd_land0_* masters)
+G2V=${G2V:-/srv/opentallas-scratch/claude/hd4g/gen2/views/synth}      # GEN2 synth views (incl. hbfd_lh0_* / hbfd_land0_* masters)
 step() { echo "STEP $* $(date -Is)"; }
 otr() { local m=$1 t=$2; shift 2; $OTRUN --mem $m --threads $t --dir $S -- env PYTHONDONTWRITEBYTECODE=1 MPLBACKEND=Agg "$@"; }
 mkdir -p $A; ssh $H "mkdir -p $B/net" || exit 9
@@ -29,7 +29,7 @@ otr 32 12 python3 tools/hbm_die_v16/relay_lanes_d4f.py --stations $B/hnx_station
   --manifest $CA/manifest.json --root-keepouts $B/hnx_root_sites.json --jobs 12 --out $B/hnx_stations_lanes.json --report $B/hnx_lanes_report.json \
   > $A/lanes.otrun 2>&1 || { echo S5_LANES_FAIL; tail $A/lanes.otrun; exit 15; }
 otr 32 1 python3 tools/hbm_die_v16/relay_layer_d4f.py --stations $B/hnx_stations_lanes.json --contract $PRE --manifest $CA/manifest.json \
-  --root-sites $B/hnx_root_sites.json --region-map $RM --exclude-re '^(rfr|sfr)_' --fork-lane-width 136 --lane-rows --land --land-plan $LP \
+  --root-sites $B/hnx_root_sites.json --region-map $RM --exclude-re '^(rfr|sfr)_' --fork-lane-width 136 --lane-rows --land --land-plan $LP ${LAYER_EXTRA:-} \
   --out $B/net/hnx_relays_land.json.gz --report $B/net/hnx_relays_land_report.json > $A/layer_land.otrun 2>&1 || { echo S5_LAYER_FAIL; tail $A/layer_land.otrun; exit 12; }
 ssh $H "python3 -c \"
 import json; r=json.load(open('$B/net/hnx_relays_land_report.json'))

@@ -229,7 +229,8 @@ def lane_main(a):
                         V.append(f'  wire {nm}__f; {m} {nm} ({src_}, .ck(clk), .rs(rs), {kk}, .b({nm}__o), .fault({nm}__f));')
                         faults.append(f'{nm}__f')
                     else:
-                        V.append(f'  {m} {nm} (.ck(clk), .rs(rs), .i({prev[t]}), .o({nm}__o));')
+                        rsp = '' if m.startswith('hbfd_rlyn_') else ', .rs(rs)'   # HNX-DIE 10-20: reset-free pads have no rs
+                        V.append(f'  {m} {nm} (.ck(clk){rsp}, .i({prev[t]}), .o({nm}__o));')
                     outs.append(f'{nm}__o')
                 prev = outs
             if kmut:

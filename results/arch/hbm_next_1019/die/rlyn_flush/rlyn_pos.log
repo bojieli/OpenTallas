@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hnx/rlyn_bench
+ot-run: ot-epyc6       admits  1051 GB (avail 849, growth 113, headroom 0, waiters 0/0 GB) load 50/128 running 27 disk 4016 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hnx/rlyn_bench
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/hnx/rlyn_bench
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hnx/rlyn_bench
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hnx/rlyn_bench
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2948073-1792503750 after 0 s
+RLYN_FLUSH PASS checks=400 errors=0 D=13 RCYC=15
+- tools/hbm_next/die/rlyn_flush_tb.sv:43: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 829ns; walltime 0.000 s; speed 3.290 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2948073-1792503750): exit 0

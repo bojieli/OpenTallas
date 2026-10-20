@@ -11,9 +11,9 @@ export OT_RUN_PRIO_ENV=""
 RUN=$(date +%Y%m%dT%H%M%S)_$$; R=$B/s6_$RUN
 mkdir -p "$V/drive"
 echo "STEP S6S exact_source $R $(date -Is) cells: $*"
-ssh ot-epyc4 "mkdir -p $R; cp -al $B/src $R/src; mkdir -p $R/src/v16w; ln -s $R/src $R/src_$SRC_COMMIT"
+ssh ${H:-ot-epyc4} "mkdir -p $R; cp -al $B/src $R/src; mkdir -p $R/src/v16w; ln -s $R/src $R/src_$SRC_COMMIT"
 # rsync writes a replacement inode: inherited hardlinks into older snapshots stay intact.
-rsync -a "$V/wrap/" ot-epyc4:$R/src/v16w/
+rsync -a "$V/wrap/" ${H:-ot-epyc4}:$R/src/v16w/
 # The plan's generated wrappers are the exact synthesis source; no normalization or bypass.
 pids=()
 for c in "$@"; do
@@ -36,8 +36,8 @@ for pid in "${pids[@]}"; do wait "$pid" || { echo S6S_BUILD_FAIL; exit 16; }; do
 python3 "$W/tools/hbm_die_v15/v16_fetch.py" --views "$V" --remote-root "$R" --commit "$SRC_COMMIT" --contract "$V/hnx_contract.json" "$@" > "$A/fetch_s6.log" 2>&1 || { tail -20 "$A/fetch_s6.log"; exit 16; }
 cat "$A/fetch_s6.log"
 for c in "$@"; do [ -f "$V/synth/$c/meta.json" ] || { echo "S6S_SYNTH_MISSING $c (no stubs)"; exit 16; }; done
-ssh ot-epyc4 "mkdir -p $B/hnx_vplan/synth"
-rsync -a "$V/synth/" ot-epyc4:$B/hnx_vplan/synth/
+ssh ${H:-ot-epyc4} "mkdir -p $B/hnx_vplan/synth"
+rsync -a "$V/synth/" ${H:-ot-epyc4}:$B/hnx_vplan/synth/
 echo "S6S_DONE $(date -Is)"
 [ -n "${NOCHAIN:-}" ] && exit 0
 cd "$W/physical/hbm_next/die"

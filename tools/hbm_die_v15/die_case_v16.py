@@ -107,7 +107,12 @@ class Occ:
         nw = int(math.ceil((w + 2 * halo) / CELL)); nh = int(math.ceil((h + 2 * halo) / CELL))
         ii = self.ii()
         ci = int((cx - w / 2 - halo) / CELL); cj = int((cy - h / 2 - halo) / CELL)
-        lo_i, lo_j, hi_i, hi_j = 0, 0, self.nx - nw, self.ny - nh
+        # HNX-DIE 10-20 (f4c_t9p3 S8 GRT-0028, 1050 off-die pins): the grid's last row/column is a PARTIAL cell (nx, ny =
+        # int(W or H / CELL) + 1 covers up to 4.6 um past the die edge), so the old bound hi = n - nw let a w x h rect end
+        # past W / H (21 hbfd_lh_136 hops of rf1175 at y 32103 + 21.6 > 32120).  Bound the lower-left by the REAL die edge.
+        lo_i, lo_j = 0, 0
+        hi_i = min(self.nx - nw, int(math.floor((self.W - w - halo) / CELL + 1e-9)))
+        hi_j = min(self.ny - nh, int(math.floor((self.H - h - halo) / CELL + 1e-9)))
         if region:
             lo_i = max(lo_i, int(math.ceil(region[0] / CELL))); lo_j = max(lo_j, int(math.ceil(region[1] / CELL)))
             hi_i = min(hi_i, int(region[2] / CELL) - nw); hi_j = min(hi_j, int(region[3] / CELL) - nh)
@@ -581,6 +586,8 @@ def main():
         w, h = size[cell_of[n]]
         if o in ('R90', 'R270'):
             w, h = h, w
+        if x < -1e-6 or y < -1e-6 or x + w > W + 1e-6 or y + h > H + 1e-6:   # HNX-DIE 10-20: never emit an off-die instance
+            raise SystemExit(f'OFF_DIE {n} ({x}, {y}) {w}x{h} outside die {W}x{H} ({rule})')
         pl[n] = dict(m=cell_of[n], x=round(x, 3), y=round(y, 3), o=o, w=w, h=h, rule=rule)
         for r in solid(n, x, y, w, h, o):
             occ.mark(r[0], r[1], r[2] - r[0], r[3] - r[1], halo)
