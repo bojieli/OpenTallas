@@ -79,12 +79,16 @@ BUSY = 6                  # calendar done -> issuer go_busy clear -> next go
 #   xp     : xl + PIPELINED x-load (HBM-XLP10 10-20, RTL ot_hgi_sm_xload_cl2xp_ctlx, bench tb_hgi_xload_xpipe): the next
 #           x-load fires at the ISSUE END of the previous one (ISS = CAD x beats at P 1; cl2 waited for x_done) and its
 #           beats stay disjoint from the previous load's (x0' + F' >= last beat + 1).  Opt-in; xl / xlr unchanged.
+#           ISSUE_AHEAD SMB_XAHEAD (default 4): a non-RAW record's x-load may start at the first command of record
+#           r - j (j <= XAHEAD) when every writer of its A precedes record r - j (xl: j = 1 only, so a record's x-load
+#           could never overlap the previous record's x-load and the loader pipelining had nothing to hide).
 #   xpr    : xp + x reuse (xlr rule).
 XMODE = os.environ.get("SMB_XMODE", "bench13")
 assert XMODE in ("bench13", "die", "xl", "xlr", "xp", "xpr"), XMODE
 XSLOT_MODES = ("xl", "xlr", "xp", "xpr")       # static x ring slots (RTL XSLOT 1)
 XREUSE_MODES = ("xlr", "xpr")
 XPIPE_MODES = ("xp", "xpr")
+XAHEAD = int(os.environ.get("SMB_XAHEAD", 4))
 XRING = 128
 XRD = int(os.environ.get("SMB_XRD", 16))
 XNB = -(-MV.XC // 2048) if hasattr(MV, "XC") else 2       # beats per x word on the die (P = 1)
@@ -397,6 +401,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         xptr, wbusy, wown = 0, [0] * XRING, [None] * XRING     # ring pointer, last read edge + owner of every x word
         x_free, prev_r, prev_first = 0, None, None
         x_iss_free, x_last_beat = 0, -(1 << 30)          # XP: previous load's issue end / last beat edge
+        hist = []                                        # XP: (fixture k, first command edge) of the records so far
         install_end = desc_install_t + 2 * len(descs) + 4
         flat = [b for r_ in recs for b in r_["blocks"]]          # issue order of the kind's blocks
         rm = dict(res=[], rdy=[], opn=[], dend=[], ret=[])       # residency model (rc domain), by issue index
@@ -428,8 +433,16 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 words = [(xb + i) % XRING for i in range(fp)]
                 F_x = XLAT[r["fmt"]][0] if XMODE != "bench13" else 0
                 if XMODE in XPIPE_MODES and not raw:
-                    # pipelined: issue end of the previous load + disjoint beats (+ the slot liveness rule of xl)
-                    x0 = max(install_end, x_iss_free, x_last_beat + 1 - F_x, prev_first,
+                    # pipelined: issue end of the previous load + disjoint beats (+ the slot liveness rule of xl);
+                    # dependency floor = first command of record r - j for the deepest j <= XAHEAD whose every A writer
+                    # precedes record r - j (j = 1: the xl rule)
+                    dep = prev_first
+                    for j in range(2, XAHEAD + 1):
+                        if len(hist) >= j and (prod[r["k"]] is None or prod[r["k"]] < hist[-j][0]):
+                            dep = hist[-j][1]
+                        else:
+                            break
+                    x0 = max(install_end, x_iss_free, x_last_beat + 1 - F_x, dep,
                              max(wbusy[w] for w in words) + XRD if mut != "xslot0" else 0)
                 elif XMODE in XSLOT_MODES and not raw:
                     x0 = max(install_end, x_free, prev_first, max(wbusy[w] for w in words) + XRD if mut != "xslot0" else 0)
@@ -518,6 +531,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 if wown[w] == r["xload_k"]:
                     wbusy[w] = max(wbusy[w], cur_abs)
             prev_r, prev_first = r, op["first_cmd_abs"]
+            hist.append((_fk(r), op["first_cmd_abs"]))
             if r["rec"]["tag"].startswith("router") and kd["exp"]:
                 ids_rc = cur_abs - rc0 + IDS_LAG                # router result -> top-k -> broadcast (modelled lag)
             ops_out.append(op)
