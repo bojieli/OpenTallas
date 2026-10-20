@@ -594,6 +594,9 @@ def encode_bank72(words):
 
 def cmd_frame(a):
     import dv_layer_compile as C
+    import xs_capacity as XCAP   # S81-ROMOPT-B: the die compile refuses a stage map that overfills the ROM / cfg7
+    if XCAP.enabled():
+        XCAP.verdict(stage=os.environ.get("OT_XS_STAGE"))
     die = C.Die(C.die_tree(a.die_ref, a.die_src))
     rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'] + BF_OPS['L0'], iters=a.iters,
                                only=None if a.only is None else set(a.only))
