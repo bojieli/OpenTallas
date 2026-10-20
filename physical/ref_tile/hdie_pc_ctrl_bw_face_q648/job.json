@@ -27,6 +27,62 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "face_txn_pos",
+    "cmd": "mkdir -p {RUN} && verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module tb -GMUT_ID_TAG=0 --Mdir {RUN}/obj_pos -j 4 rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v > {RUN}/build_pos.log 2>&1 && {RUN}/obj_pos/Vtb > {RUN}/face_txn_pos.log 2>&1; rc=$?; tail -4 {RUN}/face_txn_pos.log; test $rc -eq 0 && grep -q 'BW_FACE_TXN PASS reqs=6000 beats=12944 wcols=759 wdone=759' {RUN}/face_txn_pos.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "sources": [
+     "rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v"
+    ]
+   },
+   {
+    "name": "face_txn_mut_idtag",
+    "cmd": "mkdir -p {RUN} && verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module tb -GMUT_ID_TAG=1 --Mdir {RUN}/obj_mut -j 4 rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v > {RUN}/build_mut.log 2>&1 && {RUN}/obj_mut/Vtb > {RUN}/face_txn_mut.log 2>&1; rc=$?; tail -4 {RUN}/face_txn_mut.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "BW_FACE_TXN FAIL errors=[1-9][0-9]* MUT_ID_TAG=1",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/hbm_bw_safe_1019/face_txn/face_mut.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "sources": [
+     "rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sram128_n64.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+     "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v"
+    ]
    }
   ],
   "calibrate": {
