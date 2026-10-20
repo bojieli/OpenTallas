@@ -1,0 +1,13 @@
+CLAUDE IS BACK. Evidence preservation only; no new launches/submits/merges after stop.
+
+Both exact submitted jobs qkd_kvs_hroot_s32v4-v4a-3fc88dfaf and qkd_kvs_hroot_s32v4b-v4b-3fc88dfaf are REFUSED SUBMIT_LINT CLOSED_STANDS. Exact submitted specs and daemon states retained here. Original kind structural_reach unsupported. Do not relabel native_reach: current canonical implementation requires changed pin ranges; candidate only changes internal after-flops fence. ROOT scoped support still needed.
+
+Exact predecessor CLOSED qkd_kvs_hroot_safe32-s32v3-e52c7bca5, source e52c7bca55c1cff75ce6ed17e258170c366eecfe, final ODB SHA5f1e27974a59372f848db36712e55232c244ec9e7d984f5e367a5737e0080b17. Raw v5 and classified positive results preserved. v2 actual Lib role/clock graph classification: zero unknown/missing,232 intentionally open unary clock outputs, fanoutmax30,420 bbox reach violations of which411 center>405, centermax516.4365/bbox516.760. Do not silently filter nine bbox-only failures for current native_reach validator.
+
+Candidate same-source96eadbfa5 exact CTS v2 max centers339.5595/343.5015, bbox339.847/343.789; zero reach/unknown/missing, maxfanout30,241/237 classified clockload outputs. Original transparent audit max340.335/344.277 has different endpoint metric; retain both. Both gates WARN0FAIL/GRT0 already reviewed/pushed3fc88dfaf; no P&R repeat needed for admission metadata. RTL equivalence confirmed daemon; explicit source/params/outline/faces/layers/pinrange/hook SHA/register inventory packet remains incomplete. In particular actual consumed hook plus register bbox proof not yet sealed.
+
+PG NOT PASS: predecessor6242 unbound ITerms: HB2xp67_ASAP7_75t_R3128, HB1xp67_ASAP7_75t_R3114. Candidate CTS4510/4694 BUFx2_ASAP7_75t_R. Master counts known, insertion-stage/birthhook classification and corrected final PG proof outstanding. No pg_binding loophole.
+
+Clock classification causal diagnostic: v2 modifies graph ONLY input clkload0/A from proven clock net to actual sequential output data net; exact same ODB unchanged. Positive missing0, negative exactly1 missing/231 classified clockloads (runner exit1). This is diagnostic graph proof, not rewritten ODB proof. Original attempted actual ITerm.connect negative segfault139 preserved, not accepted causal result.
+
+Remote own outputs: agidock128 /srv/opentallas-scratch/claude/codex-hroot-closed-v5-1020/{out,out_closed,out_v2_closed,out_v2_negative}; ep5 /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020/{out_v2_s32v4,out_v2_s32v4b}. Raw inputs mounted readonly. Four v2 clients90620/24632/58722/49386 terminal. Source scripts, exact reports, gzip rows/logs here. Canonical audit identity unchanged; private classifiers are explicitly diagnostic, not deployed.

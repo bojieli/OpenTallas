@@ -1,0 +1,179 @@
+{
+ "name": "qkd_kvs_hroot_s32v4-v4a-3fc88dfaf",
+ "spec": {
+  "name": "qkd_kvs_hroot_s32v4-v4a-3fc88dfaf",
+  "block": "qkd_kvs_hroot_safe32",
+  "ref_tile": true,
+  "owner": "Claude:KV-RST3",
+  "purpose": "SAFE32 hroot s32v4: s32v3 RTL/pins/outline unchanged + hard central 80x80 fence for every non-boundary cell (stage reach face->centre->face <=380.24 um); HROOT_LAND_EDGES=2 (+1 vs old landed) on each of four words.",
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "codex/kv-gates-takeover-1020",
+   "commit": "3fc88dfaf",
+   "extra_paths": [
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_hroot_safe32.sv",
+    "results/rtl/kv_hroot_safe32_1020",
+    "physical/qwen_kv_hroot_safe32_1020"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_hroot_safe32 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_hroot_safe32.sv && echo lint-ok",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "safe32_exact",
+     "cmd": "bash results/rtl/kv_hroot_safe32_1020/bench.sh {RUN}/safe32_m0 0",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ],
+     "pass_regex": "^SAFE32 PASS checked=2091 mut=0"
+    },
+    {
+     "name": "safe32_mut1",
+     "cmd": "bash results/rtl/kv_hroot_safe32_1020/bench.sh {RUN}/safe32_m1 1",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^SAFE32 FAIL errors=[1-9][0-9]* checked=2091 mut=1",
+     "fail_witness": "results/rtl/kv_hroot_safe32_1020/v3_bench1.log"
+    },
+    {
+     "name": "safe32_mut2",
+     "cmd": "bash results/rtl/kv_hroot_safe32_1020/bench.sh {RUN}/safe32_m2 2",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^SAFE32 FAIL errors=[1-9][0-9]* checked=2091 mut=2",
+     "fail_witness": "results/rtl/kv_hroot_safe32_1020/v3_bench2.log"
+    },
+    {
+     "name": "safe32_mut3",
+     "cmd": "bash results/rtl/kv_hroot_safe32_1020/bench.sh {RUN}/safe32_m3 3",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^SAFE32 FAIL errors=[1-9][0-9]* checked=2091 mut=3",
+     "fail_witness": "results/rtl/kv_hroot_safe32_1020/v3_bench3.log"
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_hroot_s32v4/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_hroot_s32v4/kit.env {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_hroot_s32v4 --out {RUN}/record/views/qkd_kvs_hroot_safe32  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/ref_tile/qkd_kvs_hroot_s32v4/signoff.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/ref_tile/qkd_kvs_hroot_s32v4/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/ref_tile/qkd_kvs_hroot_s32v4/qkd_kvs_hroot_s32v4-v4a-3fc88dfaf"
+   }
+  ],
+  "cycles_added": 1,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "structural_change": "s32v3 placed the intermediate stage freely: N-face captures drove BUF/INV endpoints 517.2 um away (417 roots >405). s32v4 fences every non-boundary standard cell (intermediate captures, region ctl/sid/rn copies, relay mids, head decode) into an INCLUSIVE 80x80 um centre region after the pin flops are fixed, so every stage is face->centre or centre->face (<=380.24 um L1). Same RTL, pins, outline, cycles.",
+  "reroute_reason": {
+   "kind": "structural_reach",
+   "source": "qkd_kvs_hroot_safe32-s32v3-e52c7bca5",
+   "fix": "placed BUF/INV endpoint reach 517.212 um (417 roots >405, placed_reach_union.json): hard central fence bounds every stage at 380.24 um"
+  }
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/qkd_kvs_hroot_s32v4-v4a-3fc88dfaf.json",
+ "created": "2026-10-20T04:30:44-07:00",
+ "status": "REFUSED",
+ "stage_idx": 0,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [],
+ "events": [
+  "2026-10-20T04:30:44-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qkd_kvs_hroot_s32v4-v4a-3fc88dfaf.json",
+  "2026-10-20T04:30:46-07:00 SUBMIT_LINT CLOSED_STANDS: qkd_kvs_hroot_safe32 is CLOSED with a published view (qkd_kvs_hroot_safe32-s32v3-e52c7bca5 @ e52c7bca5): \"reroute_reason\" must be an object with \"kind\" one of die_window, slot_change, param_change, rtl_change, evidence_gap, pin_register, native_launch, native_capture, native_spread, flow_failure, pin_order, pg_binding, native_reach; measured: RTL vs the closed commit same (2 RTL source file(s) byte-identical at e52c7bca5 and 3fc88dfaf); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ \"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", \"fix\") | \"flow_failure\" (+ \"failed_job\": the id of the failed, ADMITTED re-route being retried) | native_reach (+ committed exact all-path audit and changed pin coordinates; same RTL/slot) | \"pg_binding\" (+ \"source\" COMMITTED native PG-binding audit summary that records the closed vi"
+ ],
+ "freeze_helper_overlay": true,
+ "submit_checks": {
+  "closed_stands": {
+   "verdict": "REFUSE",
+   "mode": "refuse",
+   "kind": null,
+   "closed": [
+    "qkd_kvs_hroot_safe32-s32v3-e52c7bca5"
+   ],
+   "facts": {
+    "closed_job": "qkd_kvs_hroot_safe32-s32v3-e52c7bca5",
+    "closed_commit": "e52c7bca5",
+    "params": {},
+    "rtl": "same",
+    "rtl_detail": "2 RTL source file(s) byte-identical at e52c7bca5 and 3fc88dfaf",
+    "evidence_gap": null
+   },
+   "message": "qkd_kvs_hroot_safe32 is CLOSED with a published view (qkd_kvs_hroot_safe32-s32v3-e52c7bca5 @ e52c7bca5): \"reroute_reason\" must be an object with \"kind\" one of die_window, slot_change, param_change, rtl_change, evidence_gap, pin_register, native_launch, native_capture, native_spread, flow_failure, pin_order, pg_binding, native_reach; measured: RTL vs the closed commit same (2 RTL source file(s) byte-identical at e52c7bca5 and 3fc88dfaf); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ \"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", \"fix\") | \"f"
+  }
+ },
+ "reason": "SUBMIT_LINT CLOSED_STANDS: qkd_kvs_hroot_safe32 is CLOSED with a published view (qkd_kvs_hroot_safe32-s32v3-e52c7bca5 @ e52c7bca5): \"reroute_reason\" must be an object with \"kind\" one of die_window, slot_change, param_change, rtl_change, evidence_gap, pin_register, native_launch, native_capture, native_spread, flow_failure, pin_order, pg_binding, native_reach; measured: RTL vs the closed commit same (2 RTL source file(s) byte-identical at e52c7bca5 and 3fc88dfaf); closed evidence complete (bench + mutant, routed verdict). a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json \"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": \"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | \"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ \"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ \"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > 683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ \"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", \"fix\") | \"flow_failure\" (+ \"failed_job\": the id of the failed, ADMITTED re-route being retried) | native_reach (+ committed exact all-path audit and changed pin coordinates; same RTL/slot) | \"pg_binding\" (+ \"source\" COMMITTED native PG-binding audit summary that records the closed vi",
+ "updated": "2026-10-20T04:30:46-07:00"
+}
