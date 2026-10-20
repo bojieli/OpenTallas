@@ -1,0 +1,260 @@
+{
+ "n0": {
+  "ds_ar_tok_s": 1109.7,
+  "qwen_tok_s": 372.2,
+  "issue_ahead": {
+   "xl": 0,
+   "coll": 0,
+   "dma": 0,
+   "idx": 0
+  },
+  "clients": {
+   "ds": {
+    "xl": {
+     "base": 52499.0,
+     "exposed": 52499.0,
+     "records": 1175.0,
+     "raw_bound": 0
+    },
+    "coll": {
+     "base": 30449.2,
+     "exposed": 30449.2,
+     "records": 562.0,
+     "raw_bound": 0
+    },
+    "dma": {
+     "base": 1112.4,
+     "exposed": 1112.4,
+     "records": 40.0,
+     "raw_bound": 0
+    },
+    "idx": {
+     "base": 8763.0,
+     "exposed": 8763.0,
+     "records": 49.0,
+     "raw_bound": 0
+    }
+   },
+   "qwen": {
+    "xl": {
+     "base": 12912.5,
+     "exposed": 12912.5,
+     "records": 289.0,
+     "raw_bound": 0
+    },
+    "coll": {
+     "base": 3955.1,
+     "exposed": 3955.1,
+     "records": 73.0,
+     "raw_bound": 0
+    },
+    "dma": {
+     "base": 2002.3,
+     "exposed": 2002.3,
+     "records": 72.0,
+     "raw_bound": 0
+    },
+    "idx": {
+     "base": 0.0,
+     "exposed": 0.0,
+     "records": 0,
+     "raw_bound": 0
+    }
+   }
+  }
+ },
+ "coll1": {
+  "ds_ar_tok_s": 1116.6,
+  "qwen_tok_s": 372.3,
+  "issue_ahead": {
+   "xl": 0,
+   "coll": 1,
+   "dma": 0,
+   "idx": 0
+  },
+  "clients": {
+   "ds": {
+    "xl": {
+     "base": 52499.0,
+     "exposed": 52499.0,
+     "records": 1175.0,
+     "raw_bound": 0
+    },
+    "coll": {
+     "base": 30449.2,
+     "exposed": 14899.2,
+     "records": 562.0,
+     "raw_bound": 298.0
+    },
+    "dma": {
+     "base": 1112.4,
+     "exposed": 1112.4,
+     "records": 40.0,
+     "raw_bound": 0
+    },
+    "idx": {
+     "base": 8763.0,
+     "exposed": 8763.0,
+     "records": 49.0,
+     "raw_bound": 0
+    }
+   },
+   "qwen": {
+    "xl": {
+     "base": 12912.5,
+     "exposed": 12912.5,
+     "records": 289.0,
+     "raw_bound": 0
+    },
+    "coll": {
+     "base": 3955.1,
+     "exposed": 3663.1,
+     "records": 73.0,
+     "raw_bound": 73.0
+    },
+    "dma": {
+     "base": 2002.3,
+     "exposed": 2002.3,
+     "records": 72.0,
+     "raw_bound": 0
+    },
+    "idx": {
+     "base": 0.0,
+     "exposed": 0.0,
+     "records": 0,
+     "raw_bound": 0
+    }
+   }
+  }
+ },
+ "coll2": {
+  "ds_ar_tok_s": 1116.6,
+  "qwen_tok_s": 372.3,
+  "issue_ahead": {
+   "xl": 0,
+   "coll": 2,
+   "dma": 0,
+   "idx": 0
+  },
+  "clients": {
+   "ds": {
+    "xl": {
+     "base": 52499.0,
+     "exposed": 52499.0,
+     "records": 1175.0,
+     "raw_bound": 0
+    },
+    "coll": {
+     "base": 30449.2,
+     "exposed": 14899.2,
+     "records": 562.0,
+     "raw_bound": 298.0
+    },
+    "dma": {
+     "base": 1112.4,
+     "exposed": 1112.4,
+     "records": 40.0,
+     "raw_bound": 0
+    },
+    "idx": {
+     "base": 8763.0,
+     "exposed": 8763.0,
+     "records": 49.0,
+     "raw_bound": 0
+    }
+   },
+   "qwen": {
+    "xl": {
+     "base": 12912.5,
+     "exposed": 12912.5,
+     "records": 289.0,
+     "raw_bound": 0
+    },
+    "coll": {
+     "base": 3955.1,
+     "exposed": 3663.1,
+     "records": 73.0,
+     "raw_bound": 73.0
+    },
+    "dma": {
+     "base": 2002.3,
+     "exposed": 2002.3,
+     "records": 72.0,
+     "raw_bound": 0
+    },
+    "idx": {
+     "base": 0.0,
+     "exposed": 0.0,
+     "records": 0,
+     "raw_bound": 0
+    }
+   }
+  }
+ },
+ "xlcoll1": {
+  "ds_ar_tok_s": 1157.0,
+  "qwen_tok_s": 372.7,
+  "issue_ahead": {
+   "xl": 1,
+   "coll": 1,
+   "dma": 0,
+   "idx": 0
+  },
+  "clients": {
+   "ds": {
+    "xl": {
+     "base": 52499.0,
+     "exposed": 10647.4,
+     "records": 1175.0,
+     "raw_bound": 333.0
+    },
+    "coll": {
+     "base": 30449.2,
+     "exposed": 14949.4,
+     "records": 562.0,
+     "raw_bound": 298.0
+    },
+    "dma": {
+     "base": 1112.4,
+     "exposed": 1112.4,
+     "records": 40.0,
+     "raw_bound": 0
+    },
+    "idx": {
+     "base": 8763.0,
+     "exposed": 8763.0,
+     "records": 49.0,
+     "raw_bound": 0
+    }
+   },
+   "qwen": {
+    "xl": {
+     "base": 12912.5,
+     "exposed": 5915.1,
+     "records": 289.0,
+     "raw_bound": 181.0
+    },
+    "coll": {
+     "base": 3955.1,
+     "exposed": 3663.1,
+     "records": 73.0,
+     "raw_bound": 73.0
+    },
+    "dma": {
+     "base": 2002.3,
+     "exposed": 2002.3,
+     "records": 72.0,
+     "raw_bound": 0
+    },
+    "idx": {
+     "base": 0.0,
+     "exposed": 0.0,
+     "records": 0,
+     "raw_bound": 0
+    }
+   }
+  }
+ },
+ "baseline": "origin/claude/toksim-hbm-1019 @20c323c47 combined_1020/measured_rel_i8_su.json, census --measured --bw 98 --bridge 1, row info_banklat_all (n0 reproduces 1109.7/372.2)",
+ "measured_rtl": "COLL ISSUE_AHEAD on the k4 gq leaf at VM_RT 74 (claude/hbm-vmearly-k4-1020, tb_hgi_coll_gq_ia 5.050): exposed 12 DS gathers IA0 1404 / IA1 617 / IA2 366 = the compiler rule every pair"
+}

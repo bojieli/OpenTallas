@@ -442,7 +442,7 @@ module ot_hgi_coll_gq_issue #(
     end
     // ld_fire / ld_desc: V = 0 as built (+ the slot field at ISSUE_AHEAD > 0); V > 0 below (VM_RT ring)
     wire rg_fire; wire [SW-1:0] rg_fslot;             // fire / its slot delayed V edges (VM_RT ring; V > 0 only)
-    wire [SW-1:0] rg_fslc [0:1];                      // two copies of rg_fslot (ld_desc slot select)
+    wire [SW-1:0] rg_fslc [0:3];                      // four copies of rg_fslot (ld_desc slot select, <= 14 bits each)
     generate if (V == 0) begin : g_ld0
         always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
     end else begin : g_ldv
@@ -487,13 +487,12 @@ module ot_hgi_coll_gq_issue #(
         if (LSW == 0) begin : g_d0 always @(posedge clk) ld_desc <= {g_r2, g_self, g_qbg, g_f, g_bs, g_dst, g_str}; end
         else begin : g_ds
             reg [52:0] dsel;
-            // two ring copies of the slot select (each <= 27 of the 53 mux bits; checklist item 3)
+            // four ring copies of the slot select (each <= 14 of the 53 mux bits; checklist item 3)
             always @* begin
                 dsel = sb_desc(sb_q[0]);
-                for (integer j = 1; j < NB; j = j + 1) begin
-                    if (rg_fslc[0] == SW'(j)) dsel[26:0] = sb_desc(sb_q[j]) >> 0;
-                    if (rg_fslc[1] == SW'(j)) dsel[52:27] = sb_desc(sb_q[j]) >> 27;
-                end
+                for (integer j = 1; j < NB; j = j + 1)
+                    for (integer x = 0; x < 53; x = x + 1)
+                        if (rg_fslc[x / 14] == SW'(j)) dsel[x] = sb_desc(sb_q[j]) >> x;
             end
             always @(posedge clk) ld_desc <= {rg_fslot, dsel};
         end
@@ -759,7 +758,7 @@ module ot_hgi_coll_gq_issue #(
     // the event entry (ev[TAP] -> ev[V-1], re-registered into ev[V]), the read expectation (rdx[6+TAP] -> rdx[5+V] -> rdx_v)
     // and the fire + its slot (fire delayed TAP+1 -> delayed V = the ld_fire / ld_desc load edge). II 1, no reset on data.
     generate if (V > 0) begin : g_ring
-        localparam integer RW = 15 + 8 + 1 + ((IA > 0) ? 1 + SW + 2 * SW : 0);
+        localparam integer RW = 15 + 8 + 1 + ((IA > 0) ? 1 + SW + 4 * SW : 0);
         reg fd [0:TAP]; reg [SW-1:0] fs [0:TAP];
         always @(posedge clk or negedge rn1)
             if (!rn1) for (integer j = 0; j <= TAP; j = j + 1) fd[j] <= 1'b0;
@@ -767,18 +766,20 @@ module ot_hgi_coll_gq_issue #(
         always @(posedge clk) begin fs[0] <= f_slot; for (integer j = 1; j <= TAP; j = j + 1) fs[j] <= fs[j-1]; end
         wire [RW-1:0] rd_i, rd_o;
         if (IA > 0) begin : g_wi
-            assign rd_i = {fs[TAP], fs[TAP], ev_s[TAP], ev_fst[TAP], fd[TAP], rdx[6+TAP], ev_c[TAP], ev_f[TAP], ev_k[TAP], ev_v[TAP]};
-            assign {rg_fslc[1], rg_fslc[0], rg_s, rg_fst, rg_fire, rg_rdx, rg_c, rg_f, rg_k, rg_v} = rd_o;
+            assign rd_i = {{4{fs[TAP]}}, ev_s[TAP], ev_fst[TAP], fd[TAP], rdx[6+TAP], ev_c[TAP], ev_f[TAP], ev_k[TAP], ev_v[TAP]};
+            assign {rg_fslc[3], rg_fslc[2], rg_fslc[1], rg_fslc[0], rg_s, rg_fst, rg_fire, rg_rdx, rg_c, rg_f, rg_k, rg_v} = rd_o;
             assign rg_fslot = rg_fslc[0];
         end else begin : g_w0
             assign rd_i = {fd[TAP], rdx[6+TAP], ev_c[TAP], ev_f[TAP], ev_k[TAP], ev_v[TAP]};
             assign {rg_fire, rg_rdx, rg_c, rg_f, rg_k, rg_v} = rd_o;
-            assign rg_s = '0; assign rg_fst = 1'b0; assign rg_fslot = '0; assign rg_fslc[0] = '0; assign rg_fslc[1] = '0;
+            assign rg_s = '0; assign rg_fst = 1'b0; assign rg_fslot = '0;
+            for (genvar c = 0; c < 4; c = c + 1) begin : g_fc assign rg_fslc[c] = '0; end
         end
         ot_hgi_coll_gq_vmring #(.W(RW), .D(DRING - 1)) u_vmring(.clk(clk), .rst_n(rn1), .din(rd_i), .dout(rd_o));
     end else begin : g_ring0
         assign rg_v = 1'b0; assign rg_fst = 1'b0; assign rg_k = '0; assign rg_f = '0; assign rg_c = '0; assign rg_s = '0;
-        assign rg_rdx = '0; assign rg_fire = 1'b0; assign rg_fslot = '0; assign rg_fslc[0] = '0; assign rg_fslc[1] = '0;
+        assign rg_rdx = '0; assign rg_fire = 1'b0; assign rg_fslot = '0;
+        for (genvar c = 0; c < 4; c = c + 1) begin : g_fc assign rg_fslc[c] = '0; end
     end endgenerate
     // ------------------------------------------------------------------ quantiser feed (@9) and capture (@23)
     always @(posedge clk or negedge rn1)
@@ -1338,6 +1339,8 @@ module ot_hgi_coll_gq_vmring #(parameter integer W = 32, D = 66)(input wire clk,
     localparam integer NM = (W + 15) / 16;
     initial begin if (D < 4 || D > 66 || W > 16 * NM) $fatal(1, "ot_hgi_coll_gq_vmring: illegal shape"); end
     reg [W-1:0] in_q; reg [5:0] wp; reg [6:0] filled;
+    localparam integer NOK = (W + 15) / 16;          // one kept ready copy per 16 output bits (checklist 3)
+    (* keep = "true", dont_touch = "true" *) reg [NOK-1:0] ok;   // = filled >= D - 1 (registered one edge early)
     wire [5:0] ra = wp - 6'(D - 3);
     wire [16*NM-1:0] rd; wire [16*NM-1:0] wd = {{(16*NM-W){1'b0}}, in_q};
     for (genvar m = 0; m < NM; m = m + 1) begin : g_m
@@ -1346,10 +1349,11 @@ module ot_hgi_coll_gq_vmring #(parameter integer W = 32, D = 66)(input wire clk,
     end
     always @(posedge clk) in_q <= din;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wp <= 6'd0; filled <= 7'd0; dout <= '0; end
+        if (!rst_n) begin wp <= 6'd0; filled <= 7'd0; dout <= '0; ok <= '0; end
         else begin
             wp <= wp + 6'd1; if (filled < 7'(D)) filled <= filled + 7'd1;
-            dout <= (filled >= 7'(D - 1)) ? rd[W-1:0] : '0;
+            ok <= {NOK{filled >= 7'(D - 2)}};
+            for (integer b = 0; b < W; b = b + 1) dout[b] <= ok[b / 16] & rd[b];
         end
 endmodule
 //16x<=8-bit programme columns; one same-edge target pointer/enable percolumn.

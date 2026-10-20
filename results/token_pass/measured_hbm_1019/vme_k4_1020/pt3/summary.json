@@ -1,0 +1,44 @@
+{
+ "baseline": "HBM-PRETREE3 claude/hbm-pretree3-1020 @305771cf6 pretree2/m_pt3_tp8.json, census --measured --bw 98 --bridge 1, tok_from_sched.py delta rule (n0 reproduces 1148.8 / 1000.7)",
+ "tool": "tools/hgi_sim/toksim_vme_compose_1020.py (census over d4g_vmearly_1019 early-issue schedule, OT_VME_BLDMA=all)",
+ "measured_rtl": "COLL ISSUE_AHEAD 1 on the k4 gq leaf VM_RT 74 (tb_hgi_coll_gq_ia 5.050): 12 DS gathers exposed 1404 -> 617 = compiler rule every pair",
+ "n0": {
+  "what": "baseline OT_VME_N=0",
+  "AR": {
+   "schedule": 1016720.8,
+   "token_cycles": 1044595.4,
+   "tok_s": 1148.8
+  },
+  "qwen": {
+   "schedule": 1198769.6,
+   "token_cycles": 1199158.6,
+   "tok_s": 1000.7
+  }
+ },
+ "coll1": {
+  "what": "COLL IA1 (this RTL)",
+  "AR": {
+   "schedule": 1010651.6,
+   "token_cycles": 1038456.8,
+   "tok_s": 1155.6
+  },
+  "qwen": {
+   "schedule": 1198477.6,
+   "token_cycles": 1198866.4,
+   "tok_s": 1000.9
+  }
+ },
+ "xlcoll1": {
+  "what": "XL + COLL IA1 (XL needs SMXL XSLOT bind)",
+  "AR": {
+   "schedule": 969893.7,
+   "token_cycles": 997233.1,
+   "tok_s": 1203.3
+  },
+  "qwen": {
+   "schedule": 1194697.1,
+   "token_cycles": 1195083.2,
+   "tok_s": 1004.1
+  }
+ }
+}
