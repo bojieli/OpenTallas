@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       admits  1184 GB (avail 926, growth 97, headroom 0, waiters 0/0 GB) load 88/128 running 26 disk 707 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/src
+ot-run: ot-epyc8       admits   756 GB (avail 642, growth 113, headroom 0, waiters 0/0 GB) load 86/128 running 36 disk 306 GB 
+ot-run: ot-epyc9       admits  1182 GB (avail 915, growth 88, headroom 0, waiters 0/0 GB) load 48/128 running 19 disk 705 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-922078-1792460461 after 1 s
+ot-epyc5
+PASS HGI_QDQ_HOST_SPLIT_LOCKSTEP records=1 beats=16 reads=64 writes=64 cycles_compared=376 monolith_last_write=65 split_last_write=70 rq_offset=1 wq_done_offset=5 immutable_price=24 VM_latency_at_pins=7
+TOKSIM_QDQ_SPAN records=1 beats=16 first_rq=17 first_write=55 last_write=70 last_record_done=74 span_rq_to_last_write=54 span_rq_to_record_done=58 (edges after doorbell, split DUT)
+PASS HGI_QDQ_HOST_SPLIT_LOCKSTEP records=8 beats=104 reads=416 writes=416 cycles_compared=495 monolith_last_write=153 split_last_write=158 rq_offset=1 wq_done_offset=5 immutable_price=168 VM_latency_at_pins=7
+TOKSIM_QDQ_SPAN records=8 beats=104 first_rq=17 first_write=55 last_write=158 last_record_done=162 span_rq_to_last_write=142 span_rq_to_record_done=146 (edges after doorbell, split DUT)
+[1560000] %Fatal: tb_toksim_qdq_split.sv:128: Assertion failed in tb_toksim_qdq_split: LOCKSTEP_FAIL split unexpected static fault cycle25
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-922078-1792460461): exit 0

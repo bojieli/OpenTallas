@@ -1,0 +1,29 @@
+ot-run: ot-epyc5       admits  1184 GB (avail 926, growth 97, headroom 0, waiters 0/0 GB) load 88/128 running 26 disk 707 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/src
+ot-run: ot-epyc8       admits   756 GB (avail 642, growth 113, headroom 0, waiters 0/0 GB) load 86/128 running 36 disk 306 GB 
+ot-run: ot-epyc9       admits  1182 GB (avail 915, growth 88, headroom 0, waiters 0/0 GB) load 48/128 running 19 disk 705 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-922126-1792460461 after 1 s
+ot-epyc5
+== d4096
+RMS_REDUCE d4096 [{"n": 1024, "tag": 1, "first_cmd": 0, "export_cmd": 1313, "scalar_cycle": 1322, "span": 1323}, {"n": 4, "tag": 2, "combine": true, "first_cmd": 1314, "export_cmd": 1355, "scalar_cycle": 1364, "span": 51}]
+PASS scalars=2 cycles=1375 actual LAT6 arithmetic two nativeSRAM replicas
+rc=0
+FAIL scalar cycle=1321 expected_cycle=1322 tag=1 expected_tag=1 fp32=529fdad2 expected=529fdad2
+rc=1
+== seg128_q2
+RMS_REDUCE seg128_q2 [{"n": 128, "tag": 1, "first_cmd": 0, "export_cmd": 193, "scalar_cycle": 202, "span": 203}, {"n": 128, "tag": 2, "first_cmd": 194, "export_cmd": 387, "scalar_cycle": 396, "span": 203}]
+PASS scalars=2 cycles=407 actual LAT6 arithmetic two nativeSRAM replicas
+rc=0
+FAIL scalar cycle=201 expected_cycle=202 tag=1 expected_tag=1 fp32=50794cde expected=50794cde
+rc=1
+== seg128_k1
+RMS_REDUCE seg128_k1 [{"n": 128, "tag": 1, "first_cmd": 0, "export_cmd": 193, "scalar_cycle": 202, "span": 203}]
+PASS scalars=1 cycles=213 actual LAT6 arithmetic two nativeSRAM replicas
+rc=0
+FAIL scalar cycle=201 expected_cycle=202 tag=1 expected_tag=1 fp32=50794cde expected=50794cde
+rc=1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-922126-1792460461): exit 0
