@@ -1,0 +1,56 @@
+{
+  "status": "SOURCE-COUPLED MODEL ONLY; no source/gate adoption",
+  "source_parent": "eae783e87 (unmerged XG3 actual gate source, not current main plain rstop)",
+  "source_file_sha256": "214577af3eeb0dc824346fef4ac74a3819dbd0f9832c462e8ecbd87e63f4af97",
+  "immutable_evidence": "3f8b2506d: RS466 roots>32/max202, 40 primary-port offenders; XS1156/max2529 separate",
+  "mechanism_before_RTL": {
+    "boundary_control_capture": "23 shared capture banks, each feeds two existing24bit control slices; primary header bits at most24 capture endpoints including master. Age remains original first capture edge.",
+    "sid_candidate": "Two-level SID strap capture/distribution permits native cloning of second tier without increasing raw SID loads. Adds1 SID capture edge only; requires actual production constant-strap/cold-reset contract and first-valid proof, not assumed hidden. No unrestricted dynamic-SID equivalence claim.",
+    "fragment_payload": "Compute each of276 fragment merged bits once, reuse four word positions, instead of repeated1104 bit computations. Current five valids can then use bounded capture groups, avoiding direct47-copy primary fanout.",
+    "reset": "32 regional leaves instead of4; all actual leaf/first-stage/reset drivers must map<=32. Existing first-two-stage raw reset landing unchanged.",
+    "late_comb": "SCC-safe native primitive replication may only be tried on feedforward control/capture cones after exact source census; refusal at any feedback/raw-port frontier remains FAIL.",
+    "data_edges_target": "No added data edge: preserve line/NX/V3 capture edges and gather2. This is a target requiring complete exact miter; otherwise explicit priced pipeline stage is required."
+  },
+  "communication": {
+    "input_pin_bits": {
+      "clk_reset": 2,
+      "sid": 4,
+      "line": 2208,
+      "vertical": 276,
+      "own_fragment_flags": 10,
+      "own_fragments": 1380,
+      "nx": 346,
+      "control_direction": 3,
+      "control_beat": 1104
+    },
+    "output_pin_bits": {
+      "line": 2208,
+      "vertical": 276,
+      "nx": 346,
+      "gather": 3099,
+      "control_deliveries": 2489,
+      "fault": 1
+    },
+    "total_signal_and_clock_reset_bits": 13752,
+    "steady_budget": "E/W1104b each per cycle; V276b/cycle; own at most one276b fragment/cycle; three gather streams of1024data+metadata/cycle. Not all injection sources may collide; existing sticky-fault semantics retained.",
+    "hard_boundary": "RS and XS sibling hard leaves, no computation MACs. Existing XS3 remains separately blocked; no whole-XG qualification."
+  },
+  "geometry_model": {
+    "existing_outline": "864x518.4 or907.2x561.6, no macro",
+    "pin_perimeter_lower_bound_um_at6perum": 2292.0,
+    "potential_outline_only": [
+      777.6,
+      604.8
+    ],
+    "reach_reason": "Three existing captures might place west input, central selected payload, east relay within2x388.8um hops. All named native endpoints/pin windows/ownership must prove this; diagonal and control fanout reach not inferred from outline.",
+    "density": "Actual canonical ORFS linked area and native fullwidth band needed; pin perimeter does not grant blanket lowfill exception.",
+    "clock": "Actual single-root TT/FF allflop <=80 or real landed regional model; no child means or assumed correlation."
+  },
+  "proof_before_gate": [
+    "Production caller SID constant/reset-first-edge source identity or reject SID retiming.",
+    "Full output/valid/fault miter vs immutable eae RS, independently random unreset states, earliest legal firstvalid and inflightreset.",
+    "Causal shared-header-age, one fragment-valid bank, per-slice select and reset-negative witnesses.",
+    "Exact canonical ORFS + main mandatory actual-Lib census all<=32, storage inventory and registered port roles.",
+    "Actual allbox405/pinfaces/fullwidth band/PGescape/clock model with PNG8item review."
+  ]
+}

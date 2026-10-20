@@ -1,0 +1,3 @@
+# RS native32 continuation model
+
+The actual XG3 RS source is unmerged eae783e87; current main still has the earlier plain rstop. The existing bit-sliced leaf has47 first-capture loads on common header/strap pins and local tier/select roots as high as202. This cannot be qualified by quoting24 payload bits per slice. The pinned JSON records a bounded source experiment before RTL: share the first capture bank, reuse fragment work, and increase reset regions. SID two-level distribution is conditional on the real production strap/reset contract; it is not accepted as unrestricted dynamic-input equivalence. All phase, native and physical proofs remain open. No RTL edit or new fleet job/gate has been launched.
