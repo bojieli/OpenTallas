@@ -151,8 +151,13 @@ module tb_hbm_hc_eng4_static;
     // ---- checks
     integer mixseen = 0, mixbad = 0, outseen = 0, outbad = 0, cyc = 0, last_out_t = 0, first_out_t = -1;
     integer last_mix_t = 0;
+    // HBM-HCROOT6 10-20: extended programme-edge counter.  t (u_seq.t) freezes when the sequencer stops, so a result
+    // emitted after the last programme event (root SAFE 1: tail domain TD = 2 edges later) was timed at the frozen t.
+    // tx follows t while busy and keeps counting one per edge after it, so HC_MIX_CYCLES is measured, not clipped.
+    integer tx = 0;
     always @(posedge clk) begin
         cyc <= cyc + 1;
+        if (busy) tx = t; else tx = tx + 1;
         if (rst_n && fault) begin
             $display("HC_ENG_FAULT t=%0d seq=%0d ev=%0d ps=%0d qf=%b core=%0d mix=%0d tbl=%0d tail=%0d tfl=%0d", t,
                 dut.seq_fault, dut.ev_fault, dut.ps_fault, dut.qf_q, dut.core_fault, dut.mix_fault, dut.tbl_fault,
@@ -162,7 +167,7 @@ module tb_hbm_hc_eng4_static;
         if (mode == 1 && dut.u_core.raw_wv) $display("PROBE raw t=%0d ss=%0d pos=%0d idx=%0d", t,
             dut.u_core.raw_w[40], dut.u_core.raw_w[32 + 5 +: 3], dut.u_core.raw_w[32 +: 5]);
         if (dut.o_valid) begin
-            mixseen = mixseen + 1; last_mix_t = t;
+            mixseen = mixseen + 1; last_mix_t = tx;
             if (dut.o_data !== expmix[dut.o_pos*24 + dut.o_idx]) begin
                 mixbad = mixbad + 1;
                 if (mixbad < 6) $display("MIX_MISMATCH pos%0d row%0d got=%08x exp=%08x", dut.o_pos, dut.o_idx,
@@ -171,7 +176,7 @@ module tb_hbm_hc_eng4_static;
         end
         for (integer q = 0; q < 4; q = q + 1) if (result_v[q]) begin : chk
             integer p; p = result_position[q*3 +: 3];
-            outseen = outseen + 1; last_out_t = t; if (first_out_t < 0) first_out_t = t;
+            outseen = outseen + 1; last_out_t = tx; if (first_out_t < 0) first_out_t = tx;
             for (integer j = 0; j < 24; j = j + 1) if (result[q*768 + j*32 +: 32] !== exptail[p*24 + j]) begin
                 outbad = outbad + 1;
                 if (outbad < 6) $display("TAIL_MISMATCH q%0d pos%0d word%0d got=%08x exp=%08x", q, p, j,
