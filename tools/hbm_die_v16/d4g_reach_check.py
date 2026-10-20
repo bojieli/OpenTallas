@@ -34,7 +34,7 @@ HOME = re.compile(r'home \(([-\d.]+), ([-\d.]+)\) um')
 RST = re.compile(r'(^|_)(rst|reset|por)(_|n|$)|rst_n|_rstn|^rs$')
 
 
-def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40, strict_coverage=False):
+def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40, strict_coverage=True):
     C = json.loads(Path(contract).read_text()); I = C['instances']
     coverage = {} if strict_coverage else None
     pl, nets, directions, top_inputs = RP.load_case(Path(case), C, coverage=coverage)
@@ -102,6 +102,11 @@ def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40, strict
                                 worst_bus_extra_cycles=max([f['extra_cycles'] for f in fix] or [0])))
     res['geometry_coverage'] = coverage or dict(verdict='NOT_CHECKED', reason='use --strict-coverage')
     res['strict_coverage'] = strict_coverage
+    res['geometry_qualified'] = bool(strict_coverage and coverage and coverage['verdict'] == 'PASS')
+    res['native_release_qualified'] = False
+    res['qualification'] = ('GEOMETRY_COMPLETE_ONLY; timing/clock/reset/native qualification required'
+                            if res['geometry_qualified'] else
+                            'DIAGNOSTIC_INCOMPLETE_GEOMETRY; no qualification')
     if strict_coverage and coverage['verdict'] != 'PASS':
         res['verdict'] = 'FAIL'
     return res, fails, fix
@@ -113,12 +118,14 @@ def main():
     ap.add_argument('--reach', type=float, default=405.0); ap.add_argument('--tol', type=float, default=0.0)
     ap.add_argument('--out'); ap.add_argument('--fix'); ap.add_argument('--all', help='write every failing bus here (json)')
     ap.add_argument('--reset-fails', action='store_true', help='post-forest case: reset fan-out over reach also fails')
-    ap.add_argument('--strict-coverage', action='store_true', help='refuse missing instance/LEF/pin geometry or unknown signal directions')
+    ap.add_argument('--strict-coverage', action='store_true', help=argparse.SUPPRESS)
+    ap.add_argument('--diagnostic-incomplete-coverage', action='store_true',
+                    help='diagnostic only: permit an incomplete geometry scan, always unqualified')
     a = ap.parse_args()
-    res, fails, fix = classify(a.case, a.contract, a.reach, a.tol, strict_coverage=a.strict_coverage)
+    res, fails, fix = classify(a.case, a.contract, a.reach, a.tol, strict_coverage=not a.diagnostic_incomplete_coverage)
     if a.reset_fails and res['over_buses_by_class'].get('reset'):
         res['verdict'] = 'FAIL'
-    print('REACH_CHECK', res['verdict'], json.dumps({k: res[k] for k in ('buses_checked', 'over_buses_by_class', 'over_by_cause',
+    print('REACH_CHECK' if not a.diagnostic_incomplete_coverage else 'DIAGNOSTIC_REACH_CHECK', res['verdict'], json.dumps({k: res[k] for k in ('buses_checked', 'over_buses_by_class', 'over_by_cause',
                                                                           'span_hist', 'fix_summary')}))
     if a.out:
         Path(a.out).write_text(json.dumps(res, indent=1))

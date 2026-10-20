@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Causal geometry omissions must not turn an over-reach bus into PASS."""
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -97,6 +99,31 @@ END tile
         self.emit(parameter=True)
         self.assertEqual(self.run_case(False)['buses_checked'],0)
         self.assertEqual(self.run_case()['buses_checked'],1)
+    def cli(self,*args):
+        out=self.root/'reach.json'
+        r=subprocess.run([sys.executable,str(Path(__file__).with_name('d4g_reach_check.py')),
+                          str(self.root),str(self.contract),'--out',str(out),*args],capture_output=True,text=True)
+        return r,json.loads(out.read_text())
+    def test_cli_default_refuses_missing_geometry(self):
+        self.lef.unlink()
+        r,out=self.cli()
+        self.assertEqual(r.returncode,1)
+        self.assertIn('REACH_CHECK FAIL',r.stdout)
+        self.assertFalse(out['geometry_qualified'])
+    def test_cli_diagnostic_optout_cannot_claim_ordinary_pass(self):
+        self.lef.unlink()
+        r,out=self.cli('--diagnostic-incomplete-coverage')
+        self.assertEqual(r.returncode,0)
+        self.assertIn('DIAGNOSTIC_REACH_CHECK PASS',r.stdout)
+        self.assertFalse(out['geometry_qualified'])
+        self.assertFalse(out['native_release_qualified'])
+        self.assertIn('DIAGNOSTIC',out['qualification'])
+    def test_cli_default_complete_near_bus_is_geometry_only(self):
+        self.placement['b']['x']=100;self.emit()
+        r,out=self.cli()
+        self.assertEqual(r.returncode,0)
+        self.assertTrue(out['geometry_qualified'])
+        self.assertFalse(out['native_release_qualified'])
     def test_unknown_direction_is_refused(self):
         self.lef.write_text(self.lef.read_text().replace('DIRECTION INPUT','DIRECTION INOUT'))
         self.assertEqual(self.run_case()['geometry_coverage']['by_reason'],dict(unknown_signal_direction=1))
