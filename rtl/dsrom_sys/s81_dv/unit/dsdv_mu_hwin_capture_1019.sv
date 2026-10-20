@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Private exact selected-anchor HWIN source; namespace projection only.
 module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0, parameter integer CFG_RELAY = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0, parameter integer CFG_RELAY = 0, parameter integer DUE_COPIES = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -135,8 +135,22 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     wire [PTR_CTL-1:0] pointer_due,pointer_adv,slot_step,gap_step;
     wire [2:0] cg_step,crl_write,crm_write;
     generate if(LOCAL_BOOT!=0) begin:g_control_regions
+        // HWIN21h DUE_COPIES=2 (opt-in; 0 = one retire_due per event, HWIN21cb logic): the 32-bit retire==now compare and the
+        // 47-bit valid reduce run in 2 kept central copies beside the retire head, and only the 1-bit due leaves for the
+        // events (copy 0 -> west events 0..NEV/2-1, copy 1 -> east events; 8 loads each) instead of 16 per-event compares
+        // fed by a 64-bit h_rts/tmr broadcast along the band (c21d gate: worst post-GRT cone = event count_r).  Same function, +0 edges.
+        if(DUE_COPIES!=0) begin:g_due_central
+            wire [1:0] due_c;
+            for(genvar dc=0;dc<2;dc=dc+1) begin:g_copy
+                (* keep=1 *) dsdv_mu_hwin_capture_1019_retire_due u_due(.valid(rok),.fresh(h_rfr),.retire(h_rts),.now_time(tmr),.due(due_c[dc]));
+            end
+            for(genvar ed=0;ed<NEV;ed=ed+1) begin:g_event_due
+                assign event_due[ed]=due_c[(ed>=NEV/2 && NEV>1)?1:0];
+            end
+        end else begin:g_due_local
         for(genvar ed=0;ed<NEV;ed=ed+1) begin:g_event_due
             (* keep=1 *) dsdv_mu_hwin_capture_1019_retire_due u_due(.valid(rok),.fresh(h_rfr),.retire(h_rts),.now_time(tmr),.due(event_due[ed]));
+        end
         end
         for(genvar pc=0;pc<PTR_CTL;pc=pc+1) begin:g_pointer
             (* keep=1 *) dsdv_mu_hwin_capture_1019_retire_advance u_retire(.valid(rok),.fresh(h_rfr),.hold_head(rhold),.retire(h_rts),.now_time(tmr),.due(pointer_due[pc]),.advance(pointer_adv[pc]));
