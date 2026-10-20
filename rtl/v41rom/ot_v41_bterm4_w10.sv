@@ -354,6 +354,12 @@ module ot_v41_bterm4_w10 #(
     ot_v41_inc #(.W(25)) u_mr (.a({1'b0, m24}), .inc(inc), .y(mr), .co(cmr));
     reg               p6_v, p6_first, p6_last, p6_nan, p6_s, p6_z;
     reg signed [11:0] p6_b;
+`ifdef OT_BF_FOREP32
+    // One exponent/shift copy for each ten output bits of the subnormal shifter.
+    (* keep *) reg signed [11:0] p6_shift_b [0:4];
+    always @(posedge clk)
+        for (int j = 0; j < 5; j++) p6_shift_b[j] <= p5_ebl + $signed({11'd0, mr[24]});
+`endif
     reg [22:0]        p6_f;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p6_v <= 1'b0;
@@ -366,9 +372,20 @@ module ot_v41_bterm4_w10 #(
     end
 
     // -- P7: scale by 2^(xe+we): exponent add done; subnormal right shift -------------------------
+`ifdef OT_BF_FOREP32
+    wire [49:0] sw_k [0:4];
+    for (genvar j = 0; j < 5; j++) begin : g_sub_shift
+        wire [11:0] rsh = 12'd1 - p6_shift_b[j];
+        wire [4:0] rs5 = (p6_shift_b[j] < -12'sd24) ? 5'd26 : rsh[4:0];
+        assign sw_k[j] = {1'b1, p6_f, 26'd0} >> rs5;
+    end
+    wire [49:0] sw;
+    for (genvar b = 0; b < 50; b++) assign sw[b] = sw_k[b / 10][b];
+`else
     wire [11:0] rsh = 12'd1 - p6_b;                         // used when p6_b <= 0
     wire [4:0]  rs5 = (p6_b < -12'sd24) ? 5'd26 : rsh[4:0];
     wire [49:0] sw = {1'b1, p6_f, 26'd0} >> rs5;
+`endif
     reg               p7_v, p7_first, p7_last, p7_nan, p7_sub, p7_ovf, p7_s;
     reg [31:0]        p7_n;                                 // normal / zero / inf result
     reg [23:0]        p7_t;
