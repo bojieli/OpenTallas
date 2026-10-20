@@ -6,7 +6,8 @@
 module ot_rp4_g1_capture #(
     parameter integer TAGW = 16,
     parameter integer GROUP = 6,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer MASKPIPE = 0
 ) (
     input wire clk, rst_n,
     input wire bov, fov, bfault, ffault,
@@ -22,6 +23,7 @@ module ot_rp4_g1_capture #(
     (* keep *) reg [W-1:0] b_q, f_q;
     reg v_q, fault_q;
     reg [W-1:0] result_q;
+    reg v_mask, fault_mask;
     always @(posedge clk) begin
         select_q <= {N{bov}};
         b_q <= {by, btag};
@@ -29,19 +31,34 @@ module ot_rp4_g1_capture #(
         if (!rst_n) begin
             v_q <= 1'b0;
             fault_q <= 1'b0;
+            v_mask <= 1'b0;
+            fault_mask <= 1'b0;
             gv <= 1'b0;
             gf <= 1'b0;
         end else begin
             v_q <= bov | fov;
             fault_q <= bfault | ffault | (bov & fov);
-            gv <= MUT == 1 ? (bov | fov) : v_q;
-            gf <= MUT == 2 ? 1'b0 : fault_q;
+            v_mask <= v_q;
+            fault_mask <= fault_q;
+            gv <= MUT == 1 ? (bov | fov) : (MASKPIPE ? v_mask : v_q);
+            gf <= MUT == 2 ? 1'b0 : (MASKPIPE ? fault_mask : fault_q);
         end
     end
     genvar k;
     generate for (k = 0; k < W; k = k + 1) begin : g_result
-        always @(posedge clk)
-            result_q[k] <= select_q[k / GROUP] ? b_q[k] : f_q[k];
+        if (MASKPIPE) begin : g_masks
+            // Both branches perform useful selection before the final OR.
+            // This is a three-stage compute pipeline, not result padding.
+            (* keep *) reg b_mask, f_mask;
+            always @(posedge clk) begin
+                b_mask <= b_q[k] & select_q[k / GROUP];
+                f_mask <= f_q[k] & ~select_q[k / GROUP];
+                result_q[k] <= b_mask | f_mask;
+            end
+        end else begin : g_direct
+            always @(posedge clk)
+                result_q[k] <= select_q[k / GROUP] ? b_q[k] : f_q[k];
+        end
     end endgenerate
     assign {gy, gt} = result_q;
 endmodule

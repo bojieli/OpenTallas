@@ -47,8 +47,16 @@ module ot_rp4l_gn(input wire clk, input wire rst_n, input wire [49:0] g0, input 
 `ifdef OT_SMH_G1_CAPTURE
   // The +1 through-lane edge belongs in the tall north half: three planned
   // hops (907->604.8->302.4->0) replace the original two ~455um hops.
-  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm2[49:48]), .q(gpm[k*50+48 +: 2]));
-  ot_hbm_accel_smh_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm2[47:0]), .q(gpm[k*50 +: 48]));
+  wire [49:0] gm3;
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm2[49:48]), .q(gm3[49:48]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm2[47:0]), .q(gm3[47:0]));
+`ifdef OT_SMH_G1_MASKPIPE
+  // Additional physical relay in the tall north half; never local padding.
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v4 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm3[49:48]), .q(gpm[k*50+48 +: 2]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_d4 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gm3[47:0]), .q(gpm[k*50 +: 48]));
+`else
+  assign gpm[k*50 +: 50] = gm3;
+`endif
 `else
   assign gpm[k*50 +: 50] = gm2;
 `endif
