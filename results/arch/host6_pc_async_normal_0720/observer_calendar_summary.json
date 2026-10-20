@@ -1,0 +1,82 @@
+{
+  "qkd_kvs_pc": {
+    "mapped_sha256": "3d29020a23951d425b99ef4f72b0a795502ebad6b618814c3c769524cecf6bc3",
+    "observer_counts": {
+      "('ck',)": 25,
+      "('hck',)": 128
+    },
+    "all_consumer_clock_inventory": [
+      {
+        "reset": "rst_n",
+        "role": "ASR active-low reset",
+        "clock_ports": [
+          "ck"
+        ],
+        "count": 73
+      },
+      {
+        "reset": "rst_n",
+        "role": "registered logical release sample",
+        "clock_ports": [
+          "ck"
+        ],
+        "count": 25
+      },
+      {
+        "reset": "hrst_n",
+        "role": "registered logical release sample",
+        "clock_ports": [
+          "hck"
+        ],
+        "count": 128
+      }
+    ],
+    "role_counts": {
+      "('rst_n', 'Liberty-proven reset clamp to zero for all other inputs')": 1,
+      "('rst_n', 'ASR active-low reset')": 73,
+      "('rst_n', 'registered logical release sample')": 25,
+      "('hrst_n', 'Liberty-proven reset clamp to zero for all other inputs')": 1,
+      "('hrst_n', 'registered logical release sample')": 128
+    }
+  },
+  "qkd_kvs_pc_h": {
+    "mapped_sha256": "0cbd66c288fe86c6aaaee2c17b1c821ccd4901dfbddf7941ac9c1882a825e514",
+    "observer_counts": {
+      "('ck',)": 25,
+      "('hck',)": 128
+    },
+    "all_consumer_clock_inventory": [
+      {
+        "reset": "rst_n",
+        "role": "ASR active-low reset",
+        "clock_ports": [
+          "ck"
+        ],
+        "count": 72
+      },
+      {
+        "reset": "rst_n",
+        "role": "registered logical release sample",
+        "clock_ports": [
+          "ck"
+        ],
+        "count": 25
+      },
+      {
+        "reset": "hrst_n",
+        "role": "registered logical release sample",
+        "clock_ports": [
+          "hck"
+        ],
+        "count": 128
+      }
+    ],
+    "role_counts": {
+      "('rst_n', 'Liberty-proven reset clamp to zero for all other inputs')": 1,
+      "('rst_n', 'ASR active-low reset')": 72,
+      "('rst_n', 'registered logical release sample')": 25,
+      "('hrst_n', 'Liberty-proven reset clamp to zero for all other inputs')": 1,
+      "('hrst_n', 'registered logical release sample')": 128
+    }
+  }
+}

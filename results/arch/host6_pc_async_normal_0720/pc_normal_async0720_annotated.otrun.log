@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-pc-normal-async-proof-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-pc-normal-async-proof-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-pc-normal-async-proof-0720
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-pc-normal-async-proof-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-pc-normal-async-proof-0720
+ot-run: ot-agidock128  admits   100 GB (avail 83, growth 13, headroom 0, waiters 0/0 GB) load 11/64 running 9 disk 242 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-257877-1792506931 after 0 s
+{"qkd_kvs_pc": {"source": "77d444acbeab1f50152c681e876428175cd864a7263ed9dc0892175943b1c91e", "native_max": 32, "banks": {"rst_n": {"first": "rland_ck_s1$_DFF_PN0_", "final": 8, "max_final": 13}, "hrst_n": {"first": "rland_hck_s1$_DFF_PN0_", "final": 8, "max_final": 17}}, "negative_refusals": 16}, "qkd_kvs_pc_h": {"source": "77d444acbeab1f50152c681e876428175cd864a7263ed9dc0892175943b1c91e", "native_max": 32, "banks": {"rst_n": {"first": "rland_ck_s1$_DFF_PN0_", "final": 8, "max_final": 13}, "hrst_n": {"first": "rland_hck_s1$_DFF_PN0_", "final": 8, "max_final": 17}}, "negative_refusals": 16}}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-257877-1792506931): exit 0
