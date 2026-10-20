@@ -1,17 +1,18 @@
 {
- "name": "qkd_pv_fin_s32-s32r10-COMMIT",
+ "name": "qkd_pv_fin_s32-s32r14-COMMIT",
  "block": "qkd_pv_fin_s32",
  "ref_tile": true,
- "owner": "Claude:KV-PARAMS5",
- "purpose": "PVFIN default-off safe32 successor: 4x32x128 sum SRAM, 2-edge prefetch with both write-forward paths, unchanged MUL_AGE and one beat/edge; bounded reset +2 boot edges. Native census required before gate.",
+ "owner": "Claude:KV-PARAMS6",
+ "purpose": "PVFIN safe32 successor R14: 4x32x128 sum SRAM, static command calendar, per-group acceptance nodes (native census PASS max32/0 viol, R14 cfaa9a3cb); token-age delta 0; boot reset release: first start capture E6/accept E7 (+5 command edges vs legacy E1/E2).",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/kv-pvfin-s32-1020",
+  "branch": "claude/kv-pvfin-r14-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "results/rtl/kv_pvfin_sram_1020",
-   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin"
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
+   "results/rtl/kv_pvfin_shipping_1020"
   ]
  },
  "stages": {
@@ -28,7 +29,7 @@
    },
    {
     "name": "pv_fin_s32_m0",
-    "cmd": "bash rtl/test/qwen_split/run_qkd_pv_fin_s32.sh {RUN}/bench/pvfin_m0 0",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m0 0",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -37,11 +38,12 @@
     ],
     "pass_regex": "^PVFIN_KIT PASS mut=0 ",
     "sources": [
-     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
      "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
      "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
@@ -50,15 +52,14 @@
      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
      "rtl/hdc/ot_hdc_prefix.sv",
      "rtl/hdc/ot_hdc_fastfp.sv",
-     "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-     "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
-     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
-    "pass_witness": "results/rtl/kv_pvfin_sram_1020/r10_proof/m0.log"
+    "pass_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m0.log"
    },
    {
     "name": "pv_fin_s32_m1",
-    "cmd": "bash rtl/test/qwen_split/run_qkd_pv_fin_s32.sh {RUN}/bench/pvfin_m1 1",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m1 1",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -67,11 +68,12 @@
     ],
     "pass_regex": "^PVFIN_KIT PASS mut=1 ",
     "sources": [
-     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
      "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
      "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
@@ -80,16 +82,15 @@
      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
      "rtl/hdc/ot_hdc_prefix.sv",
      "rtl/hdc/ot_hdc_fastfp.sv",
-     "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-     "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
-     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=1 detected",
-    "fail_witness": "results/rtl/kv_pvfin_sram_1020/r10_proof/m1.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m1.log"
    },
    {
     "name": "pv_fin_s32_m2",
-    "cmd": "bash rtl/test/qwen_split/run_qkd_pv_fin_s32.sh {RUN}/bench/pvfin_m2 2",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m2 2",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -98,11 +99,12 @@
     ],
     "pass_regex": "^PVFIN_KIT PASS mut=2 ",
     "sources": [
-     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
      "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
      "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
@@ -111,16 +113,15 @@
      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
      "rtl/hdc/ot_hdc_prefix.sv",
      "rtl/hdc/ot_hdc_fastfp.sv",
-     "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-     "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
-     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=2 detected",
-    "fail_witness": "results/rtl/kv_pvfin_sram_1020/r10_proof/m2.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m2.log"
    },
    {
     "name": "pv_fin_s32_m3",
-    "cmd": "bash rtl/test/qwen_split/run_qkd_pv_fin_s32.sh {RUN}/bench/pvfin_m3 3",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m3 3",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -129,11 +130,12 @@
     ],
     "pass_regex": "^PVFIN_KIT PASS mut=3 ",
     "sources": [
-     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
      "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
      "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
@@ -142,16 +144,15 @@
      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
      "rtl/hdc/ot_hdc_prefix.sv",
      "rtl/hdc/ot_hdc_fastfp.sv",
-     "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-     "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
-     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=3 detected",
-    "fail_witness": "results/rtl/kv_pvfin_sram_1020/r10_proof/m3.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m3.log"
    },
    {
     "name": "pv_fin_s32_m4",
-    "cmd": "bash rtl/test/qwen_split/run_qkd_pv_fin_s32.sh {RUN}/bench/pvfin_m4 4",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m4 4",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -160,11 +161,12 @@
     ],
     "pass_regex": "^PVFIN_KIT PASS mut=4 ",
     "sources": [
-     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
      "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
      "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
@@ -173,16 +175,15 @@
      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
      "rtl/hdc/ot_hdc_prefix.sv",
      "rtl/hdc/ot_hdc_fastfp.sv",
-     "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-     "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
-     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=4 detected",
-    "fail_witness": "results/rtl/kv_pvfin_sram_1020/r10_proof/m4.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m4.log"
    },
    {
     "name": "pv_fin_s32_m5",
-    "cmd": "bash rtl/test/qwen_split/run_qkd_pv_fin_s32.sh {RUN}/bench/pvfin_m5 5",
+    "cmd": "bash results/rtl/kv_pvfin_shipping_1020/run_shipping.sh {RUN}/bench/pvfin_m5 5",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -191,11 +192,12 @@
     ],
     "pass_regex": "^PVFIN_KIT PASS mut=5 ",
     "sources": [
-     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+     "results/rtl/kv_pvfin_shipping_1020/r10_gold.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
      "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv",
      "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
      "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
      "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
@@ -204,12 +206,11 @@
      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
      "rtl/hdc/ot_hdc_prefix.sv",
      "rtl/hdc/ot_hdc_fastfp.sv",
-     "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-     "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
-     "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
+     "results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv",
+     "results/rtl/kv_pvfin_shipping_1020/run_shipping.sh"
     ],
     "fail_regex": "^PVFIN_KIT FAIL mut=5 detected",
-    "fail_witness": "results/rtl/kv_pvfin_sram_1020/r10_proof/m5.log"
+    "fail_witness": "results/rtl/kv_pvfin_shipping_1020/r14_proof/m5.log"
    }
   ],
   "calibrate": {
@@ -262,7 +263,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_pv_fin_s32/qkd_pv_fin_s32-s32r10-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_pv_fin_s32/qkd_pv_fin_s32-s32r14-COMMIT"
   }
  ],
  "cycles_added": 0,

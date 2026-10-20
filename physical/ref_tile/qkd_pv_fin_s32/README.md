@@ -1,4 +1,4 @@
-# qkd_pv_fin_s32 (R10: native census PASS; gate = PACKET ONLY per parent rule, no REVIEW/submit)
+# qkd_pv_fin_s32 (R14: actual shipping-config native census PASS max32/0 viol; kit regenerated with main tools)
 
 Native census of R6 must pass before generation or gate. The source proof,
 mutant witnesses, prior failed native census, and model sizing live in
@@ -33,3 +33,21 @@ Safe-design checklist (R10, pre-gate):
 6 Floorplan: 4 macros at 43.2-lattice origins, full-width central std-cell band, util ~53% (synthesis), square.
 7 Clock: single ck root, centre band; spread/insertion measured by --cts gate; io_hold_margin 0.03.
 8 Schedule: static; token-age delta 0 (MUL_AGE / output beat ages unchanged); only boot reset release grows.
+
+## R14 status (KV-PARAMS6 10-20, claude/kv-pvfin-r14-1020) -- supersedes the R10 checklist below where they differ
+Actual shipping-config census (gate config: OT_KEEP_PIN_REGS, 2 plain reset landing stages, regional farms) history:
+R10 FAIL 49/9, R11 FAIL 34/1, R12 FAIL 40/3, R13 FAIL 48/4 (command_accept[2..5] each enabled 24 payload flops:
+P0/P1 8 + ADD/SUM date 8 + product date 8). R14 (cfaa9a3cb): the two date groups take their own acceptance nodes built
+from same-phase kept start_lane[8..15] images -> 8 flops per node. Census PASS max 32 / 0 violations / 182,258 roots
+(r14_proof/native_census.json.gz). Mapped area 41,099.9 um2 incl. 8,217 SRAM -> 32,883 um2 cells = 55.8% of the
+58,968 um2 free silicon (std_area_um2 in spec). +0 FF vs R13 (R13 = R10 + 400 FF).
+R14 V5.050 shipping suite (run_shipping.sh, r14_proof): m0 PASS (328 commands / 10,496 beats incl. stretch, NEG1-3),
+MUT1-5 detected, cold seeds 1/29/53 PASS.
+Corrections (Codex 08:14 audit): boot reset release = raw release -> landing E1/E2, farm roots E3, second E4, leaf E5,
+first start capture E6 / accept E7: +5 command edges vs legacy E1/E2 (+2 vs unwrapped R10), not +2. Token ages unchanged.
+Reach: the 259.2 square's 366.6 um diagonal is not a Manhattan bound; the routed registered-stage reach audit (<=405)
+is required after CLOSED.
+Checklist R14: 1 Pins PASS (kit landing + pin flops; outputs registered) 2 Reach: post-route audit owed 3 Fanout PASS census
+max32 4 Depth unchanged (LAT-7 add, LAT-6 mul) 5 Storage PASS 4x32x128 SRAM 6 Floorplan PASS lattice macros, band, 55.8%,
+square 7 Clock single centre root, gate --cts measures spread 8 Schedule static, token delta 0, boot +5 edges (die boot
+calendar owner KV-BIND8).

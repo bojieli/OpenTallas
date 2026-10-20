@@ -16,7 +16,7 @@
   257.03999999999996
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 32883.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -114,14 +114,7 @@
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "fill",
-   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
-   "pass --area-um2 / std_area_um2 from the synthesis smoke"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv",
   "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv",
