@@ -104,6 +104,16 @@ def age_fields(r, land_k, land_e=None):
     if not lands:
         return dict(age_edges=max(r['st']), age_basis='relay flops')
     ks = sorted({land_k.get(l[-1]) for l in lands})
+    # QW-GEN3 10-19 (QW-GEN2 relay side check 'torn C.rx_record: native_rx_* 2, rx_payload 1' = SEAM_AGE_SOURCE): since
+    # QK-LANDEN / Q-COLLCAL the strap is K = (E + cal + 1) mod 8, so 'E = K' no longer holds for an n = 1 lane on a
+    # calendar; with the GEN's own fwd_lanes.json (--lanes) EVERY landed lane takes the lane E (the age the generator
+    # equalized its bundle to, as record_bundles.seam_stages does), n = 1 included.  Without --lanes the old rule stays.
+    if land_e and len(lands) == 1 and next(iter(lands))[-1] in land_e:
+        e, k = land_e[next(iter(lands))[-1]]
+        if k is not None and None not in ks and ks != [k % 8]:
+            return dict(age_edges=None, landing_k=ks[0], age_basis=f'fwd_lanes.json E {e} but straps K {ks} != lane K {k}')
+        return dict(age_edges=e, landing_k=ks[0] if len(ks) == 1 else ks,
+                    age_basis='landed lane: E from fwd_lanes.json (GEN)' + (' n=1' if max(r['st']) == 1 else ' n>1'))
     if len(lands) == 1 and max(r['st']) == 1 and len(next(iter(lands))) == 1 and None not in ks:
         return dict(age_edges=ks[0], landing_k=ks[0], age_basis='n=1 landed lane: E = K')
     # QLB-GEN 10-18: a longer landed lane takes the GEN's own E (fwd_lanes.json of the same build, --lanes), the age
