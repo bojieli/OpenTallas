@@ -1,0 +1,85 @@
+{
+  "status": "ROOT_REVIEW_PROPOSAL_FAIL_CLOSED_NOT_IMPLEMENTED",
+  "scope": "ATTN original CLOSED rv3 and PV slice original CLOSED r5 selected parameter receipts",
+  "source_authority": {
+    "attn_profile": {
+      "RETIRE_STATIC": 1,
+      "STATUS_DELAY": 213
+    },
+    "attn_shell": "two plain synchronous reset stages delay assertion and release, exact emitted shell required",
+    "attn_local_ready": "qkd_attn_service_root_r16 resets boot_count/boot_ok; counts to80 then request_ready=!running&&boot_ok",
+    "independent_inputs": [
+      {
+        "name": "i_ctl[90]",
+        "meaning": "calendar_go; one face capture, directly drives unreset S1..S9 calendar pipeline valid chain; not gated by root request_ready"
+      },
+      {
+        "name": "i_ctl[34]",
+        "meaning": "programme issue; NIS24 unreset face register copies capture284-bit cap_q in sixteen-bit slices; cap_q has no reset"
+      },
+      {
+        "name": "i_ctl[35]",
+        "meaning": "programme run; three unreset face copies; not equivalent to root request_ready"
+      }
+    ],
+    "all_ports_remain_required": "tx_valid AND full548bit tx_payload, pvst31, pvfst65, ahs165, prg537, acal4x48, arh8; source emits payload/prg data unconditionally, so no valid-mask assumption authorized",
+    "pvslice_reset": "RESET_PIN1 one plain rst_q stage; captured command/input and cp/wp data arrays unreset",
+    "pvslice_storage": "4actual32x128 SRAM arrays plus registered rd_out must be modeled and paired from actual closed macro implementation if memory-state claim made"
+  },
+  "actual_parent_authority": {
+    "status": "UNQUALIFIED_MISSING",
+    "case": "ot-epyc6:/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-04b625135-gen9d11r/case_kv",
+    "bind_owner_findings": [
+      "14boot-age mismatches",
+      "32stale paths",
+      "151parameter mismatches",
+      "PVFIN skew32",
+      "boundCTL BAfiledf665451 legacy vs intended MU",
+      "d11s selected_hs source absent"
+    ],
+    "consequence": "No assumption that calendar_go/programme_issue is held idle for80, nor that every input is benign during reset, nor a selected valid memory initialization/first-use schedule may be introduced."
+  },
+  "next_proof_obligations": [
+    {
+      "id": "A",
+      "claim": "Exact gate-emitted plain reset shell and source reset network startup/occupied-reset edge behavior",
+      "method": "Source-bound actual module/wrapper with true arbitrary initial original and added FF state; assertion and release separately measured; every original observable output/state comparison retained. No assumed initial replica equality.",
+      "adoption": "Diagnostic until actual parent reset waveform/phase authority exists."
+    },
+    {
+      "id": "B",
+      "claim": "Local root boot readiness only",
+      "method": "Prove actual source boot_count80/request_ready and sticky early-request fault behavior under arbitrary request_valid. Independently keep calendar_go/issue/run arbitrary; do not generalize readiness to those inputs.",
+      "adoption": "Narrow lemma, cannot fill full parameter receipt."
+    },
+    {
+      "id": "C",
+      "claim": "First use of unconditional calendar captures and programme held captures",
+      "method": "Bind actual upstream producer source/events/params, configuration stability, calendar_go->v9->heldcal->issuecap->load->run->rootaccept chain. Show pre-use values cannot alter ANY required outputs using exact Boolean/data cone, with no masked fields; then prove every required comparison.",
+      "blocker": "Current selected parent source/boot audit fails, so producer assumptions not currently available."
+    },
+    {
+      "id": "D",
+      "claim": "PV slice complete SRAM-state and cut controls",
+      "method": "Exact same macro RTL/model both sides: pair all4 arrays + registered rd_out with actual read/write timing, same initial memory image relation, arbitrary existing contents and occupied reset. Keep all28cut-input comparisons/1076bits and every original port/state assertion. Positive RESET_PIN1 + negative RESET_PIN0 + independent wrong-stage/read/write/address controls.",
+      "blocker": "Current recipe macro_state_pairs0/models{}, positive failed2388; adding model is a new meaningful proof, not a receipt from cuts."
+    }
+  ],
+  "review_choices": [
+    {
+      "choice": "Keep strict all-unreset-internal-state equality after6 reset edges",
+      "implication": "Current positive proof stays NOTPROVEN. Derive a sound initial-state correspondence or implement/reclose source successor that establishes those states; cannot resolve with arbitrary warm-up or deleted assertions."
+    },
+    {
+      "choice": "Review an explicitly scoped state-refinement contract",
+      "implication": "Only ROOT may approve the exact required observable set and state relation after producer/first-use source evidence. Existing full strict proof and all failed observations remain preserved as diagnostic; no private helper waiver or automatic receipt."
+    }
+  ],
+  "actions_excluded": [
+    "No arbitrary80-cycle ignore window",
+    "No X masking or valid-data masking",
+    "No parameter-only induction retries",
+    "No clearing/hiding sticky faults during startup",
+    "No use of old physical closure as new parameter/state proof"
+  ]
+}
