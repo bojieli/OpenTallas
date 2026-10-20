@@ -1,0 +1,18 @@
+{
+  "status": "MODEL_BEFORE_GROUP4_RTL",
+  "predecessor": "bc238af9a group7 mapped native FAIL max38/5 combinational decode roots, retained native_group7",
+  "group_size": 4,
+  "copy_groups": 14,
+  "raw_type_bits": 56,
+  "legacy_selector_register_bits": 53,
+  "register_delta_bits": 3,
+  "type_port_load_bound": 17,
+  "added_cycles": 0,
+  "clock_reset": "Same original edges; canonical reset2stage standalone diagnostic; quarter retains existing canonical profile",
+  "admission": [
+    "fresh fullinput lockstep alltypes/reset + wrong/late mutants",
+    "standalone canonical mapped native32 +depth",
+    "full productionquarter behavioral +fullquarter native before ANY physical successor",
+    "no duplicate current HQ3 gate"
+  ]
+}

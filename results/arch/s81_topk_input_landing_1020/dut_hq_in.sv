@@ -51,9 +51,9 @@ module ot_s81ph_hq_in (
     // decodes (<= 14 each)
 `ifdef OT_S81PH_HQ_INPUT_RAW
     // Structural successor: land raw type bits at the existing first edge;
-    // decode locally at the existing second-stage payload mux. Eight groups
+    // decode locally at the existing second-stage payload mux. Four-select groups
     // keep each type bit below32 loads, with zero additional pipeline edges.
-    localparam integer NF = 53, NT = 8;
+    localparam integer NF = 53, NT = 14;
     (* keep = "true" *) reg [4*NT-1:0] raw_type;
 `ifdef OT_S81PH_HQ_INPUT_RAW_MUT
     reg [3:0] raw_type_prev;
@@ -72,7 +72,7 @@ module ot_s81ph_hq_in (
     wire [NF-1:0] f;
     genvar fs;
     generate for (fs = 0; fs < NF; fs = fs + 1) begin : g_f
-        wire [3:0] t = raw_type[4*(fs / 7) +: 4];
+        wire [3:0] t = raw_type[4*(fs / 4) +: 4];
         wire [3:0] dec = {t[3] & ~t[1] & ~t[0],
                           t[3] & ~t[2] & ~t[0],
                           t[3] & ~t[2] & ~t[1],
