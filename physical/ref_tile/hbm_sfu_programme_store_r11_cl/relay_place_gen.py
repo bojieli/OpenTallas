@@ -9,12 +9,19 @@ puts stage k at its equal-arc-length point, checks every register-to-register le
                     legally by physical/common_flow/anchor_row_packing.tcl; names recorded for the release hook
   relay_release.tcl PRE_DETAIL_PLACE hook (spec pre_dpl_extra): back to PLACED so DPL legalises them in place
   relay_plan.json   the plan: per chain, polyline length, stage points and the longest leg.
-Run from the repo root: python3 physical/ref_tile/hbm_sfu_programme_store_r11_cl/relay_place_gen.py
+Run from the repo root: python3 physical/ref_tile/hbm_sfu_programme_store_r11_cl/relay_place_gen.py [--pins mid --kit DIR]
+  --pins mid (parallel variant kit hbm_sfu_programme_store_r11_clm): the launch / reset pins sit mid-height on the E face
+  (y 420..508, beside the head row), cfg below (2..406), io_cfg above (520..946): shorter launch and reset legs.
 """
 import json, math, sys
 from pathlib import Path
 
-KIT = Path(__file__).resolve().parent
+import argparse
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--pins", choices=["r10", "mid"], default="r10")
+_ap.add_argument("--kit", default=str(Path(__file__).resolve().parent))
+ARGS = _ap.parse_args()
+KIT = Path(ARGS.kit).resolve()
 REACH = 405.0
 KR, KI, KL, KS, KO = 3, 2, 4, 2, 4
 KC = {0: 1, 3: 3, 6: 4, 8: KI}                 # chain-head data relays (P0, P3, P6, IO0)
@@ -36,6 +43,9 @@ OUT_CAL, OUT_STAT, OUT_HZ = 72.0, 183.0, 221.0
 # host pins (E face, measured): cfg bus y 2..414, io_cfg 416..826, io_start 828..888, rst_n 889, start 891..949
 SRC_CFG = (EB, 213.0); SRC_IOCFG = (EB, 627.0); SITE_CFG = (EB, 412.0); SITE_IOCFG = (EB, 825.0)
 SITE_IOL = (EB, 858.0); SITE_PL = (EB, 920.0); RS2 = (EB, 889.0)
+if ARGS.pins == "mid":   # spec pin_ranges of hbm_sfu_programme_store_r11_clm
+    SRC_CFG = (EB, 204.0); SITE_CFG = (EB, 405.0); SRC_IOCFG = (EB, 742.0); SITE_IOCFG = (EB, 522.0)
+    SITE_IOL = (EB, 440.0); SITE_PL = (EB, 490.0); RS2 = (EB, 465.0)
 SITE_PSV = (704.2, 464.4); SITE_ST = (580.0, 20.0)
 SITE_N7 = (COLX[0] + OUT_HZ, SCH[2]); SITE_N10 = (COLX[1] + OUT_HZ, SCH[2])
 SITES = {0: SITE_CFG, 1: SITE_IOCFG, 2: SITE_IOL, 3: SITE_PSV, 4: SITE_N7, 5: SITE_N10, 6: SITE_ST}
@@ -192,7 +202,7 @@ for c in chains:
             raise SystemExit(f"stage point inside a leaf: {c['name']} {p}")
 worst = max(chains, key=lambda c: c["max_leg_um"])
 bad = [c["name"] for c in chains if c["max_leg_um"] > REACH]
-plan = dict(schema="opentallas.sfu_store_r11.relay_plan.v1", reach_um=REACH, KR=KR, KI=KI, KL=KL, KS=KS, KO=KO, KC=KC,
+plan = dict(schema="opentallas.sfu_store_r11.relay_plan.v1", pins=ARGS.pins, reach_um=REACH, KR=KR, KI=KI, KL=KL, KS=KS, KO=KO, KC=KC,
             strobe_depth=depth, worst_chain=worst["name"], worst_leg_um=worst["max_leg_um"], over_reach=bad,
             expected_flops=sum(c["width"] * len(c["stages"]) for c in chains if "(\\d+)" in c["regex"]), chains=chains)
 (KIT / "relay_plan.json").write_text(json.dumps(plan, indent=1) + "\n")

@@ -1,0 +1,545 @@
+{
+ "name": "hbm_sfu_programme_store_r11_clm",
+ "top": "ot_hgi_sfu_programme_store_r11",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r11.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "params": {},
+ "outline": {
+  "w": 1080.0,
+  "h": 950.4,
+  "exact": true
+ },
+ "macros": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?0?.u_leaf",
+   "at": [
+    734.4,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?1?.u_leaf",
+   "at": [
+    388.8,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?2?.u_leaf",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?3?.u_leaf",
+   "at": [
+    734.4,
+    691.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?4?.u_leaf",
+   "at": [
+    388.8,
+    691.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?5?.u_leaf",
+   "at": [
+    43.2,
+    691.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?6?.u_leaf",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?7?.u_leaf",
+   "at": [
+    43.2,
+    475.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?8?.u_leaf",
+   "at": [
+    734.4,
+    259.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?9?.u_leaf",
+   "at": [
+    734.4,
+    475.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10",
+   "count": 1,
+   "inst": "*g_leaf?10?.u_leaf",
+   "at": [
+    388.8,
+    475.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "inter": [],
+ "pins": {
+  "S": [
+   "io_word",
+   "compiler_control",
+   "clk",
+   "programme_active",
+   "programme_done",
+   "programme_ordinal",
+   "io_active",
+   "io_done",
+   "io_ordinal",
+   "fault"
+  ],
+  "E": [
+   "rst_n",
+   "cfg_we",
+   "cfg_stripe",
+   "cfg_addr",
+   "cfg_data",
+   "start_base",
+   "start_limit",
+   "start_loops",
+   "io_cfg_we",
+   "io_cfg_stripe",
+   "io_cfg_addr",
+   "io_cfg_data",
+   "io_start_v",
+   "io_start_base",
+   "io_start_limit",
+   "io_start_loops"
+  ]
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the r11 head registers every host input at the pin (p_* pin flops, 2-flop reset sync) and every output is a relay-fed pin register (o_io / o_ctl / status pad); a kit flop stage would add an unpriced edge (the r11 relays are priced in the RTL header: D=10, status 8)"
+ },
+ "structural_change": "r11 (HBM-ELEMOWN3/SFUPS 10-19) after the r10 cluster --cts gate FAIL (ref_gate/hbm_sfu_programme_store_r10_cl-20261018-180939: post-GRT repair_timing stuck at SS WNS -256 ps on pr_base[0][4]/D, 468 endpoints; the single per-row launch relay spanned ~1.5 mm from the E-face start pins to three leaves 830 um apart). Same 11 closed r10n2 leaves, same 1080 x 950.4 outline / leaf positions / pin faces; the head is redesigned as FORWARDED MULTI-STAGE RELAYS sized from the floorplan, one kept copy per destination (reset KR=3, IO launch KI=2, programme launch KL=4, config chain heads P0 1 / P3 3 / P6 4 / IO0 2, per-leaf write strobes depth(l), per-leaf status KS=2 + 2 pads, outputs KO=4), every stage placed FIRM at its channel point by relay_place.tcl (relay_place_gen.py; longest register-to-register leg 382 um <= 405 reach; 11,843 relay flops). All leaves of a calendar stay in lockstep (equal launch depth), every head function is computed at its consuming site with an equal-depth reset copy. Priced: D 5 -> 10, status 3 -> 8, arith_start advance 2 -> 5, first write 7 edges after reset. PARALLEL VARIANT r11 clm (same RTL, same leaves/outline): the E-face host pins are re-planned so the launch and reset pins (start_*, io_start_*, rst_n) sit mid-height beside the head row (y 420..508), cfg_* below (2..406), io_cfg_* above (520..946): launch / reset legs shorten (plan relay_plan.json, --pins mid). Bind whichever of r11_cl / r11_clm closes first under the checklist.",
+ "job": {
+  "owner": "Claude:HBM-ELEMOWN3/SFUPS",
+  "branch": "claude/sfups11-1019",
+  "tag": "r11",
+  "purpose": "SFU programme store r11 parent cluster, PARALLEL VARIANT clm (E-face launch/reset pins mid-height): r10 leaves + floorplan-sized forwarded multi-stage relays (reach <= 405 um, lockstep launch, D=10, status 8). CRITICAL (hbm_sfu_programme_store): coordinator reviews the gate PNG before submit. Replaces hbm_sfu_programme_store_r10_cl (gate FAIL 10-18).",
+  "views_to": "physical/ref_tile/hbm_sfu_programme_store_r11_clm/views",
+  "record_to": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_accel_macros",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/hbm_accel/generic/peers",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/test/hbm_accel/generic",
+   "tools/hbm_static"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_hgi_sfu_programme_store_r11 rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r11.sv physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_r7c",
+    "cmd": "OUT={RUN}/bench/ls MODE=0 SEED=12345 bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE POSITIVE PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_fault1",
+    "cmd": "OUT={RUN}/bench/lsf1 MODE=1 SEED=12345 bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE POSITIVE PASS mode=1",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_fault2",
+    "cmd": "OUT={RUN}/bench/lsf2 MODE=2 SEED=12345 bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE POSITIVE PASS mode=2",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_fault3",
+    "cmd": "OUT={RUN}/bench/lsf3 MODE=3 SEED=12345 bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE POSITIVE PASS mode=3",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_fault4",
+    "cmd": "OUT={RUN}/bench/lsf4 MODE=4 SEED=12345 bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE POSITIVE PASS mode=4",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_chain",
+    "cmd": "OUT={RUN}/bench/ls_chain EQ_MUT=chain bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE MUTANT chain REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_noshift",
+    "cmd": "OUT={RUN}/bench/ls_noshift EQ_MUT=noshift bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE MUTANT noshift REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_rowskew",
+    "cmd": "OUT={RUN}/bench/ls_rowskew EQ_MUT=rowskew bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE MUTANT rowskew REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_ioskew",
+    "cmd": "OUT={RUN}/bench/ls_ioskew EQ_MUT=ioskew bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE MUTANT ioskew REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "store_lockstep_mutant_flip",
+    "cmd": "OUT={RUN}/bench/ls_flip EQ_MUT=flip bash tools/hbm_static/run_sfu_store_r11_lockstep.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_STORE_R11_GATE MUTANT flip REJECTED",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos SFU_LG_R=23 STORE11=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip11",
+    "cmd": "OUT={RUN}/bench/flip11 SFU_LG_R=23 STORE11=1 EQ_MUT=flip11 bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip11/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_flip11.log"
+   },
+   {
+    "name": "split_mutant_early",
+    "cmd": "OUT={RUN}/bench/early SFU_LG_R=23 STORE11=1 EQ_MUT=early bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/early/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_early.log"
+   },
+   {
+    "name": "split_mutant_chain11",
+    "cmd": "OUT={RUN}/bench/chain11 SFU_LG_R=23 STORE11=1 EQ_MUT=chain11 bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/chain11/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_chain11.log"
+   },
+   {
+    "name": "split_mutant_noshift11",
+    "cmd": "OUT={RUN}/bench/noshift11 SFU_LG_R=23 STORE11=1 EQ_MUT=noshift11 bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/noshift11/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_noshift11.log"
+   },
+   {
+    "name": "split_mutant_rowskew11",
+    "cmd": "OUT={RUN}/bench/rowskew11 SFU_LG_R=23 STORE11=1 EQ_MUT=rowskew11 bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/rowskew11/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_rowskew11.log"
+   },
+   {
+    "name": "split_mutant_ioskew11",
+    "cmd": "OUT={RUN}/bench/ioskew11 SFU_LG_R=23 STORE11=1 EQ_MUT=ioskew11 bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/ioskew11/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_ioskew11.log"
+   }
+  ]
+ },
+ "orfs_vars": {},
+ "pg_layer": "M7",
+ "clock": "spine",
+ "child_clock_ref": "boundary",
+ "pin_ranges": {
+  "compiler_control": [
+   21.6,
+   452.0
+  ],
+  "io_word": [
+   452.0,
+   568.8
+  ],
+  "programme_active": [
+   568.8,
+   569.6
+  ],
+  "programme_done": [
+   569.6,
+   570.4
+  ],
+  "programme_ordinal": [
+   570.4,
+   578.4
+  ],
+  "io_active": [
+   578.4,
+   579.2
+  ],
+  "io_done": [
+   579.2,
+   580.0
+  ],
+  "io_ordinal": [
+   580.0,
+   588.0
+  ],
+  "fault": [
+   588.0,
+   588.8
+  ],
+  "clk": [
+   604.8,
+   605.2
+  ],
+  "cfg_addr": [
+   2.0,
+   18.0
+  ],
+  "cfg_data": [
+   19.0,
+   400.0
+  ],
+  "cfg_stripe": [
+   401.0,
+   404.5
+  ],
+  "cfg_we": [
+   404.5,
+   406.0
+  ],
+  "io_start_v": [
+   420.0,
+   421.5
+  ],
+  "io_start_base": [
+   421.5,
+   433.5
+  ],
+  "io_start_limit": [
+   433.5,
+   446.5
+  ],
+  "io_start_loops": [
+   446.5,
+   463.5
+  ],
+  "rst_n": [
+   463.5,
+   465.5
+  ],
+  "start_base": [
+   465.5,
+   477.5
+  ],
+  "start_limit": [
+   477.5,
+   490.5
+  ],
+  "start_loops": [
+   490.5,
+   508.0
+  ],
+  "io_cfg_we": [
+   520.0,
+   521.5
+  ],
+  "io_cfg_stripe": [
+   521.5,
+   524.5
+  ],
+  "io_cfg_addr": [
+   524.5,
+   537.5
+  ],
+  "io_cfg_data": [
+   538.0,
+   946.0
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/hbm_sfu_programme_store_r11_clm/relay_place.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/hbm_sfu_programme_store_r11_clm/relay_release.tcl"
+ ]
+}
