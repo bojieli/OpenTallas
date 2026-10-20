@@ -33,7 +33,9 @@
    "results/rtl/qwen_layer_tput_1018/compiled_L1/d2d",
    "results/arch/qwen_split_compute_1014/res_train_decision_1015",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "physical/asap7_memory_macros/ot_rom_4096x72_m8_escape_p192"
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8_escape_p192",
+   "results/arch/qw_sysface_route_1245_1020",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
   ]
  },
  "stages": {
@@ -44,6 +46,29 @@
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sysface_protocol_actual",
+    "cmd": "python3 results/arch/qw_sysface_route_1245_1020/run_exact.py {RUN}/protocol qfd_sys_face_n32ob",
+    "expect": "pass",
+    "pass_regex": "^SYSFACE_ROUTE_EXACT_PASS qfd_sys_face_n32ob$",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sysface_actual_producer_clock_negative",
+    "cmd": "python3 results/arch/qw_sysface_route_1245_1020/run_exact.py {RUN}/clock_negative qfd_sys_face_n32ob --mutant",
+    "expect": "fail",
+    "fail_regex": "^SYSFACE_ROUTE_ACTUAL_PRODUCER_CLOCK_MUTANT_CAUGHT$",
+    "fail_witness": "results/arch/qw_sysface_route_1245_1020/actual/negative_client.log",
+    "threads": 4,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ]
