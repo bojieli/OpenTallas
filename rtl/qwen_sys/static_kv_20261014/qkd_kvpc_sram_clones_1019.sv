@@ -1978,7 +1978,7 @@ wire [9:0] head_first = head_first__qv[9:0];
  end
 endmodule
 
-// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 61 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x3(4) ----
+// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 63 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x3(4) ----
 module ot_qkd_static_kv_timing_kvpc_s #(
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
@@ -2067,11 +2067,13 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     (* keep, ot_rst_split *) reg [9:0] streaming__qv;   // KV-PC SAFE: 10 kept copies of streaming (KV-PC2: 7 -> 10, 264 loads = 38 / copy at 7)
     function streaming__f; input v; streaming__f = v; endfunction
     wire streaming = streaming__qv[0:0]; reg [2:0] last; reg [10:0] nm1;   // registered at descriptor accept
-    wire [2:0] k = j[9:7];
     // KV-PC7 (census sr9 r2/r3: j[9] 33 loads, 11 of them the col_bank copies; a j copy family is refused: j is a
     // self-holding DFFE): the read bank bits as their own kept copies loading j's exact next value every edge
     (* keep, ot_rst_split = 5 *) reg [9:0] jb__qv;
     wire [4:0] rd_bank = jb__qv[4:0];      // == {j[9:7], j[1:0]}
+    // KV-PC8 (census sr9 r7 103838: j[7] QN 33 loads): k (set index == j[9:7]) from the second kept jb copy,
+    // so j's own bits load only the j+1 / ordinal / nm1 cones
+    wire [2:0] k = jb__qv[9:7];            // == j[9:7] (jb__qv loads j's exact next state, both reset 0)
     wire [1:0] rd_bg = j[1:0];
     // r8: the RD bank as a registered one-hot (rd_oh, rd_bgoh) and credit != 0 as a registered
     // flag, updated exactly with j / credit, so rd_ok is an AND-OR of flops (no j-decoded mux).

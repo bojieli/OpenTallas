@@ -859,6 +859,13 @@ TIM_PC7 = [
         if (desc_acc_c[19]) rd_oh[31:24] <= rd_oh_d[31:24]; else if (rd_ok_c[20]) rd_oh[31:24] <= rd_oh_j[31:24];'''),
     ('''wq_ne_qv <= {3{wq_n_nx != 1, wq_n_nx != 0}};''',
      '''wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}};'''),
+    # KV-PC8 (census sr9 r7 103838: j[7] QN 33 loads): k from the second kept jb copy (jb__qv[9:7] == j[9:7])
+    ('''    wire [2:0] k = j[9:7];\n''', ''),
+    ('''    wire [4:0] rd_bank = jb__qv[4:0];      // == {j[9:7], j[1:0]}''',
+     '''    wire [4:0] rd_bank = jb__qv[4:0];      // == {j[9:7], j[1:0]}
+    // KV-PC8 (census sr9 r7 103838: j[7] QN 33 loads): k (set index == j[9:7]) from the second kept jb copy,
+    // so j's own bits load only the j+1 / ordinal / nm1 cones
+    wire [2:0] k = jb__qv[9:7];            // == j[9:7] (jb__qv loads j's exact next state, both reset 0)'''),
 ]
 
 # KV-PC5-A: u_ctl (ot_qkd_static_ctrl_pc_emb) command FIFO native32 restructure
