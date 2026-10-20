@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_col_idx256r_a-ra1-f7ac00aab bench bench_idx256r_12 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256r_a-ra1-f7ac00aab log cl/bench_idx256r_12.a1b1.log captured 2026-10-19T17:12:20-07:00
+# fail_regex 'IDX256R_FAIL'
+[49647000] %Fatal: tb_idx256r.sv:97: Assertion failed in tb_idx256r.unnamedblk8.unnamedblk9.unnamedblk10: IDX256R_FAIL nonzero reserved row0 bit44 accepted MUT12
+%Error: rtl/test/hbm_collar_idx256r/tb_idx256r.sv:97: Verilog $stop
+Aborting...
