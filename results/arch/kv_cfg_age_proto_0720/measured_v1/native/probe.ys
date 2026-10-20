@@ -1,0 +1,11 @@
+read_liberty -lib native/all.lib
+read_verilog -sv qkd_kv_die_cfg_a_s32_age.sv
+chparam -set NRST 43 -set CAP 1 -set AGES 1 -set S32 1 qkd_kv_die_cfg_a_s32_age
+hierarchy -check -top qkd_kv_die_cfg_a_s32_age
+synth -top qkd_kv_die_cfg_a_s32_age -flatten -noabc
+dfflibmap -liberty native/libs/SEQ.lib
+abc -liberty native/all.lib
+opt_clean
+tee -o native/mapped.stat stat -liberty native/all.lib
+write_verilog -noattr native/mapped.v
+write_json native/mapped.json

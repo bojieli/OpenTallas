@@ -1,0 +1,190 @@
+
+9. Printing statistics.
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       29        - wires
+       43        - wire bits
+        5        - public wires
+       19        - public wire bits
+        5        - ports
+       19        - port bits
+       32    4.432 cells
+        8    3.033   DFFASRHQNx1_ASAP7_75t_R
+        8     0.35   INVx1_ASAP7_75t_R
+        8    0.467   NAND2xp33_ASAP7_75t_R
+        8    0.583   OAI21xp33_ASAP7_75t_R
+
+   Chip area for module '$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000': 4.432320
+     of which used for sequential elements: 3.032640 (68.42%)
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       50        - wires
+       78        - wire bits
+        5        - public wires
+       33        - public wire bits
+        5        - ports
+       33        - port bits
+       60    8.311 cells
+       15    5.686   DFFASRHQNx1_ASAP7_75t_R
+       15    0.656   INVx1_ASAP7_75t_R
+       15    0.875   NAND2xp33_ASAP7_75t_R
+       15    1.093   OAI21xp33_ASAP7_75t_R
+
+   Chip area for module '$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111': 8.310600
+     of which used for sequential elements: 5.686200 (68.42%)
+
+=== qkd_kv_cfg_age_en ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        3        - wires
+        3        - wire bits
+        3        - public wires
+        3        - public wire bits
+        3        - ports
+        3        - port bits
+        1    0.087 cells
+        1    0.087   AND2x2_ASAP7_75t_R
+
+   Chip area for module '\qkd_kv_cfg_age_en': 0.087480
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       53        - wires
+       83        - wire bits
+        5        - public wires
+       35        - public wire bits
+        5        - ports
+       35        - port bits
+       64    8.865 cells
+       16    6.065   DFFASRHQNx1_ASAP7_75t_R
+       16      0.7   INVx1_ASAP7_75t_R
+       16    0.933   NAND2xp33_ASAP7_75t_R
+       16    1.166   OAI21xp33_ASAP7_75t_R
+
+   Chip area for module '$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000': 8.864640
+     of which used for sequential elements: 6.065280 (68.42%)
+
+=== qkd_kv_die_cfg_a_s32_age ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      433        - wires
+     4280        - wire bits
+      186        - public wires
+     4033        - public wire bits
+       15        - ports
+     1206        - port bits
+      686   73.789 cells
+      305   26.681   AND2x2_ASAP7_75t_R
+        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204   AND4x1_ASAP7_75t_R
+        3     0.35   AND5x1_ASAP7_75t_R
+        3    0.262   AO21x1_ASAP7_75t_R
+        3    0.219   AOI21xp33_ASAP7_75t_R
+        2    0.204   AOI32xp33_ASAP7_75t_R
+       17    6.444   DFFASRHQNx1_ASAP7_75t_R
+       72   20.995   DFFHQNx1_ASAP7_75t_R
+       76    3.324   INVx1_ASAP7_75t_R
+       16    0.933   NAND2xp33_ASAP7_75t_R
+       24     1.75   NAND3xp33_ASAP7_75t_R
+       19    1.662   NAND4xp25_ASAP7_75t_R
+        8    0.816   NAND5xp2_ASAP7_75t_R
+       83    4.841   NOR2xp33_ASAP7_75t_R
+       12    0.875   NOR3xp33_ASAP7_75t_R
+        6    0.525   NOR4xp25_ASAP7_75t_R
+        6    0.612   NOR5xp2_ASAP7_75t_R
+        1    0.102   OA21x2_ASAP7_75t_R
+        6    0.437   OAI21xp33_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+        1    0.102   OAI32xp33_ASAP7_75t_R
+        1    0.087   OR2x2_ASAP7_75t_R
+        1    0.087   OR3x1_ASAP7_75t_R
+        4    0.408   OR4x1_ASAP7_75t_R
+        1    0.117   OR5x1_ASAP7_75t_R
+        8     1.05   XNOR2xp5_ASAP7_75t_R
+        4    0.525   XOR2xp5_ASAP7_75t_R
+      115        - submodules
+       45        -   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       32        -   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       18        -   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+       20        -   qkd_kv_cfg_age_en
+
+   Chip area for module '\qkd_kv_die_cfg_a_s32_age': 73.789380
+     of which used for sequential elements: 27.439560 (37.19%)
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+     5218  700.496 qkd_kv_die_cfg_a_s32_age
+       32    4.432 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       60    8.311 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       64    8.865 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+        1    0.087 qkd_kv_cfg_age_en
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+     4352        - wires
+    10265        - wire bits
+      721        - public wires
+     6634        - public wire bits
+      550        - ports
+     3807        - port bits
+        -        - memories
+        -        - memory bits
+        -        - processes
+     5218  700.496 cells
+      325   28.431   AND2x2_ASAP7_75t_R
+        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204   AND4x1_ASAP7_75t_R
+        3     0.35   AND5x1_ASAP7_75t_R
+        3    0.262   AO21x1_ASAP7_75t_R
+        3    0.219   AOI21xp33_ASAP7_75t_R
+        2    0.204   AOI32xp33_ASAP7_75t_R
+     1145  434.047   DFFASRHQNx1_ASAP7_75t_R
+       72   20.995   DFFHQNx1_ASAP7_75t_R
+     1204   52.663   INVx1_ASAP7_75t_R
+     1144   66.718   NAND2xp33_ASAP7_75t_R
+       24     1.75   NAND3xp33_ASAP7_75t_R
+       19    1.662   NAND4xp25_ASAP7_75t_R
+        8    0.816   NAND5xp2_ASAP7_75t_R
+       83    4.841   NOR2xp33_ASAP7_75t_R
+       12    0.875   NOR3xp33_ASAP7_75t_R
+        6    0.525   NOR4xp25_ASAP7_75t_R
+        6    0.612   NOR5xp2_ASAP7_75t_R
+        1    0.102   OA21x2_ASAP7_75t_R
+     1134   82.669   OAI21xp33_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+        1    0.102   OAI32xp33_ASAP7_75t_R
+        1    0.087   OR2x2_ASAP7_75t_R
+        1    0.087   OR3x1_ASAP7_75t_R
+        4    0.408   OR4x1_ASAP7_75t_R
+        1    0.117   OR5x1_ASAP7_75t_R
+        8     1.05   XNOR2xp5_ASAP7_75t_R
+        4    0.525   XOR2xp5_ASAP7_75t_R
+      115  626.707 submodules
+       45  199.454   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       32  265.939   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       18  159.564   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+       20     1.75   qkd_kv_cfg_age_en
+
+   Chip area for top module '\qkd_kv_die_cfg_a_s32_age': 700.496100
+     of which used for sequential elements: 455.041800 (64.96%)
+

@@ -1,0 +1,61 @@
+{
+  "status": "PRIVATE UNQUALIFIED PROTOTYPE; STOP on CLAUDE IS BACK",
+  "effective_parameters": {
+    "S32": 1,
+    "AGES": 1,
+    "NRST": 43,
+    "CAP": 1,
+    "MUT": 0
+  },
+  "source_declared_FF_bits": {
+    "actual_BA_cfg": 1215,
+    "private_S32_age": 1323,
+    "delta_vs_actual_BA": 108,
+    "delta_vs_old_nonage_S32": 325
+  },
+  "mapped_native": {
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 837,
+    "violations": 18,
+    "roots_examined": 4089,
+    "FF_total": 1217,
+    "async_FFs": 1145,
+    "plain_FFs": 72,
+    "clock_sinks": 1217,
+    "area_actual_Lib_units": 700.4961,
+    "sequential_area_actual_Lib_units": 455.0418
+  },
+  "sim": "7 finite cases PASS; independent random initial deposits followed by common POR; every-edge full1129 configuration plus sealed/fault comparison after release; stopped-clock POR assertion; not universal arbitrary-init proof",
+  "formal": {
+    "status": "TIMEOUT NOT PROVEN",
+    "steps": 108,
+    "independent_initial_state": true,
+    "init_attributes": 0,
+    "POR_low_steps": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "comparison_steps": "5..108",
+    "variables": 21375309,
+    "clauses": 58580172
+  },
+  "firstuse_scope": "Dense stream old seal88 vs age-aware107, +19 accepted boot beats; candidate and actual cfg_a match every checked edge with no added active/release edge in finite bench. Seal word address95 is not absolute edge95. Production HOST cadence/full parent firstuse remains OPEN.",
+  "causal_observation": "Mapped _926_ is async FF D(age_por0), RESETN(por_n), QN load837; _932_ D(age_por0), RESETN(age_por0), QN load305. Plain synth did not run canonical ot_keep_regs hook; source-copy merging is a hypothesis, not proven by replay. No replay launched before STOP.",
+  "jobs": {
+    "sim": "3182155-1792508320 terminal PASS",
+    "native": "3195707-1792508702 terminal; driver exit0 but census FAIL",
+    "formal": "3199876-1792508783 terminal TIMEOUT"
+  },
+  "remote_artifacts": "ot-epyc6:/srv/opentallas-scratch/claude/codex-kv-cfg-age-proto-0720",
+  "gaps": [
+    "canonical production keep-hook comparison not run",
+    "native32 FAIL",
+    "finite formal TIMEOUT",
+    "no mapped timing/clock skew/P&R/PG/405 proof",
+    "no parent binding/gate/adoption",
+    "full62port BA/MU table SRAM firstuse remains OPEN"
+  ]
+}

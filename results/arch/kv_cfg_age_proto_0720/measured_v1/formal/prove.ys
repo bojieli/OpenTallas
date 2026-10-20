@@ -1,0 +1,14 @@
+read_verilog -formal -sv formal/gold.sv qkd_kv_die_cfg_a_s32_age.sv formal_miter.sv
+chparam -set NRST 43 -set CAP 1 -set AGES 1 -set S32 1 qkd_kv_die_cfg_a_s32_age
+hierarchy -check -top cfg_age_miter
+proc
+setattr -mod -unset keep_hierarchy
+flatten
+opt_clean
+async2sync
+dffunmap
+opt_clean
+setattr -unset init w:*
+stat
+write_json formal/pre_sat.json
+sat -seq 108 -set ck 1 -set por_n 1 -set-at 1 por_n 0 -set-at 2 por_n 0 -set-at 3 por_n 0 -set-at 4 por_n 0 -prove equal_outputs 1 -prove-skip 4 -verify -timeout 180

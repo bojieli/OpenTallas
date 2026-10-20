@@ -1,0 +1,2477 @@
+
+-- Executing script file `native/probe.ys' --
+
+1. Executing Liberty frontend: native/all.lib
+Imported 202 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: qkd_kv_die_cfg_a_s32_age.sv
+Parsing SystemVerilog input from `qkd_kv_die_cfg_a_s32_age.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_kv_die_cfg_a_s32_age'.
+Generating RTLIL representation for module `\qkd_kv_cfg_age_field'.
+Generating RTLIL representation for module `\qkd_kv_cfg_age_en'.
+Successfully finished Verilog frontend.
+Parameter \NRST = 43
+Parameter \CAP = 1
+Parameter \AGES = 1
+Parameter \S32 = 1
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_a_s32_age'.
+Parameter \NRST = 43
+Parameter \CAP = 1
+Parameter \AGES = 1
+Parameter \S32 = 1
+Generating RTLIL representation for module `$paramod$cf995215a57e73c23b949893547e20e9563f4308\qkd_kv_die_cfg_a_s32_age'.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \qkd_kv_die_cfg_a_s32_age
+Used module:     \qkd_kv_cfg_age_field
+Used module:     \qkd_kv_cfg_age_en
+Parameter \W = 15
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfg_age_field'.
+Parameter \W = 15
+Generating RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Parameter \W = 8
+
+4.3. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfg_age_field'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 16
+
+4.4. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfg_age_field'.
+Parameter \W = 16
+Generating RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+
+4.5. Analyzing design hierarchy..
+Top module:  \qkd_kv_die_cfg_a_s32_age
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+Used module:     \qkd_kv_cfg_age_en
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+
+4.6. Analyzing design hierarchy..
+Top module:  \qkd_kv_die_cfg_a_s32_age
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+Used module:     \qkd_kv_cfg_age_en
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+Removing unused module `\qkd_kv_cfg_age_field'.
+Removed 1 unused modules.
+
+5. Executing SYNTH pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \qkd_kv_die_cfg_a_s32_age
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+Used module:     \qkd_kv_cfg_age_en
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+
+5.1.2. Analyzing design hierarchy..
+Top module:  \qkd_kv_die_cfg_a_s32_age
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+Used module:     \qkd_kv_cfg_age_en
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+Removed 0 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:263$1156 in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:263$1154 in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:263$1158 in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:60$218 in module qkd_kv_die_cfg_a_s32_age.
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:64$220 in module qkd_kv_die_cfg_a_s32_age.
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:110$278 in module qkd_kv_die_cfg_a_s32_age.
+Marked 2 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:137$417 in module qkd_kv_die_cfg_a_s32_age.
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:163$496 in module qkd_kv_die_cfg_a_s32_age.
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:165$498 in module qkd_kv_die_cfg_a_s32_age.
+Marked 1 switch rules as full_case in process $proc$qkd_kv_die_cfg_a_s32_age.sv:167$500 in module qkd_kv_die_cfg_a_s32_age.
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 5 redundant assignments.
+Promoted 165 assignments to connections.
+
+5.2.4. Executing PROC_INIT pass (extract init attributes).
+
+5.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rn in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1156'.
+Found async reset \rn in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1154'.
+Found async reset \rn in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1158'.
+Found async reset \por_n in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:60$218'.
+Found async reset \pr_n in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:64$220'.
+Found async reset \por_n in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:110$278'.
+Found async reset \pr_n in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:137$417'.
+Found async reset \por_n in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:163$496'.
+Found async reset \g_s32.age_por0 in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:165$498'.
+Found async reset \g_s32.age_rcp [9] in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:167$500'.
+
+5.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~8 debug messages>
+
+5.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1156'.
+     1/1: $0\q[7:0]
+Creating decoders for process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1154'.
+     1/1: $0\q[14:0]
+Creating decoders for process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1158'.
+     1/1: $0\q[15:0]
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:60$218'.
+     1/1: $0\ps[1:0]
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:64$220'.
+     1/1: $0\we_q[0:0]
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:65$222'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:110$278'.
+     1/1: $0\g_s32.rcp[26:0]
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:119$283'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:137$417'.
+     1/4: $0\cap_q[0:0]
+     2/4: $0\next[8:0]
+     3/4: $0\fault[0:0]
+     4/4: $0\sealed[0:0]
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$421'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$422'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$423'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$424'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$425'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$426'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$427'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$428'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$429'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$430'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$431'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$432'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$433'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$434'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$435'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$436'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$437'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$438'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$439'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$440'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$441'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$442'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$443'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$444'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$445'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$446'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$447'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$448'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$449'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$450'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$451'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$452'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$453'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$454'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$455'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$456'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$457'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$458'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$459'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$460'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$461'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$462'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$463'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$464'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$465'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$466'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$467'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$468'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$469'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$470'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$471'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$472'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$473'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$474'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$475'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$476'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$477'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$478'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$479'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$480'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$481'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$482'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$483'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$484'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$485'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$486'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$487'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$488'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$489'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$490'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$491'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$492'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$493'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$494'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$495'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:163$496'.
+     1/1: $0\g_s32.age_por0[0:0]
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:165$498'.
+     1/1: $0\g_s32.age_rcp[9:0]
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:167$500'.
+     1/1: $0\g_s32.seal_pub[9:0]
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:174$526'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:178$527'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:182$528'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:186$529'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:190$530'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:194$531'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:198$532'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:202$533'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:206$534'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:210$535'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:214$536'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:218$537'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:222$538'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:226$539'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:230$540'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:234$541'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:238$542'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:242$543'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:246$544'.
+Creating decoders for process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:250$545'.
+
+5.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [4:0]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$421'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [4:0]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$421'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [4:0]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$421'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [9:5]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$422'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [9:5]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$422'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [9:5]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$422'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [14:10]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$423'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [14:10]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$423'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [14:10]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$423'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [19:15]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$424'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [19:15]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$424'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [19:15]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$424'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [24:20]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$425'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [24:20]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$425'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [24:20]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$425'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [29:25]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$426'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [29:25]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$426'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [29:25]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$426'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [34:30]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$427'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [34:30]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$427'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [34:30]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$427'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [39:35]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$428'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [39:35]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$428'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [39:35]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$428'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [44:40]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$429'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [44:40]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$429'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [44:40]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$429'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [49:45]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$430'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [49:45]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$430'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [49:45]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$430'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [54:50]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$431'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [54:50]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$431'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [54:50]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$431'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [59:55]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$432'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [59:55]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$432'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [59:55]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$432'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [64:60]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$433'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [64:60]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$433'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [64:60]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$433'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [69:65]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$434'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [69:65]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$434'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [69:65]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$434'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [74:70]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$435'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [74:70]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$435'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [74:70]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$435'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [79:75]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$436'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [79:75]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$436'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [79:75]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$436'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [84:80]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$437'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [84:80]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$437'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [84:80]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$437'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [89:85]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$438'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [89:85]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$438'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [89:85]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$438'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [94:90]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$439'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [94:90]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$439'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [94:90]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$439'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [99:95]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$440'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [99:95]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$440'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [99:95]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$440'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [104:100]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$441'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [104:100]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$441'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [104:100]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$441'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [109:105]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$442'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [109:105]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$442'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [109:105]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$442'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [114:110]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$443'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [114:110]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$443'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [114:110]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$443'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [119:115]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$444'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [119:115]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$444'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [119:115]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$444'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [124:120]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$445'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [124:120]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$445'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [124:120]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$445'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [129:125]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$446'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [129:125]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$446'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [129:125]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$446'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [134:130]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$447'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [134:130]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$447'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [134:130]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$447'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [139:135]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$448'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [139:135]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$448'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [139:135]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$448'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [144:140]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$449'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [144:140]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$449'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [144:140]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$449'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [149:145]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$450'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [149:145]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$450'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [149:145]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$450'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [154:150]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$451'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [154:150]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$451'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [154:150]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$451'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_a_cfg [159:155]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$452'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_b_cfg [159:155]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$452'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ectl_c_cfg [159:155]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$452'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [7:0]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$453'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [15:8]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$454'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [23:16]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$455'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [31:24]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$456'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [39:32]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$457'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [47:40]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$458'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [55:48]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$459'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [63:56]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$460'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [71:64]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$461'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [79:72]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$462'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [87:80]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$463'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [95:88]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$464'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [103:96]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$465'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [111:104]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$466'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [119:112]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$467'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [127:120]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$468'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [135:128]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$469'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [143:136]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$470'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [151:144]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$471'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [159:152]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$472'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [167:160]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$473'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [175:168]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$474'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [183:176]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$475'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [191:184]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$476'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [199:192]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$477'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [207:200]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$478'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [215:208]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$479'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [223:216]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$480'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [231:224]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$481'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [239:232]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$482'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [247:240]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$483'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [255:248]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$484'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [263:256]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$485'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [271:264]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$486'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [279:272]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$487'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [287:280]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$488'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [295:288]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$489'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [303:296]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$490'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [311:304]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$491'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [319:312]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$492'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [327:320]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$493'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [335:328]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$494'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\rst_dly [343:336]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$495'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_attn [15:0]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:174$526'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_attn [31:16]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:178$527'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_pv [7:0]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:182$528'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_pv [15:8]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:186$529'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [15:0]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:190$530'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [31:16]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:194$531'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [47:32]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:198$532'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [63:48]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:202$533'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [79:64]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:206$534'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [95:80]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:210$535'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [111:96]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:214$536'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [127:112]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:218$537'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [143:128]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:222$538'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [159:144]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:226$539'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [175:160]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:230$540'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [191:176]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:234$541'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [207:192]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:238$542'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [223:208]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:242$543'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [239:224]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:246$544'.
+No latch inferred for signal `\qkd_kv_die_cfg_a_s32_age.\ag_vp [255:240]' from process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:250$545'.
+
+5.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.\q' using process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1156'.
+  created $adff cell `$procdff$1196' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.\q' using process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1154'.
+  created $adff cell `$procdff$1201' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.\q' using process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1158'.
+  created $adff cell `$procdff$1206' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\ps' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:60$218'.
+  created $adff cell `$procdff$1211' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\we_q' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:64$220'.
+  created $adff cell `$procdff$1216' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\a_q' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:65$222'.
+  created $dff cell `$procdff$1217' with positive edge clock.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\d_q' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:65$222'.
+  created $dff cell `$procdff$1218' with positive edge clock.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\g_s32.rcp' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:110$278'.
+  created $adff cell `$procdff$1223' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\g_s32.dqc0' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:119$283'.
+  created $dff cell `$procdff$1224' with positive edge clock.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\g_s32.dqc1' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:119$283'.
+  created $dff cell `$procdff$1225' with positive edge clock.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\g_s32.dqc2' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:119$283'.
+  created $dff cell `$procdff$1226' with positive edge clock.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\g_s32.dqc3' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:119$283'.
+  created $dff cell `$procdff$1227' with positive edge clock.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\sealed' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:137$417'.
+  created $adff cell `$procdff$1232' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\fault' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:137$417'.
+  created $adff cell `$procdff$1237' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\next' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:137$417'.
+  created $adff cell `$procdff$1242' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\cap_q' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:137$417'.
+  created $adff cell `$procdff$1247' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\g_s32.age_por0' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:163$496'.
+  created $adff cell `$procdff$1252' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\g_s32.age_rcp' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:165$498'.
+  created $adff cell `$procdff$1257' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_kv_die_cfg_a_s32_age.\g_s32.seal_pub' using process `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:167$500'.
+  created $adff cell `$procdff$1262' with positive edge clock and positive level reset.
+
+5.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1156'.
+Removing empty process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1156'.
+Found and cleaned up 1 empty switch in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1154'.
+Removing empty process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1154'.
+Found and cleaned up 1 empty switch in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1158'.
+Removing empty process `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.$proc$qkd_kv_die_cfg_a_s32_age.sv:263$1158'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:60$218'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:64$220'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:65$222'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:110$278'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:119$283'.
+Found and cleaned up 4 empty switches in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:137$417'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:137$417'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$421'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$422'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$423'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$424'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$425'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$426'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$427'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$428'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$429'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$430'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$431'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$432'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$433'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$434'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$435'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$436'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$437'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$438'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$439'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$440'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$441'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$442'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$443'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$444'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$445'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$446'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$447'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$448'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$449'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$450'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$451'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:155$452'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$453'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$454'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$455'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$456'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$457'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$458'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$459'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$460'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$461'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$462'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$463'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$464'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$465'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$466'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$467'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$468'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$469'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$470'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$471'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$472'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$473'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$474'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$475'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$476'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$477'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$478'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$479'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$480'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$481'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$482'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$483'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$484'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$485'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$486'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$487'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$488'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$489'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$490'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$491'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$492'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$493'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$494'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:160$495'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:163$496'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:165$498'.
+Found and cleaned up 1 empty switch in `\qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:167$500'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:167$500'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:174$526'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:178$527'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:182$528'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:186$529'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:190$530'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:194$531'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:198$532'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:202$533'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:206$534'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:210$535'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:214$536'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:218$537'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:222$538'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:226$539'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:230$540'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:234$541'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:238$542'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:242$543'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:246$544'.
+Removing empty process `qkd_kv_die_cfg_a_s32_age.$proc$qkd_kv_die_cfg_a_s32_age.sv:250$545'.
+Cleaned up 8 empty switches.
+
+5.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+<suppressed ~2 debug messages>
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+<suppressed ~2 debug messages>
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+<suppressed ~2 debug messages>
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+<suppressed ~350 debug messages>
+
+5.3. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000...
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111...
+Checking module qkd_kv_cfg_age_en...
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000...
+Checking module qkd_kv_die_cfg_a_s32_age...
+Found and reported 0 problems.
+
+5.4. Executing FLATTEN pass (flatten design).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[41].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[40].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[39].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[38].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[37].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[36].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[35].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[34].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[33].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[32].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[31].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[30].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[29].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[28].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[27].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[26].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[25].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[24].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[23].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[22].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[21].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[20].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[19].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[18].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[17].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[16].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[15].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[14].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[13].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[12].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[11].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[10].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[9].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[8].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[7].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[6].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[5].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[4].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[3].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[2].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[1].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[0].u_r (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[31].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[30].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[29].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[28].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[27].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[26].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[25].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[24].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[23].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[22].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[21].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[20].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[19].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[18].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[17].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[16].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[15].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[14].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[13].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[12].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[11].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[10].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[9].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[8].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[7].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[6].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[5].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[4].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[3].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[2].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[1].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_ef[0].u_f (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp15 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp15 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp14 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp14 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp13 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp13 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp12 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp12 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp11 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp11 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp10 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp10 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp9 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp9 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp8 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp8 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp7 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp7 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp6 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp6 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp5 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp5 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp4 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp4 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp3 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp3 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp2 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp2 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp1 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp1 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_vp0 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_vp0 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_pair1 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_pair1 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_pair0 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_pair0 (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_attn_hi (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_attn_hi (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.f_attn_lo (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.e_attn_lo (found keep_hierarchy attribute).
+Keeping qkd_kv_die_cfg_a_s32_age.g_s32.g_rf[42].u_r (found keep_hierarchy attribute).
+
+5.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+<suppressed ~2 debug messages>
+
+5.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 23 unused cells and 966 unused wires.
+<suppressed ~31 debug messages>
+
+5.7. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000...
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111...
+Checking module qkd_kv_cfg_age_en...
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000...
+Checking module qkd_kv_die_cfg_a_s32_age...
+Found and reported 0 problems.
+
+5.8. Executing OPT pass (performing simple optimizations).
+
+5.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 657 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 634 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 632 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+<suppressed ~75 debug messages>
+Removed a total of 25 cells.
+
+5.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \qkd_kv_cfg_age_en..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \qkd_kv_die_cfg_a_s32_age..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~633 debug messages>
+
+5.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+  Optimizing cells in module \qkd_kv_cfg_age_en.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+Performed a total of 0 changes.
+
+5.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 632 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 0 unused cells and 22 unused wires.
+<suppressed ~1 debug messages>
+
+5.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \qkd_kv_cfg_age_en..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \qkd_kv_die_cfg_a_s32_age..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~633 debug messages>
+
+5.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+  Optimizing cells in module \qkd_kv_cfg_age_en.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+Performed a total of 0 changes.
+
+5.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 632 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+
+5.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5.9. Executing FSM pass (extract and optimize FSM).
+
+5.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+Not marking qkd_kv_die_cfg_a_s32_age.g_s32.seal_pub as FSM state register:
+    Users of register don't seem to benefit from recoding.
+
+5.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+5.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+
+5.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+5.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+5.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+5.10. Executing OPT pass (performing simple optimizations).
+
+5.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 632 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \qkd_kv_cfg_age_en..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \qkd_kv_die_cfg_a_s32_age..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~633 debug messages>
+
+5.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+  Optimizing cells in module \qkd_kv_cfg_age_en.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+Performed a total of 0 changes.
+
+5.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 2 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 632 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$1196 ($adff) from module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000 (D = \d, Q = \q).
+Adding EN signal on $procdff$1201 ($adff) from module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111 (D = \d, Q = \q).
+Adding EN signal on $procdff$1206 ($adff) from module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000 (D = \d, Q = \q).
+Adding EN signal on $procdff$1262 ($adff) from module qkd_kv_die_cfg_a_s32_age (D = 10'1111111111, Q = \g_s32.seal_pub).
+Adding EN signal on $procdff$1242 ($adff) from module qkd_kv_die_cfg_a_s32_age (D = $add$qkd_kv_die_cfg_a_s32_age.sv:143$420_Y, Q = \next).
+Adding EN signal on $procdff$1247 ($adff) from module qkd_kv_die_cfg_a_s32_age (D = \d_q [0], Q = \cap_q).
+Adding EN signal on $procdff$1232 ($adff) from module qkd_kv_die_cfg_a_s32_age (D = 1'1, Q = \sealed).
+Adding EN signal on $procdff$1237 ($adff) from module qkd_kv_die_cfg_a_s32_age (D = 1'1, Q = \fault).
+
+5.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 14 unused cells and 14 unused wires.
+<suppressed ~18 debug messages>
+
+5.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_cfg_age_en..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_die_cfg_a_s32_age..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~611 debug messages>
+
+5.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+  Optimizing cells in module \qkd_kv_cfg_age_en.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+Performed a total of 0 changes.
+
+5.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 628 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 626 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+5.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+5.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_cfg_age_en..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_die_cfg_a_s32_age..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~611 debug messages>
+
+5.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+  Optimizing cells in module \qkd_kv_cfg_age_en.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+Performed a total of 0 changes.
+
+5.10.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 626 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+
+5.10.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.10.23. Finished fast OPT passes. (There is nothing left to do.)
+
+5.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 9 bits (of 10) from FF cell qkd_kv_die_cfg_a_s32_age.$auto$ff.cc:337:slice$1266 ($adffe).
+Removed top 2 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$lt$qkd_kv_die_cfg_a_s32_age.sv:67$223 ($lt).
+Removed top 1 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$lt$qkd_kv_die_cfg_a_s32_age.sv:68$225 ($lt).
+Removed top 1 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:69$227 ($eq).
+Removed top 1 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$ge$qkd_kv_die_cfg_a_s32_age.sv:70$229 ($ge).
+Removed top 1 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$lt$qkd_kv_die_cfg_a_s32_age.sv:70$231 ($lt).
+Removed top 1 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$sub$qkd_kv_die_cfg_a_s32_age.sv:71$233 ($sub).
+Removed top 24 bits (of 32) from port Y of cell qkd_kv_die_cfg_a_s32_age.$sub$qkd_kv_die_cfg_a_s32_age.sv:71$233 ($sub).
+Removed top 1 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:72$235 ($eq).
+Removed top 7 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:73$238 ($eq).
+Removed top 6 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:73$239 ($eq).
+Removed top 2 bits (of 8) from port B of cell qkd_kv_die_cfg_a_s32_age.$sub$qkd_kv_die_cfg_a_s32_age.sv:76$245 ($sub).
+Removed top 1 bits (of 9) from port A of cell qkd_kv_die_cfg_a_s32_age.$ne$qkd_kv_die_cfg_a_s32_age.sv:77$247 ($ne).
+Removed top 1 bits (of 64) from port B of cell qkd_kv_die_cfg_a_s32_age.$ne$qkd_kv_die_cfg_a_s32_age.sv:79$261 ($ne).
+Removed top 2 bits (of 9) from port B of cell qkd_kv_die_cfg_a_s32_age.$ne$qkd_kv_die_cfg_a_s32_age.sv:79$262 ($ne).
+Removed top 1 bits (of 2) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:122$288 ($eq).
+Removed top 2 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:125$298 ($eq).
+Removed top 2 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:126$299 ($eq).
+Removed top 1 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:125$300 ($eq).
+Removed top 1 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:126$301 ($eq).
+Removed top 1 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:125$302 ($eq).
+Removed top 1 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:126$303 ($eq).
+Removed top 2 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:129$318 ($eq).
+Removed top 1 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:129$323 ($eq).
+Removed top 1 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:129$328 ($eq).
+Removed top 8 bits (of 9) from port B of cell qkd_kv_die_cfg_a_s32_age.$add$qkd_kv_die_cfg_a_s32_age.sv:143$420 ($add).
+Removed top 1 bits (of 2) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:169$511 ($eq).
+Removed top 2 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:170$519 ($eq).
+Removed top 1 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:170$520 ($eq).
+Removed top 1 bits (of 3) from port B of cell qkd_kv_die_cfg_a_s32_age.$eq$qkd_kv_die_cfg_a_s32_age.sv:170$521 ($eq).
+Removed top 26 bits (of 27) from FF cell qkd_kv_die_cfg_a_s32_age.$procdff$1223 ($adff).
+Removed top 9 bits (of 10) from FF cell qkd_kv_die_cfg_a_s32_age.$procdff$1257 ($adff).
+
+5.12. Executing PEEPOPT pass (run peephole optimizers).
+
+5.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+5.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module qkd_kv_cfg_age_en:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000:
+  created 0 $alu and 0 $macc cells.
+Extracting $alu and $macc cells in module qkd_kv_die_cfg_a_s32_age:
+  creating $macc model for $sub$qkd_kv_die_cfg_a_s32_age.sv:71$233 ($sub).
+  creating $macc model for $sub$qkd_kv_die_cfg_a_s32_age.sv:76$245 ($sub).
+  creating $macc model for $add$qkd_kv_die_cfg_a_s32_age.sv:143$420 ($add).
+  creating $alu model for $macc $add$qkd_kv_die_cfg_a_s32_age.sv:143$420.
+  creating $alu model for $macc $sub$qkd_kv_die_cfg_a_s32_age.sv:76$245.
+  creating $alu model for $macc $sub$qkd_kv_die_cfg_a_s32_age.sv:71$233.
+  creating $alu model for $lt$qkd_kv_die_cfg_a_s32_age.sv:67$223 ($lt): merged with $sub$qkd_kv_die_cfg_a_s32_age.sv:76$245.
+  creating $alu model for $lt$qkd_kv_die_cfg_a_s32_age.sv:68$225 ($lt): new $alu
+  creating $alu model for $ge$qkd_kv_die_cfg_a_s32_age.sv:70$229 ($ge): merged with $sub$qkd_kv_die_cfg_a_s32_age.sv:71$233.
+  creating $alu model for $lt$qkd_kv_die_cfg_a_s32_age.sv:70$231 ($lt): new $alu
+  creating $alu model for $eq$qkd_kv_die_cfg_a_s32_age.sv:69$227 ($eq): merged with $lt$qkd_kv_die_cfg_a_s32_age.sv:68$225.
+  creating $alu model for $eq$qkd_kv_die_cfg_a_s32_age.sv:72$235 ($eq): merged with $lt$qkd_kv_die_cfg_a_s32_age.sv:70$231.
+  creating $alu cell for $lt$qkd_kv_die_cfg_a_s32_age.sv:70$231, $eq$qkd_kv_die_cfg_a_s32_age.sv:72$235: $auto$alumacc.cc:548:replace_alu$1287
+  creating $alu cell for $lt$qkd_kv_die_cfg_a_s32_age.sv:68$225, $eq$qkd_kv_die_cfg_a_s32_age.sv:69$227: $auto$alumacc.cc:548:replace_alu$1294
+  creating $alu cell for $sub$qkd_kv_die_cfg_a_s32_age.sv:71$233, $ge$qkd_kv_die_cfg_a_s32_age.sv:70$229: $auto$alumacc.cc:548:replace_alu$1301
+  creating $alu cell for $sub$qkd_kv_die_cfg_a_s32_age.sv:76$245, $lt$qkd_kv_die_cfg_a_s32_age.sv:67$223: $auto$alumacc.cc:548:replace_alu$1314
+  creating $alu cell for $add$qkd_kv_die_cfg_a_s32_age.sv:143$420: $auto$alumacc.cc:548:replace_alu$1319
+  created 5 $alu and 0 $macc cells.
+
+5.15. Executing SHARE pass (SAT-based resource sharing).
+
+5.16. Executing OPT pass (performing simple optimizations).
+
+5.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+<suppressed ~1 debug messages>
+
+5.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 631 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_cfg_age_en..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_die_cfg_a_s32_age..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~611 debug messages>
+
+5.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+  Optimizing cells in module \qkd_kv_cfg_age_en.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+    New input vector for $reduce_and cell $auto$opt_dff.cc:337:make_patterns_logic$1281: { \we_q $auto$rtlil.cc:3267:Not$1269 $auto$alumacc.cc:564:replace_alu$1288 }
+    New input vector for $reduce_and cell $auto$opt_dff.cc:337:make_patterns_logic$1276: { \we_q $auto$rtlil.cc:3267:Not$1269 $auto$alumacc.cc:564:replace_alu$1295 }
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+Performed a total of 2 changes.
+
+5.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 631 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~1 debug messages>
+
+5.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_cfg_age_en..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_die_cfg_a_s32_age..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~611 debug messages>
+
+5.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+  Optimizing cells in module \qkd_kv_cfg_age_en.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+Performed a total of 0 changes.
+
+5.16.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 631 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+
+5.16.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.16.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5.17. Executing MEMORY pass.
+
+5.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+5.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+5.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+5.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+5.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+5.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+
+5.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+5.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+
+5.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+
+5.19. Executing OPT pass (performing simple optimizations).
+
+5.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+<suppressed ~306 debug messages>
+
+5.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 638 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 628 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+<suppressed ~30 debug messages>
+Removed a total of 10 cells.
+
+5.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 3 unused cells and 7 unused wires.
+<suppressed ~4 debug messages>
+
+5.19.5. Finished fast OPT passes.
+
+5.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+5.21. Executing OPT pass (performing simple optimizations).
+
+5.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 625 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_cfg_age_en..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \qkd_kv_die_cfg_a_s32_age..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~3 debug messages>
+
+5.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+  Optimizing cells in module \qkd_kv_cfg_age_en.
+  Optimizing cells in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+  Optimizing cells in module \qkd_kv_die_cfg_a_s32_age.
+Performed a total of 0 changes.
+
+5.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 1 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 625 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Removed a total of 0 cells.
+
+5.21.6. Executing OPT_SHARE pass.
+
+5.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+
+5.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+
+5.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+5.22. Executing TECHMAP pass (map to technology primitives).
+
+5.22.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+5.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$53700bbee849b2010ad0b60a61ccd204a10e24ca\_90_alu for cells of type $alu.
+Using template $paramod$b8c0a997bce700f23568a5ada79cc6781d1f5ca0\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$a40b3a69ab2154dca9743e30e1e84efb03b892b4\_90_alu for cells of type $alu.
+Using template $paramod$befd47b1c77b68561d11d0cb61a0fae29b79f34c\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000110 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000110 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001001 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~1335 debug messages>
+
+5.23. Executing OPT pass (performing simple optimizations).
+
+5.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111.
+Optimizing module qkd_kv_cfg_age_en.
+Optimizing module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000.
+Optimizing module qkd_kv_die_cfg_a_s32_age.
+<suppressed ~449 debug messages>
+
+5.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Computing hashes of 8 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Computing hashes of 15 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Finding identical cells in module `\qkd_kv_cfg_age_en'.
+Computing hashes of 1 cells of `\qkd_kv_cfg_age_en'.
+Finding duplicate cells in `\qkd_kv_cfg_age_en'.
+Finding identical cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Computing hashes of 16 cells of `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding duplicate cells in `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Finding identical cells in module `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 1327 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 1153 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 1100 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 1077 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+Computing hashes of 1068 cells of `\qkd_kv_die_cfg_a_s32_age'.
+Finding duplicate cells in `\qkd_kv_die_cfg_a_s32_age'.
+<suppressed ~777 debug messages>
+Removed a total of 259 cells.
+
+5.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 30 unused cells and 422 unused wires.
+<suppressed ~31 debug messages>
+
+5.23.5. Finished fast OPT passes.
+
+5.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `qkd_kv_die_cfg_a_s32_age'. Setting top module to qkd_kv_die_cfg_a_s32_age.
+
+5.24.1. Analyzing design hierarchy..
+Top module:  \qkd_kv_die_cfg_a_s32_age
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+Used module:     \qkd_kv_cfg_age_en
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+
+5.24.2. Analyzing design hierarchy..
+Top module:  \qkd_kv_die_cfg_a_s32_age
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+Used module:     \qkd_kv_cfg_age_en
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+Used module:     $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+Removed 0 unused modules.
+
+5.25. Printing statistics.
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       19 wire bits
+        5 public wires
+       19 public wire bits
+        5 ports
+       19 port bits
+        8 cells
+        8   $_DFFE_PN0P_
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       33 wire bits
+        5 public wires
+       33 public wire bits
+        5 ports
+       33 port bits
+       15 cells
+       15   $_DFFE_PN0P_
+
+=== qkd_kv_cfg_age_en ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        3 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 cells
+        1   $_AND_
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       35 wire bits
+        5 public wires
+       35 public wire bits
+        5 ports
+       35 port bits
+       16 cells
+       16   $_DFFE_PN0P_
+
+=== qkd_kv_die_cfg_a_s32_age ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      403 wires
+     4623 wire bits
+      200 public wires
+     4076 public wire bits
+       15 ports
+     1206 port bits
+      923 cells
+      453   $_AND_
+       13   $_DFFE_PN0P_
+        4   $_DFF_PN0_
+       72   $_DFF_P_
+        2   $_MUX_
+       77   $_NOT_
+      279   $_OR_
+       23   $_XOR_
+      115 submodules
+       45   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       32   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       18   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+       20   qkd_kv_cfg_age_en
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+     2071 qkd_kv_die_cfg_a_s32_age
+        8 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       15 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       16 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+        1 qkd_kv_cfg_age_en
+
+        +----------Count including submodules.
+        | 
+      938 wires
+     7224 wire bits
+      735 public wires
+     6677 public wire bits
+      550 ports
+     3807 port bits
+        - memories
+        - memory bits
+        - processes
+     2071 cells
+      473   $_AND_
+     1141   $_DFFE_PN0P_
+        4   $_DFF_PN0_
+       72   $_DFF_P_
+        2   $_MUX_
+       77   $_NOT_
+      279   $_OR_
+       23   $_XOR_
+      115 submodules
+       45   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       32   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       18   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+       20   qkd_kv_cfg_age_en
+
+5.26. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000...
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111...
+Checking module qkd_kv_cfg_age_en...
+Checking module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000...
+Checking module qkd_kv_die_cfg_a_s32_age...
+Found and reported 0 problems.
+
+6. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+6.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000':
+  mapped 8 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111':
+  mapped 15 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `\qkd_kv_cfg_age_en':
+Mapping DFF cells in module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000':
+  mapped 16 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `\qkd_kv_die_cfg_a_s32_age':
+  mapped 17 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 72 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+7. Executing ABC pass (technology mapping using ABC).
+
+7.1. Extracting gate netlist of module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000' to `<abc-temp-dir>/input.blif'..
+
+7.1.1. Executed ABC.
+Extracted 16 gates and 33 wires to a netlist network with 17 inputs and 16 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+7.1.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        8
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:        8
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:        8
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:       17
+ABC RESULTS:          output signals:       16
+Removing temp directory.
+
+7.2. Extracting gate netlist of module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl (1 files)
+
+7.2.1. Executed ABC.
+Extracted 30 gates and 61 wires to a netlist network with 31 inputs and 30 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+7.2.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:       15
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:       15
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:       15
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:       31
+ABC RESULTS:          output signals:       30
+Removing temp directory.
+
+7.3. Extracting gate netlist of module `\qkd_kv_cfg_age_en' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl (1 files)
+
+7.3.1. Executed ABC.
+Extracted 1 gates and 3 wires to a netlist network with 2 inputs and 1 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+7.3.2. Re-integrating ABC results.
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:        1
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        2
+ABC RESULTS:          output signals:        1
+Removing temp directory.
+
+7.4. Extracting gate netlist of module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl (1 files)
+
+7.4.1. Executed ABC.
+Extracted 32 gates and 65 wires to a netlist network with 33 inputs and 32 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+7.4.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:       16
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:       16
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:       16
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:       33
+ABC RESULTS:          output signals:       32
+Removing temp directory.
+
+7.5. Extracting gate netlist of module `\qkd_kv_die_cfg_a_s32_age' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl (1 files)
+
+7.5.1. Executed ABC.
+Extracted 936 gates and 1330 wires to a netlist network with 393 inputs and 452 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_b6eecbb3.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+7.5.2. Re-integrating ABC results.
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      305
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        3
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:        3
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:       76
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:       16
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:       24
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:       19
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:        8
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:       83
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:       12
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:        6
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        6
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:        6
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:        8
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:        4
+ABC RESULTS:        internal signals:      485
+ABC RESULTS:           input signals:      393
+ABC RESULTS:          output signals:      452
+Removing temp directory.
+Removing global temp directory.
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111..
+Finding unused cells or wires in module \qkd_kv_cfg_age_en..
+Finding unused cells or wires in module $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000..
+Finding unused cells or wires in module \qkd_kv_die_cfg_a_s32_age..
+Removed 0 unused cells and 1224 unused wires.
+<suppressed ~19 debug messages>
+
+9. Printing statistics.
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       29        - wires
+       43        - wire bits
+        5        - public wires
+       19        - public wire bits
+        5        - ports
+       19        - port bits
+       32    4.432 cells
+        8    3.033   DFFASRHQNx1_ASAP7_75t_R
+        8     0.35   INVx1_ASAP7_75t_R
+        8    0.467   NAND2xp33_ASAP7_75t_R
+        8    0.583   OAI21xp33_ASAP7_75t_R
+
+   Chip area for module '$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000': 4.432320
+     of which used for sequential elements: 3.032640 (68.42%)
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       50        - wires
+       78        - wire bits
+        5        - public wires
+       33        - public wire bits
+        5        - ports
+       33        - port bits
+       60    8.311 cells
+       15    5.686   DFFASRHQNx1_ASAP7_75t_R
+       15    0.656   INVx1_ASAP7_75t_R
+       15    0.875   NAND2xp33_ASAP7_75t_R
+       15    1.093   OAI21xp33_ASAP7_75t_R
+
+   Chip area for module '$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111': 8.310600
+     of which used for sequential elements: 5.686200 (68.42%)
+
+=== qkd_kv_cfg_age_en ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        3        - wires
+        3        - wire bits
+        3        - public wires
+        3        - public wire bits
+        3        - ports
+        3        - port bits
+        1    0.087 cells
+        1    0.087   AND2x2_ASAP7_75t_R
+
+   Chip area for module '\qkd_kv_cfg_age_en': 0.087480
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       53        - wires
+       83        - wire bits
+        5        - public wires
+       35        - public wire bits
+        5        - ports
+       35        - port bits
+       64    8.865 cells
+       16    6.065   DFFASRHQNx1_ASAP7_75t_R
+       16      0.7   INVx1_ASAP7_75t_R
+       16    0.933   NAND2xp33_ASAP7_75t_R
+       16    1.166   OAI21xp33_ASAP7_75t_R
+
+   Chip area for module '$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000': 8.864640
+     of which used for sequential elements: 6.065280 (68.42%)
+
+=== qkd_kv_die_cfg_a_s32_age ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      433        - wires
+     4280        - wire bits
+      186        - public wires
+     4033        - public wire bits
+       15        - ports
+     1206        - port bits
+      686   73.789 cells
+      305   26.681   AND2x2_ASAP7_75t_R
+        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204   AND4x1_ASAP7_75t_R
+        3     0.35   AND5x1_ASAP7_75t_R
+        3    0.262   AO21x1_ASAP7_75t_R
+        3    0.219   AOI21xp33_ASAP7_75t_R
+        2    0.204   AOI32xp33_ASAP7_75t_R
+       17    6.444   DFFASRHQNx1_ASAP7_75t_R
+       72   20.995   DFFHQNx1_ASAP7_75t_R
+       76    3.324   INVx1_ASAP7_75t_R
+       16    0.933   NAND2xp33_ASAP7_75t_R
+       24     1.75   NAND3xp33_ASAP7_75t_R
+       19    1.662   NAND4xp25_ASAP7_75t_R
+        8    0.816   NAND5xp2_ASAP7_75t_R
+       83    4.841   NOR2xp33_ASAP7_75t_R
+       12    0.875   NOR3xp33_ASAP7_75t_R
+        6    0.525   NOR4xp25_ASAP7_75t_R
+        6    0.612   NOR5xp2_ASAP7_75t_R
+        1    0.102   OA21x2_ASAP7_75t_R
+        6    0.437   OAI21xp33_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+        1    0.102   OAI32xp33_ASAP7_75t_R
+        1    0.087   OR2x2_ASAP7_75t_R
+        1    0.087   OR3x1_ASAP7_75t_R
+        4    0.408   OR4x1_ASAP7_75t_R
+        1    0.117   OR5x1_ASAP7_75t_R
+        8     1.05   XNOR2xp5_ASAP7_75t_R
+        4    0.525   XOR2xp5_ASAP7_75t_R
+      115        - submodules
+       45        -   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       32        -   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       18        -   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+       20        -   qkd_kv_cfg_age_en
+
+   Chip area for module '\qkd_kv_die_cfg_a_s32_age': 73.789380
+     of which used for sequential elements: 27.439560 (37.19%)
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+     5218  700.496 qkd_kv_die_cfg_a_s32_age
+       32    4.432 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       60    8.311 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       64    8.865 $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+        1    0.087 qkd_kv_cfg_age_en
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+     4352        - wires
+    10265        - wire bits
+      721        - public wires
+     6634        - public wire bits
+      550        - ports
+     3807        - port bits
+        -        - memories
+        -        - memory bits
+        -        - processes
+     5218  700.496 cells
+      325   28.431   AND2x2_ASAP7_75t_R
+        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204   AND4x1_ASAP7_75t_R
+        3     0.35   AND5x1_ASAP7_75t_R
+        3    0.262   AO21x1_ASAP7_75t_R
+        3    0.219   AOI21xp33_ASAP7_75t_R
+        2    0.204   AOI32xp33_ASAP7_75t_R
+     1145  434.047   DFFASRHQNx1_ASAP7_75t_R
+       72   20.995   DFFHQNx1_ASAP7_75t_R
+     1204   52.663   INVx1_ASAP7_75t_R
+     1144   66.718   NAND2xp33_ASAP7_75t_R
+       24     1.75   NAND3xp33_ASAP7_75t_R
+       19    1.662   NAND4xp25_ASAP7_75t_R
+        8    0.816   NAND5xp2_ASAP7_75t_R
+       83    4.841   NOR2xp33_ASAP7_75t_R
+       12    0.875   NOR3xp33_ASAP7_75t_R
+        6    0.525   NOR4xp25_ASAP7_75t_R
+        6    0.612   NOR5xp2_ASAP7_75t_R
+        1    0.102   OA21x2_ASAP7_75t_R
+     1134   82.669   OAI21xp33_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+        1    0.102   OAI32xp33_ASAP7_75t_R
+        1    0.087   OR2x2_ASAP7_75t_R
+        1    0.087   OR3x1_ASAP7_75t_R
+        4    0.408   OR4x1_ASAP7_75t_R
+        1    0.117   OR5x1_ASAP7_75t_R
+        8     1.05   XNOR2xp5_ASAP7_75t_R
+        4    0.525   XOR2xp5_ASAP7_75t_R
+      115  626.707 submodules
+       45  199.454   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000
+       32  265.939   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111
+       18  159.564   $paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000
+       20     1.75   qkd_kv_cfg_age_en
+
+   Chip area for top module '\qkd_kv_die_cfg_a_s32_age': 700.496100
+     of which used for sequential elements: 455.041800 (64.96%)
+
+10. Executing Verilog backend.
+
+10.1. Executing BMUXMAP pass.
+
+10.2. Executing DEMUXMAP pass.
+Dumping module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001000'.
+Dumping module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000001111'.
+Dumping module `$paramod\qkd_kv_cfg_age_field\W=s32'00000000000000000000000000010000'.
+Dumping module `\qkd_kv_cfg_age_en'.
+Dumping module `\qkd_kv_die_cfg_a_s32_age'.
+
+11. Executing JSON backend.
+
+End of script. Logfile hash: 67695ee7cc, time: 2.41s, user: 0.90s, system: 0.36s, MEM: 145.32 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 50% 1x abc (1 sec), 10% 2x stat (0 sec), ...
