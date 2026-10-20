@@ -46,7 +46,8 @@ NSLICE, NFRAME = 16, 8
 # fmt and K), so plan_phase fills R-row phases across both tensors: 9 rows / frame -> 3 phases instead of 2 + 2.
 # Contents only (ROM images, cfg7 rows, xs streams); default 0 keeps every record byte-identical.
 import os  # noqa: E402
-GU_MERGE = os.environ.get('OT_XS_GU_MERGE', '0') == '1'
+import xs_flags as XO  # noqa: E402  S81-ROMOPT-A: release defaults (env overrides)
+GU_MERGE = XO.on('OT_XS_GU_MERGE')
 import xs_topo as TP  # noqa: E402  S81-RATE3: physical frames per slice (OT_XS_TOPO=1)
 
 
@@ -176,10 +177,12 @@ def op_groups(fx, op):
             if GU_MERGE:    # S81-ROMCAP: ONE matrix per expert (gate ++ up rows), so a frame's 9 rows fill 3 phases, not 4
                 rows = list(range(2 * nff))
                 tie = [(tie_op, j0 + r) for r in range(nff)] + [(tie_op, tot + j0 + r) for r in range(nff)]
-                # gate j and up j interleaved, so they stay in the same frame (as the 2-matrix placement) +-1 row
-                g = [[fr for fr in deal_into([r for j in js for r in (j, nff + j)], TP.nfr(s))]
+                # S81-ROMOPT-A: whole (gate j, up j) pairs a frame, the frame's gates first then its ups, so gate j and
+                # up j never share a phase (they share a CAP pairing slot, see merged_cap) -- a phase <= R rows < pairs
+                g = [[[j for j in fr] + [nff + j for j in fr] for fr in deal_into(js, TP.nfr(s))]
                      for s, js in enumerate(deal(nff, NSLICE))]
-                out.append(dict(mat=f'{e}.w13', rows=rows, x=x, tie=tie, groups=g, out='bf16', expert=e))
+                out.append(dict(mat=f'{e}.w13', rows=rows, x=x, tie=tie, groups=g, out='bf16', expert=e,
+                                **merged_cap(nff)))
                 continue
             # one matrix per tensor (plan_phase takes one matrix per phase): gate j and up j in the same slice/frame
             for n, base in ((n1, 0), (n3, tot)):
@@ -211,6 +214,27 @@ def op_groups(fx, op):
         return [dict(mat=n, rows=rows, x=fx.op(xop), tie=None, groups=g, out='bf16',
                      note='the fixture holds q after RoPE + FP4 qdq only: golden tie, no fixture tie')]
     raise KeyError(op)
+
+
+def merged_cap(nff):
+    """S81-ROMOPT-A: capture-root row tags of a GU_MERGE matrix (rows gate 0..nff-1 ++ up 0..nff-1).
+    ot_s81sl_cap decodes ONE range a cfg_d: e = tag - rbase < rcnt, leaf = (e >> 6) % 5,
+    word = obase + 64 ((e >> 6) // 5) + e % 64.  Slice s owns gate / up j in [a, a + n) (deal(nff, 16)); its tags are
+    gate j -> 2 U s + (j - a), up j -> 2 U s + U + (j - a), U = 320 ceil(span / 320): rbase 2 U s, rcnt U + n.  With
+    obase = the unmerged gate region (the up region follows it, 64 ceil(span / 320) words on), every row decodes to
+    the SAME (leaf, word) as the two-matrix placement, so the consumer layout is unchanged; other slices' tags lie
+    outside [2 U s, 2 U s + 2 U) and fault (F9).  Checked by xs_calendar.py cap (layout == unmerged reference)."""
+    js_all = deal(nff, NSLICE)
+    span = max(len(js) for js in js_all)
+    U = 320 * -(-span // 320)
+    tags = [None] * (2 * nff)
+    rng = []
+    for s, js in enumerate(js_all):
+        for i, j in enumerate(js):
+            tags[j], tags[nff + j] = 2 * U * s + i, 2 * U * s + U + i
+        rng.append((2 * U * s, U + len(js)))
+    assert max(tags) < (1 << 14) and all(c < (1 << 11) for _, c in rng)   # row[13:0] (row[15:14] = flags); rcnt 11 b
+    return dict(cap_tags=tags, cap_range=rng, cap_alloc=128 * (U // 320))     # words: gate + up regions
 
 
 def deal_into(items, parts):
@@ -274,7 +298,7 @@ def cmd_tie(a):
 
 
 # ------------------------------------------------------------------------------------------------ frame field
-NPAIRS = int(os.environ.get('OT_XS_QPAIRS', str(LX.NPAIRS)))
+NPAIRS = int(XO.get('OT_XS_QPAIRS'))
 if NPAIRS not in (10, 12):
     raise ValueError('OT_XS_QPAIRS must be 10 (legacy) or 12 (all physical pairs)')
 # q pairs per phase (a_proj's choice; every phase of the frame uses the same field slots)
@@ -393,7 +417,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         assert sel, ('empty FP chunk on a frame', op, gi, c, frame)
         mat = make_mat(fx, grp, sel, op)
         npair = (len(qa) // nseg) * nseg
-        if os.environ.get('OT_XS_COMPACT_TAILS', '0') == '1' and mat.rows:
+        if XO.on('OT_XS_COMPACT_TAILS') and mat.rows:
             # The full pair budget used to allocate completely SENT superrows
             # on short tails. Only real superrows need weight/config storage.
             npair = min(npair, -(-mat.rows // 2) * nseg)
@@ -630,6 +654,8 @@ def gen_one(a, rec, field, ph, out):
         tie = ph['tie'][r]
         rows[r] = dict(vals=plan['rows_vals'][str(r)], acc=gold[r][0], bf16=gold[r][1], src=list(mat.src[r]),
                        out_index=tie[1] if tie else None, tie=tie)
+        if grp.get('cap_tags'):     # S81-ROMOPT-A: GU_MERGE capture-root tag (xs_calendar gen --tags rank)
+            rows[r]['cap_tag'] = grp['cap_tags'][ph['sel'][r]]
     vm = [int(struct.unpack('<I', struct.pack('<f', float(v)))[0]) for v in np.asarray(grp['x'], dtype=np.float32)]
     (out / 'vm.hex').write_text(''.join(f'{v:08x}\n' for v in vm))
     plan = {k_: v for k_, v in plan.items() if k_ != 'stream'}

@@ -7,13 +7,13 @@ rank rows, merged gu 54 and down 60 rank rows per expert).  With OT_XS_TOPO=1 ev
 frames; the die-wide phase list (one phase sequence for every frame) then takes the slowest slice's phase count.
 Default off: earlier evidence stays reproducible byte-for-byte.  Set from the bind9 die by dv_layer_compile.Die.
 """
-import os
+import xs_flags as XO
 
-ENABLED = os.environ.get('OT_XS_TOPO', '0') == '1'
+ENABLED = XO.on('OT_XS_TOPO')     # S81-ROMOPT-A: release default on
 # OT_XS_PROP=1 (needs OT_XS_TOPO=1): ops whose slice ownership is free (row-sharded outputs that the CAP descriptors
 # address by per-slice rbase / rcnt: attn.wo_b, ffn.down) deal their rows over the slices IN PROPORTION to the physical
 # frames, so a 6-frame slice no longer sets the die-wide phase count.  Heads (wq_b, idx.q) stay on their slice.
-PROP = ENABLED and os.environ.get('OT_XS_PROP', '0') == '1'
+PROP = ENABLED and XO.on('OT_XS_PROP')
 NFRAME_DEFAULT = 8
 TOPO = None          # TOPO[g] = physical frames of slice index g (None = legacy 8 everywhere)
 SOURCE = None

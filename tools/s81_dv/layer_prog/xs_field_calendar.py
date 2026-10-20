@@ -58,6 +58,7 @@ os.environ.setdefault('HDC_V41_ARITH', 'chunk8')
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import xs_calendar as XC  # noqa: E402
+import xs_flags as XO  # noqa: E402  S81-ROMOPT-A: release defaults
 
 CFG_LEAD = 52
 BF_SEG_LABEL_FLOOR = 231
@@ -105,7 +106,7 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
                iss=dict(pipe['iss']), phases=per, stream_words=len(stream), nphases=len(per), cal_rows=pipe['cal_rows'],
                floor=floor)
     cal['static'] = static_checks(cal, allow_below_floor)
-    if op == 'attn.wq_b' and os.environ.get('OT_XS_QPAIRS') == '12':
+    if op == 'attn.wq_b' and XO.get('OT_XS_QPAIRS') == '12':
         # FSEQ uses the same u_sp.go input -> frame-root RET origin as this
         # record. The full12-pair8-row release vehicle measures1189 at P126:
         # seven periods plus307, rather than the fullsix vehicle's old223.
@@ -167,7 +168,7 @@ def layer_calendar(cals, starts=None, gap=0):
     edges unique, delay line <= ND over the layer.  Returns the packed rows, absolute issuers and per-op windows."""
     order = [c for o in EXEC_ORDER for c in cals if c['op'] == o]
     nrows = sum(len(c['packed']) for c in order)
-    segmented = os.environ.get('OT_XS_CAL_SEGMENT', '0') == '1'
+    segmented = XO.on('OT_XS_CAL_SEGMENT')
     if nrows > 4096 and not segmented:      # ot_s81sl_xs pq_calendar ROM = one ot_rom_4096x72_m8 pair; is_d base field 12 b
         raise CalendarFault(('layer calendar compile fault', [('layer_rows_le_4096', nrows,
                              {c['op']: len(c['packed']) for c in order})]))
@@ -275,7 +276,7 @@ def frame_field(die, frame, fixd, ops, iters=None):
         phase = []
         for ph in field.phases:
             phase += list(I.phase_words(ph))
-        if os.environ.get('OT_XS_CAL_SEGMENT', '0') == '1':
+        if XO.on('OT_XS_CAL_SEGMENT'):
             from xs_calendar_pack import dedup_stream
             phase, stream = dedup_stream(phase, list(field.stream))
         else:
@@ -333,7 +334,7 @@ def emit_files(die, op, ctx, sl):
              f'prog/xs/{op["id"]}/pq_calendar_action.viamap.hex': viamap([w & ((1 << 72) - 1) for w in cw] + [0] * (4096 - len(cw))),
              f'prog/xs/{op["id"]}/pq_calendar_time.viamap.hex': viamap([w >> 72 for w in cw] + [0] * (4096 - len(cw))),
              f'prog/xs/{op["id"]}/is_d.txt': ''.join(f'{t} {v:040x}\n' for t, v in sorted(cal['iss'].items()))}
-    if os.environ.get('OT_XS_CAL_SEGMENT', '0') == '1':
+    if XO.on('OT_XS_CAL_SEGMENT'):
         if not lc['PASS']:
             raise CalendarFault(('shared layer calendar not admitted', lfault))
         # The per-op directories remain diagnostic vehicles. A release XS has

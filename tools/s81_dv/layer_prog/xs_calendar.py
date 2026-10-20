@@ -290,7 +290,7 @@ def remap_tags(vec, out, meta):
     ph = meta['field_phase']
     tmap = {}
     for r, v in meta['rows'].items():
-        tmap[int(r)] = int(v['src'][1])              # FMat src = (matrix, rank-local row)
+        tmap[int(r)] = int(v.get('cap_tag', v['src'][1]))   # FMat src = (matrix, rank-local row); GU_MERGE: cap tag
     assert len(set(tmap.values())) == len(tmap) and max(tmap.values()) < (1 << 14)
     banks = {}
     for f in sorted(Path(out).glob('f_c*_[0-6].viamap.hex')):
@@ -454,28 +454,30 @@ def cap_word(c):
             c['rsplit'] << 56 | c['lo32'] << 72 | c['hi32'] << 73)
 
 
-def cmd_cap(a):
+def cap_emit(XP, fx, ops, final_ffn=False):
     """per slice and die-wide phase: cfg_d (rbase = the slice's first row of the op, rcnt = its share, fmt from the op's
-    output format) + the frame tag map (phase-local r -> rank-local row); validated through cap_model.decode: every
-    row of the slice decodes in range to a distinct (leaf, word), no other slice's row decodes in range"""
-    import xs_place as XP
+    output format) + the frame tag map (phase-local r -> capture-root tag); validated through cap_model.decode: every
+    row of the slice decodes in range to a distinct (leaf, word), no other slice's row decodes in range.  A GU_MERGE
+    matrix (xs_place.merged_cap) carries its own tags / range (gate and up are two disjoint row runs of a slice).
+    Returns (record, {(matrix base, gate|up|row, row): (slice, leaf, word)}, pairing-slot collisions)."""
     from cap_model import decode
-    fx = XP.Fix(a.fixtures)
-    ops = XP.XS_OPS[a.layer]
     seq = XP.phase_list(fx, ops)
     groups = {op: XP.op_groups(fx, op) for op in ops}
     obase = {}
     nxt = 0
-    rec = dict(schema='opentallas.s81_dv.xs_cap_cfg.v1', layer=a.layer, fixtures=str(a.fixtures),
-               rule='frame row tag = rank-local row; cap rbase = slice first row, rcnt = slice share', phases=[])
-    bad = 0
+    rec = dict(schema='opentallas.s81_dv.xs_cap_cfg.v1', fixtures=str(fx.d), gu_merge=XP.GU_MERGE,
+               rule='frame row tag = rank-local row (GU_MERGE: xs_place.merged_cap tag); cap rbase = slice first tag, '
+                    'rcnt = slice tag range', phases=[])
+    bad, amap, slotc = 0, {}, []
     for k, (op, gi, ch, nseg, R) in enumerate(seq, start=1):       # field phase 0 = a_proj (lower_xs)
         grp = groups[op][gi]
         key = (op, grp['mat'])
+        ctag = grp.get('cap_tags')
+        tag = (lambda i: ctag[i]) if ctag else (lambda i: grp['rows'][i])   # noqa: E731
         per_slice = [sorted(i for fr in grp['groups'][g] for i in fr) for g in range(XP.NSLICE)]
         span = max(len(s) for s in per_slice)
         if key not in obase:                      # slice vp store: one 64-row-aligned region per matrix (allocation)
-            if getattr(a, 'final_ffn_placement', False) and op == 'ffn.down':
+            if final_ffn and op == 'ffn.down':
                 # cap addresses WORDS, while final_ffn allocates four-word ROWS.
                 from layer_prog.final_ffn import CAPTURE, expert_slot
                 slot = expert_slot(grp['expert'], fx.meta['experts'])
@@ -485,20 +487,35 @@ def cmd_cap(a):
                 nxt += 64 * -(-span // 320)  # preserve every other matrix's canonical allocation
             else:
                 obase[key] = nxt
-                nxt += 64 * -(-span // 320)
+                nxt += grp['cap_alloc'] if ctag else 64 * -(-span // 320)
         slices = []
         for g in range(XP.NSLICE):
-            rows = [grp['rows'][i] for i in per_slice[g]]
+            rows = [tag(i) for i in per_slice[g]]
             if not rows:
                 continue
-            assert rows == list(range(rows[0], rows[0] + len(rows))), ('slice share not contiguous', op, g)
+            if ctag:
+                rb, rc = grp['cap_range'][g]
+                assert all(rb <= t < rb + rc for t in rows), ('merged tag outside the slice range', op, g)
+            else:
+                assert rows == list(range(rows[0], rows[0] + len(rows))), ('slice share not contiguous', op, g)
+                rb, rc = rows[0], len(rows)
             fmt = 1 if grp['out'] == 'fp32' else 2
-            cfg = dict(obase=obase[key] & 0xFFF, ops=0, np=0, fmt=fmt, rbase=rows[0], rcnt=len(rows), rsplit=0, lo32=0,
-                       hi32=0)
+            cfg = dict(obase=obase[key] & 0xFFF, ops=0, np=0, fmt=fmt, rbase=rb, rcnt=rc, rsplit=0, lo32=0, hi32=0)
             tags = {}
             for f in range(len(grp['groups'][g])):   # S81-RATE3: the slice's physical frames (xs_topo)
                 sel = XP.TP.chunk(grp, grp['groups'][g][f], ch, R)
-                tags[f] = [grp['rows'][i] for i in sel]
+                tags[f] = [tag(i) for i in sel]
+                for i in sel:
+                    r = grp['rows'][i]
+                    if ctag:
+                        nff = len(grp['rows']) // 2
+                        kk = (grp['mat'][:-4], 'gate' if r < nff else 'up', r % nff)
+                    elif grp['mat'].endswith(('.w1', '.w3')):
+                        kk = (grp['mat'][:-3], 'gate' if grp['mat'].endswith('.w1') else 'up', r)
+                    else:
+                        kk = (grp['mat'], 'row', r)
+                    b, leaf, port, addr, _ = decode(tag(i) << 13, 0, cfg)
+                    amap[kk] = (g, leaf, addr)
             seen = set()
             for f, ts in tags.items():
                 for t in ts:
@@ -506,20 +523,62 @@ def cmd_cap(a):
                     if b or (leaf, addr) in seen:
                         bad += 1
                     seen.add((leaf, addr))
+            sl_ = [t & 63 for ts in tags.values() for t in ts]       # cap pairing store slot (row + 8 pos) mod 64
+            if len(sl_) != len(set(sl_)):
+                slotc.append(dict(phase=k, op=op, mat=grp['mat'], slice_index=g, rows=len(sl_), slots=len(set(sl_))))
             for g2 in range(XP.NSLICE):           # rows of other slices must fault (F9), never alias
                 if g2 != g and per_slice[g2]:
-                    t = grp['rows'][per_slice[g2][0]]
-                    if not decode(t << 13, 0, cfg)[0]:
-                        bad += 1
+                    for i in per_slice[g2]:
+                        if not decode(tag(i) << 13, 0, cfg)[0]:
+                            bad += 1
             slices.append(dict(slice_index=g, cfg=cfg, cfg_d=f'{cap_word(cfg):040x}', frame_tags=tags))
         rec['phases'].append(dict(phase=k, op=op, mat=grp['mat'], chunk=ch, rows_per_phase=R, slices=slices))
     rec['faults'] = bad
     rec['vp_rows_used'] = nxt
-    if getattr(a, 'final_ffn_placement', False):
+    if final_ffn:
         rec['final_ffn_placement'] = dict(capture_rows=[128,240],assembled_rows=[320,432],combined_rows=[448,464],
                                          admitted=False,requires='dead VPX lease + real RD/allgather reservations')
+    return rec, amap, slotc
+
+
+def cmd_cap(a):
+    """cap_emit for a layer (+ with GU_MERGE: the consumer-layout check against the two-matrix reference)"""
+    import xs_place as XP
+    if XP.TP.ENABLED:          # S81-ROMOPT-A: the physical frames per slice come from the die (xs_topo)
+        if not a.die_src:
+            raise SystemExit('OT_XS_TOPO=1 needs --die-src (physical frames per slice)')
+        import dv_layer_compile as C
+        C.Die(C.die_tree(None, a.die_src))
+    fx = XP.Fix(a.fixtures)
+    ops = XP.XS_OPS[a.layer]
+    ff = getattr(a, 'final_ffn_placement', False)
+    rec, amap, slotc = cap_emit(XP, fx, ops, ff)
+    rec['layer'] = a.layer
+    rec['topo'] = XP.TP.describe()
+    import xs_flags as XO
+    rec['env'] = XO.describe()
+    rec['pairing_slot_collisions'] = slotc
+    bad = rec['faults']
+    if XP.GU_MERGE:
+        XP.GU_MERGE = False
+        try:
+            _r0, ref, _s0 = cap_emit(XP, fx, ops, ff)
+        finally:
+            XP.GU_MERGE = True
+        diff = sorted(k for k in set(ref) | set(amap) if ref.get(k) != amap.get(k))
+        gsl = [c for c in slotc if c['op'] in ('ffn.experts_gu', 'ffn.shared_gu')]
+        ref_sl = [c for c in _s0 if c['op'] in ('ffn.experts_gu', 'ffn.shared_gu')]
+        rec['merged_layout_check'] = dict(rows=len(amap), reference_rows=len(ref), differing=len(diff),
+                                          first_differing=[list(map(str, d)) for d in diff[:5]],
+                                          gu_slot_collisions=len(gsl), reference_gu_slot_collisions=len(ref_sl),
+                                          vp_rows_used=rec['vp_rows_used'], reference_vp_rows_used=_r0['vp_rows_used'],
+                                          PASS=not diff and not gsl and rec['vp_rows_used'] == _r0['vp_rows_used'])
+        bad += 0 if rec['merged_layout_check']['PASS'] else 1
+        print('XS_CAP_MERGED_LAYOUT', json.dumps({k: v for k, v in rec['merged_layout_check'].items()
+                                                   if k != 'first_differing'}), diff[:3])
     Path(a.out).write_text(json.dumps(rec, indent=1) + '\n')
-    print(f'XS_CAP {a.layer} phases {len(seq)} slices/phase <= {XP.NSLICE} faults {bad} vp rows {nxt}')
+    print(f'XS_CAP {a.layer} phases {len(rec["phases"])} slices/phase <= {XP.NSLICE} faults {rec["faults"]} '
+          f'vp rows {rec["vp_rows_used"]} slot collisions {len(slotc)} gu_merge {XP.GU_MERGE}')
     return 0 if bad == 0 else 1
 
 
@@ -544,6 +603,7 @@ def main(argv=None):
     p.add_argument('--out', required=True)
     p.add_argument('--fixtures', default=str(LX.FIX))
     p.add_argument('--layer', default='L0')
+    p.add_argument('--die-src', default=None, help='die tree (physical frames per slice; needed with OT_XS_TOPO=1)')
     p.add_argument('--final-ffn-placement', action='store_true', help='opt-in actual VS13 capture rows; requires VPX lifetime proof')
     a = ap.parse_args(argv)
     return {'gen': cmd_gen, 'check': cmd_check, 'collect': cmd_collect, 'cap': cmd_cap}[a.cmd](a)
