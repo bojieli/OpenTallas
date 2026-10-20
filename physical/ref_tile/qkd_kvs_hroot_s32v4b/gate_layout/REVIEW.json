@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "reviewer": "codex coordinator takeover KV gate collection",
+ "time": "2026-10-20T03:59:56.627321-07:00",
+ "gate_commit": "2026-10-20T02:52:30-0700",
+ "geometry_sha256": "c6fbb406291658249f15c550681d19fa0f652baaeea5416a249362a1c7b9f8e7",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "c6fbb406291658249f15c550681d19fa0f652baaeea5416a249362a1c7b9f8e7",
+  "components": {
+   "outline": "2c31ce62feab746ea5bce5cd1b8a94087c71c5cd6bacf30d8a1f235832beab95",
+   "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+   "pins": "0b1d50182d64482ad5b7961bce5134c08f8eccdd5d39631df3040c7ab6ba0a73",
+   "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+  }
+ },
+ "verdict": "CHANGES",
+ "checklist": {
+  "lattice": "No hard macros; full standard-cell rows; lattice not applicable.",
+  "std_cell_band": "Centre 80x80 or90x90 cluster visible in density, with IO register faces at north/south. cts.log HROOT_CENTER central7306 cells area1206.101um2 util18.85% or14.89%; global2.3% is pin-limited.",
+  "pin_spread": "Full N/S/E faces, maximum N5.29/S5.06 pins/um <6; clock root W.",
+  "clock_entry": "W-face clock root; measured TT/FF insertion 425.4/357.0 ps, boundary spreads 50.7/49.8 ps; parent compensation or landed boundary required.",
+  "shape": "Square300.2x300.2, no macros, density central fence visible, GRT0.",
+  "reach": "Pending exact CTS BUF/INV endpoint audit result before approval.",
+  "protocol": "Synchronous sampled reset 4 assert/release edges (2 landing+2core), HROOT_LAND_EDGES2 each4chains; +3 release edges vs k1 once boot. Exact/mutant/offphase receipts remain pinned."
+ }
+}
