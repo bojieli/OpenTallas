@@ -20,7 +20,12 @@ module tb_idx_chunk_rt_equiv;
 `ifndef QLATE
 `define QLATE 0
 `endif
- ot_hbm_idx_chunk_rt #(.QLATE(`QLATE)) dut(.clk(clk),.clk_pair({16{clk}}),.rst_n(rst_n),.hb(8'd8),
+`ifdef OT_CHUNK_RT_L
+ ot_hbm_idx_chunk_rt_l #(.QLATE(`QLATE)) dut(                    // L2H-IDXSCORE 10-19: landed-reset / ring-buffer successor
+`else
+ ot_hbm_idx_chunk_rt #(.QLATE(`QLATE)) dut(
+`endif
+  .clk(clk),.clk_pair({16{clk}}),.rst_n(rst_n),.hb(8'd8),
   .ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.k_v(k_v),.k_kv(k_kv),.k_key(k_key),
   .c_v(b_v),.c_kv(b_kv),.c_sum(b_s),.c_fault(b_f),.online(b_on));
  integer seed=20261017, gapk=2, gapq=120, frames=6, nkeys=200;

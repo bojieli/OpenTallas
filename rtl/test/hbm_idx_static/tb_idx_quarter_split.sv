@@ -3,6 +3,8 @@
 // OWN-IDXSCORE 2026-10-18: lockstep of the wires-only IDX quarter scorer (ot_hbm_idx_score_quarter_wo = W glue tile +
 // 8 leaves + E glue tile) against the flat ot_hbm_idx_score_quarter_static, identical stimulus, EVERY edge compared:
 // new.score / new.fault == old one edge earlier (the W tile's registered output stage = +1 on every leaf input).
+// -DOT_QS_WO2 (L2H-IDXSCORE 2026-10-19): the DUT is the r4 parent ot_hbm_idx_score_quarter_wo2 (W tile r4 with a mid stage:
+// +2 edges, row clocks, leaf_c1 leaves, E tile r4 with per-row score registers); compared at +2.
 // Two frames (query load of all 32 heads, key beats with partial last beat, keep bitmap, different rank / first_ord),
 // strap HALF from -GHALF. Reset defines only score.ev and fault (payload flops have no reset).
 // During reset assert those controls; from the FIRST rst_n-high edge compare the ENTIRE score bus,
@@ -21,15 +23,24 @@ module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0
   .clk_hslice(c256),.rst_n(rst_n),.half(1'(HALF)),.rank(rank),.first_ord(first_ord),.nkeys(nkeys),.keep_en(keep_en),
   .keep_bitmap(keep_bitmap),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.beat_v(beat_v),
   .beat_index(beat_index),.key_lines(key_lines),.score(so),.fault(fo));
+`ifdef OT_QS_WO2
+ localparam integer LAT=2;
+ ot_hbm_idx_score_quarter_wo2 #(.TP(TP)) u_new(.clk_engine(c2),.clk_tail(c2),.clk_chunk(c8),.rst_n(rst_n),.half(1'(HALF)),.rank(rank),.first_ord(first_ord),.nkeys(nkeys),.keep_en(keep_en),
+  .keep_bitmap(keep_bitmap),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.beat_v(beat_v),
+  .beat_index(beat_index),.key_lines(key_lines),.score(sn),.fault(fn));
+`else
+ localparam integer LAT=1;
  ot_hbm_idx_score_quarter_wo #(.TP(TP)) u_new(.clk_ctl(clk),.clk_engine(c2),.clk_meta(c2),.clk_tail(c2),.clk_chunk(c8),
   .clk_hslice(c256),.rst_n(rst_n),.half(1'(HALF)),.rank(rank),.first_ord(first_ord),.nkeys(nkeys),.keep_en(keep_en),
   .keep_bitmap(keep_bitmap),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.beat_v(beat_v),
   .beat_index(beat_index),.key_lines(key_lines),.score(sn),.fault(fn));
- reg [305:0] so_d; reg fo_d; integer cyc=0, errs=0, evs=0, nz=0, oldfault_cyc=-1, newev=0;
+`endif
+ reg [305:0] so_d1, so_d; reg fo_d1, fo_d; integer cyc=0, errs=0, evs=0, nz=0, oldfault_cyc=-1, newev=0;
  integer nz_row0=0, nz_row1=0, lane_faults=0;
  bit finite_frame=0;
  always @(posedge clk) begin
-  so_d<=so; fo_d<=fo; cyc<=cyc+1;
+  so_d1<=so; fo_d1<=fo; cyc<=cyc+1;
+  if (LAT==2) begin so_d<=so_d1; fo_d<=fo_d1; end else begin so_d<=so; fo_d<=fo; end
   begin
    if ((!rst_n && ({sn[0],so[0],fn,fo} !== 4'b0)) ||
        (rst_n && (sn!==so_d || fn!==fo_d))) begin
@@ -85,10 +96,18 @@ module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0
  // Reset controls remain driven by RTL; normal clock assignments flush poison.
  initial if ($test$plusargs("poison_payload")) begin
   force u_old.score[305:1] = {305{1'b1}};
+`ifdef OT_QS_WO2
+  force u_new.u_e.score0[153:1] = {153{1'b0}}; force u_new.u_e.score1 = {152{1'b0}};
+`else
   force u_new.u_e.score[305:1] = {305{1'b0}};
+`endif
   repeat(2) @(negedge clk);
   release u_old.score[305:1];
+`ifdef OT_QS_WO2
+  release u_new.u_e.score0[153:1]; release u_new.u_e.score1;
+`else
   release u_new.u_e.score[305:1];
+`endif
   $display("IDX_QUARTER_SPLIT payload_poison_released");
  end
  initial begin
