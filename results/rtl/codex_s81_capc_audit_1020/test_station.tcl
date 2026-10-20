@@ -1,0 +1,3 @@
+read_db /route/routes/s81sl_capc2_s81capc2_1f4c80cf6/work/orfs/results/asap7/opentallas_ot_s81sl_capc2_asap7_ref_s81sl_capc2_s81capc2_1f4c80cf6/base/6_final.odb
+source /audit/reach_stations.tcl
+exit
