@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_suvm",
+ "enable": false,
+ "reason": "qfd_dv_s5_suvm is a register-for-register cut of qfd_dv_slice2: every lane-side input is a lane-relay flop Q one hop away (lrly), every output is flop Q (gb/gv/lv1/pd1 relay stage 1, su_* status, VM capture flops + the qfd_dv_vm word/lane extraction mux) or su_nr (HARD 1 register); a flow pin register would add an unpriced edge inside the lane read round trip (ML 1 / RD 2: the closed lane head binds)"
+}
