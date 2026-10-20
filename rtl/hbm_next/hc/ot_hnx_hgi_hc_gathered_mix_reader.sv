@@ -126,9 +126,9 @@ module ot_hnx_hgi_hc_gathered_mix_reader #(parameter integer RESP_PHASE=19)(
             resp_c<={24{resp_n[1],resp_n[0]}};
             rsp_o<={resp_n[1],resp_n[1],resp_n[0],resp_n[0]};
             if(actual_valid!==expected_valid)fault<=1;
+            if(act_c[0])ph_c<={2{phase==23?5'd0:phase+5'd1}};   // = the phase update (act_c[0] = active)
             if(active)begin
                 phase<=phase==23?5'd0:phase+5'd1;
-                ph_c<={2{phase==23?5'd0:phase+5'd1}};
                 if(request_slot)issued<=issued+1'b1;
                 if(rsp_o[3])returned<=returned+1'b1;
                 if(rsp_o[2])begin

@@ -92,6 +92,8 @@ module ot_hnx_hc_cal #(
     // headers (h_n) read captured: two separate s0 cones (one drove 45).  s0 = sbase + spos * srs as a 3-term shifted sum.
     (* keep = "true", dont_touch = "true" *) reg [34:0] cap_k;   // = {captured[110:95], captured[78:60]}
     always @(posedge clk)cap_k<={macro_data[110:95],macro_data[78:60]};
+    (* keep = "true", dont_touch = "true" *) reg [2:0] cap_p;    // = captured[78:76]: the header cone's position (35/36)
+    always @(posedge clk)cap_p<=macro_data[78:76];
     function automatic [15:0] f_s0(input [15:0] base, input [2:0] pos, input [15:0] rsf);
         reg [15:0] rs;
         begin
@@ -99,7 +101,7 @@ module ot_hnx_hc_cal #(
             f_s0=base+16'(MUT_SBASE)+({16{pos[0]}}&rs)+({16{pos[1]}}&{rs[14:0],1'b0})+({16{pos[2]}}&{rs[13:0],2'b0});
         end
     endfunction
-    wire [15:0] s0=f_s0(captured[75:60],captured[78:76],captured[110:95]);
+    wire [15:0] s0=f_s0(captured[75:60],cap_p,captured[110:95]);
     wire [15:0] s0k=f_s0(cap_k[15:0],cap_k[18:16],cap_k[34:19]);
     wire [15:0] sj[0:2];
     assign sj[0]=s0; assign sj[1]=s0+16'd1; assign sj[2]=s0+16'd2;
