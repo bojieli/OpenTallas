@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/root7-shared-source-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root7-shared-source-0720
+ot-run: ot-epyc7       admits   907 GB (avail 736, growth 101, headroom 0, waiters 0/0 GB) load 45/96 running 21 disk 5399 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root7-shared-source-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root7-shared-source-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root7-shared-source-0720
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1685207-1792506753 after 0 s
+4
+4
+ERROR: file or directory not found: tests/test_source_native_reset.py
+
+
+no tests ran in 0.00s
+ERROR: file or directory not found: tests/test_source_native_reset.py
+
+
+no tests ran in 0.00s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1685207-1792506753): exit 0
