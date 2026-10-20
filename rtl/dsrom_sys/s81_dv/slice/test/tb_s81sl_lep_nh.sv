@@ -7,7 +7,7 @@
 //   phase 2: H sends one HOST frame, then (after a reset) one KS frame: a HOST_EN 0 endpoint has no host plane, so each
 //            must raise A's sticky fault (an unknown frame type) and must not appear on ri.
 // Verdict: "PASS lep_nh ..." or "FAIL lep_nh ...".
-module tb_s81sl_lep_nh #(parameter integer N = 400, parameter integer SEED = 5, parameter integer WAIT = 8000);
+module tb_s81sl_lep_nh #(parameter integer N = 400, parameter integer SEED = 5, parameter integer WAIT = 8000, parameter integer STD_NATIVE32 = 0);
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
     reg [1103:0] a_ro = 0; wire [1103:0] a_ri; wire a_f;
@@ -16,7 +16,7 @@ module tb_s81sl_lep_nh #(parameter integer N = 400, parameter integer SEED = 5, 
     reg h0v = 0, h1v = 0; reg [552:0] h0d = 0, h1d = 0;
     wire [511:0] atx0, atx1, htx0, htx1, arx0, arx1, hrx0, hrx1; wire [1:0] ast0, ast1, hst0, hst1;
     wire [512:0] pa0, pa1, ph0, ph1; wire ta0, ta1, th0, th1;
-    ot_s81sl_lep_nh la (.clk(clk), .rst_n(rst_n), .ro(a_ro), .ri(a_ri),
+    ot_s81sl_lep_nh #(.NATIVE32_STD(STD_NATIVE32)) la (.clk(clk), .rst_n(rst_n), .ro(a_ro), .ri(a_ri),
         .lo0_v(a0v), .lo0_r(a0r), .lo0_d(a0d), .lo1_v(a1v), .lo1_r(a1r), .lo1_d(a1d),
         .li0_v(ai0v), .li0_r(ai0r), .li0_d(ai0d), .li1_v(ai1v), .li1_r(ai1r), .li1_d(ai1d), .rxv(arxv),
         .sl_f(1'b0), .l0_f(af0), .l1_f(af1), .fault(a_f));

@@ -112,6 +112,7 @@ module ot_s81sl_lep_core #(
     parameter integer NB = 80,         // ring beats per h message per endpoint (40,960 B / 4 end slices / 128 B)
     parameter integer RX_SRAM = 0,     // opt-in true SRAM RX, same show-ahead edge
     parameter integer TXRP = 1,        // 1: TX read pipeline register beside the SRAM column (S81-FIX3; +1 lo edge)
+    parameter integer NATIVE32_STD = 0, // separate opt-in standard bounded SRAM/control path
     parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
@@ -158,6 +159,9 @@ module ot_s81sl_lep_core #(
     output reg             fault
 );
     localparam integer H = 552;
+    localparam integer SAFE_STD=(NATIVE32_STD!=0 && MU_EN==0);
+    localparam integer SAFE_FIFO=(MU_EN!=0 || SAFE_STD) && RX_SRAM!=0;
+    localparam integer SAFE_CONTROL=((NATIVE32!=0 && MU_EN!=0) || SAFE_STD) && RX_SRAM!=0;
     localparam integer AT = $clog2(DT), AR = $clog2(DR);
     localparam integer NL = (AB_EN != 0) ? 4 : 2;      // lanes (2 per pair)
     localparam integer NBW = $clog2(NB + 1);
@@ -165,27 +169,27 @@ module ot_s81sl_lep_core #(
     localparam integer TG = 1045;                      // tag field base: [TG] tag, [TG+1] land, user, pos
     // regional reset: the port drives only this relay (own synchroniser on this leaf's clock root); one copy per region
     localparam integer RX_NS=(H+8)/8;
-    localparam integer NRX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*RX_NS:0;
-    localparam integer NRX_OUTRST=(MU_EN!=0 && RX_SRAM!=0)?((1103+15)/16):0;
+    localparam integer NRX_MEMRST=(SAFE_FIFO)?NL*RX_NS:0;
+    localparam integer NRX_OUTRST=(SAFE_FIFO)?((1103+15)/16):0;
     localparam integer TX_NS=(H+8)/8;
     localparam integer FRAME_NS=(2*H+7)/8;
     localparam integer TX_NA=(TX_NS+3)/4;
     localparam integer PUSH_GROUPS=TX_NA;
     localparam integer TX_RST_STRIDE=TX_NS+2*TX_NA;
-    localparam integer NTX_MEMRST=(MU_EN!=0 && RX_SRAM!=0)?NL*TX_RST_STRIDE:0;
-    localparam integer NFRAME_RST=(MU_EN!=0 && RX_SRAM!=0)?FRAME_NS:0;
-    localparam integer NHOST_RST=(MU_EN!=0 && RX_SRAM!=0 && HOST_EN!=0 )?37:0;
+    localparam integer NTX_MEMRST=(SAFE_FIFO)?NL*TX_RST_STRIDE:0;
+    localparam integer NFRAME_RST=(SAFE_FIFO)?FRAME_NS:0;
+    localparam integer NHOST_RST=(SAFE_FIFO && HOST_EN!=0 )?37:0;
     localparam integer TX_RSTBASE=4+NRX_MEMRST+NRX_OUTRST;
     localparam integer FRAME_RSTBASE=TX_RSTBASE+NTX_MEMRST;
     localparam integer HOST_RSTBASE=FRAME_RSTBASE+NFRAME_RST;
     localparam integer CTRL_RSTBASE=HOST_RSTBASE+NHOST_RST;
-    localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+8+PUSH_GROUPS+NL+((HOST_EN!=0)?17:0):0;
+    localparam integer NCTRL_RST=(SAFE_FIFO)?NL+8+PUSH_GROUPS+NL+((HOST_EN!=0)?17:0):0;
     localparam integer PAYLOAD_RSTBASE=CTRL_RSTBASE+NL+8+PUSH_GROUPS+NL;
     localparam integer NRX_RST_OLD=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST+NCTRL_RST;
     localparam integer NATIVE32_RSTBASE=4+NRX_RST_OLD;
-    localparam integer NRX_RST=NRX_RST_OLD+((NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0 && HOST_EN!=0)?4:0);
+    localparam integer NRX_RST=NRX_RST_OLD+((SAFE_CONTROL && HOST_EN!=0)?4:0);
     wire [3+NRX_RST:0] rr;
-    generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_reset_balanced
+    generate if(SAFE_FIFO) begin:g_reset_balanced
       ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     end else begin:g_reset_legacy
       ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
@@ -240,9 +244,9 @@ module ot_s81sl_lep_core #(
     reg [76:0] thq; reg [53:0] tkq;
     always @(posedge clk) begin thq <= th_x; tkq <= tk_x; end
     reg ph_v, pk_v, he; reg [76:0] pd; reg [53:0] kd; wire [11:0] st_l;
-    wire ev_h = (NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0)?(host_valid_regions[0] || host_now_regions[11:0]!=host_old_regions[11:0]):(thq[64] || thq[76:65] != st_l), ev_k = tkq[53];
-    wire status_reset=(MU_EN!=0 && RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+2]:rn;
-    if(NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0) begin:g_native_status
+    wire ev_h = (SAFE_CONTROL)?(host_valid_regions[0] || host_now_regions[11:0]!=host_old_regions[11:0]):(thq[64] || thq[76:65] != st_l), ev_k = tkq[53];
+    wire status_reset=(SAFE_FIFO)?rr[CTRL_RSTBASE+NL+2]:rn;
+    if(SAFE_CONTROL) begin:g_native_status
       for(genvar hs=0;hs<4;hs=hs+1) begin:g_region
         (* keep=1 *) ot_s81sl_lep_status_region u_status(.clk(clk),.rn(rr[NATIVE32_RSTBASE+hs]),
           .sample({th_x[76:65],th_x[64]}),.now_status(host_now_regions[12*hs+:12]),
@@ -277,7 +281,7 @@ module ot_s81sl_lep_core #(
             end
             if (ev_k) begin pk_v <= 1'b1; if(MU_EN==0 || RX_SRAM==0) kd <= tkq; if (pk_v && !kp_go) he <= 1'b1; end
         end
-    if(MU_EN!=0 && RX_SRAM!=0) begin:g_payload_regions
+    if(SAFE_FIFO) begin:g_payload_regions
       wire [79:0] old_host={3'd0,pd},new_host={3'd0,thq},next_host;
       wire [55:0] old_key={2'd0,kd},new_key={2'd0,tkq},next_key;
       for(genvar hh=0;hh<10;hh=hh+1) begin:g_host
@@ -338,7 +342,7 @@ module ot_s81sl_lep_core #(
     reg [2*H-1:0] fr;
     wire [FRAME_NS-1:0] frame_host_pending,frame_key_pending;
     genvar fc,fb;
-    generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_frame_local
+    generate if(SAFE_FIFO) begin:g_frame_local
       localparam integer HG=(FRAME_NS+7)/8;
       wire [HG-1:0] host_event;
       for(genvar hg=0;hg<HG;hg=hg+1) begin:g_host_event
@@ -404,7 +408,7 @@ module ot_s81sl_lep_core #(
     wire [1:0] pp = {push && bsel, push && !bsel};     // push per pair
     wire [2*PUSH_GROUPS-1:0] push_group;
     wire [2*NL-1:0] push_lane;
-    generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_push_groups
+    generate if(SAFE_FIFO) begin:g_push_groups
       for(genvar pg=0;pg<PUSH_GROUPS;pg=pg+1) begin:g_group
         (* keep *) reg ring_r;
         always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+pg])
@@ -445,9 +449,9 @@ module ot_s81sl_lep_core #(
         (* keep = "true" *) reg cr_q;                  // lo_r pin flop
         wire [H:0] q;
         wire iss = n != 0 && cnt != 0;
-        wire psh = (MU_EN!=0 && RX_SRAM!=0)?push_lane[2*t+t/2]:pp[t / 2];
+        wire psh = (SAFE_FIFO)?push_lane[2*t+t/2]:pp[t / 2];
         wire wr = psh && (n != DT || iss);
-        if(MU_EN!=0 && RX_SRAM!=0 && SRAM!=0) begin:g_safe_write
+        if(SAFE_FIFO && SRAM!=0) begin:g_safe_write
             localparam integer GA=4, NA=(TX_NS+GA-1)/GA;
             wire [NA*AT-1:0] wa_copy,ra_copy;
             wire [NA-1:0] wr_group,rd_group;
@@ -544,11 +548,11 @@ module ot_s81sl_lep_core #(
     wire rpb = relp[1] && !relp[0];                    // the released pair is B
     genvar c;
     generate for (t = 0; t < NL; t = t + 1) begin : g_rx
-        wire rx_state_reset=(MU_EN!=0 && RX_SRAM!=0)?rr[CTRL_RSTBASE+t]:rnx;
+        wire rx_state_reset=(SAFE_FIFO)?rr[CTRL_RSTBASE+t]:rnx;
         reg [H:0] mem [0:DR-1];
         reg [AR-1:0] wp, rp; reg [AR:0] n; reg vq, nz, cr, f; reg [DR-1:0] we; reg [H:0] dq;
         wire pop;
-        if(NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0) begin:g_native_pop
+        if(SAFE_CONTROL) begin:g_native_pop
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
           wire pair_b=(t==0)?1'b1:rne[2*(t/2)+1];
 `else
@@ -573,13 +577,13 @@ module ot_s81sl_lep_core #(
                 for (k = 0; k < DR; k = k + 1) we[k] <= (wp_nx == AR'(k)) && (n_nx != (AR+1)'(DR));
             end
         always @(posedge clk) dq<=li_d[t*(H+1)+:H+1];
-        if(MU_EN==0 || RX_SRAM==0) begin:g_legacy_mem
+        if(!SAFE_FIFO) begin:g_legacy_mem
             integer j;
             always @(posedge clk)
                 for(j=0;j<DR;j=j+1) if(we[j]) mem[j]<=dq;
         end
         // MU_EN 0: the head is read combinationally from mem[rpc] (pre-MU structure, unchanged; loop empty at MU_EN 1)
-        for (c = 0; c < ((MU_EN != 0) ? 0 : RREP); c = c + 1) begin : g_c
+        for (c = 0; c < ((MU_EN != 0 || SAFE_STD) ? 0 : RREP); c = c + 1) begin : g_c
             localparam integer LO = c * SW, HI = ((c + 1) * SW > H + 1) ? H + 1 : (c + 1) * SW;
             if (LO < H + 1) begin : g_on
                 (* keep = "true" *) reg [AR-1:0] rpc;
@@ -594,7 +598,7 @@ module ot_s81sl_lep_core #(
         // The pointer copy + increment is replicated per column group (as RREP above); pop = this pair's release (nz
         // flops of the pair only), so rp_nx -> 8:1 row mux -> hd stays inside the lane.  hk = a PRE-DECODED land bit of
         // the head row (stored per row at write): lane 0 of a pair = XB / XQ ring beat, lane 1 = tag && land bits.
-        if (MU_EN != 0) begin : g_sa
+        if (MU_EN != 0 || SAFE_STD) begin : g_sa
             wire kd = (t % 2 == 0) ? (dq[0] && (dq[3:1] == K_XB || dq[3:1] == K_XQ)) : (dq[TG - H] && dq[TG + 1 - H]);
             reg [DR-1:0] mk,mrk,mtk,mhost,mks; reg hk;
             wire host_d=(t==0) && !dq[0] && dq[3:1]==3'd1;
@@ -685,11 +689,31 @@ module ot_s81sl_lep_core #(
     wire mcol_w;                                       // MU: replay collided with a cut-through beat
     wire [1103:0] rb = {h1[H-1:0], h0[H-1:0]};          // the released frame (ring beat when bit 0)
     generate if (MU_EN == 0) begin : g_rxr
+    if(SAFE_STD) begin:g_std_output
+      localparam integer SG=69,CG=(SG+7)/8;
+      wire [CG-1:0] en;
+      for(genvar cg=0;cg<CG;cg=cg+1) begin:g_decode
+        (* keep=1 *) ot_s81sl_lep_std_enable u_decode(.a(rnex[0]),.b(rnex[1]),.ring(rringx[0]),.q(en[cg]));
+      end
+      for(genvar sg=0;sg<SG;sg=sg+1) begin:g_slice
+        localparam integer LO=1+16*sg,SW=(1104-LO<16)?1104-LO:16;
+        (* keep=1 *) reg select_r;
+        always @(posedge clk or negedge rr[4+NRX_MEMRST+sg])
+          if(!rr[4+NRX_MEMRST+sg]) select_r<=0;
+`ifdef OT_S81SL_LEP_MUT_STDSEL
+          else select_r<=rel && h0[0]; // causal mutant: misses look-ahead age
+`else
+          else select_r<=en[sg/8];
+`endif
+        always @(posedge clk) rid[LO+:SW]<=select_r?rb[LO+:SW]:'0;
+      end
+    end else begin:g_std_legacy
     always @(posedge clk) rid <= (rel && h0[0]) ? {h1[H-1:0], h0[H-1:1]} : 1103'd0;   // data: no reset
+    end
     always @(posedge clk or negedge rnx)
         if (!rnx) riv <= 1'b0;
         else riv <= rel && h0[0];
-    assign mu_rt = 32'd0; assign ml_wv = 1'b0; assign ml_wd = 1104'd0; assign mcol_w = 1'b0; assign rhk = '0;
+    assign mu_rt = 32'd0; assign ml_wv = 1'b0; assign ml_wd = 1104'd0; assign mcol_w = 1'b0; if(!SAFE_STD) assign rhk = '0;
     end else begin : g_rxm
     // tagged = an XB / XQ ring beat with the tag bit; land = 1 -> landing leaf, else ri (tag stripped, tag on mu_rt)
     function automatic [1103:0] strip(input [1103:0] b);
@@ -859,7 +883,7 @@ module ot_s81sl_lep_core #(
             fh_v <= rel && hacc && h0[3:1] == 3'd1;
             fk_s <= rel && hacc && h0[3:1] == 3'd2 && ksp[52];
         end
-    if(MU_EN!=0 && RX_SRAM!=0) begin:g_host_local
+    if(SAFE_FIFO) begin:g_host_local
       wire [4:0] host_enable;wire key_enable;
       for(genvar hg=0;hg<5;hg=hg+1) begin:g_enable
         (* keep=1 *) ot_s81sl_lep_host_enable u_host(.ne0(rnex[0]),.ne1(rnex[1]),.hit(rhostx[0]),.en(host_enable[hg]));
@@ -920,7 +944,7 @@ endmodule
 // the MU ports of the core are unread / undriven there).  ot_s81sl_lep_mu: the multi-user endpoint (MU_EN 1).
 module ot_s81sl_lep #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer HOST_EN = 1
+    parameter integer HOST_EN = 1, parameter integer NATIVE32_STD = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -943,7 +967,7 @@ module ot_s81sl_lep #(
     output wire [52:0]     f_ks,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(HOST_EN), .MU_EN(0), .AB_EN(0)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(HOST_EN), .MU_EN(0), .AB_EN(0), .NATIVE32_STD(NATIVE32_STD), .RX_SRAM(NATIVE32_STD), .IN_PIPE(NATIVE32_STD)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -958,7 +982,7 @@ endmodule
 
 // HOST_EN = 0 leaf top (hardened master of the three host-less endpoints s_0S / s_0N / s_7S): no host ports
 module ot_s81sl_lep_nh #(
-    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1, parameter integer NATIVE32_STD = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -977,7 +1001,7 @@ module ot_s81sl_lep_nh #(
     // no l0_st / l1_st: the PHY lane status feeds only f_lf (host plane) at HOST_EN 1 (the lane tiles still take it in
     // their rx word, and lane faults reach the fault collector through l0_f / l1_f).  The core reads none of t_host / t_kd /
     // l*_st at HOST_EN 0 (generate), so these constants are not logic: synthesis of this top keeps no host pin or flop.
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(0), .AB_EN(0)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(0), .AB_EN(0), .NATIVE32_STD(NATIVE32_STD), .RX_SRAM(NATIVE32_STD), .IN_PIPE(NATIVE32_STD)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -1429,4 +1453,9 @@ endmodule
  wire [4:0] code=cut?ring_code:replay_code;
  wire has_tag=code[0] && (code[3:1]==3'd1 || code[3:1]==3'd2) && code[4];
  assign q=has_tag?(cut?ring_data:replay_data):8'd0;
+endmodule
+
+// Independent combinational decode groups keep each shared metadata input local.
+(* keep_hierarchy=1 *) module ot_s81sl_lep_std_enable(input wire a,b,ring,output wire q);
+ assign q=a&&b&&ring;
 endmodule
