@@ -83,7 +83,13 @@ def ssq_family():
     return lw, cmds, e0, span, boot
 
 
-def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mode='priced'):
+def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mode='priced', attn_cycles=None,
+            tile_meas=None, qtp8=None):
+    """TOKSIM-QW 10-19: attn_cycles = MEASURED attention round trip (q,k,v last D2D word at W5 -> first result dr word
+    at the W5 return pin + 16, replaces the ctlm price); tile_mode 'measured' + tile_meas = {op: {first_rs, first_final,
+    last_final, far}} edges from hr go at the slice pins (XT1 column-slice RTL run) replace the tile_first PARAMETER /
+    ME price; qtp8 = measured TP8 AR constants (E, ls_rec, ls_bi) overriding QTP8."""
+    Q8 = dict(QTP8, **(qtp8 or {}))
     rec = ctlm_rec(stage, lane_ages)
     R, C = rec['relay'], rec['constants']
     plan = rec['plan']
@@ -129,11 +135,15 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         """VM-destination matvec: the column tiles deliver the far words; with tile_first the DV tail is lowered, the
         tile compute is the ctlm price (the last result lands no earlier than the priced ME done)"""
         tf = tile_first
+        if tile_mode == 'measured':                      # tiles: first rs word / last final word measured from hr go
+            m = tile_meas[name]
+            tf = m['first_rs'] + m['far']
+            done = go_w5(at) + m['last_final'] + m['far'] + rv[own[name]['level']]
         for _ in range(2):
             ch = M.Chain(smap)
             low = M.lower_matvec(name, go_w5(at) + tf, ages, ch, own=own)
             land = max(d['far'][-1] for d in low['deliveries']) + rv[own[name]['level']]
-            if land >= done or tile_mode != 'priced':
+            if land >= done or tile_mode == 'first':
                 break
             tf += done - land
         tile_note.append(dict(matvec=name, tile_first_eff=tf, dv_tail=land - (go_w5(at) + tf), land=land, priced_done=done,
@@ -144,6 +154,9 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         tf = tile_first
         if tile_mode == 'priced':                        # the last AR word leaves W5 no earlier than the priced ME done
             tf = max(tf, done - 255 - go_w5(at) - ages['l8_ar'] - 2 * (N - 1))
+        elif tile_mode == 'measured':                    # first AR word after the first measured final word, last after the last
+            m = tile_meas[name]
+            tf = max(m['first_final'] + m['far'], m['last_final'] + m['far'] - 255)
         tile_note.append(dict(matvec=name, tile_first_eff=tf, priced_done=done, go_w5=go_w5(at)))
         ch = M.Chain(smap)
         t0 = go_w5(at) + tf + ages['l8_ar'] + 2 * (N - 1)
@@ -153,7 +166,7 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         if coll:
             gaps.append(f'{name}: AR outbound lane collisions {coll[:2]}')
         last_in = t0 + 255
-        first_out = last_in + QTP8['E'] + (QTP8['ls_bi'] - QTP8['ls_rec'])
+        first_out = last_in + Q8['E'] + (Q8['ls_bi'] - Q8['ls_rec'])
         return low, ch, x, t0, first_out
 
     # ---------------- critical path (W5-pin edges from the stage start), plan gaps kept between dependent ops
@@ -174,8 +187,12 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     t_qk = stage_rec('QK-norm / RoPE / v*r -> D2D q,k,v (DV)', list(range(3, 11)), q0, q0 + (qk_end - qk_c0),
                      P[3]['at'], P[10]['done'], 'dv_lower_vec qk (vec_ages.json measured)')
     a0 = t_qk + gap(10, 11)
-    t_att = stage_rec('attention (KV die native, PRICED)', [11], a0, a0 + P[11]['done'] - P[11]['at'], P[11]['at'],
-                      P[11]['done'], 'ctlm plan price: the KV die step is QW-KVATTN (not composed from a measurement here)')
+    if attn_cycles is None:
+        t_att = stage_rec('attention (KV die native, PRICED)', [11], a0, a0 + P[11]['done'] - P[11]['at'], P[11]['at'],
+                          P[11]['done'], 'ctlm plan price: the KV die step is QW-KVATTN (not composed from a measurement here)')
+    else:
+        t_att = stage_rec('attention (D2D C2K + KV die + K2C, MEASURED)', [11], a0, a0 + attn_cycles, P[11]['at'],
+                          P[11]['done'], f'measured round trip {attn_cycles} (TOKSIM-QW; see cycles.json source)')
     # the attention result's first dr word is taken at the W5 return pin on the PRICED attention done (conservative:
     # the ctlm price already counts its own result landing, plan first landed word = done - 16)
     t_ret = stage_rec('attention return: dr words land (PORTS dd windows) + o_proj x stream (DV)', [11, 12], t_att,
@@ -187,7 +204,7 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     t_o = stage_rec('o_proj matvec L8 -> AR words + XC (column tiles + STN)', [12, 13], o_at, o_t0 + 255, P[12]['at'],
                     P[13]['done'], 'dv_lower_mat (stagger, XC dst 0)')
     t_ar1 = stage_rec('all-reduce 1 (TP8 collective)', [], o_t0, o_first_out, XCp[0]['at'], XCp[0]['done'] - 256,
-                      QTP8['source'] + ' : last in -> first out; priced = XC at -> done - 256')
+                      Q8['source'] + ' : last in -> first out; priced = XC at -> done - 256')
     r1_end = o_first_out + (rs_xend - rs_r0)
     t_r1 = stage_rec('residual 1: AR landing + post-scale + add + SSQ + x stream (DV)', [14, 15], o_first_out, r1_end,
                      XCp[0]['done'] - 256, P[15]['done'],
@@ -204,7 +221,7 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     t_d = stage_rec('down matvec L8 -> AR words + XC (column tiles + STN)', [20, 21], d_at, d_t0 + 255, P[20]['at'],
                     P[21]['done'], 'dv_lower_mat (stagger, XC dst 0)')
     t_ar2 = stage_rec('all-reduce 2 (TP8 collective)', [], d_t0, d_first_out, XCp[1]['at'], XCp[1]['done'] - 256,
-                      QTP8['source'])
+                      Q8['source'])
     r2_end = d_first_out + (rs_xend - rs_r0)
     p_end = P[23]['done']
     t_r2 = stage_rec('residual 2 + SSQ + x stream (DV)', [22, 23], d_first_out, r2_end, XCp[1]['done'] - 256, p_end,
@@ -346,7 +363,7 @@ def main():
     ap.add_argument('--tile-first', type=int, default=40)
     ap.add_argument('--ar-order', default='row', choices=('row', 'slice'))
     ap.add_argument('--lane-ages', default=LANE_AGES)
-    ap.add_argument('--tile-mode', default='priced', choices=('priced', 'first'),
+    ap.add_argument('--tile-mode', default='priced', choices=('priced', 'first', 'measured'),
                     help='priced: the column-tile matvec time = the ctlm ME price (results no earlier than the priced '
                          'done); first: tile_first only (DV-side lower bound)')
     a = ap.parse_args()

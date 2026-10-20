@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.toksim.qwen_rom.inputs.v1",
+ "release_source": "origin/claude/qw-gen3-1019 221cf90b7 (compute dv2f18dh2 -> GEN3 dv2f19g3); KV kvs14 GEN9 (no release KV build yet)",
+ "grades": "REL = RTL byte-identical to the release source; NEWEST = newest bench-passing RTL of the element (labelled); DIAG = measured on RTL that differs from the release source (re-run owed, NOT counted as measured); PRICED = plan/analytic",
+ "price_of_record": {"tok_s": 4810.9, "cycles": 249431, "source": "results/arch/token_path_1018/qwen_rom.json price_of_record (10-13 6,835-cycle production layer)"},
+ "dv": {"grade": "DIAG", "source": "DV family ages vec_ages/stn_ages/slice_ages (qlb_c4b/qlb_c4 benches, Verilator 5.050); realstg real-L0/L1 P8191 stages 14/14 bit-exact (claude/qw-realstg-1019 2cdba303d). 7 of 22 build sources differ from qw-gen3 -> TOKSIM-QW/STG re-runs on gen3"},
+ "tile": {"grade": "REL", "far": 18, "source": "XT1 column slice on dv2f18dh2 (claude/qw-tok-1019 865028dcf, results/rtl/qw_tok_1019/xt1dh2/mu1+mu4): 64/64 bit-exact on real TP8 rank-0 L0 ROM, MU_NU 1 and 4, NOBIND mutant FAIL; 67/70 sources byte-identical to qw-gen3 (3 TB files differ). Edges from hr go at the slice pins; far cluster +18 (XT1 note)",
+          "ops": {"qkv": {"first_rs": 181, "first_final": 237, "last_final": 244},
+                  "o": {"first_rs": 181, "first_final": 189, "last_final": 228},
+                  "gu": {"first_rs": 181, "first_final": 429, "last_final": 436},
+                  "down": {"first_rs": 181, "first_final": 221, "last_final": 324}}},
+ "attention": {"grade": "NEWEST", "round_trip_plan_cycles": 1825,
+               "source": "1u compute<->KV D2D pair on dv2f18dh2 (claude/qw-tok-1019, results/rtl/qw_tok_1019/xdie_dh2/pair_img, 34/34 sources = qw-gen3): 35 layers bit-exact, mutants FAIL; roundtrip cmd issue -> r31 land 1840 = C2K 63 + KV service 1779 (KV side = kvs14c kvs_attn LAND=0 stand-in, not GEN9) + K2C; plan term = 1840 - 31 (r0..r31 landing spread) + 16 (plan done = first landed word + 16) = 1825. KV attention on GEN9 -> TOKSIM-QW/KV"},
+ "attn_return": {"grade": "DIAG", "source": "QW-ATTNRET measured 98-edge attention-return family (claude/qw-attnret-1019 1ef2c2df6, qlb slice RTL)"},
+ "allreduce": {"grade": "DIAG", "qtp8": null, "source": "TP8 collective RTL bench E 284 / LS 376 (+2 bi LS 378), claude/xdie-qtp8-1018 fed8119c7; source identity vs qw-gen3 -> TOKSIM-QW/LINK"},
+ "die_edges": {"grade": "PRICED", "cycles": 52, "source": "TOK.QW.SCHED die edges not yet absorbed by the compiler: landings +45/layer, native59 +1, ctlm +4/+2"},
+ "head": {"grade": "PRICED", "cycles": 3101, "source": "token_path_compiled head.lm_head 3,101 (ctlm head plan); STG lm/amax bench on gen3 pending"},
+ "embed_fetch": {"grade": "PRICED", "cycles": 272, "source": "token_path embed 272 (KV-die embedding row fetch); the landing of the 256 words on the compute die is inside L0 cold (lowered)"},
+ "multi_user": {"users": 4, "status": "PENDING", "grade": "PENDING", "note": "4u link co-sim re-measure -> TOKSIM-QW/LINK; previous MU-D2D-OVL F16 frame 13,708.2 aggregate (u0 4,768.1) is pre-current-RTL and does not count"}
+}
