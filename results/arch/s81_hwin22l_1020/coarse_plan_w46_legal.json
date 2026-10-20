@@ -1,0 +1,86 @@
+{
+  "scope": "Conservative structural coarse-region planning using complete actual c21k CTS graph and actual macro/port pins; NOT a gate, native placement or new RTL proof",
+  "liberty_role_errors": [],
+  "groups": {
+    "CENTRE": {
+      "cells": 52070,
+      "area_um2": 6951.700260000224,
+      "box": [
+        147.8,
+        159.84,
+        413.8,
+        206.28
+      ],
+      "density": 0.5627521856968183,
+      "halo_cut_um2": 599.1408000000022,
+      "conservative_legal_area_um2": 11753.899199999996,
+      "legal_density": 0.591437797935193
+    },
+    "WEST": {
+      "cells": 15215,
+      "area_um2": 2035.4554799999496,
+      "box": [
+        60.24,
+        159.84,
+        147.8,
+        206.28
+      ],
+      "density": 0.5005686466157302,
+      "halo_cut_um2": 197.02440000000058,
+      "conservative_legal_area_um2": 3869.2619999999993,
+      "legal_density": 0.5260578063723651
+    },
+    "EAST": {
+      "cells": 15549,
+      "area_um2": 2076.746040000038,
+      "box": [
+        413.8,
+        159.84,
+        501.36,
+        206.28
+      ],
+      "density": 0.5107230125256397,
+      "halo_cut_um2": 197.0244000000008,
+      "conservative_legal_area_um2": 3869.2619999999993,
+      "legal_density": 0.5367292367381786
+    }
+  },
+  "boxes": {
+    "WEST": [
+      60.24,
+      159.84,
+      147.8,
+      206.28
+    ],
+    "CENTRE": [
+      147.8,
+      159.84,
+      413.8,
+      206.28
+    ],
+    "EAST": [
+      413.8,
+      159.84,
+      501.36,
+      206.28
+    ]
+  },
+  "cell_area": 11063.901780000211,
+  "endpoint_pairs": 567221,
+  "max_box_bound_um": 404.124,
+  "over405": 0,
+  "violations": [],
+  "reset_owner_hist": {
+    "CENTRE": 516,
+    "WEST": 128,
+    "EAST": 127
+  },
+  "input_sha256": {
+    "terms.tsv": "42a8268ea1af276aa6e20cc6b6a9bbbf475ae84d1f8eb697c6f9f6b0e34380eb",
+    "instances.tsv": "43856f132714fae5cd3cb9a61bbd7a9929bb0aebfe113bafe7e3d1fbdf2d4534"
+  },
+  "legal_band_area_um2": 24714.849599999998,
+  "legal_band_density": 0.44766211241682863,
+  "source_only_legal_band_density": 0.37026877153239895,
+  "legal_plan_notes": "Conservative continuous-area halo subtraction, not actual native generated-row/site-grid proof. Mandatory generated native rows and exact stage occupancy remain owed."
+}

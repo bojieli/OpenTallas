@@ -1,0 +1,74 @@
+{
+  "scope": "Complete original native1_synth source graph with unchanged actual macro/port pins; conservative structural region planning ONLY; not a gate or native placement",
+  "liberty_role_errors": [],
+  "groups": {
+    "CENTRE": {
+      "cells": 37873,
+      "area_um2": 5473.900619998975,
+      "box": [
+        147.8,
+        159.84,
+        413.8,
+        206.28
+      ],
+      "density": 0.44312174331168486
+    },
+    "WEST": {
+      "cells": 10816,
+      "area_um2": 1741.3477200000889,
+      "box": [
+        60.24,
+        159.84,
+        147.8,
+        206.28
+      ],
+      "density": 0.4282403029949117
+    },
+    "EAST": {
+      "cells": 10891,
+      "area_um2": 1749.5125200000782,
+      "box": [
+        413.8,
+        159.84,
+        501.36,
+        206.28
+      ],
+      "density": 0.4302482284573163
+    }
+  },
+  "boxes": {
+    "WEST": [
+      60.24,
+      159.84,
+      147.8,
+      206.28
+    ],
+    "CENTRE": [
+      147.8,
+      159.84,
+      413.8,
+      206.28
+    ],
+    "EAST": [
+      413.8,
+      159.84,
+      501.36,
+      206.28
+    ]
+  },
+  "cell_area": 8964.760859999142,
+  "endpoint_pairs": 567221,
+  "max_box_bound_um": 404.124,
+  "over405": 0,
+  "violations": [],
+  "reset_owner_hist": {
+    "CENTRE": 516,
+    "EAST": 127,
+    "WEST": 128
+  },
+  "input_sha256": {
+    "terms_src.tsv": "9031d091b71c6735a51700c5a74c8e532e413f70cdb961f88ea2926c06f8ce7b",
+    "instances_src.tsv": "6d8afc22e2cd86a39016c045d7d5b09eb63254ac41e7ae2ddf88913f7824a275",
+    "terms.tsv": "42a8268ea1af276aa6e20cc6b6a9bbbf475ae84d1f8eb697c6f9f6b0e34380eb"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "scope": "Conservative structural coarse-region planning using complete actual c21k CTS graph and actual macro/port pins; NOT a gate, native placement or new RTL proof",
+  "liberty_role_errors": [],
+  "groups": {
+    "CENTRE": {
+      "cells": 52070,
+      "area_um2": 6951.700260000224,
+      "box": [
+        155.8,
+        163.89,
+        405.8,
+        203.85
+      ],
+      "density": 0.6958658918919142
+    },
+    "WEST": {
+      "cells": 15215,
+      "area_um2": 2035.4554799999496,
+      "box": [
+        43.2,
+        163.89,
+        155.8,
+        203.85
+      ],
+      "density": 0.4523741058998495
+    },
+    "EAST": {
+      "cells": 15549,
+      "area_um2": 2076.746040000038,
+      "box": [
+        405.8,
+        163.89,
+        518.4,
+        203.85
+      ],
+      "density": 0.461550813691142
+    }
+  },
+  "boxes": {
+    "WEST": [
+      43.2,
+      163.89,
+      155.8,
+      203.85
+    ],
+    "CENTRE": [
+      155.8,
+      163.89,
+      405.8,
+      203.85
+    ],
+    "EAST": [
+      405.8,
+      163.89,
+      518.4,
+      203.85
+    ]
+  },
+  "cell_area": 11063.901780000211,
+  "endpoint_pairs": 567221,
+  "max_box_bound_um": 402.56000000000006,
+  "over405": 0,
+  "violations": [],
+  "reset_owner_hist": {
+    "CENTRE": 516,
+    "WEST": 128,
+    "EAST": 127
+  },
+  "input_sha256": {
+    "terms.tsv": "42a8268ea1af276aa6e20cc6b6a9bbbf475ae84d1f8eb697c6f9f6b0e34380eb",
+    "instances.tsv": "43856f132714fae5cd3cb9a61bbd7a9929bb0aebfe113bafe7e3d1fbdf2d4534"
+  }
+}
