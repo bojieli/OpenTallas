@@ -626,7 +626,11 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=No
                     continue
                 for c in ("tt", "ff"):
                     cr = d.get(c) or {}
-                    b = (cr.get("child_flop") or {}) if (cr.get("child_flop") or {}).get("min") is not None else (cr.get("boundary") or {})
+                    cf = cr.get("child_flop") or {}
+                    # Match pre_route_gate.corner_spreads: compensated child-flop
+                    # boundary wins over raw child clock-pin arrivals.
+                    b = (cf["boundary"] if cf.get("boundary") and cf.get("all") else
+                         cf if cf.get("min") is not None else cr.get("boundary") or {})
                     if b.get("min") is not None and b.get("max") is not None and float(b["max"]) - float(b["min"]) > CLOCK_PIN_SPREAD_MAX_PS:
                         bad.append(f"{d.get('source')} {c.upper()} {float(b['max']) - float(b['min']):.1f}")
             rows.append(dict(requires=n, ok=not bad, over=bad, text="every_root_spread: " + (

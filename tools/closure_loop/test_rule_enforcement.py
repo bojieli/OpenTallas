@@ -411,3 +411,21 @@ class EveryRootRequirement(unittest.TestCase):
         self.assertFalse(ok({"measured_clock": "core_clk", "clock_measurements": [dom("ck", "core_clk", 100, 150),
                                                                                    dom("hck", "hclk", 200, 300)]}))
         self.assertTrue(ok({}))
+
+
+class EveryRootCornersAndChildren(unittest.TestCase):
+    def test_second_root_ff_alone_can_refuse_and_exact_limit_passes(self):
+        f = EveryRootJudged()
+        r = PG.clock_record(f.out(h_tt=(200, 280), h_ff=(100, 181)), True)
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertEqual(PG.clock_record(f.out(h_tt=(200, 280), h_ff=(100, 180)), True)["verdict"], "PASS")
+
+    def test_nested_child_flop_boundary_requirement_uses_compensated_span(self):
+        import source_binding as SB
+        domains = [{"source":"ck", "clock":"core_clk"}, {"source":"hck", "clock":"hclk"}]
+        for lo, hi, ok in ((200,280,True),(200,281,False)):
+            domains[1]["tt"] = {"boundary":{"min":100,"max":120},
+                                "child_flop":{"all":{"min":lo,"max":hi},
+                                              "boundary":{"min":lo,"max":hi}}}
+            clock = {"measured_clock":"core_clk", "clock_measurements":domains}
+            self.assertEqual(SB.relaxed_rule_requirement(["every_root_spread"], clock)[0], ok)
