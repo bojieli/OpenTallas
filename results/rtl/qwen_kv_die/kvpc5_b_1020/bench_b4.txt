@@ -1,0 +1,22 @@
+cal::0 rc=0 KVPC_CAL PASS edges=60023 checks=59886 cmd_edges=15452 gos=1014 fault_rounds=169 errors=0 mut=0
+cal::1 rc=1 KVPC_CAL FAIL edges=60023 checks=59886 errors=20577 cmd_edges=15452 gos=1014 mut=1
+cal::2 rc=1 KVPC_CAL FAIL edges=60023 checks=59886 errors=20565 cmd_edges=15452 gos=1014 mut=2
+cal::3 rc=1 KVPC_CAL FAIL edges=60023 checks=59886 errors=521 cmd_edges=15452 gos=1014 mut=3
+ctrl::0 rc=0 KVPC_CTRL PASS edges=20000 checks=580624 active_out=172267 outs=16 errors=0 mut=0
+ctrl::5 rc=1 KVPC_CTRL FAIL edges=20000 checks=580624 errors=125096 active_out=172267 mut=5
+front::0 rc=0 KVPC_FRONT PASS edges=40000 checks=40000 puts=22890 holds=8489 freed=2860 errors=0 mut=0
+front::1 rc=1 KVPC_FRONT FAIL edges=40000 checks=40000 errors=39391 puts=22890 holds=8489 mut=1
+front::4 rc=1 KVPC_FRONT FAIL edges=40000 checks=40000 errors=39985 puts=22890 holds=8489 mut=4
+front::5 rc=1 KVPC_FRONT FAIL edges=40000 checks=40000 errors=39126 puts=22890 holds=8489 mut=5
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3649895-1792491128): exit 0
+path::0 rc=0 KVPC_PATH PASS edges=20000 checks=1161248 active_out=233268 outs=32 errors=0 mut=0
+path::2 rc=1 KVPC_PATH FAIL edges=20000 checks=1161248 errors=89 active_out=233268 mut=2
+path::5 rc=1 KVPC_PATH FAIL edges=20000 checks=1161248 errors=36359 active_out=233268 mut=5
+return::0 rc=0 KVPC_RETURN PASS edges=12000 checks=26734 consumed=9128 errors=0 mut=0
+return::1 rc=1 KVPC_RETURN FAIL edges=12000 checks=26734 errors=26705 consumed=9128 mut=1
+return::2 rc=1 KVPC_RETURN FAIL edges=12000 checks=26734 errors=18920 consumed=9128 mut=2
+tile:pc:0 rc=0 KVPC_TILE PASS edges=3000 checks=79216 active_out=28287 outs=14 errors=0 mut=0
+tile:pc:4 rc=1 KVPC_TILE FAIL edges=3000 checks=79216 errors=2986 active_out=28287 mut=4
+tile:pc:5 rc=1 KVPC_TILE FAIL edges=3000 checks=79216 errors=8213 active_out=28287 mut=5
+tile:pc_h:0 rc=0 KVPC_TILE PASS edges=3000 checks=73772 active_out=22151 outs=13 errors=0 mut=0
+tile:pc_h:5 rc=1 KVPC_TILE FAIL edges=3000 checks=73772 errors=8030 active_out=22151 mut=5

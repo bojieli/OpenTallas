@@ -181,7 +181,8 @@ CLONES = [
     (CORE, 'qkd_ctrl_pc_cdc_child', 'qkd_kvpc_s_cdc_child',
      [('ot_qkd_static_emb_cdc #(.ENABLE(1)) u_ecdc (', 'ot_qkd_static_emb_cdc_kvpc_s #(.ENABLE(1)) u_ecdc (')],
      [('hr_q', 1, 2), ('rs_q', 1, 3)]),
-    (CORE, 'qkd_ctrl_pc_obs_child', 'qkd_kvpc_s_obs_child', OBS_PO, [('hr_q', 1, 16)]),
+    # KV-PC5: hr_q 16 -> 20 copies (census b2: 540 async-reset pins incl. the pw copies = 34 / copy at 16)
+    (CORE, 'qkd_ctrl_pc_obs_child', 'qkd_kvpc_s_obs_child', OBS_PO, [('hr_q', 1, 20)]),
     (WOBS, 'qkd_static_kv_write_observer', 'qkd_kvpc_s_wobs', WOBS_SUBS),
     (CTRL, 'qkd_ctrl_pc_port_child_nc', 'qkd_kvpc_s_port_child',
      [('    ot_qfd_emb_pcport_nkw #(', '    ot_qfd_emb_pcport_nkw_kvpc_s #(')],
