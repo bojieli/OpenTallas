@@ -19,10 +19,17 @@ import os
 import sys
 import time
 
+import reset_forest_geometry
 from reset_forest_geometry import Geometry, GeometryError, md
 import reset_rows
 
 T0 = time.time()
+
+
+# L2H-GEN2D-RST 10-19: carrier station home search radius (was a fixed 64.8 um; carrK with the 12.96 x 6.48 hard footprint
+# found no home within 64.8 um).  Every candidate home is still reach-checked against its parent (ok()), so a larger radius
+# only displaces a station further from its model centre (reported as max home displacement), never relaxes reach.
+CARRIER_HOME_UM = 64.8
 
 
 def log(*a):
@@ -264,8 +271,9 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                 taken.setdefault((i, j), []).append(r)
         g.block_rect(*r)   # later (planner) domains never home on a carrier tile
 
-    def home_near(kind, cx, cy, taken, ok, max_um=64.8):
+    def home_near(kind, cx, cy, taken, ok, max_um=None):
         """exact free rectangle for a carrier tile centred at (cx, cy), else the nearest on a 1.08/2.16 um lattice ring"""
+        max_um = CARRIER_HOME_UM if max_um is None else max_um
         w, h, _ = g.relay_lef(kind)
         cand = [(0.0, 0.0)]
         for k in range(1, int(max_um / 2.16) + 1):
@@ -599,7 +607,18 @@ def main():
     ap.add_argument('--host-hops', choices=('prefer', 'fallback'), default=None,
                     help='LH-RSTHOP 10-19: forest reach hops hosted in placed lane relay stations (remastered '
                          'hbfd_rly_*_rf/_rrf, one rfi->rfo flop on the station clock); default off')
+    ap.add_argument('--route-detour', type=float, default=0.0,
+                    help='L2H-GEN2D-RST 10-19: bound every reset route search to path <= DETOUR x Manhattan + slack cells '
+                         '(0 = legacy unbounded clock-router A*, which floods the die on a walled-off target); reach unchanged')
+    ap.add_argument('--route-slack', type=int, default=64)
+    ap.add_argument('--route-max-pops', type=int, default=3_000_000)
+    ap.add_argument('--carrier-home-um', type=float, default=64.8,
+                    help='L2H-GEN2D-RST 10-19: carrier station home search radius (reach-checked)')
     a = ap.parse_args()
+    global CARRIER_HOME_UM
+    CARRIER_HOME_UM = a.carrier_home_um
+    reset_forest_geometry.ROUTE_DETOUR, reset_forest_geometry.ROUTE_SLACK = a.route_detour, a.route_slack
+    reset_forest_geometry.ROUTE_MAX_POPS = a.route_max_pops
     try:
         survey = [] if a.survey else None
         carrier = None
@@ -613,9 +632,12 @@ def main():
                           compact=a.compact, carrier=carrier)
     except GeometryError as e:
         a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL', reach_gate='FAIL',
-                                           physical_signoff='OPEN', problems=[str(e)], unhomable=survey or []), indent=2) + '\n')
+                                           physical_signoff='OPEN', problems=[str(e)], unhomable=survey or [],
+                                           route_stats=reset_forest_geometry.ROUTE_STATS), indent=2, default=str) + '\n')
         print(f'reset forest FAIL: {e}')
         raise SystemExit(3)
+    rep['route_bound'] = dict(detour=a.route_detour, slack_cells=a.route_slack, max_pops=a.route_max_pops,
+                              carrier_home_um=a.carrier_home_um, stats=reset_forest_geometry.ROUTE_STATS)
     rep['input_sha256'] = {str(p.resolve()): hashlib.sha256(p.read_bytes()).hexdigest()
                            for p in (a.contract, a.manifest, Path(__file__), Path(__file__).with_name('reset_forest_geometry.py'), Path(__file__).with_name('reset_rows.py'),
                                      Path(__file__).resolve().parents[2] / SRC,
@@ -632,7 +654,7 @@ def main():
             rep['input_sha256'][str(p)] = hashlib.sha256(p.read_bytes()).hexdigest()
     a.out.write_text(json.dumps(spec) + '\n')
     rep['layer_sha256'] = hashlib.sha256(a.out.read_bytes()).hexdigest()
-    a.report.write_text(json.dumps(rep, indent=2) + '\n')
+    a.report.write_text(json.dumps(rep, indent=2, default=str) + '\n')
     print(json.dumps({k: rep[k] for k in ('tiles', 'reset_ports', 'max_actual_pin_hop_um', 'geometry_gate')}))
 
 

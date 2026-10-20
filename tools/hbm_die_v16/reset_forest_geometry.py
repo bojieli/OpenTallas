@@ -6,9 +6,12 @@ placed outline. Wires may overfly outlines, but every registered stage must
 have a legal, distinct home and each routed span must fit the declared reach.
 """
 import hashlib
+import heapq
 import math
+import os
 import re
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hbm_die_v15'))
@@ -22,6 +25,84 @@ def md(a, b):
 
 class GeometryError(ValueError):
     pass
+
+
+# L2H-GEN2D-RST 10-19 (NW hang profile, py-spy on carr/cplanK: 100% in Grid._route on the PLACEMENT grid): the clock
+# router's A* has no path-length bound, so a target walled off on the placement grid (reserved relays + homes) floods the
+# whole ~8M-cell die x up to R blocked-run labels before it fails over to the obstacle-only grid -- hours per leaf (serial
+# NW try 0 on cplanK: 8,480 s).  A reset stage path longer than a few x its Manhattan span is never useful (the chain
+# stages along it), so the reset router bounds the search: path cells <= ROUTE_DETOUR x md + ROUTE_SLACK (cells), and at
+# most ROUTE_MAX_POPS expansions.  The blocked-run budget R and the reach budget are UNCHANGED (no relaxation): a bounded
+# failure only falls through to the existing obstacle-only grid / host / next-source logic.  ROUTE_DETOUR 0 = legacy.
+ROUTE_DETOUR = 0.0
+ROUTE_SLACK = 64
+ROUTE_MAX_POPS = 3_000_000
+ROUTE_STATS = dict(calls=0, fails=0, capped=0, pops=0, seconds=0.0, slow=[])
+
+
+def bounded_route(grid, a, b, max_run):
+    """die_clock_tree.Grid._route (exact Pareto label A*) with a path-length and expansion bound; SystemExit on failure."""
+    if ROUTE_DETOUR <= 0:
+        return grid._route(a, b, max_run)
+    t0 = time.time()
+    ROUTE_STATS['calls'] += 1
+    R = int(max_run // GRID)
+    h0 = abs(a[0] - b[0]) + abs(a[1] - b[1])
+    cap = int(ROUTE_DETOUR * h0) + ROUTE_SLACK
+    nx, ny, blk = grid.nx, grid.ny, grid.blk
+    dist = {(a, 0): 0}
+    labels = {a: [(0, 0)]}
+    prev = {}
+    pq = [(h0, 0, a, 0)]
+    pops = 0
+    try:
+        while pq:
+            f, neg_g, c, run = heapq.heappop(pq)
+            pops += 1
+            if pops > ROUTE_MAX_POPS:
+                ROUTE_STATS['capped'] += 1
+                raise SystemExit(f'reset route expansion cap {a} -> {b}')
+            g = -neg_g
+            if c == b:
+                path = [c]; s = (c, run)
+                while s in prev:
+                    s = prev[s]; path.append(s[0])
+                return path[::-1]
+            if dist.get((c, run)) != g:
+                continue
+            for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                n = (c[0] + d[0], c[1] + d[1])
+                if not (0 <= n[0] < nx and 0 <= n[1] < ny):
+                    continue
+                nr = 0 if not blk[n[1] * nx + n[0]] else run + 1
+                if nr > R:
+                    continue
+                ng = g + 1
+                fn = ng + abs(n[0] - b[0]) + abs(n[1] - b[1])
+                if fn > cap:
+                    continue
+                s = (n, nr)
+                if ng < dist.get(s, 1 << 60):
+                    old = labels.get(n, ())
+                    if any(lr <= nr and lg <= ng for lr, lg in old):
+                        continue
+                    for lr, lg in old:
+                        if nr <= lr and ng <= lg:
+                            dist.pop((n, lr), None)
+                    labels[n] = [(lr, lg) for lr, lg in old if not (nr <= lr and ng <= lg)] + [(nr, ng)]
+                    dist[s] = ng; prev[s] = (c, run)
+                    heapq.heappush(pq, (fn, -ng, n, nr))
+        raise SystemExit(f'no reset route within detour bound {a} -> {b}')
+    except SystemExit:
+        ROUTE_STATS['fails'] += 1
+        raise
+    finally:
+        dt = time.time() - t0
+        ROUTE_STATS['pops'] += pops; ROUTE_STATS['seconds'] += dt
+        if dt > 20 and len(ROUTE_STATS['slow']) < 200:
+            ROUTE_STATS['slow'].append(dict(a=a, b=b, md_cells=h0, pops=pops, s=round(dt, 1)))
+            if os.environ.get('OT_FOREST_LOG'):
+                print(f'    slow route {a}->{b} md {h0} cells pops {pops} {dt:.1f}s', file=sys.stderr, flush=True)
 
 
 class Geometry:
@@ -337,10 +418,10 @@ class Geometry:
             # path cell is a legal stage home and greedy staging always progresses); only if that fails, on the
             # obstacle-only grid (wires overfly reserved relays) with stage homes beside the path.  Same budget.
             try:
-                path = self.grid._route(a, b, self.budget - 4 * GRID)
+                path = bounded_route(self.grid, a, b, self.budget - 4 * GRID)
             except SystemExit:
                 try:
-                    path = self.rgrid._route(a, b, self.budget - 4 * GRID)
+                    path = bounded_route(self.rgrid, a, b, self.budget - 4 * GRID)
                 except SystemExit as e:
                     raise GeometryError(f'no reset route within fixed reach: {point} -> {end}') from e
             points = [point] + [self.grid.xy(c) for c in path] + [end]
