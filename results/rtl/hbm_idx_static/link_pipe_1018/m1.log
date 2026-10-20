@@ -1,5 +1,3 @@
-# HBM-TOPKLINK r3 10-19 (claude/hbm-topklink-1019): run_link_pipe.sh MUT 1 on ot-epyc4 via ot-run
-Verilator 5.050 2026-07-01 rev v5.050
 PIPE_MITER cycle192 dut vf f0 c512 | ref@-5 vf f0 c512
 PIPE_RECORD frame0 record0 expected00000000ffff0000 gotffff000000000000
 PIPE_RECORD frame0 record1 expected00000001ffff0000 gotffff000000000001

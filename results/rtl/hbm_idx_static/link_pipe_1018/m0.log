@@ -1,5 +1,3 @@
-# HBM-TOPKLINK r3 10-19 (claude/hbm-topklink-1019): run_link_pipe.sh MUT 0 on ot-epyc4 via ot-run
-Verilator 5.050 2026-07-01 rev v5.050
 IDX_LINK_PIPE frame0 MUT0 records512 flits64 errors0 fault0/0
 IDX_LINK_PIPE frame1 MUT0 records512 flits64 errors0 fault0/0
 IDX_LINK_PIPE frame2 MUT0 records512 flits64 errors0 fault0/0
@@ -11,5 +9,5 @@ IDX_LINK_PIPE_TOTAL MUT0 records3072 miter1954 errors0 fillsff maxpack71 first_t
 IDX_LINK_PIPE PASS
 - rtl/test/hbm_idx_static/tb_idx_link_pipe.sv:82: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 20us; walltime 0.019 s; speed 1.055 ms/s
-- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 20us; walltime 0.006 s; speed 3.180 ms/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB
