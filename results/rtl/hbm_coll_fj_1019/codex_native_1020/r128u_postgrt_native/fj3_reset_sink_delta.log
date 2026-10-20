@@ -1,0 +1,256 @@
+3 {
+  "ot_rrs__u_ot_pr_core_u_rst__ot_rlv__c1$_DFF_P_/QN": {
+    "mapped": 24,
+    "post": 37,
+    "added": [
+      {
+        "instance": "ot_prs_00006_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00005_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00004_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00014_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00013_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00012_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00011_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00010_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00009_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00008_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00003_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00007_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00002_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      }
+    ],
+    "removed": []
+  },
+  "ot_rrs__u_ot_pr_core_u_rst__ot_rlv__c7$_DFF_P_/QN": {
+    "mapped": 27,
+    "post": 34,
+    "added": [
+      {
+        "instance": "ot_prs_00018_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00019_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00020_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00021_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00022_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00023_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      },
+      {
+        "instance": "ot_prs_00017_ff",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "role": {
+          "direction": "input",
+          "clock": false,
+          "function": null
+        },
+        "sequential": true,
+        "birth": "newborn"
+      }
+    ],
+    "removed": []
+  }
+}

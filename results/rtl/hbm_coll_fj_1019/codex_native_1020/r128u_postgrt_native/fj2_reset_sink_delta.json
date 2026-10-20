@@ -1,0 +1,617 @@
+{
+  "schema": "opentallas.codex.reset_sink_delta.v1",
+  "graph_authority": "actual1_synth/5_1GRT ODB",
+  "endpoint_extraction": "unchanged mainnativecensus report instrumentation only; no threshold/rule change",
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/old/src/physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_tt.lib",
+      "sha256": "359bdb8a0cce64e34f1e7931e6951f36448f37d63db3999f67ad4df2e7fe37d7"
+    }
+  ],
+  "violating_reset_driver_deltas": {
+    "ot_rrs__u_ot_pr_core_u_rst__ot_rlv__c1$_DFF_P_/QN": {
+      "mapped_loads": 24,
+      "postgrt_loads": 37,
+      "added": [
+        {
+          "instance": "ot_prs_00006_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00005_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00004_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00014_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00013_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00012_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00011_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00010_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00009_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00008_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00003_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00007_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        },
+        {
+          "instance": "ot_prs_00002_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true,
+          "birth": "newborn"
+        }
+      ],
+      "removed": [],
+      "all_actual_sinks": [
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[0\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[10\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[1\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[2\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[3\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[4\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[5\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[6\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[7\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[8\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "u_ot_pr_core.u.unav_q\\[9\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00006_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00005_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00004_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00014_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00013_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00012_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00011_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00010_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00009_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00008_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00003_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00007_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "ot_prs_00002_ff",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[0\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[10\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[11\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[12\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[13\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[1\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[2\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[3\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[4\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[5\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[6\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[7\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        },
+        {
+          "instance": "fault_cause\\[9\\]$_DFF_PN0_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "role": {
+            "direction": "input",
+            "clock": false,
+            "function": null
+          },
+          "sequential": true
+        }
+      ]
+    }
+  }
+}

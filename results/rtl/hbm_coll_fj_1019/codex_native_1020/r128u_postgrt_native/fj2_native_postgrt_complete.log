@@ -1,0 +1,7 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+FJ_NATIVE_GRAPH_DUMP_COMPLETE
+2 FAIL 8825 37 errors 0 violations 1
+[{'driver': 'ot_rrs__u_ot_pr_core_u_rst__ot_rlv__c1$_DFF_P_/QN', 'driver_role': 'sequential', 'net': '_02733_', 'loads': 37, 'endpoints': [[10275, 'RESETN', 0], [10276, 'RESETN', 0], [10284, 'RESETN', 0], [10285, 'RESETN', 0], [10286, 'RESETN', 0], [10287, 'RESETN', 0], [10288, 'RESETN', 0], [10289, 'RESETN', 0], [10290, 'RESETN', 0], [10291, 'RESETN', 0], [10292, 'RESETN', 0], [5492, 'RESETN', 0], [5494, 'RESETN', 0], [5496, 'RESETN', 0], [5500, 'RESETN', 0], [5502, 'RESETN', 0], [5504, 'RESETN', 0], [5511, 'RESETN', 0], [5518, 'RESETN', 0], [5523, 'RESETN', 0], [5525, 'RESETN', 0], [5527, 'RESETN', 0], [5531, 'RESETN', 0], [6186, 'RESETN', 0], [7283, 'RESETN', 0], [7284, 'RESETN', 0], [7285, 'RESETN', 0], [7286, 'RESETN', 0], [7287, 'RESETN', 0], [7288, 'RESETN', 0], [7289, 'RESETN', 0], [7290, 'RESETN', 0], [7291, 'RESETN', 0], [7292, 'RESETN', 0], [7293, 'RESETN', 0], [7294, 'RESETN', 0], [7295, 'RESETN', 0]]}]
