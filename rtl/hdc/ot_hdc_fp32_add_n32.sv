@@ -67,7 +67,7 @@ module ot_hdc_fp32_add_n32 #(
                         a_exp, b_exp, a_man, b_man, dab, dba} ;
     wire          a1_swap = !cmp_c;
     wire [WA:0]   a2_in;
-    ot_hdc_w11_cut_n32 #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1), .COPY_MASK((120'b1<<119)|(120'b1<<8)|120'b1)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
+    ot_hdc_w11_cut_n32 #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1), .COPY_MASK((120'b1<<119)|(120'b1111<<8)|120'b1111)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
     // ---- A2 ----------------------------------------------------------------------------------------
     wire        x_v, x_byp, x_sub, x_as, x_bs, x_swap;
     wire [1:0]  x_err;
