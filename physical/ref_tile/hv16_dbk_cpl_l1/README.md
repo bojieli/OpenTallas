@@ -45,7 +45,7 @@ die not re-padded (mv_fault), reset-latency (cycle did not advance).
 5 Storage: PASS - landing storage in the bank SRAMs; parent holds only 1-deep landing / relay registers.
 6 Floorplan: PASS (unchanged s1 floorplan) - children on the 43.2 lattice, 606.96 x 542.16 (1.12:1), one std band.
 7 Clock: FIXED after gate 20261020-054637 (one clk_rst tree over 2,425 flops: TT insertion 650.7, boundary spread 284.6 > 80):
-  eight regional CTS roots clk_land[b] (new die-forwarded ports at the centre of lane b's rr face group) clock bank b's
-  landing + read relays (~300 sinks each); clk_rst keeps the reset relays + wb_fill relays (~33); hybrid entries for the children; spread / linked pair TT+FF <= 80 checked by the --cts gate;
+  eight face-landing roots clk_land[b] (rr data + bank valid copy, ~258 flops in one face strip) and, after gates 063306/7
+  (one root per bank over face AND relays: 77-85 ps), three relay-region roots clk_rly[S/W/N] (read relays + controller valid copy); clk_rst keeps the reset relays + wb_fill relays (~33); hybrid entries for the children; spread / linked pair TT+FF <= 80 checked by the --cts gate;
   io_hold_margin 0.03.
 8 Schedule: static, no credits; every added edge listed above and handed to the die schedule.

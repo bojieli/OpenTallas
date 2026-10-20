@@ -4955,3 +4955,6 @@ ot_assigned_pin_exact {clk_land[4]} M4 W 331.932000
 ot_assigned_pin_exact {clk_land[5]} M4 W 412.044000
 ot_assigned_pin_exact {clk_land[6]} M5 N 330.012000
 ot_assigned_pin_exact {clk_land[7]} M5 N 519.948000
+ot_assigned_pin_exact {clk_rly[0]} M5 S 290.076000
+ot_assigned_pin_exact {clk_rly[1]} M4 W 320.028000
+ot_assigned_pin_exact {clk_rly[2]} M5 N 339.948000

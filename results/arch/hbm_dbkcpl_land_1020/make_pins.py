@@ -39,6 +39,8 @@ if COMPACT27:   # lanes 2 / 7: rr group from x 523-604 to x 466-600 (pulled towa
         for i in range(256):
             MOVE[f"rr[{b * 257 + i}]"] = ("M5", face, 466.0 + 134.0 * (i + 0.5) / 256)
 lines = open(SRC).read().splitlines()
+# clk_rly[g] (gate 063306/7): relay-region roots of bank groups S / W / N, on the face nearest that group's relay mass
+ADD["clk_rly[0]"] = ("M5", "S", 290.0); ADD["clk_rly[1]"] = ("M4", "W", 320.0); ADD["clk_rly[2]"] = ("M5", "N", 340.0)
 if COMPACT27:
     ADD["clk_land[2]"] = ("M5", "S", 520.0); ADD["clk_land[7]"] = ("M5", "N", 520.0)
 lines += [f"ot_assigned_pin_exact {{{n}}} {l} {f} 0.000000" for n, (l, f, _) in ADD.items()]

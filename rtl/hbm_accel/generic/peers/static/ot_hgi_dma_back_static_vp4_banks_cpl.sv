@@ -35,7 +35,8 @@ module ot_hgi_dma_back_static_vp4_banks_rl #(
 )(
     input wire clk,
     input wire clk_land_c,               // fill relays (parent root clk_rst, same die clock)
-    input wire [7:0] clk_land,           // per-bank regional landing / relay roots (clk_land[b] ports, same die clock)
+    input wire [7:0] clk_land,           // per-bank face landing roots (rr data + bank valid copy; clk_land[b] ports)
+    input wire [2:0] clk_rly,            // per-group relay roots (S 0-2, W 3-5, N 6-7: read relays + controller valid copy)
     input wire rst_ctl_n,
     input wire [7:0] rst_bank_n,
     input wire [1:0] stk,
@@ -95,11 +96,14 @@ module ot_hgi_dma_back_static_vp4_banks_rl #(
         (* keep = "true" *) reg [6:0] rs_q;       // read slot relay (per-bank copy of the group register)
         (* keep = "true" *) reg [31:0] ra_q;      // read address relay
         wire [6:0] wslot_b;                       // the bank's write slot: the controller register, no relay
-        always @(posedge clk_land[b]) begin
-            rd_q<=rr[b*257+:256]; wv_q<=rr[b*257+256]; cv_q<=rr[b*257+256];
+        // face landing region (clk_land[b]) / relay region between the controller and the bank group (clk_rly[G]):
+        // gate 063306/063307 measured one root per bank over both regions at 77-85 ps boundary spread (> 80).
+        always @(posedge clk_land[b]) begin rd_q<=rr[b*257+:256]; wv_q<=rr[b*257+256]; end
+        always @(posedge clk_rly[G]) begin
+            cv_q<=rr[b*257+256];
             re_q<=bank_read_en[b]; oe_q<=bank_output_en[b]; rs_q<=rslot; ra_q<=bank_read_addr[b*32+:32];
         end
-        if(RL_MUT==2)begin:G_WS (* keep = "true" *) reg [6:0] ws_q; always @(posedge clk_land[b]) ws_q<=wslot; assign wslot_b=ws_q; end
+        if(RL_MUT==2)begin:G_WS (* keep = "true" *) reg [6:0] ws_q; always @(posedge clk_rly[G]) ws_q<=wslot; assign wslot_b=ws_q; end
         else begin:G_NOWS assign wslot_b=wslot; end
         assign rr_valid_i[b]=(RL_MUT==1)?rr[b*257+256]:cv_q;
         ot_hgi_dma_back_landing_bank u_bank(
@@ -126,6 +130,7 @@ module ot_hgi_dma_back_static_vp4_banks_cpl #(
     // 650.7 ps, boundary pin-flop spread 284.6 ps > 80): one regional CTS root per bank region, beside clk_bank[b]
     // (CLOCKING STANDARD: local region trees, never one tree across the parent).  Same die clock, forwarded by the die.
     input wire [7:0] clk_land,
+    input wire [2:0] clk_rly,       // relay-region roots per bank group (S / W / N), same die clock
     input wire [1:0] stk,
     input wire [7:0] tgt,
     input wire [7:0] clk_bank,
@@ -168,7 +173,7 @@ module ot_hgi_dma_back_static_vp4_banks_cpl #(
 `else
     ot_hgi_dma_back_static_vp4_banks_rl #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT),.RL_MUT(RL_MUT)) u_dbk(
 `endif
-        .clk(clk),.clk_land_c(clk_rst),.clk_land(clk_land),.rst_ctl_n(rst_ctl_n),.rst_bank_n(rst_bk_n[7:0]),.stk(stk),.clk_bank(clk_bank),.cycle(cycle),
+        .clk(clk),.clk_land_c(clk_rst),.clk_land(clk_land),.clk_rly(clk_rly),.rst_ctl_n(rst_ctl_n),.rst_bank_n(rst_bk_n[7:0]),.stk(stk),.clk_bank(clk_bank),.cycle(cycle),
         .mv_v(cmd_v),.mv((CP_MUT==1)?cmd[291:65]:cmd[290:64]),.issue_at(cmd[31:0]),.drain_at(cmd[63:32]),
         .mv_wb_bank(cmd[291]),.mv_wb_epoch(cmd[307:292]),
         .mv_src(mv_src),.mv_done(mv_done),.mv_fault(mv_fault),.quiet(quiet),.busy(busy),.rq(rq),.rr(rr),

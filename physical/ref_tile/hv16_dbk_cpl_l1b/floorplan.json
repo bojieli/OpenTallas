@@ -75,6 +75,7 @@
   "ANY": [
    "clk_bank",
    "clk_land",
+   "clk_rly",
    "rr",
    "wd"
   ]
@@ -99,7 +100,10 @@
   "clk_land[4]",
   "clk_land[5]",
   "clk_land[6]",
-  "clk_land[7]"
+  "clk_land[7]",
+  "clk_rly[0]",
+  "clk_rly[1]",
+  "clk_rly[2]"
  ],
  "clock_cts_roots": [
   "clk_rst",
@@ -110,7 +114,10 @@
   "clk_land[4]",
   "clk_land[5]",
   "clk_land[6]",
-  "clk_land[7]"
+  "clk_land[7]",
+  "clk_rly[0]",
+  "clk_rly[1]",
+  "clk_rly[2]"
  ],
  "blocks": [
   {
