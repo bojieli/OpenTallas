@@ -36,6 +36,42 @@
    "SCALE": 1035273459
   }
  },
+ "ot_qwen_tp8_pv_join_s32_t": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qwen_tp8_pv_join_s32_t.json",
+   "sha256": "f54627cf1f5540a21040217e71b8b32b33de2b6621dcf10e1e636f50526ba005"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "0e1eb3282d3d0153565d900d9ff9e9da6670acaca20bbecb26095b7989de6beb",
+    "child_lint.json": "a42f5ea5c065f7d0c74a9a1ece8c896e657515e2d9c449761e4a6fd9b17c3020",
+    "export_ff.log": "d13a1611ca3e3848e481af370ced57230d16ffbcc5660c4c02b67fb1c7120366",
+    "export_ff.tcl": "55dd0f4ce4d91fc8f3f5b658b46cf862243894af63f40d18894edb744b95732c",
+    "export_ss.log": "8eef07328fbc5c2cf7e9c27523f42b760c75d6da22377ac368d2247f7188abfa",
+    "export_ss.tcl": "6a7694370c70a56f5a25495e4b257a91c4bf569b69813eb9b8ee4ae3561290eb",
+    "export_tt.log": "71be1ac813367b20fc99573f13e8cad2312d8fd65a210da14dc040124015a095",
+    "export_tt.tcl": "ae855591d7af0cbf0dac60475d72a2762ea8dff44fa86585aeaa5005faeb5e2e",
+    "insertion.json": "3e7208632d4b830566817e7389a99b880fb099195fb8f8470351dcb3479aee15",
+    "ot_qwen_tp8_pv_join_s32_t.lef": "0d6dec60289a27c3f815773baf41c627255f2df5af2727d103a47dc19f71ed7d",
+    "ot_qwen_tp8_pv_join_s32_t_ff.lib": "091f65f08979794d029f2e4e5dfefc5648bfe1dd73295ff8f53d16ef64671a5f",
+    "ot_qwen_tp8_pv_join_s32_t_ss.lib": "605814f249d2dd3756a195c6756ee532c1fd1758b824a928aeb411ed6b6ca4ec",
+    "ot_qwen_tp8_pv_join_s32_t_tt.lib": "b8d93fb5ffae5102f4d74fcde7395ceb9cd647168502cbdc3adc4856b3483fbc",
+    "provenance/abstract_pin_stub.json": "d2fcd81c3ca8c2c1a1c6433a9d357dff0ac84aa754188fcc63b9269f53a42f55",
+    "provenance/raw/ot_qwen_tp8_pv_join_s32_t.lef": "77137a81218e429ef102e3446421e16bd60a2e881074e4832fae2b2f41462a57",
+    "provenance/view_export.abstract.json": "82e2215ef746225e6631b8c6c8b0e6677f44ee7bd5df076a7e77546cb9f7e05d"
+   },
+   "rtl": {
+    "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_s32_t.sv",
+    "sha256": "c721d94f7ce02b1cb0947959573b6190fac14ae68cca6ba621619e5b3cc1cbf7"
+   },
+   "view": "physical/ref_tile/qkd_pv_join_s32_p216/views/ot_qwen_tp8_pv_join_s32_t"
+  },
+  "parameters": {
+   "J_LAT": 7,
+   "MUT": 0,
+   "RESET_PIN": 1
+  }
+ },
  "ot_qwen_tp8_pv_slice_t": {
   "frozen_receipt": {
    "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qwen_tp8_pv_slice_t.json",
