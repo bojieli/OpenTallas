@@ -14,6 +14,7 @@ set ::ot_gf_roles [dict create {feed.consumer.rst_n} {rst r29 pipe 1} {feed.hbm_
 set ::ot_gf_fifos [dict create {f0} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f1} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f10} {writer core reader hbm ptr 773.333 store 964.0 store_read 0 chains {ronl 1 rptr 3 wonl 1 wptr 3}} {f2} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f3} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f4} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f5} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f6} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f7} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f8} {writer core reader hbm ptr 773.333 store 964.0 store_read 0 chains {ronl 1 rptr 3 wonl 1 wptr 3}} {f9} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 3 wonl 1 wptr 3}}]
 set ::ot_gf_periods [dict create core 833.333 hbm 1024.0]
 set ::ot_gf_uncertainty 60.0
+set ::ot_gf_dual [dict create {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.g_m8x285.u_mem} {writer hbm reader core} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.g_m8x285.u_mem} {writer hbm reader core} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.g_m8x285.u_mem} {writer hbm reader core} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.g_m8x285.u_mem} {writer hbm reader core} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.g_m8x285.u_mem} {writer hbm reader core} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.g_m8x285.u_mem} {writer hbm reader core} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.g_m8x285.u_mem} {writer hbm reader core} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.g_m8x285.u_mem} {writer hbm reader core} {feed.producer.u_descriptor.g_m4x97.u_mem} {writer core reader hbm}]
 set ::ot_gf_levels [dict create ]
 set ::ot_gf_gated [dict create ]
 set ::ot_gf_straps [dict create {id_sm} 1 {id_stack} 1]
@@ -115,7 +116,35 @@ proc ot_gf_verify {} {
   }
   set ::ot_gf_pending {}
 }
+proc ot_gf_dual_name {cell} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  foreach n [ot_gf_names [list $full]] {if {[dict exists $::ot_gf_dual $n]} {return $n}}
+  return {}
+}
+proc ot_gf_dual_same {start pin source target source_domain target_domain} {
+  # A reviewed SRAM FIFO's dual-clock storage macro (storage_macro profile) owns two families: its write pins (w_*,
+  # wd_*) are wclk = writer pins, its read pins (r_*) and rd_out are rclk = reader pins.  The multi-root gate gives the
+  # cell ONE domain, so a same-family path to the other port looks like a crossing: admit exactly those (no exception;
+  # ordinary STA in that family), nothing else.
+  set t [ot_gf_dual_name $target]
+  if {$t ne ""} {
+    set d [dict get $::ot_gf_dual $t]
+    regsub {\[\d+\]$} [lindex [split [get_full_name $pin] /] end] {} p
+    if {[regexp {^(w_|wd_)} $p] && $source_domain eq [dict get $d writer]} {return 1}
+    if {[regexp {^r_} $p] && $source_domain eq [dict get $d reader]} {return 1}
+  }
+  set s [ot_gf_dual_name $source]
+  if {$s ne ""} {
+    regsub {\[\d+\]$} [lindex [split [get_full_name $start] /] end] {} p
+    if {$p eq "rd_out" && $target_domain eq [dict get [dict get $::ot_gf_dual $s] reader]} {return 1}
+  }
+  return 0
+}
 proc ot_gf_crossing {start pin source target source_domain target_domain} {
+  if {[info exists ::ot_gf_dual] && [ot_gf_dual_same $start $pin $source $target $source_domain $target_domain]} {
+    puts "OT_GF DUAL_SAME [get_full_name $start] -> [get_full_name $pin] ($source_domain -> $target_domain)"
+    return
+  }
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
     error "OT_GF: cross-family control pin [get_full_name $pin]"
   }

@@ -189,7 +189,7 @@
     "tool": {
      "cdc_sync_constraints.py": "dbad0153f6038fb22766740110007f16e781ff3b5b7fe206ec59a4173da51506",
      "clock_entry_constraints.py": "7e184cb89837c924bbef6db763866e8dfb2c5a26b619ccd4847797bb9eb32351",
-     "gray_fifo_cdc_constraints.py": "eb6ec1fc198f97fcbdee44b83b8d40646f822f11289174e92d4160fc4fa64b1a",
+     "gray_fifo_cdc_constraints.py": "adb87d298284a3f879853f58430f3e22eff93f54e89ad33dbaa49470f1f57d06",
      "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
     },
     "tool_data": {
@@ -197,9 +197,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-19T18:14:24-0700",
-   "host": "ot-epyc8",
-   "key": "e9c6e6e970498cb18af5a5c8837e23138980faa6807970be257381817573ca70",
+   "created": "2026-10-19T18:32:38-0700",
+   "host": "ot-epyc9",
+   "key": "9525a38518bcdd18d0492f292cfb5c2082e078a8166d7ae8947d63a0a114a6c5",
    "record": {
     "counts": {
      "consumer": 0,
@@ -212,6 +212,44 @@
      "src": 104,
      "stage": 104,
      "sync1": 104
+    },
+    "dual": {
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+      "reader": "core",
+      "writer": "hbm"
+     },
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+      "reader": "core",
+      "writer": "hbm"
+     },
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+      "reader": "core",
+      "writer": "hbm"
+     },
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+      "reader": "core",
+      "writer": "hbm"
+     },
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+      "reader": "core",
+      "writer": "hbm"
+     },
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+      "reader": "core",
+      "writer": "hbm"
+     },
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+      "reader": "core",
+      "writer": "hbm"
+     },
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+      "reader": "core",
+      "writer": "hbm"
+     },
+     "feed.producer.u_descriptor.g_m4x97.u_mem": {
+      "reader": "hbm",
+      "writer": "core"
+     }
     },
     "fifos": {
      "f0": {
@@ -3571,7 +3609,7 @@
      "id_stack"
     ]
    },
-   "seconds": 95
+   "seconds": 113
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
