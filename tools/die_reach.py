@@ -45,6 +45,15 @@ def reach_um(design):
     return float(record(design)['reach_um'])
 
 
+# owner rule (memory reach-405-repeaters-1016, SAFE-DESIGN checklist item 2): no single-cycle wire > 405 um -- the planning
+# hop of every die, below every measured reach in the table (the census / over-reach report use this, not the 455 s81)
+PLAN_HOP_UM = 405.0
+
+
+def plan_reach_um(design):
+    return min(reach_um(design), PLAN_HOP_UM)
+
+
 def resolve(design, max_wire_um=None, allow_over_reach=None):
     """-> dict(value_um, reach_um, design, source, over_reach_reason); refuses value > reach without a reason."""
     reach = reach_um(design)
