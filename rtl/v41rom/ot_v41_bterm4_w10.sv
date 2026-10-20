@@ -358,7 +358,13 @@ module ot_v41_bterm4_w10 #(
     // One exponent/shift copy for each ten output bits of the subnormal shifter.
     (* keep *) reg signed [11:0] p6_shift_b [0:4];
     always @(posedge clk)
-        for (int j = 0; j < 5; j++) p6_shift_b[j] <= p5_ebl + $signed({11'd0, mr[24]});
+        for (int j = 0; j < 5; j++) begin
+`ifdef OT_BF_FOREP32_MUT_SUB
+            p6_shift_b[j] <= p5_ebl + $signed({11'd0, mr[24]}) + (j == 3 ? 12'sd1 : 12'sd0);
+`else
+            p6_shift_b[j] <= p5_ebl + $signed({11'd0, mr[24]});
+`endif
+        end
 `endif
     reg [22:0]        p6_f;
     always @(posedge clk or negedge rst_n) begin

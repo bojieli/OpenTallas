@@ -1,0 +1,431 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------
+// ot_v41_bterm4_w10: ot_v41_bterm3_w10 (byte-identical body, renamed) plus the opt-in P2S (default 0 = bterm3).
+// P2S = 1 (requires P1S = 1; DS-V4.1 ROM q-pair SS closure, 2026-10-04, route Z6: P2 shift + CSA -36.6 ps post-GRT):
+//   P1b registers the product already shifted by the low two shift bits (a 12-bit signed partial term) and the shift
+//   amount's high bits; P2 shifts by {sh[4:2], 2'b00}.  (p << sh[1:0]) << 4 sh[4:2] == p << sh exactly (the 42-bit
+//   term never overflows: sh <= 28), so every output is bit-identical; two shifter levels move from P2 to P1b.
+//   Zero cycles.
+// NS = 1 (requires P1S = 1; route Z15a: p0 -> 64-input NaN OR -> pa_nan -20.8 ps): the NaN flag is registered in P1a as
+// four 8-lane partials (pa_nang) and ORed in P1b; with NS the full-width pa_nan is unused.  Zero cycles, bit-identical.
+// ot_v41_bterm3_w10: ot_v41_bterm2_w10 (byte-identical arithmetic) with two opt-in re-cuts for the DS-V4.1 ROM q-pair
+// element at SS 1.2 GHz (QPIPE, 2026-10-03):
+//   P1S = 1  splits P1 (decode + signed 4x4 product + shift amount) into P1a (decode: FP4 e2m1 / FP8 fields, sign,
+//            shift amount, NaN) and P1b (4x4 product and its negation).  +1 cycle: LATENCY 12.
+//   CSAM     the first carry-save stage's output count (bterm2: 7).  10 moves one 3:2 level from P2 (shift + CSA)
+//            into P3 (P2 32 -> 10, P3 10 -> 2).  Zero cycles; the carry-save sum is exact modulo 2^42 under any
+//            grouping, so the 42-bit total is bit-identical.
+// P1S = 0, CSAM = 7 is ot_v41_bterm2_w10.
+// ot_v41_bterm2_w10: ot_v41_bterm re-cut for 1.2 GHz at SS (W10, 0.833 ns): the 42-bit sum and its negation
+// split (P4a / P4b, the negation as a parallel-prefix increment), the 41-bit normalise split (P5a coarse
+// 32/16/8, P5b fine 4/2/1), and the two roundings as parallel-prefix increments (yosys otherwise maps an
+// increment as a ripple of ORs).  Arithmetic bit-identical to ot_v41_bterm; LATENCY = 11 (was 9).
+// ---------------------------------------------------------------------------
+module old_bterm #(
+    parameter integer TW = 8,
+    parameter integer P1S = 0,
+    parameter integer CSAM = 7,
+    parameter integer P2S = 0,
+    parameter integer NS = 0,         // 1 (requires P1S = 1): the NaN flag as 4 registered 8-lane partials, ORed in P1b
+    parameter integer WD = 0          // 1 (2026-10-06, PQ q-element routes Z21: p0_wq -> FP4 decode -> pa_sh, -43 ps
+                                      // post-GRT): the weight codes are decoded (e2m1 for FP4) BEFORE the P0 register,
+                                      // so p0_wq holds the 8-bit E4M3 code of every lane; bit-identical, zero cycles
+`ifdef OT_BF_FOREP
+    , parameter integer OH_HW = 4,    // FOREP: slot field width (top OH_HW bits of the tag)
+    parameter integer OH_K = 2        // FOREP: kept one-hot copies of the slot (otag_oh)
+`endif
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              v,
+    input  wire              fp4,
+    input  wire [255:0]      xq,
+    input  wire signed [9:0] xe,
+    input  wire [255:0]      wq,
+    input  wire signed [9:0] we,
+    input  wire [TW-1:0]     tag,
+    output wire              ov,
+    output wire [31:0]       y,
+    output wire              f,
+    output wire [TW-1:0]     otag
+`ifdef OT_BF_FOREP
+    , output wire [(OH_K << OH_HW)-1:0] otag_oh   // copy j bit e (index j*2^OH_HW+e) == (otag[TW-1 -: OH_HW] == e), same cycle
+`endif
+);
+    // FOREP (S81-C199-FANOUT 2026-10-19, opt-in OT_BF_FOREP, default off = unchanged): kept same-edge register copies so no
+    // flop drives > ~32 loads: the FP4 select per 2 bytes (16 copies of p0_fp4), the P2 shift's high bits per term half
+    // (p1_sqb), the P4b sign per 14-bit slice of the magnitude select (p4a_sgc), the P8 subnormal select per ~11 bits of
+    // the packed word (p7_subc), and the tag's last stage per lane plus OH_K kept one-hot slot decodes (otag_oh).  Every
+    // copy loads the same d on the same clock as its original: zero cycles, bit-identical.
+`ifdef OT_BF_FOREP
+    localparam integer NFC = 16;      // p0_fp4 copies (2 bytes each)
+    wire [31:0] fp4_b;                // the FP4 select seen by byte i
+    (* keep *) reg [NFC-1:0] p0_fp4c;
+    always @(posedge clk) p0_fp4c <= {NFC{fp4}};
+    for (genvar gb = 0; gb < 32; gb = gb + 1) begin : g_fb
+        assign fp4_b[gb] = p0_fp4c[(gb * NFC) / 32];
+    end
+`endif
+    localparam integer W = 42;
+    wire first = 1'b0, last = 1'b0;
+    function automatic [7:0] e2m1(input [3:0] c);
+        if (c[2:1] == 2'd0) e2m1 = {c[3], c[0] ? 4'd6 : 4'd0, 3'd0};
+        else                e2m1 = {c[3], {2'b00, c[2:1]} + 4'd6, c[0], 2'b00};
+    endfunction
+    function automatic [255:0] wdec(input [255:0] w, input f4);
+        for (int l = 0; l < 32; l++) wdec[8*l +: 8] = f4 ? e2m1(w[8*l +: 4]) : w[8*l +: 8];
+    endfunction
+
+
+    integer i;
+
+    // -- P0: input register -----------------------------------------------------------
+    reg              p0_v, p0_first, p0_last;
+    (* keep *) reg   p0_fp4;              // never merged with another lane's (W13: a merged fp4 flop drove 2 lanes' decoders)
+    reg [255:0]      p0_xq, p0_wq;
+    reg signed [9:0] p0_xe, p0_we;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p0_v <= 1'b0;
+        else p0_v <= v;
+    end
+    always @(posedge clk) begin
+        p0_first <= first; p0_last <= last; p0_fp4 <= fp4;
+        p0_xq <= xq; p0_wq <= (WD != 0) ? wdec(wq, fp4) : wq; p0_xe <= xe; p0_we <= we;
+    end
+
+    // -- P1: decode, signed 4x4 products, shift amounts (P1S: P1a decode | P1b product) ------------------
+    reg               p1_v, p1_first, p1_last, p1_nan;
+    reg signed [10:0] p1_es;
+    reg signed [8:0]  p1_p [0:31];
+    reg [4:0]         p1_sh [0:31];
+    reg signed [11:0] p1_q [0:31];       // P2S: p1_p << sh[1:0]
+    reg [2:0]         p1_sq [0:31];      // P2S: sh[4:2]
+`ifdef OT_BF_FOREP
+    (* keep *) reg [3*3*32-1:0] p1_sqb;  // FOREP: 3 kept copies of p1_sq, slices 1-3 of each term (p1_sq: slice 0)
+`endif
+    reg [7:0]         xc, wc;
+    reg [3:0]         xs, ws, xf, wf;
+    reg [7:0]         pm;
+    reg               nan;
+    if (P1S == 0) begin : g_p1
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) p1_v <= 1'b0;
+            else p1_v <= p0_v;
+        end
+        always @(posedge clk) begin
+            p1_first <= p0_first; p1_last <= p0_last;
+            p1_es <= p0_xe + p0_we;
+            nan = 1'b0;
+            for (i = 0; i < 32; i = i + 1) begin
+                xc = p0_xq[8*i +: 8];
+`ifdef OT_BF_FOREP
+                wc = (WD != 0) ? p0_wq[8*i +: 8] : (fp4_b[i] ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
+`else
+                wc = (WD != 0) ? p0_wq[8*i +: 8] : (p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
+`endif
+                nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
+                xs = {(xc[6:3] != 4'd0), xc[2:0]};
+                ws = {(wc[6:3] != 4'd0), wc[2:0]};
+                xf = (xc[6:3] == 4'd0) ? 4'd1 : xc[6:3];
+                wf = (wc[6:3] == 4'd0) ? 4'd1 : wc[6:3];
+                pm = xs * ws;
+                p1_p[i] <= (xc[7] ^ wc[7]) ? -$signed({1'b0, pm}) : $signed({1'b0, pm});
+                p1_sh[i] <= {1'b0, xf} + {1'b0, wf} - 5'd2;
+            end
+            p1_nan <= nan;
+        end
+    end else begin : g_p1s
+        // P1a: the same decode, registered as {sign, x significand, w significand, shift amount}
+        reg               pa_v, pa_first, pa_last, pa_nan;
+        reg [3:0]         pa_nang;      // NS: per 8 lanes
+        reg [3:0]         nang;
+        reg signed [10:0] pa_es;
+        reg               pa_sg [0:31];
+        reg [3:0]         pa_xs [0:31];
+        reg [3:0]         pa_ws [0:31];
+        reg [4:0]         pa_sh [0:31];
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin pa_v <= 1'b0; p1_v <= 1'b0; end
+            else begin pa_v <= p0_v; p1_v <= pa_v; end
+        end
+        always @(posedge clk) begin
+            pa_first <= p0_first; pa_last <= p0_last;
+            pa_es <= p0_xe + p0_we;
+            nan = 1'b0; nang = 4'd0;
+            for (i = 0; i < 32; i = i + 1) begin
+                xc = p0_xq[8*i +: 8];
+`ifdef OT_BF_FOREP
+                wc = (WD != 0) ? p0_wq[8*i +: 8] : (fp4_b[i] ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
+`else
+                wc = (WD != 0) ? p0_wq[8*i +: 8] : (p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
+`endif
+                nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
+                nang[i / 8] = nang[i / 8] | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
+                pa_sg[i] <= xc[7] ^ wc[7];
+                pa_xs[i] <= {(xc[6:3] != 4'd0), xc[2:0]};
+                pa_ws[i] <= {(wc[6:3] != 4'd0), wc[2:0]};
+                xf = (xc[6:3] == 4'd0) ? 4'd1 : xc[6:3];
+                wf = (wc[6:3] == 4'd0) ? 4'd1 : wc[6:3];
+                pa_sh[i] <= {1'b0, xf} + {1'b0, wf} - 5'd2;
+            end
+            pa_nan <= nan; pa_nang <= nang;
+        end
+        // P1b: the signed 4x4 product
+        always @(posedge clk) begin
+            p1_first <= pa_first; p1_last <= pa_last; p1_es <= pa_es;
+`ifdef BT_MUTANT_NS
+            p1_nan <= (NS != 0) ? |pa_nang[2:0] : pa_nan;          // negative control: one partial dropped
+`else
+            p1_nan <= (NS != 0) ? |pa_nang : pa_nan;
+`endif
+            for (i = 0; i < 32; i = i + 1) begin
+                pm = pa_xs[i] * pa_ws[i];
+                p1_p[i] <= pa_sg[i] ? -$signed({1'b0, pm}) : $signed({1'b0, pm});
+                p1_sh[i] <= pa_sh[i];
+`ifdef BT_MUTANT_P2S
+                p1_q[i] <= $signed(pa_sg[i] ? -$signed({1'b0, pm}) : $signed({1'b0, pm})) <<< pa_sh[i][1];   // negative control
+`else
+                p1_q[i] <= $signed(pa_sg[i] ? -$signed({1'b0, pm}) : $signed({1'b0, pm})) <<< pa_sh[i][1:0];
+`endif
+                p1_sq[i] <= pa_sh[i][4:2];
+`ifdef OT_BF_FOREP
+                for (int c = 0; c < 3; c++) p1_sqb[96*c + 3*i +: 3] <= pa_sh[i][4:2];
+`endif
+            end
+        end
+    end
+
+    // -- P2: terms (units of 2^-18) and CSA 32 -> CSAM ---------------------------------------
+    reg [32*W-1:0] terms;
+`ifdef OT_BF_FOREP
+    reg [W-1:0] t_s [0:3];
+    always @(*) begin
+        for (i = 0; i < 32; i = i + 1)
+            if (P2S != 0 && P1S != 0) begin
+                // quarter slice 0 shifted by p1_sq, slices 1-3 by its kept copies (the same value)
+                t_s[0] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
+                for (int c = 0; c < 3; c++) t_s[c+1] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sqb[96*c + 3*i +: 3], 2'b00};
+                for (int b = 0; b < W; b++) terms[W*i + b] = t_s[(b * 4) / W][b];
+            end else terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
+    end
+`else
+    always @(*) begin
+        for (i = 0; i < 32; i = i + 1)
+            if (P2S != 0 && P1S != 0) terms[W*i +: W] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
+            else terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
+    end
+`endif
+    wire [CSAM*W-1:0] c7;
+    ot_v41_csa #(.N(32), .M(CSAM), .W(W)) u_csa1 (.d(terms), .q(c7));
+    reg               p2_v, p2_first, p2_last, p2_nan;
+    reg signed [10:0] p2_es;
+    reg [CSAM*W-1:0]  p2_c;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p2_v <= 1'b0;
+        else p2_v <= p1_v;
+    end
+    always @(posedge clk) begin
+        p2_first <= p1_first; p2_last <= p1_last; p2_nan <= p1_nan; p2_es <= p1_es;
+        p2_c <= c7;
+    end
+
+    // -- P3: CSA CSAM -> 2 ------------------------------------------------------------------------
+    wire [2*W-1:0] c2;
+    ot_v41_csa #(.N(CSAM), .M(2), .W(W)) u_csa2 (.d(p2_c), .q(c2));
+    reg               p3_v, p3_first, p3_last, p3_nan;
+    reg signed [10:0] p3_es;
+    reg [W-1:0]       p3_a, p3_b;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p3_v <= 1'b0;
+        else p3_v <= p2_v;
+    end
+    always @(posedge clk) begin
+        p3_first <= p2_first; p3_last <= p2_last; p3_nan <= p2_nan; p3_es <= p2_es;
+        p3_a <= c2[W-1:0]; p3_b <= c2[2*W-1:W];
+    end
+
+    // -- P4a: the carry-save pair's sum -------------------------------------------------------------
+    wire [W-1:0] s4a;
+    wire         c4a;
+    ot_v41_ksadd #(.W(W)) u_s4a (.a(p3_a), .b(p3_b), .cin(1'b0), .s(s4a), .cout(c4a));
+    reg               p4a_v, p4a_nan;
+    reg signed [10:0] p4a_es;
+    reg [W-1:0]       p4a_s;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p4a_v <= 1'b0;
+        else p4a_v <= p3_v;
+    end
+    always @(posedge clk) begin
+        p4a_nan <= p3_nan; p4a_es <= p3_es;
+        p4a_s <= s4a;
+    end
+`ifdef OT_BF_FOREP
+    wire [W-2:0] p4_sel;              // the sign seen by magnitude bit k
+    (* keep *) reg [2:0] p4a_sgc;     // FOREP: kept copies of p4a_s[W-1], one per 14-bit slice of the magnitude select
+    always @(posedge clk) p4a_sgc <= {3{s4a[W-1]}};
+    for (genvar gm = 0; gm < W - 1; gm = gm + 1) begin : g_sg
+        assign p4_sel[gm] = p4a_sgc[(gm * 3) / (W - 1)];
+    end
+`endif
+    // -- P4b: sign-magnitude (the negation as ~s + 1 with a parallel-prefix increment) ---------------
+    wire [W-1:0] ng;                          // -(a + b) = ~s + 1
+    wire         cng;
+    ot_v41_inc #(.W(W)) u_ng (.a(~p4a_s), .inc(1'b1), .y(ng), .co(cng));
+    reg               p4_v, p4_first, p4_last, p4_nan, p4_s;
+    reg signed [11:0] p4_eb;
+    reg [W-2:0]       p4_m;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p4_v <= 1'b0;
+        else p4_v <= p4a_v;
+    end
+    always @(posedge clk) begin
+        p4_nan <= p4a_nan;
+        //: biased exponent of the leading bit at position 40 is xe + we + 149
+        p4_eb <= p4a_es + 12'sd149;
+        p4_s <= p4a_s[W-1];
+`ifdef OT_BF_FOREP
+        p4_m <= (p4_sel & ng[W-2:0]) | (~p4_sel & p4a_s[W-2:0]);
+`else
+        p4_m <= p4a_s[W-1] ? ng[W-2:0] : p4a_s[W-2:0];
+`endif
+    end
+
+    // -- P5a: normalise, coarse (32 / 16 / 8) ----------------------------------------------------------
+    reg [40:0] nma;
+    reg [5:0]  lza;
+    always @(*) begin
+        nma = p4_m; lza = 6'd0;
+        if (nma[40:9]  == 32'd0) begin nma = nma << 32; lza = lza + 6'd32; end
+        if (nma[40:25] == 16'd0) begin nma = nma << 16; lza = lza + 6'd16; end
+        if (nma[40:33] == 8'd0)  begin nma = nma << 8;  lza = lza + 6'd8;  end
+    end
+    reg               p5a_v, p5a_nan, p5a_s, p5a_z;
+    reg signed [11:0] p5a_eb;
+    reg [40:0]        p5a_nm;
+    reg [5:0]         p5a_lz;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p5a_v <= 1'b0;
+        else p5a_v <= p4_v;
+    end
+    always @(posedge clk) begin
+        p5a_nan <= p4_nan; p5a_s <= p4_s; p5a_z <= (p4_m == 41'd0);
+        p5a_eb <= p4_eb; p5a_nm <= nma; p5a_lz <= lza;
+    end
+    // -- P5b: normalise, fine (4 / 2 / 1) -----------------------------------------------------------
+    reg [40:0] nm;
+    reg [5:0]  lz;
+    always @(*) begin
+        nm = p5a_nm; lz = p5a_lz;
+        if (nm[40:37] == 4'd0)  begin nm = nm << 4;  lz = lz + 6'd4;  end
+        if (nm[40:39] == 2'd0)  begin nm = nm << 2;  lz = lz + 6'd2;  end
+        if (nm[40] == 1'b0)     begin nm = nm << 1;  lz = lz + 6'd1;  end
+    end
+    reg               p5_v, p5_first, p5_last, p5_nan, p5_s, p5_z;
+    reg signed [11:0] p5_ebl;           // exponent of the normalised leading bit (eb - lz), formed here
+    reg [40:0]        p5_nm;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p5_v <= 1'b0;
+        else p5_v <= p5a_v;
+    end
+    always @(posedge clk) begin
+        p5_nan <= p5a_nan; p5_s <= p5a_s;
+        p5_z <= p5a_z;
+        p5_ebl <= p5a_eb - $signed({6'd0, lz}); p5_nm <= nm;
+    end
+
+    // -- P6: round to 24 bits (the golden's float32 of the exact dot) -----------------------------
+    wire [23:0] m24 = p5_nm[40:17];
+    wire        inc = p5_nm[16] & ((p5_nm[15:0] != 16'd0) | m24[0]);
+    wire [24:0] mr;                                              // m24 + inc, explicit prefix
+    wire        cmr;
+    ot_v41_inc #(.W(25)) u_mr (.a({1'b0, m24}), .inc(inc), .y(mr), .co(cmr));
+    reg               p6_v, p6_first, p6_last, p6_nan, p6_s, p6_z;
+    reg signed [11:0] p6_b;
+    reg [22:0]        p6_f;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p6_v <= 1'b0;
+        else p6_v <= p5_v;
+    end
+    always @(posedge clk) begin
+        p6_first <= p5_first; p6_last <= p5_last; p6_nan <= p5_nan; p6_s <= p5_s; p6_z <= p5_z;
+        p6_b <= p5_ebl + $signed({11'd0, mr[24]});
+        p6_f <= mr[24] ? 23'd0 : mr[22:0];
+    end
+
+    // -- P7: scale by 2^(xe+we): exponent add done; subnormal right shift -------------------------
+    wire [11:0] rsh = 12'd1 - p6_b;                         // used when p6_b <= 0
+    wire [4:0]  rs5 = (p6_b < -12'sd24) ? 5'd26 : rsh[4:0];
+    wire [49:0] sw = {1'b1, p6_f, 26'd0} >> rs5;
+    reg               p7_v, p7_first, p7_last, p7_nan, p7_sub, p7_ovf, p7_s;
+    reg [31:0]        p7_n;                                 // normal / zero / inf result
+    reg [23:0]        p7_t;
+    reg               p7_g, p7_st;
+`ifdef OT_BF_FOREP
+    wire [31:0]       p7_subv;            // the subnormal select seen by output bit k
+    (* keep *) reg [2:0] p7_subc;         // FOREP: kept copies of p7_sub, one per ~11 bits of p8_y
+    always @(posedge clk) p7_subc <= {3{!p6_z && (p6_b < 12'sd1)}};
+    for (genvar gs = 0; gs < 32; gs = gs + 1) begin : g_sb
+        assign p7_subv[gs] = p7_subc[(gs * 3) / 32];
+    end
+`endif
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p7_v <= 1'b0;
+        else p7_v <= p6_v;
+    end
+    always @(posedge clk) begin
+        p7_first <= p6_first; p7_last <= p6_last; p7_nan <= p6_nan; p7_s <= p6_s;
+        p7_sub <= !p6_z && (p6_b < 12'sd1);
+        p7_ovf <= !p6_z && (p6_b > 12'sd254);
+        if (p6_z)                  p7_n <= 32'd0;
+        else if (p6_b > 12'sd254)  p7_n <= {p6_s, 8'hFF, 23'd0};
+        else                       p7_n <= {p6_s, p6_b[7:0], p6_f};
+        p7_t <= sw[49:26];
+        p7_g <= sw[25];
+        p7_st <= (sw[24:0] != 25'd0);
+    end
+
+    // -- P8: subnormal round and pack ---------------------------------------------------------------
+    wire        inc8 = p7_g & (p7_st | p7_t[0]);
+    wire [23:0] tr;                                                // p7_t + inc, explicit prefix
+    wire        ctr;
+    ot_v41_inc #(.W(24)) u_tr (.a(p7_t), .inc(inc8), .y(tr), .co(ctr));
+    reg         p8_v, p8_first, p8_last, p8_f;
+    reg [31:0]  p8_y;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) p8_v <= 1'b0;
+        else p8_v <= p7_v;
+    end
+    always @(posedge clk) begin
+        p8_first <= p7_first; p8_last <= p7_last;
+        p8_f <= p7_nan | p7_ovf;
+        //: a subnormal that rounds up to 2^-126 carries into the exponent field
+`ifdef OT_BF_FOREP
+        p8_y <= (p7_subv & {p7_s, 7'd0, tr}) | (~p7_subv & p7_n);
+`else
+        p8_y <= p7_sub ? {p7_s, 7'd0, tr} : p7_n;
+`endif
+    end
+
+    assign ov = p8_v;
+    assign y = p8_y;
+    assign f = p8_f;
+`ifdef OT_BF_FOREP
+    // the tag line's last stage as a kept register (the two q lanes' identical lines no longer share one last stage) and
+    // OH_K kept one-hot decodes of its slot field, both loaded from the same D-1 stage on the same edge
+    wire [TW-1:0] tag_m;
+    ot_hdc_delay #(.W(TW), .D(10 + (P1S != 0 ? 1 : 0))) u_tag (.clk(clk), .rst_n(rst_n), .d(tag), .q(tag_m));
+    (* keep *) reg [TW-1:0] tag_l;
+    (* keep *) reg [(OH_K << OH_HW)-1:0] tag_oh;
+    integer oj, oe;
+    always @(posedge clk) begin
+        tag_l <= tag_m;
+        for (oj = 0; oj < OH_K; oj = oj + 1)
+            for (oe = 0; oe < (1 << OH_HW); oe = oe + 1)
+                tag_oh[oj * (1 << OH_HW) + oe] <= (tag_m[TW-1 -: OH_HW] == oe);
+    end
+    assign otag = tag_l;
+    assign otag_oh = tag_oh;
+`else
+    ot_hdc_delay #(.W(TW), .D(11 + (P1S != 0 ? 1 : 0))) u_tag (.clk(clk), .rst_n(rst_n), .d(tag), .q(otag));
+`endif
+endmodule
