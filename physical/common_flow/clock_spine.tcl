@@ -455,7 +455,12 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     if {$bt2 ne "NULL" && $bt2 ne ""} { puts "OT_SPINE port $port not found, using $alt"; set bt $bt2; set port $alt }
   }
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
-  ot_pg_require_cts_placement_or_empty_context
+  if {[info exists ::ot_pg_rc_model] && $::ot_pg_rc_model eq "placement"} {
+    # A previous regional root may already have produced trusted placement RC.
+    ot_pg_require_cts_placement_context
+  } else {
+    ot_pg_require_cts_placement_or_empty_context
+  }
   # Existing port buffers must also be bound before this source-owned estimator.
   ot_pg_bind_batch_before_protect $::ot_sp_blk [$::ot_sp_blk getInsts]
   ot_pg_assert_all_native $::ot_sp_blk [ot_pg_prepare $::ot_sp_blk]
