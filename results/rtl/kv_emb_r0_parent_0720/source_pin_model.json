@@ -26,6 +26,77 @@
     ],
     "lattice_um": 43.2
   },
+  "routing_layer_model": {
+    "old_parent_cap": "M5",
+    "old_analytical_capacity_assumed": "M6/M7",
+    "status": "INCOMPATIBLE_ASSUMPTIONS_NO_CAPACITY_ADMISSION",
+    "child_actual_OBS": {
+      "RVTN": {
+        "rectangles": 428,
+        "bbox": [
+          2.16,
+          2.16,
+          235.44,
+          149.04
+        ]
+      },
+      "RVTP": {
+        "rectangles": 424,
+        "bbox": [
+          2.16,
+          2.295,
+          235.44,
+          148.905
+        ]
+      },
+      "M1": {
+        "rectangles": 5,
+        "bbox": [
+          2.16,
+          2.151,
+          235.44,
+          149.049
+        ]
+      },
+      "M2": {
+        "rectangles": 439,
+        "bbox": [
+          0.103,
+          2.151,
+          237.515,
+          149.049
+        ]
+      },
+      "M3": {
+        "rectangles": 4936,
+        "bbox": [
+          0.108,
+          0.571,
+          237.51,
+          149.057
+        ]
+      },
+      "M4": {
+        "rectangles": 5055,
+        "bbox": [
+          0.06,
+          0.576,
+          237.564,
+          149.052
+        ]
+      },
+      "M5": {
+        "rectangles": 1739,
+        "bbox": [
+          2.4,
+          0.016,
+          234.912,
+          149.063
+        ]
+      }
+    },
+    "scope": "Need actual layer directions/pitches, PG/OBS and width before choosing cap or channel; no over-the-child upper-metal capacity is currently admitted"
+  },
   "parent_boundary_bits": 1956,
   "face_max_pins_in_1um_window": {
     "W": 6,
