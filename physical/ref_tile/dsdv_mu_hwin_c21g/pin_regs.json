@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_mu_hwin_capture_1019",
+ "enable": false,
+ "reason": "Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf)."
+}

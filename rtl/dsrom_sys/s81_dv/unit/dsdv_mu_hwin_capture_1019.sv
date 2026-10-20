@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Private exact selected-anchor HWIN source; namespace projection only.
 module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0, parameter integer CFG_RELAY = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -38,8 +38,27 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     localparam integer RBOOT_DATA=RBOOT_BASE+((LOCAL_BOOT!=0)?NEV:0);
     localparam integer RPRED_BASE=RBOOT_DATA+((LOCAL_BOOT!=0)?NBOOT_GROUPS:0);
     localparam integer RMC_LIMIT=RPRED_BASE+((CHECK_STAGE!=0)?NEV:0);
-    localparam integer RESET_REGIONS=RMC_LIMIT+((CHECK_STAGE!=0)?1:0);
+    localparam integer RCFG_BASE=RMC_LIMIT+((CHECK_STAGE!=0)?1:0);
+    // HWIN21g CFG_RELAY: 2 relay copies x {f_mw, f_mc}, one reset region each (26 sinks), so the copies stay distinct.
+    localparam integer RESET_REGIONS=RCFG_BASE+((CFG_RELAY!=0)?4:0);
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_hwin_capture_1019_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
+    // HWIN21g CFG_RELAY=1 (opt-in, default 0 = HWIN21cb bytes-equivalent logic): the config word ports f_mw / f_mc
+    // land in a relay register stage before ANY consumer, so every config consumer sees the port one edge later
+    // (+1 edge on the config path only; f_ks start and mu_rt RX timing unchanged).  Two kept, reset-distinct copies
+    // form a balanced 2-way landed tree: copy 0 serves the west events 0..NEV/2-1, the central pin flops (mw_q/mc_q),
+    // boot-data groups of the west half and the RL limit payload; copy 1 serves the east events and boot groups.
+    // Exactness: DUT(CFG_RELAY=1)(f_mw, f_mc) == DUT(CFG_RELAY=0)(z^-1 f_mw, z^-1 f_mc) every cycle (kit bench miter).
+    wire [25:0] mw_in[0:1], mc_in[0:1];
+    generate if(CFG_RELAY!=0) begin:g_cfg_relay
+        for(genvar rc=0;rc<2;rc=rc+1) begin:g_copy
+            (* keep *) reg [25:0] mw_r, mc_r;
+            always @(posedge ck or negedge rr[RCFG_BASE+2*rc]) if(!rr[RCFG_BASE+2*rc]) mw_r<=26'd0; else mw_r<=f_mw;
+            always @(posedge ck or negedge rr[RCFG_BASE+2*rc+1]) if(!rr[RCFG_BASE+2*rc+1]) mc_r<=26'd0; else mc_r<=f_mc;
+            assign mw_in[rc]=mw_r; assign mc_in[rc]=mc_r;
+        end
+    end else begin:g_cfg_direct
+        assign mw_in[0]=f_mw; assign mw_in[1]=f_mw; assign mc_in[0]=f_mc; assign mc_in[1]=f_mc;
+    end endgenerate
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
     reg [51:0] ks_payload; reg [24:0] mc_payload, mw_payload;
@@ -49,13 +68,13 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     wire [25:0] mc_q={mc_valid,mc_payload}, mw_q={mw_valid,mw_payload};
     wire [NRT*32-1:0] rt_q; integer pr,pv,r;
     always @(posedge ck) begin
-        ks_payload<=f_ks[51:0]; mc_payload<=f_mc[24:0]; mw_payload<=f_mw[24:0];
+        ks_payload<=f_ks[51:0]; mc_payload<=mc_in[0][24:0]; mw_payload<=mw_in[0][24:0];
         for(pr=0;pr<NRT;pr=pr+1) rt_payload[31*pr+:31]<=mu_rt[32*pr+:31];
     end
     always @(posedge ck or negedge rn)
         if(!rn) begin ks_valid<=1'b0; mc_valid<=1'b0; mw_valid<=1'b0; rt_valid<={NRT{1'b0}}; end
         else begin
-            ks_valid<=f_ks[52]; mc_valid<=f_mc[25]; mw_valid<=f_mw[25];
+            ks_valid<=f_ks[52]; mc_valid<=mc_in[0][25]; mw_valid<=mw_in[0][25];
             for(pv=0;pv<NRT;pv=pv+1) rt_valid[pv]<=mu_rt[32*pv+31];
         end
     genvar rp_pin;
@@ -445,7 +464,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         if(LOCAL_BOOT!=0) begin:g_local
             (* keep *) reg [20:0] data_r;
             always @(posedge ck or negedge rr[RBOOT_DATA+bg])
-                if(!rr[RBOOT_DATA+bg]) data_r<=0; else data_r<=f_mw[20:0];
+                if(!rr[RBOOT_DATA+bg]) data_r<=0; else data_r<=mw_in[(2*bg)/NBOOT_GROUPS][20:0];
             assign boot_data[bg]=data_r;
         end else begin:g_direct assign boot_data[bg]=mw_q[20:0];end
     end endgenerate
@@ -453,7 +472,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     generate if(CHECK_STAGE!=0) begin:g_limit_input
         (* keep *) reg [23:0] payload_r;
         always @(posedge ck or negedge rr[RMC_LIMIT])
-            if(!rr[RMC_LIMIT]) payload_r<=0;else payload_r<=f_mc[23:0];
+            if(!rr[RMC_LIMIT]) payload_r<=0;else payload_r<=mc_in[0][23:0];
         assign mc_limit_input=payload_r;
     end else begin:g_limit_direct assign mc_limit_input=mc_q[23:0];end endgenerate
     wire [23:0] mc_limit_word=mc_limit_input-24'd2;
@@ -461,6 +480,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     wire [6:0] min_word=(gn==0)?7'(NSLOT+2):7'(gn)+7'd3;
     genvar ce, rcg;
     generate for(ce=0;ce<NEV;ce=ce+1) begin:g_event_broadcast
+        wire [25:0] ev_mw=mw_in[(2*ce)/NEV], ev_mc=mc_in[(2*ce)/NEV];
         (* keep *) reg [31:0] ts_r, time_r;
         reg [23:0] rl_r;
         (* keep *) reg [SI-1:0] lw_r;
@@ -476,7 +496,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         end else begin:g_kind_extra
             (* keep *) reg [EI-1:0] kind_r;
             always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
-                if(!rr[COPY_RBASE+7*ce+6]) kind_r<=0;else kind_r<=f_mw[EI-1:0];
+                if(!rr[COPY_RBASE+7*ce+6]) kind_r<=0;else kind_r<=ev_mw[EI-1:0];
             assign cfg_kind_r=kind_r;
         end
         (* keep *) reg [1:0] cfg_attr_r;
@@ -484,7 +504,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         assign rec_local[ce]=start_r && on_cal && !col && !udup && !(!arm_r && bad_group[ce/4]);
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
             if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;start_r<=1'b0;cfg_w0_r<=0;cfg_w1_r<=0;cfg_w2_r<=0;cfg_sel_r<=0;cfg_addr_r<=0;cfg_attr_r<=0;end
-            else begin cfg_sel_r<=((wv && idle && mw_q[22:21]==2'd0)?mw_q[EI-1:0]:esel)==EI'(ce);cfg_w0_r<=f_mw[25] && f_mw[22:21]==2'd0;cfg_w1_r<=f_mw[25] && f_mw[22:21]==2'd1;cfg_w2_r<=f_mw[25] && f_mw[22:21]==2'd2;cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];start_r<=f_ks[52];cfg_addr_r<=f_mw[SI-1:0];cfg_attr_r<=f_mw[11:10];end
+            else begin cfg_sel_r<=((wv && idle && mw_q[22:21]==2'd0)?mw_q[EI-1:0]:esel)==EI'(ce);cfg_w0_r<=ev_mw[25] && ev_mw[22:21]==2'd0;cfg_w1_r<=ev_mw[25] && ev_mw[22:21]==2'd1;cfg_w2_r<=ev_mw[25] && ev_mw[22:21]==2'd2;cfg_gap_r<=ev_mc[25] && !ev_mc[24];cfg_rl_r<=ev_mc[25] && ev_mc[24];start_r<=f_ks[52];cfg_addr_r<=ev_mw[SI-1:0];cfg_attr_r<=ev_mw[11:10];end
         wire [6:0] boot_count;
         wire [2:0] d_write;
         wire attr_write,kind_write,rl_write,gap_write;
