@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-epyc7       admits   808 GB (avail 666, growth 101, headroom 0, waiters 0/0 GB) load 63/96 running 25 disk 5490 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4118268-1792498106 after 0 s
+textbook_lint: WARN qfd_tt_ctlm_dv_np_lp cells 117,783 flops 15,709 depth 2927.3 ps util None reach None um (7.5 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n[0]","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=11255 root=port:ck_core[0] rule=PASS: 11,255 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: WARN(refuse-tier) boundary: 1 register->output bit(s) > 3 levels (worst u_5789._2_->cf[0] 5 lv): register the boundary (pin flops / registered outputs)
+textbook_lint: WARN(refuse-tier) logic_depth: reg->reg stage u_804._2_ -> u_8165._2_/D: ~2927 ps estimated (95 logic levels) > 600 ps: pipeline / restructure the stage
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4118268-1792498106): exit 0

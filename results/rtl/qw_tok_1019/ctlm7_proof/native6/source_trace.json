@@ -1,0 +1,2856 @@
+[
+  {
+    "cell": "u_804._1_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "9941",
+    "input": "122071",
+    "weight": 7.0,
+    "generic_index": 804,
+    "source_cell": "$auto$ff.cc:337:slice$20876",
+    "source_type": "$_DFF_P_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:40.2-87.5",
+    "connections": {
+      "C": [
+        3140
+      ],
+      "D": [
+        4750
+      ],
+      "Q": [
+        4751
+      ]
+    }
+  },
+  {
+    "cell": "u_14303._0_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "26719",
+    "input": "9941",
+    "weight": 7.0,
+    "generic_index": 14303,
+    "source_cell": "$auto$opt_expr.cc:607:replace_const_cells$90762",
+    "source_type": "$_NOT_",
+    "source": null,
+    "connections": {
+      "A": [
+        4751
+      ],
+      "Y": [
+        20929
+      ]
+    }
+  },
+  {
+    "cell": "u_29580._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "49366",
+    "input": "26719",
+    "weight": 18.0,
+    "generic_index": 29580,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86265",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        20929
+      ],
+      "B": [
+        4749
+      ],
+      "X": [
+        4751
+      ],
+      "Y": [
+        45261
+      ]
+    }
+  },
+  {
+    "cell": "u_29596._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "51093",
+    "input": "49366",
+    "weight": 17.0,
+    "generic_index": 29596,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86312",
+    "source_type": "$_AND_",
+    "source": "/usr/local/bin/../share/yosys/techmap.v:293.27-293.63|/usr/local/bin/../share/yosys/techmap.v:240.19-240.41",
+    "connections": {
+      "A": [
+        46891
+      ],
+      "B": [
+        45261
+      ],
+      "Y": [
+        46906
+      ]
+    }
+  },
+  {
+    "cell": "u_29597._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "49370",
+    "input": "51093",
+    "weight": 18.0,
+    "generic_index": 29597,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86313",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        4755
+      ],
+      "B": [
+        4753
+      ],
+      "X": [
+        46906
+      ],
+      "Y": [
+        45265
+      ]
+    }
+  },
+  {
+    "cell": "u_29605._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "51103",
+    "input": "49370",
+    "weight": 17.0,
+    "generic_index": 29605,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86336",
+    "source_type": "$_AND_",
+    "source": "/usr/local/bin/../share/yosys/techmap.v:293.27-293.63|/usr/local/bin/../share/yosys/techmap.v:240.19-240.41",
+    "connections": {
+      "A": [
+        46908
+      ],
+      "B": [
+        45265
+      ],
+      "Y": [
+        46914
+      ]
+    }
+  },
+  {
+    "cell": "u_29606._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "49378",
+    "input": "51103",
+    "weight": 18.0,
+    "generic_index": 29606,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86337",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        46894
+      ],
+      "B": [
+        46892
+      ],
+      "X": [
+        46914
+      ],
+      "Y": [
+        45273
+      ]
+    }
+  },
+  {
+    "cell": "u_29609._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49397",
+    "input": "49378",
+    "weight": 17.0,
+    "generic_index": 29609,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86348",
+    "source_type": "$_AND_",
+    "source": "/usr/local/bin/../share/yosys/techmap.v:293.27-293.63|/usr/local/bin/../share/yosys/techmap.v:240.19-240.41",
+    "connections": {
+      "A": [
+        46915
+      ],
+      "B": [
+        45273
+      ],
+      "Y": [
+        45289
+      ]
+    }
+  },
+  {
+    "cell": "u_29611._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49416",
+    "input": "49397",
+    "weight": 17.0,
+    "generic_index": 29611,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86357",
+    "source_type": "$_AND_",
+    "source": "/usr/local/bin/../share/yosys/techmap.v:293.27-293.63|/usr/local/bin/../share/yosys/techmap.v:248.19-248.41",
+    "connections": {
+      "A": [
+        46916
+      ],
+      "B": [
+        45289
+      ],
+      "Y": [
+        45305
+      ]
+    }
+  },
+  {
+    "cell": "u_29616._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49424",
+    "input": "49416",
+    "weight": 17.0,
+    "generic_index": 29616,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86366",
+    "source_type": "$_AND_",
+    "source": "/usr/local/bin/../share/yosys/techmap.v:293.27-293.63|/usr/local/bin/../share/yosys/techmap.v:248.19-248.41",
+    "connections": {
+      "A": [
+        46913
+      ],
+      "B": [
+        45305
+      ],
+      "Y": [
+        45313
+      ]
+    }
+  },
+  {
+    "cell": "u_29626._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49431",
+    "input": "49424",
+    "weight": 17.0,
+    "generic_index": 29626,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86387",
+    "source_type": "$_AND_",
+    "source": "/usr/local/bin/../share/yosys/techmap.v:293.27-293.63|/usr/local/bin/../share/yosys/techmap.v:248.19-248.41",
+    "connections": {
+      "A": [
+        46905
+      ],
+      "B": [
+        45313
+      ],
+      "Y": [
+        45317
+      ]
+    }
+  },
+  {
+    "cell": "u_29622._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49433",
+    "input": "49431",
+    "weight": 17.0,
+    "generic_index": 29622,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$86380",
+    "source_type": "$_AND_",
+    "source": "/usr/local/bin/../share/yosys/techmap.v:293.27-293.63|/usr/local/bin/../share/yosys/techmap.v:248.19-248.41",
+    "connections": {
+      "A": [
+        4809
+      ],
+      "B": [
+        45317
+      ],
+      "Y": [
+        45319
+      ]
+    }
+  },
+  {
+    "cell": "u_28192._0_",
+    "type": "XOR2xp5_ASAP7_75t_R",
+    "output": "49434",
+    "input": "49433",
+    "weight": 22.0,
+    "generic_index": 28192,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$80833",
+    "source_type": "$_XOR_",
+    "source": "/usr/local/bin/../share/yosys/techmap.v:296.13-296.25",
+    "connections": {
+      "A": [
+        4811
+      ],
+      "B": [
+        45319
+      ],
+      "Y": [
+        45320
+      ]
+    }
+  },
+  {
+    "cell": "u_41470._0_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "45736",
+    "input": "49434",
+    "weight": 7.0,
+    "generic_index": 41470,
+    "source_cell": "$auto$simplemap.cc:46:simplemap_not$65991",
+    "source_type": "$_NOT_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.19-30.79|/usr/local/bin/../share/yosys/techmap.v:279.31-279.37",
+    "connections": {
+      "A": [
+        45320
+      ],
+      "Y": [
+        41485
+      ]
+    }
+  },
+  {
+    "cell": "u_25085._0_",
+    "type": "XOR2xp5_ASAP7_75t_R",
+    "output": "45733",
+    "input": "45736",
+    "weight": 22.0,
+    "generic_index": 25085,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$69294",
+    "source_type": "$_XOR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.19-30.79|/usr/local/bin/../share/yosys/techmap.v:292.26-292.70|/usr/local/bin/../share/yosys/techmap.v:205.14-205.19",
+    "connections": {
+      "A": [
+        4939
+      ],
+      "B": [
+        41485
+      ],
+      "Y": [
+        41407
+      ]
+    }
+  },
+  {
+    "cell": "u_25025._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "45735",
+    "input": "45733",
+    "weight": 17.0,
+    "generic_index": 25025,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$69168",
+    "source_type": "$_AND_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.19-30.79|/usr/local/bin/../share/yosys/techmap.v:293.27-293.63|/usr/local/bin/../share/yosys/techmap.v:240.19-240.41",
+    "connections": {
+      "A": [
+        41407
+      ],
+      "B": [
+        41408
+      ],
+      "Y": [
+        41409
+      ]
+    }
+  },
+  {
+    "cell": "u_25026._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45737",
+    "input": "45735",
+    "weight": 18.0,
+    "generic_index": 25026,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$69169",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        4939
+      ],
+      "B": [
+        41485
+      ],
+      "X": [
+        41409
+      ],
+      "Y": [
+        41411
+      ]
+    }
+  },
+  {
+    "cell": "u_25041._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45757",
+    "input": "45737",
+    "weight": 18.0,
+    "generic_index": 25041,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$69193",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        41413
+      ],
+      "B": [
+        41404
+      ],
+      "X": [
+        41411
+      ],
+      "Y": [
+        41435
+      ]
+    }
+  },
+  {
+    "cell": "u_25048._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45764",
+    "input": "45757",
+    "weight": 18.0,
+    "generic_index": 25048,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$69205",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        41436
+      ],
+      "B": [
+        41432
+      ],
+      "X": [
+        41435
+      ],
+      "Y": [
+        41446
+      ]
+    }
+  },
+  {
+    "cell": "u_25051._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45769",
+    "input": "45764",
+    "weight": 18.0,
+    "generic_index": 25051,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$69211",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        41447
+      ],
+      "B": [
+        41443
+      ],
+      "X": [
+        41446
+      ],
+      "Y": [
+        41451
+      ]
+    }
+  },
+  {
+    "cell": "u_25053._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45771",
+    "input": "45769",
+    "weight": 18.0,
+    "generic_index": 25053,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$69214",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        41452
+      ],
+      "B": [
+        41449
+      ],
+      "X": [
+        41451
+      ],
+      "Y": [
+        41454
+      ]
+    }
+  },
+  {
+    "cell": "u_40826._0_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "55795",
+    "input": "45771",
+    "weight": 7.0,
+    "generic_index": 40826,
+    "source_cell": "$auto$simplemap.cc:46:simplemap_not$19102",
+    "source_type": "$_NOT_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.19-30.79",
+    "connections": {
+      "A": [
+        41454
+      ],
+      "Y": [
+        51150
+      ]
+    }
+  },
+  {
+    "cell": "u_33212._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "55796",
+    "input": "55795",
+    "weight": 17.0,
+    "generic_index": 33212,
+    "source_cell": "$auto$simplemap.cc:256:simplemap_logbin$54794",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79",
+    "connections": {
+      "A": [
+        50713
+      ],
+      "B": [
+        51150
+      ],
+      "Y": [
+        51151
+      ]
+    }
+  },
+  {
+    "cell": "u_40438._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76778",
+    "input": "55796",
+    "weight": 12.0,
+    "generic_index": 40438,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58434",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.4-30.87",
+    "connections": {
+      "A": [
+        51149
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51151
+      ],
+      "Y": [
+        54895
+      ]
+    }
+  },
+  {
+    "cell": "u_40438._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76776",
+    "input": "76778",
+    "weight": 18.0,
+    "generic_index": 40438,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58434",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.4-30.87",
+    "connections": {
+      "A": [
+        51149
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51151
+      ],
+      "Y": [
+        54895
+      ]
+    }
+  },
+  {
+    "cell": "u_40439._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76779",
+    "input": "76776",
+    "weight": 7.0,
+    "generic_index": 40439,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58439",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.24-29.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.21-34.6",
+    "connections": {
+      "A": [
+        54895
+      ],
+      "B": [
+        51149
+      ],
+      "S": [
+        41678
+      ],
+      "Y": [
+        54894
+      ]
+    }
+  },
+  {
+    "cell": "u_40439._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76771",
+    "input": "76779",
+    "weight": 18.0,
+    "generic_index": 40439,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58439",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.24-29.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.21-34.6",
+    "connections": {
+      "A": [
+        54895
+      ],
+      "B": [
+        51149
+      ],
+      "S": [
+        41678
+      ],
+      "Y": [
+        54894
+      ]
+    }
+  },
+  {
+    "cell": "u_40436._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76772",
+    "input": "76771",
+    "weight": 7.0,
+    "generic_index": 40436,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58432",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.4-30.87",
+    "connections": {
+      "A": [
+        54894
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51153
+      ],
+      "Y": [
+        54892
+      ]
+    }
+  },
+  {
+    "cell": "u_40436._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76767",
+    "input": "76772",
+    "weight": 18.0,
+    "generic_index": 40436,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58432",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.4-30.87",
+    "connections": {
+      "A": [
+        54894
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51153
+      ],
+      "Y": [
+        54892
+      ]
+    }
+  },
+  {
+    "cell": "u_40435._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76769",
+    "input": "76767",
+    "weight": 7.0,
+    "generic_index": 40435,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58431",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54892
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51155
+      ],
+      "Y": [
+        54893
+      ]
+    }
+  },
+  {
+    "cell": "u_40435._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76768",
+    "input": "76769",
+    "weight": 18.0,
+    "generic_index": 40435,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58431",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54892
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51155
+      ],
+      "Y": [
+        54893
+      ]
+    }
+  },
+  {
+    "cell": "u_40437._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76774",
+    "input": "76768",
+    "weight": 7.0,
+    "generic_index": 40437,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58433",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.24-29.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.21-34.6",
+    "connections": {
+      "A": [
+        54893
+      ],
+      "B": [
+        54894
+      ],
+      "S": [
+        41301
+      ],
+      "Y": [
+        54891
+      ]
+    }
+  },
+  {
+    "cell": "u_40437._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76762",
+    "input": "76774",
+    "weight": 18.0,
+    "generic_index": 40437,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58433",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.24-29.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.21-34.6",
+    "connections": {
+      "A": [
+        54893
+      ],
+      "B": [
+        54894
+      ],
+      "S": [
+        41301
+      ],
+      "Y": [
+        54891
+      ]
+    }
+  },
+  {
+    "cell": "u_40433._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76763",
+    "input": "76762",
+    "weight": 7.0,
+    "generic_index": 40433,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58429",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.4-30.87",
+    "connections": {
+      "A": [
+        54891
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51157
+      ],
+      "Y": [
+        54890
+      ]
+    }
+  },
+  {
+    "cell": "u_40433._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76759",
+    "input": "76763",
+    "weight": 18.0,
+    "generic_index": 40433,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58429",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.4-30.87",
+    "connections": {
+      "A": [
+        54891
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51157
+      ],
+      "Y": [
+        54890
+      ]
+    }
+  },
+  {
+    "cell": "u_40432._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76760",
+    "input": "76759",
+    "weight": 7.0,
+    "generic_index": 40432,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58428",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54890
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51159
+      ],
+      "Y": [
+        54888
+      ]
+    }
+  },
+  {
+    "cell": "u_40432._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76755",
+    "input": "76760",
+    "weight": 18.0,
+    "generic_index": 40432,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58428",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54890
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51159
+      ],
+      "Y": [
+        54888
+      ]
+    }
+  },
+  {
+    "cell": "u_40431._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76757",
+    "input": "76755",
+    "weight": 7.0,
+    "generic_index": 40431,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58427",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54888
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51161
+      ],
+      "Y": [
+        54889
+      ]
+    }
+  },
+  {
+    "cell": "u_40431._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76756",
+    "input": "76757",
+    "weight": 18.0,
+    "generic_index": 40431,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58427",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54888
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51161
+      ],
+      "Y": [
+        54889
+      ]
+    }
+  },
+  {
+    "cell": "u_40434._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76765",
+    "input": "76756",
+    "weight": 7.0,
+    "generic_index": 40434,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58430",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.24-29.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.21-34.6",
+    "connections": {
+      "A": [
+        54889
+      ],
+      "B": [
+        54891
+      ],
+      "S": [
+        41044
+      ],
+      "Y": [
+        54887
+      ]
+    }
+  },
+  {
+    "cell": "u_40434._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76749",
+    "input": "76765",
+    "weight": 18.0,
+    "generic_index": 40434,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58430",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.24-29.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.21-34.6",
+    "connections": {
+      "A": [
+        54889
+      ],
+      "B": [
+        54891
+      ],
+      "S": [
+        41044
+      ],
+      "Y": [
+        54887
+      ]
+    }
+  },
+  {
+    "cell": "u_40429._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76750",
+    "input": "76749",
+    "weight": 7.0,
+    "generic_index": 40429,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58425",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.4-30.87",
+    "connections": {
+      "A": [
+        54887
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51163
+      ],
+      "Y": [
+        54886
+      ]
+    }
+  },
+  {
+    "cell": "u_40429._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76746",
+    "input": "76750",
+    "weight": 18.0,
+    "generic_index": 40429,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58425",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.7-30.79|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:30.4-30.87",
+    "connections": {
+      "A": [
+        54887
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51163
+      ],
+      "Y": [
+        54886
+      ]
+    }
+  },
+  {
+    "cell": "u_40428._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76747",
+    "input": "76746",
+    "weight": 7.0,
+    "generic_index": 40428,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58424",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54886
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51165
+      ],
+      "Y": [
+        54885
+      ]
+    }
+  },
+  {
+    "cell": "u_40428._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76743",
+    "input": "76747",
+    "weight": 18.0,
+    "generic_index": 40428,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58424",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54886
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51165
+      ],
+      "Y": [
+        54885
+      ]
+    }
+  },
+  {
+    "cell": "u_40427._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76744",
+    "input": "76743",
+    "weight": 7.0,
+    "generic_index": 40427,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58423",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54885
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51167
+      ],
+      "Y": [
+        54883
+      ]
+    }
+  },
+  {
+    "cell": "u_40427._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76739",
+    "input": "76744",
+    "weight": 18.0,
+    "generic_index": 40427,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58423",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54885
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51167
+      ],
+      "Y": [
+        54883
+      ]
+    }
+  },
+  {
+    "cell": "u_40426._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76741",
+    "input": "76739",
+    "weight": 7.0,
+    "generic_index": 40426,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58422",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54883
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51169
+      ],
+      "Y": [
+        54884
+      ]
+    }
+  },
+  {
+    "cell": "u_40426._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76740",
+    "input": "76741",
+    "weight": 18.0,
+    "generic_index": 40426,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58422",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.8-33.86|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:32.5-33.94",
+    "connections": {
+      "A": [
+        54883
+      ],
+      "B": [
+        "0"
+      ],
+      "S": [
+        51169
+      ],
+      "Y": [
+        54884
+      ]
+    }
+  },
+  {
+    "cell": "u_40430._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76754",
+    "input": "76740",
+    "weight": 12.0,
+    "generic_index": 40430,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58426",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.24-29.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.21-34.6",
+    "connections": {
+      "A": [
+        54887
+      ],
+      "B": [
+        54884
+      ],
+      "S": [
+        14233
+      ],
+      "Y": [
+        50739
+      ]
+    }
+  },
+  {
+    "cell": "u_40430._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "55312",
+    "input": "76754",
+    "weight": 18.0,
+    "generic_index": 40430,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58426",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.24-29.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:29.21-34.6",
+    "connections": {
+      "A": [
+        54887
+      ],
+      "B": [
+        54884
+      ],
+      "S": [
+        14233
+      ],
+      "Y": [
+        50739
+      ]
+    }
+  },
+  {
+    "cell": "u_32801._0_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "55313",
+    "input": "55312",
+    "weight": 7.0,
+    "generic_index": 32801,
+    "source_cell": "$auto$simplemap.cc:227:simplemap_lognot$55750",
+    "source_type": "$_NOT_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:50.17-50.22",
+    "connections": {
+      "A": [
+        50739
+      ],
+      "Y": [
+        50740
+      ]
+    }
+  },
+  {
+    "cell": "u_33238._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "27283",
+    "input": "55313",
+    "weight": 17.0,
+    "generic_index": 33238,
+    "source_cell": "$auto$simplemap.cc:256:simplemap_logbin$55751",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:50.17-50.30",
+    "connections": {
+      "A": [
+        50740
+      ],
+      "B": [
+        4563
+      ],
+      "Y": [
+        21400
+      ]
+    }
+  },
+  {
+    "cell": "u_33331._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "55908",
+    "input": "27283",
+    "weight": 7.0,
+    "generic_index": 33331,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$18738",
+    "source_type": "$_MUX_",
+    "source": null,
+    "connections": {
+      "A": [
+        21400
+      ],
+      "B": [
+        21396
+      ],
+      "S": [
+        18093
+      ],
+      "Y": [
+        38926
+      ]
+    }
+  },
+  {
+    "cell": "u_33331._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42970",
+    "input": "55908",
+    "weight": 18.0,
+    "generic_index": 33331,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$18738",
+    "source_type": "$_MUX_",
+    "source": null,
+    "connections": {
+      "A": [
+        21400
+      ],
+      "B": [
+        21396
+      ],
+      "S": [
+        18093
+      ],
+      "Y": [
+        38926
+      ]
+    }
+  },
+  {
+    "cell": "u_23585._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42971",
+    "input": "42970",
+    "weight": 17.0,
+    "generic_index": 23585,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58368",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:48.9-48.63|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:48.6-49.70",
+    "connections": {
+      "A": [
+        18051
+      ],
+      "B": [
+        38926
+      ],
+      "Y": [
+        38927
+      ]
+    }
+  },
+  {
+    "cell": "u_40400._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76675",
+    "input": "42971",
+    "weight": 7.0,
+    "generic_index": 40400,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58369",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:46.13-46.22|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:46.10-51.46",
+    "connections": {
+      "A": [
+        38927
+      ],
+      "B": [
+        18051
+      ],
+      "S": [
+        18091
+      ],
+      "Y": [
+        38928
+      ]
+    }
+  },
+  {
+    "cell": "u_40400._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42972",
+    "input": "76675",
+    "weight": 18.0,
+    "generic_index": 40400,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58369",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:46.13-46.22|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:46.10-51.46",
+    "connections": {
+      "A": [
+        38927
+      ],
+      "B": [
+        18051
+      ],
+      "S": [
+        18091
+      ],
+      "Y": [
+        38928
+      ]
+    }
+  },
+  {
+    "cell": "u_23586._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42973",
+    "input": "42972",
+    "weight": 17.0,
+    "generic_index": 23586,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58370",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:45.8-45.14|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:45.5-51.46",
+    "connections": {
+      "A": [
+        38928
+      ],
+      "B": [
+        6093
+      ],
+      "Y": [
+        38929
+      ]
+    }
+  },
+  {
+    "cell": "u_40401._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76678",
+    "input": "42973",
+    "weight": 12.0,
+    "generic_index": 40401,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58371",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:44.7-44.33|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:44.4-52.7",
+    "connections": {
+      "A": [
+        18051
+      ],
+      "B": [
+        38929
+      ],
+      "S": [
+        47170
+      ],
+      "Y": [
+        38930
+      ]
+    }
+  },
+  {
+    "cell": "u_40401._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42974",
+    "input": "76678",
+    "weight": 18.0,
+    "generic_index": 40401,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58371",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:44.7-44.33|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:44.4-52.7",
+    "connections": {
+      "A": [
+        18051
+      ],
+      "B": [
+        38929
+      ],
+      "S": [
+        47170
+      ],
+      "Y": [
+        38930
+      ]
+    }
+  },
+  {
+    "cell": "u_23587._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42975",
+    "input": "42974",
+    "weight": 17.0,
+    "generic_index": 23587,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58372",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:54.8-54.49|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:54.5-55.72",
+    "connections": {
+      "A": [
+        38930
+      ],
+      "B": [
+        21398
+      ],
+      "Y": [
+        38931
+      ]
+    }
+  },
+  {
+    "cell": "u_40402._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76680",
+    "input": "42975",
+    "weight": 12.0,
+    "generic_index": 40402,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58373",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:53.7-53.12|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:53.4-56.7",
+    "connections": {
+      "A": [
+        38930
+      ],
+      "B": [
+        38931
+      ],
+      "S": [
+        47142
+      ],
+      "Y": [
+        38932
+      ]
+    }
+  },
+  {
+    "cell": "u_40402._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42978",
+    "input": "76680",
+    "weight": 18.0,
+    "generic_index": 40402,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58373",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:53.7-53.12|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:53.4-56.7",
+    "connections": {
+      "A": [
+        38930
+      ],
+      "B": [
+        38931
+      ],
+      "S": [
+        47142
+      ],
+      "Y": [
+        38932
+      ]
+    }
+  },
+  {
+    "cell": "u_23588._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "42979",
+    "input": "42978",
+    "weight": 18.0,
+    "generic_index": 23588,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58374",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        51183
+      ],
+      "B": [
+        50752
+      ],
+      "X": [
+        38932
+      ],
+      "Y": [
+        38934
+      ]
+    }
+  },
+  {
+    "cell": "u_23589._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42981",
+    "input": "42979",
+    "weight": 17.0,
+    "generic_index": 23589,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58375",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:63.10-65.71|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:63.7-66.25",
+    "connections": {
+      "A": [
+        38934
+      ],
+      "B": [
+        38935
+      ],
+      "Y": [
+        38936
+      ]
+    }
+  },
+  {
+    "cell": "u_40403._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76681",
+    "input": "42981",
+    "weight": 7.0,
+    "generic_index": 40403,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58376",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.9-62.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.6-67.9",
+    "connections": {
+      "A": [
+        38936
+      ],
+      "B": [
+        38934
+      ],
+      "S": [
+        48876
+      ],
+      "Y": [
+        38937
+      ]
+    }
+  },
+  {
+    "cell": "u_40403._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42986",
+    "input": "76681",
+    "weight": 18.0,
+    "generic_index": 40403,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58376",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.9-62.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.6-67.9",
+    "connections": {
+      "A": [
+        38936
+      ],
+      "B": [
+        38934
+      ],
+      "S": [
+        48876
+      ],
+      "Y": [
+        38937
+      ]
+    }
+  },
+  {
+    "cell": "u_23590._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "42987",
+    "input": "42986",
+    "weight": 18.0,
+    "generic_index": 23590,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58377",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        50751
+      ],
+      "B": [
+        50752
+      ],
+      "X": [
+        38937
+      ],
+      "Y": [
+        38939
+      ]
+    }
+  },
+  {
+    "cell": "u_40404._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76684",
+    "input": "42987",
+    "weight": 12.0,
+    "generic_index": 40404,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58378",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.26-60.61|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.23-69.8",
+    "connections": {
+      "A": [
+        38932
+      ],
+      "B": [
+        38939
+      ],
+      "S": [
+        51226
+      ],
+      "Y": [
+        38940
+      ]
+    }
+  },
+  {
+    "cell": "u_40404._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42990",
+    "input": "76684",
+    "weight": 18.0,
+    "generic_index": 40404,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58378",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.26-60.61|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.23-69.8",
+    "connections": {
+      "A": [
+        38932
+      ],
+      "B": [
+        38939
+      ],
+      "S": [
+        51226
+      ],
+      "Y": [
+        38940
+      ]
+    }
+  },
+  {
+    "cell": "u_23591._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "42991",
+    "input": "42990",
+    "weight": 18.0,
+    "generic_index": 23591,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58379",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        51191
+      ],
+      "B": [
+        50754
+      ],
+      "X": [
+        38940
+      ],
+      "Y": [
+        38942
+      ]
+    }
+  },
+  {
+    "cell": "u_23592._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42993",
+    "input": "42991",
+    "weight": 17.0,
+    "generic_index": 23592,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58380",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:63.10-65.71|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:63.7-66.25",
+    "connections": {
+      "A": [
+        38942
+      ],
+      "B": [
+        38943
+      ],
+      "Y": [
+        38944
+      ]
+    }
+  },
+  {
+    "cell": "u_40405._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76685",
+    "input": "42993",
+    "weight": 7.0,
+    "generic_index": 40405,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58381",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.9-62.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.6-67.9",
+    "connections": {
+      "A": [
+        38944
+      ],
+      "B": [
+        38942
+      ],
+      "S": [
+        48928
+      ],
+      "Y": [
+        38945
+      ]
+    }
+  },
+  {
+    "cell": "u_40405._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42995",
+    "input": "76685",
+    "weight": 18.0,
+    "generic_index": 40405,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58381",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.9-62.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.6-67.9",
+    "connections": {
+      "A": [
+        38944
+      ],
+      "B": [
+        38942
+      ],
+      "S": [
+        48928
+      ],
+      "Y": [
+        38945
+      ]
+    }
+  },
+  {
+    "cell": "u_23593._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "42996",
+    "input": "42995",
+    "weight": 18.0,
+    "generic_index": 23593,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58382",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        50756
+      ],
+      "B": [
+        50754
+      ],
+      "X": [
+        38945
+      ],
+      "Y": [
+        38947
+      ]
+    }
+  },
+  {
+    "cell": "u_40406._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76688",
+    "input": "42996",
+    "weight": 12.0,
+    "generic_index": 40406,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58383",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.26-60.61|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.23-69.8",
+    "connections": {
+      "A": [
+        38940
+      ],
+      "B": [
+        38947
+      ],
+      "S": [
+        51236
+      ],
+      "Y": [
+        38948
+      ]
+    }
+  },
+  {
+    "cell": "u_40406._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42999",
+    "input": "76688",
+    "weight": 18.0,
+    "generic_index": 40406,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58383",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.26-60.61|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.23-69.8",
+    "connections": {
+      "A": [
+        38940
+      ],
+      "B": [
+        38947
+      ],
+      "S": [
+        51236
+      ],
+      "Y": [
+        38948
+      ]
+    }
+  },
+  {
+    "cell": "u_23594._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43000",
+    "input": "42999",
+    "weight": 18.0,
+    "generic_index": 23594,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58384",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        51199
+      ],
+      "B": [
+        50777
+      ],
+      "X": [
+        38948
+      ],
+      "Y": [
+        38950
+      ]
+    }
+  },
+  {
+    "cell": "u_23595._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43002",
+    "input": "43000",
+    "weight": 17.0,
+    "generic_index": 23595,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58385",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:63.10-65.71|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:63.7-66.25",
+    "connections": {
+      "A": [
+        38950
+      ],
+      "B": [
+        38951
+      ],
+      "Y": [
+        38952
+      ]
+    }
+  },
+  {
+    "cell": "u_40407._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76689",
+    "input": "43002",
+    "weight": 7.0,
+    "generic_index": 40407,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58386",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.9-62.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.6-67.9",
+    "connections": {
+      "A": [
+        38952
+      ],
+      "B": [
+        38950
+      ],
+      "S": [
+        48981
+      ],
+      "Y": [
+        38953
+      ]
+    }
+  },
+  {
+    "cell": "u_40407._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43004",
+    "input": "76689",
+    "weight": 18.0,
+    "generic_index": 40407,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58386",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.9-62.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.6-67.9",
+    "connections": {
+      "A": [
+        38952
+      ],
+      "B": [
+        38950
+      ],
+      "S": [
+        48981
+      ],
+      "Y": [
+        38953
+      ]
+    }
+  },
+  {
+    "cell": "u_23596._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43005",
+    "input": "43004",
+    "weight": 18.0,
+    "generic_index": 23596,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58387",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        50757
+      ],
+      "B": [
+        50777
+      ],
+      "X": [
+        38953
+      ],
+      "Y": [
+        38955
+      ]
+    }
+  },
+  {
+    "cell": "u_40408._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76692",
+    "input": "43005",
+    "weight": 12.0,
+    "generic_index": 40408,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58388",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.26-60.61|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.23-69.8",
+    "connections": {
+      "A": [
+        38948
+      ],
+      "B": [
+        38955
+      ],
+      "S": [
+        51246
+      ],
+      "Y": [
+        38956
+      ]
+    }
+  },
+  {
+    "cell": "u_40408._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43008",
+    "input": "76692",
+    "weight": 18.0,
+    "generic_index": 40408,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58388",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.26-60.61|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.23-69.8",
+    "connections": {
+      "A": [
+        38948
+      ],
+      "B": [
+        38955
+      ],
+      "S": [
+        51246
+      ],
+      "Y": [
+        38956
+      ]
+    }
+  },
+  {
+    "cell": "u_23597._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43009",
+    "input": "43008",
+    "weight": 18.0,
+    "generic_index": 23597,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58389",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        51208
+      ],
+      "B": [
+        50779
+      ],
+      "X": [
+        38956
+      ],
+      "Y": [
+        38958
+      ]
+    }
+  },
+  {
+    "cell": "u_23598._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43011",
+    "input": "43009",
+    "weight": 17.0,
+    "generic_index": 23598,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58390",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:63.10-65.71|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:63.7-66.25",
+    "connections": {
+      "A": [
+        38958
+      ],
+      "B": [
+        38959
+      ],
+      "Y": [
+        38960
+      ]
+    }
+  },
+  {
+    "cell": "u_40409._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76693",
+    "input": "43011",
+    "weight": 7.0,
+    "generic_index": 40409,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58391",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.9-62.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.6-67.9",
+    "connections": {
+      "A": [
+        38960
+      ],
+      "B": [
+        38958
+      ],
+      "S": [
+        49034
+      ],
+      "Y": [
+        38961
+      ]
+    }
+  },
+  {
+    "cell": "u_40409._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43013",
+    "input": "76693",
+    "weight": 18.0,
+    "generic_index": 40409,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58391",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.9-62.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:62.6-67.9",
+    "connections": {
+      "A": [
+        38960
+      ],
+      "B": [
+        38958
+      ],
+      "S": [
+        49034
+      ],
+      "Y": [
+        38961
+      ]
+    }
+  },
+  {
+    "cell": "u_23599._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43014",
+    "input": "43013",
+    "weight": 18.0,
+    "generic_index": 23599,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58392",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        50758
+      ],
+      "B": [
+        50779
+      ],
+      "X": [
+        38961
+      ],
+      "Y": [
+        38963
+      ]
+    }
+  },
+  {
+    "cell": "u_40410._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76698",
+    "input": "43014",
+    "weight": 12.0,
+    "generic_index": 40410,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58393",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.26-60.61|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.23-69.8",
+    "connections": {
+      "A": [
+        38956
+      ],
+      "B": [
+        38963
+      ],
+      "S": [
+        51207
+      ],
+      "Y": [
+        54875
+      ]
+    }
+  },
+  {
+    "cell": "u_40410._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76696",
+    "input": "76698",
+    "weight": 18.0,
+    "generic_index": 40410,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58393",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.26-60.61|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:60.23-69.8",
+    "connections": {
+      "A": [
+        38956
+      ],
+      "B": [
+        38963
+      ],
+      "S": [
+        51207
+      ],
+      "Y": [
+        54875
+      ]
+    }
+  },
+  {
+    "cell": "u_40411._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76701",
+    "input": "76696",
+    "weight": 12.0,
+    "generic_index": 40411,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58394",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:57.7-57.13|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:57.4-70.7",
+    "connections": {
+      "A": [
+        38932
+      ],
+      "B": [
+        54875
+      ],
+      "S": [
+        6093
+      ],
+      "Y": [
+        54876
+      ]
+    }
+  },
+  {
+    "cell": "u_40411._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76699",
+    "input": "76701",
+    "weight": 18.0,
+    "generic_index": 40411,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58394",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:57.7-57.13|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:57.4-70.7",
+    "connections": {
+      "A": [
+        38932
+      ],
+      "B": [
+        54875
+      ],
+      "S": [
+        6093
+      ],
+      "Y": [
+        54876
+      ]
+    }
+  },
+  {
+    "cell": "u_40412._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76704",
+    "input": "76699",
+    "weight": 12.0,
+    "generic_index": 40412,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58395",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:73.8-73.15|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:73.5-73.25",
+    "connections": {
+      "A": [
+        "1"
+      ],
+      "B": [
+        54876
+      ],
+      "S": [
+        6093
+      ],
+      "Y": [
+        38964
+      ]
+    }
+  },
+  {
+    "cell": "u_40412._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43019",
+    "input": "76704",
+    "weight": 18.0,
+    "generic_index": 40412,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58395",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:73.8-73.15|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:73.5-73.25",
+    "connections": {
+      "A": [
+        "1"
+      ],
+      "B": [
+        54876
+      ],
+      "S": [
+        6093
+      ],
+      "Y": [
+        38964
+      ]
+    }
+  },
+  {
+    "cell": "u_23600._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43021",
+    "input": "43019",
+    "weight": 17.0,
+    "generic_index": 23600,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58396",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:78.9-78.46|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:78.6-78.56",
+    "connections": {
+      "A": [
+        38964
+      ],
+      "B": [
+        38965
+      ],
+      "Y": [
+        38966
+      ]
+    }
+  },
+  {
+    "cell": "u_40413._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76706",
+    "input": "43021",
+    "weight": 12.0,
+    "generic_index": 40413,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58397",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.26-77.68|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.23-79.8",
+    "connections": {
+      "A": [
+        38964
+      ],
+      "B": [
+        38966
+      ],
+      "S": [
+        51227
+      ],
+      "Y": [
+        38967
+      ]
+    }
+  },
+  {
+    "cell": "u_40413._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43022",
+    "input": "76706",
+    "weight": 18.0,
+    "generic_index": 40413,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58397",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.26-77.68|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.23-79.8",
+    "connections": {
+      "A": [
+        38964
+      ],
+      "B": [
+        38966
+      ],
+      "S": [
+        51227
+      ],
+      "Y": [
+        38967
+      ]
+    }
+  },
+  {
+    "cell": "u_23601._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43024",
+    "input": "43022",
+    "weight": 17.0,
+    "generic_index": 23601,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58398",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:78.9-78.46|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:78.6-78.56",
+    "connections": {
+      "A": [
+        38967
+      ],
+      "B": [
+        38968
+      ],
+      "Y": [
+        38969
+      ]
+    }
+  },
+  {
+    "cell": "u_40414._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76708",
+    "input": "43024",
+    "weight": 12.0,
+    "generic_index": 40414,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58399",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.26-77.68|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.23-79.8",
+    "connections": {
+      "A": [
+        38967
+      ],
+      "B": [
+        38969
+      ],
+      "S": [
+        51237
+      ],
+      "Y": [
+        38970
+      ]
+    }
+  },
+  {
+    "cell": "u_40414._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43025",
+    "input": "76708",
+    "weight": 18.0,
+    "generic_index": 40414,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58399",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.26-77.68|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.23-79.8",
+    "connections": {
+      "A": [
+        38967
+      ],
+      "B": [
+        38969
+      ],
+      "S": [
+        51237
+      ],
+      "Y": [
+        38970
+      ]
+    }
+  },
+  {
+    "cell": "u_23602._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43027",
+    "input": "43025",
+    "weight": 17.0,
+    "generic_index": 23602,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58400",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:78.9-78.46|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:78.6-78.56",
+    "connections": {
+      "A": [
+        38970
+      ],
+      "B": [
+        38971
+      ],
+      "Y": [
+        38972
+      ]
+    }
+  },
+  {
+    "cell": "u_40415._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76710",
+    "input": "43027",
+    "weight": 12.0,
+    "generic_index": 40415,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58401",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.26-77.68|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.23-79.8",
+    "connections": {
+      "A": [
+        38970
+      ],
+      "B": [
+        38972
+      ],
+      "S": [
+        51247
+      ],
+      "Y": [
+        38973
+      ]
+    }
+  },
+  {
+    "cell": "u_40415._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43028",
+    "input": "76710",
+    "weight": 18.0,
+    "generic_index": 40415,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58401",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.26-77.68|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.23-79.8",
+    "connections": {
+      "A": [
+        38970
+      ],
+      "B": [
+        38972
+      ],
+      "S": [
+        51247
+      ],
+      "Y": [
+        38973
+      ]
+    }
+  },
+  {
+    "cell": "u_23603._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43030",
+    "input": "43028",
+    "weight": 17.0,
+    "generic_index": 23603,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58402",
+    "source_type": "$_OR_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:78.9-78.46|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:78.6-78.56",
+    "connections": {
+      "A": [
+        38973
+      ],
+      "B": [
+        38974
+      ],
+      "Y": [
+        38975
+      ]
+    }
+  },
+  {
+    "cell": "u_40416._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76713",
+    "input": "43030",
+    "weight": 12.0,
+    "generic_index": 40416,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58403",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.26-77.68|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.23-79.8",
+    "connections": {
+      "A": [
+        38973
+      ],
+      "B": [
+        38975
+      ],
+      "S": [
+        51256
+      ],
+      "Y": [
+        54877
+      ]
+    }
+  },
+  {
+    "cell": "u_40416._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76711",
+    "input": "76713",
+    "weight": 18.0,
+    "generic_index": 40416,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58403",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.26-77.68|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:74.23-79.8",
+    "connections": {
+      "A": [
+        38973
+      ],
+      "B": [
+        38975
+      ],
+      "S": [
+        51256
+      ],
+      "Y": [
+        54877
+      ]
+    }
+  },
+  {
+    "cell": "u_40417._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76716",
+    "input": "76711",
+    "weight": 12.0,
+    "generic_index": 40417,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58404",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:72.7-72.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:72.4-80.7",
+    "connections": {
+      "A": [
+        54876
+      ],
+      "B": [
+        54877
+      ],
+      "S": [
+        51217
+      ],
+      "Y": [
+        54878
+      ]
+    }
+  },
+  {
+    "cell": "u_40417._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76714",
+    "input": "76716",
+    "weight": 18.0,
+    "generic_index": 40417,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58404",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:72.7-72.35|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:72.4-80.7",
+    "connections": {
+      "A": [
+        54876
+      ],
+      "B": [
+        54877
+      ],
+      "S": [
+        51217
+      ],
+      "Y": [
+        54878
+      ]
+    }
+  },
+  {
+    "cell": "u_40418._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76718",
+    "input": "76714",
+    "weight": 12.0,
+    "generic_index": 40418,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58405",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:82.8-82.15|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:82.5-82.25",
+    "connections": {
+      "A": [
+        "1"
+      ],
+      "B": [
+        54878
+      ],
+      "S": [
+        6093
+      ],
+      "Y": [
+        38976
+      ]
+    }
+  },
+  {
+    "cell": "u_40418._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43033",
+    "input": "76718",
+    "weight": 18.0,
+    "generic_index": 40418,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58405",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:82.8-82.15|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:82.5-82.25",
+    "connections": {
+      "A": [
+        "1"
+      ],
+      "B": [
+        54878
+      ],
+      "S": [
+        6093
+      ],
+      "Y": [
+        38976
+      ]
+    }
+  },
+  {
+    "cell": "u_23604._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43034",
+    "input": "43033",
+    "weight": 18.0,
+    "generic_index": 23604,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58406",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        51226
+      ],
+      "B": [
+        51257
+      ],
+      "X": [
+        38976
+      ],
+      "Y": [
+        38978
+      ]
+    }
+  },
+  {
+    "cell": "u_23605._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43037",
+    "input": "43034",
+    "weight": 18.0,
+    "generic_index": 23605,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58407",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        51236
+      ],
+      "B": [
+        51258
+      ],
+      "X": [
+        38978
+      ],
+      "Y": [
+        38980
+      ]
+    }
+  },
+  {
+    "cell": "u_23606._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43040",
+    "input": "43037",
+    "weight": 18.0,
+    "generic_index": 23606,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58408",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        51246
+      ],
+      "B": [
+        51259
+      ],
+      "X": [
+        38980
+      ],
+      "Y": [
+        38982
+      ]
+    }
+  },
+  {
+    "cell": "u_23607._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43043",
+    "input": "43040",
+    "weight": 18.0,
+    "generic_index": 23607,
+    "source_cell": "$auto$simplemap.cc:106:simplemap_bitop$58409",
+    "source_type": "$_AO21_",
+    "source": null,
+    "connections": {
+      "A": [
+        51207
+      ],
+      "B": [
+        51260
+      ],
+      "X": [
+        38982
+      ],
+      "Y": [
+        38984
+      ]
+    }
+  },
+  {
+    "cell": "u_40419._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76721",
+    "input": "43043",
+    "weight": 12.0,
+    "generic_index": 40419,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58410",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:81.7-81.11|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:81.4-85.7",
+    "connections": {
+      "A": [
+        54878
+      ],
+      "B": [
+        38984
+      ],
+      "S": [
+        47159
+      ],
+      "Y": [
+        18050
+      ]
+    }
+  },
+  {
+    "cell": "u_40419._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76719",
+    "input": "76721",
+    "weight": 18.0,
+    "generic_index": 40419,
+    "source_cell": "$auto$simplemap.cc:298:simplemap_mux$58410",
+    "source_type": "$_MUX_",
+    "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:81.7-81.11|rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv:81.4-85.7",
+    "connections": {
+      "A": [
+        54878
+      ],
+      "B": [
+        38984
+      ],
+      "S": [
+        47159
+      ],
+      "Y": [
+        18050
+      ]
+    }
+  }
+]

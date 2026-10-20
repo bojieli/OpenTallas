@@ -1,0 +1,944 @@
+{
+ "cells": 117783,
+ "flops": 15709,
+ "icgs": 0,
+ "macros": 10,
+ "findings": {
+  "boundary": [
+   "1 register->output bit(s) > 3 levels (worst u_5789._2_->cf[0] 5 lv): register the boundary (pin flops / registered outputs)"
+  ],
+  "logic_depth": [
+   "reg->reg stage u_804._2_ -> u_8165._2_/D: ~2927 ps estimated (95 logic levels) > 600 ps: pipeline / restructure the stage"
+  ]
+ },
+ "refuse": {
+  "boundary": [
+   "register->output 5 levels > 3 (u_5789._2_ -> cf[0])"
+  ],
+  "logic_depth": [
+   "~2927 ps > 700 ps (u_804._2_ -> u_8165._2_/D)"
+  ]
+ },
+ "metrics": {
+  "clock_roots": [
+   {
+    "root": "port:ck_core[0]",
+    "ff": 11246,
+    "icg": 0,
+    "macro_pins": 9,
+    "example": "u_0._2_"
+   },
+   {
+    "root": "port:ck_hr[0]",
+    "ff": 4463,
+    "icg": 0,
+    "macro_pins": 3,
+    "example": "u_1000._2_"
+   }
+  ],
+  "hier_subblocks": 1,
+  "clock_max_root_sinks": 11255,
+  "clock_max_root": "port:ck_core[0]",
+  "high_fanout_top": [],
+  "hf_max_port": 0,
+  "hf_max_reset": 0,
+  "hf_max_net": 0,
+  "reset_landing": [
+   {
+    "port": "rst_n[0]",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 2,
+  "reg_to_out_levels": 5,
+  "icg_enable_from_port": 0,
+  "depth_trace": [
+   {
+    "cell": "u_804._1_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "9941",
+    "input": "122071",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_14303._0_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "26719",
+    "input": "9941",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_29580._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "49366",
+    "input": "26719",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_29596._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "51093",
+    "input": "49366",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_29597._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "49370",
+    "input": "51093",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_29605._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "51103",
+    "input": "49370",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_29606._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "49378",
+    "input": "51103",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_29609._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49397",
+    "input": "49378",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_29611._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49416",
+    "input": "49397",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_29616._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49424",
+    "input": "49416",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_29626._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49431",
+    "input": "49424",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_29622._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "49433",
+    "input": "49431",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_28192._0_",
+    "type": "XOR2xp5_ASAP7_75t_R",
+    "output": "49434",
+    "input": "49433",
+    "weight": 22.0
+   },
+   {
+    "cell": "u_41470._0_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "45736",
+    "input": "49434",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_25085._0_",
+    "type": "XOR2xp5_ASAP7_75t_R",
+    "output": "45733",
+    "input": "45736",
+    "weight": 22.0
+   },
+   {
+    "cell": "u_25025._0_",
+    "type": "AND2x2_ASAP7_75t_R",
+    "output": "45735",
+    "input": "45733",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_25026._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45737",
+    "input": "45735",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_25041._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45757",
+    "input": "45737",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_25048._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45764",
+    "input": "45757",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_25051._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45769",
+    "input": "45764",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_25053._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "45771",
+    "input": "45769",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40826._0_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "55795",
+    "input": "45771",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_33212._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "55796",
+    "input": "55795",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40438._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76778",
+    "input": "55796",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40438._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76776",
+    "input": "76778",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40439._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76779",
+    "input": "76776",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40439._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76771",
+    "input": "76779",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40436._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76772",
+    "input": "76771",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40436._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76767",
+    "input": "76772",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40435._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76769",
+    "input": "76767",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40435._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76768",
+    "input": "76769",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40437._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76774",
+    "input": "76768",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40437._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76762",
+    "input": "76774",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40433._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76763",
+    "input": "76762",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40433._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76759",
+    "input": "76763",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40432._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76760",
+    "input": "76759",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40432._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76755",
+    "input": "76760",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40431._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76757",
+    "input": "76755",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40431._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76756",
+    "input": "76757",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40434._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76765",
+    "input": "76756",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40434._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76749",
+    "input": "76765",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40429._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76750",
+    "input": "76749",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40429._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76746",
+    "input": "76750",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40428._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76747",
+    "input": "76746",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40428._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76743",
+    "input": "76747",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40427._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76744",
+    "input": "76743",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40427._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76739",
+    "input": "76744",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40426._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76741",
+    "input": "76739",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40426._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76740",
+    "input": "76741",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40430._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76754",
+    "input": "76740",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40430._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "55312",
+    "input": "76754",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_32801._0_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "55313",
+    "input": "55312",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_33238._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "27283",
+    "input": "55313",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_33331._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "55908",
+    "input": "27283",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_33331._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42970",
+    "input": "55908",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23585._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42971",
+    "input": "42970",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40400._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76675",
+    "input": "42971",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40400._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42972",
+    "input": "76675",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23586._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42973",
+    "input": "42972",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40401._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76678",
+    "input": "42973",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40401._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42974",
+    "input": "76678",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23587._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42975",
+    "input": "42974",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40402._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76680",
+    "input": "42975",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40402._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42978",
+    "input": "76680",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23588._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "42979",
+    "input": "42978",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23589._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42981",
+    "input": "42979",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40403._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76681",
+    "input": "42981",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40403._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42986",
+    "input": "76681",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23590._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "42987",
+    "input": "42986",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40404._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76684",
+    "input": "42987",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40404._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42990",
+    "input": "76684",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23591._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "42991",
+    "input": "42990",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23592._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "42993",
+    "input": "42991",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40405._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76685",
+    "input": "42993",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40405._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42995",
+    "input": "76685",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23593._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "42996",
+    "input": "42995",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40406._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76688",
+    "input": "42996",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40406._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "42999",
+    "input": "76688",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23594._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43000",
+    "input": "42999",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23595._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43002",
+    "input": "43000",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40407._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76689",
+    "input": "43002",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40407._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43004",
+    "input": "76689",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23596._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43005",
+    "input": "43004",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40408._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76692",
+    "input": "43005",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40408._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43008",
+    "input": "76692",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23597._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43009",
+    "input": "43008",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23598._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43011",
+    "input": "43009",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40409._2_",
+    "type": "INVx1_ASAP7_75t_R",
+    "output": "76693",
+    "input": "43011",
+    "weight": 7.0
+   },
+   {
+    "cell": "u_40409._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43013",
+    "input": "76693",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23599._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43014",
+    "input": "43013",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40410._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76698",
+    "input": "43014",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40410._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76696",
+    "input": "76698",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40411._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76701",
+    "input": "76696",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40411._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76699",
+    "input": "76701",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40412._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76704",
+    "input": "76699",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40412._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43019",
+    "input": "76704",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23600._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43021",
+    "input": "43019",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40413._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76706",
+    "input": "43021",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40413._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43022",
+    "input": "76706",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23601._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43024",
+    "input": "43022",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40414._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76708",
+    "input": "43024",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40414._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43025",
+    "input": "76708",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23602._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43027",
+    "input": "43025",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40415._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76710",
+    "input": "43027",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40415._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43028",
+    "input": "76710",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23603._0_",
+    "type": "OR2x2_ASAP7_75t_R",
+    "output": "43030",
+    "input": "43028",
+    "weight": 17.0
+   },
+   {
+    "cell": "u_40416._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76713",
+    "input": "43030",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40416._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76711",
+    "input": "76713",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40417._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76716",
+    "input": "76711",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40417._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76714",
+    "input": "76716",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40418._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76718",
+    "input": "76714",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40418._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "43033",
+    "input": "76718",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23604._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43034",
+    "input": "43033",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23605._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43037",
+    "input": "43034",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23606._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43040",
+    "input": "43037",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_23607._0_",
+    "type": "AO21x1_ASAP7_75t_R",
+    "output": "43043",
+    "input": "43040",
+    "weight": 18.0
+   },
+   {
+    "cell": "u_40419._3_",
+    "type": "NAND2xp33_ASAP7_75t_R",
+    "output": "76721",
+    "input": "43043",
+    "weight": 12.0
+   },
+   {
+    "cell": "u_40419._4_",
+    "type": "OAI21xp33_ASAP7_75t_R",
+    "output": "76719",
+    "input": "76721",
+    "weight": 18.0
+   }
+  ],
+  "depth_ps": 2927.3,
+  "depth_path": [
+   "u_804._2_",
+   "u_8165._2_/D"
+  ],
+  "depth_levels": 95
+ },
+ "top": "qfd_tt_ctlm_dv_np_lp",
+ "netlist": "/work/native6/mapped.v",
+ "seconds": 7.5,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0
+ },
+ "clock_rule": {
+  "max_root_sinks": 11255,
+  "root": "port:ck_core[0]",
+  "ok": true,
+  "text": "11,255 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [
+  "boundary",
+  "logic_depth"
+ ],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "boundary: 1 register->output bit(s) > 3 levels (worst u_5789._2_->cf[0] 5 lv): register the boundary (pin flops / registered outputs) | logic_depth: reg->reg stage u_804._2_ -> u_8165._2_/D: ~2927 ps estimated (95 logic levels) > 600 ps: pipeline / restructure the stage"
+}
