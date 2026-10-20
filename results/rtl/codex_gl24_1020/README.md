@@ -53,3 +53,16 @@ Remaining 60 runs: `oth-ubuntu-2694552-1792485038`, terminal exit 0.
 Strict collection: `oth-ubuntu-3213858-1792486729`, terminal PASS.
 All owned GL24 runs are terminal. Staging:
 `ot-epyc6:/srv/opentallas-scratch/claude/codex-gl24-1020`.
+
+The main-based composition changes only these four exact layer costs. AR fixed
+path is 1,417,139.1 edges; the resolved path is longer at 1,438,802.6, yielding the
+conservative **834.0 tokens/s** component estimate, with **80.25%** measured on
+that same selected path. MTP is 1,883,938.8 edges per step, yielding **2649.1
+accepted tokens/s**, 71.64% measured. Both subtract 739 edges from the previous
+composition. All release and MU qualification remains open; WQBP P126 stays
+proposed and the baseline WQBG 3359+195 record is unchanged.
+
+Validation on the actual main-based candidate: nine composition regressions,
+the empty-element selftest, baseline `--check`, proposed-scenario `--check`, and
+`git diff --check` pass. The GL24 collector passes all 64 cases and all image
+hashes. The proposal remains in its separate scenario output.

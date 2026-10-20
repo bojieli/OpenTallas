@@ -93,7 +93,7 @@
     "written": "2026-10-19 21:43 PT"
    },
    {
-    "branch": "codex/token-compose-source-ages-1020",
+    "branch": "codex/token-gl24-main-1020@48403187fb1ec6e90068875f0d6c05c947172e96",
     "cls": "GATH",
     "file": "results/token_pass/measured_s81_1019/elements/GATH.json",
     "written": "2026-10-20 PT"
@@ -208,26 +208,26 @@
  ],
  "multi_user": {
   "ar": {
-   "aggregate_tok_s": 39865.0,
+   "aggregate_tok_s": 39887.0,
    "base_aggregate_tok_s": 55780,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 989260,
    "calendar_record": "results/arch/mu_s81_1018/calendar_ar_cal1.json (claude/s81-cal1-1019@152d70002; lemma PASS 5,474 windows 0 collisions; fleet ep5 oth-ubuntu-548701-1792476636 byte-identical)",
-   "pct_measured_per_user": 73.5,
-   "per_user_tok_s": 866.6,
+   "pct_measured_per_user": 73.72,
+   "per_user_tok_s": 867.1,
    "qualification": "PROPOSED scenario only; CAP/deadline/compiler contract unresolved",
    "users": 46
   },
   "mtp": {
-   "aggregate_tok_s": 27378.0,
+   "aggregate_tok_s": 27389.0,
    "base_aggregate_tok_s": 36985,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 1312908,
    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp_cal1.json (claude/s81-cal1-1019@152d70002; 10 users + 1 filler, lemma PASS 1,309 windows 0 collisions)",
-   "pct_measured_per_user": 65.6,
-   "per_user_tok_s": 2737.8,
+   "pct_measured_per_user": 65.77,
+   "per_user_tok_s": 2738.9,
    "qualification": "PROPOSED scenario only; CAP/deadline/compiler contract unresolved",
    "users": 10
   }
@@ -237,16 +237,16 @@
  "schema": "opentallas.toksim_s81.v1",
  "workloads": {
   "ar": {
-   "T_cycles": 1384661.6,
-   "T_cycles_fixed": 1362998.1,
-   "T_cycles_solved": 1384661.6,
+   "T_cycles": 1383922.6,
+   "T_cycles_fixed": 1362259.1,
+   "T_cycles_solved": 1383922.6,
    "base_T_cycles": 989618.6,
    "base_tok_s": 1212.6,
    "by_grade": {
     "measured-current-RTL": 109119.0,
     "measured-newest-element-RTL": 67465.0,
-    "measured-old-RTL": 30348.4,
-    "measured-release-RTL": 841133.0,
+    "measured-old-RTL": 27104.4,
+    "measured-release-RTL": 843638.0,
     "modelled-PHY": 172975.0,
     "priced": 79361.2,
     "priced-edge": 4780,
@@ -255,8 +255,8 @@
    "by_grade_fixed": {
     "measured-current-RTL": 109119.0,
     "measured-newest-element-RTL": 43625.0,
-    "measured-old-RTL": 29514.9,
-    "measured-release-RTL": 844143.0,
+    "measured-old-RTL": 26270.9,
+    "measured-release-RTL": 846648.0,
     "modelled-PHY": 172975.0,
     "priced": 79361.2,
     "priced-edge": 4780,
@@ -265,8 +265,8 @@
    "by_grade_solved": {
     "measured-current-RTL": 109119.0,
     "measured-newest-element-RTL": 67465.0,
-    "measured-old-RTL": 30348.4,
-    "measured-release-RTL": 841133.0,
+    "measured-old-RTL": 27104.4,
+    "measured-release-RTL": 843638.0,
     "modelled-PHY": 172975.0,
     "priced": 79361.2,
     "priced-edge": 4780,
@@ -788,12 +788,12 @@
     }
    ],
    "grade_accounting_basis": "same path as conservative rate (fixed if tied, otherwise longest)",
-   "pct_measured": 73.5,
-   "pct_measured_fixed": 73.14,
-   "pct_measured_on_chip": 83.99,
-   "pct_measured_solved": 73.5,
-   "pct_modelled_phy": 12.49,
-   "per_accepted_cycles": 1384661.6,
+   "pct_measured": 73.72,
+   "pct_measured_fixed": 73.36,
+   "pct_measured_on_chip": 84.25,
+   "pct_measured_solved": 73.72,
+   "pct_modelled_phy": 12.5,
+   "per_accepted_cycles": 1383922.6,
    "per_op": [
     {
      "cls": "field",
@@ -1024,18 +1024,6 @@
      "op": "ffn.softplus_sqrt"
     },
     {
-     "cls": "select",
-     "cycles": 5599.0,
-     "grades": {
-      "measured-old-RTL": 3244.0,
-      "measured-release-RTL": 2355.0,
-      "priced-edge": 0
-     },
-     "n_crit": 8,
-     "old_cycles": 6487.0,
-     "op": "attn.gather"
-    },
-    {
      "cls": "su",
      "cycles": 4896.0,
      "grades": {
@@ -1057,6 +1045,17 @@
      "n_crit": 40,
      "old_cycles": 4704.0,
      "op": "ffn.bias"
+    },
+    {
+     "cls": "select",
+     "cycles": 4860.0,
+     "grades": {
+      "measured-release-RTL": 4860.0,
+      "priced-edge": 0
+     },
+     "n_crit": 8,
+     "old_cycles": 6487.0,
+     "op": "attn.gather"
     },
     {
      "cls": "su",
@@ -6264,22 +6263,22 @@
     }
    ],
    "tau": null,
-   "tok_s": 866.6,
-   "tok_s_fixed": 880.4,
-   "tok_s_solved": 866.6,
+   "tok_s": 867.1,
+   "tok_s_fixed": 880.9,
+   "tok_s_solved": 867.1,
    "workload": "ar"
   },
   "mtp": {
-   "T_cycles": 1822937.8,
-   "T_cycles_fixed": 1822937.8,
-   "T_cycles_solved": 1822937.8,
+   "T_cycles": 1822198.8,
+   "T_cycles_fixed": 1822198.8,
+   "T_cycles_solved": 1822198.8,
    "base_T_cycles": 1381860.8,
    "base_tok_s": 3611.7,
    "by_grade": {
     "measured-current-RTL": 122693.0,
     "measured-newest-element-RTL": 87180.0,
-    "measured-old-RTL": 187339.0,
-    "measured-release-RTL": 986028.0,
+    "measured-old-RTL": 184095.0,
+    "measured-release-RTL": 988533.0,
     "modelled-PHY": 205943.6,
     "priced": 138199.2,
     "priced-edge": 6140,
@@ -6288,8 +6287,8 @@
    "by_grade_fixed": {
     "measured-current-RTL": 122693.0,
     "measured-newest-element-RTL": 87180.0,
-    "measured-old-RTL": 187339.0,
-    "measured-release-RTL": 986028.0,
+    "measured-old-RTL": 184095.0,
+    "measured-release-RTL": 988533.0,
     "modelled-PHY": 205943.6,
     "priced": 138199.2,
     "priced-edge": 6140,
@@ -6298,8 +6297,8 @@
    "by_grade_solved": {
     "measured-current-RTL": 122693.0,
     "measured-newest-element-RTL": 87180.0,
-    "measured-old-RTL": 187339.0,
-    "measured-release-RTL": 986028.0,
+    "measured-old-RTL": 184095.0,
+    "measured-release-RTL": 988533.0,
     "modelled-PHY": 205943.6,
     "priced": 138199.2,
     "priced-edge": 6140,
@@ -7190,12 +7189,12 @@
     }
    ],
    "grade_accounting_basis": "same path as conservative rate (fixed if tied, otherwise longest)",
-   "pct_measured": 65.6,
-   "pct_measured_fixed": 65.6,
-   "pct_measured_on_chip": 73.96,
-   "pct_measured_solved": 65.6,
+   "pct_measured": 65.77,
+   "pct_measured_fixed": 65.77,
+   "pct_measured_on_chip": 74.15,
+   "pct_measured_solved": 65.77,
    "pct_modelled_phy": 11.3,
-   "per_accepted_cycles": 438311.6,
+   "per_accepted_cycles": 438133.9,
    "per_op": [
     {
      "cls": "wave",
@@ -7511,18 +7510,6 @@
      "op": "attn.idx.q_field"
     },
     {
-     "cls": "select",
-     "cycles": 5599.0,
-     "grades": {
-      "measured-old-RTL": 3244.0,
-      "measured-release-RTL": 2355.0,
-      "priced-edge": 0
-     },
-     "n_crit": 8,
-     "old_cycles": 6487.0,
-     "op": "attn.gather"
-    },
-    {
      "cls": "su",
      "cycles": 5288.0,
      "grades": {
@@ -7545,6 +7532,17 @@
      "n_crit": 40,
      "old_cycles": 11481.2,
      "op": "attn.exp"
+    },
+    {
+     "cls": "select",
+     "cycles": 4860.0,
+     "grades": {
+      "measured-release-RTL": 4860.0,
+      "priced-edge": 0
+     },
+     "n_crit": 8,
+     "old_cycles": 6487.0,
+     "op": "attn.gather"
     },
     {
      "cls": "field",
@@ -13638,9 +13636,9 @@
     }
    ],
    "tau": 4.159,
-   "tok_s": 2737.8,
-   "tok_s_fixed": 2737.8,
-   "tok_s_solved": 2737.8,
+   "tok_s": 2738.9,
+   "tok_s_fixed": 2738.9,
+   "tok_s_solved": 2738.9,
    "workload": "mtp"
   }
  },
