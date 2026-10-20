@@ -1,0 +1,12 @@
+N59SPLIT_ERR cycle 168: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 1 emb 0 done 0 ret 0 fault 1)
+N59SPLIT_ERR cycle 169: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 1 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 170: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 1 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 171: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 1 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 172: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 1 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 173: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 1 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 174: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 1 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 175: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 1 emb 0 done 0 ret 1 fault 1)
+N59DV_FAIL SPLIT lockstep: 204 of 360 edges differ (split vs reference)
+[0] %Fatal: tb_qfd_native59_dv_service.sv:170: Assertion failed in TOP.tb_qfd_native59_dv_service.split_verdict
+%Error: /srv/opentallas-scratch/claude/codex-qw-n59-service-r3b-1020/resultpub_zero_dv/src/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv:170: Verilog $stop
+Aborting...
