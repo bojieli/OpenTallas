@@ -747,9 +747,9 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             if (FAN32 != 0) begin : g_on
                 (* keep="true", dont_touch="true" *) reg [4*EW-1:0] cap;
                 if (PRE != 0) begin : g_region
-                    always @(posedge ckr[rg(fg)]) cap <= i_b;
+                    always @(posedge ckr[rg(fg)]) cap <= (CMUT==2&&fg==3&&fc==0)?0:i_b;
                 end else begin : g_core
-                    always @(posedge clk) cap <= i_b;
+                    always @(posedge clk) cap <= (CMUT==2&&fg==3&&fc==0)?0:i_b;
                 end
                 assign compare_bg[fg][fc] = cap;
             end else begin : g_off

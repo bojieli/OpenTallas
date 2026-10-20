@@ -9,7 +9,7 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 C=rtl/hbm_accel/generic/collective/tkm
 for m in $MS; do
   "$V" --binary --timing -j 8 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
-    --top-module tb_hgi_coll_tkm_tile_rg_crep -GMUT=$m -GNCYC=$NCYC -Mdir "$OUT/obj$m" \
+    --top-module tb_hgi_coll_tkm_tile_rg_crep -GMUT=$m -GFAN32=${FAN32:-0} -GNCYC=$NCYC -Mdir "$OUT/obj$m" \
     "$C/tb_hgi_coll_tkm_tile_rg_crep.sv" "$C/ot_hgi_coll_tkm.sv" > "$OUT/build$m.log" 2>&1 || { tail -20 "$OUT/build$m.log"; exit 2; }
   "$OUT/obj$m/Vtb_hgi_coll_tkm_tile_rg_crep" > "$OUT/run$m.log" 2>&1
   r=$(grep "^TKM_RG_CREP MUT$m cycles" "$OUT/run$m.log" | tail -1); echo "$r"; grep -m3 "MISMATCH\|VACUOUS\|Error" "$OUT/run$m.log"

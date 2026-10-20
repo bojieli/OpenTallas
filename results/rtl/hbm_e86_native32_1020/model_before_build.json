@@ -1,0 +1,39 @@
+{
+  "status": "source draft not qualified; census must pass before any gate",
+  "base": "claude/l2h-idx-e86s-1019",
+  "shape": {
+    "EW": 86,
+    "PT": 64,
+    "GP": 8,
+    "NP": 68,
+    "regions": 4
+  },
+  "optin": "FAN32=1, PRE1, CREP1",
+  "added_cycles": 0,
+  "new_floorplan_assumption": "none; size from fresh synthesis before gate",
+  "added_flop_estimate": 17630,
+  "source_budgets": {
+    "pin_data_q": 27,
+    "pin_control_fanout": 30,
+    "pin_provenance_copies": 4,
+    "p_valid_to_q_copies": 31,
+    "p_clear_to_q_copies": 26,
+    "gn_bit_to_gt_copies": 26,
+    "p_validbit_to_gt_copies": 25,
+    "local_insertion_select": 20,
+    "overflow_select_mux_endpoints": 24
+  },
+  "physical_constraints": [
+    "existing four positional regions unchanged",
+    "no new data-domain timing exception",
+    "mapped native <=32 every driver/reset prerequisite",
+    "fresh synthesis area and actual reach needed before gate"
+  ],
+  "measurement_plan": [
+    "FAN32 lockstep vs CREP0, every output every edge, Verilator5.050",
+    "CMUT1 actual mismatch witness",
+    "new compare provenance mutant actual mismatch witness",
+    "standalone synthesis and actual native mapped all-driver census; fix every violation",
+    "only then regenerate kit sized to measured area, review source-safe checklist and gate"
+  ]
+}
