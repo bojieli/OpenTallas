@@ -29,6 +29,9 @@ token-run start of both calendars 3 edges before the old pair edge (K TX context
 40 edges later.  The link = LINK_CAL = 16 edges (production image: K TX slot 2 -> C pin arrival 18).  Extra check:
   K6 no sequencer / calendar fault; the KV TX and C RX calendars each play 2 context events per pair.
 --cmut 1 (CAL only): the face sequencer carries the MU 0 C RX image (a qfd_sys_face kit without the MU image): must FAIL.
+QW-KVCTX 10-19: the ctlm runs CTX_SRC 1 FCTX 1 (die_params) with the leaf on its ctx_x port (was a force on c_ctx,
+FCTX 0, no LCV / CTXU log): the shared checks C8 (MU-DQ-D2DUSER user carrier) and C10 (MU-DQ-BOOTCTX filler native
+contexts, 108 in `red`) now see the harness; tb_mu_kvctx.sv header.
 """
 import argparse, json, os, subprocess, sys
 from pathlib import Path

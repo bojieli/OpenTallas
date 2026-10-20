@@ -6,8 +6,10 @@
 //   link:    the static D2D link as its fixed latency: the record port's pin register word is delayed LINK edges; the
 //            compute RX slot is the KV send slot delayed by the same compiled latency (2 record-port edges + LINK).
 //   compute: the face's own kind-12 receiver (qfd_host_native_context_rx, as inside qfd_sys_face), the proposed observer
-//            leaf qfd_mu_ctx_rx, and qfd_tt_ctlm_dv NU 4 OPSEG 1 whose loader inputs c_ctx / c_ctxld are driven by the
-//            leaf (force: the 129-b cluster input that MU-QW-DIE owes; the image DW5 / DW6 record is plain 0 here).
+//            leaf qfd_mu_ctx_rx, and qfd_tt_ctlm_dv NU 4 OPSEG 1 CTX_SRC 1 FCTX 1 (the die's die_params) whose ctx_x port
+//            (pin register ctx_q, same-filler load rule) takes the leaf's ctx_x (the image DW5 / DW6 record is plain 0 here).
+//            QW-KVCTX 10-19: was a force on dut.c_ctx / c_ctxld (pre-MU-DQ-BOOTCTX vintage, FCTX 0, no LCV / CTXU log ->
+//            the shared checks C10 / C8 saw 0 filler native contexts); now the real port + the opseg bench's LCV / CTXU log.
 // The ctlm part is tb_mu_opseg_dv (rtl/test/mu_qwen_seq, MU-QW-B1) unchanged: same events 0..3 and log lines, so
 // mu_opseg_bench.check_case runs on it.  Extra events (+EV "cycle kind hex", applied before posedge `cycle`):
 //   4 KEP  epoch16: token_epoch_valid for one edge (both ports when epoch[1:0] == 0, else the MU port only)
@@ -37,6 +39,7 @@
 module tb_mu_kvctx;
     parameter integer NU = 4, MUT = 0, OPSEG = 1, KMUT = 0, RMUT = 0, LINK = 14;
     parameter integer CAL = 0, CMUT = 0;
+    parameter integer CTX_SRC = 1, FCTX = 1;                 // MU-DQ-BOOTCTX (die_params): runtime ctx_x port + filler native context
     parameter [31:0] CRX_SEG1 = 32'd0, KTX_SEG1 = 32'd0;     // token-run segment-1 bases (the images' D2D_CAL_*_SEG1)
     parameter [1023:0] CRX_MU0 = 1024'd0;                   // CMUT 1: the MU 0 C RX image
     reg ck = 1'b0;
@@ -45,8 +48,10 @@ module tb_mu_kvctx;
     reg [74:0] pw = 0; reg [186:0] dh = 0; reg [1:0] dh_user = 0; reg [106:0] ss5 = 0;
     wire [452:0] hr; wire [115:0] cmd; wire emb_start; wire [17:0] emb_token; wire [55:0] dc; wire cf;
     wire [75:0] pobs, cobs; wire [68:0] dobs; wire csr, cir, lcv; wire [17:0] ntk, nps; wire [5:0] cst; wire [379:0] ncmd;
-    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT), .NU(NU), .STAGE_ME(1), .OPSEG(OPSEG)) dut (.ck(ck), .rst_n(rst_n),
-        .pw(pw), .dh(dh), .dh_user(dh_user), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
+    wire [128:0] ctx_x; wire [1:0] ctx_u; wire x_f;              // the leaf's {load, CTX record} -> ctlm ctx_x
+    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT), .NU(NU), .STAGE_ME(1), .OPSEG(OPSEG), .CTX_SRC(CTX_SRC), .FCTX(FCTX))
+        dut (.ck(ck), .rst_n(rst_n),
+        .pw(pw), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
         .control_stores_ready(csr), .layer_context_v(lcv), .native_tok(ntk), .native_pos(nps), .command_stage(cst),
         .cal_program_obs(cobs), .cal_descriptor_obs(dobs), .cal_image_ready(cir), .dc(dc), .native_cmd(ncmd),
         .native_ret(95'd0), .hr(hr), .cmd(cmd), .ss5(ss5), .ag5(10'd0), .emb_start(emb_start), .emb_token(emb_token),
@@ -126,14 +131,9 @@ module tb_mu_kvctx;
         .head_context_v(1'b0), .head_stage(6'd0), .head_token(18'd0), .head_position(18'd0), .native_active(1'b0),
         .host_epoch_valid(h_ev), .host_epoch(h_ep), .host_tag(h_tag), .host_gen(h_gen), .host_fusedcap(h_cap),
         .host_image_epoch(h_iep), .host_image_digest(h_idg), .fault(h_f));
-    wire [128:0] ctx_x; wire [1:0] ctx_u; wire x_f;
     qfd_mu_ctx_rx #(.NU(NU), .MUT(RMUT)) mu_rx (.ck(ck), .rst_n(rst_n), .context_slot(c_slot), .rx_v(c_rxv),
         .rx_hdr(c_rec[547:517]), .rx_beat(c_rec[516:512]), .rx_tag(c_rec[58:0]), .ctx_x(ctx_x), .ctx_user(ctx_u), .mu_fault(x_f));
-    // the ctlm loader takes the leaf's record (the proposed cluster input; see the header)
-    initial begin
-        force dut.c_ctx = ctx_x[127:0];
-        force dut.c_ctxld = ctx_x[128];
-    end
+    // the ctlm loader takes the leaf's record on its ctx_x port (CTX_SRC 1; connected above, no force)
 
     // ------------------------------------------------------------------ driver + log (tb_mu_opseg_dv + KV events)
     wire [1024:0] hd = {hr, ncmd, ntk, nps, cst, lcv, csr, pobs, cf};
@@ -142,6 +142,8 @@ module tb_mu_kvctx;
     reg [186:0] ev; reg have; reg [1023:0] evf, lgf; reg flt_l = 0; reg [23:0] sua_l = 0; reg [5:0] cst_l = 0;
     reg [55:0] dc_l = 0; reg opf_l = 0; reg [3:0] lfc_l = 0; reg [1:0] eu_l = 0, su_l = 0;
     reg pair2 = 0, cslot_l = 0;
+    // C8 (MU-DQ-D2DUSER) probe, identical to tb_mu_opseg_dv.sv: native_pos[17:16] = the user of the latest head start
+    reg sg_l = 0; reg [1:0] xu_l = 0; integer cu_bad = 0, cu_n1 = 0, cu_n2 = 0, cu_n3 = 0;
     initial begin
         if (!$value$plusargs("EV=%s", evf)) $fatal(1, "+EV");
         if (!$value$plusargs("LOG=%s", lgf)) $fatal(1, "+LOG");
@@ -164,6 +166,16 @@ module tb_mu_kvctx;
                                        dut.l_first, dut.l_cnt);
             if (dut.u_cal.fault && !flt_l) $fdisplay(lg, "%0d FAULT %b", cyc, dut.u_cal.fault_code);
             if ((dut.op_fault && !opf_l) || dut.l_fcode != lfc_l) $fdisplay(lg, "%0d OPF %b %0d", cyc, dut.l_fcode, dut.op_coll);
+            if (lcv) $fdisplay(lg, "%0d LCV %h %h %0d", cyc, ntk, nps, cst);    // C10 (MU-DQ-BOOTCTX FCTX), as tb_mu_opseg_dv
+            if (dut.st_h) begin
+                xu_l = sg_l ? su_l : 2'd0;
+                if (xu_l == 2'd1) cu_n1 = cu_n1 + 1; if (xu_l == 2'd2) cu_n2 = cu_n2 + 1; if (xu_l == 2'd3) cu_n3 = cu_n3 + 1;
+            end
+            if (nps[17:16] !== ((NU > 1) ? xu_l : 2'd0)) begin
+                cu_bad = cu_bad + 1;
+                if (cu_bad <= 3) $fdisplay(lg, "%0d CTXU_ERR carried %0d want %0d", cyc, nps[17:16], xu_l);
+            end
+            sg_l = dut.c_seg;
             // KV / link / compute-leaf observations (this posedge)
             if (m_tv) $fdisplay(lg, "%0d KTX %0d %h", cyc, m_to, m_tr[58:0]);
             if (r_tv) begin
@@ -205,6 +217,7 @@ module tb_mu_kvctx;
             if (have && ec <= cyc) $fatal(1, "event file not sorted at cycle %0d", ec);
             cyc = cyc + 1;
             if (cyc >= ncyc) begin
+                $fdisplay(lg, "%0d CTXU %0d %0d %0d %0d", cyc, cu_bad, cu_n1, cu_n2, cu_n3);
                 $fdisplay(lg, "%0d KIDN %0d", cyc, kidn);
                 $fdisplay(lg, "%0d KEND %0d %0d %0d %0d", cyc, m_f, r_f, h_f, x_f);
                 if (CAL) $fdisplay(lg, "%0d KCALEND %0d %0d %0d %0d %0d %0d", cyc, cs_f, ks_f, crf, ktf, nk_ctx, nc_ctx);
