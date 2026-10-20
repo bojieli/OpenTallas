@@ -1276,17 +1276,17 @@ module qkd_kvpc_s_port_child #(
     (* keep *) reg col_v_q, col_we_q, w_v_q;
     (* keep *) reg [4:0] csk;                           // col_sr_q copies: [0] wr_static / wr_kv, [1..4] kq data
     (* keep *) reg [22:0] rvk;                          // rv_q copies (pi[0] -> 23 loads + the sched rv_q)
-    (* keep *) reg [24:0] wsk, wvk;                     // wr_static / w_v lookahead copies
+    (* keep *) reg [29:0] wsk, wvk;                     // wr_static / w_v lookahead copies
     (* keep *) reg [4:0] rik;                           // rd_issue lookahead copies
     (* keep *) reg [287:0] rd_q;
     (* keep *) reg [255:0] w_d_q;
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) begin
             rvk <= 23'd0; col_v_q <= 1'b0; col_we_q <= 1'b0; csk <= 5'd0; w_v_q <= 1'b0;
-            wsk <= 25'd0; wvk <= 25'd0; rik <= 5'd0;
+            wsk <= 30'd0; wvk <= 30'd0; rik <= 5'd0;
         end else begin
             rvk <= {23{pi[0]}}; col_v_q <= col_v_e; col_we_q <= col_we_e; csk <= {5{col_sr_e}}; w_v_q <= w_v;
-            wsk <= {25{col_v_e && col_we_e && col_sr_e}}; wvk <= {25{w_v}}; rik <= {5{col_v_e && !col_we_e}};
+            wsk <= {30{col_v_e && col_we_e && col_sr_e}}; wvk <= {30{w_v}}; rik <= {5{col_v_e && !col_we_e}};
         end
     always @(posedge hclk) begin rd_q <= pi[288:1]; w_d_q <= w_d; end
     ot_qfd_emb_pcport_nkw_kvpc_s #(.RQD(RQD), .MUT(MUT)) u_port (
@@ -1306,10 +1306,10 @@ module ot_qfd_emb_pcport_nkw_kvpc_s #(
     input  wire         col_v,
     input  wire         col_we,
     input  wire [4:0]   csk,              // col_sr copies
-    input  wire [24:0]  wvk,              // w_v copies (24 slices + master)
+    input  wire [29:0]  wvk,              // w_v copies (29 slices + master)
     input  wire [255:0] w_d,
     output wire [287:0] wd,
-    input  wire [24:0]  wsk,              // wr_static = col_v && col_we && col_sr, registered one edge early
+    input  wire [29:0]  wsk,              // wr_static = col_v && col_we && col_sr, registered one edge early
     input  wire [4:0]   rik,              // rd_issue = col_v && !col_we, registered one edge early
     input  wire [22:0]  rvk,              // r_v copies
     input  wire [287:0] r_d,
@@ -1382,7 +1382,7 @@ module ot_qfd_emb_pcport_nkw_kvpc_s #(
 
     localparam integer RA = $clog2(RQD);
     localparam integer WA = (WQD > 1) ? $clog2(WQD) : 1;
-    localparam integer NS = 24, SW = 12;              // wq / st1_wd / s2_wd slices
+    localparam integer NS = 29, SW = 10;              // wq / st1_wd / s2_wd slices (28 x 10 + 8; census c2: 12-bit slices 33)
     localparam integer NK = 20, KW = 15;              // kv_d slices (19 x 15 + 3)
     initial if (WA != 2 || RA != 6) $error("ot_qfd_emb_pcport_nkw_kvpc_s: copy layout assumes WQD 4, RQD 64");
     reg [RQD-1:0] kq;
@@ -1447,23 +1447,24 @@ module ot_qfd_emb_pcport_nkw_kvpc_s #(
     end
     wire [287:0] wenc = enc256(w_d);
     for (g = 0; g < NS; g = g + 1) begin : g_ws
-        reg [SW-1:0] wq0, wq1, wq2, wq3;
+        localparam integer LO = g * SW, WD = (288 - LO < SW) ? 288 - LO : SW;
+        reg [WD-1:0] wq0, wq1, wq2, wq3;
         // read select one-hot of wr[1:0] (census c1: the binary wr copy bit 0 drove 51 mux pins), rotates with wr
         (* keep *) reg [3:0] rsel;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) rsel <= 4'b0001; else if (wsk[g]) rsel <= {rsel[2:0], rsel[3]};
         always @(posedge clk) begin
-            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd0) wq0 <= wenc[g*SW +: SW];
-            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd1) wq1 <= wenc[g*SW +: SW];
-            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd2) wq2 <= wenc[g*SW +: SW];
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd0) wq0 <= wenc[LO +: WD];
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd1) wq1 <= wenc[LO +: WD];
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd2) wq2 <= wenc[LO +: WD];
 `ifdef OT_KVPC5_TAP_MUT
-            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd3) wq3 <= (g == 7) ? ~wenc[g*SW +: SW] : wenc[g*SW +: SW];   // bench mutant
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd3) wq3 <= (g == 7) ? ~wenc[LO +: WD] : wenc[LO +: WD];   // bench mutant
 `else
-            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd3) wq3 <= wenc[g*SW +: SW];
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd3) wq3 <= wenc[LO +: WD];
 `endif
-            if (wsk[g]) st1_wd[g*SW +: SW] <= ({SW{rsel[0]}} & wq0) | ({SW{rsel[1]}} & wq1) |
-                                              ({SW{rsel[2]}} & wq2) | ({SW{rsel[3]}} & wq3);
-            if (wc1_kvk[g]) s2_wd[g*SW +: SW] <= {SW{1'b0}}; else if (wc1_stk[g]) s2_wd[g*SW +: SW] <= st1_wd[g*SW +: SW];
+            if (wsk[g]) st1_wd[LO +: WD] <= ({WD{rsel[0]}} & wq0) | ({WD{rsel[1]}} & wq1) |
+                                              ({WD{rsel[2]}} & wq2) | ({WD{rsel[3]}} & wq3);
+            if (wc1_kvk[g]) s2_wd[LO +: WD] <= {WD{1'b0}}; else if (wc1_stk[g]) s2_wd[LO +: WD] <= st1_wd[LO +: WD];
         end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin wc1_kvk[g] <= 1'b0; wc1_stk[g] <= 1'b0; end
