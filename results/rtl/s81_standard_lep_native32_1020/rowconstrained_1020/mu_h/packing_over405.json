@@ -1,0 +1,1146 @@
+[
+  {
+    "net": "_03294_",
+    "bbox": [
+      200.7180000000002,
+      261.36,
+      360.3419999999968,
+      537.816
+    ],
+    "upper_um": 436.07999999999663,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[437\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[437\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[437\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[3\\].u_m/wd_in[53]",
+        [
+          302.4,
+          537.792,
+          302.424,
+          537.816
+        ]
+      ],
+      [
+        "cell",
+        "_44268_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03303_",
+    "bbox": [
+      202.98600000000044,
+      263.52,
+      361.85399999999686,
+      536.952
+    ],
+    "upper_um": 432.29999999999643,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[428\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[428\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[428\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[3\\].u_m/wd_in[44]",
+        [
+          302.4,
+          536.928,
+          302.424,
+          536.952
+        ]
+      ],
+      [
+        "cell",
+        "_44241_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03317_",
+    "bbox": [
+      204.66000000000076,
+      264.06,
+      362.06999999999704,
+      535.608
+    ],
+    "upper_um": 428.95799999999616,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[414\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[414\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[414\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[3\\].u_m/wd_in[30]",
+        [
+          302.4,
+          535.584,
+          302.424,
+          535.608
+        ]
+      ],
+      [
+        "cell",
+        "_44171_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03318_",
+    "bbox": [
+      196.3979999999996,
+      260.01,
+      360.449999999997,
+      535.512
+    ],
+    "upper_um": 439.55399999999736,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[413\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[413\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[413\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[3\\].u_m/wd_in[29]",
+        [
+          302.4,
+          535.488,
+          302.424,
+          535.512
+        ]
+      ],
+      [
+        "cell",
+        "_44175_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03327_",
+    "bbox": [
+      194.88599999999985,
+      259.2,
+      360.1259999999973,
+      534.648
+    ],
+    "upper_um": 440.68799999999743,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[404\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[404\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[404\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[3\\].u_m/wd_in[20]",
+        [
+          302.4,
+          534.624,
+          302.424,
+          534.648
+        ]
+      ],
+      [
+        "cell",
+        "_44148_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03337_",
+    "bbox": [
+      199.63800000000018,
+      260.55,
+      361.31399999999684,
+      533.688
+    ],
+    "upper_um": 434.8139999999966,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[394\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[394\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[394\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[3\\].u_m/wd_in[10]",
+        [
+          302.4,
+          533.664,
+          302.424,
+          533.688
+        ]
+      ],
+      [
+        "cell",
+        "_44125_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03341_",
+    "bbox": [
+      190.3499999999995,
+      261.63,
+      359.7479999999969,
+      533.304
+    ],
+    "upper_um": 441.0719999999974,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[390\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[390\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[390\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[3\\].u_m/wd_in[6]",
+        [
+          302.4,
+          533.28,
+          302.424,
+          533.304
+        ]
+      ],
+      [
+        "cell",
+        "_44078_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03343_",
+    "bbox": [
+      201.15000000000018,
+      260.82,
+      361.5299999999967,
+      533.112
+    ],
+    "upper_um": 432.67199999999644,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[388\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[388\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[388\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[3\\].u_m/wd_in[4]",
+        [
+          302.4,
+          533.088,
+          302.424,
+          533.112
+        ]
+      ],
+      [
+        "cell",
+        "_44086_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03418_",
+    "bbox": [
+      200.12400000000076,
+      264.59999999999997,
+      361.3139999999967,
+      538.2
+    ],
+    "upper_um": 434.78999999999604,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[313\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[313\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[313\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[57]",
+        [
+          216.0,
+          538.176,
+          216.024,
+          538.2
+        ]
+      ],
+      [
+        "cell",
+        "_43819_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03427_",
+    "bbox": [
+      197.85600000000076,
+      261.9,
+      345.546,
+      537.336
+    ],
+    "upper_um": 423.1259999999993,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[304\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[304\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[304\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[48]",
+        [
+          216.0,
+          537.312,
+          216.024,
+          537.336
+        ]
+      ],
+      [
+        "cell",
+        "_43792_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03429_",
+    "bbox": [
+      203.7420000000014,
+      264.87,
+      357.858,
+      537.144
+    ],
+    "upper_um": 426.3899999999986,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[302\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[302\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[302\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[46]",
+        [
+          216.0,
+          537.12,
+          216.024,
+          537.144
+        ]
+      ],
+      [
+        "cell",
+        "_43737_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03430_",
+    "bbox": [
+      216.0,
+      271.62,
+      363.04199999999713,
+      537.048
+    ],
+    "upper_um": 412.4699999999972,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[301\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[301\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[301\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[45]",
+        [
+          216.0,
+          537.024,
+          216.024,
+          537.048
+        ]
+      ],
+      [
+        "cell",
+        "_43741_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03432_",
+    "bbox": [
+      204.82200000000142,
+      264.87,
+      361.5299999999969,
+      536.856
+    ],
+    "upper_um": 428.6939999999955,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[299\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[299\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[299\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[43]",
+        [
+          216.0,
+          536.832,
+          216.024,
+          536.856
+        ]
+      ],
+      [
+        "cell",
+        "_43749_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03433_",
+    "bbox": [
+      205.3620000000021,
+      260.01,
+      344.25,
+      536.76
+    ],
+    "upper_um": 415.6379999999979,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[298\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[298\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[298\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[42]",
+        [
+          216.0,
+          536.736,
+          216.024,
+          536.76
+        ]
+      ],
+      [
+        "cell",
+        "_43753_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03434_",
+    "bbox": [
+      201.25800000000092,
+      265.14,
+      361.31399999999695,
+      536.664
+    ],
+    "upper_um": 431.57999999999606,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[297\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[297\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[297\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[41]",
+        [
+          216.0,
+          536.64,
+          216.024,
+          536.664
+        ]
+      ],
+      [
+        "cell",
+        "_43757_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03436_",
+    "bbox": [
+      194.23799999999957,
+      261.63,
+      360.7739999999969,
+      536.472
+    ],
+    "upper_um": 441.3779999999973,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[295\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[295\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "_67979_",
+        "A2"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[295\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[39]",
+        [
+          216.0,
+          536.448,
+          216.024,
+          536.472
+        ]
+      ]
+    ]
+  },
+  {
+    "net": "_03439_",
+    "bbox": [
+      198.55800000000016,
+      260.55,
+      360.28799999999677,
+      536.184
+    ],
+    "upper_um": 437.36399999999657,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[292\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[292\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[292\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[36]",
+        [
+          216.0,
+          536.16,
+          216.024,
+          536.184
+        ]
+      ],
+      [
+        "cell",
+        "_43714_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03446_",
+    "bbox": [
+      202.33800000000093,
+      265.14,
+      361.85399999999703,
+      535.512
+    ],
+    "upper_um": 429.88799999999605,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[285\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[285\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[285\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[29]",
+        [
+          216.0,
+          535.488,
+          216.024,
+          535.512
+        ]
+      ],
+      [
+        "cell",
+        "_43679_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03450_",
+    "bbox": [
+      216.0,
+      264.33,
+      361.3679999999969,
+      535.128
+    ],
+    "upper_um": 416.1659999999969,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[281\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[281\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[281\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[25]",
+        [
+          216.0,
+          535.104,
+          216.024,
+          535.128
+        ]
+      ],
+      [
+        "cell",
+        "_43695_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03451_",
+    "bbox": [
+      191.6999999999997,
+      259.2,
+      359.5319999999969,
+      535.032
+    ],
+    "upper_um": 443.6639999999973,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[280\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[280\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[280\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[24]",
+        [
+          216.0,
+          535.008,
+          216.024,
+          535.032
+        ]
+      ],
+      [
+        "cell",
+        "_43699_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03452_",
+    "bbox": [
+      198.8820000000003,
+      259.46999999999997,
+      359.7479999999969,
+      534.936
+    ],
+    "upper_um": 436.33199999999675,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[279\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[279\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "_67973_",
+        "A2"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[279\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[23]",
+        [
+          216.0,
+          534.912,
+          216.024,
+          534.936
+        ]
+      ]
+    ]
+  },
+  {
+    "net": "_03454_",
+    "bbox": [
+      190.08000000000018,
+      259.46999999999997,
+      346.51800000000003,
+      534.744
+    ],
+    "upper_um": 431.71199999999993,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[277\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[277\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[277\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[21]",
+        [
+          216.0,
+          534.72,
+          216.024,
+          534.744
+        ]
+      ],
+      [
+        "cell",
+        "_43648_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03456_",
+    "bbox": [
+      197.80200000000028,
+      259.46999999999997,
+      360.18,
+      534.552
+    ],
+    "upper_um": 437.45999999999975,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[275\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[275\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[275\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[19]",
+        [
+          216.0,
+          534.528,
+          216.024,
+          534.552
+        ]
+      ],
+      [
+        "cell",
+        "_43656_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03458_",
+    "bbox": [
+      197.3160000000007,
+      264.59999999999997,
+      360.98999999999694,
+      534.36
+    ],
+    "upper_um": 433.4339999999963,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[273\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[273\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[273\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[17]",
+        [
+          216.0,
+          534.336,
+          216.024,
+          534.36
+        ]
+      ],
+      [
+        "cell",
+        "_43664_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03462_",
+    "bbox": [
+      193.212,
+      262.44,
+      360.341999999997,
+      533.976
+    ],
+    "upper_um": 438.66599999999704,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[269\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[269\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[269\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[13]",
+        [
+          216.0,
+          533.952,
+          216.024,
+          533.976
+        ]
+      ],
+      [
+        "cell",
+        "_43617_",
+        "A2"
+      ]
+    ]
+  },
+  {
+    "net": "_03470_",
+    "bbox": [
+      202.1220000000016,
+      260.28,
+      348.084,
+      533.208
+    ],
+    "upper_um": 418.8899999999984,
+    "drivers": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[261\\]$_DFF_P_",
+        "QN"
+      ]
+    ],
+    "endpoints": [
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.mwd\\[261\\]$_DFF_P_",
+        "QN"
+      ],
+      [
+        "cell",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.prevdata\\[261\\]$_DFF_P_",
+        "D"
+      ],
+      [
+        "macro",
+        "u_ot_pr_core.u.g_rx\\[1\\].g_sa.g_true_sram.u_rx_mem.g_bank\\[2\\].u_m/wd_in[5]",
+        [
+          216.0,
+          533.184,
+          216.024,
+          533.208
+        ]
+      ],
+      [
+        "cell",
+        "_43586_",
+        "A2"
+      ]
+    ]
+  }
+]

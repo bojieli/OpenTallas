@@ -154,7 +154,7 @@
   "fault": "K"
  },
  "_note_lepenh2": "S81-LEPENH2 10-20 (after the 08f4a85fd diagnostic FAIL): (1) landings chunked (landing_chunk_bits 24: each 24-bit chunk owns its kept write/read selector, was one rc bit driving 4,424 loads) with the per-chunk reset forest (no reset driver > 32 loads); (2) lockstep observability: the random-word bench never trained the lanes (link up ~8k cycles) so the lri landing carried no beat and MUT 1/2/4 passed; tb_stimulus now cross-wires the flat reference's lanes through two ot_pdie_ucie (lane 0 <-> lane 1) and drives 200 CTL line beats on ri_w after link-up, so both 1104-b landings carry real traffic (ri_w -> ro_e -> lro -> lep -> tx -> loop -> rx -> lep -> lri -> ri_e -> ro_w); the bench fails as vacuous if no beat reaches ro_w; MUT 4 holds the slice reset past link-up (mut4_stages).",
- "landing_chunk_bits": 24,
+ "landing_chunk_bits": 8,
  "landing_reset_forest": true,
  "mut4_stages": 10050,
  "tb_stimulus": "rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/tb_lepe_nh_loopback.vh",
@@ -162,5 +162,6 @@
   "fault": 2
  },
  "_note_lepenh2_out": "fault (lep S face, interior) is >= 560 um from any parent face: 2 K-region register stages in front of the port (out_regs), status +2 edges",
- "landing_kept_enable": true
+ "landing_kept_enable": true,
+ "_note_lepenh2_chunk": "chunk 8 (was 24): with the kept-enable writer each slot one-hot still drives ~2 actual pins per data bit (capture mux) + 8 (epoch / rotation): census 10-20 gate 025715 write_oh 56 loads at 24 b; 8 b -> ~24 loads"
 }

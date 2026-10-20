@@ -1,0 +1,315 @@
+{
+  "schema": "opentallas.lep_native_constructive_planning.v1",
+  "native_cells": 42454,
+  "native_sequential_cells": 15167,
+  "native_masters": {
+    "INVx1_ASAP7_75t_R": 10334,
+    "BUFx2_ASAP7_75t_R": 966,
+    "BUFx6f_ASAP7_75t_R": 301,
+    "OR4x1_ASAP7_75t_R": 834,
+    "AND4x1_ASAP7_75t_R": 175,
+    "AND2x2_ASAP7_75t_R": 363,
+    "XNOR2x2_ASAP7_75t_R": 1244,
+    "AND5x1_ASAP7_75t_R": 47,
+    "NOR2x1_ASAP7_75t_R": 2452,
+    "AO21x1_ASAP7_75t_R": 1542,
+    "OA31x2_ASAP7_75t_R": 11,
+    "OR3x1_ASAP7_75t_R": 649,
+    "AND3x1_ASAP7_75t_R": 245,
+    "AO32x1_ASAP7_75t_R": 50,
+    "BUFx3_ASAP7_75t_R": 44,
+    "OAI21x1_ASAP7_75t_R": 162,
+    "AOI211x1_ASAP7_75t_R": 1107,
+    "OA211x2_ASAP7_75t_R": 1130,
+    "NAND2x1_ASAP7_75t_R": 2293,
+    "OA21x2_ASAP7_75t_R": 1384,
+    "XOR2x2_ASAP7_75t_R": 1110,
+    "OR2x2_ASAP7_75t_R": 37,
+    "BUFx4f_ASAP7_75t_R": 45,
+    "OA33x2_ASAP7_75t_R": 6,
+    "OA22x2_ASAP7_75t_R": 6,
+    "AOI21x1_ASAP7_75t_R": 17,
+    "OR5x1_ASAP7_75t_R": 161,
+    "OAI22x1_ASAP7_75t_R": 7,
+    "OA221x2_ASAP7_75t_R": 1,
+    "NOR3x1_ASAP7_75t_R": 145,
+    "AO22x1_ASAP7_75t_R": 13,
+    "AND4x2_ASAP7_75t_R": 1,
+    "NAND3x1_ASAP7_75t_R": 26,
+    "AOI22x1_ASAP7_75t_R": 4,
+    "AND5x2_ASAP7_75t_R": 2,
+    "XNOR2x1_ASAP7_75t_R": 104,
+    "AO31x2_ASAP7_75t_R": 3,
+    "AO33x2_ASAP7_75t_R": 1,
+    "BUFx12f_ASAP7_75t_R": 88,
+    "XOR2x1_ASAP7_75t_R": 2,
+    "DFFASRHQNx1_ASAP7_75t_R": 4062,
+    "TIEHIx1_ASAP7_75t_R": 27,
+    "TIELOx1_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 11105,
+    "AND2x4_ASAP7_75t_R": 18,
+    "INVx3_ASAP7_75t_R": 47,
+    "NOR2x2_ASAP7_75t_R": 20,
+    "INVx5_ASAP7_75t_R": 11,
+    "INVx4_ASAP7_75t_R": 11,
+    "AND3x2_ASAP7_75t_R": 40
+  },
+  "native_area_um2": 7109.52876,
+  "band": [
+    2.16,
+    259.2,
+    473.04,
+    291.6
+  ],
+  "density": 0.4659996177370026,
+  "rows": 120,
+  "site_um": 0.054,
+  "row_height_um": 0.27,
+  "max_packed_row_width_um": 219.726,
+  "all_cells_packed_without_overlap": true,
+  "dynamic_roots": 35361,
+  "actual_library_transparent_cells": 11847,
+  "effective_endpoint_bbox_max_um": 405.0,
+  "effective_endpoint_bbox_over405": 0,
+  "cuts": [
+    {
+      "axis": "y",
+      "coordinate_um": 259.199,
+      "unique_dynamic_net_crossings": 3708,
+      "native_tracks_after_explicit_obstacles": {
+        "M3": 12288,
+        "M5": 9194
+      },
+      "after_actual_25percent_reduction": 16111,
+      "demand_over_capacity": 0.2301533114021476
+    },
+    {
+      "axis": "y",
+      "coordinate_um": 291.601,
+      "unique_dynamic_net_crossings": 5165,
+      "native_tracks_after_explicit_obstacles": {
+        "M3": 12288,
+        "M5": 9194
+      },
+      "after_actual_25percent_reduction": 16111,
+      "demand_over_capacity": 0.3205884178511576
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 25.704,
+      "unique_dynamic_net_crossings": 2230,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 13608,
+        "M4": 11610
+      },
+      "after_actual_25percent_reduction": 18913,
+      "demand_over_capacity": 0.11790831703061386
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 49.248000000000005,
+      "unique_dynamic_net_crossings": 3659,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.299011195554466
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 72.79199999999999,
+      "unique_dynamic_net_crossings": 3683,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.3009724605704012
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 96.336,
+      "unique_dynamic_net_crossings": 3336,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.24355698328101044
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 119.88,
+      "unique_dynamic_net_crossings": 2983,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.2177849164050522
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 143.42399999999998,
+      "unique_dynamic_net_crossings": 3229,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.2638718640189589
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 166.968,
+      "unique_dynamic_net_crossings": 3031,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.24769142763749286
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 190.512,
+      "unique_dynamic_net_crossings": 3235,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.23618310578958895
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 214.056,
+      "unique_dynamic_net_crossings": 3130,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.22851719354603198
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 237.6,
+      "unique_dynamic_net_crossings": 4138,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 12528,
+        "M4": 10744
+      },
+      "after_actual_25percent_reduction": 17454,
+      "demand_over_capacity": 0.23708032542683624
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 261.14400000000006,
+      "unique_dynamic_net_crossings": 3406,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.2783361935114816
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 284.688,
+      "unique_dynamic_net_crossings": 3788,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.27655691027232243
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 308.232,
+      "unique_dynamic_net_crossings": 2982,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.24368717822995833
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 331.776,
+      "unique_dynamic_net_crossings": 2732,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.22325733431396586
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 355.32,
+      "unique_dynamic_net_crossings": 2488,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.18164561582828356
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 378.86400000000003,
+      "unique_dynamic_net_crossings": 2427,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.17719208585821714
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 402.408,
+      "unique_dynamic_net_crossings": 2535,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.20715861730816376
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 425.95200000000006,
+      "unique_dynamic_net_crossings": 2440,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.19939527662008663
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 449.496,
+      "unique_dynamic_net_crossings": 2208,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 13608,
+        "M4": 11610
+      },
+      "after_actual_25percent_reduction": 18913,
+      "demand_over_capacity": 0.11674509596573786
+    }
+  ],
+  "qualification": false,
+  "limits": [
+    "Analytic legal packing; native placement is not run",
+    "Endpoint bbox is a constructive planning upper bound, not routed wire length",
+    "Clock CTS/TT/FF spread not measured",
+    "PG binding is audited separately; unplaced standard pin-metal contact not qualified",
+    "Timing setup/hold and congestion require approved gate"
+  ]
+}

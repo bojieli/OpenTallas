@@ -43,26 +43,26 @@ module ot_s81sl_slice_lepe_nh_x_lp #(
     ot_pl_pad #(.W(1), .N(2)) u_lpo_fault (.ck(ck_K), .d(fault__o), .q(fault));
     // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region S holds the root)
     wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_S), .d(rst_n), .q(lpr_root));
-    localparam integer LPR_LEAVES_S = 1+(((((1103) - (0) + 1))+24-1)/24)+(((((1103) - (0) + 1))+24-1)/24)+(((1)+24-1)/24);
-    localparam integer LPR_LEAVES_K = 1+(((((1103) - (0) + 1))+24-1)/24)+(((((1103) - (0) + 1))+24-1)/24)+(((1)+24-1)/24);
+    localparam integer LPR_LEAVES_S = 1+(((((1103) - (0) + 1))+8-1)/8)+(((((1103) - (0) + 1))+8-1)/8)+(((1)+8-1)/8);
+    localparam integer LPR_LEAVES_K = 1+(((((1103) - (0) + 1))+8-1)/8)+(((((1103) - (0) + 1))+8-1)/8)+(((1)+8-1)/8);
     wire [LPR_LEAVES_S-1:0] lpr_S_leaves; wire lpr_S = lpr_S_leaves[0];
     ot_pl_land_reset_forest #(.DEPTH(3), .LEAVES(LPR_LEAVES_S), .ROOT_LOADS(2)) u_lpr_S (.ck(ck_S), .d(lpr_root), .q(lpr_S_leaves)); // same reset age; physical reach unproved
     wire [LPR_LEAVES_K-1:0] lpr_K_leaves; wire lpr_K = lpr_K_leaves[0];
     ot_pl_land_reset_forest #(.DEPTH(3), .LEAVES(LPR_LEAVES_K), .ROOT_LOADS(2)) u_lpr_K (.ck(ck_K), .d(lpr_root), .q(lpr_K_leaves)); // same reset age; physical reach unproved
     // ---- LANDING 0: lri K -> S, 1104 b (u_sl.ri_e)
-    wire [4*((1103) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((((1103) - (0) + 1))+24-1)/24)-1:0] lpl_0_vld;  wire [1103:0] lri__l_S, lpl_0_o;
-    ot_pl_land_vector_reset_kw_w #(.W(((1103) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_K), .rsi(lpr_K_leaves[(1) +: (((((1103) - (0) + 1))+24-1)/24)]), .i(lri), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
-    ot_pl_land_vector_reset_r #(.W(((1103) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_S), .rsi(lpr_S_leaves[(1) +: (((((1103) - (0) + 1))+24-1)/24)]), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+    wire [4*((1103) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((((1103) - (0) + 1))+8-1)/8)-1:0] lpl_0_vld;  wire [1103:0] lri__l_S, lpl_0_o;
+    ot_pl_land_vector_reset_kw_w #(.W(((1103) - (0) + 1)), .D(4), .CHUNK_BITS(8)) u_lpl_0_w (.ck(ck_K), .rsi(lpr_K_leaves[(1) +: (((((1103) - (0) + 1))+8-1)/8)]), .i(lri), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
+    ot_pl_land_vector_reset_r #(.W(((1103) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(8)) u_lpl_0_r (.ck(ck_S), .rsi(lpr_S_leaves[(1) +: (((((1103) - (0) + 1))+8-1)/8)]), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
     assign lri__l_S = (MUT == 1) ? lri : lpl_0_o;
     // ---- LANDING 1: lro S -> K, 1104 b (u_lep.ro)
-    wire [4*((1103) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((((1103) - (0) + 1))+24-1)/24)-1:0] lpl_1_vld;  wire [1103:0] lro__l_K, lpl_1_o;
-    ot_pl_land_vector_reset_kw_w #(.W(((1103) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_S), .rsi(lpr_S_leaves[(1+(((((1103) - (0) + 1))+24-1)/24)) +: (((((1103) - (0) + 1))+24-1)/24)]), .i(lro), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
-    ot_pl_land_vector_reset_r #(.W(((1103) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_K), .rsi(lpr_K_leaves[(1+(((((1103) - (0) + 1))+24-1)/24)) +: (((((1103) - (0) + 1))+24-1)/24)]), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
+    wire [4*((1103) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((((1103) - (0) + 1))+8-1)/8)-1:0] lpl_1_vld;  wire [1103:0] lro__l_K, lpl_1_o;
+    ot_pl_land_vector_reset_kw_w #(.W(((1103) - (0) + 1)), .D(4), .CHUNK_BITS(8)) u_lpl_1_w (.ck(ck_S), .rsi(lpr_S_leaves[(1+(((((1103) - (0) + 1))+8-1)/8)) +: (((((1103) - (0) + 1))+8-1)/8)]), .i(lro), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+    ot_pl_land_vector_reset_r #(.W(((1103) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(8)) u_lpl_1_r (.ck(ck_K), .rsi(lpr_K_leaves[(1+(((((1103) - (0) + 1))+8-1)/8)) +: (((((1103) - (0) + 1))+8-1)/8)]), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
     assign lro__l_K = lpl_1_o;
     // ---- LANDING 2: sf S -> K, 1 b (u_lep.sl_f)
-    wire [4*1-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_2_vld;  wire  sf__l_K, lpl_2_o;
-    ot_pl_land_vector_reset_kw_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_2_w (.ck(ck_S), .rsi(lpr_S_leaves[(1+(((((1103) - (0) + 1))+24-1)/24)+(((((1103) - (0) + 1))+24-1)/24)) +: (((1)+24-1)/24)]), .i(sf), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
-    ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_2_r (.ck(ck_K), .rsi(lpr_K_leaves[(1+(((((1103) - (0) + 1))+24-1)/24)+(((((1103) - (0) + 1))+24-1)/24)) +: (((1)+24-1)/24)]), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
+    wire [4*1-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*(((1)+8-1)/8)-1:0] lpl_2_vld;  wire  sf__l_K, lpl_2_o;
+    ot_pl_land_vector_reset_kw_w #(.W(1), .D(4), .CHUNK_BITS(8)) u_lpl_2_w (.ck(ck_S), .rsi(lpr_S_leaves[(1+(((((1103) - (0) + 1))+8-1)/8)+(((((1103) - (0) + 1))+8-1)/8)) +: (((1)+8-1)/8)]), .i(sf), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
+    ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(8)) u_lpl_2_r (.ck(ck_K), .rsi(lpr_K_leaves[(1+(((((1103) - (0) + 1))+8-1)/8)+(((((1103) - (0) + 1))+8-1)/8)) +: (((1)+8-1)/8)]), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
     assign sf__l_K = lpl_2_o;
     wire lpr_c_u_sl;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 10050 : 0)) u_lprc_u_sl (.ck(ck_S), .d(lpr_S), .q(lpr_c_u_sl));   // t(u_sl) = 0
     wire lpr_c_u_ln0;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln0 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln0));   // t(u_ln0) = 0

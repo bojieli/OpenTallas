@@ -1,0 +1,319 @@
+{
+  "schema": "opentallas.lep_native_constructive_planning.v1",
+  "native_cells": 53722,
+  "native_sequential_cells": 18898,
+  "native_masters": {
+    "INVx1_ASAP7_75t_R": 13666,
+    "BUFx2_ASAP7_75t_R": 1939,
+    "AND3x1_ASAP7_75t_R": 431,
+    "AND2x2_ASAP7_75t_R": 442,
+    "AND4x1_ASAP7_75t_R": 217,
+    "NOR2x1_ASAP7_75t_R": 2469,
+    "OR2x2_ASAP7_75t_R": 145,
+    "BUFx3_ASAP7_75t_R": 144,
+    "XNOR2x2_ASAP7_75t_R": 1185,
+    "AO21x1_ASAP7_75t_R": 2631,
+    "AND5x1_ASAP7_75t_R": 156,
+    "AO33x2_ASAP7_75t_R": 42,
+    "OR3x1_ASAP7_75t_R": 444,
+    "OA21x2_ASAP7_75t_R": 1770,
+    "NAND3x1_ASAP7_75t_R": 31,
+    "OR4x1_ASAP7_75t_R": 532,
+    "NAND2x1_ASAP7_75t_R": 3059,
+    "AO221x1_ASAP7_75t_R": 11,
+    "OR5x1_ASAP7_75t_R": 266,
+    "AO31x2_ASAP7_75t_R": 17,
+    "AOI211x1_ASAP7_75t_R": 18,
+    "BUFx4f_ASAP7_75t_R": 7,
+    "NOR3x1_ASAP7_75t_R": 35,
+    "BUFx6f_ASAP7_75t_R": 32,
+    "AND5x2_ASAP7_75t_R": 6,
+    "AND4x2_ASAP7_75t_R": 21,
+    "AOI21x1_ASAP7_75t_R": 246,
+    "AO32x1_ASAP7_75t_R": 39,
+    "AO22x1_ASAP7_75t_R": 1034,
+    "AOI22x1_ASAP7_75t_R": 13,
+    "OAI21x1_ASAP7_75t_R": 339,
+    "OA211x2_ASAP7_75t_R": 1248,
+    "XOR2x2_ASAP7_75t_R": 1414,
+    "OA22x2_ASAP7_75t_R": 8,
+    "INVx2_ASAP7_75t_R": 71,
+    "OA33x2_ASAP7_75t_R": 5,
+    "OAI22x1_ASAP7_75t_R": 67,
+    "OR5x2_ASAP7_75t_R": 1,
+    "OR4x2_ASAP7_75t_R": 1,
+    "AOI221x1_ASAP7_75t_R": 13,
+    "XNOR2x1_ASAP7_75t_R": 113,
+    "TIEHIx1_ASAP7_75t_R": 38,
+    "TIELOx1_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 14472,
+    "DFFASRHQNx1_ASAP7_75t_R": 4426,
+    "AND2x4_ASAP7_75t_R": 22,
+    "AND3x2_ASAP7_75t_R": 52,
+    "INVx3_ASAP7_75t_R": 147,
+    "XOR2x1_ASAP7_75t_R": 19,
+    "AO211x2_ASAP7_75t_R": 77,
+    "AO21x2_ASAP7_75t_R": 86,
+    "NOR2x2_ASAP7_75t_R": 24,
+    "INVx5_ASAP7_75t_R": 15,
+    "INVx4_ASAP7_75t_R": 15
+  },
+  "native_area_um2": 8701.18362,
+  "band": [
+    2.16,
+    259.2,
+    473.04,
+    291.6
+  ],
+  "density": 0.5703258792048924,
+  "rows": 120,
+  "site_um": 0.054,
+  "row_height_um": 0.27,
+  "max_packed_row_width_um": 269.082,
+  "all_cells_packed_without_overlap": true,
+  "dynamic_roots": 43704,
+  "actual_library_transparent_cells": 16036,
+  "effective_endpoint_bbox_max_um": 443.6639999999973,
+  "effective_endpoint_bbox_over405": 26,
+  "cuts": [
+    {
+      "axis": "y",
+      "coordinate_um": 259.199,
+      "unique_dynamic_net_crossings": 4445,
+      "native_tracks_after_explicit_obstacles": {
+        "M3": 12288,
+        "M5": 9194
+      },
+      "after_actual_25percent_reduction": 16111,
+      "demand_over_capacity": 0.2758984544720998
+    },
+    {
+      "axis": "y",
+      "coordinate_um": 291.601,
+      "unique_dynamic_net_crossings": 7408,
+      "native_tracks_after_explicit_obstacles": {
+        "M3": 12288,
+        "M5": 9194
+      },
+      "after_actual_25percent_reduction": 16111,
+      "demand_over_capacity": 0.45981006765563903
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 25.704,
+      "unique_dynamic_net_crossings": 2385,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 13608,
+        "M4": 11610
+      },
+      "after_actual_25percent_reduction": 18913,
+      "demand_over_capacity": 0.12610373816951304
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 49.248000000000005,
+      "unique_dynamic_net_crossings": 3887,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.3176432132058511
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 72.79199999999999,
+      "unique_dynamic_net_crossings": 4034,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.3296559614284547
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 96.336,
+      "unique_dynamic_net_crossings": 3947,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.2881652916697087
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 119.88,
+      "unique_dynamic_net_crossings": 3798,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.27728699715266114
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 143.42399999999998,
+      "unique_dynamic_net_crossings": 3965,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.32401732450764076
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 166.968,
+      "unique_dynamic_net_crossings": 3739,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.30554874560758355
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 190.512,
+      "unique_dynamic_net_crossings": 3998,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.2918887347594364
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 214.056,
+      "unique_dynamic_net_crossings": 5061,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.3694969701394466
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 237.6,
+      "unique_dynamic_net_crossings": 6196,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 12528,
+        "M4": 10744
+      },
+      "after_actual_25percent_reduction": 17454,
+      "demand_over_capacity": 0.3549902601122952
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 261.14400000000006,
+      "unique_dynamic_net_crossings": 4559,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.3725586336520389
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 284.688,
+      "unique_dynamic_net_crossings": 5267,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.38453675987442504
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 308.232,
+      "unique_dynamic_net_crossings": 5484,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.4481490561412111
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 331.776,
+      "unique_dynamic_net_crossings": 4088,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.3340688077143091
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 355.32,
+      "unique_dynamic_net_crossings": 3755,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.2741476235672045
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 378.86400000000003,
+      "unique_dynamic_net_crossings": 3132,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 9753,
+        "M4": 8510
+      },
+      "after_actual_25percent_reduction": 13697,
+      "demand_over_capacity": 0.22866321092209974
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 402.408,
+      "unique_dynamic_net_crossings": 2974,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.24303342322464658
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 425.95200000000006,
+      "unique_dynamic_net_crossings": 2802,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 8673,
+        "M4": 7644
+      },
+      "after_actual_25percent_reduction": 12237,
+      "demand_over_capacity": 0.22897769061044373
+    },
+    {
+      "axis": "x",
+      "coordinate_um": 449.496,
+      "unique_dynamic_net_crossings": 2426,
+      "native_tracks_after_explicit_obstacles": {
+        "M2": 13608,
+        "M4": 11610
+      },
+      "after_actual_25percent_reduction": 18913,
+      "demand_over_capacity": 0.12827155924496378
+    }
+  ],
+  "qualification": false,
+  "limits": [
+    "Analytic legal packing; native placement is not run",
+    "Endpoint bbox is a constructive planning upper bound, not routed wire length",
+    "Clock CTS/TT/FF spread not measured",
+    "PG binding is audited separately; unplaced standard pin-metal contact not qualified",
+    "Timing setup/hold and congestion require approved gate"
+  ]
+}

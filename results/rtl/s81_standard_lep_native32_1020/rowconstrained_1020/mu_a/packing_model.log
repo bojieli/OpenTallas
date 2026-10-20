@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.lep_native_constructive_planning.v1",
+  "native_cells": 48003,
+  "native_sequential_cells": 17653,
+  "native_area_um2": 7946.40618,
+  "band": [
+    2.16,
+    259.2,
+    473.04,
+    291.6
+  ],
+  "density": 0.5208534021406722,
+  "rows": 120,
+  "site_um": 0.054,
+  "row_height_um": 0.27,
+  "max_packed_row_width_um": 245.75400000000002,
+  "all_cells_packed_without_overlap": true,
+  "dynamic_roots": 39964,
+  "actual_library_transparent_cells": 13933,
+  "effective_endpoint_bbox_max_um": 418.35599999999636,
+  "effective_endpoint_bbox_over405": 11,
+  "qualification": false,
+  "limits": [
+    "Analytic legal packing; native placement is not run",
+    "Endpoint bbox is a constructive planning upper bound, not routed wire length",
+    "Clock CTS/TT/FF spread not measured",
+    "PG binding is audited separately; unplaced standard pin-metal contact not qualified",
+    "Timing setup/hold and congestion require approved gate"
+  ]
+}
+worst_cut_ratio 0.45981006765563903

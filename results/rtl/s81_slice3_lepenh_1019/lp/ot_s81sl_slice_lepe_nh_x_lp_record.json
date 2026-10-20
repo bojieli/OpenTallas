@@ -98,83 +98,83 @@
    "root_D_loads": 2,
    "regions": {
     "S": {
-     "leaves": 94,
+     "leaves": 278,
      "terms": [
       "1",
-      "(((((1103) - (0) + 1))+24-1)/24)",
-      "(((((1103) - (0) + 1))+24-1)/24)",
-      "(((1)+24-1)/24)"
+      "(((((1103) - (0) + 1))+8-1)/8)",
+      "(((((1103) - (0) + 1))+8-1)/8)",
+      "(((1)+8-1)/8)"
      ],
      "bindings": [
       {
        "landing": "0",
        "role": "r",
        "first_leaf": 1,
-       "chunks": 46,
+       "chunks": 138,
        "first_expr": "1",
-       "chunks_expr": "(((((1103) - (0) + 1))+24-1)/24)"
+       "chunks_expr": "(((((1103) - (0) + 1))+8-1)/8)"
       },
       {
        "landing": "1",
        "role": "w",
-       "first_leaf": 47,
-       "chunks": 46,
-       "first_expr": "1+(((((1103) - (0) + 1))+24-1)/24)",
-       "chunks_expr": "(((((1103) - (0) + 1))+24-1)/24)"
+       "first_leaf": 139,
+       "chunks": 138,
+       "first_expr": "1+(((((1103) - (0) + 1))+8-1)/8)",
+       "chunks_expr": "(((((1103) - (0) + 1))+8-1)/8)"
       },
       {
        "landing": "2",
        "role": "w",
-       "first_leaf": 93,
+       "first_leaf": 277,
        "chunks": 1,
-       "first_expr": "1+(((((1103) - (0) + 1))+24-1)/24)+(((((1103) - (0) + 1))+24-1)/24)",
-       "chunks_expr": "(((1)+24-1)/24)"
+       "first_expr": "1+(((((1103) - (0) + 1))+8-1)/8)+(((((1103) - (0) + 1))+8-1)/8)",
+       "chunks_expr": "(((1)+8-1)/8)"
       }
      ],
-     "branches": 3,
-     "FFs": 98,
+     "branches": 9,
+     "FFs": 288,
      "scalar_child_pad_port_uses": 1
     },
     "K": {
-     "leaves": 94,
+     "leaves": 278,
      "terms": [
       "1",
-      "(((((1103) - (0) + 1))+24-1)/24)",
-      "(((((1103) - (0) + 1))+24-1)/24)",
-      "(((1)+24-1)/24)"
+      "(((((1103) - (0) + 1))+8-1)/8)",
+      "(((((1103) - (0) + 1))+8-1)/8)",
+      "(((1)+8-1)/8)"
      ],
      "bindings": [
       {
        "landing": "0",
        "role": "w",
        "first_leaf": 1,
-       "chunks": 46,
+       "chunks": 138,
        "first_expr": "1",
-       "chunks_expr": "(((((1103) - (0) + 1))+24-1)/24)"
+       "chunks_expr": "(((((1103) - (0) + 1))+8-1)/8)"
       },
       {
        "landing": "1",
        "role": "r",
-       "first_leaf": 47,
-       "chunks": 46,
-       "first_expr": "1+(((((1103) - (0) + 1))+24-1)/24)",
-       "chunks_expr": "(((((1103) - (0) + 1))+24-1)/24)"
+       "first_leaf": 139,
+       "chunks": 138,
+       "first_expr": "1+(((((1103) - (0) + 1))+8-1)/8)",
+       "chunks_expr": "(((((1103) - (0) + 1))+8-1)/8)"
       },
       {
        "landing": "2",
        "role": "r",
-       "first_leaf": 93,
+       "first_leaf": 277,
        "chunks": 1,
-       "first_expr": "1+(((((1103) - (0) + 1))+24-1)/24)+(((((1103) - (0) + 1))+24-1)/24)",
-       "chunks_expr": "(((1)+24-1)/24)"
+       "first_expr": "1+(((((1103) - (0) + 1))+8-1)/8)+(((((1103) - (0) + 1))+8-1)/8)",
+       "chunks_expr": "(((1)+8-1)/8)"
       }
      ],
-     "branches": 3,
-     "FFs": 98,
+     "branches": 9,
+     "FFs": 288,
      "scalar_child_pad_port_uses": 3
     }
    },
-   "incremental_FFs": 190,
+   "incremental_FFs": 570,
    "required_rtl_sources": [
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
     "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
@@ -185,9 +185,9 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 12998,
+  "landing": 16862,
   "pads": 0,
-  "reset": 197,
+  "reset": 577,
   "out_regs": 2
  },
  "out_regs": [
@@ -277,7 +277,7 @@
  },
  "warnings": [],
  "landing_implementation": {
-  "chunk_bits": 24,
+  "chunk_bits": 8,
   "direct_quarter_period_timing": false,
   "compensated_phase_T": [
    -0.75,
