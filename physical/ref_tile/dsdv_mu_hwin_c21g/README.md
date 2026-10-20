@@ -36,7 +36,7 @@ Coordinator options (restart brief 10-19): macro-local capture/launch registers,
 Geometry: macros on the 43.2 lattice, all R0 (MX/R180 put 63 signal pins off the asap7 tracks on the lattice; R0 pins sit on the bottom 3.8 um), 10.8 halo,
 channels 24.84 (x) / 22.41 (y); one full-width std band y169.02..204.12 (130 rows), std 8600 um2 = 44.0%;
 max SRAM pin -> band 145.2 um (c21b ~370). Each event's 5 SRAMs (attr + 4 payload) are 5 consecutive column slots (<=2 adjacent columns);
-retire/gap SRAMs in the centre columns. ck/rst_n W pins inside the band. No clock_span warning (561.6 < 600).
+retire/gap SRAMs in the centre columns. ck/rst_n W pins inside the band (2 um ranges y200.0-204.0 after gate-1 PPL-0086: the 8 um ranges starved the W band pin section for the 32-pin groups, as c21e gate 1). No clock_span warning (561.6 < 600).
 Benches: unchanged DUT -> the c21b kit bench (physical/ref_tile/dsdv_mu_hwin_c21b/run_c21b_bench.sh, Verilator 5.050) ns47 / ns2 PASS and mutants EC_MUT=2 /
 NEXT_WRAP_MUTANT FAIL EARLY_MITER (witnesses results/rtl/s81_mu_hwin21cb_1019/), lint; the job re-runs them.
 Schedule/pricing: +0 public edges (RTL unchanged; cycle-exact miter vs anchor 1e057). INBOX lanes/LEAD2-S81.md.
