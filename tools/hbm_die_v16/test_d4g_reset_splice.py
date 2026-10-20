@@ -112,5 +112,44 @@ class ResetSplice(unittest.TestCase):
         self.assertIn('remaster stale', problems[0])
 
 
+    def test_hosted_hop_remaster_added_input(self):
+        """LH-RSTHOP: h (row driver) -> _rrf and t (tail) -> _rf host forest hops; rfi is an added input that must be
+        driven by the layer (undriven -> refused; undeclared -> incompatible ports)."""
+        rtl = S.F.Rtl()
+        m, RF = 'hbfd_rly_48_WE', 'rtl/hbm_accel/die_glue/hbfd_rly_rf_masters.sv'
+        P = rtl.ports(m, 'rtl/hbm_accel/die_glue/hbfd_rly_masters.sv', {})
+        inst = {n: dict(master=m, source='rtl/hbm_accel/die_glue/hbfd_rly_masters.sv', params={}, ports=P) for n in ('h', 't')}
+        inst['leaf'] = dict(master='hbfd_rrl_hop', source='rtl/hbm_accel/die_glue/hbfd_rrl.sv', params={},
+                            ports=rtl.ports('hbfd_rrl_hop', 'rtl/hbm_accel/die_glue/hbfd_rrl.sv', {}))
+        c = dict(instances=inst, masters={m: 2, 'hbfd_rrl_hop': 1},
+                 edges=[dict(name='d', bits=48, source=['h', 'o', 0, 48], sink=['t', 'i', 0, 48])],
+                 clock_resets=[dict(instance=n, port='rs', bits=1, domain='stream', kind='reset',
+                                    source=['hb_ckgen', 'por_stream']) for n in ('h', 't')], straps=[], gaps=[], summary={})
+        rm = [dict(inst='h', old=m, master=m + '_rrf', source=RF, rtl_deps=[], added_inputs=['rfi']),
+              dict(inst='t', old=m, master=m + '_rf', source=RF, rtl_deps=[], added_inputs=['rfi'])]
+        l = dict(region='reset_forest', instances=[], clocks=[], reset_forest_ports=[['t', 'rs']],
+                 edges=[dict(src=['h', 'rso'], dst=['t', 'rs'], clock='stream'),
+                        dict(src=['h', 'rfo'], dst=['t', 'rfi'], clock='stream'),
+                        dict(src=['t', 'rfo'], dst=['leaf', 'rst_n_in'], clock='stream')], remaster=rm)
+
+        def go(layer):
+            with tempfile.TemporaryDirectory() as d:
+                d = Path(d)
+                for name, obj in [('c.json', c), ('l.json', layer)]:
+                    (d / name).write_text(json.dumps(obj))
+                r = subprocess.run([sys.executable, str(Path(S.__file__)), str(d/'c.json'), str(d/'l.json'),
+                                    str(d/'out.json'), '--report', str(d/'report.json')], capture_output=True, text=True)
+                return r, (json.loads((d/'out.json').read_text()) if r.returncode == 0 else None)
+        r, out = go(dict(l, edges=l['edges'] + [dict(src=['leaf', 'rst_n'], dst=['h', 'rfi'], clock='stream')]))
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(out['instances']['h']['master'], m + '_rrf')
+        self.assertEqual(out['instances']['t']['ports']['rfi'], dict(direction='input', bits=1))
+        r, _ = go(l)   # h.rfi undriven
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn('h.rfi', r.stdout)
+        problems = []
+        S.apply_remaster(json.loads(json.dumps(c)), dict(l, remaster=[dict(rm[1], added_inputs=[])]), rtl, problems)
+        self.assertIn('incompatible ports', problems[0])
+
 if __name__ == '__main__':
     unittest.main()

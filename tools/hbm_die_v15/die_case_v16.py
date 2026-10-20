@@ -56,7 +56,7 @@ PLAN = ROOT / 'results/arch/hbm_die_v15/compact660_v5/compact.P.json'
 LANES = ROOT / 'results/arch/hbm_die_v15/compact660_v5/lanes2.json'
 PERIOD = dict(stream=833.333, hbm=1024.0, serial=1111.111)
 CKGEN = 'hb_ckgen'
-CELL = 5.4      # occupancy grid (um)
+from die_occupancy import CELL, Occ  # occupancy grid and exact windowed search
 HALO = 10.8
 # closed views bound although their native audit fails (H-DIE 10-16): results through them are diagnostic
 DIAGNOSTIC = {'ot_hbm_svc_vmdel_lane': 'hv15_vmdel_lane closed TT +49.22/FF +10.13/DRC 0 (985e70198) but native audit FAIL: '
@@ -80,59 +80,6 @@ PIN_STEP0 = 0.096   # granted die pin pitch (10.417 pins/um, hbm_v15 grants)
 def snap(v, g):
     return round(math.ceil(v / g - 1e-9) * g, 3)
 
-
-class Occ:
-    """occupancy grid with an integral image for O(1) rectangle-free tests."""
-
-    def __init__(self, W, H):
-        self.nx, self.ny = int(W / CELL) + 1, int(H / CELL) + 1
-        self.g = np.zeros((self.ny, self.nx), np.uint8)
-        self.W, self.H = W, H
-        self._ii = None
-
-    def mark(self, x, y, w, h, halo=0.0):
-        i0 = max(0, int((x - halo) / CELL)); j0 = max(0, int((y - halo) / CELL))
-        i1 = min(self.nx, int(math.ceil((x + w + halo) / CELL))); j1 = min(self.ny, int(math.ceil((y + h + halo) / CELL)))
-        self.g[j0:j1, i0:i1] = 1
-        self._ii = None
-
-    def ii(self):
-        if self._ii is None:
-            a = np.zeros((self.ny + 1, self.nx + 1), np.int32)
-            a[1:, 1:] = self.g.cumsum(0).cumsum(1)
-            self._ii = a
-        return self._ii
-
-    def find(self, cx, cy, w, h, halo=0.0, region=None, rmax=None):
-        """lower-left (x, y) of a free w x h rect (+halo) nearest to centre (cx, cy); region = (x0, y0, x1, y1) limits it."""
-        nw = int(math.ceil((w + 2 * halo) / CELL)); nh = int(math.ceil((h + 2 * halo) / CELL))
-        ii = self.ii()
-        ci = int((cx - w / 2 - halo) / CELL); cj = int((cy - h / 2 - halo) / CELL)
-        lo_i, lo_j, hi_i, hi_j = 0, 0, self.nx - nw, self.ny - nh
-        if region:
-            lo_i = max(lo_i, int(math.ceil(region[0] / CELL))); lo_j = max(lo_j, int(math.ceil(region[1] / CELL)))
-            hi_i = min(hi_i, int(region[2] / CELL) - nw); hi_j = min(hi_j, int(region[3] / CELL) - nh)
-        if hi_i < lo_i or hi_j < lo_j:
-            return None
-        R = rmax or max(self.nx, self.ny)
-        for r in range(0, R):
-            ii_ = np.concatenate([np.arange(ci - r, ci + r + 1), np.full(2 * r - 1 if r else 0, ci - r),
-                                  np.full(2 * r - 1 if r else 0, ci + r), np.arange(ci - r, ci + r + 1)]) if r else np.array([ci])
-            jj_ = np.concatenate([np.full(2 * r + 1, cj - r), np.arange(cj - r + 1, cj + r),
-                                  np.arange(cj - r + 1, cj + r), np.full(2 * r + 1, cj + r)]) if r else np.array([cj])
-            ok = (ii_ >= lo_i) & (ii_ <= hi_i) & (jj_ >= lo_j) & (jj_ <= hi_j)
-            if not ok.any():
-                if r > max(abs(ci - lo_i), abs(ci - hi_i), abs(cj - lo_j), abs(cj - hi_j)) + 1:
-                    return None
-                continue
-            i, j = ii_[ok], jj_[ok]
-            s = ii[j + nh, i + nw] - ii[j, i + nw] - ii[j + nh, i] + ii[j, i]
-            free = np.nonzero(s == 0)[0]
-            if len(free):
-                d = (i[free] - ci) ** 2 + (j[free] - cj) ** 2
-                k = free[int(np.argmin(d))]
-                return round(i[k] * CELL + halo, 3), round(j[k] * CELL + halo, 3)
-        return None
 
 
 def lef_size(lef):
@@ -301,7 +248,9 @@ def reset_reach_gate(rst, nets, pl, vxy, cell_of, master_of, reach, ckgen='hb_ck
     for d, ends in nets.items():
         # HBM-RSTROW (coordinator 0jp): a relay-row reset hop (hbfd_rly_*_rr.rso -> next station rs) is a forest edge
         # too: same reach / buried checks as a hbfd_rrl driver.
-        row = d[0] in pl and d[1] == 'rso' and master_of(d[0]).endswith('_rr')
+        # LH-RSTHOP: a forest reach hop hosted in a lane relay station (hbfd_rly_*_rf/_rrf.rfo) is a forest driver too.
+        row = d[0] in pl and ((d[1] == 'rso' and master_of(d[0]).endswith(('_rr', '_rrf')))
+                              or (d[1] == 'rfo' and master_of(d[0]).endswith(('_rf', '_rrf'))))
         if d[0] not in pl or not (master_of(d[0]).startswith('hbfd_rrl') or row):
             continue
         n_row += row * (len(ends) - 1)
@@ -413,6 +362,14 @@ def main():
                     help='DIE-HBM-LEAD 10-19: run.tcl of the GEN the relay/landing layer was planned on: every unplaced '
                          'non-relay block keeps its R0 home there (placed BEFORE lane rows) when the spot is still free; '
                          'without it rows slide into the generated homes and big blocks find no free area (GEN2c case_a)')
+    ap.add_argument('--reserve-homes', type=Path, default=None,
+                    help='L2H-GEN2D-FP2 10-19 (LEAD3-HBM 23:22): JSON {"sites": [{name, x, y, w, h, kind, why}]} of RESERVED reset-stage '
+                         'homes (lower-left x/y, um). Marked in the placement grid AFTER grant slots / plan regions / prior homes and '
+                         'BEFORE lane rows, so lane relays and generated homes cannot fill them; a site that overlaps an already placed '
+                         'block slides to the nearest free spot within its "slide_um" (default 43.2), else it is reported lost. No '
+                         'instance is placed in a site: the manifest placement leaves it empty (a free home for reset_forest_layer) and '
+                         'lists it in manifest.reserved_reset_homes. A forest tile (hbfd_rrl*) whose planned home overlaps a site '
+                         'releases that site just before it is placed (spliced GEN).')
     ap.add_argument('--slot-map', default='',
                     help='inst=slot[,inst=slot..]: die-side contract slot retarget (H-DIE-R6; same as an H-NETLIST slot_override layer)')
     ap.add_argument('--replan-chains', default='',
@@ -421,6 +378,18 @@ def main():
     ap.add_argument('--d4b-homes', action='store_true',
                     help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
                          'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
+    ap.add_argument('--lane-reach', choices=('fail', 'diag', 'legacy'), default='fail',
+                    help='HBM-GENREACH 10-20 (release rule 2): lane rows / planned relay homes are placed only where every '
+                         'hop to a placed neighbour pin (and to an unplaced neighbour tile\'s planned site) stays <= the '
+                         'reach (--max-wire-um); no far relocation.  fail (default): GEN stops with GEN_REACH_FAIL + '
+                         'out/reach_fail.json naming every bus it cannot keep in reach, and on any placed hop / un-relayed '
+                         'block bus over reach; diag: the case completes, labelled REACH_FAIL; legacy: the pre-10-20 '
+                         'unbounded nearest-free-area rule (diagnostic only)')
+    ap.add_argument('--lane-reach-margin-um', type=float, default=0.0,
+                    help='placement-side margin under the reach for the pin-centroid span (the post-GEN per-bus pin check '
+                         'd4g_reach_check.py is the authority)')
+    ap.add_argument('--lane-reach-order', choices=('area', 'chain'), default='area',
+                    help='lane-row order under --lane-reach: area (widest first) | chain (BFS from placed chain ends)')
     die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
     mw = die_reach.from_args(a, 'hbm')
@@ -684,6 +653,38 @@ def main():
             homes[n_] = dict(rule=f'prior home ({a.prior_place.parent.name})', target=[x_, y_], at=[r_[0], r_[1]], dist_um=0.0)
             prior_kept.append(n_)
         print('prior homes kept', len(prior_kept), 'lost', len(prior_lost), prior_lost[:20], flush=True)
+    # 2c L2H-GEN2D-FP2 10-19: RESERVED reset-stage homes (--reserve-homes) BEFORE lane rows.  Grid value 2 = reserved (put()
+    # marks 1), so a release (2 -> 0) never clears a placed block; halos of later blocks may overwrite reserved cells with 1.
+    res_sites, res_rep = [], dict(src=str(a.reserve_homes) if a.reserve_homes else None, kept=[], slid=[], lost=[], released=[])
+    if a.reserve_homes:
+        for st in json.loads(a.reserve_homes.read_text())['sites']:
+            x_, y_, w_, h_ = st['x'], st['y'], st['w'], st['h']
+            sl_ = float(st.get('slide_um', 43.2))
+            def _free(x0, y0):
+                ii = occ.ii(); i0, j0 = int(x0 / CELL), int(y0 / CELL)
+                i1 = min(int(math.ceil((x0 + w_) / CELL)), occ.nx); j1 = min(int(math.ceil((y0 + h_) / CELL)), occ.ny)
+                return x0 >= 0 and y0 >= 0 and x0 + w_ <= W and y0 + h_ <= H and ii[j1, i1] - ii[j0, i1] - ii[j1, i0] + ii[j0, i0] == 0
+            got_ = (x_, y_) if _free(x_, y_) else None
+            if got_ is None:
+                r_ = occ.find(x_ + w_ / 2, y_ + h_ / 2, w_, h_, 0.0, (x_ - sl_, y_ - sl_, x_ + w_ + sl_, y_ + h_ + sl_))
+                got_ = tuple(r_) if r_ is not None else None
+            if got_ is None:
+                res_rep['lost'].append(st['name']); continue
+            i0, j0 = max(0, int(got_[0] / CELL)), max(0, int(got_[1] / CELL))
+            i1, j1 = min(occ.nx, int(math.ceil((got_[0] + w_) / CELL))), min(occ.ny, int(math.ceil((got_[1] + h_) / CELL)))
+            blk_ = occ.g[j0:j1, i0:i1]; blk_[blk_ == 0] = 2; occ._ii = None
+            rec_ = dict(st, x=round(got_[0], 3), y=round(got_[1], 3), cells=(i0, j0, i1, j1), dx_um=round(got_[0] - x_, 3), dy_um=round(got_[1] - y_, 3))
+            res_sites.append(rec_)
+            (res_rep['kept'] if got_ == (x_, y_) else res_rep['slid']).append(st['name'])
+        print('reserved reset homes kept', len(res_rep['kept']), 'slid', len(res_rep['slid']), 'lost', len(res_rep['lost']), res_rep['lost'][:20], flush=True)
+
+    def release_reserved(x0, y0, x1, y1):
+        for rs in res_sites:
+            if rs.get('released'):
+                continue
+            if rs['x'] < x1 and rs['x'] + rs['w'] > x0 and rs['y'] < y1 and rs['y'] + rs['h'] > y0:
+                i0, j0, i1, j1 = rs['cells']; blk_ = occ.g[j0:j1, i0:i1]; blk_[blk_ == 2] = 0; occ._ii = None
+                rs['released'] = True; res_rep['released'].append(rs['name'])
     # 3a H-RELAY 10-17 (S81-DV lane model): LANE ROWS.  A relay station = one row of T lane tiles abutted ACROSS the
     # travel direction at a FIXED site (relay layer note 'lane row <id> <t>/<T> <flow>; site (x, y) um' = row centre).
     # The row is placed as a unit: exact site, else slid along the travel axis (the hop slack, <= LANE_SLIDE um), else
@@ -708,6 +709,43 @@ def main():
         return ii[j1, i1] - ii[j0, i1] - ii[j1, i0] + ii[j0, i0] == 0
     lane_stats = collections.Counter()
     order_ = sorted(rows_, key=lambda k: -sum(size[cell_of[v[0]]][0] * size[cell_of[v[0]]][1] for v in rows_[k].values()))
+    reach_rec = None
+    if a.lane_reach != 'legacy':
+        # HBM-GENREACH 10-20: reach-bounded rows (lane_rows_reach.py); never the unbounded 'row nearest free area'
+        import lane_rows_reach as LRR
+        inst_rows = {v[0]: rid for rid, tl in rows_.items() for v in tl.values()}
+        LP = LRR.LanePlacer(occ=occ, cell=CELL, W=W, H=H, R=mw['value_um'], margin=a.lane_reach_margin_um, slide_um=LANE_SLIDE,
+                            tol_um=64.8, inst_rows=inst_rows, rows=rows_, I=I, edges=C['edges'], cell_of=cell_of, size=size,
+                            kinds=kinds, lef_path_of=lambda c_: (vd / f'{c_}.lef') if (vd / f'{c_}.lef').exists() else None,
+                            lef_xy_fn=lef_xy, pl=pl, mode=a.lane_reach)
+        for rid in LP.order(a.lane_reach_order):
+            g_ = LP.row_geom[rid]
+            got, how, wspan = LP.place(rid)
+            if got is None:
+                continue
+            lane_stats[' '.join(how.split(' ')[:2])] += 1
+            LP.max_hop['<=405' if wspan is not None and wspan <= mw['value_um'] else '>405'] += 1
+            for (n, *_), (ox, oy) in zip(g_['tiles'], g_['offs']):
+                x, y = got[0] + ox, got[1] + oy
+                put(n, x, y, 'R0', f"lane row {rid} ({len(g_['tiles'])} lanes, {g_['fl']}): {how}", 0.0)
+                homes[n] = dict(rule=f'lane row {how}', target=[round(g_['site'][0], 1), round(g_['site'][1], 1)],
+                                at=[round(x, 3), round(y, 3)],
+                                dist_um=round(abs(got[0] + g_['rw'] / 2 - g_['site'][0]) + abs(got[1] + g_['rh'] / 2 - g_['site'][1]), 1))
+        reach_rec = LP.report()
+        reach_rec.update(fails=LP.fails, not_inserted=LP.not_inserted[:5000], relaxed=LP.relaxed[:5000])
+        print('lane rows (reach)', len(rows_), 'tiles', sum(len(v) for v in rows_.values()), dict(lane_stats),
+              'REACH_FAIL rows', len(LP.fails), 'not_inserted hops', len(LP.not_inserted), flush=True)
+        if a.lane_reach == 'fail' and (LP.fails or LP.not_inserted):
+            # A failed bounded row must never enter the legacy unconstrained
+            # per-tile fallback. Preserve the full blocker packet immediately;
+            # diag mode may still finish the explicit unqualified audit case.
+            reach_rec.update(verdict='REACH_FAIL', stage='bounded_lane_rows',
+                             complete_placement=False, final_edge_audit_pending=True)
+            (out / 'reach_fail.json').write_text(json.dumps(reach_rec, indent=1))
+            raise SystemExit(f'GEN_REACH_FAIL: {len(LP.fails)} bounded lane rows fail; '
+                             f'{len(LP.not_inserted)} planned hops missing stations; '
+                             'stopped before unbounded fallback; see reach_fail.json')
+        order_ = []
     for rid in order_:
         tl = [rows_[rid][t] for t in sorted(rows_[rid])]
         fl = tl[0][1]; cx, cy = tl[0][2], tl[0][3]
@@ -741,12 +779,27 @@ def main():
     if rows_:
         print('lane rows', len(rows_), 'tiles', sum(len(v) for v in rows_.values()), dict(lane_stats), flush=True)
     # 3 relays with planned homes
+    home_fail = []
     for n in inst:
         if n in pl:
             continue
         m = re.search(r'home \(([\d.]+), ([\d.]+)\) um', I[n].get('note', ''))
         if m:
             w, h = size[cell_of[n]]
+            if res_sites and I[n]['master'].startswith('hbfd_rrl'):   # L2H-GEN2D-FP2: a forest tile takes its reserved home
+                release_reserved(float(m.group(1)) - HALO, float(m.group(2)) - HALO, float(m.group(1)) + w + HALO, float(m.group(2)) + h + HALO)
+            if a.lane_reach != 'legacy' and I[n]['master'].startswith('hbfd'):
+                # HBM-GENREACH: a planned relay home is a station of a planned hop -> bounded (half the reach slack), else named
+                hx, hy = float(m.group(1)) + w / 2, float(m.group(2)) + h / 2
+                r_ = occ.find(hx, hy, w, h, 0.0, rmax=int(math.ceil(64.8 / CELL)) + 1)
+                if r_ is None:
+                    home_fail.append(dict(inst=n, master=I[n]['master'], home=[round(hx, 1), round(hy, 1)],
+                                          reason='no free spot within 64.8 um of the planned relay home'))
+                    r_ = occ.find(hx, hy, w, h, 0.0)
+                put(n, r_[0], r_[1], 'R0', 'planned relay home (bounded)', 0.0)
+                homes[n] = dict(rule='planned relay home (bounded)', target=[round(hx, 1), round(hy, 1)], at=[r_[0], r_[1]],
+                                dist_um=round(abs(r_[0] + w / 2 - hx) + abs(r_[1] + h / 2 - hy), 1))
+                continue
             put_near(n, float(m.group(1)) + w / 2, float(m.group(2)) + h / 2, 'planned relay home', halo=0.0)
     # connectivity (instance level, bits)
     adj = defaultdict(lambda: defaultdict(int))
@@ -859,17 +912,8 @@ def main():
         if s_ in cell_of and is_rly(s_) and e['source'][1] == 'o':
             succ[s_] = t_
     left = [n for n in inst if n not in pl]
-    done = set()
-    for n in left:
-        if n in done:
-            continue
-        head = n
-        while pred.get(head) in left and pred[head] not in done and pred[head] != n:
-            head = pred[head]
-        chain = [head]
-        while succ.get(chain[-1]) in left and succ[chain[-1]] not in chain:
-            chain.append(succ[chain[-1]])
-        done.update(chain)
+    from relay_chain_groups import linear_chains
+    for chain in linear_chains(left, pred, succ):
         a_ = pred.get(chain[0]); b_ = succ.get(chain[-1])
         p0 = centre(a_) if a_ in pl else None; p1 = centre(b_) if b_ in pl else None
         p0 = p0 or p1 or (W / 2, H / 2); p1 = p1 or p0
@@ -903,7 +947,33 @@ def main():
             f = t / seg[i] if seg[i] else 0
             put_near(rn, x0 + (x1 - x0) * f, y0 + (y1 - y0) * f,
                      f"relay chain {chain[0]}..{chain[-1]} ({len(chain)}) between {a_} and {b_}, lane {lane or 'L'}", halo=0.0)
-    assert all(n in pl for n in inst)
+    missing = [n for n in inst if n not in pl]
+    if missing:
+        detail = dict(verdict='GEN_PLACEMENT_INCOMPLETE', missing=missing,
+                      expected_instances=len(inst), placed_instances=len(pl),
+                      instances={n: dict(master=I[n]['master'], note=I[n].get('note', ''),
+                                         lane_row=inst_rows.get(n) if a.lane_reach != 'legacy' else None) for n in missing},
+                      lane_reach=reach_rec, home_fail=home_fail)
+        (out / 'placement_incomplete.json').write_text(json.dumps(detail, indent=1))
+        raise SystemExit(f'GEN_PLACEMENT_INCOMPLETE {len(missing)} instances missing: {missing[:12]}; see placement_incomplete.json')
+    if a.lane_reach != 'legacy':
+        # HBM-GENREACH 10-20: placed-hop audit (lower bound: REAL LEF port pins, SYNTH block rectangles), per bus
+        import lane_rows_reach as LRR
+        aud = LRR.audit_edges(C['edges'], pl, I, cell_of, size, mw['value_um'],
+                              lambda c_: (vd / f'{c_}.lef') if (vd / f'{c_}.lef').exists() else None, lef_xy)
+        reach_rec = dict(reach_rec or {}, audit={k: v for k, v in aud.items() if k != 'buses'}, audit_buses=aud['buses'][:20000],
+                         home_fail=home_fail)
+        nfail = len((reach_rec or {}).get('fails', [])) + len(home_fail) + aud['over_buses']
+        nins = len((reach_rec or {}).get('not_inserted', []))
+        reach_rec['verdict'] = 'PASS' if not (nfail or nins) else 'REACH_FAIL'
+        print('reach audit', json.dumps({k: v for k, v in aud.items() if k not in ('buses',)})[:1500], 'verdict', reach_rec['verdict'], flush=True)
+        (out / 'reach_fail.json' if reach_rec['verdict'] != 'PASS' else out / 'reach_gen.json').write_text(json.dumps(reach_rec, indent=1))
+        if a.lane_reach == 'fail' and reach_rec['verdict'] != 'PASS':
+            ex = (reach_rec.get('fails') or [])[:2] + aud['buses'][:3] + (reach_rec.get('not_inserted') or [])[:2]
+            raise SystemExit(f'GEN_REACH_FAIL: {len(reach_rec.get("fails") or [])} lane rows cannot keep every hop <= '
+                             f'{mw["value_um"]} um; {len(home_fail)} relay homes unbounded; {aud["over_buses"]} placed buses over '
+                             f'reach ({aud["by_class"]}); {nins} planned lane hops already over reach (relay layer never inserted '
+                             f'the stations); first {json.dumps(ex)[:1500]} -- full list {out / "reach_fail.json"}')
     # overlap + outline check
     bad = []
     for l1, v1 in pl.items():
@@ -918,8 +988,10 @@ def main():
                 break
             if l1 != l2 and r1[1] < r2[3] - 0.01 and r2[1] < r1[3] - 0.01 and (l1, l2) not in seen_:
                 seen_.add((l1, l2)); bad.append(('overlap', l1, l2))
-    in_channel = sorted(n for n, v in pl.items() for m, u in pl.items() if m != n and channels(m) and
-                        u['x'] <= v['x'] and v['x'] + v['w'] <= u['x'] + u['w'] and u['y'] <= v['y'] and v['y'] + v['h'] <= u['y'] + u['h'])
+    # Pure channels() reads fixed cell/view/slot metadata only. Avoid billions
+    # of repeated negative lookups while retaining the legacy bbox diagnostic.
+    from channel_containment import channel_containment
+    in_channel = channel_containment(pl, channels)
     print('placement problems', len(bad), bad[:10])
 
     # ---------------- nets ----------------
@@ -1151,6 +1223,18 @@ def main():
                                                            max_wire_um=a.repeater_max_wire_um))
     manifest['pc_strip'] = strip
     manifest['prior_place'] = dict(src=str(a.prior_place) if a.prior_place else None, kept=len(prior_kept), lost=prior_lost)
+    if a.lane_reach != 'legacy':
+        manifest['reach_gen'] = dict(mode=a.lane_reach, verdict=reach_rec['verdict'],
+                                     summary={k: v for k, v in reach_rec.items() if k not in ('fails', 'not_inserted', 'relaxed', 'audit_buses', 'home_fail')},
+                                     fails=len(reach_rec.get('fails') or []), not_inserted=len(reach_rec.get('not_inserted') or []),
+                                     file='reach_gen.json' if reach_rec['verdict'] == 'PASS' else 'reach_fail.json',
+                                     post_gen_check='tools/hbm_die_v16/d4g_reach_check.py (per bus, real pins)')
+        if reach_rec['verdict'] != 'PASS':
+            manifest['label'] += ' REACH_FAIL (lane hops / un-relayed buses over the reach: reach_fail.json)'
+    else:
+        manifest['reach_gen'] = dict(mode='legacy', verdict='NOT_CHECKED (legacy unbounded lane rows: diagnostic only)')
+    manifest['reserved_reset_homes'] = dict(res_rep, sites=[{k: v for k, v in r.items() if k != 'cells'} for r in res_sites],
+                                            note='L2H-GEN2D-FP2: empty reserved areas = free reset-stage homes for reset_forest_layer')
     manifest['slot_map'] = slot_map; manifest['replanned_chain_relays'] = dict(regex=a.replan_chains, n=len(replanned))
     manifest['outline_override'] = a.outline_override
     manifest['d4b_homes'] = bool(a.d4b_homes)

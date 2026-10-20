@@ -355,3 +355,48 @@ def test_relay_rows_feed_below_unhomable_head(case, monkeypatch):
     assert sorted(rep['domains']['stream:por_stream']['actual_leaf_ages']) == [D - 3, D]
     # r0 releases its stage at (D - 3) + 1 + 3 = D + 1 = D + 1 + depth 0: exact
     assert rr['max_station_rs_age'] == D - 2
+
+
+@pytest.fixture
+def corridor(tmp_path):
+    """LH-RSTHOP: a 40 um corridor between two macros, completely filled by lane relay stations (no free reset-hop home)."""
+    lef(tmp_path, 'ck', 40, 40, {'por_stream': (40, 20)})
+    lef(tmp_path, 'sink', 100, 100, {'rst_n': (0, 50)})
+    lef(tmp_path, 'mac', 1600, 480, {})
+    pins = {'ck': (10, 36), 'rs': (10, 0)}
+    pins.update({f'i[{k}]': (0, 4 + 4 * k) for k in range(8)})
+    pins.update({f'o[{k}]': (20, 4 + 4 * k) for k in range(8)})
+    lef(tmp_path, 'hbfd_rly_8_WE', 20, 36, pins)
+    for kind in ('sync', 'hop'):
+        lef(tmp_path, 'hbfd_rrl_' + kind, 4, 4, {'clk': (2, 4), 'rst_n_in': (0, 2), 'rst_n': (4, 2)})
+    pl = {'hb_ckgen': dict(m='ck', x=0, y=480, w=40, h=40, o='R0'),
+          'ms': dict(m='mac', x=100, y=0, w=1600, h=480, o='R0'),
+          'mn': dict(m='mac', x=100, y=520, w=1600, h=480, o='R0'),
+          'b': dict(m='sink', x=1750, y=450, w=100, h=100, o='R0')}
+    for k in range(80):
+        pl[f'r{k:02d}'] = dict(m='hbfd_rly_8_WE', x=100 + 20 * k, y=482, w=20, h=36, o='R0')
+    c = dict(instances={n: dict(master=v['m']) for n, v in pl.items()}, edges=[], clock_resets=[
+        dict(instance='b', port='rst_n', bits=1, kind='reset', domain='stream', source=['hb_ckgen', 'por_stream'])]
+        + [dict(instance=n, port='ck', bits=1, kind='clock', domain='stream', source=['hb_ckgen', 'pll_stream'])
+           for n in pl if n.startswith('r')])
+    return c, dict(placement=pl, die_um=[1900, 1000]), tmp_path
+
+
+def test_host_hops_cross_a_relay_filled_corridor(corridor):
+    c, m, v = corridor
+    with pytest.raises(GeometryError):
+        build(copy.deepcopy(c), m, v, reach=200, zones='quadrant', overfly='hbfd_rly')
+    for mode in ('prefer', 'fallback'):
+        spec, rep = build(copy.deepcopy(c), m, v, reach=200, zones='quadrant', overfly='hbfd_rly', host_hops=mode)
+        assert rep['geometry_gate'] == 'PASS' and rep['max_actual_pin_hop_um'] <= 200
+        hosted = {x['inst'] for x in spec['remaster']}
+        assert hosted and rep['host_hops']['hosted'] == len(hosted)
+        assert all(x['master'] == 'hbfd_rly_8_WE_rf' and x['added_inputs'] == ['rfi'] for x in spec['remaster'])
+        # every hosted station: exactly one rfi driver and its rfo drives the next stage; no rst_n ports on stations
+        dst = [tuple(e['dst']) for e in spec['edges']]
+        src = [tuple(e['src']) for e in spec['edges']]
+        for n in hosted:
+            assert dst.count((n, 'rfi')) == 1 and (n, 'rfo') in src
+        assert not any(e[0] in hosted and e[1] in ('rst_n', 'rst_n_in') for e in dst + src)
+        # equal-age release is still exact
+        assert all(d['actual_leaf_ages'] == [d['age']] for d in rep['domains'].values())

@@ -1,0 +1,1331 @@
+{
+ "tool": "tools/hbm_die_v16/d4g_gen2e4_grants_fallback.py",
+ "lane": "HBM-DIE6 10-20",
+ "clearance_um": 21.6,
+ "grants_in": "results/arch/hbm_die_d4g/gen2e4_diag_identity_1020/grants_d4g.json",
+ "manifest": "/home/ubuntu/artifacts/codex-gen2e4-diag-s3-1020/manifest_identity3.json",
+ "fallback_instances": 82,
+ "name_clash": [],
+ "new": {
+  "cxrc_NW_s": {
+   "master": "ot_hbm_su_static_cxport_rc_s",
+   "at": [
+    6912.0,
+    18824.4,
+    173.016,
+    432.0
+   ],
+   "centroid": [
+    6997.4,
+    19426.6
+   ],
+   "off_centroid_um": 387.3,
+   "from_case_a_um": 16.2,
+   "peers": 2
+  },
+  "cxrc_NW_q": {
+   "master": "ot_hbm_su_static_cxport_rc_q",
+   "at": [
+    7117.2,
+    18824.4,
+    173.016,
+    432.0
+   ],
+   "centroid": [
+    7029.4,
+    19138.9
+   ],
+   "off_centroid_um": 272.7,
+   "from_case_a_um": 27.0,
+   "peers": 3
+  },
+  "cxrc_NE_s": {
+   "master": "ot_hbm_su_static_cxport_rc_s",
+   "at": [
+    13305.6,
+    18824.4,
+    173.016,
+    432.0
+   ],
+   "centroid": [
+    13391.7,
+    19426.6
+   ],
+   "off_centroid_um": 386.5,
+   "from_case_a_um": 16.2,
+   "peers": 2
+  },
+  "cxrc_SE_q": {
+   "master": "ot_hbm_su_static_cxport_rc_q",
+   "at": [
+    11826.0,
+    9406.8,
+    173.016,
+    432.0
+   ],
+   "centroid": [
+    12040.2,
+    9218.1
+   ],
+   "off_centroid_um": 532.4,
+   "from_case_a_um": 4379.4,
+   "peers": 2
+  },
+  "cxrc_SE_s": {
+   "master": "ot_hbm_su_static_cxport_rc_s",
+   "at": [
+    11620.8,
+    9471.6,
+    173.016,
+    432.0
+   ],
+   "centroid": [
+    12074.1,
+    9920.4
+   ],
+   "off_centroid_um": 599.6,
+   "from_case_a_um": 4714.2,
+   "peers": 3
+  },
+  "cxrc_SW_q": {
+   "master": "ot_hbm_su_static_cxport_rc_q",
+   "at": [
+    8197.2,
+    9039.6,
+    173.016,
+    432.0
+   ],
+   "centroid": [
+    7920.5,
+    9215.2
+   ],
+   "off_centroid_um": 403.6,
+   "from_case_a_um": 5356.8,
+   "peers": 2
+  },
+  "cxrc_SW_s": {
+   "master": "ot_hbm_su_static_cxport_rc_s",
+   "at": [
+    8424.0,
+    9439.2,
+    173.016,
+    432.0
+   ],
+   "centroid": [
+    8122.5,
+    9590.9
+   ],
+   "off_centroid_um": 452.3,
+   "from_case_a_um": 4989.6,
+   "peers": 3
+  },
+  "cxrc_NE_q": {
+   "master": "ot_hbm_su_static_cxport_rc_q",
+   "at": [
+    13100.4,
+    18824.4,
+    173.016,
+    432.0
+   ],
+   "centroid": [
+    13334.1,
+    19139.0
+   ],
+   "off_centroid_um": 245.9,
+   "from_case_a_um": 16.2,
+   "peers": 3
+  },
+  "hb_idx__xqr": {
+   "master": "ot_hbm_idx_xq_node_static",
+   "at": [
+    8067.6,
+    14968.8,
+    259.2,
+    216.0
+   ],
+   "centroid": [
+    8200.0,
+    15436.8
+   ],
+   "off_centroid_um": 362.8,
+   "from_case_a_um": 10.8,
+   "peers": 2
+  },
+  "cxdl_NW2_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    1198.8,
+    18014.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    2235.4,
+    18124.3
+   ],
+   "off_centroid_um": 984.5,
+   "from_case_a_um": 16.2,
+   "peers": 1
+  },
+  "cxdl_SE1_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    15940.8,
+    10972.8,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    15012.0,
+    10623.7
+   ],
+   "off_centroid_um": 1439.9,
+   "from_case_a_um": 32.4,
+   "peers": 1
+  },
+  "cxdl_SW2_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    3067.2,
+    13694.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    2141.0,
+    13649.0
+   ],
+   "off_centroid_um": 1133.6,
+   "from_case_a_um": 2230.2,
+   "peers": 1
+  },
+  "cxdl_SW3_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    6112.8,
+    13543.2,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    5188.1,
+    13649.0
+   ],
+   "off_centroid_um": 980.9,
+   "from_case_a_um": 2381.4,
+   "peers": 1
+  },
+  "cxdl_NE1_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    15940.8,
+    20638.8,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    15012.0,
+    21149.6
+   ],
+   "off_centroid_um": 1385.6,
+   "from_case_a_um": 32.4,
+   "peers": 1
+  },
+  "cxdl_NE2_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    17020.8,
+    17809.2,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    18059.1,
+    18124.3
+   ],
+   "off_centroid_um": 1191.5,
+   "from_case_a_um": 27.0,
+   "peers": 1
+  },
+  "cxdl_SE0_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    17020.8,
+    10670.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    18059.1,
+    10623.7
+   ],
+   "off_centroid_um": 1139.0,
+   "from_case_a_um": 32.4,
+   "peers": 1
+  },
+  "cxdl_SW1_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    4158.0,
+    10972.8,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    5188.1,
+    10623.7
+   ],
+   "off_centroid_um": 1433.2,
+   "from_case_a_um": 27.0,
+   "peers": 1
+  },
+  "cxdl_NE0_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    17020.8,
+    20833.2,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    18059.1,
+    21149.6
+   ],
+   "off_centroid_um": 1192.8,
+   "from_case_a_um": 27.0,
+   "peers": 1
+  },
+  "cxdl_SE3_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    13975.2,
+    13543.2,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    15012.0,
+    13649.0
+   ],
+   "off_centroid_um": 985.0,
+   "from_case_a_um": 21.6,
+   "peers": 1
+  },
+  "cxdl_NW3_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    4341.6,
+    18014.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    5377.1,
+    18124.3
+   ],
+   "off_centroid_um": 983.4,
+   "from_case_a_um": 16.2,
+   "peers": 1
+  },
+  "cxdl_NW1_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    4341.6,
+    21038.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    5377.1,
+    21149.6
+   ],
+   "off_centroid_um": 984.7,
+   "from_case_a_um": 16.2,
+   "peers": 1
+  },
+  "cxdl_NE3_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    13975.2,
+    18014.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    15012.0,
+    18124.3
+   ],
+   "off_centroid_um": 984.7,
+   "from_case_a_um": 16.2,
+   "peers": 1
+  },
+  "cxdl_NW0_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    6814.8,
+    17528.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    6865.8,
+    17106.7
+   ],
+   "off_centroid_um": 532.7,
+   "from_case_a_um": 6237.0,
+   "peers": 1
+  },
+  "cxdl_SE2_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    17020.8,
+    13694.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    18059.1,
+    13649.0
+   ],
+   "off_centroid_um": 1137.7,
+   "from_case_a_um": 32.4,
+   "peers": 1
+  },
+  "cxdl_NW0_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    4341.6,
+    19299.6,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    4598.2,
+    19358.0
+   ],
+   "off_centroid_um": 252.2,
+   "from_case_a_um": 4865.4,
+   "peers": 2
+  },
+  "cxdl_SW0_q": {
+   "master": "ot_hbm_su_static_cxport_dl_q",
+   "at": [
+    3067.2,
+    10670.4,
+    108.0,
+    216.0
+   ],
+   "centroid": [
+    2141.0,
+    10623.7
+   ],
+   "off_centroid_um": 1134.9,
+   "from_case_a_um": 2230.2,
+   "peers": 1
+  },
+  "hb_idx__xq_N": {
+   "master": "ot_hbm_idx_xq_node_static",
+   "at": [
+    8769.6,
+    20163.6,
+    129.6,
+    129.6
+   ],
+   "centroid": [
+    8831.1,
+    20229.0
+   ],
+   "off_centroid_um": 3.9,
+   "from_case_a_um": 10.8,
+   "peers": 3
+  },
+  "hb_idx__xq_S": {
+   "master": "ot_hbm_idx_xq_node_static",
+   "at": [
+    8596.8,
+    10400.4,
+    129.6,
+    129.6
+   ],
+   "centroid": [
+    8831.1,
+    10464.6
+   ],
+   "off_centroid_um": 170.2,
+   "from_case_a_um": 21.6,
+   "peers": 3
+  },
+  "hleaf_NW": {
+   "master": "ot_hbm_host_cfg_leaf_nw",
+   "at": [
+    7786.8,
+    24807.6,
+    69.12,
+    69.12
+   ],
+   "centroid": [
+    7816.9,
+    24838.7
+   ],
+   "off_centroid_um": 8.0,
+   "from_case_a_um": 5.4,
+   "peers": 24
+  },
+  "hleaf_SW": {
+   "master": "ot_hbm_host_cfg_leaf_sw",
+   "at": [
+    7862.4,
+    6426.0,
+    69.12,
+    69.12
+   ],
+   "centroid": [
+    7952.5,
+    6463.7
+   ],
+   "off_centroid_um": 58.7,
+   "from_case_a_um": 43.2,
+   "peers": 24
+  },
+  "hleaf_SE": {
+   "master": "ot_hbm_host_cfg_leaf_se2",
+   "at": [
+    12268.8,
+    6501.6,
+    69.12,
+    69.12
+   ],
+   "centroid": [
+    12137.7,
+    6540.5
+   ],
+   "off_centroid_um": 170.0,
+   "from_case_a_um": 16.2,
+   "peers": 23
+  },
+  "hleaf_NE": {
+   "master": "ot_hbm_host_cfg_leaf_ne2",
+   "at": [
+    12268.8,
+    25477.2,
+    69.12,
+    69.12
+   ],
+   "centroid": [
+    12221.2,
+    25507.1
+   ],
+   "off_centroid_um": 86.9,
+   "from_case_a_um": 21.6,
+   "peers": 22
+  },
+  "col_idx": {
+   "master": "ot_hbm_static_cfg_collar_idx256r",
+   "at": [
+    10821.6,
+    14212.8,
+    61.56,
+    61.56
+   ],
+   "centroid": [
+    10480.0,
+    14085.2
+   ],
+   "off_centroid_um": 530.8,
+   "from_case_a_um": 739.8,
+   "peers": 18
+  },
+  "refcfg_SE": {
+   "master": "ot_hbm_pc_refresh_cfg",
+   "at": [
+    12268.8,
+    6426.0,
+    52.056,
+    52.056
+   ],
+   "centroid": [
+    12298.1,
+    6468.8
+   ],
+   "off_centroid_um": 20.1,
+   "from_case_a_um": 16.2,
+   "peers": 17
+  },
+  "col_su": {
+   "master": "ot_hbm_static_cfg_collar",
+   "at": [
+    13240.8,
+    13435.2,
+    52.056,
+    52.056
+   ],
+   "centroid": [
+    13265.7,
+    13461.7
+   ],
+   "off_centroid_um": 1.6,
+   "from_case_a_um": 10.8,
+   "peers": 3
+  },
+  "col_sfu_NE": {
+   "master": "ot_hbm_static_cfg_collar",
+   "at": [
+    12387.6,
+    21157.2,
+    52.056,
+    52.056
+   ],
+   "centroid": [
+    12445.8,
+    21181.8
+   ],
+   "off_centroid_um": 33.6,
+   "from_case_a_um": 16.2,
+   "peers": 3
+  },
+  "refcfg_NE": {
+   "master": "ot_hbm_pc_refresh_cfg",
+   "at": [
+    12268.8,
+    25574.4,
+    52.056,
+    52.056
+   ],
+   "centroid": [
+    12298.1,
+    25575.6
+   ],
+   "off_centroid_um": 28.1,
+   "from_case_a_um": 27.0,
+   "peers": 17
+  },
+  "col_sfu_SE": {
+   "master": "ot_hbm_static_cfg_collar",
+   "at": [
+    12387.6,
+    10616.4,
+    52.056,
+    52.056
+   ],
+   "centroid": [
+    12445.8,
+    10638.3
+   ],
+   "off_centroid_um": 36.2,
+   "from_case_a_um": 16.2,
+   "peers": 3
+  },
+  "col_sfu_SW": {
+   "master": "ot_hbm_static_cfg_collar",
+   "at": [
+    7765.2,
+    10594.8,
+    52.056,
+    52.056
+   ],
+   "centroid": [
+    7754.2,
+    10624.4
+   ],
+   "off_centroid_um": 40.6,
+   "from_case_a_um": 21.6,
+   "peers": 3
+  },
+  "col_sfu_NW": {
+   "master": "ot_hbm_static_cfg_collar",
+   "at": [
+    7948.8,
+    21038.4,
+    52.056,
+    52.056
+   ],
+   "centroid": [
+    7898.4,
+    21069.0
+   ],
+   "off_centroid_um": 81.0,
+   "from_case_a_um": 10.8,
+   "peers": 3
+  },
+  "str_C": {
+   "master": "ot_hbm_su_stree_root",
+   "at": [
+    10303.2,
+    16977.6,
+    43.416,
+    43.416
+   ],
+   "centroid": [
+    10162.8,
+    15888.1
+   ],
+   "off_centroid_um": 1273.3,
+   "from_case_a_um": 1188.0,
+   "peers": 12
+  },
+  "cic_SE": {
+   "master": "ot_hgi_coll_inj_copy",
+   "at": [
+    14482.8,
+    12063.6,
+    34.56,
+    34.56
+   ],
+   "centroid": [
+    14500.5,
+    11898.7
+   ],
+   "off_centroid_um": 182.6,
+   "from_case_a_um": 1738.8,
+   "peers": 7
+  },
+  "cic_SW": {
+   "master": "ot_hgi_coll_inj_copy",
+   "at": [
+    5940.0,
+    12063.6,
+    34.56,
+    34.56
+   ],
+   "centroid": [
+    5952.5,
+    11950.9
+   ],
+   "off_centroid_um": 134.7,
+   "from_case_a_um": 1452.6,
+   "peers": 7
+  },
+  "cic_NE": {
+   "master": "ot_hgi_coll_inj_copy",
+   "at": [
+    14482.8,
+    19666.8,
+    34.56,
+    34.56
+   ],
+   "centroid": [
+    14500.5,
+    19874.5
+   ],
+   "off_centroid_um": 190.8,
+   "from_case_a_um": 1738.8,
+   "peers": 7
+  },
+  "cic_NW": {
+   "master": "ot_hgi_coll_inj_copy",
+   "at": [
+    5853.6,
+    19666.8,
+    34.56,
+    34.56
+   ],
+   "centroid": [
+    5866.8,
+    19875.0
+   ],
+   "off_centroid_um": 195.0,
+   "from_case_a_um": 2743.2,
+   "peers": 7
+  },
+  "cxdl_NE2_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    16232.4,
+    17712.0,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    16249.4,
+    17728.8
+   ],
+   "off_centroid_um": 0.4,
+   "from_case_a_um": 16.2,
+   "peers": 2
+  },
+  "cxdl_SE3_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    13899.6,
+    13867.2,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    13911.6,
+    13887.2
+   ],
+   "off_centroid_um": 8.0,
+   "from_case_a_um": 10.8,
+   "peers": 2
+  },
+  "cxdl_SW0_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    3931.2,
+    11653.2,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    3947.5,
+    11671.6
+   ],
+   "off_centroid_um": 2.1,
+   "from_case_a_um": 1890.0,
+   "peers": 2
+  },
+  "cxdl_SW2_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    3931.2,
+    13996.8,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    3947.5,
+    13992.8
+   ],
+   "off_centroid_um": 21.2,
+   "from_case_a_um": 1074.6,
+   "peers": 2
+  },
+  "cxdl_SE2_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    16232.4,
+    13996.8,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    16249.4,
+    14003.3
+   ],
+   "off_centroid_um": 10.6,
+   "from_case_a_um": 27.0,
+   "peers": 2
+  },
+  "cxdl_NE3_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    13899.6,
+    17874.0,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    13911.6,
+    17886.4
+   ],
+   "off_centroid_um": 9.1,
+   "from_case_a_um": 10.8,
+   "peers": 2
+  },
+  "cxdl_SE1_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    15400.8,
+    12063.6,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    15420.4,
+    11914.2
+   ],
+   "off_centroid_um": 169.1,
+   "from_case_a_um": 27.0,
+   "peers": 2
+  },
+  "cxdl_SW1_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    4762.8,
+    12063.6,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    4784.8,
+    11903.7
+   ],
+   "off_centroid_um": 181.9,
+   "from_case_a_um": 27.0,
+   "peers": 2
+  },
+  "cxdl_NW3_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    4406.4,
+    17874.0,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    4969.7,
+    17886.4
+   ],
+   "off_centroid_um": 550.9,
+   "from_case_a_um": 27.0,
+   "peers": 2
+  },
+  "cxdl_NW1_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    4957.2,
+    19666.8,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    4969.7,
+    20207.6
+   ],
+   "off_centroid_um": 528.3,
+   "from_case_a_um": 21.6,
+   "peers": 2
+  },
+  "cxdl_SE0_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    16232.4,
+    11664.0,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    16249.4,
+    11682.0
+   ],
+   "off_centroid_um": 1.6,
+   "from_case_a_um": 27.0,
+   "peers": 2
+  },
+  "cxdl_NE0_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    16232.4,
+    20034.0,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    16249.4,
+    20050.1
+   ],
+   "off_centroid_um": 1.0,
+   "from_case_a_um": 16.2,
+   "peers": 2
+  },
+  "cxdl_SW3_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    6264.0,
+    13856.4,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    6285.3,
+    13876.7
+   ],
+   "off_centroid_um": 8.1,
+   "from_case_a_um": 2386.8,
+   "peers": 2
+  },
+  "cxdl_NE1_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    15400.8,
+    19666.8,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    15420.4,
+    19900.8
+   ],
+   "off_centroid_um": 220.2,
+   "from_case_a_um": 27.0,
+   "peers": 2
+  },
+  "cxdl_NW2_s": {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "at": [
+    3164.4,
+    17874.0,
+    33.48,
+    33.48
+   ],
+   "centroid": [
+    2557.2,
+    17886.4
+   ],
+   "off_centroid_um": 628.3,
+   "from_case_a_um": 21.6,
+   "peers": 2
+  },
+  "obs_NE": {
+   "master": "ot_hbm_obs_leaf",
+   "at": [
+    12506.4,
+    19569.6,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    12515.9,
+    19579.9
+   ],
+   "off_centroid_um": 2.0,
+   "from_case_a_um": 1080.0,
+   "peers": 29
+  },
+  "wbc_SE": {
+   "master": "ot_hbm_svc_wbw_copy",
+   "at": [
+    12366.0,
+    1598.4,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    12457.8,
+    1612.6
+   ],
+   "off_centroid_um": 84.2,
+   "from_case_a_um": 21.6,
+   "peers": 5
+  },
+  "wbc_SW": {
+   "master": "ot_hbm_svc_wbw_copy",
+   "at": [
+    7808.4,
+    1641.6,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    7562.7,
+    1652.5
+   ],
+   "off_centroid_um": 256.6,
+   "from_case_a_um": 615.6,
+   "peers": 5
+  },
+  "wbc_NW": {
+   "master": "ot_hbm_svc_wbw_copy",
+   "at": [
+    7808.4,
+    30110.4,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    7562.7,
+    30117.6
+   ],
+   "off_centroid_um": 260.3,
+   "from_case_a_um": 615.6,
+   "peers": 5
+  },
+  "sfault_SE": {
+   "master": "ot_hbm_svc_stack_fault",
+   "at": [
+    11890.8,
+    1879.2,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    11896.9,
+    1392.9
+   ],
+   "off_centroid_um": 502.0,
+   "from_case_a_um": 907.2,
+   "peers": 33
+  },
+  "fcx_SE": {
+   "master": "ot_hbm_fault_leaf",
+   "at": [
+    14050.8,
+    11026.8,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    14871.8,
+    11084.0
+   ],
+   "off_centroid_um": 856.4,
+   "from_case_a_um": 2014.2,
+   "peers": 7
+  },
+  "fs_SE": {
+   "master": "ot_hbm_fault_leaf_n8_s0",
+   "at": [
+    11923.2,
+    1998.0,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    11935.0,
+    2080.0
+   ],
+   "off_centroid_um": 72.0,
+   "from_case_a_um": 804.6,
+   "peers": 2
+  },
+  "obs_SE": {
+   "master": "ot_hbm_obs_leaf",
+   "at": [
+    12765.6,
+    14364.0,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    12771.5,
+    14373.9
+   ],
+   "off_centroid_um": 6.1,
+   "from_case_a_um": 286.2,
+   "peers": 30
+  },
+  "obs_SW": {
+   "master": "ot_hbm_obs_leaf",
+   "at": [
+    9007.2,
+    14212.8,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    9022.4,
+    14206.9
+   ],
+   "off_centroid_um": 21.1,
+   "from_case_a_um": 86.4,
+   "peers": 47
+  },
+  "sfault_NE": {
+   "master": "ot_hbm_svc_stack_fault",
+   "at": [
+    11890.8,
+    29862.0,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    11896.9,
+    30379.3
+   ],
+   "off_centroid_um": 511.2,
+   "from_case_a_um": 912.6,
+   "peers": 33
+  },
+  "fcx_NW": {
+   "master": "ot_hbm_fault_leaf",
+   "at": [
+    4860.0,
+    19677.6,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    4874.1,
+    20048.0
+   ],
+   "off_centroid_um": 362.7,
+   "from_case_a_um": 1047.6,
+   "peers": 7
+  },
+  "hb_router_ids": {
+   "master": "ot_hbm_router_ids_static",
+   "at": [
+    11124.0,
+    15130.8,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    10877.3,
+    15450.9
+   ],
+   "off_centroid_um": 566.9,
+   "from_case_a_um": 32.4,
+   "peers": 19
+  },
+  "fs_NE": {
+   "master": "ot_hbm_fault_leaf_n8_s0",
+   "at": [
+    11923.2,
+    29743.2,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    11935.0,
+    29683.0
+   ],
+   "off_centroid_um": 72.0,
+   "from_case_a_um": 804.6,
+   "peers": 2
+  },
+  "wbc_NE": {
+   "master": "ot_hbm_svc_wbw_copy",
+   "at": [
+    12366.0,
+    30142.8,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    12457.8,
+    30157.6
+   ],
+   "off_centroid_um": 84.8,
+   "from_case_a_um": 21.6,
+   "peers": 5
+  },
+  "obs_NW": {
+   "master": "ot_hbm_obs_leaf",
+   "at": [
+    8823.6,
+    17269.2,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    8832.7,
+    18075.1
+   ],
+   "off_centroid_um": 796.8,
+   "from_case_a_um": 1576.8,
+   "peers": 56
+  },
+  "fcx_NE": {
+   "master": "ot_hbm_fault_leaf",
+   "at": [
+    15044.4,
+    19677.6,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    15053.8,
+    20276.4
+   ],
+   "off_centroid_um": 589.4,
+   "from_case_a_um": 21.6,
+   "peers": 7
+  },
+  "obs_C": {
+   "master": "ot_hbm_obs_leaf",
+   "at": [
+    9320.4,
+    14720.4,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    9332.0,
+    14730.4
+   ],
+   "off_centroid_um": 1.6,
+   "from_case_a_um": 43.2,
+   "peers": 13
+  },
+  "fcx_SW": {
+   "master": "ot_hbm_fault_leaf",
+   "at": [
+    6112.8,
+    11005.2,
+    21.816,
+    21.816
+   ],
+   "centroid": [
+    5344.6,
+    11020.8
+   ],
+   "off_centroid_um": 783.8,
+   "from_case_a_um": 2516.4,
+   "peers": 7
+  },
+  "subr_NW": {
+   "master": "ot_hbm_su_bridge_release_s",
+   "at": [
+    4428.0,
+    18910.8,
+    13.176,
+    13.176
+   ],
+   "centroid": [
+    4535.2,
+    18919.0
+   ],
+   "off_centroid_um": 102.2,
+   "from_case_a_um": 540.0,
+   "peers": 17
+  },
+  "subr_SW": {
+   "master": "ot_hbm_su_bridge_release_s",
+   "at": [
+    4989.6,
+    12182.4,
+    13.176,
+    13.176
+   ],
+   "centroid": [
+    4993.8,
+    12219.1
+   ],
+   "off_centroid_um": 32.6,
+   "from_case_a_um": 1177.2,
+   "peers": 17
+  },
+  "subr_SE": {
+   "master": "ot_hbm_su_bridge_release_s",
+   "at": [
+    15487.2,
+    12182.4,
+    13.176,
+    13.176
+   ],
+   "centroid": [
+    15492.2,
+    12350.0
+   ],
+   "off_centroid_um": 162.6,
+   "from_case_a_um": 896.4,
+   "peers": 17
+  },
+  "subr_NE": {
+   "master": "ot_hbm_su_bridge_release_s",
+   "at": [
+    15379.2,
+    19558.8,
+    13.176,
+    13.176
+   ],
+   "centroid": [
+    15381.2,
+    19411.3
+   ],
+   "off_centroid_um": 158.7,
+   "from_case_a_um": 16.2,
+   "peers": 17
+  }
+ },
+ "violations": [],
+ "summary": {
+  "fallback": 82,
+  "new": 82,
+  "violations": 0,
+  "off_centroid_um_max": 1439.9,
+  "off_centroid_um_median": 245.9
+ }
+}

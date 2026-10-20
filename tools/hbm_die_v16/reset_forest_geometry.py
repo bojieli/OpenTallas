@@ -6,9 +6,12 @@ placed outline. Wires may overfly outlines, but every registered stage must
 have a legal, distinct home and each routed span must fit the declared reach.
 """
 import hashlib
+import heapq
 import math
+import os
 import re
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hbm_die_v15'))
@@ -24,30 +27,121 @@ class GeometryError(ValueError):
     pass
 
 
+# L2H-GEN2D-RST 10-19 (NW hang profile, py-spy on carr/cplanK: 100% in Grid._route on the PLACEMENT grid): the clock
+# router's A* has no path-length bound, so a target walled off on the placement grid (reserved relays + homes) floods the
+# whole ~8M-cell die x up to R blocked-run labels before it fails over to the obstacle-only grid -- hours per leaf (serial
+# NW try 0 on cplanK: 8,480 s).  A reset stage path longer than a few x its Manhattan span is never useful (the chain
+# stages along it), so the reset router bounds the search: path cells <= ROUTE_DETOUR x md + ROUTE_SLACK (cells), and at
+# most ROUTE_MAX_POPS expansions.  The blocked-run budget R and the reach budget are UNCHANGED (no relaxation): a bounded
+# failure only falls through to the existing obstacle-only grid / host / next-source logic.  ROUTE_DETOUR 0 = legacy.
+ROUTE_DETOUR = 0.0
+ROUTE_SLACK = 64
+ROUTE_MAX_POPS = 3_000_000
+# ROUTE_REUSE: a chain routes ONCE and stages along the routed path; after a stage it continues on the unconsumed suffix of that
+# path (start within one relay footprint of the new stage pin) instead of re-routing the whole remaining span per hop (the bounded
+# carrhhB profile: a 7 mm NW leaf chain re-ran the full A* for each of ~20 hops).  The final pin-to-pin reach check is unchanged.
+ROUTE_REUSE = False
+ROUTE_STATS = dict(calls=0, fails=0, capped=0, pops=0, seconds=0.0, slow=[])
+
+
+def bounded_route(grid, a, b, max_run):
+    """die_clock_tree.Grid._route (exact Pareto label A*) with a path-length and expansion bound; SystemExit on failure."""
+    if ROUTE_DETOUR <= 0:
+        return grid._route(a, b, max_run)
+    t0 = time.time()
+    ROUTE_STATS['calls'] += 1
+    R = int(max_run // GRID)
+    h0 = abs(a[0] - b[0]) + abs(a[1] - b[1])
+    cap = int(ROUTE_DETOUR * h0) + ROUTE_SLACK
+    nx, ny, blk = grid.nx, grid.ny, grid.blk
+    dist = {(a, 0): 0}
+    labels = {a: [(0, 0)]}
+    prev = {}
+    pq = [(h0, 0, a, 0)]
+    pops = 0
+    try:
+        while pq:
+            f, neg_g, c, run = heapq.heappop(pq)
+            pops += 1
+            if pops > ROUTE_MAX_POPS:
+                ROUTE_STATS['capped'] += 1
+                raise SystemExit(f'reset route expansion cap {a} -> {b}')
+            g = -neg_g
+            if c == b:
+                path = [c]; s = (c, run)
+                while s in prev:
+                    s = prev[s]; path.append(s[0])
+                return path[::-1]
+            if dist.get((c, run)) != g:
+                continue
+            for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                n = (c[0] + d[0], c[1] + d[1])
+                if not (0 <= n[0] < nx and 0 <= n[1] < ny):
+                    continue
+                nr = 0 if not blk[n[1] * nx + n[0]] else run + 1
+                if nr > R:
+                    continue
+                ng = g + 1
+                fn = ng + abs(n[0] - b[0]) + abs(n[1] - b[1])
+                if fn > cap:
+                    continue
+                s = (n, nr)
+                if ng < dist.get(s, 1 << 60):
+                    old = labels.get(n, ())
+                    if any(lr <= nr and lg <= ng for lr, lg in old):
+                        continue
+                    for lr, lg in old:
+                        if nr <= lr and ng <= lg:
+                            dist.pop((n, lr), None)
+                    labels[n] = [(lr, lg) for lr, lg in old if not (nr <= lr and ng <= lg)] + [(nr, ng)]
+                    dist[s] = ng; prev[s] = (c, run)
+                    heapq.heappush(pq, (fn, -ng, n, nr))
+        raise SystemExit(f'no reset route within detour bound {a} -> {b}')
+    except SystemExit:
+        ROUTE_STATS['fails'] += 1
+        raise
+    finally:
+        dt = time.time() - t0
+        ROUTE_STATS['pops'] += pops; ROUTE_STATS['seconds'] += dt
+        if dt > 20 and len(ROUTE_STATS['slow']) < 200:
+            ROUTE_STATS['slow'].append(dict(a=a, b=b, md_cells=h0, pops=pops, s=round(dt, 1)))
+            if os.environ.get('OT_FOREST_LOG'):
+                print(f'    slow route {a}->{b} md {h0} cells pops {pops} {dt:.1f}s', file=sys.stderr, flush=True)
+
+
 class Geometry:
-    def __init__(self, manifest, views, relay_views, reach):
+    def __init__(self, manifest, views, relay_views, reach, overfly=None, prefix='hbfd_rrl_'):
         self.pl = manifest['placement']
         self.W, self.H = manifest['die_um']
         self.expected_hashes = manifest.get('consumed_view_sha256', {})
         self.views, self.relay_views = Path(views), Path(relay_views or views)
         self.reach = reach
         self.cache, self.hashes, self.reserved = {}, {}, {}
-        self.relay = {k: self.lef('hbfd_rrl_' + k, self.relay_views) for k in ('hop', 'sync')}
+        # L2H-GEN2D-RST 10-19: prefix 'hbfd_rrl_c' = compact carrier tiles (hbfd_rrl_c.sv; relay_views holds their LEFs)
+        self.prefix = prefix
+        self.relay = {k: self.lef(prefix + k, self.relay_views) for k in ('hop', 'sync')}
         for kind, (w, h, pins) in self.relay.items():
             for p in ('rst_n_in', 'rst_n', 'clk'):
                 if p not in pins:
-                    raise GeometryError(f'hbfd_rrl_{kind}: missing LEF pin {p}')
+                    raise GeometryError(f'{prefix}{kind}: missing LEF pin {p}')
         self.radius = max(max(w / 2 + h / 2, *(md((w / 2, h / 2), xy) for xy in pins.values()))
                           for w, h, pins in self.relay.values())
         self.budget = reach - 2 * self.radius - 2 * GRID
         if self.budget < 6 * GRID:
             raise GeometryError('reach too small for relay outlines and conservative grid budget')
-        obstacles = []
+        obstacles, overflown = [], []
+        ofly = re.compile(overfly) if overfly else None
         for n, v in self.pl.items():
             o = v.get('o', 'R0')
             if o not in ('R0', 'MX', 'MY', 'R180'):
                 raise GeometryError(f'{n}: unsupported placement orientation {o}')
-            obstacles.append((v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']))
+            # LH-GEN2CD 10-19 (opt-in --overfly-masters): placed lane-row relay tiles (21.6 um hbfd_rly/lh/land kits) are
+            # overflown like the forest's own reserved relay tiles -- they block HOMES (self.grid) but not the routing
+            # grid's blocked-run budget (self.rgrid).  Default None = every placed instance blocks both (unchanged).
+            m_ = v.get('m') or v.get('master') or ''
+            (overflown if ofly and ofly.match(m_) and max(v['w'], v['h']) <= 64.8 else obstacles).append(
+                (v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']))
+        self.overflown_count = len(overflown)
         # spatial bins for the buried-pin check (post-landing cases place ~57k instances x ~31k reset pins)
         self.BIN = 500.0
         self.bins = {}
@@ -70,6 +164,58 @@ class Geometry:
         # Reserved tiles used to close 20 um channels for later trees (GEN2a stream NW pocket).  Budget unchanged.
         self.rgrid = Grid(self.W, self.H, [])
         self.rgrid.blk[:] = self.grid.blk
+        for rect in overflown:   # homes only (empty unless --overfly-masters)
+            self.block_rect(*rect)
+        # LH-RSTHOP 10-19 (opt-in, set_hosts): reach hops co-located in placed lane relay stations (hbfd_rly_*_rf/_rrf).
+        self.hosts, self.host_bins, self.host_mode, self.host_dom, self.host_used = [], {}, None, None, set()
+        self.HBIN = 100.0
+
+    def set_hosts(self, hosts, mode):
+        """LH-RSTHOP: hosts = [dict(inst, dom, rfi=(x, y), rfo=(x, y), home=(x, y), w, h)] -- placed lane relay stations
+        that may carry ONE forest reach hop each (rfi -> rfo, one registered stage, the station's own regional clock).
+        mode 'prefer': a chain stage is hosted when a station lies on the routed path within the hop budget, else a free
+        home; 'fallback': free homes first, a host only where no legal free home exists.  Hosted edges keep the
+        conservative hop budget (reach - 2 relay radii - 2 GRID) on the assumed i/o-face-middle pins, so the real kit pins
+        (anywhere on a <= 64.8 um station) stay inside the 405 um reach."""
+        self.hosts, self.host_mode = hosts, mode
+        for k, h in enumerate(hosts):
+            for xy in (h['rfi'], h['rfo']):
+                self.host_bins.setdefault((int(xy[0] // self.HBIN), int(xy[1] // self.HBIN)), set()).add(k)
+
+    def _hosts_near(self, xy, r):
+        out = set()
+        for i in range(int((xy[0] - r) // self.HBIN), int((xy[0] + r) // self.HBIN) + 1):
+            for j in range(int((xy[1] - r) // self.HBIN), int((xy[1] + r) // self.HBIN) + 1):
+                out |= self.host_bins.get((i, j), set())
+        return sorted(out)
+
+    def host_hop(self, point, end, points, run, lim, near=60.0):
+        """LH-RSTHOP: reserve an unused same-domain host station near the routed path (farthest path point first) whose
+        rfi is within lim of point and whose rfo strictly progresses toward end; None if there is none."""
+        if not self.hosts or self.host_dom is None:
+            return None
+        here = md(point, end)
+        idx = [i for i in range(1, len(points) - 1) if run[i] <= lim]
+        for i in reversed(idx):
+            best = None
+            for k in self._hosts_near(points[i], near):
+                h = self.hosts[k]
+                if h['dom'] != self.host_dom or h['inst'] in self.host_used:
+                    continue
+                if md(point, h['rfi']) > lim or md(h['rfo'], end) >= here - GRID:
+                    continue
+                d = md(points[i], h['rfi'])
+                if d <= near and (best is None or d < best[0]):
+                    best = (d, h)
+            if best:
+                h = best[1]
+                tile = dict(kind='host', inst=h['inst'], home=h['home'], w=h['w'], h=h['h'],
+                            pins={'rst_n_in': h['rfi'], 'rfi': h['rfi'], 'rst_n': h['rfo'], 'rfo': h['rfo']})
+                self._before_last = bytes(self.grid.blk)
+                self.reserved[len(self.reserved)] = tile
+                self.host_used.add(h['inst'])
+                return tile
+        return None
 
     def block_rect(self, x0, y0, x1, y1):
         # Mark centers whose complete largest-relay rectangle intersects the
@@ -178,6 +324,8 @@ class Geometry:
         assert self.reserved[k] is tile
         self.grid.blk[:] = self._before_last
         del self.reserved[k]
+        if tile.get('kind') == 'host':
+            self.host_used.discard(tile['inst'])
 
     def snapshot(self):
         """Undo point for a speculative plan (alternative regional-root homes)."""
@@ -186,6 +334,7 @@ class Geometry:
     def restore(self, snap):
         self.grid.blk[:] = snap[0]
         self.reserved = dict(snap[1])
+        self.host_used = {t['inst'] for t in self.reserved.values() if t.get('kind') == 'host'}
 
     def root_sites(self, point, rings=(0., 200., 405., 810., 1215., 1620., 2430., 3240.), per_ring=8):
         """Alternative regional-root target points: the sink centroid first, then rings around it.
@@ -208,10 +357,14 @@ class Geometry:
         return self.relay['hop' if kind.startswith('pad') else kind]
 
     def centre(self, tile):
+        if tile['kind'] == 'host':
+            return tile['home'][0] + tile['w'] / 2, tile['home'][1] + tile['h'] / 2
         w, h, _ = self.relay_lef(tile['kind'])
         return tile['home'][0] + w / 2, tile['home'][1] + h / 2
 
     def tile_pin(self, tile, p):
+        if tile['kind'] == 'host':
+            return tile['pins'][p]
         x, y = self.relay_lef(tile['kind'])[2][p]
         return tile['home'][0] + x, tile['home'][1] + y
 
@@ -248,7 +401,7 @@ class Geometry:
             return tile
         raise GeometryError(f'no legal {kind} home near {point} satisfying reset reach')
 
-    def chain(self, source, target):
+    def chain(self, source, target, src_host=False):
         """Return reserved hop tiles excluding the already reserved target.
 
         Grid routing permits overflight with a STRICT bounded blocked run;
@@ -256,31 +409,56 @@ class Geometry:
         staging is conservative and refuses a path if it cannot place a stage.
         """
         end = self.tile_pin(target, 'rst_n_in')
-        if md(source, end) <= self.reach:
+        # LH-RSTHOP: an edge out of a hosted hop (assumed rfo pin) keeps the hop budget, not the full reach
+        lim = self.budget if src_host else self.reach
+        if md(source, end) <= lim:
             return []
         out = []
         point = source
-        while md(point, end) > self.reach:
+        rest = None   # L2H-GEN2D-RST ROUTE_REUSE: unconsumed suffix of the last routed path
+        while md(point, end) > lim:
             a, b = self.grid.cell(*point), self.grid.cell(*end)
+            reused = False
+            if ROUTE_REUSE and rest and md(point, self.grid.xy(rest[0])) <= 2 * self.radius + 2 * GRID:
+                path, rest, reused = rest, None, True
+            else:
+                path = None
             # Leave room for the current relay reservation and endpoint pin offsets; never use the clock router's 3x
             # fallback.  FOREST2: route first on the PLACEMENT grid (reserved relays count as blocked, so every free
             # path cell is a legal stage home and greedy staging always progresses); only if that fails, on the
             # obstacle-only grid (wires overfly reserved relays) with stage homes beside the path.  Same budget.
-            try:
-                path = self.grid._route(a, b, self.budget - 4 * GRID)
-            except SystemExit:
+            if path is None:
+              try:
+                path = bounded_route(self.grid, a, b, self.budget - 4 * GRID)
+              except SystemExit:
                 try:
-                    path = self.rgrid._route(a, b, self.budget - 4 * GRID)
+                    path = bounded_route(self.rgrid, a, b, self.budget - 4 * GRID)
                 except SystemExit as e:
                     raise GeometryError(f'no reset route within fixed reach: {point} -> {end}') from e
             points = [point] + [self.grid.xy(c) for c in path] + [end]
             run = [0.0]
             for p, q in zip(points, points[1:]):
                 run.append(run[-1] + md(p, q))
+            # LH-RSTHOP: out of a hosted hop the stage input must stay within the hop budget (pin offset = radius)
+            cap = self.budget if lim > self.budget else self.budget - self.radius
             options = [i for i in range(1, len(points) - 1)
-                       if run[i] <= self.budget and self.grid.free(path[i - 1])]
-            if options:
-                t = self.reserve('hop', points[options[-1]], max_distance=0)
+                       if run[i] <= cap and self.grid.free(path[i - 1])]
+            hop_lim = min(lim, self.budget)
+            t = None
+            if self.host_mode == 'prefer':
+                t = self.host_hop(point, end, points, run, hop_lim)
+            if t is not None:
+                pass
+            elif reused and not options:
+                continue   # ROUTE_REUSE: the stale suffix has no free stage cell -> fresh route from here (rest is None)
+            elif options:
+                try:
+                    t = self.reserve('hop', points[options[-1]], max_distance=0)
+                except GeometryError:
+                    if not reused:
+                        raise
+                    continue   # ROUTE_REUSE: fresh route
+                rest = path[options[-1]:]
             else:
                 # FOREST2: the routed cells within the budget are all OCCUPIED by earlier relay reservations (wires
                 # overfly them): home the stage on the nearest free cell beside the path instead, farthest path point
@@ -293,16 +471,24 @@ class Geometry:
                                             max_distance=max(GRID, self.budget - run[i]))
                     except GeometryError:
                         continue
-                    if md(self.tile_pin(cand, 'rst_n'), end) < md(point, end):
+                    if md(self.tile_pin(cand, 'rst_n'), end) < md(point, end) and md(point, self.tile_pin(cand, 'rst_n_in')) <= lim:
                         t = cand
+                        rest = path[i:]
                         break
                     self.unreserve(cand)
+                if t is None and reused:
+                    continue   # ROUTE_REUSE: retry this stage on a fresh route before host fallback / failure
+                if t is None and self.host_mode == 'fallback':
+                    t = self.host_hop(point, end, points, run, hop_lim)
                 if t is None:
                     raise GeometryError(f'no legal reset relay within routed reach from {point}')
             out.append(t)
             point = self.tile_pin(t, 'rst_n')
+            lim = self.budget if t['kind'] == 'host' else self.reach
         all_pins = [source] + [self.tile_pin(t, 'rst_n') for t in out]
         inputs = [self.tile_pin(t, 'rst_n_in') for t in out] + [end]
-        if any(md(p, q) > self.reach for p, q in zip(all_pins, inputs)):
+        hosted = [src_host] + [t['kind'] == 'host' for t in out]
+        into = [t['kind'] == 'host' for t in out] + [False]
+        if any(md(p, q) > (self.budget if (a or b) else self.reach) for p, q, a, b in zip(all_pins, inputs, hosted, into)):
             raise GeometryError('internal reset hop exceeds reach')
         return out
