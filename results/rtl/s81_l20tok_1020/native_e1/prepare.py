@@ -24,5 +24,5 @@ rows += ['yosys read_verilog -sv /work/census_top.sv', 'yosys hierarchy -check -
          'source /work/physical/common_flow/ot_keep_regs.tcl',
          'yosys synth -top idxrg_native_top -flatten', 'yosys dfflibmap -liberty /work/SEQ.lib',
          'yosys abc ' + ' '.join('-liberty ' + f for f in libs) + ' -D 770', 'yosys clean', 'yosys stat',
-         'yosys write_verilog -noattr /work/mapped.v', 'yosys write_json /work/mapped.json']
+         'yosys write_verilog -noattr /work/mapped.v', 'yosys write_verilog /work/mapped_attr.v']
 Path('/work/synth.tcl').write_text('\n'.join(rows) + '\n')
