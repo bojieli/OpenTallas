@@ -1,0 +1,17 @@
+{
+  "fanout": "PASS allmappeddrivers<=32 includingrawportsandreset",
+  "maxloads": 32,
+  "violations": 0,
+  "scalar_reset_landing_root_loads": 2,
+  "mapped_ff_count": 7207,
+  "pin_boundary_levels": {
+    "in_reg": 0,
+    "reg_out": 0,
+    "in_out_bits": 0
+  },
+  "estimated_TT_stage_ps": 551.8,
+  "estimated_TT_logic_levels": 19,
+  "liberty_area_um2": 4354.81272,
+  "physical_qualification": "NOTRUN: plannedreach/pin-geometry/clockCTS/PG require boundedkit reviewbefore gate",
+  "functional_model_hold": "No importedASRmodelproof; pureRTLbenchunaffected"
+}
