@@ -1,0 +1,432 @@
+{
+  "source": "35e931766",
+  "native_exports": [
+    {
+      "variant": "buf",
+      "corner": "ss",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "823094f45f0f2150e80f5d5fae9518a957135b925f9d926c2baf2fa7f3fc4204",
+      "OT_WS": "OT_WS max 5.650022671943589e-10 min 2.469272702976255e-11",
+      "sense": "positive_unate",
+      "local": {
+        "arrival_max_rise": 108.55481,
+        "arrival_min_rise": 108.483826,
+        "arrival_max_fall": 101.69442700000002,
+        "arrival_min_fall": 101.62197900000001,
+        "slew_max_rise": 177.696365,
+        "slew_max_fall": 142.422226
+      }
+    },
+    {
+      "variant": "buf",
+      "corner": "ff",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "f92ce706c029f9678d1dd3272e8d0ba585a6e55e24f95f7cb0c72feb726818ad",
+      "OT_WS": "OT_WS max 6.85115963960925e-10 min 3.184288249746814e-11",
+      "sense": "positive_unate",
+      "local": {
+        "arrival_max_rise": 56.771721,
+        "arrival_min_rise": 56.715286000000006,
+        "arrival_max_fall": 55.96118200000001,
+        "arrival_min_fall": 55.897155999999995,
+        "slew_max_rise": 96.318459,
+        "slew_max_fall": 89.85051
+      }
+    },
+    {
+      "variant": "buf",
+      "corner": "tt",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "f2e6c87a7e64ba36b9570f8307a0c43d2c3c1a7d7973f1c0708040c3994823e9",
+      "OT_WS": "OT_WS max 6.4179905834294e-10 min 3.052492286714781e-11",
+      "sense": "positive_unate",
+      "local": {
+        "arrival_max_rise": 74.556587,
+        "arrival_min_rise": 74.492165,
+        "arrival_max_fall": 72.016052,
+        "arrival_min_fall": 71.94561800000002,
+        "slew_max_rise": 122.770699,
+        "slew_max_fall": 107.974953
+      }
+    },
+    {
+      "variant": "inv",
+      "corner": "ss",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "05f447a243cdd52d38ac7cdcc5eb18bc012f734744cca7ac5cff564b2d286e79",
+      "OT_WS": "OT_WS max 5.647610157311078e-10 min 2.4470647730368e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 102.28317299999998,
+        "arrival_min_rise": 102.11154199999999,
+        "arrival_max_fall": 78.92054,
+        "arrival_min_fall": 78.744865,
+        "slew_max_rise": 220.509888,
+        "slew_max_fall": 167.892181
+      }
+    },
+    {
+      "variant": "inv",
+      "corner": "ff",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "24d0b2117634393cccbfe2a3ea6aee6d508450a91c78d0b1ca0ec13bf93c05d3",
+      "OT_WS": "OT_WS max 6.848920319768581e-10 min 3.1691940738376445e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 50.626251000000025,
+        "arrival_min_rise": 50.446320000000014,
+        "arrival_max_fall": 45.528617999999994,
+        "arrival_min_fall": 45.36274,
+        "slew_max_rise": 111.768059,
+        "slew_max_fall": 102.076088
+      }
+    },
+    {
+      "variant": "inv",
+      "corner": "tt",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "721cf2033d360c7e6fda89b5a118174ff49ec80d2cd44446ee77eb0853ff037f",
+      "OT_WS": "OT_WS max 6.415654674185589e-10 min 3.0291207042676405e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 68.13790899999998,
+        "arrival_min_rise": 67.956818,
+        "arrival_max_fall": 57.340271,
+        "arrival_min_fall": 57.16643500000001,
+        "slew_max_rise": 147.593262,
+        "slew_max_fall": 125.108856
+      }
+    },
+    {
+      "variant": "chain",
+      "corner": "ss",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "c6f891159a64ea57415a3c281130b027c8e34589c50c88903a7167605df6e6b4",
+      "OT_WS": "OT_WS max 5.649949397223963e-10 min 2.4688175115361588e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 207.28887899999995,
+        "arrival_min_rise": 205.20538299999998,
+        "arrival_max_fall": 173.304886,
+        "arrival_min_fall": 171.210861,
+        "slew_max_rise": 305.739349,
+        "slew_max_fall": 226.664276
+      }
+    },
+    {
+      "variant": "chain",
+      "corner": "ff",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "3c36bbe5c1bb7d7b1a92405a9242bb99e03f6edeb6d690ea2e647401678e730d",
+      "OT_WS": "OT_WS max 6.851102463123482e-10 min 3.1840814707084775e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 96.95422400000001,
+        "arrival_min_rise": 95.90234400000003,
+        "arrival_max_fall": 88.83647199999999,
+        "arrival_min_fall": 87.804611,
+        "slew_max_rise": 138.631912,
+        "slew_max_fall": 121.748749
+      }
+    },
+    {
+      "variant": "chain",
+      "corner": "tt",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "594956f162f89e729326f1b0bf5b4e82c758f2e9f924580b89cebed6a7905e00",
+      "OT_WS": "OT_WS max 6.417924525159435e-10 min 3.0520551363988346e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 136.12927200000001,
+        "arrival_min_rise": 134.751038,
+        "arrival_max_fall": 119.79109199999999,
+        "arrival_min_fall": 118.437668,
+        "slew_max_rise": 196.429871,
+        "slew_max_fall": 159.505478
+      }
+    },
+    {
+      "variant": "defaultbuf",
+      "corner": "ss",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "899a3a20671bdbeeda145d1c5c06bb6fedac967204fab6b95d76a3db1b6965e0",
+      "OT_WS": "OT_WS max 5.650022671943589e-10 min 2.469272702976255e-11",
+      "sense": "positive_unate",
+      "local": {
+        "arrival_max_rise": 108.55481,
+        "arrival_min_rise": 108.483826,
+        "arrival_max_fall": 101.69442700000002,
+        "arrival_min_fall": 101.62197900000001,
+        "slew_max_rise": 177.696365,
+        "slew_max_fall": 142.422226
+      }
+    },
+    {
+      "variant": "defaultbuf",
+      "corner": "ff",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "0f78eae67f6ef8f122fa4b09d138f568084f308ed486749909bf56af481883a6",
+      "OT_WS": "OT_WS max 6.85115963960925e-10 min 3.184288249746814e-11",
+      "sense": "positive_unate",
+      "local": {
+        "arrival_max_rise": 56.771721,
+        "arrival_min_rise": 56.715286000000006,
+        "arrival_max_fall": 55.96118200000001,
+        "arrival_min_fall": 55.897155999999995,
+        "slew_max_rise": 96.318459,
+        "slew_max_fall": 89.85051
+      }
+    },
+    {
+      "variant": "defaultbuf",
+      "corner": "tt",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "853c43a5f5784a8ad7224faaed86f12e19b43f846f5422f2d0f6d4db0eae7b8a",
+      "OT_WS": "OT_WS max 6.4179905834294e-10 min 3.052492286714781e-11",
+      "sense": "positive_unate",
+      "local": {
+        "arrival_max_rise": 74.556587,
+        "arrival_min_rise": 74.492165,
+        "arrival_max_fall": 72.016052,
+        "arrival_min_fall": 71.94561800000002,
+        "slew_max_rise": 122.770699,
+        "slew_max_fall": 107.974953
+      }
+    },
+    {
+      "variant": "defaultinv",
+      "corner": "ss",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "e0a229ea48627564cdc8520e76228a2b333910fbb4153f60a8824b4f6b97d6be",
+      "OT_WS": "OT_WS max 5.647610157311078e-10 min 2.4470647730368e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 102.28317299999998,
+        "arrival_min_rise": 102.11154199999999,
+        "arrival_max_fall": 78.92054,
+        "arrival_min_fall": 78.744865,
+        "slew_max_rise": 220.509888,
+        "slew_max_fall": 167.892181
+      }
+    },
+    {
+      "variant": "defaultinv",
+      "corner": "ff",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "f6e5e3b5c327261096399dcfeccaaedf26fb3cddcf08b69ac001a73b383a4697",
+      "OT_WS": "OT_WS max 6.848920319768581e-10 min 3.1691940738376445e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 50.626251000000025,
+        "arrival_min_rise": 50.446320000000014,
+        "arrival_max_fall": 45.528617999999994,
+        "arrival_min_fall": 45.36274,
+        "slew_max_rise": 111.768059,
+        "slew_max_fall": 102.076088
+      }
+    },
+    {
+      "variant": "defaultinv",
+      "corner": "tt",
+      "other_pin_FF_all_bytes_equal": true,
+      "other_bytes_sha256": "c218c9ffe4875ed68b14f7fc3d2e226c007985b1a17b0d90b211e16f3b840ab7",
+      "OT_WS": "OT_WS max 6.415654674185589e-10 min 3.0291207042676405e-11",
+      "sense": "negative_unate",
+      "local": {
+        "arrival_max_rise": 68.13790899999998,
+        "arrival_min_rise": 67.956818,
+        "arrival_max_fall": 57.340271,
+        "arrival_min_fall": 57.16643500000001,
+        "slew_max_rise": 147.593262,
+        "slew_max_fall": 125.108856
+      }
+    }
+  ],
+  "latency_invariance": [
+    {
+      "variant": "buf",
+      "local_delta": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 0.0,
+        "arrival_max_fall": -3.099999997857594e-05,
+        "arrival_min_fall": 0.0,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "absolute_shifts": {
+        "input_absolute_ps": {
+          "arrival_max_rise": 17.0,
+          "arrival_min_rise": 17.0,
+          "arrival_max_fall": 17.0,
+          "arrival_min_fall": 17.0
+        },
+        "output_absolute_ps": {
+          "arrival_max_rise": 17.0,
+          "arrival_min_rise": 17.0,
+          "arrival_max_fall": 16.99996900000002,
+          "arrival_min_fall": 17.0
+        },
+        "driver_absolute_ps": {
+          "arrival_max_rise": 17.0,
+          "arrival_min_rise": 16.99999199999999,
+          "arrival_max_fall": 17.0,
+          "arrival_min_fall": 17.0
+        }
+      },
+      "merged_lib_bytes_identical": true
+    },
+    {
+      "variant": "inv",
+      "local_delta": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 3.099999997857594e-05,
+        "arrival_max_fall": 8.000000008223651e-06,
+        "arrival_min_fall": 0.0,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "absolute_shifts": {
+        "input_absolute_ps": {
+          "arrival_max_rise": 17.0,
+          "arrival_min_rise": 17.0,
+          "arrival_max_fall": 17.0,
+          "arrival_min_fall": 17.0
+        },
+        "output_absolute_ps": {
+          "arrival_max_rise": 17.0,
+          "arrival_min_rise": 17.00003099999998,
+          "arrival_max_fall": 17.00000800000001,
+          "arrival_min_fall": 17.0
+        },
+        "driver_absolute_ps": {
+          "arrival_max_rise": 17.0,
+          "arrival_min_rise": 17.0,
+          "arrival_max_fall": 17.000003999999997,
+          "arrival_min_fall": 17.000000000000007
+        }
+      },
+      "merged_lib_bytes_identical": true
+    },
+    {
+      "variant": "chain",
+      "local_delta": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 6.100000001652006e-05,
+        "arrival_max_fall": 0.0,
+        "arrival_min_fall": 1.499999999055035e-05,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "absolute_shifts": {
+        "input_absolute_ps": {
+          "arrival_max_rise": 17.0,
+          "arrival_min_rise": 17.0,
+          "arrival_max_fall": 17.0,
+          "arrival_min_fall": 17.0
+        },
+        "output_absolute_ps": {
+          "arrival_max_rise": 17.0,
+          "arrival_min_rise": 17.000061000000017,
+          "arrival_max_fall": 17.0,
+          "arrival_min_fall": 17.00001499999999
+        },
+        "driver_absolute_ps": {
+          "arrival_max_rise": 17.000031000000035,
+          "arrival_min_rise": 17.000061000000017,
+          "arrival_max_fall": 17.00001499999999,
+          "arrival_min_fall": 17.000007999999994
+        }
+      },
+      "merged_lib_bytes_identical": true
+    }
+  ],
+  "default_absent_no_receipt": true,
+  "causal": [
+    {
+      "label": "buf_latency0",
+      "rc": 0,
+      "expected_success": true,
+      "pass_expected": true
+    },
+    {
+      "label": "inv_latency0",
+      "rc": 0,
+      "expected_success": true,
+      "pass_expected": true
+    },
+    {
+      "label": "chain_latency0",
+      "rc": 0,
+      "expected_success": true,
+      "pass_expected": true
+    },
+    {
+      "label": "default_absent",
+      "rc": 0,
+      "expected_success": true,
+      "pass_expected": true
+    },
+    {
+      "label": "wrong_invert",
+      "rc": 1,
+      "expected_success": false,
+      "pass_expected": true
+    },
+    {
+      "label": "wrong_source",
+      "rc": 1,
+      "expected_success": false,
+      "pass_expected": true
+    },
+    {
+      "label": "wrong_master",
+      "rc": 1,
+      "expected_success": false,
+      "pass_expected": true
+    },
+    {
+      "label": "wrong_root",
+      "rc": 1,
+      "expected_success": false,
+      "pass_expected": true
+    },
+    {
+      "label": "missing_spef",
+      "rc": 1,
+      "expected_success": false,
+      "pass_expected": true
+    },
+    {
+      "label": "partial_proof",
+      "rc": 1,
+      "expected_success": false,
+      "pass_expected": true
+    }
+  ],
+  "sensitivity": [
+    {
+      "case": "load74",
+      "local_delta": {
+        "arrival_max_rise": 53.185028000000045,
+        "arrival_min_rise": 53.19461000000001,
+        "arrival_max_fall": 43.78543099999999,
+        "arrival_min_fall": 43.79064199999999,
+        "slew_max_rise": 138.435547,
+        "slew_max_fall": 117.854019
+      },
+      "lib_changed": true
+    },
+    {
+      "case": "spef2",
+      "local_delta": {
+        "arrival_max_rise": 13.434570000000008,
+        "arrival_min_rise": 13.257873000000018,
+        "arrival_max_fall": 14.921538999999996,
+        "arrival_min_fall": 14.741882999999987,
+        "slew_max_rise": 46.43699599999999,
+        "slew_max_fall": 50.38789399999999
+      },
+      "lib_changed": true
+    }
+  ]
+}
