@@ -1,0 +1,2330 @@
+[
+  {
+    "driver": "_185203_/Y",
+    "net": "_050228_",
+    "loads": 49,
+    "driver_role": "combinational_or_macro",
+    "load_pins": [
+      {
+        "instance": "_310374_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310377_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310384_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310481_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310483_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310502_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310505_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310507_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310518_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310523_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310599_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185219_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185233_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185250_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185254_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185276_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185280_",
+        "master": "NAND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185284_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185298_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185311_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185318_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185329_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185360_",
+        "master": "AND4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185424_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185432_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185438_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185444_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185455_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185456_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185473_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185477_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185490_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185501_",
+        "master": "AND4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185539_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185543_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185545_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185548_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185558_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185576_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185583_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185609_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185655_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185659_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185666_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185692_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185697_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185703_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185723_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185727_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      }
+    ]
+  },
+  {
+    "driver": "_185217_/Y",
+    "net": "_050242_",
+    "loads": 49,
+    "driver_role": "combinational_or_macro",
+    "load_pins": [
+      {
+        "instance": "_310374_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310377_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310384_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310481_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310483_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310502_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310505_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310507_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310518_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310523_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310599_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185219_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185233_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185250_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185254_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185276_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185280_",
+        "master": "NAND2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185284_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185298_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185311_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185318_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185329_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185360_",
+        "master": "AND4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185424_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185432_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185438_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185445_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185455_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185456_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185473_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185477_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185490_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185501_",
+        "master": "AND4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185539_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185543_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185545_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185548_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185558_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185576_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185583_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185609_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185655_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185659_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185666_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185692_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185697_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185703_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185723_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185727_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      }
+    ]
+  },
+  {
+    "driver": "_185280_/Y",
+    "net": "_050305_",
+    "loads": 43,
+    "driver_role": "combinational_or_macro",
+    "load_pins": [
+      {
+        "instance": "_310375_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310385_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310394_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310403_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310462_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310482_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310484_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310486_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310487_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310490_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310491_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310503_",
+        "master": "OAI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310519_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310524_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310525_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310531_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310548_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310565_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310593_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310594_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310601_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310609_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185282_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185299_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185322_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185425_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185468_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185474_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185478_",
+        "master": "AOI221x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185491_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185540_",
+        "master": "OAI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185546_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185563_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185586_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185597_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185610_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185642_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_185679_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185685_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185693_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185713_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185724_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185728_",
+        "master": "AOI221x1_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.MUL_AGE[0]$_DFFE_PN1P_/QN",
+    "net": "_000188_",
+    "loads": 34,
+    "driver_role": "sequential",
+    "load_pins": [
+      {
+        "instance": "_310226_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310228_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310230_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310232_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310234_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310236_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310239_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310245_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310257_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310314_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310325_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310330_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310333_",
+        "master": "AO31x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310334_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310336_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310343_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310351_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310379_",
+        "master": "AND4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310380_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310389_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310395_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310397_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310646_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310648_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310773_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310775_",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310781_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_310785_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310940_",
+        "master": "AND4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_203709_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_203713_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_204709_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_219253_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228635_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.MUL_AGE[5]$_DFFE_PN1P_/QN",
+    "net": "_000355_",
+    "loads": 34,
+    "driver_role": "sequential",
+    "load_pins": [
+      {
+        "instance": "_310094_",
+        "master": "AND4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310128_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310129_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310132_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310158_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310163_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310238_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310315_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310653_",
+        "master": "MAJx2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310691_",
+        "master": "MAJx2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310694_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310696_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310697_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310698_",
+        "master": "AO31x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310701_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      },
+      {
+        "instance": "_310796_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310828_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      },
+      {
+        "instance": "_310974_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310975_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310976_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310979_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_228625_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228676_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228694_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228695_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228704_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228712_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_228719_",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_228724_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_228739_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_228747_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      },
+      {
+        "instance": "_228751_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228831_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228841_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.MUL_AGE[6]$_DFFE_PN1P_/QN",
+    "net": "_000362_",
+    "loads": 33,
+    "driver_role": "sequential",
+    "load_pins": [
+      {
+        "instance": "_310094_",
+        "master": "AND4x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310137_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310155_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310157_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310158_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310238_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310349_",
+        "master": "MAJx2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310352_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310643_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310644_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310654_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310694_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310697_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310698_",
+        "master": "AO31x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310701_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310793_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310828_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_310831_",
+        "master": "OA33x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310967_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310976_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228620_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228676_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_228697_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228724_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228738_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228748_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      },
+      {
+        "instance": "_228754_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_228761_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228764_",
+        "master": "OA31x2_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_228791_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228831_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228841_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_228848_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.age[0]$_DFFE_PN0P_/QN",
+    "net": "u_ot_pr_core.n[0]",
+    "loads": 43,
+    "driver_role": "sequential",
+    "load_pins": [
+      {
+        "instance": "_310247_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310301_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310330_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310338_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310514_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310517_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310646_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310648_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310773_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310775_",
+        "master": "AOI211x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310781_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310785_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_311142_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185265_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185348_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185369_",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185375_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185387_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185392_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185398_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185436_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185442_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185495_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_203708_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_203713_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_203719_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_204709_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_219253_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228883_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228885_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_228889_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_229056_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229073_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229100_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229118_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229132_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229138_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229308_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229309_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_233182_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_233183_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_233185_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_233186_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.age[1]$_DFFE_PN0P_/QN",
+    "net": "_002915_",
+    "loads": 45,
+    "driver_role": "sequential",
+    "load_pins": [
+      {
+        "instance": "_310247_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310301_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310320_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310331_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310334_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      },
+      {
+        "instance": "_310335_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310510_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310511_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310647_",
+        "master": "AOI21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310773_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310780_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310781_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      },
+      {
+        "instance": "_311144_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_311145_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185265_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185348_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185369_",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185375_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185387_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185392_",
+        "master": "NOR2x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185398_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185437_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185444_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185495_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_203705_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_203707_",
+        "master": "AO22x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_203712_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_203714_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_203718_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_203719_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_204710_",
+        "master": "XOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_219217_",
+        "master": "MAJx2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228885_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228888_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_228891_",
+        "master": "AO221x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_229056_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_229057_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_229085_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229095_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_229097_",
+        "master": "AO31x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_229119_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_229141_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229306_",
+        "master": "XOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_233183_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_233184_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      }
+    ]
+  },
+  {
+    "driver": "u_ot_pr_core.age[2]$_DFFE_PN0P_/QN",
+    "net": "_002916_",
+    "loads": 46,
+    "driver_role": "sequential",
+    "load_pins": [
+      {
+        "instance": "_310320_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310332_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310333_",
+        "master": "AO31x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310335_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310506_",
+        "master": "OAI21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310508_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310511_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_310645_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_310646_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      },
+      {
+        "instance": "_310784_",
+        "master": "AO32x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_310984_",
+        "master": "OA22x2_ASAP7_75t_R",
+        "pin": "B2",
+        "bit": 0
+      },
+      {
+        "instance": "_311143_",
+        "master": "XOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_311144_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185261_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185348_",
+        "master": "OR5x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185369_",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185378_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185382_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_185387_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185394_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185395_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_185398_",
+        "master": "OR4x1_ASAP7_75t_R",
+        "pin": "C",
+        "bit": 0
+      },
+      {
+        "instance": "_185407_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185415_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_185416_",
+        "master": "OA211x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_203705_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_203707_",
+        "master": "AO22x1_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_203712_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_203714_",
+        "master": "OR2x2_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_203715_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_203720_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "B",
+        "bit": 0
+      },
+      {
+        "instance": "_203721_",
+        "master": "OA31x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_219216_",
+        "master": "XOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228884_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228885_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_228887_",
+        "master": "AND2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_228888_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_229055_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229095_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_229097_",
+        "master": "AO31x2_ASAP7_75t_R",
+        "pin": "A2",
+        "bit": 0
+      },
+      {
+        "instance": "_229099_",
+        "master": "NAND2x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229117_",
+        "master": "XNOR2x2_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229300_",
+        "master": "OR3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_229301_",
+        "master": "OA21x2_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      },
+      {
+        "instance": "_233180_",
+        "master": "AND3x1_ASAP7_75t_R",
+        "pin": "A",
+        "bit": 0
+      },
+      {
+        "instance": "_233181_",
+        "master": "AO21x1_ASAP7_75t_R",
+        "pin": "A1",
+        "bit": 0
+      }
+    ]
+  }
+]
