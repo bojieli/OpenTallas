@@ -1,0 +1,69 @@
+{
+  "source_commit": "acc1802b3",
+  "rtl_sha256": "3c3c01088953bbc09fa338ae94ddc5d106c0f203747962e7a0b578b567c1d895",
+  "status": "UNBOUND SOURCE OPTION / NO PHYSICAL GATE",
+  "direct_rtl": {
+    "widths": [
+      328,
+      257
+    ],
+    "checks_each": 886,
+    "reset_epochs_each": 50,
+    "first_valid_edge": 3,
+    "steady_edges": 1,
+    "mutants_rejected": [
+      "DATA",
+      "RESET",
+      "CLOCK"
+    ],
+    "log": "/home/ubuntu/artifacts/codex-hbm-parent-station-1020/rtl_kept.otrun",
+    "log_sha256": "e0365d57a3cb033b62e0378bf465d44baaccc1119d564f6456c456d7cf4e342a"
+  },
+  "native": {
+    "328": {
+      "status": "PASS",
+      "roots_examined": 687,
+      "max_dynamic_loads": 25,
+      "constant_output_bits": [],
+      "role_errors": [],
+      "functional_pin_contract": "NOT_EVALUATED",
+      "pin_registration_contract": "NOT_EVALUATED",
+      "storage_contract": "NOT_EVALUATED",
+      "raw_reset_loads": 15
+    },
+    "257": {
+      "status": "PASS",
+      "roots_examined": 539,
+      "max_dynamic_loads": 25,
+      "constant_output_bits": [],
+      "role_errors": [],
+      "functional_pin_contract": "NOT_EVALUATED",
+      "pin_registration_contract": "NOT_EVALUATED",
+      "storage_contract": "NOT_EVALUATED",
+      "raw_reset_loads": 12
+    }
+  },
+  "source_BMC": {
+    "steps": 8,
+    "dut_initial_state": "unconstrained",
+    "harness_only_initialization": "past-observation age=0, not DUT state",
+    "result": "PASS bothwidths",
+    "scope": "source RTL async2sync clock-sampled contract only; not imported-cell model proof or analog asynchronous phase qualification"
+  },
+  "preserved_failures": [
+    "mapped.otrun/map_328: omittedkeep hook merged copies; numericdonttouch string causedstoi; correctedsource/normalhook acc1802b3",
+    "formal.otrun: missing stagedscript rc127, corrected",
+    "formal_staged.otrun: unconstrainedharnesshistory wronglyenabledassertatstep1; correctedobservedpastguard ca6d7e19e; initialfailureverdict preserved"
+  ],
+  "mapped_cell_functional_proof": "NOT CLAIMED; root DFFASRHQN model alert remains relevant",
+  "physical_clock_hold_reset_calendar": "OPEN",
+  "mapped_area_um2": {
+    "328": 276.34932,
+    "257": 216.7317,
+    "32_upper_pairs": 15778.59264
+  },
+  "mapped_FF": {
+    "328": 357,
+    "257": 280
+  }
+}
