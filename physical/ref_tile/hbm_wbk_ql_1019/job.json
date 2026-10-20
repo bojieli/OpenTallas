@@ -1,0 +1,198 @@
+{
+ "name": "hbm_wbk_ql_1019-ql1-COMMIT",
+ "block": "ot_hbm_svc_wb_kport_q",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-WBK",
+ "purpose": "HBM die d4g wbk_<q> x4 = ot_hbm_svc_wb_kport_q (per-quadrant DMA write-back -> 16 HBM K ports, quad strap); first hardening through the reviewed_gray_fifos CDC policy (main 7536ee4bb) with the K-skid non-empty gate; 10-19 per-domain RTL reset landing",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/l2h-wbk-ql-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/rtl/rbh_stk_1018/wbk_ql_1019/"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_wb_kport_q #(.WOPEN(0), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_reset_sync.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport_q.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wbq_e",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_e wbq_e",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "STK_WBQ PASS wbq_e",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_e.log",
+    "note": "E quadrant lockstep vs GEN0 wb_kport"
+   },
+   {
+    "name": "wbq_w",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_w wbq_w",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "STK_WBQ PASS wbq_w",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_w.log",
+    "note": "W quadrant lockstep"
+   },
+   {
+    "name": "wbq_e_wopen",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_e_wopen wbq_e_wopen",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "STK_WBQ PASS wbq_e_wopen",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
+    "pass_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_e_wopen.log",
+    "note": "E quadrant WOPEN=1 lockstep"
+   },
+   {
+    "name": "wbq_mut_quad",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_mut_quad wbq_mut_quad",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
+    "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
+    "fail_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_mut_quad.log",
+    "note": "fold ignores the quad strap"
+   },
+   {
+    "name": "wbq_mut_span",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_mut_span wbq_mut_span",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
+    "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
+    "fail_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_mut_span.log",
+    "note": "window total = ordinal total"
+   },
+   {
+    "name": "wbq_mut_premature",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_mut_premature wbq_mut_premature",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
+    "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
+    "fail_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_mut_premature.log",
+    "note": "premature wa"
+   },
+   {
+    "name": "wbq_mut_ksaddr",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh {RUN}/bench/wbq_mut_ksaddr wbq_mut_ksaddr",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
+    "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
+    "fail_witness": "results/rtl/rbh_stk_1018/wbk_ql_1019/wbq_mut_ksaddr.log",
+    "note": "kshare address mutant"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_wbk_ql_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_wbk_ql_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_wbk_ql_1019 --out {RUN}/record/views/ot_hbm_svc_wb_kport_q --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_wbk_ql_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_wbk_ql_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_wbk_ql_1019/hbm_wbk_ql_1019-ql1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "L2H-WBK 10-19 successor of hbm_wbk_q_1018 (gate FAIL OT_MULTI_ROOT: kit reset landing put hbm_rst_n on stream_clk): RTL lands each reset in its own clock domain (2 plain stages per domain at the face), landed resets drive the core; cross-domain reset combination unchanged inside u_wb (per-domain ot_reset_sync). Same floorplan/macros/pins. | prior: NEW hard top for d4g wbk_<q> x4 (ot_hbm_svc_wb_kport_q over ot_hbm_svc_wb_cutthrough_cdc #(NPC 16, QFOLD 1)); GEN0 bound the per-stack ot_hbm_svc_wb_kport as a SYNTH ETM. CDC gate fix (HBM-WBK 10-18): K-port skid loads the FIFO head only when that FIFO is non-empty (k_v && !fifo_empty[selected_lane]); unreachable difference in the static schedule (req_valid[pc] -> !fifo_empty[req_lane[pc]] holds: the latched lane was non-empty and only its own PC pops it), 20 bench logs old==new"
+}

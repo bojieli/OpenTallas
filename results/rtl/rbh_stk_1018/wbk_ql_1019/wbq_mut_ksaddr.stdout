@@ -1,0 +1,5 @@
+[225834000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:117: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=0 wb=0 kshare=0000 controller=1
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:117: Verilog $stop
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_ksaddr
+rc=0
