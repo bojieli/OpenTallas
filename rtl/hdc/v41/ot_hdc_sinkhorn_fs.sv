@@ -21,6 +21,9 @@
 // relay holds reset for >= 3 edges with the clock running), exactly as the reset state of ot_hdc_sinkhorn_p.
 // ---------------------------------------------------------------------------------------------------------------------
 
+`ifndef OT_SKF_OH
+`define OT_SKF_OH 0
+`endif
 // kept same-edge register copy (fixed hierarchy: synthesis never merges two instances)
 (* keep_hierarchy = 1 *) module ot_skf_kr #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
     always @(posedge clk) q <= d;
@@ -80,7 +83,7 @@ endmodule
 
 // ---- fanout-safe positive add (ot_hdc_skp_add with ua = 0, bit for bit) ----------------------------------------------
 // Operand copy c < NS feeds mantissa slice c of stage A; copy NS feeds the exponent / guard / sticky slice.
-module ot_hdc_skf_add #(parameter integer NS = 4, parameter integer NB = 3) (
+module ot_hdc_skf_add #(parameter integer NS = 4, parameter integer NB = 3, parameter integer OH = 0) (
     input  wire                 clk,
     input  wire [(NS+1)*8-1:0]  ea,
     input  wire [(NS+1)*24-1:0] ma,
@@ -103,8 +106,20 @@ module ot_hdc_skf_add #(parameter integer NS = 4, parameter integer NB = 3) (
             (* keep = 1 *) ot_skf_esub u_es (.ea(ea_c), .eb(eb_c), .ab1(ab1), .ba1(ba1));   // ea - eb, eb - ea
             wire swap = !ab1[8];
             wire [7:0] dab = ab1[7:0], dba = ba1[7:0];
-            wire [24:0] shb = (dab >= 8'd25) ? 25'd0 : ({mb_c, 1'b0} >> dab[4:0]);
-            wire [24:0] sha = (dba >= 8'd25) ? 25'd0 : ({ma_c, 1'b0} >> dba[4:0]);
+            wire [24:0] shb, sha;
+            if (OH == 0) begin : g_lsh
+                assign shb = (dab >= 8'd25) ? 25'd0 : ({mb_c, 1'b0} >> dab[4:0]);
+                assign sha = (dba >= 8'd25) ? 25'd0 : ({ma_c, 1'b0} >> dba[4:0]);
+            end else begin : g_ohsh
+                // S81-GUVE (10-20): one-hot sliced shifters (kept 2-level decode), only the bits this slice reads:
+                // the shift-amount bits drive the kept decoder only (L5 ro3 native census: ab1 / ba1 / swap 33-62)
+                localparam integer LO = (c < NS) ? 1 + SW*c : 0, NW = (c < NS) ? SW : 1;
+                wire [NW-1:0] yb, ya;
+                ot_skf_rsh #(.W(25), .LO(LO), .N(NW)) u_rb (.x({mb_c, 1'b0}), .d(dab), .y(yb));
+                ot_skf_rsh #(.W(25), .LO(LO), .N(NW)) u_ra (.x({ma_c, 1'b0}), .d(dba), .y(ya));
+                assign shb = 25'(yb) << LO;
+                assign sha = 25'(ya) << LO;
+            end
             if (c < NS) begin : g_slice
                 wire [SW-1:0] mg = swap ? mb_c[SW*c +: SW] : ma_c[SW*c +: SW];
                 wire [SW-1:0] ah = swap ? sha[1 + SW*c +: SW] : shb[1 + SW*c +: SW];
@@ -167,6 +182,41 @@ endmodule
     wire [8:0] ab0, ba0;
     ot_hdc_sk_cadd #(.W(8)) u_dab (.a(ea), .b(~eb), .s0(ab0), .s1(ab1));
     ot_hdc_sk_cadd #(.W(8)) u_dba (.a(eb), .b(~ea), .s0(ba0), .s1(ba1));
+endmodule
+
+// S81-GUVE (10-20): one-hot right shift, output slice only.  y[i] = (d > W-1 ... see far) ? 0 : x[LO + i + d].
+// Two levels: z[j] = OR_g s4[g] & x[LO + j + 4g] (g = d[4:2], 0..6), y[i] = OR_m s1[m] & z[i + m] (m = d[1:0]);
+// d > 24 (far) -> 0 (the callers' shifts never exceed 24 otherwise: skf_add 25-bit operand, quot sh <= 24).
+// The decode is its own kept module, so each amount bit drives only the decoder and each select <= N + 3 ANDs.
+(* keep_hierarchy = 1 *) module ot_skf_sdec (input wire [7:0] d, output wire [6:0] s4, output wire [3:0] s1);
+    wire far = (d > 8'd24);
+    genvar g;
+    generate
+        for (g = 0; g < 7; g = g + 1) begin : g_4
+            assign s4[g] = !far && (d[4:2] == g);
+        end
+        for (g = 0; g < 4; g = g + 1) begin : g_1
+            assign s1[g] = (d[1:0] == g);
+        end
+    endgenerate
+endmodule
+(* keep_hierarchy = 1 *) module ot_skf_rsh #(parameter integer W = 25, parameter integer LO = 0, parameter integer N = 6) (
+    input wire [W-1:0] x, input wire [7:0] d, output reg [N-1:0] y);
+    wire [6:0] s4; wire [3:0] s1;
+    ot_skf_sdec u_dec (.d(d), .s4(s4), .s1(s1));
+    reg [N+2:0] z;
+    integer i, j, g;
+    always @* begin
+        for (j = 0; j < N + 3; j = j + 1) begin
+            z[j] = 1'b0;
+            for (g = 0; g < 7; g = g + 1)
+                if (LO + j + 4 * g < W) z[j] = z[j] | (s4[g] & x[LO + j + 4 * g]);
+        end
+        for (i = 0; i < N; i = i + 1) begin
+            y[i] = 1'b0;
+            for (g = 0; g < 4; g = g + 1) y[i] = y[i] | (s1[g] & z[i + g]);
+        end
+    end
 endmodule
 
 // trailing-zero count of a non-zero 24-bit word (don't care for 0)
@@ -244,7 +294,7 @@ module ot_hdc_skf_seed (
 endmodule
 
 // ---- correctly rounded X / T, Q1..Q4 + final (ot_hdc_skp_quot Q4 = 1, bit for bit) ----------------------------------
-module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0) (
+module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0, parameter integer OH = 0) (
     input  wire              clk,
     input  wire [6:0]        subn,       // mode copies: [2:0] M' slices, [5:3] X' slices, [6] Q4 low
     input  wire [4*24-1:0]   xm,         // [0..2] Q1 row groups (rows 0-9 / 10-19 / 20-28), [3] compare + X'
@@ -316,7 +366,11 @@ module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0) (
     generate
         for (s = 0; s < 15; s = s + 1) begin : g_sh
             wire [4:0] sh = sh_q[s];
-            if (s < 6) begin : g_m
+            if (OH != 0 && s < 6) begin : g_mo     // S81-GUVE: one-hot slice shift (sh copy drives the kept decode only)
+                ot_skf_rsh #(.W(24), .LO(4*s), .N(4)) u_r (.x(mp), .d({3'd0, sh}), .y(msd[4*s +: 4]));
+            end else if (OH != 0) begin : g_xo   // {xp} << (24 - sh) == ({xp, 24'b0} >> sh), sh <= 24
+                ot_skf_rsh #(.W(51), .LO(3*(s-6)), .N(3)) u_r (.x({2'b00, xp, 24'd0}), .d({3'd0, sh}), .y(xsd[3*(s-6) +: 3]));
+            end else if (s < 6) begin : g_m
                 wire [23:0] v = mp >> sh;
                 assign msd[4*s +: 4] = v[4*s +: 4];
             end else begin : g_x
@@ -420,7 +474,8 @@ module ot_hdc_sinkhorn_fs #(
     parameter [31:0]  EPS = 32'h358637BD,
     parameter integer MUT_Q4 = 0,
     parameter integer MUT = 0,                  // bench only: 1 = a steady step lands one stage early
-    parameter integer NVIN = 8                  // in_valid copies (vin)
+    parameter integer NVIN = 8,                 // in_valid copies (vin)
+    parameter integer OH = `OT_SKF_OH           // S81-GUVE 10-20: 1 = one-hot sliced shifters (native-32), bit-identical
 ) (
     input  wire            clk,
     input  wire            rst_n,               // master + st-select replicas (11 asynchronous pins)
@@ -536,7 +591,7 @@ module ot_hdc_sinkhorn_fs #(
         end
         // S1
         wire [7:0] e1; wire o1; wire [23:0] m1;
-        ot_hdc_skf_add #(.NS(NS)) u_s1 (.clk(clk), .ea(ee[0]), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]), .e(e1), .m(m1), .ovf(o1));
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_s1 (.clk(clk), .ea(ee[0]), .ma(mm[0]), .eb(ee[1]), .mb(mm[1]), .e(e1), .m(m1), .ovf(o1));
         wire [NA*8-1:0] e1_q; wire [NA*24-1:0] m1_q; reg b1_q;
         for (n = 0; n < NA; n = n + 1) begin : g_r1
             (* keep = 1 *) ot_skf_kr #(.W(32)) u_r (.clk(clk), .d({e1, m1}), .q({e1_q[8*n +: 8], m1_q[24*n +: 24]}));
@@ -544,7 +599,7 @@ module ot_hdc_sinkhorn_fs #(
         always @(posedge clk) b1_q <= o1;
         // S2
         wire [7:0] e2; wire o2; wire [23:0] m2;
-        ot_hdc_skf_add #(.NS(NS)) u_s2 (.clk(clk), .ea(e1_q), .ma(m1_q), .eb(ee[2]), .mb(mm[2]), .e(e2), .m(m2), .ovf(o2));
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_s2 (.clk(clk), .ea(e1_q), .ma(m1_q), .eb(ee[2]), .mb(mm[2]), .e(e2), .m(m2), .ovf(o2));
         wire [NA*8-1:0] e2_q; wire [NA*24-1:0] m2_q; reg b2_q;
         for (n = 0; n < NA; n = n + 1) begin : g_r2
             (* keep = 1 *) ot_skf_kr #(.W(32)) u_r (.clk(clk), .d({e2, m2}), .q({e2_q[8*n +: 8], m2_q[24*n +: 24]}));
@@ -552,7 +607,7 @@ module ot_hdc_sinkhorn_fs #(
         always @(posedge clk) b2_q <= b1_q | o2;
         // S3 (copies 0..NA-1 for S4, NA..NA+2 for the step-0 normaliser slices)
         wire [7:0] e3; wire o3; wire [23:0] m3;
-        ot_hdc_skf_add #(.NS(NS)) u_s3 (.clk(clk), .ea(e2_q), .ma(m2_q), .eb(ee[3]), .mb(mm[3]), .e(e3), .m(m3), .ovf(o3));
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_s3 (.clk(clk), .ea(e2_q), .ma(m2_q), .eb(ee[3]), .mb(mm[3]), .e(e3), .m(m3), .ovf(o3));
         wire [(NA+3)*8-1:0] e3_q; wire [(NA+3)*24-1:0] m3_q; reg b3_q;
         for (n = 0; n < NA + 3; n = n + 1) begin : g_r3
             (* keep = 1 *) ot_skf_kr #(.W(32)) u_r (.clk(clk), .d({e3, m3}), .q({e3_q[8*n +: 8], m3_q[24*n +: 24]}));
@@ -560,7 +615,7 @@ module ot_hdc_sinkhorn_fs #(
         always @(posedge clk) b3_q <= b2_q | o3;
         // S4: steady T = sum + eps (normal); step 0 T = normalised sum
         wire [7:0] et; wire ot_; wire [23:0] mt;
-        ot_hdc_skf_add #(.NS(NS)) u_ae (.clk(clk), .ea(e3_q[0 +: NA*8]), .ma(m3_q[0 +: NA*24]), .eb({NA{EPS_E}}), .mb({NA{EPS_M}}),
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_ae (.clk(clk), .ea(e3_q[0 +: NA*8]), .ma(m3_q[0 +: NA*24]), .eb({NA{EPS_E}}), .mb({NA{EPS_M}}),
                                          .e(et), .m(mt), .ovf(ot_));
         wire signed [9:0] te_s = $signed({2'b00, et}) - 10'sd127;
         wire [23:0] nt_m; wire signed [9:0] nt_e [0:2]; wire tz [0:2];
@@ -608,7 +663,7 @@ module ot_hdc_sinkhorn_fs #(
             for (n = 0; n < 7; n = n + 1) begin : g_sn
                 assign sn[n] = zmv[ZE(EL, n)];
             end
-            ot_hdc_skf_quot #(.MUT_Q4(MUT_Q4)) u_q (.clk(clk), .subn(sn),
+            ot_hdc_skf_quot #(.MUT_Q4(MUT_Q4), .OH(OH)) u_q (.clk(clk), .subn(sn),
                 .xm({x_m[EL][3], x_m[EL][2], x_m[EL][1], x_m[EL][0]}), .xe(x_e[EL]),
                 .xz(x_z[EL] & zmv[ZE(EL, 7)]), .tm(tmc), .te(tec), .r(rs[2*29*k +: 2*29]),
                 .y(q[4*k + r]), .range(q_rng[4*k + r]));
@@ -628,7 +683,7 @@ module ot_hdc_sinkhorn_fs #(
             assign qm[24*n +: 24] = {zq[30:23] != 8'd0, zq[22:0]};
         end
         wire [7:0] oe; wire [23:0] om;
-        ot_hdc_skf_add #(.NS(NS)) u_eps (.clk(clk), .ea(qe), .ma(qm), .eb({NA{EPS_E}}), .mb({NA{EPS_M}}),
+        ot_hdc_skf_add #(.NS(NS), .OH(OH)) u_eps (.clk(clk), .ea(qe), .ma(qm), .eb({NA{EPS_E}}), .mb({NA{EPS_M}}),
                                           .e(oe), .m(om), .ovf(z_ov[k]));
         assign z_out[k] = {1'b0, om[23] ? oe : 8'd0, om[22:0]};
     end endgenerate

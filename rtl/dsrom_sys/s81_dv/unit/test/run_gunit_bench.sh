@@ -3,6 +3,7 @@
 # must FAIL (1 bias not added, 4 route_scale skipped, 5 HC group association, 6 HC root order, 7 rsqrt eps dropped,
 # 8 tail pre path without eps, 9 CTL injected northbound only, 10 Sinkhorn steady step one stage early).  A third argument (MUT list) runs only those
 # builds and exits 0 iff every one PASSes (job benches: '0' positive, one leaf's mutant expect fail).
+# GUNIT_NAT32 / GUNIT_DEFS / VERILATOR (env, S81-GUVE 10-20): NAT32 tail, extra defines (-DOT_S81_VE_LOADSAFE5), binary.
 # Prints GUNIT_GATE PASS/FAIL.  usage: run_gunit_bench.sh [workdir] [cases] [muts]
 set -u
 U=$(cd "$(dirname "$0")/.." && pwd); R=$(cd "$U/../../../.." && pwd)
@@ -19,11 +20,11 @@ SRC="rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_region16.sv physical/asap7_memory_ma
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv
  rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5f.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv
- rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_gunit.sv"
+ rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_gunit.sv"
 python3 -I "$U/test/gunit_vectors.py" "$T/gv.hex" "$N" 1017 || { echo "GUNIT_GATE FAIL vectors"; exit 1; }
 MUTS=${3:-"0 1 4 5 6 7 8 9 10"}; ONLY=${3:+1}
 for m in $MUTS; do
-  ( cd "$T" && verilator --cc --exe --build -j 6 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=$m -DOT_S81_GUNIT_PIN_COPY=${GUNIT_PIN_COPY:-0} -DOT_S81_GUNIT_CONTROL_SAFE=${GUNIT_CONTROL_SAFE:-0} -DOT_S81_GUNIT_Q4=${GUNIT_Q4:-0} -DOT_S81_GUNIT_FANOUT_SAFE=${GUNIT_FANOUT_SAFE:-0} \
+  ( cd "$T" && ${VERILATOR:-verilator} --cc --exe --build -j 6 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=$m -DOT_S81_GUNIT_PIN_COPY=${GUNIT_PIN_COPY:-0} -DOT_S81_GUNIT_CONTROL_SAFE=${GUNIT_CONTROL_SAFE:-0} -DOT_S81_GUNIT_Q4=${GUNIT_Q4:-0} -DOT_S81_GUNIT_FANOUT_SAFE=${GUNIT_FANOUT_SAFE:-0} -DOT_S81_GUNIT_NAT32=${GUNIT_NAT32:-0} ${GUNIT_DEFS:-} \
       --top-module tb_dsdv_gunit -Mdir "obj$m" $(for f in $SRC; do echo "$R/$f"; done) "$U/test/tb_dsdv_gunit.cpp" \
       -CFLAGS -O1 > "build$m.log" 2>&1; echo $? > "build$m.rc" ) &
 done

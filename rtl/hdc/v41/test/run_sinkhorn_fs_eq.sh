@@ -3,11 +3,12 @@
 # [workdir] [cases] [mut] [mutq4]  (mut 0 mutq4 0 = positive, prints SKF PASS; mut 1 = stage-early mutant and mutq4 1 =
 # corrupted Q4 range predicate, must print SKF FAIL).
 # Reads: rtl/hdc/v41/ot_hdc_sinkhorn.sv ot_hdc_sinkhorn_fs.sv ot_hdc_skf_predecode.sv ot_hdc_sk_arith.sv
-# ot_hdc_sk_recip_rom.sv, this dir's tb_sinkhorn_fs_eq.{sv,cpp}.
+# ot_hdc_sk_recip_rom.sv, this dir's tb_sinkhorn_fs_eq.{sv,cpp}.  SKF_DEFS (env): extra defines, e.g. -DOT_SKF_OH=1
+# (S81-GUVE one-hot shifters).  VERILATOR (env): the binary (default verilator).
 set -u
 H=$(cd "$(dirname "$0")/.." && pwd)
 T=${1:-$(mktemp -d)}; N=${2:-200}; M=${3:-0}; Q=${4:-0}; mkdir -p "$T"
-( cd "$T" && verilator --cc --exe --build -j 4 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=$M -DMUTQ4=$Q \
+( cd "$T" && ${VERILATOR:-verilator} --cc --exe --build -j 4 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=$M -DMUTQ4=$Q ${SKF_DEFS:-} \
     --top-module tb_sinkhorn_fs_eq -Mdir "obj$M$Q" "$H/ot_hdc_sinkhorn.sv" "$H/ot_hdc_sinkhorn_fs.sv" "$H/ot_hdc_skf_predecode.sv" \
     "$H/ot_hdc_sk_arith.sv" "$H/ot_hdc_sk_recip_rom.sv" "$H/test/tb_sinkhorn_fs_eq.sv" "$H/test/tb_sinkhorn_fs_eq.cpp" \
     -CFLAGS -O1 > "build$M$Q.log" 2>&1 ) \

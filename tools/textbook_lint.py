@@ -73,6 +73,12 @@ THRESHOLDS = {
     "bnd_out_levels_refuse": 3,    # REFUSE register->output (closed max 2; tt_ctlm 5)
     "bnd_in_to_out_refuse": 1,     # REFUSE any combinational input->output bit (closed: none)
     "bnd_icg_port_refuse": 1,      # REFUSE an ICG enable combinational from a port (closed: none)
+    # OWNER 10-20 ~09:05 PIN REGISTERS: required only at region crossings (landing rings) and on wires over the 405 um
+    # reach; touching same-region tiles may connect directly when the combined path meets timing (die / parent STA
+    # judges it).  So input->register / register->output LEVELS are a WARN (reported), never a boundary REFUSE, unless
+    # the strict 10-15 "every pin registered" form is asked for (--set bnd_strict_pin_regs=1).  A combinational
+    # input->output bit and an ICG enable from a port stay REFUSE; a stage beyond reach_um stays a wire_reach REFUSE.
+    "bnd_strict_pin_regs": 0,
     # logic_depth: raw ASAP7 weight sum x depth_scale = ps.  depth_scale calibrated so the closed set's worst stage
     # (P6 tu_retry_phy_port, 15 levels) estimates <= ~610 ps against the 700 ps budget at 1.2 GHz
     "depth_scale": 1.667,
@@ -138,6 +144,8 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 difference from the closed commit no longer refuses when "source" is a COMMITTED receipt (a path on the
 #                 job's commit / origin/main, not an absolute local file) that records the closed view's FAIL: such a
 #                 view cannot bind into the die, so the re-route is not a repeat (Gate-Rule: relaxing, submit lint only).
+#   native_reach  exact-job committed native-path receipt >405 um, unchanged RTL/parameters, and source-pinned
+#                 changed pin coordinate ranges on the same outline/faces; fresh native/gate qualification required.
 #   flow_failure  (ROOT-0945 2026-10-18) a re-route of the same or a fixed source after a harness / OOM / flow failure of
 #                 an ADMITTED re-route: "failed_job" (the failed job's id, in the loop's history: same block, not CLOSED,
 #                 not active, and its own spec carried a valid "reroute_reason" -- the retry inherits that admission;
@@ -150,7 +158,8 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 (OT_PIN_BALANCE_H from route.pin_balance, or PINEX=0 from an exact io_tcl) and the closed kit did not
 #                 (Gate-Rule: relaxing, submit-time CLOSED-STANDS only).
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
-                       "native_launch", "native_capture", "native_spread", "flow_failure", "pin_order")
+                       "native_launch", "native_capture", "native_spread", "flow_failure", "pin_order",
+                       "pg_binding", "native_reach")
 DIE_WINDOW_CUT_MIN = 0.6
 PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
 PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
@@ -168,7 +177,8 @@ CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it ag
                          "tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ "
                          "\"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", "
                          "\"fix\") | \"flow_failure\" (+ \"failed_job\": the id of the failed, ADMITTED re-route "
-                         "being retried)}")
+                         "being retried) | native_reach (+ committed exact all-path audit and changed pin coordinates; same RTL/slot) | \"pg_binding\" (+ \"source\" COMMITTED native PG-binding audit summary that "
+                         "records the closed view's unbound VDD/VSS terminals, \"fix\"; same RTL and outline)}")
 
 
 def _num(x):
@@ -1095,10 +1105,11 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
     M["icg_enable_from_port"] = len(icg_en)
     if T["bnd_in_to_out_refuse"] and len(in2out) >= T["bnd_in_to_out_refuse"]:
         RF.setdefault("boundary", []).append(f"{len(in2out)} combinational input->output bit(s)")
-    if in2reg and in2reg[0][0] > T["bnd_in_levels_refuse"]:
+    strict_pins = bool(T.get("bnd_strict_pin_regs"))
+    if strict_pins and in2reg and in2reg[0][0] > T["bnd_in_levels_refuse"]:
         RF.setdefault("boundary", []).append(f"input->register {in2reg[0][0]} levels > {T['bnd_in_levels_refuse']} "
                                              f"({in2reg[0][1]} -> {in2reg[0][2]})")
-    if r2o and r2o[0][0] > T["bnd_out_levels_refuse"]:
+    if strict_pins and r2o and r2o[0][0] > T["bnd_out_levels_refuse"]:
         RF.setdefault("boundary", []).append(f"register->output {r2o[0][0]} levels > {T['bnd_out_levels_refuse']} "
                                              f"({r2o[0][1]} -> {r2o[0][2]})")
     if T["bnd_icg_port_refuse"] and len(icg_en) >= T["bnd_icg_port_refuse"]:
@@ -1119,7 +1130,10 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
         bad.append(f"{len(icg_en)} clock-gate enable(s) combinational from input ports (e.g. "
                    + ", ".join(f"{p}->{c} {l} lv" for l, p, c in icg_en[:3]) + "): register the enable first")
     if bad:
-        F["boundary"] = [b + ": register the boundary (pin flops / registered outputs)" for b in bad]
+        F["boundary"] = [b + (": register the boundary (pin flops / registered outputs)" if strict_pins else
+                              ": allowed as a same-region direct connection when the die / parent path meets timing "
+                              "(owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um")
+                         for b in bad]
 
     # ---- 4. logic depth reg -> reg
     worst = (0.0, None, None)

@@ -21,7 +21,12 @@ module dsdv_gunit_tail_fs #(
     parameter [31:0] HC_EPS = 32'h358637bd,
     parameter integer MUT_PRE = 0,
     parameter integer MUT_SK = 0,
-    parameter integer PIN_COPY = 1
+    parameter integer PIN_COPY = 1,
+    // S81-GUVE 10-20 (L5 ro3 native census FAIL 621 non-clock): 1 = native-32 tail -- ve-local binary32 units
+    // (ot_s81sl_ve_qmul / _qadd: bit- and cycle-exact to the f12 LAT 5 / 4 units, valid-only reset) fed by two kept
+    // same-edge operand copies; payload write gates per byte; one-hot Sinkhorn shifters (ot_hdc_sinkhorn_fs OH).
+    // 0 edges added; 0 = the reviewed L5 ro3 source.
+    parameter integer NAT32 = 0
 ) (
     input  wire          clk, rst_n,
     input  wire [7:0]    rst_v,
@@ -200,8 +205,18 @@ module dsdv_gunit_tail_fs #(
     // ---------------------------------------------------------------- units
     wire [31:0] my, ay; wire mf, af;
     wire [LM:0] vm; wire [LA:0] va;
-    ot_hdc_qmul_lat #(.LAT(LM)) u_mul (clk, rst_v[2], mv_q, ma_q, mb_q, my, mf);
-    ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_add (clk, rst_v[5], av_q, aa_q, ab_q, ay, af);
+    generate if (NAT32 != 0) begin : g_nu
+        wire [31:0] ma2, mb2, aa2, ab2, my2, ay2; wire mvo, avo;
+        (* keep = 1 *) dsdv_gunit_operand_pin32 u_ma2 (.clk(clk), .d(rd_ma), .q(ma2));
+        (* keep = 1 *) dsdv_gunit_operand_pin32 u_mb2 (.clk(clk), .d(mb_d), .q(mb2));
+        (* keep = 1 *) dsdv_gunit_operand_pin32 u_aa2 (.clk(clk), .d(rd_aa), .q(aa2));
+        (* keep = 1 *) dsdv_gunit_operand_pin32 u_ab2 (.clk(clk), .d(ab_d), .q(ab2));
+        ot_s81sl_ve_qmul #(.LAT(LM)) u_mul (clk, rst_v[2], mv_q, ma_q, ma2, mb_q, mb2, my, my2, mvo, mf);
+        ot_s81sl_ve_qadd #(.LAT(LA)) u_add (clk, rst_v[5], av_q, aa_q, aa2, ab_q, ab2, ay, ay2, avo, af);
+    end else begin : g_lu
+        ot_hdc_qmul_lat #(.LAT(LM)) u_mul (clk, rst_v[2], mv_q, ma_q, mb_q, my, mf);
+        ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_add (clk, rst_v[5], av_q, aa_q, ab_q, ay, af);
+    end endgenerate
     ot_hdc_vline #(.D(LM)) u_vm (.clk(clk), .rst_n(rst_v[0]), .v(mv_q), .vd(vm));
     ot_hdc_vline #(.D(LA)) u_va (.clk(clk), .rst_n(rst_v[0]), .v(av_q), .vd(va));
     wire mo = vm[LM], ao = va[LA], eo = xe_vo[0], do_ = xd_vo[0];
@@ -219,6 +234,23 @@ module dsdv_gunit_tail_fs #(
     generate for (b = 0; b < 24; b = b + 1) begin : g_payload
         for (h = 0; h < 2; h = h + 1) begin : g_half
             localparam integer C = (2 * b + h) % 4;
+            if (NAT32 != 0) begin : g_byte       // S81-GUVE: one kept gate per byte (L5 ro3 census: 16-bit gate 33-34 loads)
+                for (genvar y = 0; y < 2; y = y + 1) begin : g_y
+                    wire wm, wa, we, wd;
+                    (* keep = 1 *) ot_skf_and2 u_wm (.a(mo_c[C]), .b(mi_oh[h][b]), .y(wm));
+                    (* keep = 1 *) ot_skf_and2 u_wa (.a(ao_c[C]), .b(ai_oh[h][b]), .y(wa));
+                    (* keep = 1 *) ot_skf_and2 u_we (.a(xe_vo[C]), .b(ei_oh[h][b]), .y(we));
+                    (* keep = 1 *) ot_skf_and2 u_wd (.a(xd_vo[C]), .b(di_oh[h][b]), .y(wd));
+                    always @(posedge clk) begin
+                        if (launch_local[2*b+h]) t[b][16*h+8*y +: 8] <= mixes[32*b+16*h+8*y +: 8];
+                        if (wm) t[b][16*h+8*y +: 8] <= my[16*h+8*y +: 8];
+                        if (wa) t[b][16*h+8*y +: 8] <= ay[16*h+8*y +: 8];
+                        if (we) t[b][16*h+8*y +: 8] <= xe_y[16*h+8*y +: 8];
+                        if (wd) t[b][16*h+8*y +: 8] <= xd_y[16*h+8*y +: 8];
+                    end
+                end
+                always @(posedge clk) if (launch_local[48+2*b+h]) bb[b][16*h +: 16] <= bases[32*b+16*h +: 16];
+            end else begin : g_word
             wire wm, wa, we, wd;                 // kept gates: the valid copy drives 12 gates, each gate 16 bits
             (* keep = 1 *) ot_skf_and2 u_wm (.a(mo_c[C]), .b(mi_oh[h][b]), .y(wm));
             (* keep = 1 *) ot_skf_and2 u_wa (.a(ao_c[C]), .b(ai_oh[h][b]), .y(wa));
@@ -231,6 +263,7 @@ module dsdv_gunit_tail_fs #(
                 if (we) t[b][16*h +: 16] <= xe_y[16*h +: 16];
                 if (wd) t[b][16*h +: 16] <= xd_y[16*h +: 16];
                 if (launch_local[48+2*b+h]) bb[b][16*h +: 16] <= bases[32*b+16*h +: 16];
+            end
             end
         end
     end endgenerate
@@ -263,7 +296,7 @@ module dsdv_gunit_tail_fs #(
     generate for (k = 0; k < 8; k = k + 1) begin : g_slc
         (* keep = 1 *) ot_skf_kr #(.W(1)) u_s (.clk(clk), .d(sl_d), .q(slc[k]));
     end endgenerate
-    ot_hdc_sinkhorn_fs #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .NVIN(8)) u_sinkh (.clk(clk), .rst_n(rst_v[3]), .rst_n2(rst_v[4]),
+    ot_hdc_sinkhorn_fs #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .NVIN(8), .OH(NAT32)) u_sinkh (.clk(clk), .rst_n(rst_v[3]), .rst_n2(rst_v[4]),
         .in_valid(sl), .vin(slc), .in_ready(sr), .in_e(se), .out_valid(sv), .y(sy), .fault(sf), .busy(sbusy));
 
     // ---------------------------------------------------------------- control, fixed latency (dsdv_gunit_tail)

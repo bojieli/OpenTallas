@@ -32,6 +32,9 @@
 `ifndef OT_S81_GUNIT_FANOUT_SAFE
 `define OT_S81_GUNIT_FANOUT_SAFE 0
 `endif
+`ifndef OT_S81_GUNIT_NAT32
+`define OT_S81_GUNIT_NAT32 0
+`endif
 // S81-GUNIT whole model (10-19, FANOUT_SAFE, default 0 = legacy): (1) the 3,072-bit base table lives in 12 native
 // ot_sram_1r1w2c_32x64_m1 banks (rows {set, which}, bank b = base words 2b, 2b + 1); each bank reads continuously
 // (r_ce 1) at its own kept copy of the rank-2 job select, so its registered rd_out is the old `bases` capture register
@@ -47,7 +50,9 @@ module dsdv_gunit_l5 #(
     parameter integer PIN_COPY = `OT_S81_GUNIT_PIN_COPY,
     parameter integer CONTROL_SAFE = `OT_S81_GUNIT_CONTROL_SAFE,
     parameter integer Q4 = `OT_S81_GUNIT_Q4,
-    parameter integer FANOUT_SAFE = `OT_S81_GUNIT_FANOUT_SAFE
+    parameter integer FANOUT_SAFE = `OT_S81_GUNIT_FANOUT_SAFE,
+    // S81-GUVE 10-20: 1 = native-32 tail (dsdv_gunit_tail_fs NAT32; needs FANOUT_SAFE 1); 0 edges added
+    parameter integer NAT32 = `OT_S81_GUNIT_NAT32
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -223,7 +228,7 @@ module dsdv_gunit_l5 #(
         (* keep = 1 *) dsdv_gunit_control_first u_e (.clk(clk), .rst_n(rr[1]), .d(ye_v), .q(qe_vc[vc]));
         (* keep = 1 *) dsdv_gunit_control_first u_d (.clk(clk), .rst_n(rr[1]), .d(yd_v), .q(qd_vc[vc]));
     end
-    dsdv_gunit_tail_fs #(.PIN_COPY(PIN_COPY), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rr[6]), .rst_v(rr[14:7]), .launch(ln_c[0]), .launch_pre(lp12), .mixes(mx), .bases(bases), .scales(scales),
+    dsdv_gunit_tail_fs #(.PIN_COPY(PIN_COPY), .NAT32(NAT32), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rr[6]), .rst_v(rr[14:7]), .launch(ln_c[0]), .launch_pre(lp12), .mixes(mx), .bases(bases), .scales(scales),
         .result_v(tl_v), .result(coef), .fault(tl_f),
         .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_vc), .xe_y(qe_y), .xe_f(qe_f),
         .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_vc), .xd_y(qd_y), .xd_f(qd_f));
