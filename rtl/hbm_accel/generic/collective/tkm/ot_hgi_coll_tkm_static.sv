@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Fixed calendar successor. No ready, reservation, queue occupancy or survivor
 // predicate changes a production edge. Historical dynamic engines stay separate.
-module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_W=(TP<=1?1:$clog2(TP)))(
+module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, FAN32=0, RANK_W=(TP<=1?1:$clog2(TP)))(
  input wire clk,rst_n,start,
  input wire[31:0]tile_clk,input wire buffer_clk,
  input wire[11:0]cfg_n,input wire[12:0]cfg_k,cfg_nout,
@@ -113,7 +113,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, RANK_
   // TP=192 (RANK_W 8, EW 86) PT64 tiles use their own hardened shape name (die view per shape, no parameter alias).
   if(EW==86 && KMAX>=64)begin:e86
   // TKM 10-18: the e86 shape has no tau probe / tid ports (this calendar reads the result through the up chain only).
-  ot_hgi_coll_tkm_tile_e86 u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.clr(clr),.conv(conv1||conv2),
+  ot_hgi_coll_tkm_tile_e86 #(.FAN32(FAN32)) u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.clr(clr),.conv(conv1||conv2),
    .ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),
    .up_in(up[t+1]),.up_out(up[t]),.busy());
   end else begin:gen
