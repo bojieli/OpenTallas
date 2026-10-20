@@ -1,0 +1,102 @@
+{
+  "status": "PLANNED_NOT_GATED_NOT_QUALIFIED",
+  "outline_um": [
+    300.24,
+    300.24
+  ],
+  "central_fence_um": [
+    110.12,
+    110.12,
+    190.12,
+    190.12
+  ],
+  "mathematical_face_to_fence_point_max_l1_um": 380.24,
+  "endpoint_budget_um": 405,
+  "margin_um": 24.76,
+  "cycles_added_from_current": 0,
+  "reset_semantic_change": false,
+  "reset_status": "Sampled core assertion remains; production protocol unresolved",
+  "binding": "Keep all existing pin-facing FIRM capture/launch/hold cells at exact pins. Fence every other pre-GPL functional standard cell to central80x80. Require complete classification; missing cells or unexpected fixed interior cells fail. Clock/tie treatment remains separate. No soft attraction.",
+  "groups": [
+    {
+      "name": "head_data",
+      "edges": "N captured h0 -> central h1 -> S regional q launch",
+      "obligation": "all h1 784 data bits central; both edges <=405"
+    },
+    {
+      "name": "control_strap",
+      "edges": "N/W root ctl/sid capture -> central ctl/sid region copies -> S q enables",
+      "obligation": "all leafctl/sid flops and combinational decode central; every root to decoded terminal union <=405"
+    },
+    {
+      "name": "reset",
+      "edges": "face-landed reset -> root rst captures -> central regional rn -> S q RESETN",
+      "obligation": "existing release age and sampled assertion unchanged; trace true BUF/INV through root/reset helpers, classify root captures centrally if not pin-anchored"
+    },
+    {
+      "name": "relay_forward",
+      "edges": "N fan input capture -> central fan middle -> E/S fan launches",
+      "obligation": "all fan middle and untied cone cells central; each face-to-middle and middle-to-face edge bounded"
+    },
+    {
+      "name": "relay_reverse",
+      "edges": "S g/r captures -> central g/r middle -> N g/r launches",
+      "obligation": "all reverse middle and untied cone cells central"
+    },
+    {
+      "name": "pin_interface",
+      "edges": "port -> input hold/capture; output launch -> output hold/port",
+      "obligation": "retain current exact pin-anchor flow and audit all direct fixed-to-fixed endpoints; no inherited 168um segment shortcut"
+    }
+  ],
+  "required_actual_checks": [
+    "Fixed/unfixed mapped-cell census with every sequential and combinational group accounted for; refused unknown fixed endpoint groups",
+    "Hard fence occupancy/legalization audit after placement and CTS; assert every intended member within box",
+    "Truth-functional BUF/INV data/reset endpoint union on actual CTS ODB, exact loaded libs and terminal coordinates",
+    "Native dynamic <=32 and independently reproduced tie repair in pinned flow",
+    "No new cycles, compare source/reset benches and mutants against immutable reference",
+    "Fresh floorplan and density PNGs personally inspected and reviewed before submission"
+  ],
+  "eight_item_checklist": [
+    {
+      "item": 1,
+      "subject": "Source behavior/cycles",
+      "status": "PLANNED same source; current source benchmarks pass; final kit binding not generated"
+    },
+    {
+      "item": 2,
+      "subject": "Native actual mapped census",
+      "status": "Current source V3 dynamic<=30 PASS; successor artifact pending"
+    },
+    {
+      "item": 3,
+      "subject": "Reset semantics",
+      "status": "HOLD pending production sampled-reset protocol"
+    },
+    {
+      "item": 4,
+      "subject": "Stage reach",
+      "status": "CurrentFAIL517.212; proposed bound380.24; actual successor audit pending"
+    },
+    {
+      "item": 5,
+      "subject": "Clock and timing",
+      "status": "Prior gate WARN insertion; successor CTS and allcorners pending"
+    },
+    {
+      "item": 6,
+      "subject": "Pins, density and access",
+      "status": "Same full-row300.24 outline and pin map; planned center utilization, actual image pending"
+    },
+    {
+      "item": 7,
+      "subject": "Source-bound hooks and artifact identity",
+      "status": "PENDING hard fence hook and hash-bound reproduction; no shared tool change"
+    },
+    {
+      "item": 8,
+      "subject": "Coordinator review and adoption",
+      "status": "No APPROVED receipt; planned image is not actual placement; route remains diagnostic"
+    }
+  ]
+}
