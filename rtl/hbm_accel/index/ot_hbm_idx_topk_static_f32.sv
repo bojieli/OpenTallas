@@ -334,6 +334,8 @@ module ot_hbm_idx_topk_static_f32 #(
         end
     endgenerate
     ot_hbm_idx_kbetter #(.IDW(IDW), .TIEHI(MUT == 2 ? 1 : 0)) u_b3c (.x(t2[0]), .y(t2[1]), .b(b3c));
+    wire b3d;   // second look-ahead comparator: the 33 shift copies are fed from two distinct decode nets
+    ot_hbm_idx_kbetter #(.IDW(IDW), .TIEHI(MUT == 2 ? 1 : 0)) u_b3d (.x(t2[0]), .y(t2[1]), .b(b3d));
     wire [EW-1:0] t3_nx = qmux(b3, t2[0], t2[1]);
     always @(posedge clk) begin
         for (l = 0; l < 4; l = l + 1) begin
@@ -350,14 +352,17 @@ module ot_hbm_idx_topk_static_f32 #(
     // lane shift copies: registered at SEL phase 2 from the phase-3 winner look-ahead (= l_sh of the closed engine)
     wire t3v_nx = b3c ? t2[0][EW-1] : t2[1][EW-1];
     wire [2:0] t3l_nx = b3c ? {1'b0, t2_l[1:0]} : {1'b1, t2_l[3:2]};
+    wire t3v_ny = b3d ? t2[0][EW-1] : t2[1][EW-1];
+    wire [2:0] t3l_ny = b3d ? {1'b0, t2_l[1:0]} : {1'b1, t2_l[3:2]};
     wire sel2 = st == E_SEL && s_ph == 2'd2;
-    wire [7:0] sh_d;
+    wire [7:0] sh_d, sh_e;
     generate
         for (g = 0; g < 8; g = g + 1) begin : g_shd
             assign sh_d[g] = sel2 && t3v_nx && t3l_nx == g[2:0];
+            assign sh_e[g] = sel2 && t3v_ny && t3l_ny == g[2:0];
         end
         for (c = 0; c < 33; c = c + 1) begin : g_shk
-            ot_hbm_idx_kreg #(.W(8)) u (.clk(clk), .rst_n(rst_n), .d(sh_d), .q(shk[c]));
+            ot_hbm_idx_kreg #(.W(8)) u (.clk(clk), .rst_n(rst_n), .d((c < 17) ? sh_d : sh_e), .q(shk[c]));
         end
     endgenerate
     // ------------------------------------------------------------ winner capture (slot copies), R value at capture
@@ -445,8 +450,11 @@ module ot_hbm_idx_topk_static_f32 #(
         end
         always @(posedge clk) begin w_o[32*g +: 32] <= wo; w_r[32*g +: 32] <= wr; end
     end endgenerate
-    wire [15:0] o_wm = {8'd0, kmask} << o_rb[2:0];
-    wire [15:0] r_wm = {8'd0, kmask} << r_rb[2:0];
+    // word masks: low byte from the kept low-bit copy, high byte from the register (halves the shift-select load)
+    wire [15:0] o_wma = {8'd0, kmask} << ol3, o_wmb = {8'd0, kmask} << o_rb[2:0];
+    wire [15:0] r_wma = {8'd0, kmask} << rl3, r_wmb = {8'd0, kmask} << r_rb[2:0];
+    wire [15:0] o_wm = {o_wmb[15:8], o_wma[7:0]};
+    wire [15:0] r_wm = {r_wmb[15:8], r_wma[7:0]};
     // O split flag: 5 kept registered copies (o_rb / k_q settle >= 10 edges before E_PKO; wl_* two edges after)
     wire [4:0] osp; reg rsp;
     generate for (c = 0; c < 5; c = c + 1) begin : g_osp
