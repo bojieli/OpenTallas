@@ -60,25 +60,3 @@ CDC verification now applies ALL exact constraints before querying each
 pair max/min; same bounds and finite-path rules (tool c9601c494,
 Gate-Rule neutral);4batch+12CDC+6mixed actual graph tests PASS fleet5.
 Previous gate FAIL remains preserved65cea4293; not physical qualification.
-
-
-CODEX 10-20 batch4 terminal review (01:07 gate): WARN0FAIL, CTS744s,
-trialGRT199s overflow0, M2max28.39%. Pin spread pg_clk TT38.8/FF38.0ps;
-clk_ctl TT57.8/FF55.4ps. CTS TTsetup+150.43ps, representative hold+29.5ps
-(gate evidence only; final SS/FF signoff belongs to route). Clock insertion
-pg_clk TT340.7/FF285.4, clk_ctl TT330.8/FF279.2 guidance only.
-Actualfloorplan+density PNGs viewed: all perimeter pins, no macros,
-216x259.2um aspect1.2, no stdcell islands/corridors; two diagonal register
-bands plus boundary mass, clock entries beside lower root groups. The
-9.4% fill is pin-bound (W/E1183/1117 pins need>=197um at6/um), unchanged
-waiver. Native source24455roots max32 zeroover32 including reset.
-Exact CDC/SEAM finite proofs PASS: return1028/inject132/request1200;
-streamreset3, pgfault1, leafreset1, tapreset1. Behavioral3PASS/8mutFAIL
-witnesses committed;0input/output boundary logic from SAFE3 sourceaudit.
-NativePG raw intermediate CTS/GRT audits both18264 unbound hold-cell
-PGterms; infrastructure owner proved protected0/fixed0 and ordinary
-in-memory global_connect clears0 on both frozen checkpoints (inputSHA
-unchanged). This is normal intermediate birth phase, not final PG closure;
-final route6_final must still pass nativePG. Raw audits retained unchanged.
-No mapped-cell functional/equivalence claim: pureRTLbench evidence only;
-current imported DFFASRHQN truth-model issue does not alter nativecounts.
