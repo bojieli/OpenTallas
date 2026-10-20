@@ -1,6 +1,6 @@
 # Claude handback preservation
 
-mu5k GRT FAIL854368 preserved. TT/FF/SS actual STA terminal RC0, setup/hold WNS respectively-39975.83/-28354.15,-39917.51/-21867.62,-40093.22/-39727.35ps. Exact classes, native clock JSON/text/TSV and source Tcl retained. Clock coverage unqualified; no timing waiver.
+mu5k GRT FAIL854368 preserved. TT/FF/SS actual STA terminal RC0, setup/hold WNS respectively-39975.83/-28354.15,-39917.51/-21867.62,-40093.22/-39727.35ps. Exact classes and native clock JSON/text/TSV retained. Source STA Tcl was not under sta/*.tcl; collection attempt preserved as missing-path infrastructure detail, exact loaded-library Tcl lookup remains outstanding. Clock coverage unqualified; no timing waiver.
 
 Important unresolved: root views14 halfcycle hrelayLibs use SELF ck_o→ck_o;42 STA subdir cornerLibs have ck→ck_o negative_unate combinational. Audit records exact fileSHA/outputgroup, but does not verify their coefficient/phase provenance nor the exact loaded path for each STA session. Do not classify all timing as staleSELF until sourceTcl mapping is checked.
 
