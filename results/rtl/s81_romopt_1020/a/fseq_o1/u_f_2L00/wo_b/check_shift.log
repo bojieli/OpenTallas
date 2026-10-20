@@ -1,0 +1,30 @@
+COVERAGE row 0 segments [] of 2
+COVERAGE row 2 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 6 segments [] of 2
+COVERAGE row 8 segments [] of 2
+PLAN_MISMATCH predicted 9 words, got 4; first diff ((370, 0, (0, 1, 2), 999175796, 0), (370, 1, (0, 1, 2), 997553520, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 1 mutant=None rows=9 fixture_rows=0 errors=6 END edges=2706 ret_words=42 xo_checked=2704 fault=0
+COVERAGE row 0 segments [] of 2
+COVERAGE row 2 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 6 segments [] of 2
+COVERAGE row 8 segments [] of 2
+PLAN_MISMATCH predicted 9 words, got 4; first diff ((370, 0, (0, 1, 2), 1018680496, 0), (370, 1, (0, 1, 2), 1016783644, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 2 mutant=None rows=9 fixture_rows=0 errors=6 END edges=2706 ret_words=42 xo_checked=2704 fault=0
+COVERAGE row 0 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 6 segments [] of 2
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((370, 0, (0, 1, 2), 3145946152, 0), (370, 1, (0, 1, 2), 1030540483, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 3 mutant=None rows=8 fixture_rows=0 errors=4 END edges=2706 ret_words=42 xo_checked=2704 fault=0
+COVERAGE row 0 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 6 segments [] of 2
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((370, 0, (0, 1, 2), 1034470950, 0), (370, 1, (0, 1, 2), 1029524583, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 4 mutant=None rows=8 fixture_rows=0 errors=4 END edges=2706 ret_words=42 xo_checked=2704 fault=0
+COVERAGE row 0 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 6 segments [] of 2
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((370, 0, (0, 1, 2), 3184989804, 0), (370, 1, (0, 1, 2), 1020309004, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 5 mutant=None rows=8 fixture_rows=0 errors=4 END edges=2706 ret_words=42 xo_checked=2704 fault=0
+TOKSIM_FGU_SEQ FAIL op attn.wo_b PER 127 phases 5 rows 42 fixture_rows 0 go0 63 last_ret 891 span 828 errors 24 ['UNASSIGNED_RET edge 369 0771c6ce810000045', 'UNASSIGNED_RET edge 372 179cf7dbc10008045', 'UNASSIGNED_RET edge 375 1791be7e410010045']

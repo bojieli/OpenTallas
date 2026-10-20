@@ -1,0 +1,17 @@
+MISMATCH edge 398 row 0 lo 0 k 1 got 3ea1dcba/0 want 3ec93732/0
+MISMATCH edge 399 row 1 lo 0 k 1 got 3ba96590/0 want 3dc0e7ef/0
+MISMATCH edge 408 row 2 lo 4 k 2 got bd1246e3/0 want 3c80d8f2/0
+MISMATCH edge 409 row 3 lo 4 k 2 got 3d4418ce/0 want 3d31af44/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((398, 0, (0, 1, 5), 1053374258, 0), (398, 0, (0, 1, 5), 1050795194, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 ffn.shared_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=5 END edges=2293 ret_words=32 xo_checked=2291 fault=0
+MISMATCH edge 401 row 2 lo 2 k 1 got 3cb6c36a/0 want bc8a3638/0
+MISMATCH edge 402 row 3 lo 2 k 1 got 3d56a158/0 want be942694/0
+MISMATCH edge 403 row 0 lo 0 k 3 got be310c56/0 want be08ed22/0
+MISMATCH edge 404 row 1 lo 0 k 3 got 3e15cd05/0 want 3ef9e142/0
+PLAN_MISMATCH predicted 8 words, got 8; first diff ((401, 2, (2, 1, 5), 3163174456, 0), (401, 2, (2, 1, 5), 1018610538, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 ffn.shared_gu phase 2 mutant=None rows=4 fixture_rows=4 errors=5 END edges=2293 ret_words=32 xo_checked=2291 fault=0
+MISMATCH edge 399 row 0 lo 0 k 2 got bec35dcf/0 want bcba5b34/0
+MISMATCH edge 400 row 1 lo 0 k 2 got 3e0ecf08/0 want 3ce2e73c/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((399, 0, (0, 2, 5), 3166329652, 0), (399, 0, (0, 2, 5), 3200474575, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 ffn.shared_gu phase 3 mutant=None rows=4 fixture_rows=4 errors=3 END edges=2293 ret_words=32 xo_checked=2291 fault=0
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 146 phases 3 rows 12 fixture_rows 12 go0 63 last_ret 714 span 651 errors 3 ["PHASE_FAIL p1: ['MISMATCH edge 398 row 0 lo 0 k 1 got 3ea1dcba/0 want 3ec93732/0', 'MISMATCH edge 399 row 1 lo 0 k 1 got 3ba96590/0 want 3dc0e7ef/0']", "PHASE_FAIL p2: ['MISMATCH edge 401 row 2 lo 2 k 1 got 3cb6c36a/0 want bc8a3638/0', 'MISMATCH edge 402 row 3 lo 2 k 1 got 3d56a158/0 want be942694/0']", "PHASE_FAIL p3: ['MISMATCH edge 399 row 0 lo 0 k 2 got bec35dcf/0 want bcba5b34/0', 'MISMATCH edge 400 row 1 lo 0 k 2 got 3e0ecf08/0 want 3ce2e73c/0']"]
