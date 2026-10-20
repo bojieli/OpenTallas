@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_dv_stream_t3c_1020",
  "verdict": "WARN",
- "generated": "2026-10-20T03:36:23-0700",
- "host": "ot-epyc6",
+ "generated": "2026-10-20T04:08:58-0700",
+ "host": "ot-epyc5",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "be9db15b56be7968a3a4bf8e310944164fb407ee",
+  "start_commit": "93ad6ac8125ed9110889631f1bb2faf3c933ffa3",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "f9d02a3869e5400dee3855e5be95f239f05635d9e855c81ce012b73c653b7c29",
-  "manifest_sha256": "f4a87689dd484d1024f4d97157e80f21f466e025b90d38fd0e24db13cf72363a",
+  "archive_sha256": "451d2b6f0414690d81e503cb04a922f0121b91dd770d08e67880b183bacab0c4",
+  "manifest_sha256": "531965808990026f40633a829c0e067c659606f2e3894279117fb3d7233dd63e",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17175,8 +17175,8 @@
    {
     "path": "physical/ref_tile/qfd_dv_stream_t3c_1020/job.json",
     "kind": "file",
-    "sha256": "2435bd641856a41f63e39ac149f637bb3b5a121a96b5418610a0f6248ba98f4c",
-    "git_blob": "494638446df4dfbc6bc98daa771b9703960cfb77",
+    "sha256": "5e31d42485e39250166a9391513c575fa6a10f8c415d5d00b5a56a812221895c",
+    "git_blob": "be30a43b5b851f03ac59c74e780dbc242a17e65a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -68231,7 +68231,7 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 79416494,
+   "archive_bytes": 79416506,
    "unpacked_bytes": 544358400,
    "pick_gb": 22,
    "runtime_gb": 22
@@ -68769,16 +68769,16 @@
    },
    "digest": "db5a8a2164d03287343ef8b4d1a63518795f85db7f504aa0fdae76c843455d67"
   },
-  "captured": "2026-10-20T02:43:56-0700",
+  "captured": "2026-10-20T03:39:06-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_dv_stream_t3c_1020/signoff.sdc"
   },
-  "remote_script_sha256": "048c6a98a1038aac54048a634d9fa9de01061f516329b1775e5ad7f3412c572e",
+  "remote_script_sha256": "e0e8e220206e5607c299a484c434ab5103489e71f643b64ac357b227e791abca",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc6",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_stream_t3c_1020-20261020-024329",
+  "remote_host": "ot-epyc5",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_stream_t3c_1020-20261020-033844",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -68892,7 +68892,7 @@
   "kind": "tile",
   "skip_incremental_repair": true,
   "rc": "0",
-  "grt_s": 679,
+  "grt_s": 325,
   "layers": [
    {
     "layer": "M1",
