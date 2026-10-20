@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.pvj216.preflight.v1",
+  "exact_pin_names": 4621,
+  "source_RTL_sha256": {
+    "rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_s32_t.sv": "c721d94f7ce02b1cb0947959573b6190fac14ae68cca6ba621619e5b3cc1cbf7",
+    "rtl/lib/ot_rst_relay_bounded32.sv": "d3ba9c38d47d5868efdec0e81dbba096732613299aba3a2b4f2e4d4498204785",
+    "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv": "28b2f290ae281f91a107bb54737822ddb887a6ad6dcf4b3a579f241026d90a15",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+  },
+  "actual_custom_plan_oflop_estimate": {
+    "S": {
+      "dense": false,
+      "depth": 1.97,
+      "gap": 1.0,
+      "cols": 4,
+      "band": 0.0
+    },
+    "W": {
+      "dense": false,
+      "depth": 1.67,
+      "gap": 1.0,
+      "cols": 4,
+      "band": 0.0
+    },
+    "N": {
+      "dense": false,
+      "depth": 1.97,
+      "gap": 1.0,
+      "cols": 4,
+      "band": 0.0
+    },
+    "E": {
+      "dense": false,
+      "depth": 1.87,
+      "gap": 1.0,
+      "cols": 4,
+      "band": 0.0
+    }
+  },
+  "actual_custom_plan_max_total_density": 5.864197530864197,
+  "no_required_actual_check_skipped": "rawDEF fp_margin_lint+native census+textbook+DBpinflop hooks unchanged; exactIO skips pinfit estimate on old+new; ANYonlyskips predictivefaceoflopWARN, recreatedhere",
+  "bench_source_identity": "unchanged2882c6196 RTL, V5.050 cold3seeds/mut1+3 failwitnesses in committedresults/arch/kv_params4_pvj_1020",
+  "gate": "NOTYETLAUNCHED",
+  "same_source_vs_original_gate": {
+    "rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_s32_t.sv": true,
+    "rtl/lib/ot_rst_relay_bounded32.sv": true,
+    "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv": true,
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": true,
+    "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv": true,
+    "rtl/hdc/ot_hdc_prefix.sv": true,
+    "rtl/hdc/ot_hdc_delay.sv": true,
+    "rtl/hdc/ot_hdc_fastfp.sv": true
+  },
+  "bench_status": "freshV5.050 same-source cold3seed+mut1/3 scheduledbeforelayoutgate"
+}
