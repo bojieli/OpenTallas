@@ -8,7 +8,7 @@
 // train root -> join path; the join's own +1 is unchanged.  No credit, ready or wait.
 // Proof: rtl/test/qwen_static_kv/tb_qkd_embedding_static_join4.sv (lock-step vs qkd_embedding_static_join fed the same
 // beats one edge earlier).  MUT (bench only): 1 = no conflict fault; 2 = train 3 ignored.
-module qkd_embedding_static_join4 #(parameter integer MUT = 0, parameter integer NATIVE32 = 0) (
+module qkd_embedding_static_join4 #(parameter integer MUT = 0, parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0) (
     input wire ck,rst_n,
     input wire [298:0] up0,up1,up2,up3,
     input wire beat_slot,
@@ -49,13 +49,25 @@ module qkd_embedding_static_join4 #(parameter integer MUT = 0, parameter integer
     wire bv=|hot;
     wire multi=(MUT==1)?1'b0:((hot&(hot-4'd1))!=4'd0);
     wire jf;
+    generate if (PIPE_JOIN) begin : g_pipelined_join
+    qkd_embedding_static_join_fan32 u_join(.ck(ck),.rst_n(rst_n),.beat_slot(slot_q),.beat_v(bv),
+        .beat_data(rec[255:0]),.beat_token(rec[273:256]),.beat_word(rec[279:274]),
+        .beat_half(rec[280]),.beat_scale(rec[281]),.beat_epoch(rec[297:282]),
+        .word_v(word_v),.word_data(word_data),.word_token(word_token),.word_index(word_index),
+        .word_scale(word_scale),.word_epoch(word_epoch),.fault(jf));
+    end else begin : g_legacy_join
     qkd_embedding_static_join u_join(.ck(ck),.rst_n(rst_n),.beat_slot(slot_q),.beat_v(bv),
         .beat_data(rec[255:0]),.beat_token(rec[273:256]),.beat_word(rec[279:274]),
         .beat_half(rec[280]),.beat_scale(rec[281]),.beat_epoch(rec[297:282]),
         .word_v(word_v),.word_data(word_data),.word_token(word_token),.word_index(word_index),
         .word_scale(word_scale),.word_epoch(word_epoch),.fault(jf));
+    end endgenerate
     reg mf;
+    reg mf_q,multi_q;
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n)begin mf_q<=0;multi_q<=0;end
+        else begin mf_q<=mf;multi_q<=multi;end
     always @(posedge ck or negedge rst_n)
         if(!rst_n) begin mf<=0;fault<=0;end
-        else begin if(multi)mf<=1;fault<=mf|jf|multi;end
+        else begin if(multi)mf<=1;fault<=(PIPE_JOIN?mf_q:mf)|jf|(PIPE_JOIN?multi_q:multi);end
 endmodule

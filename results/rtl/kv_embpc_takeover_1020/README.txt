@@ -17,3 +17,12 @@ Legacy-vs-safe miter PASS9991 comparisons on fleet Verilator5.050 (boot/start/ra
 New mapped census still REQUIRED. Mapped originals trace max593/533 to static_join.low_data enable,
 259/131/67 to static_join packed-scale selector,91 to ctx token/epoch admission; next fix is registered
 local low-capture / scale onehot controls with a priced join edge and regional reset. No gate/submit.
+
+Third source step: PIPE_JOIN defaultOFF selects new qkd_embedding_static_join_fan32.
+Added latency exactly +1 streaming edge on join word and join/cal fault paths; steady throughput stays1beat/edge.
+Full cal reference-vs-(NATIVE32=1,PIPE_JOIN=1) miter PASS9979 comparisons with +1edge reference alignment.
+Production keep-hook mapped standalone census PASS max32/over32=0 (join_fan32_native32.json).
+Raw no-hook attempt FAIL592/535 preserved; canonical keep-hook first attempt FAIL52 preserved remotely;
+final fix first output group16 (remaining30), scalar scale_q separately kept. Exact final source exercised by cal-pipe miter.
+This remains a CANDIDATE, NOT full tile qualification: regional reset+CTX enable controls need source work,
+then actual full-shape mapped census BEFORE gate. Die calendar must absorb +1 join edge before adoption.

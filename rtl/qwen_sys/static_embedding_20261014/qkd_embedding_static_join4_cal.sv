@@ -13,7 +13,7 @@
 // Faults (sticky): join4 faults, a start while the calendar runs, a malformed or running-time boot word.
 // MUT (bench only): 1 = the last segment's length is one short (the scale beat has no slot).
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter integer NATIVE32 = 0) (
+module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [298:0]  up0, up1, up2, up3,
@@ -76,8 +76,11 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
             slot <= act && (|hit);
         end
     wire jf;
-    qkd_embedding_static_join4 #(.NATIVE32(NATIVE32)) u_join4 (.ck(ck), .rst_n(rst_n), .up0(up0), .up1(up1), .up2(up2), .up3(up3),
+    qkd_embedding_static_join4 #(.NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)) u_join4 (.ck(ck), .rst_n(rst_n), .up0(up0), .up1(up1), .up2(up2), .up3(up3),
         .beat_slot(slot), .word_v(word_v), .word_data(word_data), .word_token(word_token), .word_index(word_index),
         .word_scale(word_scale), .word_epoch(word_epoch), .fault(jf));
-    assign fault = jf | cf;
+    reg cf_q;
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n)cf_q<=0;else cf_q<=cf;
+    assign fault = jf | (PIPE_JOIN ? cf_q : cf);
 endmodule
