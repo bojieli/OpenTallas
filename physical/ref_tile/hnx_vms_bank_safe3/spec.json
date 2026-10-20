@@ -277,7 +277,7 @@
   },
   "macro_halo_um": 5.4,
   "cts_sink": {
-   "extra": "-balance_levels"
+   "extra": "-balance_levels -no_obstruction_aware"
   },
   "io_hold_margin_ns": 0.03
  },

@@ -59,3 +59,10 @@ diameter 30 clustering (safe2 had 22 ps on the same root). The other roots passe
 - safe3 uses automatic sink clustering with -balance_levels.
 - safe3b uses size 8 / diameter 20 clustering with -balance_levels.
 Bind whichever passes the checklist first.
+
+## Gate 2 (10-20 07:01, both variants): CTS FAIL on clk_e only
+- safe3 (auto clustering): clk_e spread 85.2 ps (depth 4-5).
+- safe3b (size 8 / dia 20): clk_e spread 102.4 ps (depth 6-7).
+The other roots passed: clk_n 28-41, clk_s 45-65, clk 0.0. The clk_e sinks sit in the band between the macro rows, about 260 um
+of band to the right. Hypothesis: the obstruction-aware H-tree detours around the SRAM rows unevenly. Gate 3 adds
+-no_obstruction_aware: safe3 with auto clustering, safe3b with safe2's size 16 / dia 30.
