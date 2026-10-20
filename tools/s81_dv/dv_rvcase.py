@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
 import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
+from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
 import abstract_pin_windows as APW   # noqa: E402
 
@@ -128,6 +129,21 @@ def closed_views(refs):
             m = re.match(r'(physical/ref_tile/[^/]+/views/([^/]+))/\2\.lef$', p)
             if m and m.group(2) not in out:
                 out[m.group(2)] = (ref, m.group(1))
+    return out
+
+
+MACRO_DIR = 'physical/asap7_memory_macros_v2'
+
+
+def macro_views(refs, masters):
+    """master -> (ref, dir) for every die-level master that is a memory / PHY macro with a real view under
+    physical/asap7_memory_macros_v2/<m>/<m>.lef (+ <m>_<corner>.lib), e.g. the K-only HBM PHY _k (S81-MU5 10-19);
+    first ref wins. Without this the macro becomes a pin-only stand-in."""
+    out = {}
+    for ref in refs:
+        for m in sorted(masters):
+            if m not in out and git(ref, f'{MACRO_DIR}/{m}/{m}.lef') is not None:
+                out[m] = (ref, f'{MACRO_DIR}/{m}')
     return out
 
 
@@ -360,6 +376,8 @@ def main():
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
     ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
+    ap.add_argument('--macro-views', action='store_true',
+                    help=f'bind die-level macros with a real view under {MACRO_DIR}/<m>/ (HBM PHY _k, SRAMs) instead of a stand-in')
     a = ap.parse_args()
     out = a.out
     for d in ('views/sta', 'out', 'sta', 'dcc/tools/hbm_die_v15'):
@@ -384,6 +402,9 @@ def main():
     assigns = [x for x in insts if x[0] == '__assign__']
     insts = [x for x in insts if x[0] != '__assign__']
     views = closed_views(a.view_refs)
+    if a.macro_views:
+        for m_, v_ in macro_views(a.view_refs, {x[0] for x in insts if not x[0].endswith('_ASAP7_75t_R')} - set(views)).items():
+            views[m_] = v_
     # MU-DIE-S81/PO2 (10-19): the bind table pins each landing master's view (land_views: record commit + kit) -- the
     # SAME view dv_bind's landing reset check derived landing_reset_stages from; it overrides the first-ref-wins pick
     for m_, v_ in T.get('land_views', {}).items():
@@ -437,15 +458,14 @@ def main():
                 lib = git(ref, f'{d}/{m}_{c}.lib')
                 if lib is None:
                     raise SystemExit(f'dv_rvcase: closed view {m} has no {c} lib at {ref}:{d}')
-                if 'pin("ck_o")' in lib and m.startswith('dsfd_dvrlyh_'):
-                    # dv_sta_pilot: ETM self-related ck_o edges -> one ck -> ck_o arc, negative unate (half-cycle view)
-                    lib = SP.patch_ck_o(lib)
-                    i_ = lib.index('S81-DIE4 STA pilot: ETM self-related'); j_ = lib.rindex('timing_sense : positive_unate', 0, i_)
-                    lib = lib[:j_] + 'timing_sense : negative_unate' + lib[j_ + len('timing_sense : positive_unate'):]
-                elif 'pin("ck_o")' in lib:
-                    lib = SP.patch_ck_o(lib)
+                # Source-pinned native forwarding only: never reinterpret SELF ETM tables.
+                validate_native_forwarding(m, c, lib,
+                    lambda artifact: git(ref, f'{d}/{artifact}'))
                 (out / 'views' / 'sta' / f'{m}_{c}.lib').write_text(lib)    # STA corner libs (the GRT reads views/*.lib: TT copy below)
-            (out / 'views' / f'{m}.lib').write_text(git(ref, f'{d}/{m}_tt.lib'))
+            tt_lib = git(ref, f'{d}/{m}_tt.lib')
+            validate_native_forwarding(m, 'tt', tt_lib,
+                lambda artifact: git(ref, f'{d}/{artifact}'))
+            (out / 'views' / f'{m}.lib').write_text(tt_lib)
     placer = Placer(W, H)
     loc = {}            # inst -> (x, y lower-left, w, h, status)
     for b in blocks.values():
