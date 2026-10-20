@@ -64,12 +64,15 @@ module qkd_host_tp8_coordinator_rr(
  output wire post_pending,
  output wire fault
 );
- (* keep, ot_rst_split *) wire [27:0] por_n_qv;
+ (* keep, ot_rst_split *) wire [191:0] por_n_qv;
  wire por_n_q = por_n_qv[0];
 `ifdef QKD_HR_PE_RR_MUTANT
- assign por_n_qv = {28{por_n}};
+ assign por_n_qv = {192{por_n}};
 `else
- ot_rst_relay #(.REGIONS(28),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck_codec),.rst_n_in(por_n),.rst_n(por_n_qv));
+ // Same-age independent 32-leaf banks bound both release fanout and sinks.
+ genvar gr_por_n;generate for(gr_por_n=0;gr_por_n<6;gr_por_n=gr_por_n+1)begin:g_rst32_por_n
+ ot_rst_relay #(.REGIONS(32),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck_codec),.rst_n_in(por_n),.rst_n(por_n_qv[gr_por_n*32+:32]));
+ end endgenerate
 `endif
  // KV-PEER5 input stage: one plain register per listed input (no reset), +1 ck_codec edge
  reg engine_result_v_r;

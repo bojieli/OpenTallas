@@ -87,16 +87,19 @@ module qkd_host_ctrl_token_service_packet_collected_rr #(
 );
  (* keep, ot_rst_split *) wire [0:0] por_n_qv;
  wire por_n_q = por_n_qv[0];
- (* keep, ot_rst_split *) wire [11:0] rst_n_qv;
+ (* keep, ot_rst_split *) wire [95:0] rst_n_qv;
  wire rst_n_q = rst_n_qv[0];
 `ifdef QKD_HR_PE_RR_MUTANT
  assign por_n_qv = {1{por_n}};
- assign rst_n_qv = {12{rst_n}};
+ assign rst_n_qv = {96{rst_n}};
 `else
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck),.rst_n_in(por_n),.rst_n(por_n_qv));
- ot_rst_relay #(.REGIONS(12),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_rst_n(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_n_qv));
+ // Same-age independent 32-leaf banks bound both release fanout and sinks.
+ genvar gr_rst_n;generate for(gr_rst_n=0;gr_rst_n<3;gr_rst_n=gr_rst_n+1)begin:g_rst32_rst_n
+ ot_rst_relay #(.REGIONS(32),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_rst_n(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_n_qv[gr_rst_n*32+:32]));
+ end endgenerate
 `endif
- qkd_host_ctrl_token_service_packet_collected_pd2 #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN),.CMD_READ32(1)) u_m(
+ qkd_host_ctrl_token_service_packet_collected_pd2 #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN),.CMD_READ32(1),.RX_SRAM32(1)) u_m(
   .ck(ck),
   .rst_n(rst_n_q),
   .die_id(die_id),

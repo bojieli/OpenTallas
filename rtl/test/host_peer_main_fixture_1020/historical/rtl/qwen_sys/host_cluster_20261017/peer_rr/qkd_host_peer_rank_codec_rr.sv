@@ -86,12 +86,15 @@ module qkd_host_peer_rank_codec_rr #(
  output wire recovery_clear,
  output wire fault
 );
- (* keep, ot_rst_split *) wire [15:0] por_n_qv;
+ (* keep, ot_rst_split *) wire [63:0] por_n_qv;
  wire por_n_q = por_n_qv[0];
 `ifdef QKD_HR_PE_RR_MUTANT
- assign por_n_qv = {16{por_n}};
+ assign por_n_qv = {64{por_n}};
 `else
- ot_rst_relay #(.REGIONS(16),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck),.rst_n_in(por_n),.rst_n(por_n_qv));
+ // Same-age independent 32-leaf banks bound both release fanout and sinks.
+ genvar gr_por_n;generate for(gr_por_n=0;gr_por_n<2;gr_por_n=gr_por_n+1)begin:g_rst32_por_n
+ ot_rst_relay #(.REGIONS(32),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck),.rst_n_in(por_n),.rst_n(por_n_qv[gr_por_n*32+:32]));
+ end endgenerate
 `endif
  // KV-PEER5 input stage: one plain register per listed input (no reset), +1 ck edge
  reg service_ready_r;

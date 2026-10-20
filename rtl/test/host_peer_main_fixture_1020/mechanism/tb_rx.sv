@@ -84,6 +84,7 @@ module tb_rx;
  .RX_HEAD_ONLY(1),.RX_SRAM32(0)
 `endif
  ) u_b(.ck(ck),.rst_n(rst_n),.die_id(die_id),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(b_rx_cr),.tx_v(b_tx_v),.tx_d(b_tx_d),.tx_cr(tx_cr),.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc(cmd_hc),.cmd_cr(b_cmd_cr),.hc(b_hc),.tk8(b_tk8),.kst8(b_kst8),.boot8(b_boot8),.seen(b_seen),.fault(b_fault),.startup_allowed(startup_allowed),.local_service_ready(local_service_ready),.local_service_epoch(local_service_epoch),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_cr(b_begin_cr),.begin_available(b_begin_available),.service_begin_v(b_service_begin_v),.service_begin_epoch(b_service_begin_epoch),.pending_advertised(b_pending_advertised),.pending_epoch(b_pending_epoch),.service_ready8(b_service_ready8),.pending_ack8(b_pending_ack8),.service_epoch8(b_service_epoch8),.ingest_permission(b_ingest_permission),.por_n(por_n),.token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),.token_allocator_fault(token_allocator_fault),.package_abort(package_abort),.abort_drained(abort_drained),.token_request_valid(b_token_request_valid),.token_request_ready(token_request_ready),.token_request_token(b_token_request_token),.token_request_position(b_token_request_position),.token_request_generation(b_token_request_generation),.token_grant_valid(token_grant_valid),.token_grant_ready(b_token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_generation(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_epoch(allocated_epoch),.allocated_token(allocated_token),.allocated_position(allocated_position),.allocated_generation(allocated_generation),.token_epoch_valid(b_token_epoch_valid),.token_epoch(b_token_epoch),.cancel_valid(b_cancel_valid),.cancel_tag(b_cancel_tag),.cancel_generation(b_cancel_generation),.cancel_done(b_cancel_done),.cancel_fault(b_cancel_fault),.cancel_drained(b_cancel_drained),.terminal_accepted(terminal_accepted));
+ reg consumed;reg[31:0] consumed_mask;
  integer rxcredits=4,rxheads=0,maxcount=0;reg[15:0]rxseq=0;
  integer cycle=0,seed=77,rv=0,credits=4,commands=0,frames=0,checks=0,heads=0;reg[3:0]ret=0;
  task fail(input string what);$display("RX_HEAD FAIL cycle=%0d %s",cycle,what);$fatal(1);endtask
@@ -105,7 +106,16 @@ module tb_rx;
    // Exact full-body fault propagation and reset recovery are also compared.
    if(cycle%4096==700&&rx_v)rx_d[263]=1;
 
-   @(posedge ck);#1;
+   @(posedge ck);
+   consumed=u_a.take;
+   consumed_mask={4{u_a.src_oh}};
+   if(consumed&&{u_a.hf,u_a.hz,u_a.h}!=={u_b.hf,u_b.hz,u_b.h})fail("consumed534bit head before edge");
+   #1;
+   if(rst_n&&consumed)begin
+    if(u_a.dl_src_c!==u_b.dl_src_c)fail("consumed source mask");
+    if(u_a.dl_src_c!=0&&u_a.dl_src_c!==consumed_mask)fail("consumed source identity");
+    if({u_a.dl_htk,u_a.dl_hk,u_a.dl_hb,u_a.dl_hep}!=={u_b.dl_htk,u_b.dl_hk,u_b.dl_hb,u_b.dl_hep})fail("consumed delayed header");
+   end
    if(a_rx_cr!==b_rx_cr)fail("rx_cr");
    if(a_tx_v!==b_tx_v)fail("tx_v");
    if(a_tx_d!==b_tx_d)fail("tx_d");

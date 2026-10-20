@@ -29,12 +29,15 @@ module qkd_host_peer_root_mux_pl_rr(
  output wire [7:0] coordinator_tx_ready,
  output wire fault
 );
- (* keep, ot_rst_split *) wire [2:0] por_n_qv;
+ (* keep, ot_rst_split *) wire [31:0] por_n_qv;
  wire por_n_q = por_n_qv[0];
 `ifdef QKD_HR_PE_RR_MUTANT
- assign por_n_qv = {3{por_n}};
+ assign por_n_qv = {32{por_n}};
 `else
- ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck),.rst_n_in(por_n),.rst_n(por_n_qv));
+ // Same-age independent 32-leaf banks bound both release fanout and sinks.
+ genvar gr_por_n;generate for(gr_por_n=0;gr_por_n<1;gr_por_n=gr_por_n+1)begin:g_rst32_por_n
+ ot_rst_relay #(.REGIONS(32),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck),.rst_n_in(por_n),.rst_n(por_n_qv[gr_por_n*32+:32]));
+ end endgenerate
 `endif
  qkd_host_peer_root_mux_pl2  u_m(
   .ck(ck),
