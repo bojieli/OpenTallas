@@ -1,0 +1,5 @@
+CMD_READ32 PASS token=1 edges=100000 commands=6933 frames=49010 heads=98143
+- rtl/test/host_peer_main_fixture_1020/mechanism/tb_cmd.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.126 s; speed 7.916 ms/s
+- Verilator: cpu 0.126 s on 1 threads; allocated 7 MB

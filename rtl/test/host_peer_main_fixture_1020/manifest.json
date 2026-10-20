@@ -630,6 +630,26 @@
     "read_copies": 23,
     "slice_bits": 8,
     "original_ptr_maxloads": 730,
-    "new_target": "<=32; native qualification pending"
+    "new_target": "<=32; native qualification pending",
+    "behavioural": {
+      "status": "PASS",
+      "TOKEN0_edges": 100000,
+      "TOKEN1_START0_edges": 100000,
+      "commands_each": 6933,
+      "frames_each": 49010,
+      "qualified_heads_each": 98143,
+      "mutant_first_diff": 18,
+      "units": [
+        "oth-ubuntu-2980518-1792486442",
+        "oth-ubuntu-3038228-1792486535"
+      ],
+      "data_edge_delta": 0
+    }
+  },
+  "constant_roles": {
+    "status": "PASS_RESERVED_ZERO_ROLE_INVENTORY",
+    "count": 277,
+    "unit": "oth-ubuntu-3119432-1792486639",
+    "scope": "no waiver; fullleaf still fails native32"
   }
 }

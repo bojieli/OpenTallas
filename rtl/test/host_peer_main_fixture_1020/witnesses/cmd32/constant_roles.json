@@ -1,0 +1,54 @@
+{
+  "status": "PASS_RESERVED_ZERO_ROLE_INVENTORY",
+  "scope": "No dynamic pin is waived or tied by this audit; native fullleaf remains FAIL384/max731. Exact source packet layout accounts for all277 preexisting constant output bits.",
+  "packet_ctd": {
+    "count": 265,
+    "zero_ranges": [
+      [
+        2,
+        4
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        10,
+        15
+      ],
+      [
+        19,
+        23
+      ],
+      [
+        263,
+        511
+      ]
+    ],
+    "reason": "Opcode21/22/23 uses only bits0,1,5; version1/2 only8,9; rank3bits16..18; target24..31; sequence32..47; active182bits48..229; epoch230..245, marker246, service_epoch247..262; no source field writes high263..511.",
+    "source_tx_assignments": [
+      "0",
+      "512'h0223|((512'd1<<dst)<<24)|(512'(seq_tx)<<32)|(512'(epoch)<<48)",
+      "512'h0223|((512'd1<<dst)<<24)|(512'(seq_tx)<<32)|(512'(epoch)<<48)|(512'd1<<64)",
+      "(ENABLE_TOKEN&&active_epoch_valid?512'h0222:512'h0122)|((512'd1<<dst)<<24)|(512'(seq_tx)<<32)|(512'(active)<<48)|\n      (ENABLE_TOKEN&&active_epoch_valid?((512'(active_epoch^(MUT==15?16'd1:16'd0))<<230)|(512'd1<<246)|(512'(active_service_epoch)<<247)):512'd0)",
+      "(ENABLE_SERVICE?512'h01000221:512'h01000121)|(512'(role)<<16)|(512'(seq_tx)<<32)|(512'(lt)<<48)|(512'(lk)<<141)|(512'(lb)<<151)|(ENABLE_SERVICE?((512'(lready)<<153)|(512'(lepoch)<<154)):512'b0)"
+    ],
+    "assignment_sha256": "1cb83bbc1a414ba9cb1452381b47915e9e7ec99354721f394e5871ed7bd8beb4"
+  },
+  "cohort_tag": {
+    "count": 12,
+    "zero_ranges": [
+      [
+        0,
+        5
+      ],
+      [
+        37,
+        42
+      ]
+    ],
+    "reason": "Allocator grant_tag exact59bit tuple epoch16,zero6,token18,position13,zero6.",
+    "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+    "source_sha256": "3a7d297b3492b1a3eb3d0ce2a067d3962e034328e8614956cd63f08e005180fd"
+  }
+}
