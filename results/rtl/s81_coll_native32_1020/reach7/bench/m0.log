@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-tilese-coll7/src3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-tilese-coll7/src3
+ot-run: ot-epyc7       admits  1016 GB (avail 763, growth 52, headroom 0, waiters 0/0 GB) load 60/96 running 20 disk 5209 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-tilese-coll7/src3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-tilese-coll7/src3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-tilese-coll7/src3
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1412130-1792528229 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+COLL_REACH7_STATS ref4 sent=37025 received=36912 mean_latency=122.51 | safe7 sent=37399 received=37277 mean_latency=115.16 | faults ref4=000/000 safe7=000/000 | naks=4/5 replays=7/5 timeouts=2/1
+COLL_REACH7 PASS received=37277/36912 errors=0
+- rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv:91: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 5.947 s; speed 6.726 us/s
+- Verilator: cpu 5.947 s on 1 threads; allocated 9 MB
+sim exit 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1412130-1792528229): exit 0

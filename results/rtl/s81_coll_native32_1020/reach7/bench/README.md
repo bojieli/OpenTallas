@@ -1,0 +1,1 @@
+Witnesses of tools/xdie_s81/coll_reach7.sh on source 344f2113b (ot-epyc7, Verilator 5.050, OT_COLL_NATIVE32 + _OFF): m0 PASS (safe7 37,277 / ref4 36,912 words, 0 errors, faults 000/000); m5 (2nd rx landing never loads) FAIL 0 received; m6 (core landing data never loads) FAIL 37,277 data errors; m7 (reverse relay drops frames) FAIL 0 received.
