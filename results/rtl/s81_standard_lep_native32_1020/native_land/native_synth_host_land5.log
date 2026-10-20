@@ -1,0 +1,1602 @@
+mkdir -p /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/
+echo 833.333 > /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/native_orfs_host_land5/logs/asap7/ot_s81sl_lep/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/clock_period.txt
+Setting clock period to 833.333
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib
+7. Executing Liberty frontend: /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+12. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+13. Executing Liberty frontend: /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib
+14. Executing Liberty frontend: /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+15. Executing Verilog-2005 frontend: /work/rtl/lib/ot_rst_relay_tree3.sv
+16. Executing Verilog-2005 frontend: /work/rtl/lib/ot_sram_oldread_wreg.sv
+17. Executing Verilog-2005 frontend: /work/rtl/lib/ot_sram_showahead_1r1w.sv
+18. Executing Verilog-2005 frontend: /work/rtl/lib/ot_rst_relay.sv
+19. Executing Verilog-2005 frontend: /work/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
+20. Executing Verilog-2005 frontend: /work/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv
+21. Executing Verilog-2005 frontend: /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v
+22. Executing Verilog-2005 frontend: /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v
+23. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep'.
+25. Executing HIERARCHY pass (managing design hierarchy).
+26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep'.
+26.1. Analyzing design hierarchy..
+26.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_core'.
+Warning: reg '\fr' is assigned in a continuous assignment at /work/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:399.41-399.52.
+Warning: reg '\fr' is assigned in a continuous assignment at /work/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:397.20-397.55.
+/work/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:722: Warning: Range select [11:8] out of bounds on signal `\ring_meta_regions': Setting all 4 result bits to undef.
+26.3. Analyzing design hierarchy..
+26.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_host_enable'.
+26.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_std_enable'.
+26.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_vcopy'.
+26.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_sram_showahead_1r1w'.
+26.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_sram_showahead_readptr'.
+26.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_pair_ready'.
+26.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_sram_oldread_wreg'.
+26.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_std_tx_qualify'.
+26.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_tx_push'.
+26.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_stamp'.
+26.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_host_event'.
+26.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_key_hold8'.
+26.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_host_hold8'.
+26.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_status_region'.
+26.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay_tree3'.
+26.19. Analyzing design hierarchy..
+26.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_lep_host_preserve'.
+26.21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_sram_showahead_writepins'.
+26.22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_sram_showahead_hit5'.
+26.23. Analyzing design hierarchy..
+26.24. Analyzing design hierarchy..
+source /work/physical/common_flow/ot_keep_regs.tcl
+27. Executing Verilog-2005 frontend: /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/ot_rst_land_wrapper.v
+28. Executing HIERARCHY pass (managing design hierarchy).
+28.1. Analyzing design hierarchy..
+28.2. Analyzing design hierarchy..
+OT_RST_LAND ot_s81sl_lep: 1 reset port(s) landed in 2 registered stage(s) (clock clk); table /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/ot_rst_land.tsv
+29. Executing PROC pass (convert processes to netlists).
+29.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+29.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+29.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+29.4. Executing PROC_INIT pass (extract init attributes).
+29.5. Executing PROC_ARST pass (detect async resets in processes).
+29.6. Executing PROC_ROM pass (convert switches to ROMs).
+29.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+29.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+29.9. Executing PROC_DFF pass (convert process syncs to FFs).
+29.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+29.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+29.12. Executing OPT_EXPR pass (perform const folding).
+30. Executing OPT_CLEAN pass (remove unused cells and wires).
+31. Executing TECHMAP pass (map to technology primitives).
+31.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+31.2. Continuing TECHMAP pass.
+OT_KEEP_PIN_REGS: 0 top-level pin register cells kept
+OT_KEEP_REGS: keep set on 3643 register cells driving keep wires
+32. Executing OPT_CLEAN pass (remove unused cells and wires).
+33. Executing RTLIL backend.
+Warnings: 3 unique messages, 1105 total
+End of script. Logfile hash: 3502e70082, time: 2.99s, user: 2.97s, system: 0.03s, MEM: 89.25 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 54% 2x hierarchy (1 sec), 19% 16x read_liberty (0 sec), ...
+Elapsed time: 0:03.02[h:]min:sec. CPU time: user 3.01 sys 0.04 (100%). Peak memory: 91396KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          3             89 cac53085150a70860bdf
+mkdir -p /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/
+echo 833.333 > /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/native_orfs_host_land5/logs/asap7/ot_s81sl_lep/base/1_2_yosys.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/clock_period.txt
+Setting clock period to 833.333
+1. Executing RTLIL frontend.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+Warning: Selection "ot_sram_showahead_hit5\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_rx_control" did not match any module.
+Warning: Selection "ot_s81sl_lep_rx_control\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_host_event\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_tx_push\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_host_enable\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_stamp\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_host_hold8\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_key_hold8\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_host_preserve\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_vcopy\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_status_region\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_pair_ready\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_return8" did not match any module.
+Warning: Selection "ot_s81sl_lep_return8\$*" did not match any module.
+Warning: Selection "ot_sram_showahead_readptr" did not match any module.
+Warning: Selection "ot_sram_showahead_readptr\$*" did not match any module.
+Warning: Selection "ot_s81sl_lep_std_enable\$*" did not match any module.
+Warning: Selection "ot_s81sl_std_tx_qualify" did not match any module.
+Warning: Selection "ot_s81sl_std_tx_qualify\$*" did not match any module.
+Warning: Selection "ot_sram_showahead_writepins" did not match any module.
+Warning: Selection "ot_sram_showahead_writepins\$*" did not match any module.
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [53]:
+    port Q[53] of cell $procdff$19411 ($dff)
+    port Q[53] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [52]:
+    port Q[52] of cell $procdff$19411 ($dff)
+    port Q[52] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [51]:
+    port Q[51] of cell $procdff$19411 ($dff)
+    port Q[51] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [50]:
+    port Q[50] of cell $procdff$19411 ($dff)
+    port Q[50] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [49]:
+    port Q[49] of cell $procdff$19411 ($dff)
+    port Q[49] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [48]:
+    port Q[48] of cell $procdff$19411 ($dff)
+    port Q[48] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [47]:
+    port Q[47] of cell $procdff$19411 ($dff)
+    port Q[47] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [46]:
+    port Q[46] of cell $procdff$19411 ($dff)
+    port Q[46] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [45]:
+    port Q[45] of cell $procdff$19411 ($dff)
+    port Q[45] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [44]:
+    port Q[44] of cell $procdff$19411 ($dff)
+    port Q[44] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [43]:
+    port Q[43] of cell $procdff$19411 ($dff)
+    port Q[43] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [42]:
+    port Q[42] of cell $procdff$19411 ($dff)
+    port Q[42] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [41]:
+    port Q[41] of cell $procdff$19411 ($dff)
+    port Q[41] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [40]:
+    port Q[40] of cell $procdff$19411 ($dff)
+    port Q[40] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [39]:
+    port Q[39] of cell $procdff$19411 ($dff)
+    port Q[39] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [38]:
+    port Q[38] of cell $procdff$19411 ($dff)
+    port Q[38] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [37]:
+    port Q[37] of cell $procdff$19411 ($dff)
+    port Q[37] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [36]:
+    port Q[36] of cell $procdff$19411 ($dff)
+    port Q[36] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [35]:
+    port Q[35] of cell $procdff$19411 ($dff)
+    port Q[35] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [34]:
+    port Q[34] of cell $procdff$19411 ($dff)
+    port Q[34] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [33]:
+    port Q[33] of cell $procdff$19411 ($dff)
+    port Q[33] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [32]:
+    port Q[32] of cell $procdff$19411 ($dff)
+    port Q[32] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [31]:
+    port Q[31] of cell $procdff$19411 ($dff)
+    port Q[31] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [30]:
+    port Q[30] of cell $procdff$19411 ($dff)
+    port Q[30] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [29]:
+    port Q[29] of cell $procdff$19411 ($dff)
+    port Q[29] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [28]:
+    port Q[28] of cell $procdff$19411 ($dff)
+    port Q[28] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [27]:
+    port Q[27] of cell $procdff$19411 ($dff)
+    port Q[27] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [26]:
+    port Q[26] of cell $procdff$19411 ($dff)
+    port Q[26] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [25]:
+    port Q[25] of cell $procdff$19411 ($dff)
+    port Q[25] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [24]:
+    port Q[24] of cell $procdff$19411 ($dff)
+    port Q[24] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [23]:
+    port Q[23] of cell $procdff$19411 ($dff)
+    port Q[23] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [22]:
+    port Q[22] of cell $procdff$19411 ($dff)
+    port Q[22] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [21]:
+    port Q[21] of cell $procdff$19411 ($dff)
+    port Q[21] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [20]:
+    port Q[20] of cell $procdff$19411 ($dff)
+    port Q[20] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [19]:
+    port Q[19] of cell $procdff$19411 ($dff)
+    port Q[19] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [18]:
+    port Q[18] of cell $procdff$19411 ($dff)
+    port Q[18] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [17]:
+    port Q[17] of cell $procdff$19411 ($dff)
+    port Q[17] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [16]:
+    port Q[16] of cell $procdff$19411 ($dff)
+    port Q[16] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [15]:
+    port Q[15] of cell $procdff$19411 ($dff)
+    port Q[15] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [14]:
+    port Q[14] of cell $procdff$19411 ($dff)
+    port Q[14] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [13]:
+    port Q[13] of cell $procdff$19411 ($dff)
+    port Q[13] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [12]:
+    port Q[12] of cell $procdff$19411 ($dff)
+    port Q[12] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [11]:
+    port Q[11] of cell $procdff$19411 ($dff)
+    port Q[11] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [10]:
+    port Q[10] of cell $procdff$19411 ($dff)
+    port Q[10] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [9]:
+    port Q[9] of cell $procdff$19411 ($dff)
+    port Q[9] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [8]:
+    port Q[8] of cell $procdff$19411 ($dff)
+    port Q[8] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [7]:
+    port Q[7] of cell $procdff$19411 ($dff)
+    port Q[7] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [6]:
+    port Q[6] of cell $procdff$19411 ($dff)
+    port Q[6] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [5]:
+    port Q[5] of cell $procdff$19411 ($dff)
+    port Q[5] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [4]:
+    port Q[4] of cell $procdff$19411 ($dff)
+    port Q[4] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [3]:
+    port Q[3] of cell $procdff$19411 ($dff)
+    port Q[3] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [2]:
+    port Q[2] of cell $procdff$19411 ($dff)
+    port Q[2] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [1]:
+    port Q[1] of cell $procdff$19411 ($dff)
+    port Q[1] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.kd [0]:
+    port Q[0] of cell $procdff$19411 ($dff)
+    port Q[0] of cell $procdff$19440 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [76]:
+    port Q[76] of cell $procdff$19410 ($dff)
+    port Q[76] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [75]:
+    port Q[75] of cell $procdff$19410 ($dff)
+    port Q[75] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [74]:
+    port Q[74] of cell $procdff$19410 ($dff)
+    port Q[74] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [73]:
+    port Q[73] of cell $procdff$19410 ($dff)
+    port Q[73] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [72]:
+    port Q[72] of cell $procdff$19410 ($dff)
+    port Q[72] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [71]:
+    port Q[71] of cell $procdff$19410 ($dff)
+    port Q[71] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [70]:
+    port Q[70] of cell $procdff$19410 ($dff)
+    port Q[70] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [69]:
+    port Q[69] of cell $procdff$19410 ($dff)
+    port Q[69] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [68]:
+    port Q[68] of cell $procdff$19410 ($dff)
+    port Q[68] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [67]:
+    port Q[67] of cell $procdff$19410 ($dff)
+    port Q[67] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [66]:
+    port Q[66] of cell $procdff$19410 ($dff)
+    port Q[66] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [65]:
+    port Q[65] of cell $procdff$19410 ($dff)
+    port Q[65] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [64]:
+    port Q[64] of cell $procdff$19410 ($dff)
+    port Q[64] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [63]:
+    port Q[63] of cell $procdff$19410 ($dff)
+    port Q[63] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [62]:
+    port Q[62] of cell $procdff$19410 ($dff)
+    port Q[62] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [61]:
+    port Q[61] of cell $procdff$19410 ($dff)
+    port Q[61] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [60]:
+    port Q[60] of cell $procdff$19410 ($dff)
+    port Q[60] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [59]:
+    port Q[59] of cell $procdff$19410 ($dff)
+    port Q[59] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [58]:
+    port Q[58] of cell $procdff$19410 ($dff)
+    port Q[58] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [57]:
+    port Q[57] of cell $procdff$19410 ($dff)
+    port Q[57] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [56]:
+    port Q[56] of cell $procdff$19410 ($dff)
+    port Q[56] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [55]:
+    port Q[55] of cell $procdff$19410 ($dff)
+    port Q[55] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [54]:
+    port Q[54] of cell $procdff$19410 ($dff)
+    port Q[54] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [53]:
+    port Q[53] of cell $procdff$19410 ($dff)
+    port Q[53] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [52]:
+    port Q[52] of cell $procdff$19410 ($dff)
+    port Q[52] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [51]:
+    port Q[51] of cell $procdff$19410 ($dff)
+    port Q[51] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [50]:
+    port Q[50] of cell $procdff$19410 ($dff)
+    port Q[50] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [49]:
+    port Q[49] of cell $procdff$19410 ($dff)
+    port Q[49] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [48]:
+    port Q[48] of cell $procdff$19410 ($dff)
+    port Q[48] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [47]:
+    port Q[47] of cell $procdff$19410 ($dff)
+    port Q[47] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [46]:
+    port Q[46] of cell $procdff$19410 ($dff)
+    port Q[46] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [45]:
+    port Q[45] of cell $procdff$19410 ($dff)
+    port Q[45] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [44]:
+    port Q[44] of cell $procdff$19410 ($dff)
+    port Q[44] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [43]:
+    port Q[43] of cell $procdff$19410 ($dff)
+    port Q[43] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [42]:
+    port Q[42] of cell $procdff$19410 ($dff)
+    port Q[42] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [41]:
+    port Q[41] of cell $procdff$19410 ($dff)
+    port Q[41] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [40]:
+    port Q[40] of cell $procdff$19410 ($dff)
+    port Q[40] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [39]:
+    port Q[39] of cell $procdff$19410 ($dff)
+    port Q[39] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [38]:
+    port Q[38] of cell $procdff$19410 ($dff)
+    port Q[38] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [37]:
+    port Q[37] of cell $procdff$19410 ($dff)
+    port Q[37] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [36]:
+    port Q[36] of cell $procdff$19410 ($dff)
+    port Q[36] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [35]:
+    port Q[35] of cell $procdff$19410 ($dff)
+    port Q[35] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [34]:
+    port Q[34] of cell $procdff$19410 ($dff)
+    port Q[34] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [33]:
+    port Q[33] of cell $procdff$19410 ($dff)
+    port Q[33] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [32]:
+    port Q[32] of cell $procdff$19410 ($dff)
+    port Q[32] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [31]:
+    port Q[31] of cell $procdff$19410 ($dff)
+    port Q[31] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [30]:
+    port Q[30] of cell $procdff$19410 ($dff)
+    port Q[30] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [29]:
+    port Q[29] of cell $procdff$19410 ($dff)
+    port Q[29] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [28]:
+    port Q[28] of cell $procdff$19410 ($dff)
+    port Q[28] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [27]:
+    port Q[27] of cell $procdff$19410 ($dff)
+    port Q[27] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [26]:
+    port Q[26] of cell $procdff$19410 ($dff)
+    port Q[26] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [25]:
+    port Q[25] of cell $procdff$19410 ($dff)
+    port Q[25] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [24]:
+    port Q[24] of cell $procdff$19410 ($dff)
+    port Q[24] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [23]:
+    port Q[23] of cell $procdff$19410 ($dff)
+    port Q[23] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [22]:
+    port Q[22] of cell $procdff$19410 ($dff)
+    port Q[22] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [21]:
+    port Q[21] of cell $procdff$19410 ($dff)
+    port Q[21] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [20]:
+    port Q[20] of cell $procdff$19410 ($dff)
+    port Q[20] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [19]:
+    port Q[19] of cell $procdff$19410 ($dff)
+    port Q[19] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [18]:
+    port Q[18] of cell $procdff$19410 ($dff)
+    port Q[18] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [17]:
+    port Q[17] of cell $procdff$19410 ($dff)
+    port Q[17] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [16]:
+    port Q[16] of cell $procdff$19410 ($dff)
+    port Q[16] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [15]:
+    port Q[15] of cell $procdff$19410 ($dff)
+    port Q[15] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [14]:
+    port Q[14] of cell $procdff$19410 ($dff)
+    port Q[14] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [13]:
+    port Q[13] of cell $procdff$19410 ($dff)
+    port Q[13] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [12]:
+    port Q[12] of cell $procdff$19410 ($dff)
+    port Q[12] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [11]:
+    port Q[11] of cell $procdff$19410 ($dff)
+    port Q[11] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [10]:
+    port Q[10] of cell $procdff$19410 ($dff)
+    port Q[10] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [9]:
+    port Q[9] of cell $procdff$19410 ($dff)
+    port Q[9] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [8]:
+    port Q[8] of cell $procdff$19410 ($dff)
+    port Q[8] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [7]:
+    port Q[7] of cell $procdff$19410 ($dff)
+    port Q[7] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [6]:
+    port Q[6] of cell $procdff$19410 ($dff)
+    port Q[6] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [5]:
+    port Q[5] of cell $procdff$19410 ($dff)
+    port Q[5] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [4]:
+    port Q[4] of cell $procdff$19410 ($dff)
+    port Q[4] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [3]:
+    port Q[3] of cell $procdff$19410 ($dff)
+    port Q[3] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [2]:
+    port Q[2] of cell $procdff$19410 ($dff)
+    port Q[2] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [1]:
+    port Q[1] of cell $procdff$19410 ($dff)
+    port Q[1] of cell $procdff$19433 ($dff)
+Warning: multiple conflicting drivers for $paramod$3ae12097037784b3c9530ebffb5cd951e4b13d18\ot_s81sl_lep_core.\g_htx.pd [0]:
+    port Q[0] of cell $procdff$19410 ($dff)
+    port Q[0] of cell $procdff$19433 ($dff)
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [53]:
+    port Q[53] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[53] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [52]:
+    port Q[52] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[52] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [51]:
+    port Q[51] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[51] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [50]:
+    port Q[50] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[50] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [49]:
+    port Q[49] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[49] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [48]:
+    port Q[48] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[48] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [47]:
+    port Q[47] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[47] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [46]:
+    port Q[46] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[46] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [45]:
+    port Q[45] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[45] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [44]:
+    port Q[44] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[44] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [43]:
+    port Q[43] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[43] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [42]:
+    port Q[42] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[42] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [41]:
+    port Q[41] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[41] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [40]:
+    port Q[40] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[40] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [39]:
+    port Q[39] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[39] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [38]:
+    port Q[38] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[38] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [37]:
+    port Q[37] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[37] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [36]:
+    port Q[36] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[36] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [35]:
+    port Q[35] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[35] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [34]:
+    port Q[34] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[34] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [33]:
+    port Q[33] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[33] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [32]:
+    port Q[32] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[32] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [31]:
+    port Q[31] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[31] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [30]:
+    port Q[30] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[30] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [29]:
+    port Q[29] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[29] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [28]:
+    port Q[28] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[28] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [27]:
+    port Q[27] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[27] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [26]:
+    port Q[26] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[26] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [25]:
+    port Q[25] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[25] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [24]:
+    port Q[24] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[24] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [23]:
+    port Q[23] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[23] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [22]:
+    port Q[22] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[22] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [21]:
+    port Q[21] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[21] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [20]:
+    port Q[20] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[20] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [19]:
+    port Q[19] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[19] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [18]:
+    port Q[18] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[18] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [17]:
+    port Q[17] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[17] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [16]:
+    port Q[16] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[16] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [15]:
+    port Q[15] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[15] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [14]:
+    port Q[14] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[14] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [13]:
+    port Q[13] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[13] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [12]:
+    port Q[12] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[12] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [11]:
+    port Q[11] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[11] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [10]:
+    port Q[10] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[10] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [9]:
+    port Q[9] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[9] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [8]:
+    port Q[8] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[8] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [7]:
+    port Q[7] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[7] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [6]:
+    port Q[6] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[6] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [5]:
+    port Q[5] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[5] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [4]:
+    port Q[4] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[4] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [3]:
+    port Q[3] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[3] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [2]:
+    port Q[2] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[2] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [1]:
+    port Q[1] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[1] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [0]:
+    port Q[0] of cell $flatten\u_ot_pr_core.\u.$procdff$19411 ($dff)
+    port Q[0] of cell $flatten\u_ot_pr_core.\u.$procdff$19440 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [76]:
+    port Q[76] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[76] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [75]:
+    port Q[75] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[75] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [74]:
+    port Q[74] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[74] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [73]:
+    port Q[73] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[73] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [72]:
+    port Q[72] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[72] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [71]:
+    port Q[71] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[71] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [70]:
+    port Q[70] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[70] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [69]:
+    port Q[69] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[69] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [68]:
+    port Q[68] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[68] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [67]:
+    port Q[67] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[67] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [66]:
+    port Q[66] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[66] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [65]:
+    port Q[65] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[65] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [64]:
+    port Q[64] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[64] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [63]:
+    port Q[63] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[63] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [62]:
+    port Q[62] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[62] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [61]:
+    port Q[61] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[61] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [60]:
+    port Q[60] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[60] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [59]:
+    port Q[59] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[59] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [58]:
+    port Q[58] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[58] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [57]:
+    port Q[57] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[57] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [56]:
+    port Q[56] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[56] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [55]:
+    port Q[55] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[55] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [54]:
+    port Q[54] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[54] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [53]:
+    port Q[53] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[53] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [52]:
+    port Q[52] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[52] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [51]:
+    port Q[51] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[51] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [50]:
+    port Q[50] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[50] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [49]:
+    port Q[49] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[49] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [48]:
+    port Q[48] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[48] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [47]:
+    port Q[47] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[47] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [46]:
+    port Q[46] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[46] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [45]:
+    port Q[45] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[45] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [44]:
+    port Q[44] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[44] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [43]:
+    port Q[43] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[43] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [42]:
+    port Q[42] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[42] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [41]:
+    port Q[41] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[41] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [40]:
+    port Q[40] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[40] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [39]:
+    port Q[39] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[39] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [38]:
+    port Q[38] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[38] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [37]:
+    port Q[37] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[37] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [36]:
+    port Q[36] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[36] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [35]:
+    port Q[35] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[35] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [34]:
+    port Q[34] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[34] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [33]:
+    port Q[33] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[33] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [32]:
+    port Q[32] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[32] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [31]:
+    port Q[31] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[31] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [30]:
+    port Q[30] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[30] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [29]:
+    port Q[29] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[29] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [28]:
+    port Q[28] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[28] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [27]:
+    port Q[27] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[27] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [26]:
+    port Q[26] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[26] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [25]:
+    port Q[25] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[25] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [24]:
+    port Q[24] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[24] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [23]:
+    port Q[23] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[23] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [22]:
+    port Q[22] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[22] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [21]:
+    port Q[21] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[21] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [20]:
+    port Q[20] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[20] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [19]:
+    port Q[19] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[19] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [18]:
+    port Q[18] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[18] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [17]:
+    port Q[17] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[17] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [16]:
+    port Q[16] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[16] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [15]:
+    port Q[15] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[15] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [14]:
+    port Q[14] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[14] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [13]:
+    port Q[13] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[13] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [12]:
+    port Q[12] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[12] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [11]:
+    port Q[11] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[11] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [10]:
+    port Q[10] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[10] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [9]:
+    port Q[9] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[9] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [8]:
+    port Q[8] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[8] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [7]:
+    port Q[7] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[7] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [6]:
+    port Q[6] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[6] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [5]:
+    port Q[5] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[5] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [4]:
+    port Q[4] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[4] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [3]:
+    port Q[3] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[3] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [2]:
+    port Q[2] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[2] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [1]:
+    port Q[1] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[1] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [0]:
+    port Q[0] of cell $flatten\u_ot_pr_core.\u.$procdff$19410 ($dff)
+    port Q[0] of cell $flatten\u_ot_pr_core.\u.$procdff$19433 ($dff)
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.19. Executing OPT_MERGE pass (detect identical cells).
+3.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.22. Executing OPT_EXPR pass (perform const folding).
+3.8.23. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Warning: Driver-driver conflict for \u_ot_pr_core.u.g_htx.kd [53] between cell $flatten\u_ot_pr_core.\u.$procdff$19411.Q and constant 1'1 in ot_s81sl_lep: Resolved using constant.
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.19. Executing OPT_MERGE pass (detect identical cells).
+3.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.22. Executing OPT_EXPR pass (perform const folding).
+3.10.23. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.12. Executing OPT_MERGE pass (detect identical cells).
+3.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.15. Executing OPT_EXPR pass (perform const folding).
+3.16.16. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+4. Executing SYNTH pass.
+4.1. Executing OPT pass (performing simple optimizations).
+4.1.1. Executing OPT_EXPR pass (perform const folding).
+4.1.2. Executing OPT_MERGE pass (detect identical cells).
+4.1.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.5. Finished fast OPT passes.
+4.2. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+4.3. Executing OPT pass (performing simple optimizations).
+4.3.1. Executing OPT_EXPR pass (perform const folding).
+4.3.2. Executing OPT_MERGE pass (detect identical cells).
+4.3.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.5. Executing OPT_MERGE pass (detect identical cells).
+4.3.6. Executing OPT_SHARE pass.
+4.3.7. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.9. Executing OPT_EXPR pass (perform const folding).
+4.3.10. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.13. Executing OPT_MERGE pass (detect identical cells).
+4.3.14. Executing OPT_SHARE pass.
+4.3.15. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.17. Executing OPT_EXPR pass (perform const folding).
+4.3.18. Finished fast OPT passes. (There is nothing left to do.)
+4.4. Executing TECHMAP pass (map to technology primitives).
+4.4.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+4.4.2. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/common/lcu_kogge_stone.v
+4.4.3. Continuing TECHMAP pass.
+4.4.13. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.4.14. Executing OPT_EXPR pass (perform const folding).
+4.5. Executing OPT pass (performing simple optimizations).
+4.5.1. Executing OPT_EXPR pass (perform const folding).
+4.5.2. Executing OPT_MERGE pass (detect identical cells).
+4.5.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.5. Finished fast OPT passes.
+4.6. Executing HIERARCHY pass (managing design hierarchy).
+4.6.1. Analyzing design hierarchy..
+4.6.2. Analyzing design hierarchy..
+4.7. Printing statistics.
+4.8. Executing CHECK pass (checking for obvious problems).
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [76]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37664 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36582 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [0]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37492 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32582 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [1]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37493 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32583 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [2]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37494 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32584 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [3]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37495 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32585 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [4]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37496 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32586 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [5]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37497 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32587 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [6]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37498 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32588 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [7]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37499 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32589 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [8]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37500 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32590 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [9]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37501 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32591 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [10]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37502 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32592 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [11]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37503 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32593 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [12]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37504 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32594 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [13]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37505 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32595 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [14]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37506 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32596 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [15]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37507 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32597 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [16]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37508 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32598 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [17]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37509 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32599 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [18]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37510 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32600 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [19]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37511 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32601 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [20]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37512 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32602 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [21]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37513 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32603 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [22]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37514 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32604 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [23]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37515 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32605 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [24]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37516 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32606 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [25]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37517 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32607 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [26]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37518 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32608 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [27]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37519 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32609 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [28]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37520 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32610 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [29]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37521 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32611 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [30]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37522 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32612 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [31]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37523 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32613 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [32]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37524 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32614 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [33]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37525 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32615 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [34]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37526 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32616 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [35]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37527 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32617 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [36]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37528 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32618 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [37]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37529 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32619 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [38]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37530 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32620 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [39]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37531 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32621 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [40]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37532 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32622 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [41]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37533 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32623 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [42]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37534 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32624 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [43]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37535 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32625 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [44]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37536 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32626 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [45]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37537 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32627 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [46]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37538 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32628 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [47]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37539 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32629 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [48]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37540 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32630 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [49]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37541 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32631 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [50]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37542 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32632 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [51]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37543 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32633 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.kd [52]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37544 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$32634 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [0]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37588 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36588 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [1]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37589 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36589 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [2]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37590 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36590 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [3]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37591 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36591 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [4]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37592 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36592 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [5]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37593 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36593 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [6]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37594 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36594 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [7]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37595 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36595 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [8]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37596 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36596 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [9]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37597 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36597 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [10]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37598 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36598 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [11]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37599 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36599 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [12]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37600 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36600 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [13]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37601 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36601 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [14]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37602 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36602 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [15]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37603 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36603 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [16]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37604 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36604 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [17]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37605 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36605 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [18]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37606 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36606 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [19]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37607 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36607 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [20]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37608 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36608 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [21]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37609 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36609 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [22]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37610 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36610 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [23]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37611 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36611 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [24]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37612 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36612 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [25]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37613 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36613 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [26]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37614 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36614 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [27]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37615 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36615 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [28]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37616 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36616 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [29]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37617 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36617 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [30]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37618 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36618 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [31]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37619 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36619 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [32]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37620 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36620 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [33]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37621 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36621 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [34]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37622 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36622 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [35]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37623 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36623 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [36]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37624 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36624 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [37]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37625 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36625 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [38]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37626 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36626 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [39]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37627 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36627 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [40]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37628 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36628 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [41]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37629 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36629 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [42]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37630 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36630 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [43]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37631 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36631 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [44]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37632 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36632 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [45]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37633 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36633 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [46]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37634 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36634 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [47]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37635 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36635 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [48]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37636 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36636 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [49]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37637 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36637 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [50]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37638 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36638 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [51]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37639 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36639 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [52]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37640 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36640 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [53]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37641 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36641 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [54]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37642 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36642 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [55]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37643 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36643 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [56]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37644 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36644 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [57]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37645 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36645 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [58]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37646 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36646 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [59]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37647 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36647 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [60]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37648 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36648 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [61]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37649 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36649 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [62]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37650 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36650 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [63]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37651 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36651 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [64]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37652 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36652 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [65]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37653 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36571 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [66]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37654 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36572 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [67]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37655 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36573 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [68]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37656 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36574 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [69]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37657 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36575 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [70]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37658 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36576 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [71]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37659 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36577 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [72]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37660 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36578 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [73]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37661 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36579 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [74]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37662 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36580 ($_DFFE_PP_)
+Warning: multiple conflicting drivers for ot_s81sl_lep.\u_ot_pr_core.u.g_htx.pd [75]:
+    port Q[0] of cell $auto$ff.cc:337:slice$37663 ($_DFF_P_)
+    port Q[0] of cell $auto$ff.cc:337:slice$36581 ($_DFFE_PP_)
+5. Executing OPT pass (performing simple optimizations).
+5.1. Executing OPT_EXPR pass (perform const folding).
+5.2. Executing OPT_MERGE pass (detect identical cells).
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.5. Executing OPT_MERGE pass (detect identical cells).
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.8. Executing OPT_EXPR pass (perform const folding).
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.12. Executing OPT_MERGE pass (detect identical cells).
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.15. Executing OPT_EXPR pass (perform const folding).
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+6. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+7. Executing TECHMAP pass (map to technology primitives).
+7.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v
+7.2. Continuing TECHMAP pass.
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+9. Executing OPT pass (performing simple optimizations).
+9.1. Executing OPT_EXPR pass (perform const folding).
+9.2. Executing OPT_MERGE pass (detect identical cells).
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.5. Executing OPT_MERGE pass (detect identical cells).
+9.6. Executing OPT_DFF pass (perform DFF optimizations).
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.8. Executing OPT_EXPR pass (perform const folding).
+9.9. Rerunning OPT passes. (Maybe there is more to do..)
+9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.12. Executing OPT_MERGE pass (detect identical cells).
+9.13. Executing OPT_DFF pass (perform DFF optimizations).
+9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.15. Executing OPT_EXPR pass (perform const folding).
+9.16. Finished fast OPT passes. (There is nothing left to do.)
+10. Executing SETUNDEF pass (replace undef values with defined constants).
+abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz -liberty /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib -liberty /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/native_orfs_host_land5/objects/asap7/ot_s81sl_lep/base/abc.constr -D 833.333
+11. Executing ABC pass (technology mapping using ABC).
+11.1. Extracting gate netlist of module `$paramod$6a064a464261a58e515d66f524a76103780e42dd\ot_s81sl_std_tx_qualify' to `<abc-temp-dir>/input.blif'..
+11.1.1. Executed ABC.
+11.1.2. Re-integrating ABC results.
+11.2. Extracting gate netlist of module `$paramod$88619806337f3196fa8e2b991ac227a53f2aa58e\ot_sram_showahead_readptr' to `<abc-temp-dir>/input.blif'..
+11.2.1. Executed ABC.
+11.2.2. Re-integrating ABC results.
+11.3. Extracting gate netlist of module `$paramod\ot_sram_showahead_writepins\AW=s32'00000000000000000000000000000011' to `<abc-temp-dir>/input.blif'..
+11.3.1. Executed ABC.
+11.3.2. Re-integrating ABC results.
+11.4. Extracting gate netlist of module `\ot_s81sl_lep' to `<abc-temp-dir>/input.blif'..
+11.4.1. Executed ABC.
+11.4.2. Re-integrating ABC results.
+11.5. Extracting gate netlist of module `\ot_s81sl_lep_host_enable' to `<abc-temp-dir>/input.blif'..
+11.5.1. Executed ABC.
+11.5.2. Re-integrating ABC results.
+11.6. Extracting gate netlist of module `\ot_s81sl_lep_host_event' to `<abc-temp-dir>/input.blif'..
+11.6.1. Executed ABC.
+11.6.2. Re-integrating ABC results.
+11.7. Extracting gate netlist of module `\ot_s81sl_lep_host_hold8' to `<abc-temp-dir>/input.blif'..
+11.7.1. Executed ABC.
+11.7.2. Re-integrating ABC results.
+11.8. Extracting gate netlist of module `\ot_s81sl_lep_host_preserve' to `<abc-temp-dir>/input.blif'..
+11.8.1. Executed ABC.
+11.8.2. Re-integrating ABC results.
+11.9. Extracting gate netlist of module `\ot_s81sl_lep_key_hold8' to `<abc-temp-dir>/input.blif'..
+11.9.1. Executed ABC.
+11.9.2. Re-integrating ABC results.
+11.10. Extracting gate netlist of module `\ot_s81sl_lep_pair_ready' to `<abc-temp-dir>/input.blif'..
+11.10.1. Executed ABC.
+11.10.2. Re-integrating ABC results.
+11.11. Extracting gate netlist of module `\ot_s81sl_lep_stamp' to `<abc-temp-dir>/input.blif'..
+11.11.1. Executed ABC.
+11.11.2. Re-integrating ABC results.
+11.12. Extracting gate netlist of module `\ot_s81sl_lep_status_region' to `<abc-temp-dir>/input.blif'..
+11.12.1. Executed ABC.
+11.12.2. Re-integrating ABC results.
+11.13. Extracting gate netlist of module `\ot_s81sl_lep_std_enable' to `<abc-temp-dir>/input.blif'..
+11.13.1. Executed ABC.
+11.13.2. Re-integrating ABC results.
+11.14. Extracting gate netlist of module `\ot_s81sl_lep_tx_push' to `<abc-temp-dir>/input.blif'..
+11.14.1. Executed ABC.
+11.14.2. Re-integrating ABC results.
+11.15. Extracting gate netlist of module `\ot_s81sl_lep_vcopy' to `<abc-temp-dir>/input.blif'..
+11.15.1. Executed ABC.
+11.15.2. Re-integrating ABC results.
+11.16. Extracting gate netlist of module `\ot_sram_showahead_hit5' to `<abc-temp-dir>/input.blif'..
+11.16.1. Executed ABC.
+11.16.2. Re-integrating ABC results.
+Took 11 seconds: abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz -liberty /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib -liberty /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/native_orfs_host_land5/objects/asap7/ot_s81sl_lep/base/abc.constr -D 833.333
+12. Executing SPLITNETS pass (splitting up multi-bit signals).
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+14. Executing HILOMAP pass (mapping to constant drivers).
+15. Executing INSBUF pass (insert buffer cells for connected wires).
+16. Executing CHECK pass (checking for obvious problems).
+17. Printing statistics.
+18. Executing CHECK pass (checking for obvious problems).
+19. Executing Verilog backend.
+19.1. Executing BMUXMAP pass.
+19.2. Executing DEMUXMAP pass.
+Warnings: 415 unique messages, 415 total
+End of script. Logfile hash: 8598f7cfdc, time: 21.95s, user: 13.63s, system: 0.40s, MEM: 284.02 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 44% 1x abc (10 sec), 16% 27x opt_clean (3 sec), ...
+Elapsed time: 0:22.10[h:]min:sec. CPU time: user 23.86 sys 0.57 (110%). Peak memory: 291876KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v             22            285 4e87939c38bbdb3a445a
+cp /work/native.sdc /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/1_2_yosys.sdc
+touch -r /work/native.sdc /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+mkdir -p /work/native_orfs_host_land5/objects/asap7/ot_s81sl_lep/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib
+read_liberty /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef, created 1 library cells
+link_design ot_s81sl_lep
+read_sdc /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/1_2_yosys.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+eliminate_dead_logic
+Removed 3617 unused instances and 3617 unused nets.
+Design area 70300 um^2 100% utilization.
+write_db /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/1_synth.odb
+write_sdc -no_timestamp /work/native_orfs_host_land5/results/asap7/ot_s81sl_lep/base/1_synth.sdc
+Elapsed time: 0:02.06[h:]min:sec. CPU time: user 1.94 sys 0.13 (99%). Peak memory: 346892KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb            2            338 44532624b051cd06dc61
+1_synth                   .sdc                             ddc9944b63224dda9cd8
