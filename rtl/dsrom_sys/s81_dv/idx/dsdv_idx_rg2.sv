@@ -38,7 +38,8 @@
 // Gather slots close when full (16 keys), at list end, or when the walker stalls (deadlock-free: the consumer head is
 // then always in a closed slot).  Query word pairs of a frame must be contiguous on the chain (fault 6 otherwise).
 // MUT (bench negative controls): 1 item lane off by one, 2 rk always returned to the slice, 3 scale of the neighbouring
-// cell, 4 pair 0's part-1 beat one cycle late, 5 slice response swallowed, 6 spec om ignored.
+// cell, 4 pair 0's part-1 beat one cycle late, 5 slice response swallowed, 6 spec om ignored, 7 record gather late rule
+// (owned gather word missing at its slot passes empty with fault 0: fail-open).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_idx_rg2 #(
     parameter integer MUT = 0,
@@ -994,7 +995,23 @@ module dsdv_idx_rg2 #(
     // take one edge before the slot: buffer ep complete and holding word ewn
     wire [15:0] bwe = {bw[epk[8]][15:8], bw[epk[0]][7:0]};
     assign take_n = slot_n && bcmp[epk[5]] && bwe == ewn;
-    wire        late_n = slot_n && (gat ? (bcmp[epk[5]] && bwe < ewn) : !take_n);
+    // S81-L20RD3 (10-20): FAIL-CLOSED gather slots.  A gather word the pair does not own is legitimately empty, but the
+    // record rule (late only when a COMPLETE buffer holds an older word) let an OWNED word whose keys had not reached the
+    // assembler pass as an empty word with fault 0 (bench2 gather P3: word 104 zeros, fault 0).  A gather slot is now
+    // certified only when the assembler frontier is past it (items reach the assembler in word order, so every owned word
+    // below gfr is complete in a buffer) or the reader is drained (walker done, item queue / in-flight / open buffers
+    // empty).  An uncertified slot that is not taken is LATE (sticky fault + in-band flag).  gc_r is registered one edge
+    // ahead from the stable ewn (P >= 2), with gfr / gdr one edge stale: conservative only.  MUT 7 = the record rule.
+    reg  [15:0] gfr;                                // gather: words below gfr are complete or not owned
+    reg         gd1, gdr, gc_r;
+    always @(posedge ck) begin                      // data registers (no reset): gfr cleared at every job header
+            if (hj1[3]) gfr <= 16'd0;
+            else if (sq_pop_d) gfr <= t_lw ? t_w + 16'd1 : t_w;
+            gd1 <= ws == 3'd6 && iq_n == 11'd0 && infl == 11'd0 && !ipush && (bact & ~bcmp) == 2'b00 && !hj1[3];
+            gdr <= gd1 && ws == 3'd6 && !hj1[3];
+            gc_r <= MUT == 7 || gdr || gfr > ewn;
+    end
+    wire        late_n = slot_n && (gat ? ((bcmp[epk[5]] && bwe < ewn) || (!take_n && !gc_r)) : !take_n);
     (* keep = "true" *) reg [1:0] tk0, tk1;        // part-0 data enables (2 x 8 lanes) per buffer
     reg         tk_r, late_r, p1_r, p1_d, p1_last, p1_f;
     reg  [15:0] p1_lv;

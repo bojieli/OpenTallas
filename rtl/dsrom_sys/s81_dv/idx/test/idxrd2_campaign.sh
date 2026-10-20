@@ -3,7 +3,8 @@
 # Run from the repo root on a fleet host (Verilator 5.050, the closure daemon's version).
 #   idxrd_campaign.sh OUT BUILD "<-G build flags>" JOBS "name|+plusargs" ...
 #   build flags: -GMUT=<0..6> -GSRAM_MACRO=<0|1> -GCKH_PS=<ps> -GSQD=<n> -GIQD=<n>;  plusargs: +N= +GATHER= +B= +PMAX= +KB= +T0= +P= +K= +SEED= +SLICE=
-# Case names: pass_* must print TB_IDXRD PASS, fail_* must print TB_IDXRD FAIL, x_* are informational (sweeps).  Prints one line a case and
+# Case names: pass_* must print TB_IDXRD PASS, fail_* must print TB_IDXRD FAIL, closed_* must FAIL with nopen 0 (every
+# mismatching word carries the in-band fault flag: fail-closed, S81-L20RD3), x_* are informational (sweeps).  Prints one line a case and
 # IDXRD_CAMPAIGN PASS when every case met its expectation (exit 0), else IDXRD_CAMPAIGN FAIL (exit 1).
 set -u
 O=$1; BN=$2; G=$3; J=$4; shift 4
@@ -33,7 +34,8 @@ run_case() {
   /usr/bin/time -v "$D/obj/Vtb_dsdv_idx_rg2" $args > "$log" 2>&1
   local v; v=$(grep -h -E '^TB_IDXRD (PASS|FAIL)$' "$log" | tail -1)
   local ok=BAD
-  case $name in pass_*) [ "$v" = "TB_IDXRD PASS" ] && ok=OK ;; fail_*) [ "$v" = "TB_IDXRD FAIL" ] && ok=OK ;; x_*) ok=OK ;; esac
+  case $name in pass_*) [ "$v" = "TB_IDXRD PASS" ] && ok=OK ;; fail_*) [ "$v" = "TB_IDXRD FAIL" ] && ok=OK ;;
+    closed_*) [ "$v" = "TB_IDXRD FAIL" ] && grep -q -E 'TB_IDXRD_STATS .* nopen 0 ' "$log" && ok=OK ;; x_*) ok=OK ;; esac
   echo "IDXRD_CASE $ok $BN/$name: $v | $(grep -h TB_IDXRD_STATS "$log" | tail -1) | maxrss_kb=$(grep -h 'Maximum resident' "$log" | awk '{print $NF}') wall=$(grep -h 'Elapsed (wall' "$log" | awk '{print $NF}')"
 }
 n=0

@@ -16,6 +16,8 @@
 //   Also checked: qo == qi delayed 16 edges (8 hops) (every frame forwarded), a non-index frame skipped, slice traffic passing
 //   the station both ways (data / beat / tag, rk count == slice requests) before the job and NO response / rk leaking
 //   to the slice during it, every region's sticky fault 0 after the window end.
+//   S81-L20RD3: nopen counts mismatching lane words whose in-band fault flag is 0 (a fail-OPEN word); closed_* campaign
+//   cases (an over-rate window) must FAIL with nopen 0.
 // Plusargs: none (parameters by -G).  Prints TB_IDXRD PASS / FAIL and a TB_IDXRD_STATS line.
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_dsdv_idx_rg2;
@@ -58,7 +60,7 @@ module tb_dsdv_idx_rg2;
     always begin #417 ck = 1; #416 ck = 0; end
     always #(CKH_PS / 2) ckh = ~ckh;
     longint cyc = 0;
-    integer fail = 0, nerr = 0;
+    integer fail = 0, nerr = 0, nopen = 0;   // nopen: mismatching lane words WITHOUT the in-band fault flag (fail-open)
     always @(posedge ck) cyc <= cyc + 1;
 
     function automatic [3:0] hj(input [15:0] j); hj = j[3:0] ^ j[7:4] ^ j[11:8] ^ j[15:12]; endfunction
@@ -235,6 +237,7 @@ module tb_dsdv_idx_rg2;
             if (d !== e || ln[515 * l + 514] || (l != 0 && lw_n[l] > 1) || (l == 0 && lw_n[0] > nw) ||
                 (l != 0 && OPEN[l - 1])) begin
                 nerr = nerr + 1;
+                if (!ln[515 * l + 514]) nopen = nopen + 1;
                 if (nerr <= 8) $display("TB_IDXRD MISMATCH cyc %0d lane %0d word %0d fault %0d got %h exp %h", cyc, l,
                                         lw_n[l], ln[515 * l + 514], d, e);
             end
@@ -354,8 +357,8 @@ module tb_dsdv_idx_rg2;
         end
         if (vin_f) begin fail = 1; $display("TB_IDXRD selector V-ingress protocol fault"); end
         if (nerr != 0 || qerr != 0 || s_err != 0) fail = 1;
-        $display("TB_IDXRD_STATS gather %0d N %0d keys %0d words %0d T0 %0d P %0d mut %0d sram %0d ckh %0d hdr_to_last %0d end_to_last %0d nerr %0d qerr %0d slice_err %0d",
-                 GATHER, N, GATHER != 0 ? 8 * N : N, nw, T0, P, MUT, SRAM_MACRO, CKH_PS, t_last - t_hdr0, t_last - t_end, nerr, qerr, s_err);
+        $display("TB_IDXRD_STATS gather %0d N %0d keys %0d words %0d T0 %0d P %0d mut %0d sram %0d ckh %0d hdr_to_last %0d end_to_last %0d nerr %0d nopen %0d qerr %0d slice_err %0d",
+                 GATHER, N, GATHER != 0 ? 8 * N : N, nw, T0, P, MUT, SRAM_MACRO, CKH_PS, t_last - t_hdr0, t_last - t_end, nerr, nopen, qerr, s_err);
         if (fail) $display("TB_IDXRD FAIL"); else $display("TB_IDXRD PASS");
         $finish;
     end
