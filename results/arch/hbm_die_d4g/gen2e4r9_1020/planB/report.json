@@ -1,0 +1,183 @@
+{
+ "slots_with_plan_block": 70,
+ "slots_own_centre": 379,
+ "schema": "opentallas.hbm.d4g_channel_cuts.v1",
+ "spec": {
+  "plan": "B",
+  "why": "HBM-DIE9 plan B (fallback, different layout): fewer WIDER channels -- both sides of each xq/xl stack (+345.6 each) and a centre spine (+432); no channel at the 100 um single gaps or the stripes; y channels as plan A (reticle-bound: H +691.2 max)",
+  "bands": [
+   {
+    "name": "stripe_S",
+    "y0": -1000000000.0,
+    "y1": 2050.0,
+    "shift": 1598.4
+   },
+   {
+    "name": "sm_S",
+    "y0": 2050.0,
+    "y1": 9020.0,
+    "cuts": [
+     [
+      2916,
+      345.6
+     ],
+     [
+      3427,
+      345.6
+     ],
+     [
+      7436,
+      345.6
+     ],
+     [
+      7946,
+      345.6
+     ],
+     [
+      10110,
+      432
+     ],
+     [
+      12254,
+      345.6
+     ],
+     [
+      12764,
+      345.6
+     ],
+     [
+      16771,
+      345.6
+     ],
+     [
+      17283,
+      345.6
+     ]
+    ]
+   },
+   {
+    "name": "mid",
+    "y0": 9020.0,
+    "y1": 22762.0,
+    "cuts": [
+     [
+      3050,
+      691.2
+     ],
+     [
+      7700,
+      691.2
+     ],
+     [
+      10110,
+      432
+     ],
+     [
+      12500,
+      691.2
+     ],
+     [
+      17148,
+      691.2
+     ]
+    ]
+   },
+   {
+    "name": "sm_N",
+    "y0": 22762.0,
+    "y1": 29719.0,
+    "cuts": [
+     [
+      2916,
+      345.6
+     ],
+     [
+      3427,
+      345.6
+     ],
+     [
+      7436,
+      345.6
+     ],
+     [
+      7946,
+      345.6
+     ],
+     [
+      10110,
+      432
+     ],
+     [
+      12254,
+      345.6
+     ],
+     [
+      12764,
+      345.6
+     ],
+     [
+      16771,
+      345.6
+     ],
+     [
+      17283,
+      345.6
+     ]
+    ]
+   },
+   {
+    "name": "stripe_N",
+    "y0": 29719.0,
+    "y1": 1000000000.0,
+    "shift": 1598.4
+   }
+  ],
+  "ycuts": [
+   [
+    2050.0,
+    86.4
+   ],
+   [
+    9020.0,
+    259.2
+   ],
+   [
+    22762.0,
+    259.2
+   ],
+   [
+    29719.0,
+    86.4
+   ]
+  ]
+ },
+ "die_um": [
+  20200.0,
+  31773.52
+ ],
+ "new_die_um": [
+  23396.8,
+  32464.72
+ ],
+ "die_mm2": 641.83,
+ "new_die_mm2": 759.57,
+ "dX": 3196.8,
+ "dY": 691.1999999999999,
+ "reticle": {
+  "die_um": [
+   23396.8,
+   32464.72
+  ],
+  "long_margin_um": 535.28,
+  "short_margin_um": 2603.2,
+  "margin_req_um": 500.0,
+  "ok": true
+ },
+ "new_overlaps": {
+  "plan": [],
+  "slots": [],
+  "slot_vs_plan": []
+ },
+ "verdict": "PASS",
+ "rule": "rigid block shifts by centre per band; slots move with their plan block; no block resized"
+}

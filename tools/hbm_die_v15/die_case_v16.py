@@ -401,6 +401,10 @@ def main():
                          'density = max(area/0.6, 10.8 um, bits / 24 um) capped at the floor rule (<= 6 pins/um)')
     ap.add_argument('--lane-reach-order', choices=('area', 'chain'), default='area',
                     help='lane-row order under --lane-reach: area (widest first) | chain (BFS from placed chain ends)')
+    ap.add_argument('--coord-map', type=Path, default=None,
+                    help='HBM-DIE9: coord_map.json of d4g_channel_cuts.py; maps contract-note relay homes of instances '
+                         'matching --coord-map-re from the original to the channel-cut floorplan')
+    ap.add_argument('--coord-map-re', default='.', help='HBM-DIE9: regex of instances whose note homes are in original coordinates')
     die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
     mw = die_reach.from_args(a, 'hbm')
@@ -448,6 +452,20 @@ def main():
         H = round(H + 2 * dh, 3)
         strip = dict(dh_um=dh, s_strip_at_y=ys, n_strip_at_y=yn, die_um=[W, H], die_mm2=round(W * H / 1e6, 2))
         print('PC strip', strip)
+    if a.coord_map:
+        # HBM-DIE9 10-20: channel-cut floorplan (tools/hbm_die_v16/d4g_channel_cuts.py): --plan/--grants/--lanes/
+        # --clock-region-map are the CUT files; contract-note relay homes planned on the ORIGINAL floorplan (instances
+        # matching --coord-map-re) are mapped here by the same rule.  Homes planned on the cut floorplan stay as written.
+        sys.path.insert(0, str(ROOT / 'tools/hbm_die_v16'))
+        from d4g_channel_cuts import CoordMap
+        CM = CoordMap(json.loads(a.coord_map.read_text())['spec']); nmap = 0
+        for n_, v_ in I.items():
+            if not re.match(a.coord_map_re, n_):
+                continue
+            for m_ in list(re.finditer(r'(home|site) \(([-\d.]+), ([-\d.]+)\) um', v_.get('note', ''))):
+                x_, y_ = CM.point(float(m_.group(2)), float(m_.group(3)))
+                v_['note'] = v_['note'].replace(m_.group(0), f'{m_.group(1)} ({x_:.3f}, {y_:.3f}) um', 1); nmap += 1
+        print('coord map: contract-note homes mapped', nmap, 'die', [W, H], flush=True)
     out = a.out; vd = out / 'views'; vd.mkdir(parents=True, exist_ok=True); (out / 'out').mkdir(exist_ok=True)
 
     # ---------------- views ----------------

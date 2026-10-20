@@ -1,0 +1,207 @@
+{
+ "slots_with_plan_block": 70,
+ "slots_own_centre": 379,
+ "schema": "opentallas.hbm.d4g_channel_cuts.v1",
+ "spec": {
+  "plan": "A",
+  "why": "HBM-DIE9 plan A: channels at EVERY SM gap -- both sides of each xq/xl stack (+216 each), the 100 um gaps and the centre gap (+216); middle band cut at its column boundaries under the same SM columns; y channels at the SM-row/middle-band edges (+259.2) and the SM/stripe edges (+86.4)",
+  "bands": [
+   {
+    "name": "stripe_S",
+    "y0": -1000000000.0,
+    "y1": 2050.0,
+    "shift": 1166.4
+   },
+   {
+    "name": "sm_S",
+    "y0": 2050.0,
+    "y1": 9020.0,
+    "cuts": [
+     [
+      2916,
+      216
+     ],
+     [
+      3427,
+      216
+     ],
+     [
+      5430,
+      216
+     ],
+     [
+      7436,
+      216
+     ],
+     [
+      7946,
+      216
+     ],
+     [
+      10110,
+      216
+     ],
+     [
+      12254,
+      216
+     ],
+     [
+      12764,
+      216
+     ],
+     [
+      14769,
+      216
+     ],
+     [
+      16771,
+      216
+     ],
+     [
+      17283,
+      216
+     ]
+    ]
+   },
+   {
+    "name": "mid",
+    "y0": 9020.0,
+    "y1": 22762.0,
+    "cuts": [
+     [
+      3050,
+      432
+     ],
+     [
+      6110,
+      216
+     ],
+     [
+      7700,
+      432
+     ],
+     [
+      10110,
+      216
+     ],
+     [
+      12500,
+      432
+     ],
+     [
+      14090,
+      216
+     ],
+     [
+      17148,
+      432
+     ]
+    ]
+   },
+   {
+    "name": "sm_N",
+    "y0": 22762.0,
+    "y1": 29719.0,
+    "cuts": [
+     [
+      2916,
+      216
+     ],
+     [
+      3427,
+      216
+     ],
+     [
+      5430,
+      216
+     ],
+     [
+      7436,
+      216
+     ],
+     [
+      7946,
+      216
+     ],
+     [
+      10110,
+      216
+     ],
+     [
+      12254,
+      216
+     ],
+     [
+      12764,
+      216
+     ],
+     [
+      14769,
+      216
+     ],
+     [
+      16771,
+      216
+     ],
+     [
+      17283,
+      216
+     ]
+    ]
+   },
+   {
+    "name": "stripe_N",
+    "y0": 29719.0,
+    "y1": 1000000000.0,
+    "shift": 1166.4
+   }
+  ],
+  "ycuts": [
+   [
+    2050.0,
+    86.4
+   ],
+   [
+    9020.0,
+    259.2
+   ],
+   [
+    22762.0,
+    259.2
+   ],
+   [
+    29719.0,
+    86.4
+   ]
+  ]
+ },
+ "die_um": [
+  20200.0,
+  31773.52
+ ],
+ "new_die_um": [
+  22576.0,
+  32464.72
+ ],
+ "die_mm2": 641.83,
+ "new_die_mm2": 732.92,
+ "dX": 2376.0,
+ "dY": 691.1999999999999,
+ "reticle": {
+  "die_um": [
+   22576.0,
+   32464.72
+  ],
+  "long_margin_um": 535.28,
+  "short_margin_um": 3424.0,
+  "margin_req_um": 500.0,
+  "ok": true
+ },
+ "new_overlaps": {
+  "plan": [],
+  "slots": [],
+  "slot_vs_plan": []
+ },
+ "verdict": "PASS",
+ "rule": "rigid block shifts by centre per band; slots move with their plan block; no block resized"
+}
