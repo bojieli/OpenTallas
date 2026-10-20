@@ -1,0 +1,35 @@
+leg	host_exit	verdict	expected
+host	exit 2 (leg.sh edited mid-run; bench ok)	MU_HOST_GATE PASS	PASS
+hslot_col	exit 0	BENCH_PASS	PASS
+hslot_m0	exit 0	BENCH_PASS	PASS
+hslot_m1	exit 1	BENCH_FAIL	FAIL
+hslot_m2col	exit 1	BENCH_FAIL	FAIL
+hslot_m2	exit 0	BENCH_PASS	PASS
+hwin	live		PASS
+kit_lepmuh_ip0	exit 0	BENCH_PASS	PASS
+kit_lepmuh_s1	exit 0	BENCH_PASS	PASS
+kit_lepmuh_s5	exit 0	BENCH_PASS	PASS
+kit_lepmu_ip0	exit 0	BENCH_PASS	PASS
+kit_lepmu_s1	exit 0	BENCH_PASS	PASS
+kit_lepmu_s5	exit 0	BENCH_PASS	PASS
+kmut_lepmuh_HSTAMP	exit 1	BENCH_FAIL	FAIL
+kmut_lepmuh_KSOFF	exit 1	BENCH_FAIL	FAIL
+kmut_lepmuh_LANDCUT	exit 1	BENCH_FAIL	FAIL
+kmut_lepmuh_TAGDROP	exit 1	BENCH_FAIL	FAIL
+kmut_lepmuh_VSKEW	exit 1	BENCH_FAIL	FAIL
+kmut_lepmu_LANDCUT	exit 1	BENCH_FAIL	FAIL
+kmut_lepmu_LANDOVR	exit 1	BENCH_FAIL	FAIL
+kmut_lepmu_STALEHD	exit 1	BENCH_FAIL	FAIL
+kmut_lepmu_TAGDROP	exit 1	BENCH_FAIL	FAIL
+kmut_lepmu_VSKEW	exit 1	BENCH_FAIL	FAIL
+kmut_lepmu_WRONGCOPY	exit 1	BENCH_FAIL	FAIL
+lep_base	exit 0	LEP_MU_GATE PASS	PASS
+lep_mut	exit 0	LEP_MU_GATE PASS	PASS
+lep_regr	exit 0	LEP_MU_GATE PASS	PASS
+lint_die	exit 0	LEP_MU_DIE_LINT PASS	PASS
+muh_all	live		PASS
+prog	exit 0	SEQHOST_PROG PASS; L0_all 46u + L2_A/B 23u SEQHOST_MU PASS; mutants m_shift4/m_ctx3/m_raw/m_drop FAIL	PASS (mutants FAIL)
+seqhost	live	SEQHOST_MU PASS	PASS
+shmut1	exit 1	SEQHOST_MU FAIL	FAIL
+shmut2	exit 1	SEQHOST_MU FAULT0 FAIL	FAIL
+shmut5	exit 1	SEQHOST_MU FAIL	FAIL
