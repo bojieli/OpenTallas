@@ -2,6 +2,8 @@
   "scope": "CAP/CW/VP component only; consumer read/retirement/deadline proof OPEN",
   "full_stage_qualified": false,
   "component_capture_PASS": false,
+  "fixture": "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/root/sid6_fixture",
+  "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
   "expected_rows": 512,
   "cw_words": 476,
   "vp_words": 476,
@@ -162,5 +164,6 @@
     "FULLSIX_SOURCE_CHECK errors=3 rawwrites=320 gathers=20 epochs=15",
     "FULLSIX_PREPARATORY_TRACE_END CAPfault=1 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL"
   ],
+  "terminal_receipt_PASS": true,
   "simulator_exit": 1
 }

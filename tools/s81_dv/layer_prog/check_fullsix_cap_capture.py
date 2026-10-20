@@ -6,6 +6,7 @@ these observational monitors and can never yield full-stage qualification.
 Run numerical golden construction on the fleet.
 """
 import importlib.util
+import hashlib
 import json
 import re
 import sys
@@ -53,15 +54,23 @@ duplicates = [list(k)+[v] for k,v in count.items() if v != 1]
 expected_commits = Counter((t+5,leaf,address,value) for t,leaf,address,value in observed)
 actual_commits = Counter(commits)
 source_lines = [line for line in log.splitlines() if 'MISMATCH' in line or 'FULLSIX_SOURCE_CHECK' in line or 'FULLSIX_PREPARATORY_TRACE_END' in line]
+terminals=re.findall(r'^FULLSIX_PREPARATORY_TRACE_END .*$',log,re.M)
+source_checks=re.findall(r'^FULLSIX_SOURCE_CHECK errors=(\d+) rawwrites=(\d+) gathers=(\d+) epochs=(\d+)$',log,re.M)
+simulator_exit=int((run/'simulator.exit').read_text())
+terminal_ok=(len(terminals)==1 and source_checks==[('3','320','20','15')] and simulator_exit==1
+             and 'RETAINED_CONTROL_MISMATCH gos15 ends1 gws1 macwrites40 lastcommit1260' in log
+             and 'EPOCH_READ_COUNTS epoch=0 actual=21 expected=24' in log
+             and 'EPOCH_READ_COUNTS epoch=14 actual=27 expected=24' in log)
 golden_ok = (selfcheck['contract_rows']==512 and not selfcheck['contract_mismatch'] and not selfcheck['shard_bf16_mismatch'])
-component_pass = golden_ok and bool(observed) and not (bad_values or missing or extra or duplicates or faults or expected_commits != actual_commits)
+component_pass = terminal_ok and golden_ok and bool(observed) and not (bad_values or missing or extra or duplicates or faults or expected_commits != actual_commits)
 result = dict(scope='CAP/CW/VP component only; consumer read/retirement/deadline proof OPEN',
               full_stage_qualified=False, component_capture_PASS=component_pass,
+              fixture=str(fixture),fixture_meta_sha256=hashlib.sha256((fixture/'meta.json').read_bytes()).hexdigest(),
               golden_self_check=selfcheck, expected_rows=len(expected), cw_words=len(observed), vp_words=len(commits),
               missing=missing,extra=extra,duplicates=duplicates,bad_values=bad_values,
               missing_commits=list((expected_commits-actual_commits).elements()),extra_commits=list((actual_commits-expected_commits).elements()),
               faults=faults[:25], fault_observations=len(faults), source_assertions=source_lines,
-              simulator_exit=int((run/'simulator.exit').read_text()))
+              terminal_receipt_PASS=terminal_ok,simulator_exit=simulator_exit)
 output.write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps({k:v for k,v in result.items() if k not in ('faults','golden_self_check')},indent=2))
 sys.exit(0 if component_pass else 1)

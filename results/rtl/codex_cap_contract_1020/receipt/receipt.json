@@ -62,6 +62,39 @@
         "missing_rows": 0,
         "matched_images": 1019,
         "source_schedule_PASS": true
+      },
+      {
+        "name": "capture_l2",
+        "expected_capture_PASS": true,
+        "actual_capture_PASS": true,
+        "causal_fault_bit": "0x0",
+        "cw_words": 512,
+        "vp_words": 512,
+        "missing_rows": 0,
+        "matched_images": 1019,
+        "source_schedule_PASS": true
+      },
+      {
+        "name": "capture_l14",
+        "expected_capture_PASS": true,
+        "actual_capture_PASS": true,
+        "causal_fault_bit": "0x0",
+        "cw_words": 512,
+        "vp_words": 512,
+        "missing_rows": 0,
+        "matched_images": 1019,
+        "source_schedule_PASS": true
+      },
+      {
+        "name": "source_compiled",
+        "expected_capture_PASS": true,
+        "actual_capture_PASS": true,
+        "causal_fault_bit": "0x0",
+        "cw_words": 512,
+        "vp_words": 512,
+        "missing_rows": 0,
+        "matched_images": 1019,
+        "source_schedule_PASS": true
       }
     ]
   }

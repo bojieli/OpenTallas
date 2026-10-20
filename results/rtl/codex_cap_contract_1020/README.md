@@ -103,3 +103,13 @@ times differ from the trace-calibrated replay, demonstrating that this path is
 driven by the source model rather than copying observed CFG times. Consumer
 runtime retirement and deadlines remain unverified, so this proof does not
 promote P126 from proposed to the released composition.
+
+The final checker also requires the complete terminal trace and the exact known
+legacy source failure receipt, including simulator status 1. Missing terminal
+status, a fourth unknown source error, or an incompatible simulator status is
+rejected even with all 512 numerical CAP and VP captures intact. These three
+causal admission regressions pass. The final matched matrix rechecks all six
+nominal/negative/layer/source-compiled cases, each against its original image
+SHA manifest and with explicit fixture metadata SHA. Final sealing run
+`oth-ubuntu-1144901-1792486931` is terminal PASS. This tightens component admission;
+it does not turn the preserved simulator failure into a full-stage PASS.

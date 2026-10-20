@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc9       admits   479 GB (avail 478, growth 143, headroom 0, waiters 0/0 GB) load 46/128 running 30 disk 147 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-987712-1792486697 after 0 s
+CAP_MATCHED_RECEIPT {"name": "candidate", "expected_capture_PASS": true, "actual_capture_PASS": true, "causal_fault_bit": "0x0", "cw_words": 512, "vp_words": 512, "missing_rows": 0, "matched_images": 1019, "source_schedule_PASS": true}
+CAP_MATCHED_RECEIPT {"name": "wrong_rbase", "expected_capture_PASS": false, "actual_capture_PASS": false, "causal_fault_bit": "0x100", "cw_words": 476, "vp_words": 476, "missing_rows": 36, "matched_images": 1019, "source_schedule_PASS": true}
+CAP_MATCHED_RECEIPT {"name": "late_cfg", "expected_capture_PASS": false, "actual_capture_PASS": false, "causal_fault_bit": "0x400", "cw_words": 512, "vp_words": 512, "missing_rows": 0, "matched_images": 1019, "source_schedule_PASS": true}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-987712-1792486697): exit 0
