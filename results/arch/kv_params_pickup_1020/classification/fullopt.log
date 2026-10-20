@@ -1,0 +1,1710 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_rtlil gold1.il; opt -full; wreduce; opt -full; write_json gold_fullopt.json' --
+
+1. Executing RTLIL frontend.
+Input filename: gold1.il
+
+2. Executing OPT pass (performing simple optimizations).
+
+2.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+<suppressed ~73 debug messages>
+
+2.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 1037 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 1012 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 1009 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 1008 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+<suppressed ~87 debug messages>
+Removed a total of 29 cells.
+
+2.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procmux$2332: \u_ot_pr_core.u_core.u_attn_face.emitting -> 1'0
+      Replacing known input bits on port A of cell $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procmux$2330: \u_ot_pr_core.u_core.u_attn_face.emitting -> 1'1
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~850 debug messages>
+
+2.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:216$1524:
+      Old ports: A=4'0010, B=4'0001, Y=\u_ot_pr_core.u_core.u_attn.ctl.codec.rx_expected_kind
+      New ports: A=2'10, B=2'01, Y=\u_ot_pr_core.u_core.u_attn.ctl.codec.rx_expected_kind [1:0]
+      New connections: \u_ot_pr_core.u_core.u_attn.ctl.codec.rx_expected_kind [3:2] = 2'00
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:234$1542:
+      Old ports: A=4'0011, B=4'0100, Y=\u_ot_pr_core.u_core.u_attn.ctl.codec.tx_kind
+      New ports: A=2'01, B=2'10, Y={ \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_kind [2] \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_kind [0] }
+      New connections: { \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_kind [3] \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_kind [1] } = { 1'0 \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_kind [0] }
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:235$1543:
+      Old ports: A=4'0011, B=4'0100, Y=\u_ot_pr_core.u_core.u_attn.ctl.codec.tx_expected_kind
+      New ports: A=2'01, B=2'10, Y={ \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_expected_kind [2] \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_expected_kind [0] }
+      New connections: { \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_expected_kind [3] \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_expected_kind [1] } = { 1'0 \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_expected_kind [0] }
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:252$1555:
+      Old ports: A=4'0011, B=4'0100, Y=$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$0\ls_ekb[8:0] [8:5]
+      New ports: A=2'01, B=2'10, Y={ $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$0\ls_ekb[8:0] [7] $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$0\ls_ekb[8:0] [5] }
+      New connections: { $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$0\ls_ekb[8:0] [8] $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$0\ls_ekb[8:0] [6] } = { 1'0 $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$0\ls_ekb[8:0] [5] }
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:565$1338:
+      Old ports: A={ 5'00000 \u_ot_pr_core.u_core.u_attn_cal.t1 [8:0] }, B=14'00000010000000, Y=$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:565$1338_Y
+      New ports: A=\u_ot_pr_core.u_core.u_attn_cal.t1 [8:0], B=9'010000000, Y=$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:565$1338_Y [8:0]
+      New connections: $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:565$1338_Y [13:9] = 5'00000
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:590$1410:
+      Old ports: A={ 5'00000 \u_ot_pr_core.u_core.u_attn_cal.mm3 [5:3] }, B=8'00000111, Y=$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:590$1410_Y
+      New ports: A=\u_ot_pr_core.u_core.u_attn_cal.mm3 [5:3], B=3'111, Y=$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:590$1410_Y [2:0]
+      New connections: $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:590$1410_Y [7:3] = 5'00000
+  Optimizing cells in module \gold.
+Performed a total of 6 changes.
+
+2.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 1008 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 1005 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+<suppressed ~9 debug messages>
+Removed a total of 3 cells.
+
+2.6. Executing OPT_SHARE pass.
+
+2.7. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3039 ($adff) from module gold (D = { $flatten\u_ot_pr_core.\u_core.\u_attn_root.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:442$804_Y \u_ot_pr_core.u_core.u_attn_root.rq_end_m1 }, Q = \u_ot_pr_core.u_core.u_attn_root.end_t).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3034 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_root.rq_pv_t, Q = \u_ot_pr_core.u_core.u_attn_root.pv_t).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3019 ($adff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:422$778_Y, Q = \u_ot_pr_core.u_core.u_attn_root.boot_count).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3004 ($adff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:440$803_Y [13:0], Q = \u_ot_pr_core.u_core.u_attn_root.ctx).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [15:0], Q = \u_ot_pr_core.u_core.u_attn_root.cal [15:0]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [31:16], Q = \u_ot_pr_core.u_core.u_attn_root.cal [31:16]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [47:32], Q = \u_ot_pr_core.u_core.u_attn_root.cal [47:32]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [63:48], Q = \u_ot_pr_core.u_core.u_attn_root.cal [63:48]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [79:64], Q = \u_ot_pr_core.u_core.u_attn_root.cal [79:64]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [95:80], Q = \u_ot_pr_core.u_core.u_attn_root.cal [95:80]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [111:96], Q = \u_ot_pr_core.u_core.u_attn_root.cal [111:96]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [127:112], Q = \u_ot_pr_core.u_core.u_attn_root.cal [127:112]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [143:128], Q = \u_ot_pr_core.u_core.u_attn_root.cal [143:128]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [159:144], Q = \u_ot_pr_core.u_core.u_attn_root.cal [159:144]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2984 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.cal [175:160], Q = \u_ot_pr_core.u_core.u_attn_root.cal [175:160]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2979 ($adff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procmux$2412_Y, Q = \u_ot_pr_core.u_core.u_attn_root.local_fault).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2974 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.codec.rx_expected_layer, Q = \u_ot_pr_core.u_core.u_attn_root.layer).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2969 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.guard.accepted_tag [58:43], Q = \u_ot_pr_core.u_core.u_attn_root.ep).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$2964 ($adff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_root.$0\age[15:0], Q = \u_ot_pr_core.u_core.u_attn_root.age).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2931 ($adff) from module gold (D = \u_ot_pr_core.u_fl_land_fin.genblk1.g_land1.st [5:1], Q = \u_ot_pr_core.u_core.u_attn_face.rbeat).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2926 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_face.res_c [7:0], Q = \u_ot_pr_core.u_core.u_attn_face.res_t [7:0]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2926 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_face.res_c [15:8], Q = \u_ot_pr_core.u_core.u_attn_face.res_t [15:8]).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2867 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:577$1374_Y, Q = \u_ot_pr_core.u_core.u_attn_cal.cnt3[3], rval = 4'0000).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2866 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:577$1367_Y, Q = \u_ot_pr_core.u_core.u_attn_cal.cnt3[2], rval = 4'0000).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2865 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:577$1360_Y, Q = \u_ot_pr_core.u_core.u_attn_cal.cnt3[1], rval = 4'0000).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2864 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:577$1353_Y, Q = \u_ot_pr_core.u_core.u_attn_cal.cnt3[0], rval = 4'0000).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2839 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1405_Y, Q = \u_ot_pr_core.u_core.u_attn_cal.zv4[3], rval = 10'0000000000).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2838 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1400_Y, Q = \u_ot_pr_core.u_core.u_attn_cal.zv4[2], rval = 10'0000000000).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2837 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1395_Y, Q = \u_ot_pr_core.u_core.u_attn_cal.zv4[1], rval = 10'0000000000).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2836 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1390_Y, Q = \u_ot_pr_core.u_core.u_attn_cal.zv4[0], rval = 10'0000000000).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2834 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:591$1414_Y [8:0], Q = \u_ot_pr_core.u_core.u_attn_cal.adj4, rval = 9'000000000).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2742 ($adff) from module gold (D = 16'0000011111001110, Q = \u_ot_pr_core.u_core.u_attn_cal.end_age).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2732 ($adff) from module gold (D = 16'0000011011010111, Q = \u_ot_pr_core.u_core.u_attn_cal.tx_first).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2727 ($adff) from module gold (D = 16'0000000000000010, Q = \u_ot_pr_core.u_core.u_attn_cal.rx_cmd).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [15:0], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [15:0]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [31:16], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [31:16]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [47:32], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [47:32]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [63:48], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [63:48]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [79:64], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [79:64]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [95:80], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [95:80]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [111:96], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [111:96]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [127:112], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [127:112]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [143:128], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [143:128]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [159:144], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [159:144]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2722 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal9 [175:160], Q = \u_ot_pr_core.u_core.u_attn_cal.cal [175:160]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$procdff$2444 ($adff) from module gold (D = { \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [75:66] 6'000000 }, Q = \u_ot_pr_core.u_core.u_attn.producer.tag [15:0]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$procdff$2444 ($adff) from module gold (D = { \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [103:91] \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [78:76] }, Q = \u_ot_pr_core.u_core.u_attn.producer.tag [31:16]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$procdff$2444 ($adff) from module gold (D = { \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [54:50] \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [89:84] \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [108:104] }, Q = \u_ot_pr_core.u_core.u_attn.producer.tag [47:32]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$procdff$2444 ($adff) from module gold (D = \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [65:55], Q = \u_ot_pr_core.u_core.u_attn.producer.tag [58:48]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$procdff$2439 ($adff) from module gold (D = 380'00000000000000000000000000110000000000000000000000010000000000000000000000010000000000001100010111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000001101011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000100000000000000000000000010000000010000000001, Q = \u_ot_pr_core.u_core.u_attn.producer.descriptor).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2486 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q [58:48], Q = \u_ot_pr_core.u_core.u_attn.ctl.guard.accepted_tag [58:48]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2486 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q [47:32], Q = \u_ot_pr_core.u_core.u_attn.ctl.guard.accepted_tag [47:32]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2486 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q [31:16], Q = \u_ot_pr_core.u_core.u_attn.ctl.guard.accepted_tag [31:16]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2486 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q [15:0], Q = \u_ot_pr_core.u_core.u_attn.ctl.guard.accepted_tag [15:0]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2466 ($adff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procmux$1643_Y, Q = \u_ot_pr_core.u_core.u_attn.ctl.guard.fault).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$procdff$2617 ($dff) from module gold (D = { \u_ot_pr_core.u_core.u_attn_face.rdata [4] \u_ot_pr_core.u_core.u_attn_face.rdata [1] }, Q = { \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_payload [4] \u_ot_pr_core.u_core.u_attn.ctl.codec.tx_payload [1] }, rval = 2'00).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2604 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [191:176], Q = \u_ot_pr_core.u_core.u_attn.ctl.last).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2599 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [207:192], Q = \u_ot_pr_core.u_core.u_attn.ctl.tx_first).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2594 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [223:208], Q = \u_ot_pr_core.u_core.u_attn.ctl.rx_cmd).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [15:0], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [15:0]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [31:16], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [31:16]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [47:32], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [47:32]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [63:48], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [63:48]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [79:64], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [79:64]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [95:80], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [95:80]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [111:96], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [111:96]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [127:112], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [127:112]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [143:128], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [143:128]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [159:144], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [159:144]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2589 ($adff) from module gold (D = \u_ot_pr_core.u_core.u_attn.cap_q [175:160], Q = \u_ot_pr_core.u_core.u_attn.ctl.cal [175:160]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [15:0], Q = \u_ot_pr_core.u_core.u_attn.cap_q [15:0]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [31:16], Q = \u_ot_pr_core.u_core.u_attn.cap_q [31:16]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [47:32], Q = \u_ot_pr_core.u_core.u_attn.cap_q [47:32]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [63:48], Q = \u_ot_pr_core.u_core.u_attn.cap_q [63:48]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [79:64], Q = \u_ot_pr_core.u_core.u_attn.cap_q [79:64]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [95:80], Q = \u_ot_pr_core.u_core.u_attn.cap_q [95:80]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [111:96], Q = \u_ot_pr_core.u_core.u_attn.cap_q [111:96]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [127:112], Q = \u_ot_pr_core.u_core.u_attn.cap_q [127:112]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [143:128], Q = \u_ot_pr_core.u_core.u_attn.cap_q [143:128]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [159:144], Q = \u_ot_pr_core.u_core.u_attn.cap_q [159:144]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.cal [175:160], Q = \u_ot_pr_core.u_core.u_attn.cap_q [175:160]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.end_age, Q = \u_ot_pr_core.u_core.u_attn.cap_q [191:176]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.tx_first, Q = \u_ot_pr_core.u_core.u_attn.cap_q [207:192]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.rx_cmd, Q = \u_ot_pr_core.u_core.u_attn.cap_q [223:208]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [81:66], Q = \u_ot_pr_core.u_core.u_attn.cap_q [239:224]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = { \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [98:91] \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [89:82] }, Q = \u_ot_pr_core.u_core.u_attn.cap_q [255:240]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = { \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [55:50] \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [108:99] }, Q = \u_ot_pr_core.u_core.u_attn.cap_q [271:256]).
+Adding EN signal on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2711 ($dff) from module gold (D = { \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [33:32] \u_ot_pr_core.u_fl_land_i_ctl.genblk1.g_land1.st [65:56] }, Q = \u_ot_pr_core.u_core.u_attn.cap_q [283:272]).
+Setting constant 0-bit at position 541 on $auto$ff.cc:337:slice$3154 ($dff) from module gold.
+Setting constant 0-bit at position 542 on $auto$ff.cc:337:slice$3154 ($dff) from module gold.
+Setting constant 0-bit at position 543 on $auto$ff.cc:337:slice$3154 ($dff) from module gold.
+Setting constant 0-bit at position 544 on $auto$ff.cc:337:slice$3154 ($dff) from module gold.
+Setting constant 0-bit at position 545 on $auto$ff.cc:337:slice$3154 ($dff) from module gold.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$3143 ($adffe) from module gold.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$3143 ($adffe) from module gold.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$3143 ($adffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3143 ($adffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3143 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3143 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2700 ($dff) from module gold.
+Setting constant 0-bit at position 14 on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2700 ($dff) from module gold.
+Setting constant 0-bit at position 15 on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2700 ($dff) from module gold.
+Setting constant 0-bit at position 16 on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2700 ($dff) from module gold.
+Setting constant 0-bit at position 17 on $flatten\u_ot_pr_core.\u_core.\u_attn.$procdff$2700 ($dff) from module gold.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 32 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 33 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 34 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 35 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 36 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 37 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 38 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 39 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 40 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 41 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 42 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 43 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 45 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 46 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 47 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 48 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 49 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 50 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 51 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 52 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 53 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 54 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 56 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 57 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 58 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 59 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 60 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 61 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 62 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 63 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 64 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 65 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 66 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 67 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 68 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 69 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 70 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 71 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 72 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 73 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 74 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 75 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 76 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 77 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 78 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 79 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 80 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 81 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 82 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 83 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 84 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 85 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 86 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 87 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 88 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 89 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 90 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 91 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 92 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 93 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 94 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 95 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 96 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 97 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 98 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 99 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 100 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 101 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 102 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 103 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 104 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 105 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 106 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 107 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 108 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 109 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 110 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 111 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 112 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 113 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 114 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 115 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 116 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 117 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 118 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 119 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 120 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 121 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 122 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 123 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 124 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 125 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 126 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 127 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 128 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 129 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 130 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 131 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 132 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 133 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 134 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 135 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 136 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 137 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 138 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 139 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 140 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 141 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 142 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 143 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 144 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 145 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 146 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 147 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 148 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 149 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 150 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 151 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 152 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 153 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 154 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 155 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 156 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 157 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 158 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 161 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 163 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 166 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 167 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 168 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 169 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 170 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 171 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 172 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 173 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 174 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 175 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 177 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 178 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 179 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 180 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 181 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 182 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 183 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 184 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 185 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 186 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 187 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 188 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 189 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 190 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 191 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 192 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 193 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 194 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 195 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 196 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 197 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 198 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 199 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 200 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 201 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 202 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 203 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 204 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 205 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 206 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 207 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 208 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 209 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 210 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 211 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 212 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 213 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 214 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 215 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 216 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 217 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 218 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 219 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 220 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 221 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 222 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 223 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 224 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 225 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 226 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 227 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 228 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 229 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 230 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 231 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 232 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 233 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 234 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 235 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 236 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 237 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 238 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 239 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 240 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 241 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 242 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 243 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 244 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 245 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 246 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 247 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 248 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 249 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 250 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 251 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 252 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 253 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 254 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 255 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 256 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 257 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 258 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 259 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 260 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 261 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 262 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 263 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 264 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 265 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 266 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 267 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 268 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 269 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 270 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 271 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 272 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 273 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 274 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 275 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 276 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 277 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 278 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 279 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 285 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 287 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 288 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 289 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 292 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 293 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 294 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 295 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 296 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 297 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 298 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 299 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 300 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 301 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 302 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 303 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 305 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 306 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 307 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 308 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 309 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 310 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 311 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 312 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 313 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 314 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 315 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 316 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 317 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 318 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 319 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 320 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 321 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 322 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 323 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 324 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 325 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 326 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 327 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 329 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 330 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 331 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 332 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 333 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 334 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 335 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 336 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 337 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 338 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 339 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 340 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 341 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 342 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 343 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 344 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 345 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 346 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 347 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 348 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 349 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 350 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 351 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 354 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 355 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 356 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 357 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 358 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 359 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 360 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 361 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 362 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 363 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 364 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 365 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 366 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 367 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 368 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 369 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 370 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 371 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 372 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 373 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 374 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 375 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 376 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 377 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 378 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 379 on $auto$ff.cc:337:slice$3147 ($adffe) from module gold.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 1-bit at position 1 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3131 ($adffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3130 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3130 ($adffe) from module gold.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$3130 ($adffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3130 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3130 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3130 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3130 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3130 ($adffe) from module gold.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$3129 ($adffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3129 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3129 ($adffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3129 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3129 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3129 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3129 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3129 ($adffe) from module gold.
+Setting constant 0-bit at position 140 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2762 ($dff) from module gold.
+Setting constant 0-bit at position 141 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2762 ($dff) from module gold.
+Setting constant 0-bit at position 142 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2762 ($dff) from module gold.
+Setting constant 0-bit at position 143 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2762 ($dff) from module gold.
+Setting constant 0-bit at position 156 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2762 ($dff) from module gold.
+Setting constant 0-bit at position 157 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2762 ($dff) from module gold.
+Setting constant 0-bit at position 158 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2762 ($dff) from module gold.
+Setting constant 0-bit at position 159 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2762 ($dff) from module gold.
+
+2.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 352 unused cells and 71 unused wires.
+<suppressed ~353 debug messages>
+
+2.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+<suppressed ~15 debug messages>
+
+2.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+2.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+2.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 699 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+2.14. Executing OPT_SHARE pass.
+
+2.15. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2877 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.t1 [6:0], Q = \u_ot_pr_core.u_core.u_attn_cal.ns2 [6:0], rval = 7'0000000).
+Setting constant 0-bit at position 543 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2512 ($dff) from module gold.
+Setting constant 0-bit at position 544 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2512 ($dff) from module gold.
+Setting constant 0-bit at position 545 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2512 ($dff) from module gold.
+Setting constant 0-bit at position 546 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2512 ($dff) from module gold.
+Setting constant 0-bit at position 547 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2512 ($dff) from module gold.
+Setting constant 0-bit at position 8 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2549 ($adff) from module gold.
+Setting constant 0-bit at position 2 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$procdff$2634 ($adff) from module gold.
+Setting constant 0-bit at position 3 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$procdff$2634 ($adff) from module gold.
+Setting constant 0-bit at position 1 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 2 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 3 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 4 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 5 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 6 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 7 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 8 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 9 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 11 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 12 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 13 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 14 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 15 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 16 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 17 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 18 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 20 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 21 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 22 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 23 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 24 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 25 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 26 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 27 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 28 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 29 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 30 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 31 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 32 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 33 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 34 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 35 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 36 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 37 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 38 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 39 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 40 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 41 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 42 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 43 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 45 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 46 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 47 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 48 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 49 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 50 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 51 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 52 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 53 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 54 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 56 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 57 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 58 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 59 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 60 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 61 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 62 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 63 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 64 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 65 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 66 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 67 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 68 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 69 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 70 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 71 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 72 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 73 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 74 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 75 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 76 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 77 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 78 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 79 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 80 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 81 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 82 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 83 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 84 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 85 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 86 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 87 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 88 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 89 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 90 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 91 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 92 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 93 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 94 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 95 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 96 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 97 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 98 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 99 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 100 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 101 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 102 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 103 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 104 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 105 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 106 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 107 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 108 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 109 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 110 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 111 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 112 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 113 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 114 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 115 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 116 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 117 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 118 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 119 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 120 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 121 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 122 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 123 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 124 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 125 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 126 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 127 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 128 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 129 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 130 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 131 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 132 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 133 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 134 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 135 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 136 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 137 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 138 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 139 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 140 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 141 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 142 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 143 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 144 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 145 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 146 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 147 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 148 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 149 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 150 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 151 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 152 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 153 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 154 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 155 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 156 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 157 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 158 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 161 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 163 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 166 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 167 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 168 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 169 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 170 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 171 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 172 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 173 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 174 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 175 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 177 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 178 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 179 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 180 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 181 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 182 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 183 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 184 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 185 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 186 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 187 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 188 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 189 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 190 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 191 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 192 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 193 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 194 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 195 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 196 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 197 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 198 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 199 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 200 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 201 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 202 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 203 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 204 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 205 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 206 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 207 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 208 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 209 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 210 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 211 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 212 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 213 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 214 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 215 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 216 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 217 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 218 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 219 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 220 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 221 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 222 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 223 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 224 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 225 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 226 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 227 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 228 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 229 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 230 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 231 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 232 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 233 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 234 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 235 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 236 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 237 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 238 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 239 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 240 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 241 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 242 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 243 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 244 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 245 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 246 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 247 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 248 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 249 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 250 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 251 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 252 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 253 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 254 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 255 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 256 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 257 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 258 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 259 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 260 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 261 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 262 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 263 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 264 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 265 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 266 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 267 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 268 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 269 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 270 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 271 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 272 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 273 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 274 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 275 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 276 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 277 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 278 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 279 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 285 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 287 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 288 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 289 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 292 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 293 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 294 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 295 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 296 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 297 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 298 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 299 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 300 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 301 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 302 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 303 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 305 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 306 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 307 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 308 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 309 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 310 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 311 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 312 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 313 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 314 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 315 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 316 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 317 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 318 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 319 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 320 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 321 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 322 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 323 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 324 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 325 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 326 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 327 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 329 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 330 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 331 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 332 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 333 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 334 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 335 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 336 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 337 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 338 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 339 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 340 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 341 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 342 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 343 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 344 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 345 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 346 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 347 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 348 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 349 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 350 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 351 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 354 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 355 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 356 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 357 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 358 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 359 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 360 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 361 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 362 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 363 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 364 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 365 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 366 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 367 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 368 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 369 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 370 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 371 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 372 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 373 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 374 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 375 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 376 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 377 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 378 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 379 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2510 ($dff) from module gold.
+Setting constant 0-bit at position 0 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2511 ($dff) from module gold.
+Setting constant 0-bit at position 1 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2511 ($dff) from module gold.
+Setting constant 0-bit at position 2 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2511 ($dff) from module gold.
+Setting constant 0-bit at position 3 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2511 ($dff) from module gold.
+Setting constant 0-bit at position 4 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2511 ($dff) from module gold.
+Setting constant 0-bit at position 5 on $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2511 ($dff) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3140 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3140 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3140 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3140 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3141 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3141 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3141 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3141 ($adffe) from module gold.
+Setting constant 0-bit at position 540 on $auto$ff.cc:337:slice$3187 ($dff) from module gold.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$3180 ($dffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3180 ($dffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3180 ($dffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3180 ($dffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3180 ($dffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3180 ($dffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3180 ($dffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3180 ($dffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3181 ($dffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3181 ($dffe) from module gold.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$3181 ($dffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3181 ($dffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3181 ($dffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3181 ($dffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3181 ($dffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3181 ($dffe) from module gold.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 1-bit at position 1 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3182 ($dffe) from module gold.
+
+2.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 2 unused cells and 10 unused wires.
+<suppressed ~3 debug messages>
+
+2.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+<suppressed ~4 debug messages>
+
+2.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+2.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+2.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 694 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+2.22. Executing OPT_SHARE pass.
+
+2.23. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2831 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_cal.m3 [10], Q = \u_ot_pr_core.u_core.u_attn_cal.scan4 [7], rval = 1'1).
+Setting constant 0-bit at position 542 on $auto$ff.cc:337:slice$3196 ($dff) from module gold.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3157 ($adffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3156 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3156 ($adffe) from module gold.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$3156 ($adffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3156 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3156 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3156 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3156 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3156 ($adffe) from module gold.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$3155 ($adffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3155 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3155 ($adffe) from module gold.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$3155 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3155 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3155 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3155 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3155 ($adffe) from module gold.
+Setting constant 0-bit at position 0 on $auto$ff.cc:337:slice$3151 ($adffe) from module gold.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$3151 ($adffe) from module gold.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$3151 ($adffe) from module gold.
+Setting constant 0-bit at position 3 on $auto$ff.cc:337:slice$3151 ($adffe) from module gold.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$3151 ($adffe) from module gold.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$3151 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3177 ($dffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3177 ($dffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3177 ($dffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3177 ($dffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3178 ($dffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3178 ($dffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3178 ($dffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3178 ($dffe) from module gold.
+
+2.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+2.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+<suppressed ~6 debug messages>
+
+2.26. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+2.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:173$1478:
+      Old ports: A={ 5'00000 \u_ot_pr_core.u_core.u_attn.ctl.last [10:6] 2'00 \u_ot_pr_core.u_core.u_attn.ctl.last [3:1] 1'0 }, B={ 5'00000 \u_ot_pr_core.u_core.u_attn.cap_q [186:182] 2'00 \u_ot_pr_core.u_core.u_attn.cap_q [179:177] 1'0 }, Y=\u_ot_pr_core.u_core.u_attn.ctl.last_nx
+      New ports: A={ \u_ot_pr_core.u_core.u_attn.ctl.last [10:6] \u_ot_pr_core.u_core.u_attn.ctl.last [3:1] }, B={ \u_ot_pr_core.u_core.u_attn.cap_q [186:182] \u_ot_pr_core.u_core.u_attn.cap_q [179:177] }, Y={ \u_ot_pr_core.u_core.u_attn.ctl.last_nx [10:6] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [3:1] }
+      New connections: { \u_ot_pr_core.u_core.u_attn.ctl.last_nx [15:11] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [5:4] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [0] } = 8'00000000
+  Optimizing cells in module \gold.
+Performed a total of 1 changes.
+
+2.29. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 693 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+2.30. Executing OPT_SHARE pass.
+
+2.31. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3166 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3166 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3166 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3166 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3167 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3167 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3167 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3167 ($adffe) from module gold.
+
+2.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+2.33. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+2.34. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.35. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+2.36. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+2.37. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 693 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+2.38. Executing OPT_SHARE pass.
+
+2.39. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3108 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3108 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3108 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3108 ($adffe) from module gold.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$3109 ($adffe) from module gold.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$3109 ($adffe) from module gold.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$3109 ($adffe) from module gold.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$3109 ($adffe) from module gold.
+Setting constant 0-bit at position 28 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3053 ($dff) from module gold.
+Setting constant 0-bit at position 29 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3053 ($dff) from module gold.
+Setting constant 0-bit at position 30 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3053 ($dff) from module gold.
+Setting constant 0-bit at position 31 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3053 ($dff) from module gold.
+Setting constant 0-bit at position 44 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3053 ($dff) from module gold.
+Setting constant 0-bit at position 45 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3053 ($dff) from module gold.
+Setting constant 0-bit at position 46 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3053 ($dff) from module gold.
+Setting constant 0-bit at position 47 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3053 ($dff) from module gold.
+
+2.40. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+
+2.41. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+2.42. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.43. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+2.44. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn_face.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:471$806:
+      Old ports: A={ 4'0000 \u_ot_pr_core.u_core.u_attn_root.cal [155:144] }, B={ 4'0000 \u_ot_pr_core.u_core.u_attn_root.cal [139:128] }, Y=\u_ot_pr_core.u_core.u_attn_face.c_lastp
+      New ports: A=\u_ot_pr_core.u_core.u_attn_root.cal [155:144], B=\u_ot_pr_core.u_core.u_attn_root.cal [139:128], Y=\u_ot_pr_core.u_core.u_attn_face.c_lastp [11:0]
+      New connections: \u_ot_pr_core.u_core.u_attn_face.c_lastp [15:12] = 4'0000
+  Optimizing cells in module \gold.
+Performed a total of 1 changes.
+
+2.45. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 693 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+2.46. Executing OPT_SHARE pass.
+
+2.47. Executing OPT_DFF pass (perform DFF optimizations).
+
+2.48. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+
+2.49. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+2.50. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.51. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+2.52. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+2.53. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 693 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+2.54. Executing OPT_SHARE pass.
+
+2.55. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2905 ($dff) from module gold (D = \u_ot_pr_core.u_core.u_attn_root.cal [175:172], Q = \u_ot_pr_core.u_core.u_attn_face.cp_last [15:12], rval = 4'0000).
+
+2.56. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+
+2.57. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+2.58. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.59. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+2.60. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+2.61. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 694 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+2.62. Executing OPT_SHARE pass.
+
+2.63. Executing OPT_DFF pass (perform DFF optimizations).
+
+2.64. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+
+2.65. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+2.66. Finished fast OPT passes. (There is nothing left to do.)
+
+3. Executing WREDUCE pass (reducing word size of cells).
+Removed top 7 bits (of 8) from FF cell gold.$auto$ff.cc:337:slice$3192 ($adffe).
+Removed top 7 bits (of 8) from FF cell gold.$auto$ff.cc:337:slice$3191 ($adffe).
+Removed top 22 bits (of 23) from FF cell gold.$auto$ff.cc:337:slice$3190 ($adffe).
+Removed top 13 bits (of 16) from FF cell gold.$auto$ff.cc:337:slice$3150 ($adffe).
+Removed top 46 bits (of 47) from FF cell gold.$procdff$3056 ($dff).
+Removed top 31 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:429$790 ($sub).
+Removed top 27 bits (of 32) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:429$790 ($sub).
+Removed top 11 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:429$790 ($sub).
+Removed top 1 bits (of 17) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:416$772 ($sub).
+Removed top 25 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:422$777 ($lt).
+Removed top 8 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$le$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:432$797 ($le).
+Removed top 26 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$le$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:399$755 ($le).
+Removed top 5 bits (of 18) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:431$794 ($gt).
+Removed top 19 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:431$794 ($gt).
+Removed top 2 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:414$771 ($gt).
+Removed top 4 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:403$760 ($gt).
+Removed top 4 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:403$758 ($gt).
+Removed top 4 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:403$757 ($gt).
+Removed top 4 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:403$757 ($gt).
+Removed top 1 bits (of 17) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:426$784 ($eq).
+Removed top 1 bits (of 17) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:425$782 ($eq).
+Removed top 5 bits (of 18) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:440$803 ($add).
+Removed top 31 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:440$803 ($add).
+Removed top 18 bits (of 32) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:440$803 ($add).
+Removed top 9 bits (of 17) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:413$770 ($add).
+Removed top 16 bits (of 17) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:413$770 ($add).
+Removed top 8 bits (of 17) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:413$770 ($add).
+Removed top 10 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:408$766 ($add).
+Removed top 8 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:408$766 ($add).
+Removed top 7 bits (of 16) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:408$766 ($add).
+Removed top 4 bits (of 16) from mux cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:472$808 ($mux).
+Removed top 1 bits (of 2) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2956 ($adff).
+Removed top 1 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:484$812 ($gt).
+Removed top 4 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:472$807 ($gt).
+Removed top 4 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:471$805 ($gt).
+Removed top 4 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:471$805 ($gt).
+Removed top 11 bits (of 12) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:483$810 ($add).
+Removed top 8 bits (of 12) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:483$810 ($add).
+Removed top 7 bits (of 12) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:483$810 ($add).
+Removed top 1 bits (of 8) from mux cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:590$1412 ($mux).
+Removed top 7 bits (of 10) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:611$1436 ($sub).
+Removed top 9 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:611$1436 ($sub).
+Removed top 6 bits (of 10) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:611$1436 ($sub).
+Removed top 3 bits (of 12) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:591$1414 ($sub).
+Removed top 3 bits (of 12) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:591$1414 ($sub).
+Removed top 3 bits (of 12) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:591$1414 ($sub).
+Removed top 6 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1403 ($sub).
+Removed top 1 bits (of 10) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1403 ($sub).
+Removed top 6 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1398 ($sub).
+Removed top 1 bits (of 10) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1398 ($sub).
+Removed top 6 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1393 ($sub).
+Removed top 1 bits (of 10) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1393 ($sub).
+Removed top 6 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1388 ($sub).
+Removed top 1 bits (of 10) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1388 ($sub).
+Removed top 5 bits (of 12) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:580$1378 ($sub).
+Removed top 1 bits (of 12) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:580$1378 ($sub).
+Removed top 1 bits (of 12) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:580$1378 ($sub).
+Removed top 11 bits (of 12) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:580$1377 ($sub).
+Removed top 1 bits (of 12) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:580$1377 ($sub).
+Removed top 1 bits (of 12) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:580$1377 ($sub).
+Removed top 4 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:576$1371 ($sub).
+Removed top 4 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:576$1364 ($sub).
+Removed top 4 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:576$1357 ($sub).
+Removed top 4 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:576$1350 ($sub).
+Removed top 5 bits (of 7) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1335 ($sub).
+Removed top 1 bits (of 7) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1335 ($sub).
+Removed top 1 bits (of 7) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1335 ($sub).
+Removed top 5 bits (of 6) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1332 ($sub).
+Removed top 1 bits (of 6) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1332 ($sub).
+Removed top 1 bits (of 6) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1332 ($sub).
+Removed top 6 bits (of 7) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1329 ($sub).
+Removed top 1 bits (of 7) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1329 ($sub).
+Removed top 1 bits (of 7) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1329 ($sub).
+Removed top 13 bits (of 14) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1325 ($sub).
+Removed top 1 bits (of 14) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1325 ($sub).
+Removed top 1 bits (of 14) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1325 ($sub).
+Removed top 5 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:553$1307 ($sub).
+Removed top 8 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:553$1307 ($sub).
+Removed top 4 bits (of 16) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:553$1307 ($sub).
+Removed top 4 bits (of 16) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2902 ($dff).
+Removed top 6 bits (of 16) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2793 ($dff).
+Removed top 15 bits (of 16) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2769 ($adff).
+Removed top 2 bits (of 9) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:578$1376 ($lt).
+Removed top 2 bits (of 9) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:578$1369 ($lt).
+Removed top 2 bits (of 9) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:578$1362 ($lt).
+Removed top 2 bits (of 9) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:578$1355 ($lt).
+Removed top 6 bits (of 13) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:574$1370 ($lt).
+Removed top 6 bits (of 13) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:574$1363 ($lt).
+Removed top 6 bits (of 13) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:574$1356 ($lt).
+Removed top 6 bits (of 13) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:574$1349 ($lt).
+Removed top 3 bits (of 12) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$le$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:591$1413 ($le).
+Removed top 1 bits (of 12) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$le$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:580$1379 ($le).
+Removed top 5 bits (of 14) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1336 ($gt).
+Removed top 5 bits (of 14) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1333 ($gt).
+Removed top 6 bits (of 14) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1330 ($gt).
+Removed top 13 bits (of 14) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:564$1327 ($gt).
+Removed top 1 bits (of 7) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:590$1409 ($ge).
+Removed top 2 bits (of 6) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:577$1373 ($ge).
+Removed top 2 bits (of 6) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:577$1366 ($ge).
+Removed top 2 bits (of 6) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:577$1359 ($ge).
+Removed top 2 bits (of 6) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:577$1352 ($ge).
+Removed top 7 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:617$1442 ($add).
+Removed top 7 bits (of 15) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:617$1441 ($add).
+Removed top 7 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:617$1440 ($add).
+Removed top 6 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:610$1435 ($add).
+Removed top 13 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:604$1431 ($add).
+Removed top 7 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:604$1430 ($add).
+Removed top 12 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:604$1429 ($add).
+Removed top 8 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:598$1423 ($add).
+Converting cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1404 ($add) from unsigned to signed.
+Removed top 1 bits (of 10) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1404 ($add).
+Removed top 8 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1404 ($add).
+Converting cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1399 ($add) from unsigned to signed.
+Removed top 1 bits (of 10) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1399 ($add).
+Removed top 8 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1399 ($add).
+Converting cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1394 ($add) from unsigned to signed.
+Removed top 1 bits (of 10) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1394 ($add).
+Removed top 8 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1394 ($add).
+Converting cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1389 ($add) from unsigned to signed.
+Removed top 1 bits (of 10) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1389 ($add).
+Removed top 8 bits (of 10) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:589$1389 ($add).
+Removed top 2 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:582$1381 ($add).
+Removed top 2 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:581$1380 ($add).
+Removed top 4 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:576$1372 ($add).
+Removed top 4 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:576$1365 ($add).
+Removed top 4 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:576$1358 ($add).
+Removed top 4 bits (of 8) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:576$1351 ($add).
+Removed top 7 bits (of 14) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:566$1342 ($add).
+Removed top 6 bits (of 14) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:566$1340 ($add).
+Removed top 2 bits (of 7) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:565$1339 ($add).
+Removed top 5 bits (of 7) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:565$1339 ($add).
+Removed top 2 bits (of 7) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:565$1339 ($add).
+Removed top 8 bits (of 14) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:552$1306 ($add).
+Removed top 8 bits (of 14) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:552$1306 ($add).
+Removed top 7 bits (of 14) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:552$1306 ($add).
+Removed top 4 bits (of 12) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:551$1305 ($add).
+Removed top 4 bits (of 12) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:551$1305 ($add).
+Removed top 3 bits (of 12) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:551$1305 ($add).
+Removed top 4 bits (of 12) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:550$1304 ($add).
+Removed top 4 bits (of 12) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:550$1304 ($add).
+Removed top 3 bits (of 12) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:550$1304 ($add).
+Removed top 15 bits (of 16) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$procdff$2461 ($adff).
+Removed top 26 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:289$1282 ($gt).
+Removed top 26 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$gt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:288$1273 ($gt).
+Removed top 14 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:289$1276 ($ge).
+Removed top 14 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\producer.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:288$1267 ($ge).
+Removed top 5 bits (of 6) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:846$611 ($sub).
+Removed top 3 bits (of 4) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\guard.$procdff$2496 ($adff).
+Removed top 5 bits (of 548) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$procdff$2619 ($dff).
+Removed top 2 bits (of 31) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$ne$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:90$1028 ($ne).
+Removed top 26 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:64$1095 ($lt).
+Removed top 26 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:64$1061 ($lt).
+Removed top 1 bits (of 4) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:66$1107 ($eq).
+Removed top 3 bits (of 4) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:65$1099 ($eq).
+Removed top 2 bits (of 4) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:64$1097 ($eq).
+Removed top 2 bits (of 4) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:64$1096 ($eq).
+Removed top 1 bits (of 2) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.\codec.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:64$1063 ($eq).
+Removed top 31 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:217$1526 ($sub).
+Removed top 27 bits (of 32) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:217$1526 ($sub).
+Removed top 27 bits (of 32) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:217$1526 ($sub).
+Removed top 14 bits (of 15) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:217$1525 ($sub).
+Removed top 27 bits (of 31) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:217$1525 ($sub).
+Removed top 11 bits (of 15) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:217$1525 ($sub).
+Removed top 5 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:214$1517 ($sub).
+Removed top 11 bits (of 16) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:214$1517 ($sub).
+Removed top 11 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:214$1517 ($sub).
+Removed top 6 bits (of 11) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:214$1517 ($sub).
+Removed top 5 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:176$1479 ($sub).
+Removed top 15 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:176$1479 ($sub).
+Removed top 4 bits (of 16) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:176$1479 ($sub).
+Removed top 32 bits (of 33) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2616 ($adff).
+Removed top 18 bits (of 19) from FF cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$procdff$2554 ($adff).
+Removed top 1 bits (of 9) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ne$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:253$1557 ($ne).
+Removed top 498 bits (of 512) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ne$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:208$1508 ($ne).
+Removed top 21 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:219$1531 ($lt).
+Removed top 6 bits (of 17) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:198$1499 ($lt).
+Removed top 26 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$le$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:215$1521 ($le).
+Removed top 5 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$le$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:197$1496 ($le).
+Removed top 26 bits (of 32) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$le$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:197$1496 ($le).
+Removed top 5 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:219$1528 ($ge).
+Removed top 14 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ge$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:215$1518 ($ge).
+Removed top 2 bits (of 4) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:258$1565 ($eq).
+Removed top 14 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:216$1523 ($eq).
+Removed top 5 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:211$1514 ($eq).
+Removed top 3 bits (of 4) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:208$1506 ($eq).
+Removed top 5 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$eq$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:171$1473 ($eq).
+Removed top 6 bits (of 16) from port A of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:198$1498 ($add).
+Removed top 11 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:198$1498 ($add).
+Removed top 5 bits (of 16) from port Y of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:198$1498 ($add).
+Removed top 15 bits (of 16) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:167$1467 ($add).
+Removed top 23 bits (of 24) from FF cell gold.$flatten\u_ot_pr_core.$procdff$2425 ($dff).
+Removed top 2 bits (of 3) from FF cell gold.$flatten\u_ot_pr_core.$procdff$2424 ($dff).
+Removed top 7 bits (of 8) from FF cell gold.$auto$ff.cc:337:slice$3205 ($dffe).
+Removed top 7 bits (of 8) from FF cell gold.$auto$ff.cc:337:slice$3204 ($dffe).
+Removed top 22 bits (of 23) from FF cell gold.$auto$ff.cc:337:slice$3199 ($dff).
+Removed top 7 bits (of 8) from FF cell gold.$auto$ff.cc:337:slice$3211 ($adffe).
+Removed top 7 bits (of 8) from FF cell gold.$auto$ff.cc:337:slice$3210 ($adffe).
+Removed top 5 bits (of 17) from port B of cell gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$lt$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:198$1499 ($lt).
+Removed top 27 bits (of 32) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:217$1525_Y.
+Removed top 7 bits (of 16) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$0\k_lm[15:0].
+Removed top 3 bits (of 12) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$0\k_po0[11:0].
+Removed top 3 bits (of 12) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$0\k_po1[11:0].
+Removed top 1 bits (of 8) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$0\scan4[7:0].
+Removed top 1 bits (of 8) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:590$1411_Y.
+Removed top 5 bits (of 17) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:198$1498_Y.
+Removed top 3 bits (of 12) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:591$1414_Y.
+Removed top 5 bits (of 14) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_cal.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:565$1338_Y.
+Removed top 7 bits (of 16) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_face.$0\k_res[15:0].
+Removed top 7 bits (of 16) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$0\k_end[15:0].
+Removed top 8 bits (of 17) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$0\sub_q[16:0].
+Removed top 18 bits (of 32) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:440$803_Y.
+Removed top 27 bits (of 32) from wire gold.$flatten\u_ot_pr_core.\u_core.\u_attn_root.$sub$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:429$790_Y.
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+<suppressed ~18 debug messages>
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 691 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 683 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 682 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Computing hashes of 681 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+<suppressed ~30 debug messages>
+Removed a total of 10 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+    Consolidated identical input bits for $mux cell $flatten\u_ot_pr_core.\u_core.\u_attn.\ctl.$ternary$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:173$1478:
+      Old ports: A={ \u_ot_pr_core.u_core.u_attn.ctl.last [10:6] \u_ot_pr_core.u_core.u_attn.ctl.last [3:1] }, B={ \u_ot_pr_core.u_core.u_attn.cap_q [186:182] \u_ot_pr_core.u_core.u_attn.cap_q [179:177] }, Y={ \u_ot_pr_core.u_core.u_attn.ctl.last_nx [10:6] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [3:1] }
+      New ports: A=\u_ot_pr_core.u_core.u_attn.ctl.tx_first [0], B=\u_ot_pr_core.u_core.u_attn.cap_q [192], Y=\u_ot_pr_core.u_core.u_attn.ctl.last_nx [1]
+      New connections: { \u_ot_pr_core.u_core.u_attn.ctl.last_nx [10:6] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [3:2] } = { \u_ot_pr_core.u_core.u_attn.ctl.last_nx [1] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [1] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [1] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [1] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [1] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [1] \u_ot_pr_core.u_core.u_attn.ctl.last_nx [1] }
+  Optimizing cells in module \gold.
+Performed a total of 1 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 681 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_SHARE pass.
+
+4.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 0 unused cells and 30 unused wires.
+<suppressed ~1 debug messages>
+
+4.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+4.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+4.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+4.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 681 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+4.14. Executing OPT_SHARE pass.
+
+4.15. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 9 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2899 ($dff) from module gold.
+Setting constant 0-bit at position 10 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2899 ($dff) from module gold.
+Setting constant 0-bit at position 11 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2899 ($dff) from module gold.
+Setting constant 0-bit at position 9 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2900 ($dff) from module gold.
+Setting constant 0-bit at position 10 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2900 ($dff) from module gold.
+Setting constant 0-bit at position 11 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2900 ($dff) from module gold.
+Setting constant 0-bit at position 9 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2901 ($dff) from module gold.
+Setting constant 0-bit at position 10 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2901 ($dff) from module gold.
+Setting constant 0-bit at position 11 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2901 ($dff) from module gold.
+Setting constant 0-bit at position 12 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2901 ($dff) from module gold.
+Setting constant 0-bit at position 13 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2901 ($dff) from module gold.
+Setting constant 0-bit at position 14 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2901 ($dff) from module gold.
+Setting constant 0-bit at position 15 on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2901 ($dff) from module gold.
+Setting constant 0-bit at position 9 on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2958 ($dff) from module gold.
+Setting constant 0-bit at position 10 on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2958 ($dff) from module gold.
+Setting constant 0-bit at position 11 on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2958 ($dff) from module gold.
+Setting constant 0-bit at position 12 on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2958 ($dff) from module gold.
+Setting constant 0-bit at position 13 on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2958 ($dff) from module gold.
+Setting constant 0-bit at position 14 on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2958 ($dff) from module gold.
+Setting constant 0-bit at position 15 on $flatten\u_ot_pr_core.\u_core.\u_attn_face.$procdff$2958 ($dff) from module gold.
+Setting constant 0-bit at position 9 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3048 ($dff) from module gold.
+Setting constant 0-bit at position 10 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3048 ($dff) from module gold.
+Setting constant 0-bit at position 11 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3048 ($dff) from module gold.
+Setting constant 0-bit at position 12 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3048 ($dff) from module gold.
+Setting constant 0-bit at position 13 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3048 ($dff) from module gold.
+Setting constant 0-bit at position 14 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3048 ($dff) from module gold.
+Setting constant 0-bit at position 15 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3048 ($dff) from module gold.
+Setting constant 0-bit at position 16 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3048 ($dff) from module gold.
+Setting constant 0-bit at position 9 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3050 ($dff) from module gold.
+Setting constant 0-bit at position 10 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3050 ($dff) from module gold.
+Setting constant 0-bit at position 11 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3050 ($dff) from module gold.
+Setting constant 0-bit at position 12 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3050 ($dff) from module gold.
+Setting constant 0-bit at position 13 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3050 ($dff) from module gold.
+Setting constant 0-bit at position 14 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3050 ($dff) from module gold.
+Setting constant 0-bit at position 15 on $flatten\u_ot_pr_core.\u_core.\u_attn_root.$procdff$3050 ($dff) from module gold.
+
+4.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+
+4.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+4.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+4.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+4.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 681 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+4.22. Executing OPT_SHARE pass.
+
+4.23. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$procdff$2854 ($dff) from module gold (D = $flatten\u_ot_pr_core.\u_core.\u_attn_cal.$add$/srv/opentallas-scratch/claude/kv-bind4-1019/attn/root/rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv:582$1381_Y [11:9], Q = \u_ot_pr_core.u_core.u_attn_cal.po1_3 [11:9], rval = 3'000).
+
+4.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+
+4.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+4.26. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+4.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gold.
+Performed a total of 0 changes.
+
+4.29. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gold'.
+Computing hashes of 682 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Removed a total of 0 cells.
+
+4.30. Executing OPT_SHARE pass.
+
+4.31. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+
+4.33. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gold.
+
+4.34. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Executing JSON backend.
+
+End of script. Logfile hash: ef5d37e09e, time: 0.38s, user: 0.37s, system: 0.02s, MEM: 38.72 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 33% 12x opt_clean (0 sec), 22% 12x opt_dff (0 sec), ...
