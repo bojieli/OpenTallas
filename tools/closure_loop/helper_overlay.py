@@ -351,6 +351,14 @@ RULE_COMMITS = {
         kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
         what="TW3-LGTAP: exact shapes only inside pin windows when the exact abstract is > 200k rects; published only "
              "when it has fewer pin-access violations than the default; a collect FAIL can only disappear"),
+    # ROOT3 10-19 (merge note, history not rewritten): KV-PC 96ac666e1 changed ot_rst_copies.py/.tcl without a trailer.
+    # Strided families apply only to (* ot_rst_split = W *) with an integer W >= 2 (1 / binary 1 -> the old family) and
+    # --wide / opt_dff run only under OT_RST_COPIES_WIDE=1 -> every existing kit's prep and split are unchanged.
+    "96ac666e1019437db6b9c723cf9059aa9884a314": dict(
+        kind="neutral", rule="rst-copies-opt-in",
+        paths=("physical/common_flow/ot_rst_copies.py", "physical/common_flow/ot_rst_copies.tcl"),
+        what="ot_rst_copies: strided copy families only for ot_rst_split = W >= 2, OT_RST_COPIES_WIDE=1 opt-in "
+             "(opt_dff + memory/coarse-cell maps); default prep/split byte-identical for every existing kit"),
 }
 # ROOT-0040 name, kept for callers / tests: the relaxing entries
 RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}
