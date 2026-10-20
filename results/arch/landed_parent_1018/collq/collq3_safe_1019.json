@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.hcoll.landed_parent_safe.v1",
+ "lane": "HBM-ELEMOWN3/COLLQ3",
+ "date": "2026-10-19",
+ "elements": ["ot_hfd_coll_q3_hard_v8x (die hb_coll_SW, NLINK 2, TP 192)", "ot_hfd_coll_q2_hard_v8g (SE/NW/NE): SAME defect, same generator -> same fix"],
+ "failed_gates": {
+  "hcoll_q3_lp_ar128": "kit @3b5f9e475, ot-epyc8 ref_gate/hcoll_q3_lp_ar128-20261019-041551, FAIL 9 checks",
+  "hcoll_q2_lp_ar128": "FAIL, identical classes",
+  "hcoll_q{2,3}_lp_1018 lpk6": "FAIL, identical classes (cts_run + clock_rule + fill + trial GRT rc 2)"
+ },
+ "diagnosis": [
+  {"check": "cts_run (CTS rc 2)", "cause": "cts.log 'OT_HYBRID: CTS source ck_sw must reach only standard-cell clock pins': 14 RAW SRAM macros in the parent's SOFT glue on ck_sw (u_issuer 6 = 3 banks x u_sram + g128.u_sram_hi; u_link0/1 4 retry-store banks each). multiple_cts_roots admits only bound hard-child clock pins (::ot_ce_counts); raw-memory bindings exist only for hybrid_entries kits.", "fix": "issuer, link_e (and fj, reduce lanes) become HARD children: the SRAMs live inside a leaf with its own CTS tree"},
+  {"check": "clock_rule 'unlanded cross-region link dest_d / dest_v / held_epoch / link_abort / *_sequence_pin'", "cause": "u_link0/1 region None: lp.py emits the 5-bit link clock pin as {5{ck_sw}} and pre_route_gate.landed link graph accepts only a bare clock identifier, so every net touching u_link looked cross-region. Not a real crossing (all in sw).", "fix": "ot_hgi_coll_link_e1 wrapper: ONE scalar clock pin (removes the vector pin; no gate-tool change needed)"},
+  {"check": "textbook.clock_domain / clock_guidance (76,427 sinks on ck_sw)", "cause": "soft flops by top instance (yosys netlist): u_issuer 21,521, u_reduce 21,249, u_link0+1 13,292, u_fj 4,581, u_va* 4,312, u_up* 1,945, sw landing rings ~9k", "fix": "hard issuer / fj / link_e1 x2 / reduce lanes x16: sw soft remainder ~16k (upipe 1.9k, vmasm 4.3k, reduce ctl ~0.8k, landing rings ~9k, pin regs 0.6k)"},
+  {"check": "textbook.wire_reach REFUSE rc_tag[2:0] -> u_control/rc_tag 540 um combinational", "cause": "rc_v / rc_tag S-face pins drive the control leaf's rc pins (on its N face at ~(254, 324)) with no register", "fix": "lp.py in_regs: rc_v / rc_tag pin register (u_lpi_*) in sw; parent kit must put the rc pins on S at x ~254 so flop -> u_control is ~324 um (< 405)"},
+  {"check": "fill 34% / trial GRT rc 2", "cause": "the GRT ran on a failed CTS database (rc 2 follows the CTS error); fill = macros + soft std over 1296 x 1036.8 with the soft masses unhardened", "fix": "re-measured on the SAFE kit (hard children count as macro area); outline re-floorplanned with the leaf views"}
+ ],
+ "rtl": {
+  "branch": "claude/collq3-safe-1019",
+  "leaves": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "flat_parents": ["rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_lpf_ars.sv", "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_lpf_ars.sv"],
+  "landed_parents": ["rtl/hbm_accel/generic/collective/p2p/landed/ot_hfd_coll_q3_lp_ars.sv", "rtl/hbm_accel/generic/collective/p2p/landed/ot_hfd_coll_q2_lp_ars.sv"],
+  "lp_specs": ["results/arch/landed_parent_1018/collq/spec_q3_ars.json", "results/arch/landed_parent_1018/collq/spec_q2_ars.json"],
+  "records": ["results/arch/landed_parent_1018/collq/ot_hfd_coll_q3_lp_ars_record.json", "results/arch/landed_parent_1018/collq/ot_hfd_coll_q2_lp_ars_record.json"],
+  "bench": "LP_ROOT=<tree> bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3|q2 OUT all (Verilator 5.050, fleet)"
+ },
+ "schedule": {
+  "added_edges": "rc_v / rc_tag / rc_d (the SU -> COLL rc bundle): presented ONE edge earlier than every other COLL input (record input_port_offset_edges rc_* 0 vs 1; equivalently the rc response path is +1 edge); isa_ring and isa_lp_data stay on one edge (out_regs isa_lp_data 2). Every other port / child: unchanged relative offsets (the whole sw region shifts together; writer +3 landing as before, ring A unchanged).",
+  "die_handoff": "lanes/H-D4G.md (COLLQ3 10-19): coll_<q> SAFE master ot_hfd_coll_<q>_lp_ars port offsets from the record",
+  "price_bound": "<= +1 cycle per COLL op record (upper bound: every COLL op waits on rc): DS +473.9 cycles/token of 576,702 (0.082 %), Qwen +73.0 of 1,269,120 (0.006 %) -- tools/hbm_coll_static/injlat_cost.py --issue-edges 1 (results/arch/hbm_coll_mulpipe_1019/price.json on claude/hbm-coll-v74p-1019)"
+ },
+ "leaf_kits": {
+  "hcoll_fj3_r128w": "ot_hgi_coll_fj_n2s1_r128, 82.08 x 77.76 (hcoll_v5_fj3_r128 geometry, gate WARN 03:28)",
+  "hcoll_fj2_r128w": "ot_hgi_coll_fj_q2_r128, 82.08 x 77.76 (hcoll_v5_fj2_r128 geometry)",
+  "hcoll_link_e1": "ot_hgi_coll_link_e1, 475.2 x 345.6, 4 SRAMs 2 x 2 (x 43.2 / 259.2, y 86.4 / 216)",
+  "hcoll_link_e1c": "PARALLEL variant: ot_hgi_coll_link_e1, 259.2 x 432, one abutted SRAM column",
+  "hcoll_reduce_lane": "ot_hgi_coll_reduce_lane, 64.8 x 64.8, x16 in the parent",
+  "issuer": "NOT kitted: ot_hgi_coll_static_issuer_v6 #(ROWS 128) keeps meta 128x64 + rowloops 128x32 + rowcm1 128x32 = 16 kb as runtime-indexed flops (3 reads / cycle: start_pc, cur_target, cur_next) -> SAFE item 5 FAIL; needs issuer v7 (tables in SRAM, replicated read copies, next-row pre-fetch). The ROWS 64 hcoll_v5_issuer (8 kb flop tables) has the same class."
+ },
+ "checklist_parent_ars": {
+  "1_pins": "fixed: rc_v / rc_tag in_regs; isa_ring / isa_lp_data out_regs; every other input lands on a hard child's pin flop or a landing ring (lp.py audit); reset lands in u_lpr_root + regional runs",
+  "2_reach": "fixed for rc_*: pin x ~254 at S under u_control (flop -> pin ~324 um); others re-checked by the SAFE kit gate",
+  "3_fanout": "OPEN: textbook WARN AND2 4,105 loads + issuer hi_q 3,073 loads were inside the soft issuer (now inside the issuer leaf)",
+  "4_depth": "issuer drow -> rowcm1 683-728 ps moved into the issuer leaf (issuer v7 scope)",
+  "5_storage": "parent: none > 2 kb soft (reduce state 512 b / lane in the lane leaf); issuer leaf FAILS (16 kb flop tables) -> issuer v7",
+  "6_floorplan": "OPEN: parent kit to be re-floorplanned with the leaf views (macros on 43.2; channels >= 20 um; outline from the SAFE std area)",
+  "7_clock": "fixed structurally: sw root drives only std-cell flops + hard-child clock pins (no raw SRAM); each SRAM-bearing leaf has its own tree; per linked child pair TT/FF spread judged by the parent gate",
+  "8_schedule": "static; rc bundle +1 handed to H-D4G and priced (bound above)"
+ },
+ "next": [
+  "collect leaf gates (pending_results COLLQ3); route the passing leaves (non-critical: submit_exact after review + benches/witnesses); bind first of hcoll_link_e1 / hcoll_link_e1c to close, cancel the loser",
+  "issuer v7 safe rebuild (owner lane needed: COORD queue)",
+  "parent kit hcoll_q3_lp_ars (and q2): gen_coll_q2_lp_kit.py --safe with the leaf views; rc pins at S x ~254; --cts gate; CRITICAL (ctl_v5 child): COORD review only"
+ ]
+}

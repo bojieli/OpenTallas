@@ -1,0 +1,51 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/collq3-safe-1019
+ot-run: ot-epyc6       admits   444 GB (avail 424, growth 113, headroom 0, waiters 0/0 GB) load 80/128 running 34 disk 5228 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/collq3-safe-1019
+ot-run: ot-epyc9       admits   893 GB (avail 791, growth 167, headroom 0, waiters 0/0 GB) load 101/128 running 37 disk 573 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collq3-safe-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/collq3-safe-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3096179-1792472146 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+eq LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=1038 rr_v_cycles=1941 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0604
+eq LPF_EQ PASS compared=144578 cycles=3164 stimulus=q3ar_v5prog_vm_writer_tkw_ring_random
+EQ PASS
+m_refnostep EQ_MISMATCH port=del_flit cyc=2500
+m_refnostep EQ_MISMATCH port=del_flit cyc=2762
+m_refnostep LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=1038 rr_v_cycles=1941 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0604
+m_refnostep LPF_EQ FAIL mismatches=2 of 144578 stimulus=q3ar_v5prog_vm_writer_tkw_ring_random
+EQ_MUTANT m_refnostep REJECTED
+m_leafedge EQ_MISMATCH port=fault_cause cyc=2474
+m_leafedge EQ_MISMATCH port=del_flit cyc=2500
+m_leafedge EQ_MISMATCH port=vm_kq cyc=2504
+m_leafedge EQ_MISMATCH port=vm_kq cyc=2505
+EQ_MUTANT m_leafedge REJECTED
+m_rlaneext EQ_MISMATCH port=del_flit cyc=2500
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2504
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2505
+m_rlaneext EQ_MISMATCH port=vm_kq cyc=2506
+EQ_MUTANT m_rlaneext REJECTED
+rs_eq RSPLIT_EQ PASS cycles=200000 publishes=33166 adds=49845
+RS PASS
+rs_mtag RSPLIT_MISMATCH cyc=18 ref_v=1 spl_v=1 ref_c=0f spl_c=8f
+rs_mtag RSPLIT_MISMATCH cyc=19 ref_v=0 spl_v=0 ref_c=0f spl_c=8f
+rs_mtag RSPLIT_MISMATCH cyc=20 ref_v=0 spl_v=0 ref_c=0f spl_c=8f
+RS_MUTANT rs_mtag REJECTED
+rs_mbf16 RSPLIT_MISMATCH cyc=44256 ref_v=1 spl_v=1 ref_c=bf spl_c=bf
+rs_mbf16 RSPLIT_MISMATCH cyc=44258 ref_v=0 spl_v=0 ref_c=bf spl_c=bf
+rs_mbf16 RSPLIT_MISMATCH cyc=44259 ref_v=0 spl_v=0 ref_c=bf spl_c=bf
+RS_MUTANT rs_mbf16 REJECTED
+rs_mext RSPLIT_MISMATCH cyc=26 ref_v=1 spl_v=1 ref_c=0f spl_c=0f
+rs_mext RSPLIT_MISMATCH cyc=27 ref_v=0 spl_v=0 ref_c=0f spl_c=0f
+rs_mext RSPLIT_MISMATCH cyc=30 ref_v=1 spl_v=1 ref_c=9f spl_c=9f
+RS_MUTANT rs_mext REJECTED
+ot-run: interrupted (signal 15 from pid 3760127 (/bin/bash -c source /home/ubuntu/.claude/shell-snapshots/snapshot-bash-1792452096603-di0ioy.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval 'kill 3359219 3359220 2>/dev/null; WT=/ho; parent 2717320 (claude bg-spare --bg-spare /tmp/cc-daemon-1000/5c860797/spare/e825568d.claim.sock))); the command is STILL RUNNING on ot-epyc6 (unit oth-ubuntu-3096179-1792472146): NOT COMPLETED
+remote lp section (local ot-run client hung after the remote finished; summary from lp_bench.log):
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+COLL_LP_ARS_ALL_EXIT 0 (EQ/RS sections above + lp BENCH_EXIT 0)

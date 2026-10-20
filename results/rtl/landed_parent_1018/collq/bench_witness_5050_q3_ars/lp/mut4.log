@@ -1,0 +1,11 @@
+LP_MISMATCH port=rr_v cycle=2961 flat=0 landed=1
+LP_MISMATCH port=pr_cw_o cycle=2961 flat=6ba00068366675ed3352bae1d51052f6d949c04bac433c2c057b076bfe5afded18c73e landed=eba00068366675ed3352bae1d51052f6d949c04bac433c2c057b076bfe5afded18c73e
+LP_MISMATCH port=pr_ccw_o cycle=2961 flat=0abe980de0799dfb37d9cb1d0c74f098b7fb2d1ea5ef256225e57011e38d80e0a09ef4 landed=8abe980de0799dfb37d9cb1d0c74f098b7fb2d1ea5ef256225e57011e38d80e0a09ef4
+LP_MISMATCH port=rr_v cycle=2968 flat=1 landed=0
+LP_MISMATCH port=pr_ccw_o cycle=2968 flat=eba000d7a962c03bb4403c36574d9cad9ee3dc1a36e9c26592d43645c16d1d6b96fad1 landed=6ba000d7a962c03bb4403c36574d9cad9ee3dc1a36e9c26592d43645c16d1d6b96fad1
+LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=1035 rr_v_cycles=1941 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0604
+LP_LOCKSTEP FAIL MUT=4 mismatches=6 of 143750 stimulus=q3ar_v5prog_vm_writer_tkw_ring_random
+- rtl/hbm_accel/generic/collective/p2p/landed/tb_ot_hfd_coll_q3_lp_ars.sv:333: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.250 s; speed 12.670 us/s
+- Verilator: cpu 0.250 s on 1 threads; allocated 11 MB
