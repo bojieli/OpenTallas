@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-1020/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-1020/src
+ot-run: ot-epyc7       admits   889 GB (avail 708, growth 86, headroom 0, waiters 0/0 GB) load 42/96 running 19 disk 5443 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-1020/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-1020/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-1020/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3417446-1792496549 after 0 s
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/codex-pvm-bindfirst-1020/mut4/native_cells.v
+Verilator 5.050 2026-07-01 rev v5.050
+[431000] %Fatal: tb_pv_merge_distributed.sv:46: Assertion failed in tb_pv_merge_distributed: DISTRIBUTED_ALL_OUTPUT_AGE_MISMATCH
+%Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:46: Verilog $stop
+%Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:46: Verilog $stop
+Aborting...
+PVM FAIL mismatches=112 (pv 0, pub 111, done None)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3417446-1792496549): exit 1

@@ -1,0 +1,43 @@
+{
+  "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v": {
+    "sha256": "5bd2448e4914cefa7b1d8dd8ffa294dd3c3e69e24910658d994a564b7593e5a7",
+    "byte_identical_to_cc33b9ac7": true
+  },
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv": {
+    "sha256": "07273570b2df52df1cb942f2a81dfe607161f4e73de5001cc71ed1ca7fbc1fbd",
+    "byte_identical_to_cc33b9ac7": true
+  },
+  "canonical_pg_rules": {
+    "source": "physical/ref_tile/smh_pvm_ref_s7a/pdn.tcl",
+    "source_sha256": "ace16b393e02e8274b4b9d87566baf2f68b322ddaba46df05a6cd6bf57148c7b",
+    "literal_commands": "add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDD$} -power\nadd_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDDPE$}\nadd_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDDCE$}\nadd_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground\nadd_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSSE$}\nglobal_connect\n",
+    "commands_sha256": "70d2b2344acde2a2e07fa796028aba7d3c881b5172e6f9dc38488600a8066849"
+  },
+  "physical/ref_tile/pvm_bindfirst_private/export_expected.tcl": {
+    "sha256": "1760725be89ffeee0f8912927ae5640fe37df19646c693ae225ca69bcd21c210"
+  },
+  "physical/ref_tile/pvm_bindfirst_private/graph_guard.tcl": {
+    "sha256": "682963c541f4db06e6d2c7df62d3147f511f401e763e0d0633792e47ab911270"
+  },
+  "physical/ref_tile/pvm_bindfirst_private/post_synth.tcl": {
+    "sha256": "5714b23b74af00fd5e0a626d8b90a5659e950971dfb872cc9dfd18710114a001"
+  },
+  "physical/ref_tile/pvm_bindfirst_private/pre_synth.tcl": {
+    "sha256": "c33c113bd6971268b053a8ebd6ad7526fa91b4adc51964ac98108e0910e5b2a9"
+  },
+  "physical/ref_tile/pvm_bindfirst_private/stage_guard.tcl": {
+    "sha256": "b61261efee07b487a5206609a92de3192fc6f2e53ad94fea530a39809d7d1ecc"
+  },
+  "physical/ref_tile/pvm_bindfirst_private/audit_persisted.tcl": {
+    "sha256": "2b8fcc47a72d9e823ac6e41ed45b77d9d37513b9480b97219ae0f7128e56b4f5"
+  },
+  "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_bindfirst_native.v": {
+    "sha256": "4f9d3c6f49f0eaf05ef07882dafd36526a173adb6d1e89953afa25a2fffd08e9"
+  },
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32_bindfirst.sv": {
+    "sha256": "209b48dbf9720868f689c5684a90f6cfdca4d279013da4592181c04d3dabf58e"
+  },
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed_core.sv": {
+    "sha256": "6877980304539847c62268d00bdeeb575f8c827deaa1be8602588345153680a4"
+  }
+}

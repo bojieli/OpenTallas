@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: ot-epyc6       admits  1064 GB (avail 858, growth 113, headroom 0, waiters 0/0 GB) load 40/128 running 31 disk 4103 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-286038-1792497702 after 0 s
+SYNTH 0
+CENSUS 0
+{'status': 'PASS', 'roots_examined': 63713, 'max_dynamic_loads': 32, 'role_errors': []}
+MAPPED_SHA256 888516a8887c716be924fff09efe4b8fbdddaf638189919c180c1aa583da2651
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-286038-1792497702): exit 0

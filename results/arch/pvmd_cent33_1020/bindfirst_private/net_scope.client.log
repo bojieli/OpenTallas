@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: ot-epyc6       admits  1072 GB (avail 864, growth 113, headroom 0, waiters 0/0 GB) load 53/128 running 32 disk 4023 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-326148-1792497949 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[(0, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (1, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (2, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (3, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (4, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (5, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (6, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (7, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (8, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (9, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (10, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (11, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (12, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (13, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (14, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113}), (15, {'one_driver_with_loads': 3352, 'driver_1_loads_0': 113})]
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-326148-1792497949): exit 0

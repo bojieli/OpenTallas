@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-r2-1020
+ot-run: ot-epyc6       admits  1088 GB (avail 875, growth 113, headroom 0, waiters 0/0 GB) load 45/128 running 32 disk 4039 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-r2-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-r2-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-r2-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-pvm-bindfirst-orfs-r2-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-331906-1792498025 after 0 s
+first_reference.log 0
+first_transaction.log 0
+persisted_1_synth 0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-331906-1792498025): exit 0
