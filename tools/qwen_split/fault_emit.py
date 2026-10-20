@@ -403,8 +403,8 @@ def post(v, m, G):
     new_buses, nn = [], [0]
     owner_of_root = {it.name: o for o, it in roots.items()}
 
-    def new_node(kind, cx, cy, cj, rj, owner):
-        s = occ.site(v, cx, cy) or occ.site(v, cx, cy, rmax=1200.0, step=8.64)
+    def new_node(kind, cx, cy, cj, rj, owner, ok=None):
+        s = occ.site(v, cx, cy, ok=ok) or occ.site(v, cx, cy, rmax=1200.0, step=8.64, ok=ok)
         if s is None:
             raise ValueError(f'fault emit: no free site for a {kind} near ({cx:.1f}, {cy:.1f})')
         nm = f'flt_{kind}{nn[0]}'
@@ -465,7 +465,12 @@ def post(v, m, G):
                 t = _ctr(by[tgt])
                 f = REACH_UM * 0.9 / d
                 hx, hy = c0[0] + (t[0] - c0[0]) * f, c0[1] + (t[1] - c0[1]) * f
-                hop = new_node('hop', hx, hy, cj, nodes[cur]['rs'], nodes[cur]['owner'])
+                # QW-G5F3 10-20: the hop site must stay within REACH_UM of the current node AND make >= 40 um progress to the
+                # target (dv2f20g5f3b: the nearest free box to the 0.9-reach point lay 523 um from flt_hop461's source)
+                def _okh(r, c0=c0, t=t, d=d):
+                    cc = ((r[0] + r[2]) / 2, (r[1] + r[3]) / 2)
+                    return _man(c0, cc) <= REACH_UM and _man(cc, t) <= d - 40.0
+                hop = new_node('hop', hx, hy, cj, nodes[cur]['rs'], nodes[cur]['owner'], ok=_okh)
                 if _man(c0, _ctr(nodes[hop]['it'])) > REACH_UM:
                     raise ValueError(f'fault emit: hop site for {cur} too far ({_man(c0, _ctr(nodes[hop]["it"])):.0f} um)')
                 connect(cur, hop)
