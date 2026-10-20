@@ -1,0 +1,19 @@
+GATE INFO pin_regs: pin registers opted out: RTL registers every pin: inputs land in kept pin flops (quadrant: cw -> 11 kept P1 copies, thr -> 6 kept threshold copies, ties -> 4 kept tie copies, in_line -> in_p1; ctl: cw_r/k_r, a_ret/a_qf), outputs are registers (quadrant: selected_v_o/selected_line_o/ret/qfault_o; ctl: cw, threshold, ties, fa
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hidx_sel_s3p_a_20261020-050446.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hidx_sel_s3p_a_20261020-050446.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=30
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 218 s (gate total 1933 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1257, 'pin_rectangles': 1257, 'pin_track_checked': 1257, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 d9ded02b0331dce0a0be7f30cbb22f08f99f3bc1fb8fa865e9ee8527d7a3a9bd
+GATE INFO util: synthesized std area 6335 um2 + macros 21291 in core 116472: util 7% (std-cell density 7.2% of placeable 87902 um2; total fill 23.7%)
+GATE INFO keep_modules: keep ot_hidx_s3_pfx: ot_hidx_s3_pfx survives synthesis (3 instances)
+GATE INFO keep_modules: keep ot_hidx_s3_pri: ot_hidx_s3_pri survives synthesis (1 instance)
+GATE INFO textbook: PASS ot_hidx_s3_q cells 45,078 flops 9,330 depth 566.8 ps util 0.237 reach 0.0 um (1.4 s)
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR DPL-0033] detailed placement checks failed during check placement.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_rule: root port:clk: 9,333 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-idx-fast-counter-1020/physical/ref_tile/hidx_sel_s3p_a/gate_layout/floorplan.png
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)
+GATE: hidx_sel_s3p_a/gate_result.json written (exact staged source binding; commit it with the kit)
