@@ -1,0 +1,15 @@
+FIRST_VALID MUT=5 edge=3 R0=0 delta=3 tag=3
+FIRST_VALID MUT=5 edge=10 R0=7 delta=3 tag=8
+CHAIN_NATIVE_MISMATCH MUT=5 why=                wrong_clock_edge t=162000 edges=15 s=01 ref=00
+CHAIN_NATIVE_MISMATCH MUT=5 why=                        own_rise t=165000 edges=16 s=11 ref=01
+CHAIN_NATIVE_MISMATCH MUT=5 why=                wrong_clock_edge t=169000 edges=16 s=11 ref=01
+FIRST_VALID_MISMATCH MUT=5 why=                        own_rise t=175000 actual=1 ref=0
+FIRST_VALID MUT=5 edge=17 R0=15 delta=2 tag=d
+FIRST_VALID_EDGE_FAIL
+HELD_RELEASE_LEAK MUT=5
+FIRST_VALID MUT=5 edge=26 R0=24 delta=2 tag=8
+FIRST_VALID_EDGE_FAIL
+TWO_RELEASE_SUMMARY MUT=5 checks=116 asserts=3 firstvalids=4 warmchecks=38 errors=18
+[467000] %Fatal: tb.sv:65: Assertion failed in tb: TWO_RELEASE_CHAIN_FAIL
+%Error: tb.sv:65: Verilog $stop
+Aborting...

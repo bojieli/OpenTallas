@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-two-release-1020
+ot-run: ot-epyc6       admits   193 GB (avail 248, growth 113, headroom 0, waiters 0/0 GB) load 114/128 running 39 disk 4756 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-two-release-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-two-release-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-two-release-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-two-release-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2967447-1792486221 after 0 s
+CANONICAL_MODEL_HASHES_PASS
+GOLDEN_FAIL
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2967447-1792486221): exit 1

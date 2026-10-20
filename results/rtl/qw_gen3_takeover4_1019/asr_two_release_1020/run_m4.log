@@ -1,0 +1,20 @@
+CHAIN_NATIVE_MISMATCH MUT=4 why=                        own_rise t=5000 edges=0 s=10 ref=00
+CHAIN_NATIVE_MISMATCH MUT=4 why=                wrong_clock_edge t=8000 edges=0 s=10 ref=00
+CHAIN_NATIVE_MISMATCH MUT=4 why=                offphase_release t=12000 edges=0 s=10 ref=00
+CHAIN_NATIVE_MISMATCH MUT=4 why=                        own_rise t=15000 edges=1 s=11 ref=01
+FIRST_VALID MUT=4 edge=1 R0=0 delta=1 tag=d
+FIRST_VALID_EDGE_FAIL
+ASYNC_CLEAR_FAIL MUT=4 t=82000
+FIRST_VALID MUT=4 edge=8 R0=7 delta=1 tag=2
+FIRST_VALID_EDGE_FAIL
+ASYNC_CLEAR_FAIL MUT=4 t=157000
+FIRST_VALID MUT=4 edge=16 R0=15 delta=1 tag=a
+FIRST_VALID_EDGE_FAIL
+ASYNC_CLEAR_FAIL MUT=4 t=227000
+FIRST_VALID MUT=4 edge=23 R0=-999 delta=1022 tag=f
+FIRST_VALID_EDGE_FAIL
+HELD_RELEASE_LEAK MUT=4
+TWO_RELEASE_SUMMARY MUT=4 checks=116 asserts=3 firstvalids=4 warmchecks=38 errors=82
+[467000] %Fatal: tb.sv:65: Assertion failed in tb: TWO_RELEASE_CHAIN_FAIL
+%Error: tb.sv:65: Verilog $stop
+Aborting...

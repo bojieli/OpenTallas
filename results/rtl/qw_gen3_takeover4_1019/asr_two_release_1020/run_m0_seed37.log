@@ -1,0 +1,10 @@
+FIRST_VALID MUT=0 edge=3 R0=0 delta=3 tag=3
+FIRST_VALID MUT=0 edge=10 R0=7 delta=3 tag=8
+FIRST_VALID MUT=0 edge=18 R0=15 delta=3 tag=0
+FIRST_VALID MUT=0 edge=27 R0=24 delta=3 tag=b
+TWO_RELEASE_SUMMARY MUT=0 checks=116 asserts=3 firstvalids=4 warmchecks=38 errors=0
+TWO_RELEASE_CHAIN_PASS
+- tb.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 467ns; walltime 0.000 s; speed 2.273 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

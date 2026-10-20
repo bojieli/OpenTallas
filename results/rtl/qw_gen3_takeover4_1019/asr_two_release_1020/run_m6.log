@@ -1,0 +1,8 @@
+CHAIN_NATIVE_MISMATCH MUT=6 why=                        own_rise t=15000 edges=1 s=00 ref=01
+CHAIN_NATIVE_MISMATCH MUT=6 why=                wrong_clock_edge t=15000 edges=1 s=00 ref=01
+CHAIN_NATIVE_MISMATCH MUT=6 why=                wrong_clock_edge t=22000 edges=1 s=00 ref=01
+CHAIN_NATIVE_MISMATCH MUT=6 why=                        own_rise t=25000 edges=2 s=00 ref=11
+TWO_RELEASE_SUMMARY MUT=6 checks=116 asserts=3 firstvalids=0 warmchecks=38 errors=154
+[467000] %Fatal: tb.sv:65: Assertion failed in tb: TWO_RELEASE_CHAIN_FAIL
+%Error: tb.sv:65: Verilog $stop
+Aborting...

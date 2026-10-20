@@ -1,0 +1,11 @@
+FIRST_VALID MUT=0 edge=3 R0=0 delta=3 tag=3
+ASYNC_CLEAR_FAIL MUT=0 t=82000
+FIRST_VALID MUT=0 edge=10 R0=7 delta=3 tag=8
+ASYNC_CLEAR_FAIL MUT=0 t=157000
+FIRST_VALID MUT=0 edge=18 R0=15 delta=3 tag=0
+ASYNC_CLEAR_FAIL MUT=0 t=227000
+FIRST_VALID MUT=0 edge=27 R0=24 delta=3 tag=b
+TWO_RELEASE_SUMMARY MUT=0 checks=116 asserts=3 firstvalids=4 warmchecks=38 errors=3
+[467000] %Fatal: tb.sv:65: Assertion failed in tb: TWO_RELEASE_CHAIN_FAIL
+%Error: tb.sv:65: Verilog $stop
+Aborting...

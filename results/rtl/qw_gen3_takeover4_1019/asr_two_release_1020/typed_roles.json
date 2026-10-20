@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.typed.two-release.functional-coupon.v1",
+ "qualified_native_role": false,
+ "own_clock": "ck",
+ "logical_release_value": 1,
+ "native_output": "QN",
+ "native_D_for_logical_release": 0,
+ "unused_preset_RESETN": 1,
+ "active_clear_pin": "SETN",
+ "stages": [
+  {
+   "instance": "release0",
+   "clear": "raw_n",
+   "output": "s0",
+   "release_owned_edges": 1
+  },
+  {
+   "instance": "release1",
+   "clear": "s0",
+   "output": "s1",
+   "release_owned_edges": 2
+  }
+ ],
+ "admitted_first_valid_owned_edges": 3,
+ "actual_land8": {
+  "source": "qfd_land8.sv",
+  "mode": "W1_ICG0",
+  "L": 3,
+  "K": 2,
+  "first_word_owned_edge_after_R0": 5
+ },
+ "mutants": {
+  "1": "stage1 bypass",
+  "2": "stage1 wrongclock",
+  "3": "stage1 wrongD",
+  "4": "stage1 wrongpolarity",
+  "5": "stage0 wrongclock",
+  "6": "stage0 wrongD",
+  "7": "stage0 wrongpolarity"
+ }
+}

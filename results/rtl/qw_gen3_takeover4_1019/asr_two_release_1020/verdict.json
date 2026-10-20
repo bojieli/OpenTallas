@@ -1,0 +1,114 @@
+{
+ "status": "FUNCTIONAL_CHAIN_PASS_7_CAUSAL_NEGATIVES",
+ "qualified_native_role": false,
+ "fleet_unit": "oth-ubuntu-2970871-1792486306",
+ "initial_failed_unit": "oth-ubuntu-2967447-1792486221",
+ "initial_failure": "Incorrect immediate async reset expectation on unreset native payload output; bench fixed, source unchanged",
+ "canonical_coupon_ref": "3905a5c7d",
+ "golden_seeds": [
+  1,
+  37
+ ],
+ "results": [
+  {
+   "MUT": 0,
+   "checks": 116,
+   "asserts": 3,
+   "firstvalids": 4,
+   "warmchecks": 38,
+   "errors": 0,
+   "causal_tags": {}
+  },
+  {
+   "MUT": 1,
+   "checks": 116,
+   "asserts": 3,
+   "firstvalids": 4,
+   "warmchecks": 38,
+   "errors": 23,
+   "causal_tags": {
+    "CHAIN_NATIVE_MISMATCH": 3,
+    "FIRST_VALID_MISMATCH": 1,
+    "FIRST_VALID_EDGE_FAIL": 4
+   }
+  },
+  {
+   "MUT": 2,
+   "checks": 116,
+   "asserts": 3,
+   "firstvalids": 4,
+   "warmchecks": 38,
+   "errors": 17,
+   "causal_tags": {
+    "CHAIN_NATIVE_MISMATCH": 1,
+    "FIRST_VALID_MISMATCH": 2,
+    "FIRST_VALID_EDGE_FAIL": 4
+   }
+  },
+  {
+   "MUT": 3,
+   "checks": 116,
+   "asserts": 3,
+   "firstvalids": 0,
+   "warmchecks": 38,
+   "errors": 144,
+   "causal_tags": {
+    "CHAIN_NATIVE_MISMATCH": 3,
+    "FIRST_VALID_MISMATCH": 1
+   }
+  },
+  {
+   "MUT": 4,
+   "checks": 116,
+   "asserts": 3,
+   "firstvalids": 4,
+   "warmchecks": 38,
+   "errors": 82,
+   "causal_tags": {
+    "CHAIN_NATIVE_MISMATCH": 4,
+    "ASYNC_CLEAR_FAIL": 3,
+    "HELD_RELEASE_LEAK": 1,
+    "FIRST_VALID_EDGE_FAIL": 4
+   }
+  },
+  {
+   "MUT": 5,
+   "checks": 116,
+   "asserts": 3,
+   "firstvalids": 4,
+   "warmchecks": 38,
+   "errors": 18,
+   "causal_tags": {
+    "CHAIN_NATIVE_MISMATCH": 3,
+    "FIRST_VALID_MISMATCH": 1,
+    "HELD_RELEASE_LEAK": 1,
+    "FIRST_VALID_EDGE_FAIL": 2
+   }
+  },
+  {
+   "MUT": 6,
+   "checks": 116,
+   "asserts": 3,
+   "firstvalids": 0,
+   "warmchecks": 38,
+   "errors": 154,
+   "causal_tags": {
+    "CHAIN_NATIVE_MISMATCH": 4
+   }
+  },
+  {
+   "MUT": 7,
+   "checks": 116,
+   "asserts": 3,
+   "firstvalids": 4,
+   "warmchecks": 38,
+   "errors": 79,
+   "causal_tags": {
+    "CHAIN_NATIVE_MISMATCH": 4,
+    "ASYNC_CLEAR_FAIL": 3,
+    "HELD_RELEASE_LEAK": 1,
+    "FIRST_VALID_EDGE_FAIL": 4
+   }
+  }
+ ]
+}
