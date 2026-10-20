@@ -13,7 +13,12 @@
 // {p3[7:0],p1,8'd0} and w = {q0,8'd0} + {q1,16'd0} + {q2[7:0],24'd0}, both exact concatenation identities of off();
 // stage 3b: u + w mod 2^32). m_idx/m_vm/m_lk_* are computed in 3a and re-registered in 3b. Products land ONE edge later
 // (4 flop stages from the tap pins instead of 3); PIPE=0 is the v74 module, edge- and bit-identical.
-module ot_hgi_coll_iter_mul_safephys #(parameter integer PIPE=0)(
+// HBM-COLL6 10-20 FANCOPY=1 (v74k; v74p native32 census FAIL n1s0 max 63 / n2s1 max 60: the stage-1 operand regs a/b/c/d/k
+// and the six 32-bit iteration landings each fed 2-4 8x8 multipliers): every 8x8 partial product gets its OWN kept stage-1
+// landing (ot_hgi_coll_pp_land_safephys, keep_hierarchy, NOT parameterised: {iteration byte i, step byte j} captured at the
+// same edge from the same tap pins as v74p's a..k / u_it_*), so each landing bit drives exactly one multiplier. Same edges,
+// same products, same combine (PIPE as before); FANCOPY=0 is the v74p module, edge- and bit-identical.
+module ot_hgi_coll_iter_mul_safephys #(parameter integer PIPE=0,FANCOPY=0)(
  input wire clk,
  input wire [31:0] iteration,
  input wire [15:0] s_idx,s_vm,s_iaddr,s_del,s_rgx,
@@ -35,6 +40,11 @@ module ot_hgi_coll_iter_mul_safephys #(parameter integer PIPE=0)(
  //   off32 = 32'(it_l*b + {16'(it_h*b),16'd0}) = low32(it*b) = 32'(sum_{i<4,j<2,i+j<4} it_i*b_j << 8(i+j))
  //   16'(it_l*a) = 16'(it_0*a_0 + (it_1*a_0 + it_0*a_1) << 8)
  //   it_l*k = it_0*k + it_1*k << 8 (24b);   it_h*k = it_2*k + it_3*k << 8 (24b)
+ function automatic [7:0] by(input [31:0] x,input integer i);by=x[i*8+:8];endfunction
+ reg [15:0] pa[0:2],pv[0:2];                 // 00,10,01
+ reg [15:0] pb[0:6],pc[0:6],pd[0:6];         // (i,j): 00,10,20,30,01,11,21
+ reg [15:0] pk[0:3];                         // it_0..3 * k
+generate if(FANCOPY==0)begin:g_land1
  wire [31:0] it_a,it_v,it_b,it_c,it_d,it_k;reg [15:0] a,v,b,c,d;reg [7:0] k;
  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_a(.clk(clk),.d(iteration),.q(it_a));
  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_v(.clk(clk),.d(iteration),.q(it_v));
@@ -42,10 +52,6 @@ module ot_hgi_coll_iter_mul_safephys #(parameter integer PIPE=0)(
  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_c(.clk(clk),.d(iteration),.q(it_c));
  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_d(.clk(clk),.d(iteration),.q(it_d));
  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_k(.clk(clk),.d(iteration),.q(it_k));
- function automatic [7:0] by(input [31:0] x,input integer i);by=x[i*8+:8];endfunction
- reg [15:0] pa[0:2],pv[0:2];                 // 00,10,01
- reg [15:0] pb[0:6],pc[0:6],pd[0:6];         // (i,j): 00,10,20,30,01,11,21
- reg [15:0] pk[0:3];                         // it_0..3 * k
  always @(posedge clk)begin
   a<=s_idx;v<=s_vm;b<=s_iaddr;c<=s_del;d<=s_rgx;k<=s_lk;
   pa[0]<=by(it_a,0)*by(a,0);pa[1]<=by(it_a,1)*by(a,0);pa[2]<=by(it_a,0)*by(a,1);
@@ -57,6 +63,44 @@ module ot_hgi_coll_iter_mul_safephys #(parameter integer PIPE=0)(
    pb[4+i]<=by(it_b,i)*by(b,1);pc[4+i]<=by(it_c,i)*by(c,1);pd[4+i]<=by(it_d,i)*by(d,1);
   end
  end
+end else begin:g_landk
+ // 31 kept landings: x = iteration byte, y = step byte of that product (index map identical to the arrays above)
+ wire [15:0] la[0:2],lv[0:2],lb[0:6],lc[0:6],ld[0:6],lk[0:3];
+ for(genvar p=0;p<3;p=p+1)begin:g_av
+  localparam integer XI=(p==1)?1:0, YJ=(p==2)?1:0;
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_pp_land_safephys u_la(.clk(clk),.d({by(iteration,XI),s_idx[YJ*8+:8]}),.q(la[p]));
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_pp_land_safephys u_lv(.clk(clk),.d({by(iteration,XI),s_vm[YJ*8+:8]}),.q(lv[p]));
+ end
+ for(genvar p=0;p<7;p=p+1)begin:g_bcd
+  localparam integer XI=(p<4)?p:p-4, YJ=(p<4)?0:1;
+`ifdef OT_COLL_FC_MUT_COPY
+  // mutant: the (1,0) rgx copy lands iteration byte 0 instead of byte 1
+  localparam integer XD=(p==1)?0:XI;
+`else
+  localparam integer XD=XI;
+`endif
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_pp_land_safephys u_lb(.clk(clk),.d({by(iteration,XI),s_iaddr[YJ*8+:8]}),.q(lb[p]));
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_pp_land_safephys u_lc(.clk(clk),.d({by(iteration,XI),s_del[YJ*8+:8]}),.q(lc[p]));
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_pp_land_safephys u_ld(.clk(clk),.d({by(iteration,XD),s_rgx[YJ*8+:8]}),.q(ld[p]));
+ end
+ for(genvar p=0;p<4;p=p+1)begin:g_k
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_pp_land_safephys u_lk(.clk(clk),.d({by(iteration,p),s_lk}),.q(lk[p]));
+ end
+`ifdef OT_COLL_FC_MUT_LATE
+ // mutant: the (2,1) del copy is landed one edge late (stale copy)
+ reg [15:0] lc5_late;always @(posedge clk)lc5_late<=lc[6];
+ wire [15:0] lc6_use=lc5_late;
+`else
+ wire [15:0] lc6_use=lc[6];
+`endif
+ always @(posedge clk)begin
+  for(integer p=0;p<3;p=p+1)begin pa[p]<=la[p][15:8]*la[p][7:0];pv[p]<=lv[p][15:8]*lv[p][7:0];end
+  for(integer p=0;p<7;p=p+1)begin pb[p]<=lb[p][15:8]*lb[p][7:0];pd[p]<=ld[p][15:8]*ld[p][7:0];end
+  for(integer p=0;p<6;p=p+1)pc[p]<=lc[p][15:8]*lc[p][7:0];
+  pc[6]<=lc6_use[15:8]*lc6_use[7:0];
+  for(integer p=0;p<4;p=p+1)pk[p]<=lk[p][15:8]*lk[p][7:0];
+ end
+end endgenerate
  function automatic [31:0] off(input [15:0] p0,p1,p2,p3,q0,q1,q2);
   off=32'({16'd0,p0}+{8'd0,p1,8'd0}+{p2,16'd0}+{p3[7:0],24'd0}+{8'd0,q0,8'd0}+{q1,16'd0}+{q2[7:0],24'd0});
  endfunction
@@ -100,7 +144,10 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  // select and the source metadata are delayed VM_RT more edges (vm_valid_pipe / vm_select_pipe / vm_meta_pipe), and
  // vm_sel_d = the select delayed VM_RT edges feeds the assembly slices (their own 9-stage pipe then lands on the
  // capture edge). VM_RT 0 = the V7 leaf, edge- and bit-identical (vm_sel_d tied 0, unused by the v5 wrappers).
- parameter integer VM_RT=0,SAFE_DELAY=0
+ parameter integer VM_RT=0,SAFE_DELAY=0,
+ // HBM-COLL6 10-20 FANCOPY=1: cycles[31:16] clears on hgi_start_h (a second KEPT copy of the core's hs flop) and
+ // cycles[15:0] on hgi_start, so neither copy drives more than ~17 loads (v74p census: hs_q 33). Same counter value.
+ parameter integer FANCOPY=0
 )(
  input wire clk_control,
  // LH-SMATT 10-19 SAFE item 1/3: eight KEPT same-age reset copies (core u_rst*), each <=32 loads:
@@ -113,6 +160,7 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  input wire [15:0] m_iaddr_h,m_del_h,m_rgx_h,
  input wire [23:0] m_lk_l,m_lk_h,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,
+ input wire hgi_start_h,                    // FANCOPY=1 only (else unused)
  input wire [ND-1:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,
  input wire [7:0] vm_rv,                    // V6: VM read valid bits only (data -> ot_hgi_coll_vmasm)
@@ -311,9 +359,18 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  end
  // LH-SMATT 10-19: plain captures / counter moved out of the protocol block so each reset copy drives <=32 flops.
  // Same edges, same reset values, same async-assert / sync-release age (all copies are the core's D1 flop).
+ generate if(FANCOPY==0)begin:g_cyc1
  always @(posedge clk_control or negedge rst_v[1])
   if(!rst_v[1])cycles<=0;
   else if(hgi_start)cycles<=0;else if(hgi_busy)cycles<=cycles+1;
+ end else begin:g_cyc2
+ always @(posedge clk_control or negedge rst_v[1])
+  if(!rst_v[1])cycles<=0;
+  else begin
+   if(hgi_start)cycles[15:0]<=0;else if(hgi_busy)cycles[15:0]<=cycles[15:0]+16'd1;
+   if(hgi_start_h)cycles[31:16]<=0;else if(hgi_busy)cycles[31:16]<=cycles[31:16]+{15'd0,&cycles[15:0]};
+  end
+ end endgenerate
  always @(posedge clk_control or negedge rst_v[2])
   if(!rst_v[2])begin dest_q<=0;rc_v_q<=0;rc_tag_q<=0;tkm_done_q<=0;tkm_busy_q<=0;issue_done_q<=0;inj_req_pin<=0;end
   else begin dest_q<=dest_v;rc_v_q<=rc_v;rc_tag_q<=rc_tag;tkm_done_q<=tkm_done;tkm_busy_q<=tkm_busy;issue_done_q<=issue_done;
@@ -400,5 +457,10 @@ endmodule
 
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_iter_landing_safephys(input wire clk,input wire[31:0]d,output reg[31:0]q);
+ always @(posedge clk)q<=d;
+endmodule
+// HBM-COLL6 10-20: one partial product's stage-1 landing {iteration byte, step byte} (FANCOPY=1); kept, not parameterised.
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_pp_land_safephys(input wire clk,input wire[15:0]d,output reg[15:0]q);
  always @(posedge clk)q<=d;
 endmodule

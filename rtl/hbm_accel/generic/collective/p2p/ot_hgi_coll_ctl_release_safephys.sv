@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hgi_coll_ctl_v5_core_safephys #(parameter integer NPT=3,SOLO=1,ND=NPT+13,VM_RT=74,SAFE_DELAY=1,MUL_PIPE=0)(
+module ot_hgi_coll_ctl_v5_core_safephys #(parameter integer NPT=3,SOLO=1,ND=NPT+13,VM_RT=74,SAFE_DELAY=1,MUL_PIPE=0,FANCOPY=0)(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [ND-1:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
@@ -11,7 +11,7 @@ module ot_hgi_coll_ctl_v5_core_safephys #(parameter integer NPT=3,SOLO=1,ND=NPT+
  output wire [NPT*16-1:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
  wire [15:0] m_idx,m_vm,m_iaddr_h,m_del_h,m_rgx_h;wire [31:0] m_iaddr_l,m_del_l,m_rgx_l;wire [23:0] m_lk_l,m_lk_h;
- ot_hgi_coll_iter_mul_safephys #(.PIPE(MUL_PIPE)) u_mul(.clk(clk_control),.iteration(tap_iteration),.s_idx(tap_steps[0+:16]),
+ ot_hgi_coll_iter_mul_safephys #(.PIPE(MUL_PIPE),.FANCOPY(FANCOPY)) u_mul(.clk(clk_control),.iteration(tap_iteration),.s_idx(tap_steps[0+:16]),
   .s_vm(tap_steps[16+:16]),.s_iaddr(tap_steps[32+:16]),.s_del(tap_steps[48+:16]),.s_rgx(tap_steps[64+:16]),
   .s_lk(tap_steps[80+:8]),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
   .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h));
@@ -41,11 +41,29 @@ module ot_hgi_coll_ctl_v5_core_safephys #(parameter integer NPT=3,SOLO=1,ND=NPT+
  end else begin:g_ctl_direct
   assign hs_i=hgi_start;assign hb_i=hgi_busy;assign id_i=issue_done;
  end endgenerate
- always @(posedge clk_control or negedge rst_l) if(!rst_l)begin hs_q<=0;hb_q<=0;end else begin hs_q<=hs_i;hb_q<=hb_i;end
- ot_hgi_coll_q_static_ctl_v5_safephys #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12),.VM_RT(VM_RT),.SAFE_DELAY(SAFE_DELAY)) u(.clk_control(clk_control),.rst_v(rst_v),
+ // HBM-COLL6 10-20 FANCOPY=1 (v74p census: hs_q 33 loads): hs_q and hs_h are two KEPT same-edge copies (cycles[15:0] /
+ // cycles[31:16] clears in the static leaf); FANCOPY=0 = v74p (hs_h unused).
+ wire hs_h;
+ generate if(FANCOPY!=0)begin:g_hs2
+  wire hs_c0;
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_hs_copy_safephys u_hs0(.clk(clk_control),.rst_n(rst_l),.d(hs_i),.q(hs_c0));
+`ifdef OT_COLL_FC_MUT_HS
+  // mutant: the high-half copy captures one edge late
+  reg hs_l;always @(posedge clk_control or negedge rst_l) if(!rst_l)hs_l<=0;else hs_l<=hs_i;
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_hs_copy_safephys u_hs1(.clk(clk_control),.rst_n(rst_l),.d(hs_l),.q(hs_h));
+`else
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_hs_copy_safephys u_hs1(.clk(clk_control),.rst_n(rst_l),.d(hs_i),.q(hs_h));
+`endif
+  always @(*) hs_q=hs_c0;
+  always @(posedge clk_control or negedge rst_l) if(!rst_l)hb_q<=0;else hb_q<=hb_i;
+ end else begin:g_hs1
+  assign hs_h=1'b0;
+  always @(posedge clk_control or negedge rst_l) if(!rst_l)begin hs_q<=0;hb_q<=0;end else begin hs_q<=hs_i;hb_q<=hb_i;end
+ end endgenerate
+ ot_hgi_coll_q_static_ctl_v5_safephys #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12),.VM_RT(VM_RT),.SAFE_DELAY(SAFE_DELAY),.FANCOPY(FANCOPY)) u(.clk_control(clk_control),.rst_v(rst_v),
   .inst(inst_q),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
   .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h),
-  .hgi_start(hs_q),.hgi_busy(hb_q),.issue_done(id_i),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+  .hgi_start(hs_q),.hgi_start_h(hs_h),.hgi_busy(hb_q),.issue_done(id_i),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),.vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),
   .inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),.delivery_obase_pin(delivery_obase_pin),
   .rgx_addr_pin(rgx_addr_pin),.inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),
@@ -53,7 +71,7 @@ module ot_hgi_coll_ctl_v5_core_safephys #(parameter integer NPT=3,SOLO=1,ND=NPT+
   .held_epoch(held_epoch),.wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),
   .rx_sequence_pin(rx_sequence_pin),.protocol_fault(protocol_fault),.cycles(cycles),.vm_sel_d(vm_sel_d));
 endmodule
-module ot_hgi_coll_ctl_v5r_n1s0_safephys #(parameter integer VM_RT=74,SAFE_DELAY=1,MUL_PIPE=0)(
+module ot_hgi_coll_ctl_v5r_n1s0_safephys #(parameter integer VM_RT=74,SAFE_DELAY=1,MUL_PIPE=0,FANCOPY=0)(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [13:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
@@ -63,9 +81,9 @@ module ot_hgi_coll_ctl_v5r_n1s0_safephys #(parameter integer VM_RT=74,SAFE_DELAY
  output wire [3:0] vm_assembled_v,output wire [7:0] held_epoch,
  output wire [15:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
- ot_hgi_coll_ctl_v5_core_safephys #(.NPT(1),.SOLO(0),.VM_RT(VM_RT),.SAFE_DELAY(SAFE_DELAY),.MUL_PIPE(MUL_PIPE)) u(.*);
+ ot_hgi_coll_ctl_v5_core_safephys #(.NPT(1),.SOLO(0),.VM_RT(VM_RT),.SAFE_DELAY(SAFE_DELAY),.MUL_PIPE(MUL_PIPE),.FANCOPY(FANCOPY)) u(.*);
 endmodule
-module ot_hgi_coll_ctl_v5r_n2s1_safephys #(parameter integer VM_RT=74,SAFE_DELAY=1,MUL_PIPE=0)(
+module ot_hgi_coll_ctl_v5r_n2s1_safephys #(parameter integer VM_RT=74,SAFE_DELAY=1,MUL_PIPE=0,FANCOPY=0)(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [14:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
@@ -75,7 +93,12 @@ module ot_hgi_coll_ctl_v5r_n2s1_safephys #(parameter integer VM_RT=74,SAFE_DELAY
  output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
  output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
- ot_hgi_coll_ctl_v5_core_safephys #(.NPT(2),.SOLO(1),.VM_RT(VM_RT),.SAFE_DELAY(SAFE_DELAY),.MUL_PIPE(MUL_PIPE)) u(.*);
+ ot_hgi_coll_ctl_v5_core_safephys #(.NPT(2),.SOLO(1),.VM_RT(VM_RT),.SAFE_DELAY(SAFE_DELAY),.MUL_PIPE(MUL_PIPE),.FANCOPY(FANCOPY)) u(.*);
+endmodule
+// HBM-COLL6 10-20: one kept copy of the hgi_start pin-timeline flop (async reset like hs_q); not parameterised.
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_hs_copy_safephys(input wire clk,rst_n,d,output reg q);
+ always @(posedge clk or negedge rst_n) if(!rst_n)q<=1'b0;else q<=d;
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_rst_copy_safephys(input wire clk,rst_n,output reg q);
