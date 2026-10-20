@@ -21,9 +21,12 @@ from lower_vs import ctl_payload
 def main():
  p=argparse.ArgumentParser();p.add_argument('--fixture',required=True);p.add_argument('--contract',required=True);p.add_argument('--raw-program',required=True);p.add_argument('--out',required=True)
  # TOK.DS.BENCH.1 CAP-ED (LEAD2-S81/TOK2 10-19): global 12-pair placement from the exact root packing (packD_<D>.json)
- p.add_argument('--placements',default=None);p.add_argument('--edly',type=int,default=0);a=p.parse_args()
+ p.add_argument('--placements',default=None);p.add_argument('--edly',type=int,default=0)
+ # TOK2: per-frame static CAP delays {frame suffix: edges} (default: --edly on every R frame); the W tree holds L01 L02 L03 R01
+ p.add_argument('--shifts',default=None);a=p.parse_args()
  glob=json.loads(Path(a.placements).read_text()) if a.placements else None
- if glob:assert glob['complete_search'] and glob['solution'] and a.edly>0
+ if glob:assert glob['complete_search'] and glob['solution']
+ SH=json.loads(a.shifts) if a.shifts else {f:(a.edly if f[0]=='R' else 0) for f in ['L01','L02','L03','R01','R02','R03']}
  # frame order of the packing (root_pack.py KIND) and the MEASURED frame-exit offset of each frame's own relative return
  # model (757a340ff diagnostic: every actual return word t - plan rel = 1434 h10 / 1430 h9_MX / 1436 h9, all 624 words)
  ORDER=['L01','L02','L03','R01','R02','R03'];OFFS={'L01':1434,'L02':1430,'L03':1436,'R01':1434,'R02':1430,'R03':1436}
@@ -48,7 +51,7 @@ def main():
    assert plan['faults']==0,(name,epoch['epoch'],plan['faults'])
    if glob:
     assert [int(k) for k in plan['emission']['off']]==qa,('pool pair order != frame q[:12]',name)
-    shift=OFFS[name[-3:]]+(a.edly if name[-3]=='R' else 0)
+    shift=OFFS[name[-3:]]+SH[name[-3:]]
     ab=[w[0]+shift for w in plan['ret']]
     full=sorted(cand['edges'])
     if len(rows)==6:assert sorted(ab)==full,('global calendar edges differ from the packing',name,epoch['epoch'],ab,full)
@@ -107,8 +110,8 @@ def main():
    scope='Exclusive private selected programme only; production/MU overlaps not granted'),
   runtime_checks_required=['all15 actual stream read/valid/source/ex/macros','macro commit dates','g_wpar and selector readback',
    'END retains but no laterGW/overwrite','reset invalidates; reinstall raw path required','mode/slot/port lifetimes'],
-  global_calendar=None if not glob else dict(placements=a.placements,edly=a.edly,frame_order=ORDER,measured_frame_offsets=OFFS,
-   root_edges_per_epoch={str(i):sorted(v) for i,v in absedges.items()},rule='union of all frames exit edges (R +edly) has no repeat'),
+  global_calendar=None if not glob else dict(placements=a.placements,edly=a.edly,shifts=SH,frame_order=ORDER,measured_frame_offsets=OFFS,
+   root_edges_per_epoch={str(i):sorted(v) for i,v in absedges.items()},rule='union of all frames exit edges (+ per-frame static CAP delay) has no repeat'),
   fixture_raw_sha256=hashlib.sha256((Path(a.fixture)/'ops/attn.q_norm.scale.bin').read_bytes()).hexdigest())
  (out/'contract.json').write_text(json.dumps(rec,indent=2)+'\n')
  print('RETAINED_XS_PROGRAM_MODEL_PASS frames6 epochs15 rows512 common_streams15 calendarrows',len(cals),'QB20_vs_reload300; ACTUAL_READS_UNPROVED')
