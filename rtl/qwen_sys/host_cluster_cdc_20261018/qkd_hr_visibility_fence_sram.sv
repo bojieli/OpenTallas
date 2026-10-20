@@ -27,15 +27,15 @@ module qkd_hr_visibility_fence_sram #(parameter integer ENABLE=1,MUT=0)(
  ot_host_reset_bank #(.N(3)) u_rsh(.clk(clk_h),.async_rst_n(rst_n),.sync_rst_n(rn_bank));
  always @(posedge clk_h or negedge rn_h)if(!rn_h)begin iv_q<=0;ocr_q<=0;fault_q<=0;end
  else begin iv_q<=in_v;ocr_q<=out_cr;fault_q<=fc2|fh;end
+  wire req_next=(!fc&&req==ac2&&commits!=snapshot)?~req:req;
   wire[32:0] add={1'b0,commits}+ack_q;
   always @(posedge ck or negedge rst_n)begin
-   if(!rst_n)begin commits<=0;snapshot<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end
+   if(!rst_n)begin commits<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end
    else begin
-    ac1<=ack_host;ac2<=ac1;
+    ac1<=ack_host;ac2<=ac1;req<=req_next;
     if(add[32])fc<=1;
     if(!fc)begin
      commits<=add[31:0];
-     if(req==ac2&&commits!=snapshot)begin snapshot<=commits;req<=~req;end
     end
    end
   end
@@ -44,16 +44,16 @@ module qkd_hr_visibility_fence_sram #(parameter integer ENABLE=1,MUT=0)(
   wire[63:0] head,mq;wire pop;
   wire write_q=!fh&&!fc2&&iv_q&&!(count==8&&!pop);
   wire[2:0] next_head=rp+3'(pop);
-  (* keep *) reg[3:0] same_row;
+  (* keep *) reg[7:0] same_row;
   reg[63:0] bypass_d;
   always @(posedge clk_h) bypass_d<=id_q;
-  for(genvar b=0;b<4;b=b+1)begin:g_bypass
+  for(genvar b=0;b<8;b=b+1)begin:g_bypass
    always @(posedge clk_h or negedge rn_bank[2])
     if(!rn_bank[2])same_row[b]<=0;else same_row[b]<=write_q&&(wp==next_head);
    `ifdef FENCE_MUT_BYPASS
-   assign head[16*b+:16]=mq[16*b+:16];
+   assign head[8*b+:8]=mq[8*b+:8];
 `else
-   assign head[16*b+:16]=same_row[b]?bypass_d[16*b+:16]:mq[16*b+:16];
+   assign head[8*b+:8]=same_row[b]?bypass_d[8*b+:8]:mq[8*b+:8];
 `endif
   end
 `ifdef FENCE_MUT_ADDR
@@ -66,11 +66,22 @@ module qkd_hr_visibility_fence_sram #(parameter integer ENABLE=1,MUT=0)(
   wire is_done=head[63:56]==8'h01;
   assign pop=count!=0&&host_credits!=0&&!fh&&!fc2&&(!is_done||MUT!=0||landed>=head[31:0]);
   assign fault=fault_q;assign landed_debug=landed;
+  (* keep *)reg[3:0] req_copy,ack_copy;
+  for(genvar k=0;k<4;k=k+1)begin:g_capture_copies
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)req_copy[k]<=0;
+    else req_copy[k]<=req_next;
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)snapshot[k*8+:8]<=0;
+    else if(!fc&&req_copy[k]==ac2&&commits!=snapshot)snapshot[k*8+:8]<=commits[k*8+:8];
+   always @(posedge clk_h or negedge rn_h)
+    if(!rn_h)ack_copy[k]<=0;else ack_copy[k]<=rc2;
+   always @(posedge clk_h or negedge rn_bank[1])
+    if(!rn_bank[1])landed[k*8+:8]<=0;
+    else if(rc2!=ack_copy[k] && snapshot>=landed)landed[k*8+:8]<=snapshot[k*8+:8];
+  end
   // Payload carries meaning only on out_v; enable-free capture avoids broad enables/reset.
   always @(posedge clk_h)out_d<=head;
-  always @(posedge clk_h or negedge rn_bank[1])
-   if(!rn_bank[1])landed<=0;
-   else if(rc2!=ack_host && snapshot>=landed)landed<=snapshot;
   always @(posedge clk_h or negedge rn_bank[2])
    if(!rn_bank[2])fh_snapshot<=0;
    else if(rc2!=ack_host && snapshot<landed)fh_snapshot<=1;
@@ -80,9 +91,7 @@ module qkd_hr_visibility_fence_sram #(parameter integer ENABLE=1,MUT=0)(
     wp<=0;rp<=0;count<=0;host_credits<=4;in_cr<=0;out_v<=0;
    end else begin
     rc1<=req;rc2<=rc1;fc1<=fc;fc2<=fc1;in_cr<=0;out_v<=0;
-    if(rc2!=ack_host)begin
-     ack_host<=rc2;
-    end
+    ack_host<=rc2;
     nw=wp;nr=rp;nc=count;nh=host_credits;
     if(!fh&&!fc2)begin
      if(iv_q)begin
