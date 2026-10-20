@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.host.actual_source_inventory.v1",
+  "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-54e9d9c39-gen9d5p",
+  "source_tree": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p",
+  "source_commit": "54e9d9c39d011719058018518b3b27ecc637e6f4",
+  "artifact_sha256": {
+    "case_kv/die.v": "80e5c6dc8c15969f040ae15bbc076b5ad157dd72a5d52544541fb840c788bcf5",
+    "case_kv/place.tcl": "0d3a562e6656e0d268e87297721990dda2235bafc93b64ec0e780f12b4273349",
+    "case_kv/elements.lef": "59c8b88061c98b3e5a25e3f387008f1fd52b05c701ed84499f3ecd116f6267ea",
+    "port_bind.json": "a882907e149278b4aa88fb875b54dd765adff7d5cff64f27b6b8a05b3158d712",
+    "kv_flags.env": "ac4697af61d6cf2dac27fff9ae9ae034b29e65392163b6697f53b76ff738b4e3",
+    "port_bind_v2.log": "290e699bc29674e5228631f2aa6abc099d001fbd3fa3250fe455add0ba1b530f"
+  },
+  "source_sha256": {
+    "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv": "f8abac1b4a44d580d9b188a245cd40b5369aad347a26d7d87ac3ca4e9d26c9e5",
+    "rtl/qwen_sys/host_20261013/qkd_host_phy_cdc5.sv": "777dd2634771a7d72f2db4c144e76056c9c57eb17ff4c638b433cbe2c56bfcef",
+    "tools/qwen_kv_die/kv_die.py": "ce1d8cf7bc94eb4fe3a1343b36bed027272a34024f7fea9a6dd830a6ad8d180b",
+    "tools/qwen_kv_die/kv_tile_views.py": "12397ca7ea751397df075fa61d2d91904b38598e3a2ab099618537795766d62b"
+  },
+  "hard_pc_leaf_instances": 0,
+  "hard_host_cluster_instances": 0,
+  "host_frame_instances": [
+    "host"
+  ],
+  "host_frame_placement": [
+    "ot_mts::place [$_blk findInst host] 6349.536 26462.160 R0"
+  ],
+  "host_frame_outline_um": [
+    777.576,
+    518.376
+  ],
+  "host_binding": {
+    "n_instances": 1,
+    "die_ports": 120,
+    "cls": "REAL",
+    "module": "qkd_host_root_admission_obs",
+    "file": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv",
+    "width_or_missing": [],
+    "die_ports_not_bound": [],
+    "rtl_inputs_unconnected": [],
+    "rtl_outputs_unread": []
+  },
+  "functional_cdc_source_path": "host/u_rank/u_phy",
+  "functional_cdc_module": "qkd_host_phy_cdc5",
+  "functional_channel_declarations": [
+    "ot_qwen_die_cdc_ch #(.W(546),.PIPE(2))u_rx(.wclk(rx_wck),.wrst_n(rst_n),.i_v(pad_v),.i_d(pad_d),.i_cr(pad_cr),.w_fault(faults[1]),",
+    "ot_qwen_die_cdc_ch #(.W(546),.PIPE(2))u_tx(.wclk(tx_wck),.wrst_n(rst_n),.i_v(core_tx_v),"
+  ],
+  "source_pair_count": 1,
+  "bound_netlist_available": false,
+  "classification": "CONTRACTED_DIE_INPUT_AND_SOURCE_BINDING_ONLY; boundv2 ledger fails hp_fault; no physical HOST cluster replacement",
+  "draft_only": "qkd_hr_cluster contains one u_cdc_pc but is not selected by this die; no 128 multiplier",
+  "candidate_cost": {
+    "old_leaf_envelope_um2": 22861.439999999995,
+    "new_leaf_envelope_um2": 246343.68,
+    "delta_per_future_replacement_um2": 223482.24,
+    "macro_um2": 114050.260224,
+    "std_um2": 2931.761156,
+    "total_mapped_um2": 116982.02138,
+    "existing_host_frame_um2": 403076.736576,
+    "ungranted": true,
+    "fit_claim": false,
+    "obligation": "Explicit optin parent replacement and re-pack entire sole HOST frame; never multiply draft128 by assumption"
+  }
+}
