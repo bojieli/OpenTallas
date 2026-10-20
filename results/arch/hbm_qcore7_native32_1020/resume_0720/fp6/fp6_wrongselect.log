@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc9       admits   930 GB (avail 759, growth 108, headroom 0, waiters 0/0 GB) load 65/128 running 32 disk 109 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3849265-1792507126 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+FP32_N32 mismatch cyc=11 y=00000000/00000001 e=0/0 v=0/0
+FP32_N32 mismatch cyc=14 y=5d000000/5d125294 e=0/0 v=1/1
+FP32_N32 mismatch cyc=18 y=c4800000/c4b94e88 e=0/0 v=0/0
+FP32_N32 mismatch cyc=21 y=51000000/515f4884 e=0/0 v=0/0
+FP32_N32 FAIL errors=8021 checks=20030 valid=14789
+- rtl/test/hbm_qcore_physical_1016/tb_fp32_n32.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.029 s; speed 6.934 ms/s
+- Verilator: cpu 0.029 s on 1 threads; allocated 7 MB
+EXPECTED_WRONGSELECT_CAUGHT
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3849265-1792507126): exit 0

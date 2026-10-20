@@ -1,6 +1,6 @@
 # Qcore RF source model and SU collection, 07:20 takeover
 
-No storage RTL, FP successor, native build or physical gate was launched in this takeover. The existing R9 flop RF and FP4 failure remain immutable. The model entry is `tools/uarch_model.py:hbm_qcore_rf_sram_candidate_model`, implemented in `tools/hbm_static/qcore_rf_sram_model.py`; regenerate `rf_sram_model.json` using that script.
+Storage remains model-only: no storage RTL or physical gate was launched. The existing R9 flop RF and FP4 failure remain immutable. Independently authorized FP primitive successors were measured; FP6 now passes the scoped source gates described below. The model entry is `tools/uarch_model.py:hbm_qcore_rf_sram_candidate_model`, implemented in `tools/hbm_static/qcore_rf_sram_model.py`; regenerate `rf_sram_model.json` using that script.
 
 The RF is 256×32 bits, exposed as64banks×4rows. It can accept five independent normal32-bit reads plus one8-word drain each serial edge (52bytes/edge), and four32-bit relay writes plus one256-bit COLL write (48bytes/edge). Source rules resolve same-bank relay collisions by highest port, then COLL overrides the matching eight banks; matching a bank with different row still counts as collision. A replacement must preserve this rule and fault behavior, not silently broaden successful writes.
 
@@ -33,3 +33,12 @@ A conservative3×3 grid reserves the centre for ownership/control and six outer 
 At86.4um channels the same conservative arithmetic screen supplies900tracks. Grid-centre spacing432um requires two registered segments per axis, giving command+5/return5segments: readE+12 (+9edges), writecommitE+6 (+5). The coarse parent becomes1296-square with a16,673FF transport budget, excluding pin/reset/clock/branch copies. This is a traffic-independent candidate price, not a topology choice, tight lower bound or approved floorplan. The old280.8-square slot cannot contain it; DIE must recompose all replicas and the actual reticle envelope. Local full-width density, native fanout, PG and clockspread remain unmeasured.
 
 The generic geometric lower bound is only `ceil(ManhattanD/405)`segments for an explicitly named source/destination pair. It does not prove a particular pair exists or that the illustrative grid is globally minimal. Edge accounting explicitly includes which capture registers already exist: root commandE, local commandE+Hc, macroE+Hc+1, selectionE+Hc+2, returnKsegments endingE+Hc+2+K. Relative readdelta isHc+K−1, write deltaHc. No extra frequency or multi-pumping is assumed.
+
+
+## Independent FP6 primitive result
+
+FP6 source d73bee5f7, LAT6/DRST0, **PASS actual TT RVT native max32/3246roots, zero role errors and zero constant outputs**. All14 exact-copy families passed; actual7895-cell alias graph passed and shipped source SHA matches the private source plus unchanged shared arithmetic. Three seeds each20,030 every-edge y/err/valid checks PASS, including invalid data and repeated resets. LAT5 causal negatives fail19634/19617/19641 checks; directly inverting the actual9-bit shift-stage select fails8021/20030, with a clean expected-failure wrapper. Mapped area442um² versus FP4 420 (+22,5.2%); no extra FF/pipeline edge from the new control decomposition.
+
+This fixes FP4's three B2 native violations by separating exponent LZC and three shift-local count trees, then dividing each of five barrelshift stages into three kept9-output consumer groups. Earlier FP5 only isolated exponent from shift: native FAIL4/max75 on shift count bits0..3, despite the exactness bench passing. Its direct wrongcount mutation raw bench FAIL8021, but that run's classification wrapper failed because remote rg was absent; both raw/wrapper failures are preserved. FP6 uses grep for classification and catches the actual mechanism mutation cleanly.
+
+Exact FP6 sources, native report, family/graph proofs, benchmark logs and prior failures live in `fp6/`; no qcore integration, layout, throughput, PG/clock or SS/FF timing claim transfers. All own FP5/FP6 jobs are terminal. Remote snapshots src_fp5/fp_native5/src_fp6/fp_native6 and mutation variants remain preserved.
