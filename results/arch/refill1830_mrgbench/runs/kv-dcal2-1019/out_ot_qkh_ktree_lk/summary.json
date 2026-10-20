@@ -1,0 +1,28 @@
+{
+ "job": "/srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-dcal2-1019/src/physical/ref_tile/ot_qkh_ktree_lk/job.json",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "results": [
+  {
+   "name": "lint",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "kpv_lockstep_miter_and_lane_injection",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "mut1_lanes_ignored_old_wiring",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  }
+ ],
+ "unexpected": 0
+}
