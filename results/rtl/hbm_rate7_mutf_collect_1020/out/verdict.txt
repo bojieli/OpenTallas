@@ -1,0 +1,5 @@
+qw8_softmax_max POS_PASS=1 MUT_FORCE_FAIL=1
+qw8_bf16_p POS_PASS=1 MUT_FORCE_FAIL=1
+qw8_pv_normalize POS_PASS=1 MUT_FORCE_FAIL=1
+qw8_round_q POS_PASS=1 MUT_FORCE_FAIL=1
+qw8_row_scale_qkv POS_PASS=1 MUT_FORCE_FAIL=1

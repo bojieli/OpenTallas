@@ -1,0 +1,217 @@
+{
+  "main": "28e76b629",
+  "files": [
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+      "remote_sha": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2",
+      "main_sha": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+      "remote_sha": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d",
+      "main_sha": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+      "remote_sha": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44",
+      "main_sha": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+      "remote_sha": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+      "main_sha": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+      "remote_sha": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+      "main_sha": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv",
+      "remote_sha": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+      "main_sha": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+      "remote_sha": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+      "main_sha": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+      "remote_sha": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+      "main_sha": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "remote_sha": "856f03008f5278674383e43b68ebf64ae3f82fc3bfbdfc81b6d5728ed259f02d",
+      "main_sha": "43e36df50cc796c2cb4a38e93c3113fbb061d798e98a556986477fcd65b6682e",
+      "equal": false
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+      "remote_sha": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
+      "main_sha": "35e48e81caace2da812c7ba1a306126c21e9965082b1f6db95d3dfa9b4db93dc",
+      "equal": false
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+      "remote_sha": "5feb3e168d16d5095b7c9704f4110f8be115e3b1c39c4750aff55cc5edf3a4ac",
+      "main_sha": "f3d7d870d2f7311da5e654689b87729bfd91024c8ff0de2d70f5367666e3d3e6",
+      "equal": false
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+      "remote_sha": "f5f2c1c46e2b269cee1ad907ca4d446186e0cc905ee3913be9a4b25b12b65670",
+      "main_sha": "f5f2c1c46e2b269cee1ad907ca4d446186e0cc905ee3913be9a4b25b12b65670",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv",
+      "main_path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv",
+      "remote_sha": "494b44832bff3f637c6039f233fc1602f7be7391c9c0cf5cf95a5d0be4c226a3",
+      "main_sha": "452111b03d2adda7fbc84d13a0933a77b8ae695b4206657f778d2acd2170c150",
+      "equal": false
+    },
+    {
+      "remote": "tb_toksim_su_top.sv",
+      "main_path": "tools/hbm_static/toksim_su/suvop/tb_toksim_su_top.sv",
+      "remote_sha": "e95656a421237684ef8589a32b1ab9df5488c411de112614af2d3a7bccb5ee4b",
+      "main_sha": "9428709bb8e92da1c7b111ccf8aab4c42b89dd7a378c83c5fd836bfabb4ee1bb",
+      "equal": false
+    },
+    {
+      "remote": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "main_path": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "remote_sha": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+      "main_sha": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "main_path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "remote_sha": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+      "main_sha": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_delay.sv",
+      "main_path": "rtl/hdc/ot_hdc_delay.sv",
+      "remote_sha": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "main_sha": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_fpu.sv",
+      "main_path": "rtl/hdc/ot_hdc_fpu.sv",
+      "remote_sha": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "main_sha": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "main_path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "remote_sha": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "main_sha": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "equal": true
+    },
+    {
+      "remote": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "main_path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "remote_sha": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "main_sha": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_sfu.sv",
+      "main_path": "rtl/hdc/ot_hdc_sfu.sv",
+      "remote_sha": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "main_sha": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_fastfp.sv",
+      "main_path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "remote_sha": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "main_sha": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "main_path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "remote_sha": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "main_sha": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "main_path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "remote_sha": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "main_sha": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "main_path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "remote_sha": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "main_sha": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/ot_hdc_prefix.sv",
+      "main_path": "rtl/hdc/ot_hdc_prefix.sv",
+      "remote_sha": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "main_sha": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "main_path": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "remote_sha": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+      "main_sha": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "main_path": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "remote_sha": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+      "main_sha": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+      "equal": true
+    },
+    {
+      "remote": "rtl/hdc/v41/ot_hdc_softplus.sv",
+      "main_path": "rtl/hdc/v41/ot_hdc_softplus.sv",
+      "remote_sha": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+      "main_sha": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+      "equal": true
+    },
+    {
+      "remote": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "main_path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "remote_sha": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "main_sha": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "equal": true
+    }
+  ],
+  "matched": 25,
+  "total": 30
+}

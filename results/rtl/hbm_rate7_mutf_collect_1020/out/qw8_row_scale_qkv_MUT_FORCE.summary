@@ -1,0 +1,3 @@
+SU_TOP ERROR cyc=57 write data q0 p0 sec 0040 got 4018137c3ec06660becc538040509a14405820b8bdb86180be25ef00ff266000 want 4018137c3ec06660becc538040509a14405820b8bdb86180be25ef00bfaa4640
+TOKSIM_LAST last_lg_write_edge=62 last_scalar_edge=-1 RR=12 WR=10
+[1660000] %Fatal: tb_toksim_su_top.sv:122: Assertion failed in tb_toksim_su_top.unnamedblk2: SU_TOP FAIL errors=1 reads=192 writes=96 scalars=0

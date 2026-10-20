@@ -1,0 +1,3 @@
+SU_TOP ERROR cyc=55 write data q0 p0 sec 0010 got bfe00000bf7400003ea80000bfe800003fd700003ec600003fe800007f000000 want bfe00000bf7400003ea80000bfe800003fd700003ec600003fe80000bf460000
+TOKSIM_LAST last_lg_write_edge=56 last_scalar_edge=-1 RR=12 WR=10
+[1600000] %Fatal: tb_toksim_su_top.sv:122: Assertion failed in tb_toksim_su_top.unnamedblk2: SU_TOP FAIL errors=1 reads=64 writes=64 scalars=0

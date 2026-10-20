@@ -1,0 +1,57 @@
+--- remote/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv
++++ main/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv
+@@ -17,7 +17,8 @@
+ // ---------------------------------------------------------------------------------------------------------------------
+ module ot_hbm_su_static_top #(
+  parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0,COLLPORT=0,RF_LOCAL=0,
+- RF_TREE=0,RF_TREE_UP=14,RF_TREE_DN=14  // HBM-B-RTL1 d4g: 1 = scalar gather/broadcast tree (ot_hbm_su_stree_net) replaces the 16 relay routes
++ RF_TREE=0,RF_TREE_UP=14,RF_TREE_DN=14, // HBM-B-RTL1 d4g: 1 = scalar gather/broadcast tree (ot_hbm_su_stree_net) replaces the 16 relay routes
++ PRETREE=0    // HBM-PRETREE2 2026-10-20: 1 = reducer ingress pre-tree in every quarter (closed HH-6 leaf + join); default 0 unchanged
+ )(
+  input wire [15:0] pg_clk,                       // 4 port-group roots per quarter
+  input wire [4095:0] clk_lane, input wire [2047:0] clk_insert, input wire [511:0] rst_lane_n,
+@@ -36,6 +37,7 @@
+  input wire [4*8*39-1:0] vmw_cmd,
+  input wire [4*6*9-1:0] rf_rd_cmd,
+  input wire [4*74-1:0] red_cmd,
++ input wire [4*48-1:0] tree_cmd,                 // PRETREE: quarter q's 4 slice tree commands at bits 48q (unused when PRETREE=0)
+  // Native qcore scalar fork and cxport return pins. No arithmetic or schedule
+  // is replaced here. The optional adapter instantiates actual cxports/rings.
+  output wire [3:0] collective_red_sv,
+@@ -48,7 +50,8 @@
+  input wire [4*8*257-1:0] lg_rr, input wire [31:0] lg_w_done,
+  output wire [19:0] fault                        // per quarter {core, slice 3..0}
+ );
+- localparam integer QMUT=(MUT==8||MUT>=16)?0:MUT;
++ // MUT 512 / 1024 (PRETREE benches) pass to the quarters' cores; 16..511 stay the stree mutants.
++ localparam integer QMUT=(MUT==8||(MUT>=16&&MUT!=512&&MUT!=1024))?0:MUT;
+  // RF write latency seen by the compiler: RF_RELAY (d4f relay routes) or L_TREE (d4g tree; set RF_RELAY:=L_TREE in the
+  // compiler / su_top_compile.py when RF_TREE=1). Tree clocks: leaf/legs of quadrant q on clk_relay[q], root on clk_relay[0].
+  localparam integer L_TREE=RF_TREE_UP+RF_TREE_DN+4;
+@@ -65,7 +68,7 @@
+   for(genvar w=0;w<4;w=w+1)begin:g_h
+    assign theads[w*41+:41]={red_rf_v[w],red_tag[w*32+:8],red_x[w*32+:32]};
+   end
+-  ot_hbm_su_stree_net #(.UP(RF_TREE_UP),.DN(RF_TREE_DN),.MUT(MUT>=16?MUT-16:0)) u_stree(.clk_q(clk_relay),.clk_root(clk_relay[0]),
++  ot_hbm_su_stree_net #(.UP(RF_TREE_UP),.DN(RF_TREE_DN),.MUT((MUT>=16&&MUT<512)?MUT-16:0)) u_stree(.clk_q(clk_relay),.clk_root(clk_relay[0]),
+    .rst_n(rst_n),.head(theads),.q_wv(tq_wv),.q_wa(tq_wa),.q_wd(tq_wd));
+  end else begin:g_no_stree
+   assign tq_wv='0; assign tq_wa='0; assign tq_wd='0;
+@@ -94,7 +97,7 @@
+    assign wv[w]=rly_out[w][q][40]; assign wa[w*8+:8]=rly_out[w][q][39:32]; assign wd[w*32+:32]=rly_out[w][q][31:0];
+   end
+   ot_hbm_su_static_quarter #(.QID(q),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),
+-   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(QMUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.RF_LOCAL(RF_LOCAL)) u_quarter(
++   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(QMUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.RF_LOCAL(RF_LOCAL),.PRETREE(PRETREE)) u_quarter(
+    .pg_clk(pg_clk[q*4+:4]),.clk_lane(clk_lane[q*1024+:1024]),.clk_insert(clk_insert[q*512+:512]),
+    .rst_lane_n(rst_lane_n[q*128+:128]),.clk_bcast(clk_bcast[q*16+:16]),.rst_bcast_n(rst_bcast_n[q*16+:16]),
+    .clk_bank(clk_bank[q*128+:128]),.clk_bank_macro(clk_bank_macro[q*768+:768]),.clk_rf(clk_rf[q*64+:64]),.clk_ctl(clk_ctl[q*4+:4]),.clk_core(clk_core[q]),
+@@ -102,7 +105,7 @@
+    .vmr_cmd(vmr_cmd[q*240+:240]),.vmw_cmd(vmw_cmd[q*312+:312]),.rf_rd_cmd(rf_rd_cmd[q*54+:54]),
+    .red_cmd(red_cmd[q*74+:74]),.rf_wv(wv),.rf_wa(wa),.rf_wd(wd),.red_sv(red_sv[q]),.red_tag(red_tag[q*32+:32]),
+    .red_x(red_x[q*32+:32]),.red_rf_v(red_rf_v[q]),
+-   .rr_wv(collective_rr_wv[q]),.rr_wa(collective_rr_wa[q*5+:5]),.rr_wd(collective_rr_wd[q*256+:256]),.sfu_x(collective_sfu_x[q*32+:32]),
++   .rr_wv(collective_rr_wv[q]),.rr_wa(collective_rr_wa[q*5+:5]),.rr_wd(collective_rr_wd[q*256+:256]),.sfu_x(collective_sfu_x[q*32+:32]),.tree_cmd(tree_cmd[q*48+:48]),
+    .lg_rq(lg_rq[q*136+:136]),.lg_wq(lg_wq[q*2248+:2248]),.lg_rr(lg_rr[q*2056+:2056]),
+    .lg_w_done(lg_w_done[q*8+:8]),.fault(fault[q*5+:5]));
+  end

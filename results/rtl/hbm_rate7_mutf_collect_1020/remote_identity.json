@@ -1,0 +1,616 @@
+{
+  "root": "/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop",
+  "source_observed_now": {
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv": {
+      "sha256": "5689f7f3baad5435b2bac95cb31d908600a5434d2768a145fb5fe93276ba8bd2",
+      "bytes": 3343,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv": {
+      "sha256": "24fb5a39f64796a9471f50973d0b2436d9561ce27df0e19d0061157d03bde53d",
+      "bytes": 41621,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv": {
+      "sha256": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44",
+      "bytes": 7590,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv": {
+      "sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+      "bytes": 3284,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv": {
+      "sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+      "bytes": 3844,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv": {
+      "sha256": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+      "bytes": 2449,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv": {
+      "sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+      "bytes": 4696,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": {
+      "sha256": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
+      "bytes": 5084,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv": {
+      "sha256": "856f03008f5278674383e43b68ebf64ae3f82fc3bfbdfc81b6d5728ed259f02d",
+      "bytes": 23495,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": {
+      "sha256": "6c2baeafe0b6aa44f2b51218970f2da25153b5c4f1849a7c41359c687734705c",
+      "bytes": 8110,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv": {
+      "sha256": "5feb3e168d16d5095b7c9704f4110f8be115e3b1c39c4750aff55cc5edf3a4ac",
+      "bytes": 4866,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv": {
+      "sha256": "f5f2c1c46e2b269cee1ad907ca4d446186e0cc905ee3913be9a4b25b12b65670",
+      "bytes": 7557,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv": {
+      "sha256": "494b44832bff3f637c6039f233fc1602f7be7391c9c0cf5cf95a5d0be4c226a3",
+      "bytes": 7289,
+      "mtime_ns": 1792497710000000000
+    },
+    "tb_toksim_su_top.sv": {
+      "sha256": "e95656a421237684ef8589a32b1ab9df5488c411de112614af2d3a7bccb5ee4b",
+      "bytes": 7675,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": {
+      "sha256": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+      "bytes": 179956,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": {
+      "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+      "bytes": 42441,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "bytes": 1395,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "bytes": 5251,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "bytes": 10519,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "bytes": 11904,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_sfu.sv": {
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "bytes": 7751,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_fastfp.sv": {
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "bytes": 20092,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": {
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "bytes": 5423,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+      "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+      "bytes": 16758,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "bytes": 13769,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/ot_hdc_prefix.sv": {
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "bytes": 2803,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv": {
+      "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+      "bytes": 7078,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": {
+      "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+      "bytes": 6738,
+      "mtime_ns": 1792497710000000000
+    },
+    "rtl/hdc/v41/ot_hdc_softplus.sv": {
+      "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+      "bytes": 5238,
+      "mtime_ns": 1792497710000000000
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": {
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "bytes": 6668,
+      "mtime_ns": 1792497710000000000
+    },
+    "run_toksim_su.sh": {
+      "sha256": "ca5fbb96ecf25bb7d99282caa344e07786aa61a82ee3377eb4c64f4d168ad089",
+      "bytes": 3227,
+      "mtime_ns": 1792497710000000000
+    },
+    "run_mutf.sh": {
+      "sha256": "5e69238d76c34efb0cb17c1b4603694bba6471dd7078f64dbe34c25946ed9ce1",
+      "bytes": 869,
+      "mtime_ns": 1792498514000000000
+    },
+    "build.summary": {
+      "sha256": "14f0b99fbf886dac700173effab800dd3aae44ccee312dd182d2091dd4b906d2",
+      "bytes": 183,
+      "mtime_ns": 1792503812896680202
+    },
+    "obj_mr10/Vtb_toksim_su_top__verFiles.dat": {
+      "sha256": "75214b8898474d39272552bae440de6ffb71c7158c5dc7de3fccc455bd5b15b2",
+      "bytes": 8670,
+      "mtime_ns": 1792498541762668930
+    },
+    "obj_mr10/Vtb_toksim_su_top": {
+      "sha256": "6f51f325b078fc374c1013fb6395626a151d38ad831b52cc2dfa71fdb652ff5c",
+      "bytes": 569981048,
+      "mtime_ns": 1792503161805020004
+    }
+  },
+  "record_inputs": {
+    "qw8_softmax_max": {
+      "arith/seed.mem": {
+        "sha256": "798389287061b8e8b255cae6774e7f19b233ba3a5948c43c73ef629fb64e8446",
+        "bytes": 2359296
+      },
+      "explw.mem": {
+        "sha256": "fe7141159da7fd458035cd412b84f68696f0e0970cd849c14c852b134ef87a34",
+        "bytes": 76149
+      },
+      "exps.mem": {
+        "sha256": "c224a4a2495ae06758931dbf56f0b377f4c1cc15ed7ffa3cc0bd4b3d8e84ca1d",
+        "bytes": 660
+      },
+      "expw.mem": {
+        "sha256": "f4fb4c14bc3d26fd863a45e7cc59b1795ffc762508f54d91a805285c737264bd",
+        "bytes": 81
+      },
+      "prog.mem": {
+        "sha256": "b5d459267138fadd50092cc336ad80cce9a159019f295db908d9ab6602b68e09",
+        "bytes": 20501003
+      },
+      "programme.json": {
+        "sha256": "d71e41d3359b0ae7a12534f6b1c25615a26574942c7858f2a413e08e7c07f081",
+        "bytes": 890
+      }
+    },
+    "qw8_bf16_p": {
+      "arith/seed.mem": {
+        "sha256": "c09863cbf0f30730dc9eb1c9e7ee3261c33d16ba221ae6e17b9635241cf98d23",
+        "bytes": 2359296
+      },
+      "explw.mem": {
+        "sha256": "da19134c6fba823ad528d99e70476eecf843836abdfeeade76766cd027ba9756",
+        "bytes": 2673
+      },
+      "exps.mem": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expw.mem": {
+        "sha256": "4aea37f8448e93e3fbefcea800b1df4b2f4da797c72e74d7d7ef7b558bfa9b73",
+        "bytes": 331776
+      },
+      "prog.mem": {
+        "sha256": "08e1a4e37a3dec3c36b62fbf0840d50dd03e7b0a39b2ed4a2123665c95dfbe5e",
+        "bytes": 719631
+      },
+      "programme.json": {
+        "sha256": "67b3eb0e8373f6305e38dce53f1f8c41a9bee8de0a9190b8ebcf11e2bb999a12",
+        "bytes": 701
+      }
+    },
+    "qw8_pv_normalize": {
+      "arith/seed.mem": {
+        "sha256": "45a81a8448183e7d438d278e85384a4a00c37b246c7f9d9fb7cdf6bf0b26f9e6",
+        "bytes": 2359296
+      },
+      "explw.mem": {
+        "sha256": "28bef8bfe7a2ec6b04d950aace8b6ec6f1d382e2c4481fab980bf92e4c726c7b",
+        "bytes": 2070
+      },
+      "exps.mem": {
+        "sha256": "e308c2b9b8917fab1da6cc7d5c1248cf69724e3d2c806c6de20b0ba48c421da8",
+        "bytes": 132
+      },
+      "expw.mem": {
+        "sha256": "c06c30226273caab36c973d9bd6c009982fcf987003c94a8116df906069e4c0b",
+        "bytes": 5184
+      },
+      "prog.mem": {
+        "sha256": "80e11bea7ab3d167c501e05430621a1274f3d7c6f095b485c095f09a3173f388",
+        "bytes": 557290
+      },
+      "programme.json": {
+        "sha256": "47faea924436df6a2280c1e152cd59fe0ab445361059410071610034fcc9c7c6",
+        "bytes": 729
+      }
+    },
+    "qw8_round_q": {
+      "arith/seed.mem": {
+        "sha256": "c01282fc554425a25710adcd42714d2dfffd1fe68c8ecc447b509734b94f3722",
+        "bytes": 2359296
+      },
+      "explw.mem": {
+        "sha256": "728821666f84270dd597d94e6f8c1d8c352b20763be54de5bc8a04f9c898c952",
+        "bytes": 666
+      },
+      "exps.mem": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expw.mem": {
+        "sha256": "e30bac5e51b13d1ef2bbbb769a789fbbd0985d42170654b165b09bf323fd8eee",
+        "bytes": 5184
+      },
+      "prog.mem": {
+        "sha256": "e8c538e0c44e4d16989b094bc69ffa23edbcc3ae1a3d8fa37954d24978c5a012",
+        "bytes": 179302
+      },
+      "programme.json": {
+        "sha256": "3eca55244a53aa3bbacf5b34b785e51c6328244b002d9d509a56a6fdffa495f8",
+        "bytes": 692
+      }
+    },
+    "qw8_row_scale_qkv": {
+      "arith/seed.mem": {
+        "sha256": "306fc2c4fec08e91c9cbde3000a9a5effd52015a3c8c8fa84fcbabde13793b36",
+        "bytes": 2359296
+      },
+      "explw.mem": {
+        "sha256": "37c081a1e2023e0ef27939586e0b9881e19b0b287c13879a78e1a67b624902d0",
+        "bytes": 720
+      },
+      "exps.mem": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expw.mem": {
+        "sha256": "2b5e30307621604928636fb03a55f6a0f266565bf6aa14462478c31a7a759918",
+        "bytes": 7776
+      },
+      "prog.mem": {
+        "sha256": "5726b5f2272ceaf57c42a7b6841f8e34a3a3da7568cce47dae2f1f92fc31448d",
+        "bytes": 193840
+      },
+      "programme.json": {
+        "sha256": "2e7dfe4b90e3b916cbc214e0f1e8772ef4986d8ed8f473dc14e2b51307197781",
+        "bytes": 724
+      }
+    }
+  },
+  "witnesses": {
+    "qw8_softmax_max": {
+      "sim_mr10_POS.log": {
+        "sha256": "f6b6486abe4961c2e1101eedea77ac0026c652eadff338ab5639393ffdeed2d4",
+        "tail": [
+          "- Verilator: cpu 1152.786 s on 1 threads; allocated 647 MB",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_softmax_max +NE_RUN=8461 +NW_RUN=1 +NS_RUN=20\"",
+          "\tUser time (seconds): 1152.94",
+          "\tSystem time (seconds): 0.28",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 19:13.35",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 654876",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 41903",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 2474",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 0"
+        ]
+      },
+      "sim_mr10_MUT_FORCE.log": {
+        "sha256": "74c1c5bfcd20d40a4146b14d8e0a2e217fb65f9c6f0fb4d87e6e067d36cba222",
+        "tail": [
+          "Command exited with non-zero status 1",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_softmax_max +NE_RUN=8461 +NW_RUN=1 +NS_RUN=20 +MUT_FORCE\"",
+          "\tUser time (seconds): 1132.58",
+          "\tSystem time (seconds): 0.20",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 18:52.89",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 655224",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 49253",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 1836",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 1"
+        ]
+      }
+    },
+    "qw8_bf16_p": {
+      "sim_mr10_POS.log": {
+        "sha256": "c9c3e0936f66e8c113c2e133c7f17b46e1a77fb7826233c75d2d63af20ec57bb",
+        "tail": [
+          "- Verilator: cpu 34.035 s on 1 threads; allocated 647 MB",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_bf16_p +NE_RUN=297 +NW_RUN=4096 +NS_RUN=0\"",
+          "\tUser time (seconds): 34.35",
+          "\tSystem time (seconds): 0.12",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:34.48",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 655956",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 34308",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 83",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 0"
+        ]
+      },
+      "sim_mr10_MUT_FORCE.log": {
+        "sha256": "149f5709c2a375265f22c1f82c00e69d93325dfa2029bf4c73b568992f14dd87",
+        "tail": [
+          "Command exited with non-zero status 1",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_bf16_p +NE_RUN=297 +NW_RUN=4096 +NS_RUN=0 +MUT_FORCE\"",
+          "\tUser time (seconds): 44.65",
+          "\tSystem time (seconds): 0.15",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:44.81",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 655232",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 37426",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 84",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 1"
+        ]
+      }
+    },
+    "qw8_pv_normalize": {
+      "sim_mr10_POS.log": {
+        "sha256": "7de50d40b190b7489bf7fdb1033ab3643934ae0131e12dc3b594edee936ef0e4",
+        "tail": [
+          "- Verilator: cpu 22.614 s on 1 threads; allocated 647 MB",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_pv_normalize +NE_RUN=230 +NW_RUN=64 +NS_RUN=4\"",
+          "\tUser time (seconds): 22.95",
+          "\tSystem time (seconds): 0.11",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:23.07",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 655824",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 34323",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 54",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 0"
+        ]
+      },
+      "sim_mr10_MUT_FORCE.log": {
+        "sha256": "f6638c8d910e284840508a00babe2a1e8d18594eb3a7e75c2a84dc94a14a56d2",
+        "tail": [
+          "Command exited with non-zero status 1",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_pv_normalize +NE_RUN=230 +NW_RUN=64 +NS_RUN=4 +MUT_FORCE\"",
+          "\tUser time (seconds): 23.03",
+          "\tSystem time (seconds): 0.11",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:23.15",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 654560",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 34322",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 86",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 1"
+        ]
+      }
+    },
+    "qw8_round_q": {
+      "sim_mr10_POS.log": {
+        "sha256": "bec7285e330e8eda24e3f7cec6c0b7e666480aefee8d7278782785212cb494ba",
+        "tail": [
+          "- Verilator: cpu 10.983 s on 1 threads; allocated 647 MB",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_round_q +NE_RUN=74 +NW_RUN=64 +NS_RUN=0\"",
+          "\tUser time (seconds): 11.34",
+          "\tSystem time (seconds): 0.10",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:11.44",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 655840",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 34301",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 14",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 0"
+        ]
+      },
+      "sim_mr10_MUT_FORCE.log": {
+        "sha256": "8813ecbc7b13928cb40a0c61fe6806d3255ed6584e35793627f4e95bf9e76d5e",
+        "tail": [
+          "Command exited with non-zero status 1",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_round_q +NE_RUN=74 +NW_RUN=64 +NS_RUN=0 +MUT_FORCE\"",
+          "\tUser time (seconds): 12.29",
+          "\tSystem time (seconds): 0.13",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:12.43",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 655312",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 34333",
+          "\tVoluntary context switches: 0",
+          "\tInvoluntary context switches: 28",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 1"
+        ]
+      }
+    },
+    "qw8_row_scale_qkv": {
+      "sim_mr10_POS.log": {
+        "sha256": "1e433311c8cd45a542565cfaa80cf4fa9e1cf33d624f0f107f4251015fa52dc4",
+        "tail": [
+          "- Verilator: cpu 15.183 s on 1 threads; allocated 647 MB",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_row_scale_qkv +NE_RUN=80 +NW_RUN=96 +NS_RUN=0\"",
+          "\tUser time (seconds): 15.48",
+          "\tSystem time (seconds): 0.11",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:15.60",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 655760",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 34323",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 21",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 0"
+        ]
+      },
+      "sim_mr10_MUT_FORCE.log": {
+        "sha256": "ae9fce9a335946571527e733d2655edd2f8da1fd3f1fc2680e468787d2e892f6",
+        "tail": [
+          "Command exited with non-zero status 1",
+          "\tCommand being timed: \"/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/obj_mr10/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-rate7-1020/suvop/vec_tp8/qw8_row_scale_qkv +NE_RUN=80 +NW_RUN=96 +NS_RUN=0 +MUT_FORCE\"",
+          "\tUser time (seconds): 12.26",
+          "\tSystem time (seconds): 0.12",
+          "\tPercent of CPU this job got: 99%",
+          "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:12.39",
+          "\tAverage shared text size (kbytes): 0",
+          "\tAverage unshared data size (kbytes): 0",
+          "\tAverage stack size (kbytes): 0",
+          "\tAverage total size (kbytes): 0",
+          "\tMaximum resident set size (kbytes): 655584",
+          "\tAverage resident set size (kbytes): 0",
+          "\tMajor (requiring I/O) page faults: 0",
+          "\tMinor (reclaiming a frame) page faults: 34315",
+          "\tVoluntary context switches: 1",
+          "\tInvoluntary context switches: 19",
+          "\tSwaps: 0",
+          "\tFile system inputs: 0",
+          "\tFile system outputs: 8",
+          "\tSocket messages sent: 0",
+          "\tSocket messages received: 0",
+          "\tSignals delivered: 0",
+          "\tPage size (bytes): 4096",
+          "\tExit status: 1"
+        ]
+      }
+    }
+  },
+  "qualification": false,
+  "scope": "Terminal component PRETREE0/MULTIRATE0/COLLPORT0 profile mr10 RR12 WR10; NOT current PRETREE1 or release-token qualification"
+}

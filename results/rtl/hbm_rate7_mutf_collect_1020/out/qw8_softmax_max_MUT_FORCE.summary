@@ -1,0 +1,5 @@
+SU_TOP ERROR cyc=8296 scalar q0 tag 00000108 got 7cb51e13 want edge 8296 q0 tag 00000108 val 3db0c8bb
+SU_TOP ERROR cyc=8383 scalar q0 tag 00000180 got 7cb51e13 want edge 8383 q0 tag 00000180 val 3db0c8bb
+SU_TOP ERROR cyc=8443 write data q0 p0 sec 1f20 got 000000000000000000000000000000003db0c8bb3db0c8bb3db0c8bb7cb51e13 want 000000000000000000000000000000003db0c8bb3db0c8bb3db0c8bb3db0c8bb
+TOKSIM_LAST last_lg_write_edge=8443 last_scalar_edge=8404 RR=12 WR=10
+[85470000] %Fatal: tb_toksim_su_top.sv:122: Assertion failed in tb_toksim_su_top.unnamedblk2: SU_TOP FAIL errors=3 reads=4096 writes=1 scalars=20
