@@ -65,6 +65,11 @@
   "io_hold_margin_ns": 0.03,
   "pin_min_tracks": 2,
   "period_ps": 833.333,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "macro_halo_um": 5.4
  },
  "safe_design_checklist": {
@@ -73,7 +78,7 @@
   "3_fanout": "gate textbook_lint high_fanout (hw broadcast: one copy, the parent lands 4 column copies)",
   "4_depth": "inherited ot_qfd_xs_tap STATIC_SCHEDULE 1 (closed in the heads cluster)",
   "5_storage": "PASS: no indexed flop array > 2 kb (tap queue <= 2 entries)",
-  "6_floorplan": "pin-bound: hw 1,567 on N, hr+xt 1,503 on S (<= 6 pins/um); aspect <= 2:1; no macros",
+  "6_floorplan": "pin-bound (util ~5%: 2.4k um2 std, 6.2k flops, 3.1k pins): hw 1,567 over the whole N face (5.3/um), hr+xt 1,503 over S (5.0/um) by pin_ranges; aspect 2:1; no macros",
   "7_clock": "one centre-fed root; io_hold_margin 0.03",
   "8_schedule": "HARD 1: cid (4 sid + c, static after SETID) +1 edge = 0 steady cycles; everything else as qfd_dv_heads"
  },
@@ -136,5 +141,55 @@
   ]
  },
  "structural_change": "fallback: 345.6 x 172.8 (2:1), hr_q moved to W so S carries only the x beat (3.0 pins/um)",
+ "pin_ranges": {
+  "hw": [
+   4.32,
+   341.03
+  ],
+  "xt_v": [
+   4.32,
+   5.977
+  ],
+  "xt_a": [
+   6.227,
+   13.607
+  ],
+  "xt_d": [
+   13.857,
+   339.123
+  ],
+  "xt_bad": [
+   339.373,
+   341.03
+  ],
+  "ck": [
+   4.32,
+   6.135
+  ],
+  "rst_n": [
+   6.385,
+   8.2
+  ],
+  "sid": [
+   8.45,
+   10.265
+  ],
+  "hr_q": [
+   10.515,
+   166.165
+  ],
+  "tap_fault": [
+   166.415,
+   168.23
+  ],
+  "lq_bad": [
+   4.32,
+   142.31
+  ],
+  "cid": [
+   142.56,
+   168.23
+  ]
+ },
  "macros": []
 }

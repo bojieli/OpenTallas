@@ -22,15 +22,13 @@
  "hold_budget": "die",
  "pins": {
   "N": [
+   "n_d",
    "cid",
    "ck",
    "rst_n",
-   "n_d"
+   "s_d"
   ],
   "W": [
-   "s_d",
-   "fault",
-   "l_rst_n",
    "w0_v",
    "w0_ep",
    "w0_off",
@@ -45,11 +43,12 @@
    "r0_p",
    "q0",
    "q0_v",
-   "q0_bad"
+   "q0_bad",
+   "fault",
+   "l_rst_n"
   ],
   "E": [
    "a_ib",
-   "fault_i",
    "w1_v",
    "w1_ep",
    "w1_off",
@@ -64,7 +63,8 @@
    "r1_p",
    "q1",
    "q1_v",
-   "q1_bad"
+   "q1_bad",
+   "fault_i"
   ],
   "S": [
    "a_f"
@@ -93,6 +93,11 @@
   "io_hold_margin_ns": 0.03,
   "pin_min_tracks": 2,
   "period_ps": 833.333,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "macro_halo_um": 5.4
  },
  "safe_design_checklist": {
@@ -101,7 +106,7 @@
   "3_fanout": "checked by the gate textbook_lint high_fanout (fd rotate 6 levels of 2:1; tids constant after SETID)",
   "4_depth": "inherited ot_qfd_xhead (closed in qfd_dv_heads_w130 at 0.77 ns); --cts path classes confirm",
   "5_storage": "PASS: largest indexed arrays wb/wbp/wbm/wo/ro [2][16] (<= 608 b), first_abs [2][16][4] x 8 = 1,024 b: all < 2 kb",
-  "6_floorplan": "pin-bound: <= 6 pins/um on every face (W 4.8, E 4.5, S 5.5, N 2.4); aspect 2:1; no macros; full std-cell band",
+  "6_floorplan": "pin-bound (util ~6%: 5.7k um2 std for 5.8k pins): pins spread over whole faces by pin_ranges (W 3.7, E 4.6, S 5.7, N 4.8 pins/um); aspect 2:1; no macros; full std-cell band; chain write bundles low on W/E beside the S fill input (reach)",
   "7_clock": "one centre-fed TritonCTS root (8.1k sinks); io_hold_margin 0.03",
   "8_schedule": "0 added cycles (qfd_dv_heads w130 timing: FILL_LEAD 5, DX 14, LEAF_READ_PIN_PIPE 1); reset release +2 (= the slice synchroniser)"
  },
@@ -161,6 +166,168 @@
     "fail_regex": "S5_EQ FAIL",
     "fail_witness": "results/arch/qw_slice6_1019/witness/xhead_xh.log"
    }
+  ]
+ },
+ "pin_ranges": {
+  "n_d": [
+   4.32,
+   105.973
+  ],
+  "cid": [
+   106.223,
+   107.158
+  ],
+  "ck": [
+   107.408,
+   108.342
+  ],
+  "rst_n": [
+   108.592,
+   109.527
+  ],
+  "s_d": [
+   109.777,
+   211.43
+  ],
+  "w0_v": [
+   4.32,
+   5.658
+  ],
+  "w0_ep": [
+   5.908,
+   7.245
+  ],
+  "w0_off": [
+   7.495,
+   8.833
+  ],
+  "w0_m": [
+   9.083,
+   25.767
+  ],
+  "w0_d": [
+   26.017,
+   296.718
+  ],
+  "w0_ctl": [
+   296.968,
+   315.769
+  ],
+  "c0_v": [
+   316.019,
+   317.356
+  ],
+  "c0_ep": [
+   317.606,
+   318.944
+  ],
+  "r0_v": [
+   319.194,
+   320.532
+  ],
+  "r0_t": [
+   320.782,
+   322.119
+  ],
+  "r0_ep": [
+   322.369,
+   323.707
+  ],
+  "r0_p": [
+   323.957,
+   353.342
+  ],
+  "q0": [
+   353.592,
+   421.08
+  ],
+  "q0_v": [
+   421.33,
+   422.667
+  ],
+  "q0_bad": [
+   422.917,
+   424.255
+  ],
+  "fault": [
+   424.505,
+   425.842
+  ],
+  "l_rst_n": [
+   426.092,
+   427.43
+  ],
+  "a_ib": [
+   4.32,
+   85.568
+  ],
+  "w1_v": [
+   85.818,
+   86.855
+  ],
+  "w1_ep": [
+   87.105,
+   88.141
+  ],
+  "w1_off": [
+   88.391,
+   89.428
+  ],
+  "w1_m": [
+   89.678,
+   103.154
+  ],
+  "w1_d": [
+   103.404,
+   322.77
+  ],
+  "w1_ctl": [
+   323.02,
+   338.211
+  ],
+  "c1_v": [
+   338.461,
+   339.498
+  ],
+  "c1_ep": [
+   339.748,
+   340.785
+  ],
+  "r1_v": [
+   341.035,
+   342.072
+  ],
+  "r1_t": [
+   342.322,
+   343.359
+  ],
+  "r1_ep": [
+   343.609,
+   344.645
+  ],
+  "r1_p": [
+   344.895,
+   368.666
+  ],
+  "q1": [
+   368.916,
+   423.57
+  ],
+  "q1_v": [
+   423.82,
+   424.856
+  ],
+  "q1_bad": [
+   425.106,
+   426.143
+  ],
+  "fault_i": [
+   426.393,
+   427.43
+  ],
+  "a_f": [
+   4.32,
+   211.43
   ]
  },
  "macros": []

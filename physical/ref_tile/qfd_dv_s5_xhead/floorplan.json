@@ -30,15 +30,13 @@
  },
  "pins": {
   "N": [
+   "n_d",
    "cid",
    "ck",
    "rst_n",
-   "n_d"
+   "s_d"
   ],
   "W": [
-   "s_d",
-   "fault",
-   "l_rst_n",
    "w0_v",
    "w0_ep",
    "w0_off",
@@ -53,11 +51,12 @@
    "r0_p",
    "q0",
    "q0_v",
-   "q0_bad"
+   "q0_bad",
+   "fault",
+   "l_rst_n"
   ],
   "E": [
    "a_ib",
-   "fault_i",
    "w1_v",
    "w1_ep",
    "w1_off",
@@ -72,7 +71,8 @@
    "r1_p",
    "q1",
    "q1_v",
-   "q1_bad"
+   "q1_bad",
+   "fault_i"
   ],
   "S": [
    "a_f"
