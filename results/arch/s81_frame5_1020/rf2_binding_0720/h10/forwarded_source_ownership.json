@@ -1,0 +1,126 @@
+{
+  "top": "col_h10_l4_lp",
+  "source": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit.sv",
+  "source_rows": [
+    {
+      "instance_declaration": "dsfd_cfifo_crs4 u_cf ",
+      "clock_ports": {
+        "xk": "xk"
+      },
+      "other_clock_connections": {
+        "xk": "xk",
+        "cr": "ck_r0",
+        "cr_s": "ck_r0"
+      }
+    },
+    {
+      "instance_declaration": "dsfd_dvrly_276_NS u_xo0 ",
+      "clock_ports": {
+        "ck": "xk[0]",
+        "ck_o": "xok[0]"
+      },
+      "other_clock_connections": {
+        "ck": "xk[0]",
+        "ck_o": "xok[0]"
+      }
+    },
+    {
+      "instance_declaration": "dsfd_dvrly_276_NS u_xo1 ",
+      "clock_ports": {
+        "ck": "xk[1]",
+        "ck_o": "xok[1]"
+      },
+      "other_clock_connections": {
+        "ck": "xk[1]",
+        "ck_o": "xok[1]"
+      }
+    },
+    {
+      "instance_declaration": "dsfd_dvrly_276_NS u_xo2 ",
+      "clock_ports": {
+        "ck": "xk[2]",
+        "ck_o": "xok[2]"
+      },
+      "other_clock_connections": {
+        "ck": "xk[2]",
+        "ck_o": "xok[2]"
+      }
+    },
+    {
+      "instance_declaration": "dsfd_dvrly_276_NS u_xo3 ",
+      "clock_ports": {
+        "ck": "xk[3]",
+        "ck_o": "xok[3]"
+      },
+      "other_clock_connections": {
+        "ck": "xk[3]",
+        "ck_o": "xok[3]"
+      }
+    }
+  ],
+  "declarations": [
+    "input",
+    "output"
+  ],
+  "declared_clock_contract": {
+    "clock_ports": [
+      "ck_r0",
+      "ck_r1",
+      "ck_r2"
+    ],
+    "clock_data_paths": "related_same_frequency",
+    "clock_relationship": {
+      "kind": "same_pll_fixed_phase",
+      "ratio": [
+        1,
+        1
+      ],
+      "phase_ps": 0
+    },
+    "clock_entry_domains": {
+      "core": {
+        "ratio": [
+          1,
+          1
+        ],
+        "ports": [
+          "ck_r0"
+        ],
+        "inputs": [
+          "x",
+          "xk",
+          "lk",
+          "rst_n"
+        ],
+        "outputs": [
+          "xo",
+          "xok",
+          "ret"
+        ]
+      },
+      "r1": {
+        "ratio": [
+          1,
+          1
+        ],
+        "ports": [
+          "ck_r1"
+        ],
+        "inputs": [],
+        "outputs": []
+      },
+      "r2": {
+        "ratio": [
+          1,
+          1
+        ],
+        "ports": [
+          "ck_r2"
+        ],
+        "inputs": [],
+        "outputs": []
+      }
+    }
+  },
+  "scope": "SOURCE STRUCTURAL OWNERSHIP ONLY; mapped netlist and actual STA clock object coverage not yet proved; upstream owner outside this frame must be matched to current exact parent die"
+}
