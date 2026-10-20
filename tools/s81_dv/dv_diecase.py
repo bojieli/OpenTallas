@@ -99,7 +99,7 @@ def face_of(b, x, y):
     return min(d, key=d.get)
 
 
-def die_repair_tcl(out, dieflow_ref, rc_layer='M4', skip=('n*_lck\\[*\\]',)):
+def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',), *, rc_layer='M4'):
     """DIE-FLOW shared repeater step (claude/dieflow-1017 -> main): files materialised from dieflow_ref, the step tcl
     written to out/die_repeaters_step.tcl; returns the run.tcl fragment that sources it"""
     a = argparse.Namespace(dieflow_ref=dieflow_ref)

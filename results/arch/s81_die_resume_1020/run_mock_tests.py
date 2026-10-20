@@ -11,4 +11,5 @@ rows=[(False,False,False,0,'FAIL',3,0,0),(True,False,False,0,'PASS',2,0,0),(True
 for row in rows:
     with tempfile.TemporaryDirectory() as d: m.test_complete_payload_contract(Path(d),*row)
 with tempfile.TemporaryDirectory() as d: m.test_shallow_payload_buffer_plan(Path(d))
-print('PASS 8 cases: complete payload, real shallow fault, missing bit, tie semantics, data buffer plan')
+for row in [(2,2,4,1),(1,1,4,-1),(1,1,3,1),(2,0,27,-1),(2,1,3,0),(3,1,2,0)]: m.test_fclk_equalize_plan(*row)
+print('PASS 14 cases: complete payload, real shallow fault, missing bit, tie semantics, data buffer plan')
