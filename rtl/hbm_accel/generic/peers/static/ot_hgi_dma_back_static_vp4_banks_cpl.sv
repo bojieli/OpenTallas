@@ -7,7 +7,7 @@
 //   bank_read_en[7] -> bank7 454.7 / 408.2 um (the NE bank is 417 um from the cluster centre); reset landing (E face
 //   y 2.4) -> the u_rst_bk relay leaves 456.4 um.  One failed review = structural redesign, so every long single-cycle
 //   wire now gets a registered hop beside its consumer, and the die/compiler take the recorded cycles:
-//   * rr LANDING (clk_rst, the parent's own CTS root): every rr bit lands in one register at the face beside ITS bank
+//   * rr LANDING (clk_land[b], one regional parent CTS root per bank): every rr bit lands in one register at the face beside ITS bank
 //     (rr_valid ports move from the W face centre to the bank's data group).  The valid bit lands TWICE (kept copies):
 //     wv_q beside the bank (-> write_en) and cv_q half way to the controller (-> rr_valid_i).  Bank and controller see
 //     the response on exactly the same edge as before, one edge after the port: the die delivers rr ONE EDGE EARLIER
@@ -34,7 +34,8 @@ module ot_hgi_dma_back_static_vp4_banks_rl #(
     parameter integer RL_MUT=0
 )(
     input wire clk,
-    input wire clk_land,                 // parent landing / relay root (clk_rst port, same die clock)
+    input wire clk_land_c,               // fill relays (parent root clk_rst, same die clock)
+    input wire [7:0] clk_land,           // per-bank regional landing / relay roots (clk_land[b] ports, same die clock)
     input wire rst_ctl_n,
     input wire [7:0] rst_bank_n,
     input wire [1:0] stk,
@@ -78,7 +79,7 @@ module ot_hgi_dma_back_static_vp4_banks_rl #(
         .bank_read_addr_s(bank_read_addr[95:0]),.bank_read_addr_w(bank_read_addr[159:96]),.bank_read_addr_n(bank_read_addr[255:160]));
     // ---- write-back fill relay (+1 edge, with wd): N face, half way controller -> wb ports
     (* keep = "true" *) reg fl_start_q,fl_bank_q; (* keep = "true" *) reg [15:0] fl_epoch_q;
-    always @(posedge clk_land) begin fl_start_q<=c_fill_start; fl_bank_q<=c_fill_bank; fl_epoch_q<=c_fill_epoch; end
+    always @(posedge clk_land_c) begin fl_start_q<=c_fill_start; fl_bank_q<=c_fill_bank; fl_epoch_q<=c_fill_epoch; end
     assign wb_fill_start=(RL_MUT==3)?c_fill_start:fl_start_q;
     assign wb_fill_bank =(RL_MUT==3)?c_fill_bank :fl_bank_q;
     assign wb_fill_epoch=(RL_MUT==3)?c_fill_epoch:fl_epoch_q;
@@ -94,11 +95,11 @@ module ot_hgi_dma_back_static_vp4_banks_rl #(
         (* keep = "true" *) reg [6:0] rs_q;       // read slot relay (per-bank copy of the group register)
         (* keep = "true" *) reg [31:0] ra_q;      // read address relay
         wire [6:0] wslot_b;                       // the bank's write slot: the controller register, no relay
-        always @(posedge clk_land) begin
+        always @(posedge clk_land[b]) begin
             rd_q<=rr[b*257+:256]; wv_q<=rr[b*257+256]; cv_q<=rr[b*257+256];
             re_q<=bank_read_en[b]; oe_q<=bank_output_en[b]; rs_q<=rslot; ra_q<=bank_read_addr[b*32+:32];
         end
-        if(RL_MUT==2)begin:G_WS (* keep = "true" *) reg [6:0] ws_q; always @(posedge clk_land) ws_q<=wslot; assign wslot_b=ws_q; end
+        if(RL_MUT==2)begin:G_WS (* keep = "true" *) reg [6:0] ws_q; always @(posedge clk_land[b]) ws_q<=wslot; assign wslot_b=ws_q; end
         else begin:G_NOWS assign wslot_b=wslot; end
         assign rr_valid_i[b]=(RL_MUT==1)?rr[b*257+256]:cv_q;
         ot_hgi_dma_back_landing_bank u_bank(
@@ -120,7 +121,11 @@ module ot_hgi_dma_back_static_vp4_banks_cpl #(
 )(
     input wire clk,rst_n,
     input wire clk_cp,
-    input wire clk_rst,             // parent CTS root: reset relays + rr landing + read/fill relays (same die clock)
+    input wire clk_rst,             // parent CTS root: reset relays + wb_fill relays (same die clock)
+    // HBM-HC7-DBK 10-20 (gate 054637: ONE clk_rst tree over 2,425 landing/relay flops across the cluster = TT insertion
+    // 650.7 ps, boundary pin-flop spread 284.6 ps > 80): one regional CTS root per bank region, beside clk_bank[b]
+    // (CLOCKING STANDARD: local region trees, never one tree across the parent).  Same die clock, forwarded by the die.
+    input wire [7:0] clk_land,
     input wire [1:0] stk,
     input wire [7:0] tgt,
     input wire [7:0] clk_bank,
@@ -163,7 +168,7 @@ module ot_hgi_dma_back_static_vp4_banks_cpl #(
 `else
     ot_hgi_dma_back_static_vp4_banks_rl #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT),.RL_MUT(RL_MUT)) u_dbk(
 `endif
-        .clk(clk),.clk_land(clk_rst),.rst_ctl_n(rst_ctl_n),.rst_bank_n(rst_bk_n[7:0]),.stk(stk),.clk_bank(clk_bank),.cycle(cycle),
+        .clk(clk),.clk_land_c(clk_rst),.clk_land(clk_land),.rst_ctl_n(rst_ctl_n),.rst_bank_n(rst_bk_n[7:0]),.stk(stk),.clk_bank(clk_bank),.cycle(cycle),
         .mv_v(cmd_v),.mv((CP_MUT==1)?cmd[291:65]:cmd[290:64]),.issue_at(cmd[31:0]),.drain_at(cmd[63:32]),
         .mv_wb_bank(cmd[291]),.mv_wb_epoch(cmd[307:292]),
         .mv_src(mv_src),.mv_done(mv_done),.mv_fault(mv_fault),.quiet(quiet),.busy(busy),.rq(rq),.rr(rr),

@@ -9,7 +9,7 @@ bank_read_en[7] -> bank7 454.7/408.2, reset landing E y 2.4 -> u_rst_bk leaves 4
 9589117b1 (reach runner results/arch/hbm_dbkcpl_review_1020/sequential_reach.py, re-used post-GRT on this kit).
 
 ## Structure (one failed review = structural redesign)
-* rr landing: every rr bit -> kept clk_rst register at its face (io_flop_at_pins); valid bit landed twice: wv_q half way
+* rr landing: every rr bit -> kept clk_land[b] register at its face (io_flop_at_pins); valid bit landed twice: wv_q half way
   port -> bank write_en, cv_q half way port -> controller rr_valid_i.  rr valid ports moved beside each bank
   (results/arch/hbm_dbkcpl_land_1020/make_pins.py: W y 130.8/150.0/260.3/389.9/519.4, S x 446.1, N x 273.4/446.1).
 * read path: bank_read_en / output_en / read slot / read address relayed one edge per bank (kept), half way between the
@@ -44,7 +44,8 @@ die not re-padded (mv_fault), reset-latency (cycle did not advance).
 4 Depth: PASS - parent = registers + wires; no parent logic between registers except the RL_MUT-0 constant muxes.
 5 Storage: PASS - landing storage in the bank SRAMs; parent holds only 1-deep landing / relay registers.
 6 Floorplan: PASS (unchanged s1 floorplan) - children on the 43.2 lattice, 606.96 x 542.16 (1.12:1), one std band.
-7 Clock: clk_rst is now the parent CTS root of the reset relays AND the landing / relay registers (~2.5 k sinks over the
-  cluster, < 1 mm); hybrid entries for the children; spread / linked pair TT+FF <= 80 checked by the --cts gate;
+7 Clock: FIXED after gate 20261020-054637 (one clk_rst tree over 2,425 flops: TT insertion 650.7, boundary spread 284.6 > 80):
+  eight regional CTS roots clk_land[b] (new die-forwarded ports at the centre of lane b's rr face group) clock bank b's
+  landing + read relays (~300 sinks each); clk_rst keeps the reset relays + wb_fill relays (~33); hybrid entries for the children; spread / linked pair TT+FF <= 80 checked by the --cts gate;
   io_hold_margin 0.03.
 8 Schedule: static, no credits; every added edge listed above and handed to the die schedule.

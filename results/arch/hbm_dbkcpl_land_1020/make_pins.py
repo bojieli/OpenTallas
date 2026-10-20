@@ -5,6 +5,8 @@
   (W y = bank top for the column-0 banks and bank 1, S x 446 for bank 2, N x 273 / 446 for banks 6 / 7), so the bank-side
   landing copy is <= ~280 um from both and the controller copy sits half way (relay_anchor.txt);
   rst_n from E y 2.4 (the SE corner) to E y ~195 (beside clk_rst, nearest the reset relay station at the cluster centre).
+NEW ports clk_land[b] (regional landing / relay CTS roots, gate 054637): at the centre of lane b's rr data group, where
+its 257 landing flops sit (W y 44/128/210/332/412/495 for lanes 0/1/3/4/5/6, S x 563 lane 2, N x 563 lane 7).
 Every new position is the nearest actual track (0.012 + 0.048 k um, the measured grid of the plan) with >= 2 tracks of
 clearance from every other pin on the same layer and face.  python3 make_pins.py SRC OUT"""
 import re, sys
@@ -21,7 +23,11 @@ MOVE = {  # port -> (layer, face, target um along the face)
     "rr[2055]": ("M5", "N", 446.1),    # bank7 write_en (446.1, 519.4)
     "rst_n":    ("M4", "E", 195.0),    # beside clk_rst (E 190.0)
 }
+ADD = {f"clk_land[{b}]": v for b, v in enumerate([("M4", "W", 44.0), ("M4", "W", 128.0), ("M5", "S", 563.0), ("M4", "W", 210.0),
+                                                   ("M4", "W", 332.0), ("M4", "W", 412.0), ("M4", "W", 495.0), ("M5", "N", 563.0)])}
 lines = open(SRC).read().splitlines()
+lines += [f"ot_assigned_pin_exact {{{n}}} {l} {f} 0.000000" for n, (l, f, _) in ADD.items()]
+MOVE.update(ADD)
 pat = re.compile(r"ot_assigned_pin_exact \{(\S+)\} (\S+) (\S) ([\d.]+)$")
 used = {}
 for l in lines:

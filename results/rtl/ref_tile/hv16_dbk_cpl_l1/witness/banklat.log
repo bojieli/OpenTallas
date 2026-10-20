@@ -9,5 +9,5 @@ BANKLAT_RL die bank7: rq lane 21 + pad 30, bank 8, rr lane 20 -> round trip 80
 BANKLAT_RL PASS RR_RT_die=80 die_pre=1 faces_D=8 lanes=1 moves=8 beats=2889 checks=1227 lag=83 (every landing slot through the real landing SRAMs, wd on drain_at+4+chunk)
 - rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat_rl.sv:132: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 12us; walltime 0.017 s; speed 722.283 us/s
+- Verilator: $finish at 12us; walltime 0.017 s; speed 715.125 us/s
 - Verilator: cpu 0.017 s on 1 threads; allocated 7 MB

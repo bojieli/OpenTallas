@@ -15,6 +15,14 @@ create_clock -name ot_entry_7 -period 833.333000000 [get_ports {clk_bank[4]}]
 create_clock -name ot_entry_8 -period 833.333000000 [get_ports {clk_bank[5]}]
 create_clock -name ot_entry_9 -period 833.333000000 [get_ports {clk_bank[6]}]
 create_clock -name ot_entry_10 -period 833.333000000 [get_ports {clk_bank[7]}]
+create_clock -name ot_entry_11 -period 833.333000000 [get_ports {clk_land[0]}]
+create_clock -name ot_entry_12 -period 833.333000000 [get_ports {clk_land[1]}]
+create_clock -name ot_entry_13 -period 833.333000000 [get_ports {clk_land[2]}]
+create_clock -name ot_entry_14 -period 833.333000000 [get_ports {clk_land[3]}]
+create_clock -name ot_entry_15 -period 833.333000000 [get_ports {clk_land[4]}]
+create_clock -name ot_entry_16 -period 833.333000000 [get_ports {clk_land[5]}]
+create_clock -name ot_entry_17 -period 833.333000000 [get_ports {clk_land[6]}]
+create_clock -name ot_entry_18 -period 833.333000000 [get_ports {clk_land[7]}]
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
@@ -29,10 +37,10 @@ set ::ot_ce_require_wire 1
 set ::ot_ce_refs [dict create {ot_hgi_dma_back_landing_bank/clk} {tt {118.5 125.9 135.9} ff {93.8 101.5 111.7} ss {161.2 168.3 178.1}} {ot_hgi_dma_back_static_vp4_controller/clk} {tt {128.3 136.0 143.6} ff {101.8 109.5 116.9} ss {174.0 182.2 191.0}} {ot_hgi_dma_back_cp_collar/clk} {tt {187.8 217.1 235.2} ff {153.9 182.2 199.3} ss {243.5 274.0 292.7}}]
 set ::ot_ce_counts [dict create {ot_hgi_dma_back_landing_bank} 8 {ot_hgi_dma_back_static_vp4_controller} 1 {ot_hgi_dma_back_cp_collar} 1]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{*}} outputs {{*}}}]
-set ::ot_ce_source_domains [dict create {clk} {core} {clk_cp} {core} {clk_rst} {core} {clk_bank[0]} {core} {clk_bank[1]} {core} {clk_bank[2]} {core} {clk_bank[3]} {core} {clk_bank[4]} {core} {clk_bank[5]} {core} {clk_bank[6]} {core} {clk_bank[7]} {core}]
+set ::ot_ce_source_domains [dict create {clk} {core} {clk_cp} {core} {clk_rst} {core} {clk_bank[0]} {core} {clk_bank[1]} {core} {clk_bank[2]} {core} {clk_bank[3]} {core} {clk_bank[4]} {core} {clk_bank[5]} {core} {clk_bank[6]} {core} {clk_bank[7]} {core} {clk_land[0]} {core} {clk_land[1]} {core} {clk_land[2]} {core} {clk_land[3]} {core} {clk_land[4]} {core} {clk_land[5]} {core} {clk_land[6]} {core} {clk_land[7]} {core}]
 set ::ot_ce_explicit_domains 0
-set ::ot_ce_cts_roots {{clk_rst}}
-set ::ot_ce_ports {{clk} {clk_cp} {clk_rst} {clk_bank[0]} {clk_bank[1]} {clk_bank[2]} {clk_bank[3]} {clk_bank[4]} {clk_bank[5]} {clk_bank[6]} {clk_bank[7]}}
+set ::ot_ce_cts_roots {{clk_rst} {clk_land[0]} {clk_land[1]} {clk_land[2]} {clk_land[3]} {clk_land[4]} {clk_land[5]} {clk_land[6]} {clk_land[7]}}
+set ::ot_ce_ports {{clk} {clk_cp} {clk_rst} {clk_bank[0]} {clk_bank[1]} {clk_bank[2]} {clk_bank[3]} {clk_bank[4]} {clk_bank[5]} {clk_bank[6]} {clk_bank[7]} {clk_land[0]} {clk_land[1]} {clk_land[2]} {clk_land[3]} {clk_land[4]} {clk_land[5]} {clk_land[6]} {clk_land[7]}}
 # Actual OpenSTA clock ancestry and physical propagated-clock measurements.
 # OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
 # resolves inferred masters; evaluate only its generated-clock declarations in

@@ -59,7 +59,7 @@ module tb_dma_vp4_banklat_rl;
  wire src,done,fault,quiet,busy,reserve,rbank,fbank,fill; wire [15:0] repoch,fepoch; wire [11:0] rsec; wire [31:0] rbase;
  wire [135:0] rq; wire [2055:0] rr; wire [2311:0] wd; reg [11:0] wa=0; reg [11:0] ack[0:4];
  ot_hgi_dma_back_static_vp4_banks_rl #(.RR_RT(`RR_RT),.RL_MUT(`RL_MUT)) dut(
-  .clk(clk),.clk_land(clk),.clk_bank({8{clk}}),.rst_ctl_n(rst_n),.rst_bank_n({8{rst_n}}),.stk(2'd0),.cycle(cycle),.mv_v(mv_v),.mv(mv),.issue_at(issue_at),.drain_at(drain_at),
+  .clk(clk),.clk_land_c(clk),.clk_land({8{clk}}),.clk_bank({8{clk}}),.rst_ctl_n(rst_n),.rst_bank_n({8{rst_n}}),.stk(2'd0),.cycle(cycle),.mv_v(mv_v),.mv(mv),.issue_at(issue_at),.drain_at(drain_at),
   .mv_wb_bank(1'b0),.mv_wb_epoch(16'h1234),.mv_src(src),.mv_done(done),.mv_fault(fault),.quiet(quiet),.busy(busy),
   .rq(rq),.rr(rr),.wb_reserve_v(reserve),.wb_reserve_bank(rbank),.wb_fill_bank(fbank),.wb_reserve_epoch(repoch),
   .wb_fill_epoch(fepoch),.wb_reserve_sectors(rsec),.wb_reserve_base(rbase),.wb_fill_start(fill),.wb_ready(1'b1),.wd(wd),.wa(wa));

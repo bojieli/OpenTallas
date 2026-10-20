@@ -24,10 +24,26 @@
   "clk_bank[4]",
   "clk_bank[5]",
   "clk_bank[6]",
-  "clk_bank[7]"
+  "clk_bank[7]",
+  "clk_land[0]",
+  "clk_land[1]",
+  "clk_land[2]",
+  "clk_land[3]",
+  "clk_land[4]",
+  "clk_land[5]",
+  "clk_land[6]",
+  "clk_land[7]"
  ],
  "clock_cts_roots": [
-  "clk_rst"
+  "clk_rst",
+  "clk_land[0]",
+  "clk_land[1]",
+  "clk_land[2]",
+  "clk_land[3]",
+  "clk_land[4]",
+  "clk_land[5]",
+  "clk_land[6]",
+  "clk_land[7]"
  ],
  "reset_ports": [
   "rst_n"
@@ -75,6 +91,7 @@
   ],
   "ANY": [
    "clk_bank",
+   "clk_land",
    "rr",
    "wd"
   ]
@@ -227,7 +244,7 @@
  "keep_pin_regs": true,
  "io_tcl": "results/arch/hbm_dbkcpl_land_1020/assigned_pins_l1.tcl",
  "slot_change_request": "hb_dbk_<q> (d4f slot 560.0 x 400.0) -> 606.96 x 542.16 (1.12:1): 8 banks + controller + collar leaf on the 43.2 lattice cannot fit 560 x 400 (see make_dbk_cpl_parent.py); master ports: clk_tab[1:0] removed, clk_rst added (reset relay root, same die clock); rr/rq W, wd/wb/wa N, F20 host bus/status/straps E, clk_bank on the nearest face (W x3, N x3, S x1, E x1); OWNERS-HBM/STK 10-18: 606.96 x 542.16 (macro_edge 20 um), wd of bank rows 0-1 on the S face, rows 2-3 on N (wire_reach), F20 host bus over the full E face; HBM-DBKCPL 10-18: rr of the col2 banks (rr[514..769] bank 2 -> S face, rr[1799..2054] bank 7 -> N face, beside their wd; rr_valid stays W) for daemon bank_distance (157 um).",
- "structural_change": "HBM-HC7-DBK 10-20 (H.STA.BLK.12): LANDED consumer-geometry successor after Codex 04:04 REVIEW REFUSED (exact post-GRT buffer-transparent reach of s1/s2 @ca6707526: 11 captures > 405 um, max 713.268 rr[2055] W-face valid -> bank7.write_en, 566.1 / 540.8 rr valid -> bank2 / bank6, controller bank_output_en[7] / bank_read_en[7] -> bank7 454.7 / 408.2, reset landing (E y 2.4) -> u_rst_bk leaves 456.4). New master ot_hgi_dma_back_static_vp4_banks_cpl (same ports): every rr bit lands in a kept clk_rst register at the face beside its bank, the valid bit twice (bank copy half way to write_en, controller copy half way to rr_valid_i); bank_read_en / output_en / read slot / read address relayed one edge per bank (kept, half way controller face -> bank pins); wb_fill_* relayed with wd; bank 5 takes the W-face write-slot copy (383 um); rr valid ports beside each bank, rst_n beside clk_rst (E y 195); reset relay leaves half way to their bank, sync pair + rl1 at the centre station (relay_anchor_l1.txt, physical/common_flow/relay_anchor.tcl). Cycles (static, die schedule): rr -1 edge at the port (die pads rr lanes to RR_RT-1), wd / wb_fill_* +1 edge, reset release unchanged, controller frame unchanged (closed rt80 view). Same children, same floorplan.",
+ "structural_change": "HBM-HC7-DBK 10-20 (H.STA.BLK.12): LANDED consumer-geometry successor after Codex 04:04 REVIEW REFUSED (exact post-GRT buffer-transparent reach of s1/s2 @ca6707526: 11 captures > 405 um, max 713.268 rr[2055] W-face valid -> bank7.write_en, 566.1 / 540.8 rr valid -> bank2 / bank6, controller bank_output_en[7] / bank_read_en[7] -> bank7 454.7 / 408.2, reset landing (E y 2.4) -> u_rst_bk leaves 456.4). New master ot_hgi_dma_back_static_vp4_banks_cpl (same ports): every rr bit lands in a kept clk_rst register at the face beside its bank, the valid bit twice (bank copy half way to write_en, controller copy half way to rr_valid_i); bank_read_en / output_en / read slot / read address relayed one edge per bank (kept, half way controller face -> bank pins); wb_fill_* relayed with wd; bank 5 takes the W-face write-slot copy (383 um); rr valid ports beside each bank, rst_n beside clk_rst (E y 195); reset relay leaves half way to their bank, sync pair + rl1 at the centre station (relay_anchor_l1.txt, physical/common_flow/relay_anchor.tcl). Cycles (static, die schedule): rr -1 edge at the port (die pads rr lanes to RR_RT-1), wd / wb_fill_* +1 edge, reset release unchanged, controller frame unchanged (closed rt80 view). Same children, same floorplan. CLOCK (gate 20261020-054637 FAIL: one clk_rst tree over 2,425 flops, TT insertion 650.7 / boundary pin-flop spread 284.6 > 80): eight regional CTS roots clk_land[b] (new die-forwarded clock ports, one per bank region, at the centre of the lane's rr face group) clock the landing + read relays of bank b; clk_rst keeps only the reset relays + wb_fill relays (~33 sinks).",
  "reroute_reason": {
   "kind": "structural",
   "failed_job": "hv16_dbk_cpl-q1-65c2387ab",

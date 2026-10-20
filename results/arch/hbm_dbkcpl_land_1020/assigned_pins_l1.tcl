@@ -4947,3 +4947,11 @@ ot_assigned_pin_exact {wd[998]} M5 S 61.260000
 ot_assigned_pin_exact {wd[999]} M5 S 61.692000
 ot_assigned_pin_exact {wd[99]} M5 S 176.700000
 ot_assigned_pin_exact {wd[9]} M5 S 136.236000
+ot_assigned_pin_exact {clk_land[0]} M4 W 44.076000
+ot_assigned_pin_exact {clk_land[1]} M4 W 127.980000
+ot_assigned_pin_exact {clk_land[2]} M5 S 563.004000
+ot_assigned_pin_exact {clk_land[3]} M4 W 209.964000
+ot_assigned_pin_exact {clk_land[4]} M4 W 331.932000
+ot_assigned_pin_exact {clk_land[5]} M4 W 412.044000
+ot_assigned_pin_exact {clk_land[6]} M4 W 494.988000
+ot_assigned_pin_exact {clk_land[7]} M5 N 563.004000
