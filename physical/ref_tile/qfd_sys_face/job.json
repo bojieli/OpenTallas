@@ -96,7 +96,7 @@
      "iverilog"
     ],
     "fail_regex": "^SYS_FACE_FAIL MUT=6",
-    "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m6.log",
+    "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness_root4_1019/sys_face_mu_filler_ctx_hosttag_mutant_head0.log",
     "note": "MU 1 face checking filler head contexts against the HOST tag (the closed MU 0 behaviour) | ROOT4-SYSFACE 10-19: run at MU_HEAD 0. At MU_HEAD 1 (the kit) MUT 6 is an EQUIVALENT mutant: the HOST context RX (qfd_host_native_context_rx MU_HEAD 1) also drops filler positions, so two independent user-0 filters each suffice (fleet ot-epyc9 root4-sysface-1019: MUT 6 PASS at MU_HEAD 1). MU_HEAD 0 isolates the face filter (mu_hc / hc_user0)."
    },
    {
