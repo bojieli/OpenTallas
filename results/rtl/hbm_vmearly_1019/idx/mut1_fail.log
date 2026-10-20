@@ -1,0 +1,5 @@
+IDX_VME_N12 MUT1 IA1 EXPECT1 vmrt171 LB183 QL14 G4 blocks512 uses125 errors167 lb_bad0 fault1 exposed_r1 0 exposed_r2_dep 0 exposed_r3 0 raw_r2 631 A 208 338 468 598 last_use 540 674 808 924 span 514 lb_meas 183 digest 3341fc3707757036
+IDX_VME_N12 FAIL data/fault
+[9400000] %Fatal: tb_idx_vme_n12.sv:189: Assertion failed in tb_idx_vme_n12: IDX early issue: data / fault / landing mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_vme_n12.sv:189: Verilog $stop
+Aborting...
