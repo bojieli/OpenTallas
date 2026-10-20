@@ -158,3 +158,12 @@ Branches: `claude/hbm-rotlayout-ml-1019` (on `claude/hbm-rotlayout-tbl-1019` 865
 - **Not changed:** the HGI-level byte compilers (`hgi_sim/qwen_compiler`, `ds_native`: EMBED base + TOKEN x emb_row).
   The d4g placement above is what the die's HBM image uses. Their DMA descriptors still need the slot/copy address
   law when the G-DMA dispatcher image compiler exists.
+### TBL full96 (R4 L00/L02 images) — `full96_tbl/`
+The run used run_smb_unit.sh 02f66bcca bwsafe_face with XDEF=,FACE_MC3 and OPGAP320/PNUM88/PADD8/FETCH96, on ot-epyc5 under Verilator 5.050.
+Result: **SMB_UNIT PASS**:
+- ops 66/66 are bit-exact;
+- gos 154/154, go_slots_exact;
+- END 45260;
+- dram_reads 35372.
+
+So the L00/L02 images with the R4 set sequences decode exactly through the issuer and MC3b.
