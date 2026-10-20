@@ -42,6 +42,18 @@ for c, C in (('tt', 'TT'), ('ff', 'FF')):
           'set_clock_uncertainty -setup 60 [all_clocks]', 'set_clock_uncertainty -hold 25 [all_clocks]',
           f'report_checks -path_delay {"max" if c == "tt" else "min"} -group_path_count 3 > /out/etm_worst_{c}.rpt',
           f'write_timing_model -library_name {top}_synth_{c} /out/{top}_synth_{c}.lib', f'puts OT_ETM_DONE_{c}']
+    if name == 'hfd_ckgen_nolink':
+        # Exact die_case_v16.py PERIOD values: ideal clocks begin at the analog
+        # boundary, matching the die generator; PLL itself has no timing claim.
+        first = L.index('set ck [get_ports -quiet {clk clk_* *_clk *_clk_* pg_clk*}]')
+        last = L.index('puts \"OT_ETM_CLOCKS $n\"') + 1
+        domain_clocks = []
+        for domain, period in (('stream', 833.333), ('hbm', 1024.0), ('serial', 1111.111)):
+            domain_clocks += [f'set p [get_ports -quiet pll_{domain}]',
+                              'if {[llength $p] != 1} {error \"Missing PLL domain output\"}',
+                              f'create_clock -name ck_{domain} -period {period} $p']
+        domain_clocks += ['puts \"OT_ETM_CLOCKS 3\"']
+        L[first:last] = domain_clocks
     open(tcl.replace('.tcl', f'_{c}.tcl'), 'w').write('\n'.join(L) + '\n')
 
 PY
