@@ -2,7 +2,7 @@
 """S81-SLICE3-LEPENH 10-19: write a die_port_bind-readable netlist form of a wires-only (or lp.py landed) parent.
 tools/die_port_bind.py reads one declaration per statement line with literal ranges; the lp.py output packs several
 statements per line, comma-lists of wires, arithmetic ranges and MUT ternaries.  This keeps every instance, port and
-connection and only re-prints them: one port / wire per line, ranges evaluated, bench-only MUT selects resolved at MUT 0.
+connection and only re-prints them: non-ANSI ports, one port / wire per line, ranges evaluated, bench-only MUT selects resolved at MUT 0.
     bind_form.py IN.sv TOP OUT.v
 """
 import re, sys
@@ -64,9 +64,9 @@ for tok in [x.strip() for x in hdr.split(",") if x.strip()]:
         ports.append((cur[0], cur[1], mm.group(3)))
     else:
         ports.append((cur[0], cur[1], tok))
-L = [f"module {top} ("]
-L += [f"    {d} wire {r} {n}{',' if i < len(ports) - 1 else ''}".replace("  ", " ") for i, (d, r, n) in enumerate(ports)]
-L.append(");")
+# non-ANSI (die netlist style): header names only, port declarations in the body
+L = [f"module {top} (" + ", ".join(n for _, _, n in ports) + ");"]
+L += [f"    {d} {r + ' ' if r else ''}{n};" for d, r, n in ports]
 for st in [s.strip() for s in rest.split(";") if s.strip()]:
     st = re.sub(r"\s+", " ", st)
     w = re.match(r"wire\s*(\[[^\]]*\])?\s*(.*)$", st)
@@ -78,6 +78,32 @@ for st in [s.strip() for s in rest.split(";") if s.strip()]:
     st = tern(st)
     st = evparams(st)
     L.append(f"    {st};")
+# assigns are not drivers in die_port_bind: fold them into the instance connections
+outs = {n for d, _, n in ports if d == "output"}
+wid = {}
+for l in L:
+    w = re.match(r"\s*(?:wire|input|output)\s*(?:\[(\d+):(\d+)\])?\s*(\w+);", l)
+    if w:
+        wid[w.group(3)] = int(w.group(1)) - int(w.group(2)) + 1 if w.group(1) else 1
+sub, drop = {}, set()
+for l in L:
+    a = re.match(r"\s*assign\s+(\w+)\s*=\s*(.*);$", l)
+    if not a:
+        continue
+    lhs, rhs = a.group(1), a.group(2).strip()
+    if lhs in outs:          # out = {x1, x0}: each 1-bit wire xi becomes out[i]
+        parts = [x.strip() for x in rhs.strip("{}").split(",")]
+        assert all(re.fullmatch(r"\w+", x) and wid.get(x) == 1 for x in parts), l
+        for i, x in enumerate(reversed(parts)):
+            sub[x] = f"{lhs}[{i}]"; drop.add(x)
+    else:                    # internal alias / concatenation: the reader takes the expression itself
+        sub[lhs] = rhs; drop.add(lhs)
+    drop.add(l)
+def rep(l):
+    for k, v in sub.items():
+        l = re.sub(r"\(%s\)" % re.escape(k), "(" + v + ")", l)
+    return l
+L = [rep(l) for l in L if l not in drop and not re.match(r"\s*wire\s*(?:\[[^\]]*\])?\s*(%s);" % "|".join(map(re.escape, drop - set(L)) or ["$^"]), l)]
 L.append("endmodule")
 open(out, "w").write("\n".join(L) + "\n")
 print(f"bind_form {top}: {len(ports)} ports, {len(L)} lines -> {out}")

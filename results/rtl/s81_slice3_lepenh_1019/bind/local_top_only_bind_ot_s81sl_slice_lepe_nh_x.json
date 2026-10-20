@@ -1,0 +1,122 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "results/rtl/s81_slice3_lepenh_1019/bind/ot_s81sl_slice_lepe_nh_x.v",
+ "top": "ot_s81sl_slice_lepe_nh_x",
+ "verdict": "PASS",
+ "failing": [],
+ "summary": {
+  "masters": 3,
+  "instances": 4,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 0,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0,
+  "pad_bits": 0,
+  "spare_out_bits": 0
+ },
+ "masters": {
+  "dsfd_coll_lane_e": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_ln0",
+    "u_ln1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_lep_nh": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_lep"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "ot_s81sl_slice": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u_sl"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "unread_nets": {},
+ "unread_classes": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "pads_declared": [],
+ "die_sha256": "1dd81a974fca01da2adc76819daa53006ed439c38e2d26c18cc41542d8e3eceb",
+ "straps_declared": [],
+ "params_file": null,
+ "rtl_roots": [
+  "rtl/dsrom_sys/s81_dv/slice",
+  "rtl/dsrom_sys/s81_ph",
+  "rtl/common/landed_parent"
+ ],
+ "rtl_files": [],
+ "defines": [
+  "OT_S81PH_LANE_CR"
+ ]
+}

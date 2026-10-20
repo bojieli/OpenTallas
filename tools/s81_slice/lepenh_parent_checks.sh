@@ -17,7 +17,7 @@ bind)
   for top in ot_s81sl_slice_lepe_nh_x_lp ot_s81sl_slice_lepe_nh_x; do
     f=$O/$top.v; python3 tools/s81_slice/bind_form.py $L/$top.sv $top $f || exit 3
     python3 tools/die_port_bind.py $f --top $top --define DSFD_PQ_STATIC_X2 --define OT_S81PH_LANE_CR \
-      --rtl-file rtl/common/landed_parent/ot_pl_land.sv --prefer rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv --prefer rtl/hdc/v41/ot_hdc_fsqrt.sv \
+      --rtl-file rtl/common/landed_parent/ot_pl_land.sv --prefer rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv --prefer rtl/hdc/v41/ot_hdc_fsqrt.sv --prefer rtl/hdc/ot_hdc_fp32_mul_lat.sv \
       --prefer-list tools/s81_slice/slice_lep_bench.sh --out $O/bind_$top.json > $O/bind_$top.log 2>&1
     r=$?; echo "BIND $top exit $r"; tail -5 $O/bind_$top.log; [ $r -eq 0 ] || rc=1
   done
