@@ -6,5 +6,5 @@ MISMATCH cyc 646 ref f203040079d960741645591bc000000000800000010 dut 0003103d320
 FAIL KV_LPRG_MU5_LOCKSTEP mismatches760768 faultsA0 tokens 254/274/242/249 gap1 648 gap2 646 chaos_faults 60
 - rtl/test/mu_qwen_1018/tb_kv_lprg_mu5_lockstep.sv:159: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2ms; walltime 2.383 s; speed 805.538 us/s
-- Verilator: cpu 2.218 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 2ms; walltime 3.907 s; speed 491.316 us/s
+- Verilator: cpu 2.001 s on 1 threads; allocated 7 MB

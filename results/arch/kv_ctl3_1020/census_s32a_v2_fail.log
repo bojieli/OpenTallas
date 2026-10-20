@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_s32a-20261020-030453
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_s32a-20261020-030453
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_s32a-20261020-030453
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_s32a-20261020-030453
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_s32a-20261020-030453
+ot-run: ot-agidock128  admits    90 GB (avail 76, growth 13, headroom 0, waiters 0/0 GB) load 20/64 running 11 disk 211 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2510183-1792491031 after 0 s
+NETLIST /srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_s32a-20261020-030453/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_ctl_s32_asap7_ref_gate/base/1_2_yosys.v
+PRE_GATE_NATIVE_CENSUS FAIL report=/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_s32a-20261020-030453/census/native_census.json
+CENSUS FAIL max 49 roots 44655 viol 3 []
+ V {'driver': '_40677_/Y', 'driver_role': 'combinational_or_macro', 'net': '_24037_', 'loads': 38, 'endpoints': [[16557, 'A', 0], [16631, 'C', 0], [26284, 'A1', 0], [26517, 'A2', 0], [26519, 'A2', 0], [26524, 'A', 0], [26528, 'A', 0], [26531, 'A', 0], [26535, 'A', 0], [26538, 'A', 0], [26542, 'A', 0], 
+ V {'driver': 'u_ot_pr_core.u_lprg.wq_m$_DFF_PN0_/QN', 'driver_role': 'sequential', 'net': '_17182_', 'loads': 36, 'endpoints': [[29131, 'A', 0], [6128, 'A', 0], [6130, 'A', 0], [6131, 'A', 0], [61709, 'w_mask_in', 32], [61709, 'w_mask_in', 33], [61709, 'w_mask_in', 34], [61709, 'w_mask_in', 35], [6170
+ V {'driver': 'u_ot_pr_core.w_lprg__fault$_DFF_PN0_/QN', 'driver_role': 'sequential', 'net': '_17172_', 'loads': 49, 'endpoints': [[16526, 'A', 0], [16569, 'B', 0], [16573, 'B', 0], [16579, 'B', 0], [16593, 'C', 0], [16631, 'A', 0], [16690, 'B', 0], [16692, 'A1', 0], [16700, 'B', 0], [16704, 'A', 0], [
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2510183-1792491031): exit 1

@@ -19,7 +19,7 @@
 //   * per-context counters: explicit next-state (start / wait / run / stage-end priority of the mus process, unchanged);
 //     the 4:1 output metadata muxes are one-hot AND-OR on per-slice gated selects; c_X[k] + 1 is formed per context.
 module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter integer MU=1,parameter integer CTLSRAM=0,
- parameter integer RCOPIES=4,parameter integer RS=32,parameter integer FC=8)(
+ parameter integer RCOPIES=4,parameter integer RS=32,parameter integer FC=16)(
  input wire ck,rst_n,
  input wire cfg_we,input wire[8:0]cfg_addr,input wire[63:0]cfg_data,
  input wire start,authority_valid,programme_authorized,
@@ -45,7 +45,7 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  (* keep = "true", ot_rst_split = 64 *) reg[191:0]dqf;
  wire[63:0]data_q=dqf[63:0];
  reg[15:0]epoch_q;reg[17:0]token_q,pos_q;reg[1:0]gen_q;
- wire[63:0]bound_digest;reg[15:0]bound_epoch;
+ wire[63:0]bound_digest;wire[15:0]bound_epoch;
  reg dig_ok_q,ep_ok_q,pos_ok_q;
  always @(posedge ck)begin
   addr_q<=cfg_addr;dqf<={3{cfg_data}};
@@ -87,6 +87,11 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  // write pipeline (one edge after the accept, as the original's wq): stage words -> P = r - 2; gap words j >= 1 -> rowb
  reg wq,wg;reg[5:0]w_row;reg[7:0]w_field;reg w_end;reg[1:0]w_u;reg[31:0]w_data;reg w_zero,w_one;
  wire row_acc=accept_cfg&&addr_q<324;
+ // KV-CTL3 census: w_data select behind two kept-hierarchy leaves (row_acc was folded into every bit with the
+ // bound_epoch hold: 38 loads); bound_epoch is a sliced register below
+ wire[31:0]wdn;wire[31:0]dm2=data_q[31:0]-32'd2;
+ ot_s32_sel #(.W(16)) u_wd0(.s(row_acc&&rs_s[30]),.a(dm2[15:0]),.b(data_q[15:0]),.y(wdn[15:0]));
+ ot_s32_sel #(.W(16)) u_wd1(.s(row_acc&&rs_s[31]),.a(dm2[31:16]),.b(data_q[31:16]),.y(wdn[31:16]));
  wire gap_acc=accept_cfg&&addr_q>=326&&addr_q<470;
  always @(posedge ck or negedge rn)if(!rn)begin wq<=0;wg<=0;end else begin wq<=row_acc;wg<=gap_acc&&gap_j!=0;end
  // KV-CTL3 census: kept copies of wq / w_u for the rowb write mask (a 32-bit mask field + its flag bits were one net, 34 loads)
@@ -95,13 +100,13 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  always @(posedge ck)w_u_m<=gap_u;
  always @(posedge ck)begin
   w_row<=row_acc?cfg_stage:(gap_j-6'd1);w_field<=8'd1<<cfg_word[2:0];w_end<=cfg_word==8;w_u<=gap_u;
-  w_data<=row_acc?(data_q[31:0]-32'd2):data_q[31:0];w_zero<=data_q[31:0]==0;w_one<=data_q[31:0]==1;
+  w_data<=wdn;w_zero<=data_q[31:0]==0;w_one<=data_q[31:0]==1;
  end
  wire[255:0]a_mask={{32{w_field[7]}},{32{w_field[6]}},{32{w_field[5]}},{32{w_field[4]}},
                     {32{w_field[3]}},{32{w_field[2]}},{32{w_field[1]}},{32{w_field[0]}}};
  wire[3:0]u1=4'd1<<w_u;
  wire[3:0]u1m=4'd1<<w_u_m;
- wire[255:0]b_mask={88'd0,u1m&{4{!wq_m}},u1m&{4{!wq_m}},(wq?128'd0:{{32{u1[3]}},{32{u1[2]}},{32{u1[1]}},{32{u1[0]}}}),{32{wq_m}}};
+ wire[255:0]b_mask={88'd0,u1m&{4{!wq}},u1m&{4{!wq}},(wq?128'd0:{{32{u1[3]}},{32{u1[2]}},{32{u1[1]}},{32{u1[0]}}}),{32{wq_m}}};
  wire[255:0]b_data={88'd0,{4{w_one}},{4{w_zero}},{4{w_data}},w_data};
  // ---- stage begin / row read ----
  wire[1:0]us=epoch_q[1:0];
@@ -177,7 +182,7 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
    ctrl_go<=0;kgo<=0;vgo<=0;attention_issue<=0;attention_run<=0;writer_start<=0;link_start<=0;
    stage_start<=0;stage_done<=0;expected_upstream_quiet<=0;completed_stage<=0;
    configured<=0;active<=0;done<=0;fault_code<=0;
-   next_cfg<=0;cfg_stage<=0;cfg_word<=0;cfg_gap<=0;gap_u<=0;gap_j<=0;bound_epoch<=0;
+   next_cfg<=0;cfg_stage<=0;cfg_word<=0;cfg_gap<=0;gap_u<=0;gap_j<=0;
    c_act<=0;c_wait<=0;c_load<=0;c_quiet<=0;owner<=0;stage_o<=0;
    f_ctrl<=0;f_k<=0;f_v<=0;f_issue<=0;f_run<=0;f_writer<=0;f_link<=0;f_quiet<=0;f_end<=0;f_wx<=0;
    for(integer k=0;k<4;k=k+1)c_stage[k]<=0;
@@ -197,7 +202,7 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
      end else if(addr_q==324)begin next_cfg<=325;end
      else if(addr_q==325)begin
       if(data_q[63:16]!=0)begin fault_code[2]<=1;end
-      bound_epoch<=data_q[15:0];next_cfg<=326;
+      next_cfg<=326;
      end else if(addr_q<470)begin
       if(data_q[63:32]!=0)begin fault_code[2]<=1;end
       if(gap_j==35)begin gap_j<=0;gap_u<=gap_u+1'b1;end else gap_j<=gap_j+1'b1;
@@ -358,6 +363,10 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  end endgenerate
  always @(posedge ck or negedge rn)if(!rn)begin bd<=0;ds<=0;end else begin bd<=bnx;ds<=dnx;end
  assign bound_digest=bd;assign duration_sum=ds;
+ reg[15:0]be;wire[15:0]ben;
+ ot_s32_sel #(.W(16)) u_be(.s(bw&&addr_q==325&&!fault_f[3]&&rs_s[29]),.a(data_q[15:0]),.b(be),.y(ben));
+ always @(posedge ck or negedge rn)if(!rn)be<=0;else be<=ben;
+ assign bound_epoch=be;
  // (G3) output metadata: one-hot fire / owner selects, gated per slice
  wire any=|e_any;
  wire hit=start_q&&start_ok&&fire_u==us;
