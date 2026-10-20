@@ -1,0 +1,93 @@
+module ot_s81sl_slice_lepe_nh_x_lp (
+  input wire rst_n,
+  input wire [3:0] sid,
+  input wire [1103:0] ri_w,
+  output wire [1103:0] ro_w,
+  input wire [275:0] vi,
+  output wire [275:0] vo,
+  input wire [1103:0] bi,
+  output wire [512:0] bo,
+  output wire [4415:0] xc,
+  input wire [559:0] rt,
+  output wire [15:0] ck_line,
+  output wire [1:0] ck_v,
+  output wire [15:0] ck_xc,
+  output wire [7:0] ck_rt,
+  input wire ch_b,
+  output wire [511:0] tx0,
+  output wire [511:0] tx1,
+  input wire [513:0] rx0,
+  input wire [513:0] rx1,
+  output wire [1:0] tf,
+  output wire fault,
+  input wire ck_S,
+  input wire ck_K
+);
+    wire [1103:0] lro;
+    wire [1103:0] lri;
+    wire sf;
+    wire l0v;
+    wire l0r;
+    wire l1v;
+    wire l1r;
+    wire i0v;
+    wire i0r;
+    wire i1v;
+    wire i1r;
+    wire [552:0] l0d;
+    wire [552:0] l1d;
+    wire [552:0] i0d;
+    wire [552:0] i1d;
+    wire [2:0] f0;
+    wire [2:0] f1;
+    wire [1:0] rxv;
+    wire [514:0] lrx0;
+    wire [514:0] lrx1;
+    wire tf0;
+    wire tf1;
+    assign lrx0 = {rx0[512], rx0[513], rx0[511:0], rxv[0]};
+    assign lrx1 = {rx1[512], rx1[513], rx1[511:0], rxv[1]};
+    assign tf = {tf1, tf0};
+    wire lpr_root;
+    ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_S), .d(rst_n), .q(lpr_root));
+    wire lpr_S;
+    ot_pl_pad #(.W(1), .N(3)) u_lpr_S (.ck(ck_S), .d(lpr_root), .q(lpr_S));
+    wire lpr_K;
+    ot_pl_pad #(.W(1), .N(3)) u_lpr_K (.ck(ck_K), .d(lpr_root), .q(lpr_K));
+    wire [4415:0] lpl_0_bank;
+    wire [11:0] lpl_0_epo;
+    wire [3:0] lpl_0_vld;
+    wire [1103:0] lri__l_S;
+    wire [1103:0] lpl_0_o;
+    ot_pl_land_w #(.W(1104), .D(4)) u_lpl_0_w (.ck(ck_K), .rsi(lpr_K), .i(lri), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
+    ot_pl_land_r #(.W(1104), .D(4), .K(2)) u_lpl_0_r (.ck(ck_S), .rsi(lpr_S), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+    assign lri__l_S = lpl_0_o;
+    wire [4415:0] lpl_1_bank;
+    wire [11:0] lpl_1_epo;
+    wire [3:0] lpl_1_vld;
+    wire [1103:0] lro__l_K;
+    wire [1103:0] lpl_1_o;
+    ot_pl_land_w #(.W(1104), .D(4)) u_lpl_1_w (.ck(ck_S), .rsi(lpr_S), .i(lro), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+    ot_pl_land_r #(.W(1104), .D(4), .K(2)) u_lpl_1_r (.ck(ck_K), .rsi(lpr_K), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
+    assign lro__l_K = lpl_1_o;
+    wire [3:0] lpl_2_bank;
+    wire [11:0] lpl_2_epo;
+    wire [3:0] lpl_2_vld;
+    wire sf__l_K;
+    wire lpl_2_o;
+    ot_pl_land_w #(.W(1), .D(4)) u_lpl_2_w (.ck(ck_S), .rsi(lpr_S), .i(sf), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
+    ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_2_r (.ck(ck_K), .rsi(lpr_K), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
+    assign sf__l_K = lpl_2_o;
+    wire lpr_c_u_sl;
+    ot_pl_pad #(.W(1), .N(0)) u_lprc_u_sl (.ck(ck_S), .d(lpr_S), .q(lpr_c_u_sl));
+    wire lpr_c_u_ln0;
+    ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln0 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln0));
+    wire lpr_c_u_ln1;
+    ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln1 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln1));
+    wire lpr_c_u_lep;
+    ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lep (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_lep));
+    ot_s81sl_slice u_sl (.clk(ck_S), .rst_n(lpr_c_u_sl), .sid(sid), .ri_w(ri_w), .ri_e(lri__l_S), .ro_e(lro), .ro_w(ro_w), .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(sf));
+    dsfd_coll_lane_e u_ln0 (.ck(ck_K), .rs(lpr_c_u_ln0), .chb(ch_b), .rx(lrx0), .tx(tx0), .tf(tf0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
+    dsfd_coll_lane_e u_ln1 (.ck(ck_K), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .tf(tf1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
+    ot_s81sl_lep_nh u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .fault(fault));
+endmodule
