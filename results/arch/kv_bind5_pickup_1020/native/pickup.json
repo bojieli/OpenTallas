@@ -1,0 +1,40 @@
+{
+  "attention": {
+    "positive": "NOT PROVEN",
+    "unproven_equiv": 1122,
+    "negative_unproven_equiv": 1123,
+    "native_receipt_issued": false
+  },
+  "pv_join": {
+    "induction_cells_proven": 16325,
+    "base_verdict": "SAT counterexample; not timeout",
+    "remaining_mismatch_steps_9_and_10": {
+      "count": 30,
+      "state": "yr"
+    },
+    "step1": {
+      "reset": 0,
+      "jrun": 1,
+      "jage": "011x1"
+    },
+    "step2": {
+      "jrun": 0,
+      "jage": 0
+    },
+    "inference": "Initial unreset adder garbage can reach the unreset yr storage before control reset. Full first-use observability or reset/state source proof is required; extending reset alone does not clear yr.",
+    "native_receipt_issued": false
+  },
+  "live": {
+    "source": "54e9d9c39d011719058018518b3b27ecc637e6f4",
+    "host": "ot-epyc6",
+    "chains": [
+      "gen9d5",
+      "gen9d5o",
+      "gen9d5p"
+    ],
+    "table_existence": "No case_kv/relay_stages.json or boot_ages.json at pickup",
+    "framepins_source": "fc93e83d32b8787689a108e1ba4525c2ba8acb68",
+    "framepins_chain": "gen9d6x",
+    "framepins_status": "prep; no production qualification"
+  }
+}

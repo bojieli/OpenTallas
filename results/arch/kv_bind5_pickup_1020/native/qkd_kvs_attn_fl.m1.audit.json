@@ -1,0 +1,181 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/kv-bind4-1019/attn/arch/qkd_kvs_attn_rv3-rv3-6fdacf98c",
+ "closed": {
+  "commit": "6fdacf98c671b3039b809e4d6686348f26f00f0b",
+  "final_v_sha256": "9861b27b73c2b8941203e9cdc87354acc56734cebf0a3ef98865570cd8552886",
+  "job": "qkd_kvs_attn_rv3-rv3-6fdacf98c",
+  "lef_sha256": "cfa776977649d05e8c98426d9e74ee773b8d773de9d91b1eed05cb77fd2b644c",
+  "physical_json_sha256": "8a81813cab7398478f726b8a1cb25dc52400bd7be48e69d4b48169b07c69069a",
+  "spec_params": {
+   "RETIRE_STATIC": 1,
+   "STATUS_DELAY": 213
+  },
+  "synth_sources": {
+   "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32",
+   "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+   "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv": "7f5753645aa0129d8c696804d3ad49378fe7224fcd69c41624f673f3e077c5bf",
+   "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+   "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0"
+  },
+  "top": "qkd_kvs_attn_fl",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {
+  "STATUS_DELAY": [
+   213,
+   212
+  ]
+ },
+ "equiv": {
+  "cells": 8398,
+  "log_sha256": "e2cf88d1a08cda630624ea7d01306abe51da17ee9b3b6f18d7de0ab7486d2c41",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+  "proven_cells": 7275,
+  "rc": 1,
+  "seconds": [
+   0.3,
+   1527.1
+  ],
+  "unproven_cells": 1123,
+  "unproven_sample": [
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233985: \\pvst_gold [30] \\pvst_gate [30]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233984: \\pvst_gold [29] \\pvst_gate [29]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233983: \\pvst_gold [28] \\pvst_gate [28]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233982: \\pvst_gold [27] \\pvst_gate [27]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233981: \\pvst_gold [26] \\pvst_gate [26]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233980: \\pvst_gold [25] \\pvst_gate [25]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233979: \\pvst_gold [24] \\pvst_gate [24]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233978: \\pvst_gold [23] \\pvst_gate [23]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233977: \\pvst_gold [22] \\pvst_gate [22]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233976: \\pvst_gold [21] \\pvst_gate [21]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233975: \\pvst_gold [20] \\pvst_gate [20]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233974: \\pvst_gold [19] \\pvst_gate [19]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233973: \\pvst_gold [18] \\pvst_gate [18]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233972: \\pvst_gold [17] \\pvst_gate [17]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233971: \\pvst_gold [16] \\pvst_gate [16]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233970: \\pvst_gold [15] \\pvst_gate [15]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233969: \\pvst_gold [14] \\pvst_gate [14]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233968: \\pvst_gold [13] \\pvst_gate [13]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233967: \\pvst_gold [12] \\pvst_gate [12]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$233966: \\pvst_gold [11] \\pvst_gate [11]"
+  ]
+ },
+ "expect": "fail",
+ "gate": {
+  "flops": 6893,
+  "macros": {},
+  "replicas": 365
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "d50980c5a7fbd86623fb4c8929c67b9fd0be1c05b66231218cfd2d453f289dc8",
+   "child_lint.json": "e6b5d0fceb0eb8da5cc37c005c10b175ef2fece608d7c055940288cebf0168ad",
+   "export_exact_abstract.log": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+   "export_exact_abstract.tcl": "7d35cc5538eb637699dfb6216f741ca25713fda2af5b5917390d7025cc3c370f",
+   "export_ff.log": "4ca1a777e01a3c1cae4d30c1eb542ba0ec036071fdd8ff70c41b885a5983d237",
+   "export_ff.tcl": "5db16b0a72288a7f1432339ec13a4640aca2196a5c9c0661c6e1123a92dedf5e",
+   "export_ss.log": "3fc140834e3dd3dc55a1462cbf4a67e55e7aba2af7a3b5cea45d07d26a10ab21",
+   "export_ss.tcl": "32057d0c50ca6e11a53474d6554974569e7d06a6042e2b23dfb2fe4290e97263",
+   "export_tt.log": "053415f580322eed9a32369ab168c3414d9eb5ebf31a8ad0fee8288786f2f95e",
+   "export_tt.tcl": "faf0ef2975f38a197df14ea9258a4568a7ce3e561052f98a1ddbb5649c9987c0",
+   "insertion.json": "f651b522d1f6f4963f5074416a2254903c67e257054610e82686b81dcf626819",
+   "provenance/abstract_pin_stub.json": "91081ada2ae63533d30bbbe1983376492d0c6a2407fb383f1902fd5842783720",
+   "provenance/raw/qkd_kvs_attn_fl.lef": "cfa776977649d05e8c98426d9e74ee773b8d773de9d91b1eed05cb77fd2b644c",
+   "provenance/view_export.abstract.json": "0d58e87f6cb3ddd33cae6f15f51442c7f83c4fc2a59bd86477f43189a630df6b",
+   "qkd_kvs_attn_fl.lef": "0d08f38db39d5ce89f03c6658963c4f058254e29ad517cc4d49603e7dc04cd45",
+   "qkd_kvs_attn_fl_ff.lib": "1ad5ecef7dd70c3cbb23d2eafb75fe48dd3a083e5312e86a9ccf80e37830bc88",
+   "qkd_kvs_attn_fl_ss.lib": "7bbf47057f5fed23a418bff350c94b47dad6616502783e64e0f61039302738ed",
+   "qkd_kvs_attn_fl_tt.lib": "5292762b1ecd2a934343881de2e59c659072f6e22dacf99a96b98f0788c1c88f"
+  },
+  "rtl": {
+   "path": "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv",
+   "sha256": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32"
+  },
+  "view": "physical/ref_tile/qkd_kvs_attn_rv3/views/qkd_kvs_attn_fl"
+ },
+ "module": "qkd_kvs_attn_fl",
+ "observe_zero": null,
+ "parameters": {
+  "MUT": 0,
+  "RETIRE_STATIC": 1,
+  "STATUS_DELAY": 212
+ },
+ "proven": false,
+ "rtl": "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32",
+  "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv": "7f5753645aa0129d8c696804d3ad49378fe7224fcd69c41624f673f3e077c5bf",
+  "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 42,
+  "gate_only_sample": [
+   "ot_rrs__rst_n__ot_rlv__c1",
+   "ot_rrs__rst_n__ot_rlv__c10",
+   "ot_rrs__rst_n__ot_rlv__c11",
+   "ot_rrs__rst_n__ot_rlv__c12",
+   "ot_rrs__rst_n__ot_rlv__c13",
+   "ot_rrs__rst_n__ot_rlv__c14",
+   "ot_rrs__rst_n__ot_rlv__c15",
+   "ot_rrs__rst_n__ot_rlv__c18",
+   "ot_rrs__rst_n__ot_rlv__c19",
+   "ot_rrs__rst_n__ot_rlv__c2",
+   "ot_rrs__rst_n__ot_rlv__c22",
+   "ot_rrs__rst_n__ot_rlv__c23",
+   "ot_rrs__rst_n__ot_rlv__c24",
+   "ot_rrs__rst_n__ot_rlv__c25",
+   "ot_rrs__rst_n__ot_rlv__c26",
+   "ot_rrs__rst_n__ot_rlv__c27",
+   "ot_rrs__rst_n__ot_rlv__c28",
+   "ot_rrs__rst_n__ot_rlv__c29",
+   "ot_rrs__rst_n__ot_rlv__c3",
+   "ot_rrs__rst_n__ot_rlv__c30"
+  ],
+  "gold_only": 1515,
+  "gold_only_sample": [
+   "acal_EN[10]",
+   "acal_EN[11]",
+   "acal_EN[12]",
+   "acal_EN[13]",
+   "acal_EN[14]",
+   "acal_EN[15]",
+   "acal_EN[28]",
+   "acal_EN[29]",
+   "acal_EN[30]",
+   "acal_EN[31]",
+   "acal_EN[43]",
+   "acal_EN[44]",
+   "acal_EN[45]",
+   "acal_EN[46]",
+   "acal_EN[47]",
+   "ahs[100]",
+   "ahs[114]",
+   "ahs[115]",
+   "ahs[116]",
+   "ahs[130]"
+  ],
+  "gold_regs": 8001,
+  "paired": 6851
+ },
+ "view": "physical/ref_tile/qkd_kvs_attn_rv3/views/qkd_kvs_attn_fl",
+ "wrapper": {
+  "clock": "ck",
+  "copies": {
+   "rst_n": 48
+  },
+  "first_copies": {
+   "rst_n": 2
+  },
+  "flow_script_blob": "243c7bfa44fb4a0e157f5fc64b79d3fd2d79d079",
+  "kind": "reset_landing_balanced",
+  "reset_landing_sha256": "debb212f56b4c028557b763a6a9ca8d7f917834abc08db1178f64b2b6bb53815",
+  "reset_ports": [
+   "rst_n"
+  ],
+  "stages": 2
+ }
+}
