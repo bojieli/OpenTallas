@@ -1,7 +1,7 @@
 {
   "status": "MODEL_SOURCE_FIX_NOT_IMPLEMENTED_ROOT_REVIEW_REQUIRED",
   "source": "8dec8d8d5",
-  "bug": "immediateK16 split occursbefore clock_spine wrapper; wrapperbalances16BUFrootA and suppressesoriginalregionalCTS",
+  "bug": "clock_spine wrapper is defined first; immediate K16 split then executes before wrapped clock_tree_synthesis invocation; invocation balances16BUFrootA and suppresses originalregionalCTS",
   "stages": [
     {
       "stage": 1,
