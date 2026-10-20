@@ -1,0 +1,15 @@
+{
+ "base": "8608a236c",
+ "unchanged_dependency_source": "28c11cb42",
+ "distributed_rtl_source": "2095d8e71",
+ "copied_only_if_absent_from_MAIN": [
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed_core.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "rtl/hbm_accel/sm/attn/test/pv_merge_golden.py",
+  "rtl/hbm_accel/sm/attn/test/pvm_reference_pin_wrapper.sv",
+  "rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh",
+  "rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv"
+ ],
+ "policy": "Existing MAIN sources retained byteforbyte; no broad Claude branch merge."
+}
