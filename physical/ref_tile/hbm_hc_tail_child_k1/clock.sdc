@@ -18,8 +18,9 @@ set_max_transition 260 [current_design]
 # whose output net is 'sclk' (compact_netlist.py --clock-net) and clocks the 3,088 sink registers.
 # Edges in master edges: rise at a clk rise (1), fall at the next clk rise (3), next rise seven periods later (15).  Every
 # clk <-> sclk arc is therefore a normal synchronous single-period check (no multicycle, no false path, no groups).
-set ot_sk [get_pins -quiet iv4540_c/Y]
-if {[llength $ot_sk] != 1} { error "tailc_sclk.sdc: generated-clock driver iv4540_c/Y not found" }
+# the flow may wrap the netlist (reset landing -> u_ot_pr_core, flattened to 'u_ot_pr_core.iv4540_c'): match by suffix, exactly one
+set ot_sk [get_pins -quiet -of_objects [get_cells -quiet {iv4540_c *.iv4540_c}] -filter "direction == output"]
+if {[llength $ot_sk] != 1} { error "tailc_sclk.sdc: generated-clock driver iv4540_c output pin not unique ([llength $ot_sk])" }
 create_generated_clock -name sclk -source [get_ports clk] -edges {1 3 15} $ot_sk
 set_clock_uncertainty -setup 60 [get_clocks sclk]
 set_clock_uncertainty -hold 25 [get_clocks sclk]
