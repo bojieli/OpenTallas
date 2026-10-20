@@ -260,6 +260,63 @@ def readback(img, pl, base, e, j):
     return b"".join(img[a] for a, _ in lookup_addrs(pl, base, e, j))
 
 
+# ------------------------------------------------------------------------------------------------ mainline compilers
+# HBM-ROTLAYOUT-ML (10-19): what the mainline compilers (smb_unit d4g image compiler for DS, toksim_smhbm.compile_qwen
+# for Qwen) place.  The home SM of a lookup is a RUNTIME value (entry e on SM e mod 32), so EVERY SM's first-layer
+# stream carries the same fixed number of lookup SLOTS at its head: the most lookups a token issues in any mode of the
+# image (DS: MTP 2; Qwen: DFlash verify b16).  A slot without a real lookup on that SM reads entry 0 through the slot's
+# copy (a static dummy read: the schedule never depends on where the ids land; cost = slots x row bytes per SM a token).
+EMBED = {
+    "HBM-DS": dict(name="embedding", row_bytes=10240, copies=2, slots=2,
+                   src="DS V4.1 vocab 129,280 x hidden 5,120 BF16 (configs/models/candidates/deepseek-v4.1-flash-"
+                       "engram_hbm.json); lookups AR 1 / MTP 2; copies = min_copies (census_tbl DS x2 101.69)"),
+    "HBM-Qwen": dict(name="embedding", row_bytes=4128, copies=4, slots=16,
+                     src="Qwen3-8B emb_row al(4,096 + 2) = 4,128 B (hgi_sim/qwen_compiler); lookups AR 1 / DFlash b8 8"
+                         " / b16 16; copies = min_copies (census_tbl Qwen x4 103.86 at k = 1 / 8 / 16)"),
+}
+ENGRAM = dict(row_bytes=264, ids_per_token=24, sector_b=32,
+              src="DS V4.1 Engram (hbm_resident_regions; layers 1 and 14): 24 hashed ids a token; rows owned by id "
+                  "mod 96; ids from the last 4 token ids, so the reads are issued a token ahead of the layer")
+
+
+def lookup_slots(design):
+    """(plan, slot table names) of the embedding lookup slots at the head of the design's first-layer stream"""
+    e = EMBED[design]
+    pl = plan(e["row_bytes"], f"{design} {e['name']}", copies=e["copies"])
+    return pl, [e["name"]] * e["slots"]
+
+
+def layout_with_lookups(design, line_list, what="", tails=None, heads=None):
+    """static (non-routed) first-layer stream of `line_list` blocks with the design's lookup slots at its head (the
+    Qwen compiler): -> dict(sets per weight block, copies per slot, check_weights (check_addrs on the weight blocks
+    alone, laid out by the caller from `sets`), check (combined stream + wrap)) or LayoutRefused"""
+    pl, slots = lookup_slots(design)
+    toks = [("t", n) for n in slots] + [("ne", BL.words(n)) for n in line_list]
+    lay = layout_stream(toks, {slots[0]: pl}, f"{design} {what}", tails=tails, heads=heads)
+    nlb = pl["nb"] * len(slots)
+    wsets = [x[1] for x in lay["seq"][nlb:]]
+    return dict(plan=pl, slots=len(slots), copies=lay["copies"], weight_sets=wsets, deviations=lay["deviations"],
+                lookup_sets=[list(x) for x in lay["sets"][:len(slots)]], check=lay["check"],
+                dummy_bytes_per_sm=len(slots) * pl["row_bytes"])
+
+
+def engram_plan(n_ids=None, gap_words=None, what="DS Engram"):
+    """Engram rows (264 B, far below one block): ONE copy, PACKED in the home SM's sector space (row e at byte
+    e x 264 of the table region, <= 10 32-B sectors = <= 3 words per PC), read by indexed DMA a token ahead.  Their bank
+    sets are runtime (hash of ids), so the read stream is not rotatable: hbm_bank_layout.check_runtime_spaced refuses it
+    unless every read is isolated (gap >= REF_WIN word-times); the window is placed in an inter-layer gap of the SM's
+    PC schedule (never inside a weight stream) and priced at its worst case (all ids on one SM)."""
+    n = ENGRAM["ids_per_token"] if n_ids is None else n_ids
+    sectors = -(-(ENGRAM["row_bytes"] + ENGRAM["sector_b"] - 1) // ENGRAM["sector_b"])    # a row straddles <= 10
+    wpc = -(-sectors // 4)                                                                  # words per PC a read
+    gap = max(BL.T_HIDE, BL.REF_WIN, BL.R4_GAP) if gap_words is None else gap_words
+    chk = BL.check_runtime_spaced("tables", n, wpc, gap, f"{what} indexed rows")
+    return dict(law="packed_sector_rows", copies=1, row_bytes=ENGRAM["row_bytes"], max_sectors_per_read=sectors,
+                words_per_pc_per_read=wpc, reads_worst_one_sm=n, gap_words=gap, window_words_worst=chk["window_words"],
+                issue="token ahead (ids = hash of the last 4 token ids), in an inter-layer gap of the home SM's PC stream",
+                check=chk, src=ENGRAM["src"])
+
+
 # ------------------------------------------------------------------------------------------------ the price
 GB = 1e9
 HBM_PER_DIE = dict(stacks=4, gb_per_stack=36.0, src="docs/HBM_GENERIC_INTERFACE.md Table 9-1 (144 GB = 4 x 36 GB)")
@@ -455,6 +512,34 @@ def _selftest():
         expect(good and len(img) == n * pl["slots"] and not set(free) & set(img),
                f"{pl['what']}: image {len(img)} slots ({pl['copies']} copies), every copy reads back exact, "
                f"40 static blocks outside the table slots")
+    # HBM-ROTLAYOUT-ML: mainline placement -- DS lookup slots + routed experts in one layout_bw kind, Qwen slots, Engram
+    import hbm_bw_unit as B
+    rng2 = random.Random(3)
+    recs = [dict(tag=tag, slot=None, eid=None, blocks=[dict(n_lines=n) for n in B.split(b, l)]) for (tag, b, l) in B.L14]
+    ids = rng2.sample(range(384), 6)
+    recs += [dict(tag="w13", slot=s_, eid=e, blocks=[dict(n_lines=B.R13)]) for s_, e in enumerate(ids)]
+    recs += [dict(tag="w2", slot=ids.index(e), eid=e, blocks=[dict(n_lines=B.R2)]) for e in rng2.sample(ids, 6)]
+    nonexp = [b for r in recs if r["slot"] is None for b in r["blocks"]]
+    exp = {}
+    for r in recs:
+        if r["slot"] is not None:
+            exp.setdefault(r["slot"], []).extend(r["blocks"])
+    plds, slots = lookup_slots("HBM-DS")
+    kd = dict(name="L00", lookups=slots, lookup_plans={slots[0]: plds})
+    BL.layout_bw(kd, recs, nonexp, exp, 0)
+    kd["row_top_after"](0)
+    seq = BL.kind_seq(BL.kind_order(dict(kd, recs=recs)))
+    r = BL.check_wrapped("tables", seq, "DS L00 stand-in with lookup slots")
+    expect(r["verdict"] == "ROTATED" and len(kd["lookup_blocks"]) == 2 * plds["nb"],
+           f"DS first-layer kind (stand-in L14 shape, routed) with {len(slots)} lookup slots: copies "
+           f"{[x['copy'] for x in kd['rotlayout']['lookup_slots']]}, sets {[x[1] for x in seq[:8]]}...")
+    lq = layout_with_lookups("HBM-Qwen", [64] * 368, "L0 368 blocks", tails=[head_run_tail()[0]])
+    expect(lq["check"]["verdict"] == "ROTATED", f"Qwen L0 (368 x 64-line blocks) + {lq['slots']} slots: copies "
+                                                 f"{lq['copies']}, weights from set {lq['weight_sets'][:4]}")
+    eg = engram_plan()
+    expect(eg["check"]["verdict"] == "ISOLATED", f"Engram packed 1-copy rows: worst window {eg['window_words_worst']} "
+                                                  f"word-times on one SM ({eg['reads_worst_one_sm']} reads)")
+    refused(lambda: engram_plan(gap_words=40), "Engram reads spaced 40 word-times (inside a weight stream)")
     p = price()
     for dn, d in p["designs"].items():
         f = d["fit"]["chosen"]

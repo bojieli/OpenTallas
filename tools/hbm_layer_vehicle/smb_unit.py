@@ -78,6 +78,9 @@ if LAYOUT != 'bw':
 if BSCALE != 1:
     raise BL.LayoutRefused(f"ROTLAYOUT REFUSED: SMB_BSCALE={BSCALE}; only 1 (slot-packed, rotated) is allowed")
 layout_bw = BL.layout_bw
+import hbm_table_images as TI  # noqa: E402
+LOOKUPS = int(os.environ.get('SMB_LOOKUPS', 1))    # HBM-ROTLAYOUT-ML: embedding lookup slots in the first layer's stream
+ENGRAM_LAYERS = (1, 14)                            # DS V4.1 Engram layers
 
 
 def put(v, lo, w, x, name):
@@ -263,6 +266,14 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                     exp_blocks.setdefault(r["slot"], []).append(blk)
         kd["nonexp_blocks"] = len(nonexp)
         kd["_layout_args"] = (recs, nonexp, exp_blocks, L)
+        # HBM-ROTLAYOUT-ML: the token's embedding lookups are SLOTS at the head of the first layer's stream (every SM,
+        # the home SM is runtime; unused slots read entry 0), laid out jointly with the weights (assign_sets 't')
+        if L == 0 and name != "head" and LOOKUPS:
+            pl, slots = TI.lookup_slots("HBM-DS")
+            kd.update(lookups=slots, lookup_plans={slots[0]: pl})
+        # Engram layers: 1-copy packed rows by indexed DMA a token ahead, isolated read by read (check_runtime_spaced)
+        if L in ENGRAM_LAYERS:
+            kd["engram"] = TI.engram_plan(what=f"DS Engram L{L}")
         kd["recs"] = recs
         kinds.append(kd)
     # ---- HBM-ROTLAYOUT: lay every kind out rotated (hbm_bank_layout.assign_sets: starts on sets 0,1,2, ends so any kind
@@ -275,7 +286,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
             recs_, nonexp_, exp_, L_ = kd["_layout_args"]
             layout_bw(kd, recs_, nonexp_, exp_, L_, heads=heads)
             row_top = kd["row_top_after"](row_top)
-        nh = [BL.head_of(BL.kind_seq([b for r in kd["recs"] for b in r["blocks"]])) for kd in kinds]
+        nh = [BL.head_of(BL.kind_seq(BL.kind_order(kd))) for kd in kinds]
         if nh == heads:
             break
         heads = nh
@@ -283,17 +294,40 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         del kd["_layout_args"]
     rot, seqs = [], {}
     for kd in kinds:
-        order = [b for r in kd["recs"] for b in r["blocks"]]
+        order = BL.kind_order(kd)
         sq = BL.kind_seq(order)
         seqs[kd["name"]] = sq
-        cls = "embed_head" if kd["name"] == "head" else "weights"
+        cls = "embed_head" if kd["name"] == "head" else ("tables" if kd.get("lookup_blocks") else "weights")
         rot.append(BL.check_stream(cls, sq, f"{kd['name']} fetch order"))
         if kd["exp"]:                              # routed blocks are checked IN the fetch order (sets by position)
             rot.append(dict(BL.check_stream("experts", sq, f"{kd['name']} fetch order (routed positions)"),
                             routed_blocks=sum(1 for b in order if b.get("runtime_row"))))
+        if kd.get("engram"):
+            rot.append(dict(kd["engram"]["check"], what=f"{kd['name']} {kd['engram']['check']['what']}"))
     rot += BL.check_sequence_pairs(seqs)
+    # table region: entry e of the SM's slice (e = id // 32) owns DRAM row tbase + e; its copies sit on copy_sets
+    tables = {}
+    for kd in kinds:
+        for nm, pl in (kd.get("lookup_plans") or {}).items():
+            if nm in tables:
+                continue
+            e = TI.EMBED["HBM-DS"]
+            n_ent = -(-TI.inventory()["HBM-DS"]["tables"][0]["rows"] // TI.N_SM)
+            tbase = -(-row_top // 8)
+            row_top = (tbase + n_ent) * 8
+            tables[nm] = dict(plan={k: v for k, v in pl.items() if k != "what"}, base_row=tbase, entries_per_sm=n_ent,
+                              slots=e["slots"], copies=e["copies"], dummy_entry=0, src=e["src"],
+                              slot_law="slot p reads copy kind.rotlayout.lookup_slots[p].copy of entry id // 32 on SM "
+                                       "id mod 32; block address (base_row + entry) << 3 | copy_sets[copy][k]",
+                              dummy_bytes_per_sm_token=e["slots"] * pl["row_bytes"])
+        for b in kd.get("lookup_blocks") or []:
+            b["dram_row"] = (tables[b["table"]]["base_row"] << 3) | b["bank_set"]
     rotlayout = dict(**BL.require_all(rot), checks=len(rot),
-                     per_kind={kd["name"]: kd["rotlayout"] for kd in kinds})
+                     per_kind={kd["name"]: kd["rotlayout"] for kd in kinds}, tables=tables,
+                     engram={kd["name"]: {k: v for k, v in kd["engram"].items() if k != "check"}
+                             for kd in kinds if kd.get("engram")})
+    if not rotlayout["all_rotated"]:
+        raise BL.LayoutRefused(f"ROTLAYOUT REFUSED: {[r for r in rot if r['verdict'] not in ('ROTATED', 'ISOLATED')]}")
     if row_top >= BLK_MAX:
         raise SystemExit(f"block addresses exhausted ({row_top})")
     # ---- issue order of a layer = record order (weights.json k order), blocks in wave order; one descriptor a block
