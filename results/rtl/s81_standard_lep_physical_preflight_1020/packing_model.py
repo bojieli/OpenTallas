@@ -76,47 +76,85 @@ for k,q in nets.items():
 incident=collections.defaultdict(list)
 for k,q in nets.items():
  for n in q['cells']:incident[n].append(k)
-hard={n:[B[0]+cells[n]['w']/2,B[2]-cells[n]['w']/2] for n in cells}
-refusals=[]
+# Exact per-row coordinate intervals retain the named native fixed endpoints.
+fixed={}
 for k,q in nets.items():
- if not q['anchors']:continue
- bs=q['anchors'];ax0=min(b[0] for b in bs);ax1=max(b[2] for b in bs)
- height=max([B[3]]+[b[3] for b in bs])-min([B[1]]+[b[1] for b in bs]);span=405-height
- if ax1-ax0>span+1e-6:refusals.append({'net':k,'anchors':bs,'reason':'no full-band-y envelope fits fixed terminals'})
- for n in q['cells']:
-  hard[n][0]=max(hard[n][0],ax1-span+cells[n]['w']/2)
-  hard[n][1]=min(hard[n][1],ax0+span-cells[n]['w']/2)
-for n,(lo,hi) in hard.items():
- if lo>hi:refusals.append({'cell':n,'interval':[lo,hi],'reason':'incompatible fixed-terminal full-band envelope'})
+ if q['anchors']:
+  bs=q['anchors'];fixed[k]=(min(b[0] for b in bs),min(b[1] for b in bs),max(b[2] for b in bs),max(b[3] for b in bs))
+def interval(n,y0,y1):
+ lo,hi=B[0]+cells[n]['w']/2,B[2]-cells[n]['w']/2
+ for k in incident[n]:
+  if k not in fixed:continue
+  ax0,ay0,ax1,ay1=fixed[k];span=405-(max(y1,ay1)-min(y0,ay0))
+  lo=max(lo,ax1-span+cells[n]['w']/2);hi=min(hi,ax0+span-cells[n]['w']/2)
+ return lo,hi
+mid=(B[1]+B[3])/2
+hard={n:interval(n,mid-RH/2,mid+RH/2) for n in cells}
+refusals=[{'cell':n,'interval':v,'fixed_nets':{k:fixed[k] for k in incident[n] if k in fixed}} for n,v in hard.items() if v[0]>v[1]]
 (d/'fixed_interval_refusals.json').write_text(json.dumps(refusals,indent=2)+'\n')
-if refusals:raise ValueError(('fixed-terminal full-band planning refusal',len(refusals),refusals[:2]))
+if refusals:raise ValueError(('mid-row conservative bbox planning refusal',refusals[:2]))
 x={n:(hard[n][0]+hard[n][1])/2 for n in cells}
 for iteration in range(35):
  means={k:(sum(x[n] for n in q['cells'])+sum((b[0]+b[2])/2 for b in q['anchors']))/(len(q['cells'])+len(q['anchors'])) for k,q in nets.items()}
  x={n:max(hard[n][0],min(hard[n][1],.25*x[n]+.75*(sum(means[k] for k in incident[n])/len(incident[n]) if incident[n] else x[n]))) for n in cells}
-# Constructive native-site legal packing, not a placement-engine result.
 rowcells=[[] for _ in range(120)];heap=[(0.,i) for i in range(120)];heapq.heapify(heap)
 for n in sorted(cells,key=lambda n:(x[n],n)):
  w,i=heapq.heappop(heap);rowcells[i].append(n);heapq.heappush(heap,(w+cells[n]['w'],i))
-boxes={};maxrow=0
+# A conservative full-band envelope can be empty even when a narrow set of
+# actual rows is legal. Move only the analytical row assignment to a row whose
+# exact y/cell-height interval is nonempty; never change source or native ODB.
+for i in range(120):
+ for n in list(rowcells[i]):
+  z=interval(n,B[1]+i*RH,B[1]+(i+1)*RH)
+  if z[0]<=z[1]:continue
+  choices=[]
+  for j in range(120):
+   zz=interval(n,B[1]+j*RH,B[1]+(j+1)*RH)
+   width=sum(cells[t]['w'] for t in rowcells[j])+cells[n]['w']
+   if zz[0]<=zz[1] and width<B[2]-B[0]:choices.append((abs(j-i),width,j))
+  if not choices:raise ValueError(('no actual legal row',n,incident[n]))
+  j=min(choices)[2];rowcells[i].remove(n);rowcells[j].append(n)
 for i,ns in enumerate(rowcells):
- total=sum(cells[n]['w'] for n in ns);maxrow=max(maxrow,total)
- if total>B[2]-B[0]+1e-6:raise ValueError(('row capacity',i,total))
- pos={};end=B[0]
- for n in ns:
-  desired=round((x[n]-cells[n]['w']/2)/SITE)*SITE
-  pos[n]=max(end,desired,math.ceil((hard[n][0]-cells[n]['w']/2)/SITE-1e-7)*SITE);end=pos[n]+cells[n]['w']
- end=B[2]
- for n in reversed(ns):pos[n]=min(pos[n],end-cells[n]['w'],math.floor((hard[n][1]-cells[n]['w']/2)/SITE+1e-7)*SITE);end=pos[n]
- for n in ns:
-  if pos[n]<B[0]-1e-5 or pos[n]+cells[n]['w']/2<hard[n][0]-1e-5:raise ValueError(('packing conflicts with fixed-terminal bound',n,pos[n],hard[n]))
-  boxes[n]=(pos[n],B[1]+i*RH,pos[n]+cells[n]['w'],B[1]+(i+1)*RH)
-netboxes={};bad=[];maxspan=0
-for k,q in nets.items():
- bs=list(q['anchors'])+[boxes[n] for n in q['cells']]
- bb=(min(b[0] for b in bs),min(b[1] for b in bs),max(b[2] for b in bs),max(b[3] for b in bs))
- span=bb[2]-bb[0]+bb[3]-bb[1];maxspan=max(maxspan,span);netboxes[k]=bb
- if span>405:bad.append({'net':k,'bbox':bb,'upper_um':span,'drivers':q['drivers'],'endpoints':q['terms']})
+ for n in ns:hard[n]=interval(n,B[1]+i*RH,B[1]+(i+1)*RH)
+def pack():
+ boxes={};maxrow=0
+ for i,original in enumerate(rowcells):
+  ns=sorted(original,key=lambda n:(x[n],n));total=sum(cells[n]['w'] for n in ns);maxrow=max(maxrow,total)
+  if total>B[2]-B[0]+1e-6:raise ValueError(('row capacity',i,total))
+  pos={};end=B[0]
+  for n in ns:
+   desired=round((x[n]-cells[n]['w']/2)/SITE)*SITE
+   pos[n]=max(end,desired,math.ceil((hard[n][0]-cells[n]['w']/2)/SITE-1e-7)*SITE);end=pos[n]+cells[n]['w']
+  end=B[2]
+  for n in reversed(ns):pos[n]=min(pos[n],end-cells[n]['w'],math.floor((hard[n][1]-cells[n]['w']/2)/SITE+1e-7)*SITE);end=pos[n]
+  for n in ns:
+   if pos[n]<B[0]-1e-5 or pos[n]+cells[n]['w']/2<hard[n][0]-1e-5:raise ValueError(('row packing conflicts with fixed-terminal interval',n,pos[n],hard[n]))
+   boxes[n]=(pos[n],B[1]+i*RH,pos[n]+cells[n]['w'],B[1]+(i+1)*RH)
+ return boxes,maxrow
+def evaluate(boxes):
+ netboxes={};bad=[];maxspan=0
+ for k,q in nets.items():
+  bs=list(q['anchors'])+[boxes[n] for n in q['cells']]
+  bb=(min(b[0] for b in bs),min(b[1] for b in bs),max(b[2] for b in bs),max(b[3] for b in bs))
+  span=bb[2]-bb[0]+bb[3]-bb[1];maxspan=max(maxspan,span);netboxes[k]=bb
+  if span>405+1e-6:bad.append({'net':k,'bbox':bb,'upper_um':span,'drivers':q['drivers'],'endpoints':q['terms']})
+ return netboxes,bad,maxspan
+history=[]
+for iteration in range(100):
+ boxes,maxrow=pack();netboxes,bad,maxspan=evaluate(boxes);history.append({'iteration':iteration,'over405':len(bad),'max_um':maxspan})
+ if not bad:break
+ proposals=collections.defaultdict(list)
+ for r in bad:
+  q=nets[r['net']];bb=r['bbox'];width=400-(bb[3]-bb[1])
+  if width<=0:continue
+  start=(bb[0]+bb[2]-width)/2
+  if q['anchors']:
+   ab=fixed[r['net']];start=max(ab[2]-width,min(ab[0],start))
+  for n in q['cells']:
+   lo=max(hard[n][0],start+cells[n]['w']/2);hi=min(hard[n][1],start+width-cells[n]['w']/2)
+   if lo<=hi:proposals[n].append(max(lo,min(hi,(boxes[n][0]+boxes[n][2])/2)))
+ for n,ps in proposals.items():x[n]=sum(ps)/len(ps)
+(d/'packing_iterations.json').write_text(json.dumps(history,indent=2)+'\n')
 # Actual native routing tracks. Conservatively block every macro on M2..M5;
 # discard M2 throughout the logic band for local PG rails, and reserve all top
 # M5 PG columns with24nm spacing on both vertical layers. Apply actual ORFS25%

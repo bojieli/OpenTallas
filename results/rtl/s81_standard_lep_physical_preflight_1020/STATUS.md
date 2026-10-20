@@ -26,3 +26,5 @@ interval refusal. Actual modeled cut ratios are<=0.47 after macro/PG obstacles
 and actual25% routing layer reduction. Clock/PG geometry qualification remains
 open. Native PG binding snapshots are electrical-net binding, not final routed
 metal connectivity or unplaced standard-cell pin contact.
+
+CLAUDE IS BACK handback: stopped new work. Last in-hand model source refines exact per-row x intervals and iterates conservative net windows; its already launched fleet job remains progressing. Job clientPID899711/session7094, ot-epyc5 unitoth-ubuntu-2700591-1792487502, remote physical_preflight/{host,nh,mu_a,mu_h}_rowconstrained. Only NH rc0 observed before stop; no reach outcome assumed. Prior full-band conservative MU refusal is not a proven source failure. Native DPL/CTS/route never launched, no PNG review or gate approval requested. Clock/PG-metal/complete birth-stage gate integration remain open.
