@@ -399,28 +399,30 @@ module ot_hbm_hc_root_static #(
             result_position[q*3 +: 3] <= tpos[t_eunit]; result[q*768 +: 768] <= tres_e;
         end
     end else begin : g_ress
-        // SAFE: the emit enables / unit select reach 3,072 result flops through KEPT copies (one per 32 loads):
-        // en_c[q*24 + c] = emit && qmask[q] and us_c[q*24 + c] = emit unit, for result word c of quarter q.  They are
-        // the second tail-domain delay stage (loaded from the first, d1), so they rise on the same edge as t_emit.
+        // SAFE: the emit enables / unit select reach 3,072 result flops through KEPT copies sized from the mapped census
+        // (an enable flop maps to a mux: 2 endpoints a bit; a 2:1 data select: 3 a bit): en_c[q*48 + c] = emit &&
+        // qmask[q] for result bits 16c .. 16c + 15 of quarter q (32 endpoints), us_c[q*96 + c] = emit unit for bits
+        // 8c .. 8c + 7 (24 endpoints).  They are the second tail-domain delay stage (loaded from the first, d1), so they
+        // rise on the same edge as t_emit (cycles unchanged).
         reg e_emit_d1, e_eunit_d1; reg [3:0] e_qmask_d1;
         always @(posedge clk or negedge rst_tail) if (!rst_tail) e_emit_d1 <= 1'b0; else e_emit_d1 <= e_emit;
         always @(posedge clk) begin e_qmask_d1 <= e_qmask; e_eunit_d1 <= e_eunit; end
-        (* keep = "true", dont_touch = "true" *) reg [95:0] en_c;
-        (* keep = "true", dont_touch = "true" *) reg [95:0] us_c;
+        (* keep = "true", dont_touch = "true" *) reg [191:0] en_c;
+        (* keep = "true", dont_touch = "true" *) reg [383:0] us_c;
         reg [3:0] en_p; reg us_p;
         always @(posedge clk) begin
             for (integer q = 0; q < 4; q = q + 1) begin
-                en_c[q*24 +: 24] <= {24{e_emit_d1 && e_qmask_d1[q]}};
-                us_c[q*24 +: 24] <= {24{e_eunit_d1}};
+                en_c[q*48 +: 48] <= {48{e_emit_d1 && e_qmask_d1[q]}};
+                us_c[q*96 +: 96] <= {96{e_eunit_d1}};
                 en_p[q] <= e_emit_d1 && e_qmask_d1[q];
             end
             us_p <= e_eunit_d1;
         end
         always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) begin
             if (en_p[q]) result_position[q*3 +: 3] <= tpos[us_p];
-            for (integer c = 0; c < 24; c = c + 1)
-                if (en_c[q*24 + c])
-                    result[q*768 + c*32 +: 32] <= us_c[q*24 + c] ? tres[768 + c*32 +: 32] : tres[c*32 +: 32];
+            for (integer c = 0; c < 96; c = c + 1)
+                if (en_c[q*48 + c/2])
+                    result[q*768 + c*8 +: 8] <= us_c[q*96 + c] ? tres[768 + c*8 +: 8] : tres[c*8 +: 8];
         end
     end
 
