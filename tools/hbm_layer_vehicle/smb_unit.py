@@ -671,7 +671,7 @@ def main(argv=None):
         p.add_argument("--fix", required=True)
         p.add_argument("--smw", required=True)
         p.add_argument("--layers", default="L00:0,L02:2,L14:14,head:0")
-        p.add_argument("--mut", default="", choices=["", "late_ids", "xslot0"])
+        p.add_argument("--mut", default=os.environ.get("SMB_MUT", ""), choices=["", "late_ids", "xslot0"])
         if nm == "compile":
             p.add_argument("--out", required=True)
         else:
