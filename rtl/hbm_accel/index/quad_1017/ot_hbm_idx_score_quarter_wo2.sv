@@ -37,12 +37,19 @@ module ot_hbm_idx_score_qw_r4 #(parameter integer TP=96,RANK_W=(TP<=1?1:$clog2(T
  (* keep *) reg h_r;(* keep *) reg[RANK_W-1:0]rk_r;(* keep *) reg[10:0]fo_r;(* keep *) reg[11:0]nk_r;
  (* keep *) reg ke_r;(* keep *) reg[170:0]kb_r;
  (* keep *) reg qv_r;(* keep *) reg[7:0]qh_r;(* keep *) reg[511:0]qc_r;(* keep *) reg[31:0]qs_r;(* keep *) reg[15:0]qw_r;
- (* keep *) reg bv_r;(* keep *) reg[7:0]bi_r;(* keep *) reg[2197:0]kl0_r;(* keep *) reg[2197:0]kl1_r;
+ (* keep *) reg bv_r;(* keep *) reg[2197:0]kl0_r;(* keep *) reg[2197:0]kl1_r;
  always @(posedge clk_w0)begin
   h_r<=half;rk_r<=rank;fo_r<=first_ord;nk_r<=nkeys;ke_r<=keep_en;kb_r<=keep_bitmap;
   qv_r<=ql_v;qh_r<=ql_head;qc_r<=ql_codes;qs_r<=ql_sc;qw_r<=ql_w;
-  bv_r<=beat_v;bi_r<=beat_index;kl0_r<=key_lines0;
+  bv_r<=beat_v;kl0_r<=key_lines0;
  end
+ // KEPT beat-index copies (HBM-IDX6 10-20 qw4n): qw4k native32 census FAIL u.bi_r[0..3] 196 loads (the 171:1 keep-bit
+ // select + 8 vk compares + 4 header compares + md/first). Every consumer group now reads its own A-stage copy of the
+ // beat_index pin (each pin bit drives 16 capture flops; each copy <= ~16 loads): bi_w = W fault checks, bi_m = md/first,
+ // bi_v0/bi_v1 = per-row vk compares, bi_h = group select of the keep bitmap, gk[g].bl = the 16:1 select inside group g.
+ // Same cycle as bi_r (A stage); (* keep *) copies survive opt_merge via the ot_keep_regs hook. Function unchanged.
+ (* keep *) reg[7:0]bi_w;(* keep *) reg[7:0]bi_m;(* keep *) reg[7:0]bi_v0;(* keep *) reg[7:0]bi_v1;(* keep *) reg[3:0]bi_h;
+ always @(posedge clk_w0)begin bi_w<=beat_index;bi_m<=beat_index;bi_v0<=beat_index;bi_v1<=beat_index;bi_h<=beat_index[7:4];end
  always @(posedge clk_w1) kl1_r<=key_lines1;
  wire[4395:0]kl_r={kl1_r,kl0_r};
  // W fault cause, split by row: row 0 = beat range + key lines 0/1 headers, row 1 = key lines 2/3 headers
@@ -50,14 +57,14 @@ module ot_hbm_idx_score_qw_r4 #(parameter integer TP=96,RANK_W=(TP<=1?1:$clog2(T
  always @* begin
   wf0=0;wf1=0;
   if(bv_r)begin
-   if(nk_r>2736||bi_r>170)wf0=1;
-   for(integer j=0;j<4;j=j+1)if(!kl_r[j*1099]||kl_r[j*1099+1+:10]!==10'((4*int'(h_r)+j)*128+int'(bi_r)))begin
+   if(nk_r>2736||bi_w>170)wf0=1;
+   for(integer j=0;j<4;j=j+1)if(!kl_r[j*1099]||kl_r[j*1099+1+:10]!==10'((4*int'(h_r)+j)*128+int'(bi_w)))begin
     if(j<2)wf0=1;else wf1=1;
    end
   end
  end
  wire[2175:0]keys[0:1];wire[3:0]vk[0:1];wire[24:0]md[0:1];
- wire[19:0]g0=20'(8*TP)*20'(fo_r)+20'(8)*20'(rk_r)+20'(16*TP)*20'(bi_r);
+ wire[19:0]g0=20'(8*TP)*20'(fo_r)+20'(8)*20'(rk_r)+20'(16*TP)*20'(bi_m);
  genvar e,l;
  for(e=0;e<2;e=e+1)begin:ge
   for(l=0;l<4;l=l+1)begin:gl
@@ -67,25 +74,37 @@ module ot_hbm_idx_score_qw_r4 #(parameter integer TP=96,RANK_W=(TP<=1?1:$clog2(T
 `else
    assign keys[e][l*544+:544]=kl_r[(ll/2)*1099+11+(ll%2)*544+:544];
 `endif
-   assign vk[e][l]=({4'd0,bi_r}*12'd16+12'(ll)+(h_r?12'd8:12'd0))<nk_r;
+   assign vk[e][l]=({4'd0,(e==0)?bi_v0:bi_v1}*12'd16+12'(ll)+(h_r?12'd8:12'd0))<nk_r;
   end
   wire[19:0]first=g0+(h_r?20'(8*TP):20'd0)+20'(e*4);
-  assign md[e]={(({4'd0,bi_r}+12'd1)*12'd16>=nk_r),first,4'd0};
+  assign md[e]={(({4'd0,bi_m}+12'd1)*12'd16>=nk_r),first,4'd0};
  end
  // ---- stages B + C per row, in the KEPT non-parameterised module ot_hidx_qw_row (SYNTH_KEEP_MODULES). L2H-IDXSCORE
  // 10-19 r4k: in the one-root tile (clk_w0 = clk_w1) Yosys opt_merge folded every row-1 copy with identical D into row 0's
  // (b_q, b_qv, b_kv, b_md, o_q, o_qv, o_kv, most of o_aux: 568 o_q flops left of 1,136), so o_q0 launched from the row-1
  // flop one ~650 um buffered hop from its pin (gate qw4s_562_w432 reg->out -228 ps). A hierarchy boundary per row keeps
  // both copies. Cycles unchanged: B then C, row e on its own row clock.
- // keep-bit select split across B/C (r4m, L2H-IDXSCORE 10-19 23:20): qw4k_648 worst path was kb_r[bi_r] (171:1 select) from the
- // row-0 A regs over the hop into row 1's B (+11.0 ps). Now A -> B carries the 16 candidates kb_r[{bi_r[7:4],x}] (11:1) plus
- // bi_r[3:0]; each row's B -> C finishes the 16:1 select beside its own pins. Same cycle; bits >170 read 0 (as Verilator did).
- wire[255:0]kb_p={85'd0,kb_r};wire[15:0]ks=kb_p[{bi_r[7:4],4'd0}+:16];
+ // keep-bit select kb_r[beat_index] as 11 groups of 16 (16:1 on the group's own copy gk[g].bl) then 11:1 on bi_h; one
+ // combinational cone in the A->B cycle as qw4k's kb_r[bi_r] (indices > 170 only occur with the bi > 170 W fault set)
+ wire[175:0]kb_p={5'd0,kb_r};wire[15:0]kg;
+ genvar g;
+ for(g=0;g<16;g=g+1)begin:gk
+  if(g<11)begin:gv
+   (* keep *) reg[3:0]bl;
+   always @(posedge clk_w0) bl<=beat_index[3:0];
+   wire[15:0]grp=kb_p[g*16+:16];
+   assign kg[g]=grp[bl];
+  end else begin:gz
+   assign kg[g]=1'b0;
+  end
+ end
+ wire kbit=kg[bi_h];
+ wire[3:0]kk[0:1];assign kk[0]={4{!ke_r||kbit}};assign kk[1]={4{!ke_r||kbit}};
  wire b_wf0,b_wf1;wire[28:0]b_ak0,b_ak1;wire[29:0]r0_aux;
- ot_hidx_qw_row u_row0(.clk(clk_w0),.qv(qv_r),.q({qh_r,qc_r,qs_r,qw_r}),.kv(bv_r),.kkv(vk[0]),.ks(ks),.blo(bi_r[3:0]),.ke(ke_r),.key(keys[0]),
+ ot_hidx_qw_row u_row0(.clk(clk_w0),.qv(qv_r),.q({qh_r,qc_r,qs_r,qw_r}),.kv(bv_r),.kkv(vk[0]),.kk(kk[0]),.key(keys[0]),
   .md(md[0]),.wf(wf0),.wf_c(b_wf0|b_wf1),.b_wf_o(b_wf0),.b_ak_o(b_ak0),.o_qv(o_qv0),.o_q(o_q0),.o_kv(o_kv0),.o_kkv(o_kkv0),
   .o_key(o_key0),.o_aux(r0_aux));
- ot_hidx_qw_row u_row1(.clk(clk_w1),.qv(qv_r),.q({qh_r,qc_r,qs_r,qw_r}),.kv(bv_r),.kkv(vk[1]),.ks(ks),.blo(bi_r[3:0]),.ke(ke_r),.key(keys[1]),
+ ot_hidx_qw_row u_row1(.clk(clk_w1),.qv(qv_r),.q({qh_r,qc_r,qs_r,qw_r}),.kv(bv_r),.kkv(vk[1]),.kk(kk[1]),.key(keys[1]),
   .md(md[1]),.wf(wf1),.wf_c(b_wf1),.b_wf_o(b_wf1),.b_ak_o(b_ak1),.o_qv(o_qv1),.o_q(o_q1),.o_kv(o_kv1),.o_kkv(o_kkv1),
   .o_key(o_key1),.o_aux(o_aux1));
 `ifdef OT_IDXQS_MUT_AUXEARLY
@@ -101,16 +120,14 @@ endmodule
 // B-stage fault cause and {md, kk} (row 0 ORs both rows' B wf into its aux; the AUXEARLY mutant reads b_ak_o).
 module ot_hidx_qw_row(
  input wire clk,
- input wire qv,input wire[567:0]q,input wire kv,input wire[3:0]kkv,input wire[15:0]ks,input wire[3:0]blo,input wire ke,
- input wire[2175:0]key,
+ input wire qv,input wire[567:0]q,input wire kv,input wire[3:0]kkv,input wire[3:0]kk,input wire[2175:0]key,
  input wire[24:0]md,input wire wf,input wire wf_c,
  output wire b_wf_o,output wire[28:0]b_ak_o,
  output reg o_qv,output reg[567:0]o_q,output reg o_kv,output reg[3:0]o_kkv,output reg[2175:0]o_key,output reg[29:0]o_aux
 );
- reg b_qv,b_kv,b_wf,b_ke;reg[567:0]b_q;reg[3:0]b_kkv,b_blo;reg[15:0]b_ks;reg[2175:0]b_key;reg[24:0]b_md;
- wire[3:0]b_kk={4{!b_ke||b_ks[b_blo]}};
+ reg b_qv,b_kv,b_wf;reg[567:0]b_q;reg[3:0]b_kkv,b_kk;reg[2175:0]b_key;reg[24:0]b_md;
  always @(posedge clk)begin
-  b_qv<=qv;b_q<=q;b_kv<=kv;b_kkv<=kkv;b_ks<=ks;b_blo<=blo;b_ke<=ke;b_key<=key;b_md<=md;b_wf<=wf;
+  b_qv<=qv;b_q<=q;b_kv<=kv;b_kkv<=kkv;b_kk<=kk;b_key<=key;b_md<=md;b_wf<=wf;
  end
  always @(posedge clk)begin
   o_qv<=b_qv;o_q<=b_q;o_kv<=b_kv;o_kkv<=b_kkv;o_key<=b_key;o_aux<={wf_c,b_md,b_kk};
