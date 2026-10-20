@@ -14,6 +14,7 @@ proc ot_native_cell_fence {name box inst_names} {
         set i [$b findInst $nm]
         if {$i eq "NULL"} { error "NATIVE_FENCE missing instance $nm" }
         if {[[$i getMaster] isBlock]} { error "NATIVE_FENCE macro forbidden $nm" }
+        if {[$i getGroup] ne "NULL"} {error "NATIVE_FENCE conflicting existing owner $nm"}
     }
     set u [[ord::get_db_tech] getDbUnitsPerMicron]
     set r [odb::dbRegion_create $b $name]
@@ -51,8 +52,8 @@ proc ot_native_cell_fence_add {name inst_names} {
         if {$i eq "NULL" || [[$i getMaster] isBlock]} {error "NATIVE_FENCE_ADD invalid cell $nm"}
         set old [$i getGroup]
         if {$old ne "NULL" && [$old getName] ne $name} {error "NATIVE_FENCE_ADD conflicting owner $nm"}
-        $g addInst $i
     }
+    foreach nm $inst_names {$g addInst [$b findInst $nm]}
     puts "NATIVE_FENCE_ADDED name=$name cells=[llength $inst_names]"
 }
 proc ot_native_cell_fence_adopt_unowned {name} {
@@ -90,10 +91,11 @@ proc ot_native_cell_fence_seed_new {name box inst_names} {
     set u [[ord::get_db_tech] getDbUnitsPerMicron]
     lassign $box x0 y0 x1 y1
     set max_move 0
+    set plans {}
     foreach nm $inst_names {
         set i [$b findInst $nm]
         if {$i eq "NULL" || [[$i getMaster] isBlock]} {error "NATIVE_FENCE_SEED invalid $nm"}
-        if {[$i getPlacementStatus] in {FIRM LOCKED}} {error "NATIVE_FENCE_SEED fixed cell $nm"}
+        if {[$i getPlacementStatus] ni {NONE UNPLACED SUGGESTED PLACED}} {error "NATIVE_FENCE_SEED fixed or unsupported cell $nm status=[$i getPlacementStatus]"}
         set g [$i getGroup]
         if {$g eq "NULL" || [$g getName] ne $name} {error "NATIVE_FENCE_SEED wrong owner $nm"}
         set bb [$i getBBox]
@@ -106,6 +108,10 @@ proc ot_native_cell_fence_seed_new {name box inst_names} {
         set nx [expr {max($lo_x,min($hi_x,$ox))}]
         set ny [expr {max($lo_y,min($hi_y,$oy))}]
         set max_move [expr {max($max_move,abs($nx-$ox)+abs($ny-$oy))}]
+        lappend plans [list $i $nx $ny]
+    }
+    foreach plan $plans {
+        lassign $plan i nx ny
         $i setLocation $nx $ny
         $i setPlacementStatus PLACED
     }

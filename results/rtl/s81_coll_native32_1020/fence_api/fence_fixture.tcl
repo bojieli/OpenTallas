@@ -13,6 +13,10 @@ foreach {name box} {left {5 5 20 25} right {60 5 75 25}} {
  for {set j 0} {$j<20} {incr j} {lappend names u_[expr {$j+($name eq "left"?0:20)}]}
  ot_native_cell_fence $name $box $names
 }
+set saved_group [[[$b findInst u_0] getGroup] getName]
+set reject [catch {ot_native_cell_fence bad_owner {25 5 35 25} {u_0}} reason]
+if {!$reject || [[[$b findInst u_0] getGroup] getName] ne $saved_group || [$b findGroup bad_owner] ne "NULL" || [$b findRegion bad_owner] ne "NULL"} {error "NATIVE_FENCE_OWNER_NEGATIVE failed or mutated"}
+puts "NATIVE_FENCE_OWNER_NEGATIVE_PASS rejected_before_mutation=1 old_group=$saved_group"
 place_pin -pin_name clk -layer M3 -location {40 0} -pin_size {0.018 0.144} -force_to_die_boundary
 place_pin -pin_name d -layer M3 -location {0 20} -pin_size {0.018 0.144} -force_to_die_boundary
 place_pin -pin_name q -layer M3 -location {80 20} -pin_size {0.018 0.144} -force_to_die_boundary
@@ -41,6 +45,21 @@ check_placement -verbose
 ot_native_cell_fence_check left {5 5 20 25} DP
 ot_native_cell_fence_check right {60 5 75 25} DP
 puts "NATIVE_FENCE_DP_PASS groups=2 cells=40"
+set fixed [$b findInst u_0]
+set movable [$b findInst birth_left]
+set old_fixed_loc [$fixed getLocation]
+set old_movable_loc [$movable getLocation]
+foreach status {FIRM LOCKED COVER} {
+    $movable setLocation [expr {int(40*$unit)}] [expr {int(30*$unit)}]
+    set outside [$movable getLocation]
+    $fixed setPlacementStatus $status
+    set reject [catch {ot_native_cell_fence_seed_new left {5 5 20 25} {birth_left u_0}} reason]
+    if {!$reject || [$fixed getLocation] ne $old_fixed_loc || [$movable getLocation] ne $outside || [$fixed getPlacementStatus] ne $status} {error "NATIVE_FENCE_FIXED_NEGATIVE mutated/released $status"}
+    puts "NATIVE_FENCE_FIXED_NEGATIVE_PASS status=$status no_batch_mutation=1"
+    $fixed setPlacementStatus PLACED
+    lassign $old_movable_loc mx my
+    $movable setLocation $mx $my
+}
 ot_native_cell_band_check {1 1 79 39} FINAL
 puts "NATIVE_FENCE_BIRTH_DP_PASS added=2 total=42"
 write_db /work/fence_dp.odb
