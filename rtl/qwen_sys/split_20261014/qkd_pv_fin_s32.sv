@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Default-off SRAM successor of qkd_pv_fin_s. Same ports, arithmetic and
-// command ages; bounded reset release is three edges (+2 boot edges).
+// command ages; regional reset leaf releases after three edges. Shipping
+// adds two plain reset landing edges; first legal start capture is E6.
 // Four 32x128 SRAMs replace the runtime-indexed 16kb sum flop bank.
 // Read at MUL_AGE-2; kept operand capture at MUL_AGE-1; both collision
 // edges forward. MUT4/5 suppress the early/final forwarding respectively.
@@ -46,8 +47,13 @@ module qkd_pv_fin_s32 #(
  always @(posedge ck or negedge rr[480])if(!rr[480])age_operand<=0;else age_operand<=age_d;
  always @(posedge ck or negedge rr[481])if(!rr[481])age_header<=0;else age_header<=age_d;
  always @(posedge ck or negedge rr[482])if(!rr[482])age_product<=0;else age_product<=age_d;
- always @(posedge ck or negedge rr[483])if(!rr[483])mul_operand<=16'hffff;else mul_operand<=MUL_AGE_d;
- always @(posedge ck or negedge rr[484])if(!rr[484])mul_header<=16'hffff;else mul_header<=MUL_AGE_d;
+ // Each shared acceptance controls original8 +two duplicated8 payload bits.
+ generate for(genvar mh=0;mh<2;mh=mh+1)begin:g_mul_date_capture
+  always @(posedge ck or negedge rr[483])if(!rr[483])mul_operand[8*mh+:8]<=8'hff;
+   else if(command_accept[8+mh])mul_operand[8*mh+:8]<=command_mulage[8+mh][8*mh+:8];
+  always @(posedge ck or negedge rr[484])if(!rr[484])mul_header[8*mh+:8]<=8'hff;
+   else if(command_accept[8+mh])mul_header[8*mh+:8]<=command_mulage[8+mh][8*mh+:8];
+ end endgenerate
  wire [15:0] n=age+16'd1;                                  // the edge that ends this cycle
  function automatic win(input [15:0] x,input [15:0] lo);win=(x>=lo)&&(x<lo+16'd32);endfunction
  wire p0_slot=active&&win(n,P0),p1_slot=active&&win(n,P1),r_slot=active&&n==RA;
