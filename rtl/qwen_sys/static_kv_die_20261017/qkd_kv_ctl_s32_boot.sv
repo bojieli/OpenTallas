@@ -162,7 +162,9 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
  assign es_cfg_addr=es_q[71:64];assign es_cfg_data=es_q[63:0];
  assign installed_isa_digest=isa_q;
  // ---- one-hot write strobes (no hold: 0 unless a word is accepted): group-select leaves over shared 16-way decodes ----
- wire[4:0]gix=5'(int'(addr)/6);
+ // Keep each small remainder step separate: monolithic /6 remapping gave addr[9] 37 loads.
+ wire[4:0]gix;
+ qkd_kv_ctl_s32_div6 u_gix(.a(addr),.q(gix));
  wire[15:0]dg,dp;
  generate for(gi_=0;gi_<16;gi_=gi_+1)begin:g_dec
   assign dg[gi_]=gix[3:0]==gi_;
@@ -360,3 +362,26 @@ module qkd_static_kv_boot_dispatch_mu_s32 #(parameter integer MUT=0,parameter in
  end endgenerate
 endmodule
 
+
+// Low five bits of unsigned floor(a/6), exactly the original group-index cast.
+// Consume the high five bits as a remainder, then emit one quotient bit per
+// low input bit. Small kept cones bound fanout without adding clock edges.
+(* keep_hierarchy *)
+module qkd_kv_ctl_s32_rem6(input wire[4:0]a, output wire[2:0]r);
+ assign r=3'(a % 5'd6);
+endmodule
+(* keep_hierarchy *)
+module qkd_kv_ctl_s32_div6_step(input wire[2:0]r, input wire b, output wire[2:0]s, output wire q);
+ wire[3:0]n={r,b};
+ assign q=n>=4'd6;
+ assign s=q?3'(n-4'd6):n[2:0];
+endmodule
+(* keep_hierarchy *)
+module qkd_kv_ctl_s32_div6(input wire[9:0]a, output wire[4:0]q);
+ wire[2:0]r[0:5];
+ qkd_kv_ctl_s32_rem6 u_hi(.a(a[9:5]),.r(r[5]));
+ genvar j;
+ generate for(j=0;j<5;j=j+1)begin:g_s
+  qkd_kv_ctl_s32_div6_step u_s(.r(r[j+1]),.b(a[j]),.s(r[j]),.q(q[j]));
+ end endgenerate
+endmodule
