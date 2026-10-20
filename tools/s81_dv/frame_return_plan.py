@@ -209,7 +209,7 @@ def score(topo, assign, emit_edge, rows_vals):
     return nfaults(rep), len(ret), rep, ret
 
 
-def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters):
+def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters, ret_score=None):
     """pairs: the frame's q pairs; nsr super rows x nseg segments = len(pairs) slots.  Local search over the slot
     permutation (super row, seg) -> pair; objective (faults, root words)."""
     slots = [(R, s, nseg) for R in range(nsr) for s in range(nseg)]
@@ -221,14 +221,18 @@ def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters):
     def mk(pm):
         return {pairs[i]: [slots[pm[i]]] for i in range(len(pairs))}
     best = perm[:]
-    bf, bw, _, _ = score(topo, mk(best), emit_edge, rows_vals)
+    bf, bw, _, ret = score(topo, mk(best), emit_edge, rows_vals)
+    if ret_score is not None:
+        bf += ret_score(ret)
     cur, cf_, cw = best[:], bf, bw
     T0 = 2.0
     for it in range(iters):
         cand = cur[:]
         i, j = rng.sample(range(len(cand)), 2)
         cand[i], cand[j] = cand[j], cand[i]
-        f, w, _, _ = score(topo, mk(cand), emit_edge, rows_vals)
+        f, w, _, ret = score(topo, mk(cand), emit_edge, rows_vals)
+        if ret_score is not None:
+            f += ret_score(ret)
         d = (f - cf_) * 100 + (w - cw)
         T = T0 * (1 - it / iters) + 1e-3
         if d <= 0 or rng.random() < pow(2.718, -d / T):
@@ -270,7 +274,7 @@ def golden_vals(mat, x, nseg):
     return {r: [int(G.bits(G.csum(blocks[r, e0 // 32:(e0 + el) // 32]))) for e0, el in segs] for r in range(mat.rows)}
 
 
-def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg_extra=None, assign=None, frame_schedule=None):
+def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg_extra=None, assign=None, frame_schedule=None, ret_score=None):
     """legalise one K-split phase of the frame: every q pair one segment; returns the plan (schedule data).
     land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs
     seg_extra: optional MEASURED element-work term per segment (TOK-S81-GAPS/XS, PV trace), added to E(pair, seg) before
@@ -316,7 +320,7 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
         return e0 + beat[s] + off[p] + sx[s]
     vals = golden_vals(mat, x, nseg)
     if assign is None:
-        assign, f, w = legalise(topo, pairs, nsr, nseg, emit_edge, vals, seed, iters)
+        assign, f, w = legalise(topo, pairs, nsr, nseg, emit_edge, vals, seed, iters, ret_score=ret_score)
     else:
         assert set(assign) <= set(pairs), ('fixed placement names a pair outside the frame', set(assign) - set(pairs))
         items = [tuple(it) for its in assign.values() for it in its]

@@ -496,8 +496,8 @@ def cmd_cap(a):
             cfg = dict(obase=obase[key] & 0xFFF, ops=0, np=0, fmt=fmt, rbase=rows[0], rcnt=len(rows), rsplit=0, lo32=0,
                        hi32=0)
             tags = {}
-            for f in range(XP.NFRAME):
-                sel = grp['groups'][g][f][ch * R:(ch + 1) * R]
+            for f in range(len(grp['groups'][g])):   # S81-RATE3: the slice's physical frames (xs_topo)
+                sel = XP.TP.chunk(grp, grp['groups'][g][f], ch, R)
                 tags[f] = [grp['rows'][i] for i in sel]
             seen = set()
             for f, ts in tags.items():

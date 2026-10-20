@@ -208,7 +208,7 @@ def layer_field(fx, layer, master, lk, iters=4000):
         # stream = the x broadcast order of the phase (independent of the row placement, frame_return_plan.plan_phase):
         # compiled on slice 0 frame 0's rows of the chunk (any frame of any slice gives the same words: asserted below
         # on the last slice's last frame)
-        sel = grp['groups'][0][0][c * R:(c + 1) * R] or grp['groups'][0][0][:R]
+        sel = XP.TP.chunk(grp, grp['groups'][0][0], c, R) or grp['groups'][0][0][:R]
         m = XP.make_mat(fx, grp, sel, op)
         import frame_bench as B
         import lower_xs as LX
@@ -218,11 +218,11 @@ def layer_field(fx, layer, master, lk, iters=4000):
         plan = XP.phase_plan(master, lk, qa, 0, m, grp['x'], nseg, iters)
         assert plan['faults'] == 0, (layer, op, c, plan['faults'])
         w = plan['stream']
-        sel2 = grp['groups'][-1][-1][c * R:(c + 1) * R]
+        sel2 = XP.TP.chunk(grp, grp['groups'][-1][-1], c, R)
         if sel2:
             p2 = XP.phase_plan(master, lk, qa, 0, XP.make_mat(fx, grp, sel2, op), grp['x'], nseg, max(200, iters // 20))
             assert p2['stream'] == w, ('stream depends on the rows', layer, op, c)
-        rows = max(len(fr[c * R:(c + 1) * R]) for sl in grp['groups'] for fr in sl)
+        rows = max(len(XP.TP.chunk(grp, fr, c, R)) for sl in grp['groups'] for fr in sl)
         phase.extend([m.K << 1 | len(w) << 14 | len(stream) << 30 | rows << 46, 0])
         stream.extend(w)
         plist.append(dict(phase=k, op=op, chunk=c, nseg=nseg, rows_per_frame=rows, stream_words=len(w)))
@@ -231,7 +231,11 @@ def layer_field(fx, layer, master, lk, iters=4000):
         n = {op: max(-(-len(fr) // seq[0][4]) for gi, grp in enumerate(XP.op_groups(fx, op)) for fr in grp['groups'][g])
              for op in ops}
         slices.append(dict(slice=g, phases_by_op=n))
-    assert all(s['phases_by_op'] == slices[0]['phases_by_op'] for s in slices), 'slices differ in phase count'
+    import xs_topo as TP
+    if TP.TOPO is None:
+        assert all(s['phases_by_op'] == slices[0]['phases_by_op'] for s in slices), 'slices differ in phase count'
+    else:   # S81-RATE3: physical frames per slice; the die-wide sequence has the slowest slice's phases (others idle)
+        assert all(s['phases_by_op'][op] <= max(x['phases_by_op'][op] for x in slices) for s in slices for op in ops)
     return ops, phase, stream, plist, slices
 
 

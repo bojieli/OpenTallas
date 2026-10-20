@@ -47,6 +47,7 @@ NSLICE, NFRAME = 16, 8
 # Contents only (ROM images, cfg7 rows, xs streams); default 0 keeps every record byte-identical.
 import os  # noqa: E402
 GU_MERGE = os.environ.get('OT_XS_GU_MERGE', '0') == '1'
+import xs_topo as TP  # noqa: E402  S81-RATE3: physical frames per slice (OT_XS_TOPO=1)
 
 
 def sha(b):
@@ -149,15 +150,18 @@ def op_groups(fx, op):
         rows = list(range(fx.w('wq_b').shape[0]))
         heads = m['tp_split']['heads'][m['rank']]
         hd = len(rows) // (heads[1] - heads[0])
-        g = [[[h * hd + r for r in fr] for fr in deal(hd, NFRAME)] for h in range(NSLICE)]
+        g = [[[h * hd + r for r in fr] for fr in deal(hd, TP.nfr(h))] for h in range(NSLICE)]
         q0 = m['tp_split']['wq_b_rows'][m['rank']][0]
         return [dict(mat='wq_b', rows=rows, x=x, tie=[('attn.wq_b', q0 + r) for r in rows], groups=g, out='bf16')]
     if op == 'attn.wo_b':
         c0, c1 = m['tp_split']['wo_b_cols'][m['rank']]
         x = fx.op('attn.wo_a')[c0:c1]
         rows = list(range(fx.w('wo_b').shape[0]))
-        per = len(rows) // NSLICE
-        g = [[[s * per + r for r in fr] for fr in deal(per, NFRAME)] for s in range(NSLICE)]
+        if TP.PROP:     # S81-RATE3: slice shares in proportion to the physical frames (contiguous, CAP rbase / rcnt)
+            g = [[[js[i] for i in fr] for fr in deal(len(js), TP.nfr(s))] for s, js in enumerate(TP.slice_deal(len(rows), NSLICE))]
+        else:
+            per = len(rows) // NSLICE
+            g = [[[s * per + r for r in fr] for fr in deal(per, TP.nfr(s))] for s in range(NSLICE)]
         return [dict(mat='wo_b', rows=rows, x=x, tie=None, groups=g, out='fp32',
                      note='rank partial (wo_b by input columns): the fixture holds the all-reduced sum only')]
     if op in ('ffn.shared_gu', 'ffn.experts_gu'):
@@ -173,13 +177,14 @@ def op_groups(fx, op):
                 rows = list(range(2 * nff))
                 tie = [(tie_op, j0 + r) for r in range(nff)] + [(tie_op, tot + j0 + r) for r in range(nff)]
                 # gate j and up j interleaved, so they stay in the same frame (as the 2-matrix placement) +-1 row
-                g = [[fr for fr in deal_into([r for j in js for r in (j, nff + j)], NFRAME)] for js in deal(nff, NSLICE)]
+                g = [[fr for fr in deal_into([r for j in js for r in (j, nff + j)], TP.nfr(s))]
+                     for s, js in enumerate(deal(nff, NSLICE))]
                 out.append(dict(mat=f'{e}.w13', rows=rows, x=x, tie=tie, groups=g, out='bf16', expert=e))
                 continue
             # one matrix per tensor (plan_phase takes one matrix per phase): gate j and up j in the same slice/frame
             for n, base in ((n1, 0), (n3, tot)):
                 rows = list(range(nff))
-                g = [[[j for j in fr] for fr in deal_into(js, NFRAME)] for js in deal(nff, NSLICE)]
+                g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(deal(nff, NSLICE))]
                 out.append(dict(mat=n, rows=rows, x=x, tie=[(tie_op, base + j0 + r) for r in rows], groups=g,
                                 out='bf16', expert=e))
         return out
@@ -191,7 +196,7 @@ def op_groups(fx, op):
             xop = 'ffn.shared.swiglu' if e == 'shared' else f'ffn.experts.{e[3:]}.route_w'
             r0 = m['tp_split']['expert_down_rows'][m['rank']][0]
             tie_op = 'ffn.shared.down' if e == 'shared' else f'ffn.experts.{e[3:]}.down'
-            g = [[[j for j in fr] for fr in deal_into(js, NFRAME)] for js in deal(len(rows), NSLICE)]
+            g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(TP.slice_deal(len(rows), NSLICE))]
             import hdc_golden_v41 as G   # down reads bf16(a) (dv_layer_fixtures.expert)
             out.append(dict(mat=n2, rows=rows, x=G.to_bf16(fx.op(xop)), tie=[(tie_op, r0 + r) for r in rows], groups=g,
                             out='bf16', expert=e))
@@ -199,7 +204,7 @@ def op_groups(fx, op):
     if op in ('attn.idx.q', 'eng.wkv'):
         n, xop = {'attn.idx.q': ('indexer.wq_b', 'attn.q_norm.scale'), 'eng.wkv': ('engram.wkv', 'eng.rows_allgather')}[op]
         rows = list(range(fx.w(n).shape[0]))
-        g = [[[j for j in fr] for fr in deal_into(js, NFRAME)] for js in deal(len(rows), NSLICE)]
+        g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(deal(len(rows), NSLICE))]
         if op == 'eng.wkv':     # the rank's contiguous quarter of the 4 x 6,400 (k copies ++ v) rows
             tie = [('eng.wkv', m['rank'] * len(rows) + r) for r in rows]
             return [dict(mat=n, rows=rows, x=fx.op(xop), tie=tie, groups=g, out='bf16')]
@@ -354,12 +359,13 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     q, bf = B.frame_pairs(LX.base_master(master))
     fxa = LX.load_fixture(fixd)
     fx = Fix(fixd)
-    _, pl = LX.placement(die, sl)
+    _, pl = LX.placement(die, sl, fxa)
     p0 = pl[j]
     phases = []
     if p0['rows']:
         mats, gidx = LX.frame_mats(fxa, p0['rows'])
-        _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'])
+        _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'], rank_rows=p0['rows'],
+                                cap_cfg=LX.aproj_capture_contract(die, sl, fxa, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
     else:
         qa = q[:NPAIRS]
     if NPAIRS == 12:
@@ -383,9 +389,14 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     for op, gi, c, nseg, R in phase_list(fx, [o for o in ops if o not in XB.BF_OPS]):
         grp = groups[op][gi]
         sel_all = grp['groups'][g][j]
-        sel = sel_all[c * R:(c + 1) * R]
+        sel = TP.chunk(grp, sel_all, c, R)
+        assert sel, ('empty FP chunk on a frame', op, gi, c, frame)
         mat = make_mat(fx, grp, sel, op)
         npair = (len(qa) // nseg) * nseg
+        if os.environ.get('OT_XS_COMPACT_TAILS', '0') == '1' and mat.rows:
+            # The full pair budget used to allocate completely SENT superrows
+            # on short tails. Only real superrows need weight/config storage.
+            npair = min(npair, -(-mat.rows // 2) * nseg)
         k = len(field.phases)
         # Cycle the unused pair positions across phases to use all twelve ROMs.
         # The planner sees actual physical pairs; assignments are then translated
@@ -411,6 +422,10 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     bfo = [o for o in ops if o in XB.BF_OPS]
     if bfo:
         phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa))
+    if LX.aproj_topology_enabled():
+        field.aproj_rank_rows = list(p0['rows'])
+        phases[0]['row_index'] = list(p0['rows'])
+        phases[0]['ownership'] = 'physical-frame contiguous tensor rows; CAP/gather unadmitted'
     fill = [int(v) for v in field.fill]
     return dict(frame=frame, master=master, lk=lk, slice=sl, slice_index=g, frame_index=j, pairs=qa, q_pairs=q,
                 bf_pairs=bf, phases=phases, fill=fill, depth=field.depth, nphases=len(field.phases),
@@ -518,6 +533,9 @@ def write_images(field, qa, q, bf, inst, out):
         banked = [[0] * 4096 for _ in range(7)]
         for p in range(nph):
             words = list(field.cfg[p][slot_all[k]]) if k in slot_all else [0] * 25
+            if p == 0 and LX.aproj_rank_tags_enabled():
+                assert hasattr(field, 'aproj_rank_rows'), 'production a_proj rank owner map missing'
+                words = LX.rank_cfg_words(words, field.aproj_rank_rows)
             d = bdesc.get(p, {}).get(slot_all.get(k))
             if d:     # ot_s81_cfg7_seq_bfp: desc[24 w +: 24] in the spare columns [71:48] of cfg word w = 0..3
                 for w_ in range(4):

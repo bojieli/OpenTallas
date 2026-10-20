@@ -126,6 +126,12 @@ class Die:
         self.E = {l['link']: l for l in self.land['links']}
         self.blocks = {b_['name']: b_ for b_ in self.plan['blocks']}
         self._links()
+        try:                                    # S81-RATE3: physical frames per slice for the field dealing
+            import xs_topo
+        except ImportError:
+            sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog'))
+            import xs_topo
+        xs_topo.set_from_die(self)
 
     def strap(self, inst, port):
         v = self.inst[inst]['conns'].get(port)
