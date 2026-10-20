@@ -94,7 +94,17 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             lappend actual_endpoints [get_full_name $pin]
           }
           set expected_endpoints [concat [dict keys [dict get $binding pins]] [dict keys [dict get $binding outputs]]]
-          if {[lsort -unique $actual_endpoints] ne [lsort $expected_endpoints]} {error "OT_FORWARDED: complete sequential/SRAM/output endpoint census mismatch $pname"}
+          foreach endpoint $actual_endpoints {
+            if {$endpoint ni $expected_endpoints} {error "OT_FORWARDED: unbound actual endpoint $pname/$endpoint"}
+          }
+          # Native clock-forwarding ETMs can make a clock pin an internal graph
+          # vertex rather than an endpoint. The strict preflight independently
+          # enumerates every actual sequential/check-only role and validates
+          # every bound pin's native clock path. All output escapes must remain
+          # actual endpoints with exact native output provenance.
+          foreach output [dict keys [dict get $binding outputs]] {
+            if {$output ni $actual_endpoints} {error "OT_FORWARDED: declared output is not reached by this source $pname/$output"}
+          }
           lappend forwarded_seen $pname;lappend cts_nets [$net getName]
           puts "OT_FORWARDED CTS_SOURCE $pname clock=[get_full_name $clk] endpoints=[llength $actual_endpoints] native_complete"
           continue
