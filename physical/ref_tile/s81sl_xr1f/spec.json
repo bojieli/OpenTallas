@@ -140,7 +140,7 @@
     "name": "slxr_mutnocol",
     "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutnocol nocol 1 0 6000 raw",
     "expect": "fail",
-    "fail_regex": "^XRILL missed=[1-9][0-9]* of 13$",
+    "fail_regex": "^XRILL missed=[1-9][0-9]* of 13( |$)",
     "fail_witness": "results/rtl/s81_xr1f_1019/fm_nocol/run.log",
     "threads": 4,
     "peak_ram_gb": 4
