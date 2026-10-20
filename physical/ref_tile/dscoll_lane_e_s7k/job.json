@@ -1,0 +1,202 @@
+{
+ "name": "dscoll_lane_e_s7k-s7k-COMMIT",
+ "block": "dsfd_coll_lane_e_safe7",
+ "ref_tile": true,
+ "owner": "Claude:S81-TILES-E",
+ "purpose": "S81-COLL s7: REACH=1 forwarded relay hops (rx 2-stage landing, RX_STAGES 5, reverse ACK relay 2, core landing +1) for the s6c native reach FAIL (5,403 pairs > 405 um); k-means regional CTS K=16 for the s6c W spread 83.9. SAFE checklist in kit README.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-coll7-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/dscoll_cx/coll_s5_cell_band.tcl",
+   "physical/ref_tile/dscoll_lane_w_ltr/kit.env",
+   "results/rtl/s81_coll_native32_1020/native_v8/bench",
+   "results/rtl/s81_coll_native32_1020/reach7/bench",
+   "rtl",
+   "tools/xdie_s81"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_coll_lane_e_safe7 #(.CH_BOARD(700)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLL_NATIVE32 -DOT_COLL_NATIVE32_OFF --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/link/ot_link_crc32.sv rtl/lib/ot_rst_relay_tree3.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/lib/ot_sram_oldread_b64.sv rtl/lib/ot_sram_showahead_b64.sv rtl/common/ot_link_credit_rx_b64.sv rtl/common/ot_link_credit_tx_rc.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_reach7_m0",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "pass_witness": "results/rtl/s81_coll_native32_1020/reach7/bench/m0.log"
+   },
+   {
+    "name": "lane_reach7_m5",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach5 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "^COLL_REACH7 FAIL errors=",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/reach7/bench/m5.log"
+   },
+   {
+    "name": "lane_reach7_m6",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach6 6",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "^COLL_REACH7 FAIL errors=",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/reach7/bench/m6.log"
+   },
+   {
+    "name": "lane_reach7_m7",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_reach7.sh {RUN}/reach7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_REACH7 PASS received=\\d+",
+    "fail_regex": "^COLL_REACH7 FAIL errors=",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/reach7/bench/m7.log"
+   },
+   {
+    "name": "lane_miter_v8_m1",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE4_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/m1.log"
+   },
+   {
+    "name": "lane_miter_v8_m2",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "COLL_COLLISION_UNSAFE",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/m2.log"
+   },
+   {
+    "name": "lane_miter_v8_m3",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter3 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE4_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/m3.log"
+   },
+   {
+    "name": "lane_miter_v8_m4",
+    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter4 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "fail_regex": "^COLL_SAFE4_BOUNDARY FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/m4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dscoll_lane_e_s7k/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dscoll_lane_e_s7k/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dscoll_lane_e_s7k --out {RUN}/record/views/dsfd_coll_lane_e_safe7 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dscoll_lane_e_s7k/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dscoll_lane_e_s7k/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dscoll_lane_e_s7k/dscoll_lane_e_s7k-s7k-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-TILES-E (10-20) COLL lane kits dscoll_lane_{w,e}_s7 (TritonCTS) / _s7k (k-means regional CTS, K=16):\nstructural successor of s6c (S81.STA.LKTO.2).\n\ns6c terminal: W clock_rule FAIL (TT pin-flop spread 83.9 ps, one 16,342-sink root); E gate WARN but the actual GRT\nnative reach audit (Codex 08:13, codex/s81-terminal-collect-1020 coll6_e) FAILS: 5,403 sequential pairs > 405 um,\nmax 756.8 um.  Classes: 5,108 = receive control (u_ep c_diff / c_crc_ok / xp_v) placed beside the gearbox at the\nlink face -> the 18 RX FIFO address groups (count_r / wp_r / valid_r) beside the RX FIFO banks at the core face\n(~520-650 um, one cycle); 194 = rx pin / lr_f landing -> gearbox; 150 = lo_d pin -> credit-rx landing d_q; 51 misc.\nThe macro map is right (s6c: FIFO at the core face for the q -> li path); the RTL had no forwarded hop on the\nlink-face -> core-face direction, so the placer had to stretch one single-cycle cone across the tile.\n\ns7 = RTL top dsfd_coll_lane_{w,e}_safe7 (ot_s81ph_coll_lane_safe4 REACH = 1): rx landing 2 stages, RX_STAGES 3 -> 5\n(two forwarded frame hops; receive control sits beside the FIFO), reverse ACK frame relay 2 stages back to the\ngearbox, core landing lo_v/lo_d +1 stage at the core face.  Same outline, macro map, pins, PDN, layer contract as s6c.\ns7k adds the k-means regional clock split (physical/common_flow/clock_split_km.tcl, K=16) against the 83.9 ps W\nspread (parallel route, owner 10-19: bind the first that closes)."
+}
