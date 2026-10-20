@@ -1,0 +1,8 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+MISMATCH cmd 1 beat 0 at k 40 (ref out -1) db 0
+COLD MISMATCH cycle=183 valid=1/0 fault=0/0
+MISMATCH cmd 1 beat 1 at k 41 (ref out -1) db 1
+COLD MISMATCH cycle=184 valid=1/0 fault=0/0
+MISMATCH cmd 1 beat 2 at k 42 (ref out 42) db 2
+PVFIN_KIT FAIL mut=3 detected (49 mismatch/fault lines)

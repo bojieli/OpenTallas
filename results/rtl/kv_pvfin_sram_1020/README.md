@@ -1,6 +1,6 @@
 # PVFIN SRAM successor (K.STA.PVFIN)
 
-Source work in progress; no layout or release qualification claimed.
+Source behavior proved at `ccf0752a2`; native census is pending. No layout or release qualification claimed.
 
 The established uarch vehicle is the single 512-bit PVFIN beat slice in
 `results/arch/qwen_kv_pvfin_1017/plan.json` (existing arithmetic model).
@@ -48,3 +48,23 @@ closed views are untouched. R9 library add/mul/reset files were imported
 from claude/kv-params4-qkh-1020; live-b multiply is a separate PVFIN module
 with 4 a operand row copies, 4 b operand column copies and split input
 normalisers. This variable-b path requires mapped census verification.
+
+R5 verification (V5.050, source hashes in r5_proof/m*/source.sha256):
+- Main gate-style suite: 40 unstretched + 48 stretched commands, 2,816
+  output beats. Every valid beat compared against the full original
+  qkd_pv_fin_s; two blocks per command also against the independent golden
+  finalize arithmetic. All ages/beat indices/epochs exact.
+- Three additional independently randomised power-up seeds (1,29,53),
+  40 commands in each stretch regime: another 7,680 output beats. Total
+  328 complete commands / 10,496 valid output beats, one beat per edge.
+- Each non-negative run first aborts a command after partial SRAM writes,
+  then starts a fresh command after bounded reset. Periodic reset epochs
+  every eleven commands prove stale SRAM payload is never read valid.
+- NEG1..3 fault; causal MUT1..5 all detected. Witness logs are committed.
+- R3 RA=1 regression and R4 bench-parser failure are preserved under
+  preliminary/. The RA=1 fix predicts the first reciprocal slot directly
+  from the incoming calendar on the command edge.
+- Preliminary census is diagnostic only: it predates bounded payload
+  selectors and omitted macro Liberty roles (516 role errors); its 17
+  fanout violations, max 1536, were principally selector distribution.
+  The production census includes SKEW=1 and the actual SRAM Liberty.

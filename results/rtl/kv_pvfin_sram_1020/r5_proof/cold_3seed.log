@@ -1,0 +1,36 @@
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+PASS STRETCH=0 40 commands, 1280 beats timed, 80 blocks bit-exact vs the reference slices, beat b = ref + 1 + b
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.421 s; speed 19.308 us/s
+- Verilator: cpu 0.421 s on 1 threads; allocated 15 MB
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+PASS STRETCH=1 40 commands, 1280 beats timed, 80 blocks bit-exact vs the reference slices, beat b = ref + 1 + b
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 26us; walltime 1.290 s; speed 20.312 us/s
+- Verilator: cpu 1.289 s on 1 threads; allocated 15 MB
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+PASS STRETCH=0 40 commands, 1280 beats timed, 80 blocks bit-exact vs the reference slices, beat b = ref + 1 + b
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.420 s; speed 19.194 us/s
+- Verilator: cpu 0.420 s on 1 threads; allocated 15 MB
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+PASS STRETCH=1 40 commands, 1280 beats timed, 80 blocks bit-exact vs the reference slices, beat b = ref + 1 + b
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 1.084 s; speed 19.849 us/s
+- Verilator: cpu 1.084 s on 1 threads; allocated 15 MB
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+PASS STRETCH=0 40 commands, 1280 beats timed, 80 blocks bit-exact vs the reference slices, beat b = ref + 1 + b
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.423 s; speed 19.032 us/s
+- Verilator: cpu 0.423 s on 1 threads; allocated 15 MB
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+PASS STRETCH=1 40 commands, 1280 beats timed, 80 blocks bit-exact vs the reference slices, beat b = ref + 1 + b
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 25us; walltime 1.301 s; speed 19.560 us/s
+- Verilator: cpu 1.300 s on 1 threads; allocated 15 MB

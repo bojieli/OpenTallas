@@ -1,0 +1,64 @@
+COLD MISMATCH cycle=346 valid=1/1 fault=0/0
+COLD MISMATCH cycle=347 valid=1/1 fault=0/0
+MISMATCH cmd 3 beat 2 at k 19 (ref out 16) db 2
+COLD MISMATCH cycle=348 valid=1/1 fault=0/0
+MISMATCH cmd 3 beat 3 at k 20 (ref out 16) db 3
+COLD MISMATCH cycle=349 valid=1/1 fault=0/0
+MISMATCH cmd 4 beat 4 at k 36 (ref out 31) db 4
+MISMATCH cmd 4 beat 9 at k 41 (ref out 31) db 9
+MISMATCH cmd 8 beat 5 at k 24 (ref out 18) db 5
+FAIL 16 mismatches (1280 beats, 80 compared) cold_errors=256 cold_checks=1280
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.646 s; speed 12.088 us/s
+- Verilator: cpu 0.646 s on 1 threads; allocated 15 MB
+COLD MISMATCH cycle=2415 valid=1/1 fault=0/0
+COLD MISMATCH cycle=2416 valid=1/1 fault=0/0
+COLD MISMATCH cycle=2417 valid=1/1 fault=0/0
+COLD MISMATCH cycle=2418 valid=1/1 fault=0/0
+MISMATCH cmd 15 beat 15 at k 32 (ref out 16) db 15
+MISMATCH cmd 15 beat 22 at k 39 (ref out 16) db 22
+FAIL 2 mismatches (1536 beats, 96 compared) cold_errors=32 cold_checks=1536
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 23us; walltime 1.802 s; speed 12.632 us/s
+- Verilator: cpu 1.802 s on 1 threads; allocated 15 MB
+COLD MISMATCH cycle=251 valid=1/1 fault=0/0
+COLD MISMATCH cycle=252 valid=1/1 fault=0/0
+MISMATCH cmd 2 beat 2 at k 37 (ref out 34) db 2
+COLD MISMATCH cycle=253 valid=1/1 fault=0/0
+COLD MISMATCH cycle=254 valid=1/1 fault=0/0
+MISMATCH cmd 2 beat 27 at k 62 (ref out 34) db 27
+NEG 1: DUT fault raised (expected) -- PASS
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:116: Verilog $finish
+FAIL 2 mismatches (96 beats, 6 compared) cold_errors=32 cold_checks=96
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 850ns; walltime 0.108 s; speed 7.844 us/s
+- Verilator: cpu 0.108 s on 1 threads; allocated 15 MB
+COLD MISMATCH cycle=251 valid=1/1 fault=0/0
+COLD MISMATCH cycle=252 valid=1/1 fault=0/0
+MISMATCH cmd 2 beat 2 at k 37 (ref out 34) db 2
+COLD MISMATCH cycle=253 valid=1/1 fault=0/0
+COLD MISMATCH cycle=254 valid=1/1 fault=0/0
+MISMATCH cmd 2 beat 27 at k 62 (ref out 34) db 27
+NEG 2: DUT fault raised (expected) -- PASS
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:116: Verilog $finish
+FAIL 2 mismatches (96 beats, 6 compared) cold_errors=32 cold_checks=96
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 850ns; walltime 0.070 s; speed 12.187 us/s
+- Verilator: cpu 0.070 s on 1 threads; allocated 15 MB
+COLD MISMATCH cycle=251 valid=1/1 fault=0/0
+COLD MISMATCH cycle=252 valid=1/1 fault=0/0
+MISMATCH cmd 2 beat 2 at k 37 (ref out 34) db 2
+COLD MISMATCH cycle=253 valid=1/1 fault=0/0
+COLD MISMATCH cycle=254 valid=1/1 fault=0/0
+MISMATCH cmd 2 beat 27 at k 62 (ref out 34) db 27
+NEG 3: DUT fault raised (expected) -- PASS
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:116: Verilog $finish
+FAIL 2 mismatches (100 beats, 8 compared) cold_errors=32 cold_checks=100
+- rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 850ns; walltime 0.070 s; speed 12.129 us/s
+- Verilator: cpu 0.070 s on 1 threads; allocated 15 MB
