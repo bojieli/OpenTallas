@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.capc_linked_child_clock_audit.v1",
+  "job": "s81sl_capc2-s81capc2-1f4c80cf6",
+  "insertion_sha256": "bc51ca3413d5ebd3ae4984201b88f8eaf85bd9dc86b67cd253630dfbbe4714d2",
+  "method": "native routed parent macro clock arrival + child insertion.json boundary mean, compare each actual linked child pair",
+  "corners": {
+    "tt": {
+      "effective_child_flop_mean_ps": {
+        "u_ed": 710.0,
+        "u_rt": 719.0,
+        "u_te": 708.5,
+        "u_tw": 712.2,
+        "u_ld3": 706.8
+      },
+      "pairs": [
+        {
+          "from": "u_te",
+          "to": "u_ed",
+          "delta_ps": 1.5,
+          "pass": true
+        },
+        {
+          "from": "u_ed",
+          "to": "u_rt",
+          "delta_ps": 9.0,
+          "pass": true
+        },
+        {
+          "from": "u_ld3",
+          "to": "u_tw",
+          "delta_ps": 5.4,
+          "pass": true
+        },
+        {
+          "from": "u_tw",
+          "to": "u_rt",
+          "delta_ps": 6.8,
+          "pass": true
+        }
+      ],
+      "pass": true
+    },
+    "ff": {
+      "effective_child_flop_mean_ps": {
+        "u_ed": 560.5,
+        "u_rt": 587.2,
+        "u_te": 562.6,
+        "u_tw": 567.5,
+        "u_ld3": 560.1
+      },
+      "pairs": [
+        {
+          "from": "u_te",
+          "to": "u_ed",
+          "delta_ps": 2.1,
+          "pass": true
+        },
+        {
+          "from": "u_ed",
+          "to": "u_rt",
+          "delta_ps": 26.7,
+          "pass": true
+        },
+        {
+          "from": "u_ld3",
+          "to": "u_tw",
+          "delta_ps": 7.4,
+          "pass": true
+        },
+        {
+          "from": "u_tw",
+          "to": "u_rt",
+          "delta_ps": 19.7,
+          "pass": true
+        }
+      ],
+      "pass": true
+    }
+  },
+  "pass": true
+}
