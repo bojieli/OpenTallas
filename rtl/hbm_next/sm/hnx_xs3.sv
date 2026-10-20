@@ -239,20 +239,21 @@ module hnx_xs3_leaf #(
     reg  [P-1:0]   wl1;
     localparam integer NG1 = (NBK + NMG - 1) / NMG;              // mask groups of the block-dot field
     localparam integer NGR = NG1 + (NBF + NMG - 1) / NMG;        // + of the BF16 field (a group is in one field)
-    reg  [NGR-1:0] ml1, mh1;                                     // per mask group: beat one-hot at g, at g + 1
-    // HNX-SM4 10-20 (census 34-37 loads): a kept second copy per group drives the upper 16 bits of the 32-bit group
-    (* keep *) reg [NGR-1:0] ml1x, mh1x;
+    // per mask group: beat one-hot at g (ml) and at g + 1 (mh).  HNX-SM4 10-20 census r3 (two copies still drove
+    // 33-40 loads: ABC shares them with the wce OR-reduce): NMC kept copies per group, copy c drives NMG/NMC mask bits
+    localparam integer NMC = 4;
+    (* keep *) reg [NMC*NGR-1:0] mlc, mhc;                       // copy c of group b at index c*NGR + b
     genvar b, m;
     generate for (b = 0; b < NGR; b = b + 1) begin : g_mg
         wire [NBEAT-1:0] oh = ohr[b*NBEAT +: NBEAT];
         (* keep *) reg [4:0] g0;                                // per-group kept copy of the static strap (fan-out)
         always @(posedge clk) g0 <= (b < NG1) ? g1p : g2p;
         wire [5:0] g1n = {1'b0, g0} + 6'd1;
-        always @(posedge clk) begin
-            ml1[b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
-            mh1[b] <= (g1n < NBEAT) ? oh[g1n] : 1'b0;
-            ml1x[b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
-            mh1x[b] <= (g1n < NBEAT) ? oh[g1n] : 1'b0;
+        for (m = 0; m < NMC; m = m + 1) begin : g_mc
+            always @(posedge clk) begin
+                mlc[m*NGR + b] <= (g0 < NBEAT) ? oh[g0] : 1'b0;
+                mhc[m*NGR + b] <= (g1n < NBEAT) ? oh[g1n] : 1'b0;
+            end
         end
     end endgenerate
     always @(posedge clk or negedge rst_n)
@@ -283,8 +284,8 @@ module hnx_xs3_leaf #(
     wire [SLW-1:0] wm_n;
     generate for (b = 0; b < SLW; b = b + 1) begin : g_wm
         localparam integer GB = (b < NBK) ? b / NMG : NG1 + (b - NBK) / NMG;
-        localparam integer HI = (((b < NBK) ? b : (b - NBK)) % NMG) >= NMG / 2;
-        assign wm_n[b] = HI ? (car[b] ? mh1x[GB] : ml1x[GB]) : (car[b] ? mh1[GB] : ml1[GB]);
+        localparam integer MC = ((((b < NBK) ? b : (b - NBK)) % NMG) * NMC) / NMG;   // copy serving this bit
+        assign wm_n[b] = car[b] ? mhc[MC*NGR + GB] : mlc[MC*NGR + GB];
     end endgenerate
     wire [NXL*256-1:0] wm_nm = {{(NXL*256-SLW){1'b0}}, wm_n};
     always @(posedge clk or negedge rst_n)
