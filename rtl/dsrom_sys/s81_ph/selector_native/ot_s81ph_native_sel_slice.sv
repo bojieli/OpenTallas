@@ -51,6 +51,11 @@ module ot_s81ph_native_sel_slice #(
     // registered (a stale, lower GC bound keeps a superset), and one register in front of the output FIFO (o0: every
     // room check counts it; mem_rdata -> o0 directly).  Function unchanged; latency only.
     parameter integer PIPE2 = 0,
+`ifdef OT_S81PH_SEL_OMERGE
+    parameter integer OMERGE = 1,
+`else
+    parameter integer OMERGE = 0,
+`endif
     // CLAUDE safe-s81 2026-10-08 (review S-B2, C template): FRPN > 0 = the write-back queue read pointer frp is
     // REPLICATED, one copy per FRPW-bit write-data slice (the macro data width; dsfd_selt_q2: 3 x 256 b = the three
     // width macros, each copy shared by its column's two depth banks, which share one write-data register).  Every
@@ -448,7 +453,11 @@ module ot_s81ph_native_sel_slice #(
     reg  [OCW-1:0] ocnt;
     reg            o0_v;
     reg  [EW*W:0]  o0_d;
-    wire [OCW-1:0] occ = ocnt + ((PIPE2 != 0) ? {{(OCW-1){1'b0}}, o0_v} : {OCW{1'b0}});   // FIFO + o0
+    wire [2:0] o_merge_v;
+    wire [OCW-1:0] o_pending = (OMERGE != 0) ?
+        ({{(OCW-1){1'b0}}, o_merge_v[0]} + {{(OCW-1){1'b0}}, o_merge_v[1]} + {{(OCW-1){1'b0}}, o_merge_v[2]}) :
+        ((PIPE2 != 0) ? {{(OCW-1){1'b0}}, o0_v} : {OCW{1'b0}});
+    wire [OCW-1:0] occ = ocnt + o_pending; // FIFO plus EVERY physical output stage
     wire em_issue = (ph == P_EM) && e_go && (e_rd < a_end) &&
                     ({{(8-OCW){1'b0}}, occ} + {5'd0, e_infl} < OD);
     always @(posedge clk or negedge rst_n) begin
@@ -613,8 +622,38 @@ module ot_s81ph_native_sel_slice #(
         else if (seg_clr) o0_v <= 1'b0;
         else o0_v <= o_push_c;
     always @(posedge clk) if (ILD != 0 || o_push_c) o0_d <= o_in_c;
-    wire           o_push = (PIPE2 != 0) ? o0_v : o_push_c;
-    wire [EW*W:0]  o_in   = (PIPE2 != 0) ? o0_d : o_in_c;
+    wire           o_push;
+    wire [EW*W:0]  o_in;
+    generate if (OMERGE != 0) begin : g_output_merge
+        initial if (PIPE2 == 0) $fatal(1, "OMERGE requires PIPE2; output publication adds exactly2 edges");
+        localparam integer MW = 148;
+        localparam integer NM = (W*EW+MW-1)/MW;
+        reg [2:0] valid_pipe;
+        reg [2:0] last_pipe;
+        wire emit_select = tq_v && tq_em;
+        wire direct_select = !emit_select && d_push;
+        assign o_merge_v = valid_pipe;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) valid_pipe <= 3'b000;
+            else if (seg_clr) valid_pipe <= 3'b000;
+            else valid_pipe <= {valid_pipe[1:0],o_push_c};
+        end
+        always @(posedge clk) begin
+            last_pipe[0] <= emit_select ? tq_last : direct_select ? d_fin_push : 1'b1;
+            last_pipe[1] <= last_pipe[0]; last_pipe[2] <= last_pipe[1];
+        end
+        for (genvar om=0;om<NM;om=om+1) begin : g_word
+            localparam integer BW = ((W*EW-om*MW)<MW) ? (W*EW-om*MW) : MW;
+            ot_s81ph_native_guarded_mux #(.W(BW)) u_merge (
+                .clk(clk),.rst_n(rst_n),.a(mem_rdata[om*MW+:BW]),.b(pend[om*MW+:BW]),
+                .sel({direct_select,emit_select}),.y(o_in[om*MW+:BW]));
+        end
+        assign o_push=valid_pipe[2]; assign o_in[W*EW]=last_pipe[2];
+    end else begin : g_output_original
+        assign o_merge_v=3'b000;
+        assign o_push=(PIPE2 != 0) ? o0_v : o_push_c;
+        assign o_in=(PIPE2 != 0) ? o0_d : o_in_c;
+    end endgenerate
     wire           o_pop  = (ocnt != 0) && out_ready;
     integer oi;
     always @(posedge clk or negedge rst_n) begin
