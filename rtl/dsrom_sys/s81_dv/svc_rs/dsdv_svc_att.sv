@@ -30,6 +30,8 @@
 //               [15:0] PO = the p-feed start, [31:16] PVO = the P.V drain base, both in cycles after the share's start
 //    9 SMJ      (new) SM head job / rows: [0] start, [4:1] kind, [12:5] jid, [13] operand rows (else parameter rows,
 //               r_j = payload index), [29:14] head mask (operand rows only)
+//   14 SOT      (S81-SMWIRE 10-19, len 2) the SO target config of the job: parsed by dsdv_svc_sot beside this share
+//               (tools/s81_dv/sm_target/dsdv_sm_wire.sv); a legal frame type here, no state in the attention share
 //
 // Static schedule (owner rule; no credit / ready on the on-die production path): from GO + gd the engine share runs a
 // fixed program: job at cycle 0, q heads at 1 .. 16, row beats c at 1 + c (4 rows a beat, the job's row order: window
@@ -143,7 +145,7 @@ module dsdv_svc_att_core #(
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
-    localparam [15:0] FT_KNOWN = 16'b0011_0010_1110_1110;   // bits 1 2 3 5 6 7 9 12 13
+    localparam [15:0] FT_KNOWN = 16'b0111_0010_1110_1110;   // bits 1 2 3 5 6 7 9 12 13 14 (14 = SOT, S81-SMWIRE)
     localparam [15:0] FT_JOB = 16'b0000_0000_1110_0010;     // bits 1 5 6 7
     reg [31:0] fc;
     assign fault_code = fc;
@@ -800,7 +802,7 @@ module dsdv_svc_att_core #(
                 sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
             end
             // ---- other frame checks
-            if (hdr_mine && !FT_KNOWN[h_type]) fc[16] <= 1'b1;   // frame types 1 2 3 5 6 7 9 12 13 (yosys: no 'inside')
+            if (hdr_mine && !FT_KNOWN[h_type]) fc[16] <= 1'b1;   // frame types 1 2 3 5 6 7 9 12 13 14 (yosys: no 'inside')
             if (hdr_mine && h_type == 4'd1 && h_len != 12'd128) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd3 && h_len != 12'd16) fc[16] <= 1'b1;
             if (hdr_mine && FT_JOB[h_type] && !job_open) fc[17] <= 1'b1;   // frame types 1 5 6 7

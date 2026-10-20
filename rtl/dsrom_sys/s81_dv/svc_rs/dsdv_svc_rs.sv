@@ -29,7 +29,13 @@
 //   P.V return tree    ri / ro (513 b + v a face): the owner slices' P.V words travel child -> parent to the entry in
 //                      compiled windows (att drain slot rs_pvslot); every hop 5 cycles; two valid words in one cycle or a
 //                      word on a face that is not a child are sticky faults (never arbitrated)
-// SM face w_v / w_a 14 / w_m 16 / w_d 512 + status.
+// SM face w_v / w_a 14 / w_m 16 / w_d 512 + status.  S81-SMWIRE (10-19): the face is INTERNAL -- the slice's SO target
+//   dsdv_sm_so_target (4 SRAM 32x64, tools/s81_dv/sm_target/MODEL.md) takes it; its config comes from the job's SOT
+//   q frame (dsdv_svc_sot, type 14), its gather beats leave as 3 words each on this slice's P.V return tree (dsdv_sm_gw,
+//   merged with the P.V words: two words in one cycle is the existing fault), its fault joins the slice fault and its
+//   booked retire joins the slice done (no END before every configured head retired cleanly).  The entry stamps
+//   the booked gather window on the 48 spare bits of its pv lane (pv_x, dsdv_sm_gx).  The w_* ports stay on the core
+//   for bench observation only (wrappers expose them under RS_OBS); SMT = 0 builds the pre-SMWIRE slice.
 // Entry only: j 33 in, jd 2 out, q 515 in, hw 292 in, hc 9 out, fault out, P.V pv_v + pv_d 513 out.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_rs_c #(
@@ -38,7 +44,8 @@ module dsdv_svc_rs_c #(
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter bit SRAM_MACRO = 0,
-    parameter integer PMEM = 1                     // SVCB: att p store (0 = dropped: non-owner positions)
+    parameter integer PMEM = 1,                    // SVCB: att p store (0 = dropped: non-owner positions)
+    parameter bit SMT = 1
 ) (
     input  wire              ck,
     input  wire              rst,
@@ -78,6 +85,7 @@ module dsdv_svc_rs_c #(
     // P.V out (ENTRY only: the half's return tree root)
     output reg               pv_v,
     output reg  [512:0]      pv_d,
+    output wire [47:0]       pv_x,         // S81-SMWIRE: SO gather-word stamp of the pv word (ENTRY only, else 0)
     // SM face
     output wire              w_v,
     output wire [13:0]       w_a,
@@ -237,6 +245,36 @@ module dsdv_svc_rs_c #(
         .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
         .o_rjid(o_rjid));
     assign w_st = {o_rjid, o_den, o_alive, o_fo, o_fu};
+    // ------------------------------------------------------------------ S81-SMWIRE: SO target, config source, gather words
+    wire zt_cfg_v; wire [19:0] zt_owner; wire [7:0] zt_se, zt_so; wire [13:0] zt_obase; wire [15:0] zt_first, zt_last, zt_read, zt_ret;
+    wire [1:0] zt_route; wire [15:0] zt_gw0, zt_gw1; wire [2:0] sot_fc;
+    wire zt_gv, zt_ggrp, zt_ret_v, zt_ret_e, zt_f; wire [6:0] zt_gidx; wire [1023:0] zt_gd; wire [19:0] zt_gown, zt_rown;
+    wire [11:0] zt_fc; wire gw_v, gw_f; wire [512:0] gw_d;
+    reg so_pend;
+    generate if (SMT) begin : g_smt
+        dsdv_svc_sot u_sot (.clk(ck), .rst_n(rn), .tile(tile), .q_v(cs[0]), .q_d(cs[512:1]), .cfg_v(zt_cfg_v),
+            .cfg_owner(zt_owner), .cfg_se_jid(zt_se), .cfg_so_jid(zt_so), .cfg_obase(zt_obase), .cfg_first(zt_first),
+            .cfg_last(zt_last), .cfg_read(zt_read), .cfg_retire(zt_ret), .route(zt_route), .gw_first(zt_gw0), .gw_last(zt_gw1),
+            .fault_code(sot_fc));
+        dsdv_sm_so_target #(.HEAD(-1)) u_tgt (.clk(ck), .rst_n(rst), .head(tile), .cfg_v(zt_cfg_v), .cfg_owner(zt_owner),
+            .cfg_se_jid(zt_se), .cfg_so_jid(zt_so), .cfg_obase(zt_obase), .cfg_first(zt_first), .cfg_last(zt_last),
+            .cfg_read(zt_read), .cfg_retire(zt_ret), .op_st(sm_st), .op_kind(sm_kind), .op_jid(sm_jid),
+            .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .g_v(zt_gv), .g_idx(zt_gidx), .g_d(zt_gd),
+            .g_owner(zt_gown), .g_group(zt_ggrp), .retired(zt_ret_v), .retire_error(zt_ret_e), .retire_owner(zt_rown),
+            .fault(zt_f), .fault_code(zt_fc));
+        dsdv_sm_gw u_gw (.clk(ck), .rst_n(rn), .head(tile), .g_v(zt_gv), .g_idx(zt_gidx), .g_d(zt_gd), .g_owner(zt_gown),
+            .g_group(zt_ggrp), .gw_v(gw_v), .gw_d(gw_d), .fault(gw_f));
+        // joined completion: a configured SO keeps the slice's done low until its booked retire is clean
+        always @(posedge ck or negedge rn)
+            if (!rn) so_pend <= 1'b0;
+            else if (zt_cfg_v) so_pend <= 1'b1;
+            else if (zt_ret_v && !zt_ret_e) so_pend <= 1'b0;
+    end else begin : g_nosmt
+        assign zt_cfg_v = 1'b0; assign zt_route = 2'd0; assign zt_gw0 = 16'd0; assign zt_gw1 = 16'd0; assign sot_fc = 3'd0;
+        assign zt_f = 1'b0; assign zt_ret_v = 1'b0; assign zt_ret_e = 1'b0; assign gw_v = 1'b0; assign gw_f = 1'b0;
+        assign gw_d = '0;
+        always @(posedge ck) so_pend <= 1'b0;
+    end endgenerate
 `ifdef RS_OBS
     assign obs = {rt_v, rt_d, se_v, se_d, a_fc, lf};
 `endif
@@ -256,7 +294,7 @@ module dsdv_svc_rs_c #(
         if (!rn) begin rm_v <= 1'b0; r_f <= 1'b0; end
         else begin
             reg [2:0] n;
-            n = 3'(a_pv_v);
+            n = 3'(a_pv_v) + 3'(gw_v);
             for (int i = 0; i < 4; i++) begin
                 if (rfi[i][0] && chm[i]) n = n + 1'b1;
                 if (rfi[i][0] && !chm[i]) r_f <= 1'b1;                     // a P.V word on a face that is not a child
@@ -265,7 +303,7 @@ module dsdv_svc_rs_c #(
             rm_v <= n != 0;
         end
     always @(posedge ck) begin
-        rm_d <= a_pv_d;
+        rm_d <= gw_v ? gw_d : a_pv_d;
         for (int i = 0; i < 4; i++) if (rfi[i][0] && chm[i]) rm_d <= rfi[i][RW-1:1];
     end
     generate for (f = 0; f < 4; f = f + 1) begin : g_ro
@@ -282,11 +320,17 @@ module dsdv_svc_rs_c #(
     end endgenerate
     always @(posedge ck or negedge rn) if (!rn) pv_v <= 1'b0; else pv_v <= ENTRY && rm_v && par == 3'd0;
     always @(posedge ck) pv_d <= rm_d;
+    generate if (ENTRY && SMT) begin : g_gx
+        dsdv_sm_gx u_gx (.clk(ck), .rst_n(rn), .cfg_v(zt_cfg_v), .route(zt_route), .gw_first(zt_gw0), .gw_last(zt_gw1),
+            .w_v(rm_v && par == 3'd0), .pv_x(pv_x));
+    end else begin : g_nogx
+        assign pv_x = 48'd0;
+    end endgenerate
 
     // ------------------------------------------------------------------ controller status, local fault
     // hs = {fault, live} per PC controller (dsfd_svc_hs's synchroniser and rule: a fault, or live dropping after it
     // rose, is a sticky slice fault; the job-done half of dsfd_svc_hs lives at the entry's job gate, not here)
-    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f;
+    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | zt_f | (|sot_fc) | gw_f | (zt_ret_v && zt_ret_e);
     (* async_reg = "true" *) reg [1:0] hs0, hs1;
     reg hs_up, hs_hf, hs_f;
     always @(posedge ck or negedge rn)
@@ -301,7 +345,7 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ up tree: {rg fault, rg live, done, fault, cr 6, ack 6}
     // (dsdv_svc_rs_up below; RTL-BUILD-S81 10-18: + the region status {fault, live} of the half's ctrl_rg2 controllers)
     wire [UW-1:0] uc;
-    dsdv_svc_rs_up #(.UW(UW)) u_up (.ck(ck), .rn(rn), .chm(chm), .par(par), .done(done), .fl(hs_f), .hcr(hcr), .hack(hack),
+    dsdv_svc_rs_up #(.UW(UW)) u_up (.ck(ck), .rn(rn), .chm(chm), .par(par), .done(done && !so_pend), .fl(hs_f), .hcr(hcr), .hack(hack),
         .hs_s(hs1), .up_i(up_i), .up_o(up_o), .uc(uc));
 
     // ------------------------------------------------------------------ entry: job done (END), host credits / acks, fault
@@ -333,8 +377,10 @@ module dsdv_svc_rs_c #(
 endmodule
 
 // entry slices (rsv_05 W, rsv_11 E): the host endpoint of the half
+// S81-SMWIRE (10-19): the SM face is internal (the SO target); w_* are bench observation ports (RS_OBS) only.  The
+// entry adds pv_x[47:0] (the 48 spare bits of the 562-b pv lane: the SO gather-word stamp).
 module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                           parameter bit SRAM_MACRO = 0, parameter integer PMEM = 1) (
+                           parameter bit SRAM_MACRO = 0, parameter integer PMEM = 1, parameter bit SMT = 1) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
@@ -344,18 +390,22 @@ module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID =
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
-    output wire pv_v, output wire [512:0] pv_d,
-    output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
+    output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x
 `ifdef RS_OBS
+    , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
     , output wire [2678:0] obs
 `endif
 );
     /*verilator hier_block*/
-    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM)) u (.ck(ck), .rst(rst),
-        .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i),
-        .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d),
-        .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat),
-        .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
+`ifndef RS_OBS
+    wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
+`endif
+    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM), .SMT(SMT)) u (.ck(ck),
+        .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i),
+        .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d),
+        .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),
+        .r_tag(r_tag), .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .w_v(w_v), .w_a(w_a), .w_m(w_m),
+        .w_d(w_d), .w_st(w_st)
 `ifdef RS_OBS
         , .obs(obs)
 `endif
@@ -364,26 +414,30 @@ endmodule
 
 // the other 14 slices (incl. the chain roots rsv_07 / rsv_09: their P.V return lane toward the entry is `ro`)
 module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                     parameter bit SRAM_MACRO = 0, parameter integer PMEM = 1) (
+                     parameter bit SRAM_MACRO = 0, parameter integer PMEM = 1, parameter bit SMT = 1) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
     input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
-    input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
-    output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
+    input  wire [2*4-1:0] r_beat, input wire [1:0] hs
 `ifdef RS_OBS
+    , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
     , output wire [2678:0] obs
 `endif
 );
     /*verilator hier_block*/
-    wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d; wire [1:0] st_rg;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM)) u (.ck(ck), .rst(rst),
-        .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i), .dn_o(dn_o),
-        .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v),
-        .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag),
-        .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
+`ifndef RS_OBS
+    wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
+`endif
+    wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d; wire [47:0] pv_x; wire [1:0] st_rg;
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM), .SMT(SMT)) u (.ck(ck),
+        .rst(rst), .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .st_rg(st_rg),
+        .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v),
+        .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv),
+        .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .w_v(w_v),
+        .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
 `ifdef RS_OBS
         , .obs(obs)
 `endif
