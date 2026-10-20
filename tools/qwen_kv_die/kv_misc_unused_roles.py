@@ -71,7 +71,7 @@ FACTS = {
                    ('rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv', r'module qkd_rlys_296')],
 }
 RELAY = re.compile(r'^(qkd_rlys_\d+|qkd_astk_rly_\d+_fl|qkd_rlysh0?_\d+|qkd_landsh0?_\d+)$')
-DUP_PRODUCERS = re.compile(r'^(qkd_kvs_attn:acal_(WS|WN|ES|EN)|qkd_pv16_vport_b:(out_epoch|out_t)|qkd_d2d_static:\w+|'
+DUP_PRODUCERS = re.compile(r'^(qkd_kvs_attn:acal_(WS|WN|ES|EN)|qkd_pv16_vport_b:(out_epoch|out_t)|qkd_d2d_static(?:_sfm)?:\w+|'
                            r'qkd_kvs_ctl:dcfg__age_pv)$')
 
 
