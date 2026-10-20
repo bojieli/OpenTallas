@@ -16,6 +16,15 @@ OT_FC_DRIVER_METRIC arrival_min_fall 13.18
 OT_FC_DRIVER_METRIC slew_max_rise 5.54
 OT_FC_DRIVER_METRIC slew_max_fall 5.48
 OT_FC_ROOT clk_in
+OT_FC_CHAIN BUFx12f_ASAP7_75t_R u.u_fcb_ck.u_cell
+OT_FC_ROLE BUFx12f_ASAP7_75t_R u.u_fcb_ck.u_cell A Y A 0
+OT_FC_LIB BUFx12f_ASAP7_75t_R native_TT A
+OT_FC_SENSE positive_unate
+OT_FC_WAVE 23 377
+OT_FC_PHASE arrival_max_rise 0 23
+OT_FC_PHASE arrival_min_rise 0 23
+OT_FC_PHASE arrival_max_fall 1 377
+OT_FC_PHASE arrival_min_fall 1 377
 '''
 
 class ForwardedClock(unittest.TestCase):
@@ -24,6 +33,9 @@ class ForwardedClock(unittest.TestCase):
                     GOOD.replace('OT_FC_METRIC arrival_min_rise 12.20\n', ''),
                     GOOD.replace('12.20', 'nan'), GOOD.replace('12.20', '-12.20'),
                     GOOD.replace('12.20', '13.20'),
+                    GOOD.replace('arrival_max_rise 0 23', 'arrival_max_rise 1 377'),
+                    GOOD.replace('positive_unate', 'negative_unate'),
+                    GOOD.replace('OT_FC_LIB BUFx12f_ASAP7_75t_R native_TT A', ''),
                     GOOD + 'OT_FC_METRIC arrival_min_rise 12.20\n',
                     '\n'.join(GOOD.splitlines()[1:])):
             with self.subTest(log=bad), self.assertRaises(ve.VerdictError):
@@ -65,6 +77,31 @@ class NativeModelMerge(unittest.TestCase):
                     comb.replace('fall_transition(t)', 'missing(t)')):
             with self.assertRaises(ve.VerdictError):
                 ve.merge_forwarded_clock_model(main, bad)
+
+class DeclaredForwarding(unittest.TestCase):
+    def test_named_inverter_derives_polarity_and_opposite_phase(self):
+        log = GOOD.replace('clk_in', 'ck').replace('clk_out', 'ck_o')
+        log = log.replace('positive_unate', 'negative_unate').replace(' A Y A 0', ' A Y !A 1').replace('native_TT A', 'native_TT !A')
+        log = log.replace('rise 0 23', 'rise 1 377').replace('fall 1 377', 'fall 0 23')
+        rec = ve.forwarded_clock_receipt(log, 'tt', 'odb', 'spef', 'ck', 'ck_o', required=True)
+        self.assertEqual(rec['timing_sense'], 'negative_unate')
+        self.assertEqual(rec['root_waveform_ps'], [23, 377])
+        self.assertEqual(rec['output_rise_input_edge'], 'fall')
+        pin = NativeModelMerge.PIN.replace('clk_in', 'ck').replace('clk_out', 'ck_o').replace('positive_unate', 'negative_unate')
+        main = 'cell(x) { pin("ck_o") { direction : output; } ff(a,b) { next_state : "D"; } }'
+        got = ve.merge_forwarded_clock_model(main, pin, 'ck', 'ck_o', rec['timing_sense'])
+        self.assertEqual(main.replace('pin("ck_o") { direction : output; }', ''), got.replace(pin, ''))
+        with self.assertRaises(ve.VerdictError):
+            ve.merge_forwarded_clock_model(main, pin, 'ck', 'ck_o', 'positive_unate')
+
+    def test_declaration_rejects_missing_ports_and_unsafe_names(self):
+        self.assertIn('OT_FC_DECLARED_PORT_MISSING', ve.forwarded_clock_tcl('ck', 'ck_o', explicit=True))
+        for pair in [('a;exit', 'b'), ('a', 'a'), ('ck[0]', 'ck_o')]:
+            with self.assertRaises(ve.VerdictError):
+                ve.forwarded_clock_tcl(*pair)
+        with self.assertRaises(ve.VerdictError):
+            ve.forwarded_clock_receipt('OT_EXPORT_DONE', 'tt', 'a', 'b', required=True)
+
 
 class ClockOutputClassification(unittest.TestCase):
     def test_only_combinational_paths_from_clock_entries_are_clock_outputs(self):
