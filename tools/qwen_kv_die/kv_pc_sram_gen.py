@@ -59,9 +59,12 @@ SCHED = [
         else if (dcnt == dsel) begin end'''),
     ('''    reg [6:0] dsel, dcnt;''', f'''    reg [6:0] dsel, dcnt;
     // Same-edge sticky release, with one kept decision leaf per eight copies.
+    // KV-PC6: ONE strap compare for every set leaf (a compare inside the loop elaborated 24 $eq cells: the leaves'
+    // inputs differed and ot_rst_copies refused the family, so copy 0 kept all 2518 loads)
+    wire hgo_hit = dcnt == dsel;
     for (genvar hg = 0; hg < {NHGO // 8}; hg = hg + 1) begin : g_hgo_native
         wire set_group;
-        ot_kvpc5_and2 u_go (.a(dcnt == dsel), .b(h_rn), .y(set_group));
+        ot_kvpc5_and2 u_go (.a(hgo_hit), .b(h_rn), .y(set_group));
         always @(posedge hclk) begin
             if (!h_rn) hgo_qv[hg*8 +: 8] <= 8'd0;
             else if (set_group) hgo_qv[hg*8 +: 8] <= 8'hff;
@@ -224,9 +227,9 @@ EV_BLOCK = f'''    // KV-PC5: registered row-command event copies (exact: c_v <=
       if (!rst_n) ev_qv <= {{{NEV * 6}{{1'b0}}}};
       else ev_qv <= {{{{{NEV - NEV // 2}{{ev_d[11:6]}}}}, {{{NEV // 2}{{ev_d[5:0]}}}}}};
     // KV-PC5: ref_c == LEAD as registered copies (ref_c <= ref_n at every non-reset edge): 0 blk/rb, 1 ready_blk_next
-    (* keep *) reg [2:0] lead_qv;
+    (* keep *) reg [4:0] lead_qv;   // KV-PC6: 3 / 4 = blk lo / hi (i4b census: copy 0 drove 38)
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) lead_qv <= {{3{{RW'(RPH + PERIOD) == RW'(LEAD)}}}}; else lead_qv <= {{3{{ref_n == RW'(LEAD)}}}};
+      if (!rst_n) lead_qv <= {{5{{RW'(RPH + PERIOD) == RW'(LEAD)}}}}; else lead_qv <= {{5{{ref_n == RW'(LEAD)}}}};
     wire [17:0] desc_acc_c;
     wire [31:0] open_nx;
     assign open_nx[15:0] = (row_gnt && {ev(14, "act")}) ? (open[15:0] | c_oh[15:0]) : (row_gnt && {ev(14, "pre")}) ? (open[15:0] & ~c_oh[15:0]) :
@@ -538,6 +541,14 @@ TIM_PC5 = [
     # where the old r_oh was exactly onehot(r_bank): blk = 1 << rb, sb_oh / wab_oh one-hot of sb / wab, act_oh / pre_oh
     # the lowest-first one-hots of act_sel / pre_sel); removes the 32-bit priority mux of r_oh (74 / 81-load selects)
     ('''c_bank <= r_bank; c_oh <= r_oh; c_w <= W && r_w;''', '''c_bank <= r_bank; c_oh <= c_oh_d; c_w <= W && r_w;'''),
+    ('''    reg [4:0] bsel;reg [4:0] refresh_rr;''', '''    reg [4:0] bsel;reg [4:0] refresh_rr;
+    // KV-PC6: onehot(bsel) the same way (i4b census: bsel copies drove 38 decode pins of blk / ready_blk_next)
+    wire [31:0] bsel_oh;                                      // == 32'b1 << bsel
+    wire [3:0] bsel_oh_lo = 4'b1 << bsel[1:0];
+    wire [7:0] bsel_oh_hi = 8'b1 << bsel[4:2];
+    for (genvar q = 0; q < 32; q = q + 1) begin : g_bsel_oh
+      ot_kvpc5_and2 u_l (.a(bsel_oh_lo[q & 3]), .b(bsel_oh_hi[q >> 2]), .y(bsel_oh[q]));
+    end'''),
     # KV-PC6 (i4 pc_h census: an r_bank bit drove 32 decode pins of c_oh + c_bank): onehot(r_bank) as a predecode
     # (r_bank[1:0] -> 4, r_bank[4:2] -> 8) and 32 kept AND leaves, so no r_bank bit sees more than the predecoders
     ('''    reg r_v, r_prio; reg [2:0] r_op; reg [4:0] r_bank;''',
@@ -581,10 +592,12 @@ TIM_PC5 = [
     wire [31:0] ready_blk_next = (row_fire && c_op == REFPB) ? 32'b0 :''',
      f'''    wire [31:0] ready_stale_next = {{{half(16, 17, 2)}, {half(0, 16, 1)}}};
     wire [31:0] ready_blk_next = (row_gnt && {ev(18, "rfp")}) ? 32'b0 :'''),
-    ('''      (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;''', '''      !REF_MODE ? blk : (({{16{lead_qv[2]}}, {16{lead_qv[1]}}} & (32'b1 << bsel)) |
+    ('''      (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;''', '''      !REF_MODE ? blk : (({{16{lead_qv[2]}}, {16{lead_qv[1]}}} & bsel_oh) |
                           ({{16{!lead_qv[2]}}, {16{!lead_qv[1]}}} & blk));'''),
     ('''          if (REF_MODE && ref_c == RW'(LEAD)) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end''',
-     '''          if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end'''),
+     '''          if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb <= bsel; end
+          if (REF_MODE && lead_qv[3]) blk[15:0] <= bsel_oh[15:0];      // KV-PC6: blk lo / hi per lead copy
+          if (REF_MODE && lead_qv[4]) blk[31:16] <= bsel_oh[31:16];'''),
     ('''      wire wr_e = (W && wr_ok && hb_oh[b] && !(AQ && hr)) || (s_go && swe && sb_oh[b]);
       wire act_e = row_fire && c_op == ACT && c_oh[b];
       wire pre_e = row_fire && ((c_op == PRE && c_oh[b]) || c_op == PREALL);

@@ -825,9 +825,12 @@ module qkd_kvpc_s_sched #(
     end endgenerate
     reg [6:0] dsel, dcnt;
     // Same-edge sticky release, with one kept decision leaf per eight copies.
+    // KV-PC6: ONE strap compare for every set leaf (a compare inside the loop elaborated 24 $eq cells: the leaves'
+    // inputs differed and ot_rst_copies refused the family, so copy 0 kept all 2518 loads)
+    wire hgo_hit = dcnt == dsel;
     for (genvar hg = 0; hg < 24; hg = hg + 1) begin : g_hgo_native
         wire set_group;
-        ot_kvpc5_and2 u_go (.a(dcnt == dsel), .b(h_rn), .y(set_group));
+        ot_kvpc5_and2 u_go (.a(hgo_hit), .b(h_rn), .y(set_group));
         always @(posedge hclk) begin
             if (!h_rn) hgo_qv[hg*8 +: 8] <= 8'd0;
             else if (set_group) hgo_qv[hg*8 +: 8] <= 8'hff;
@@ -1965,7 +1968,7 @@ wire [9:0] head_first = head_first__qv[9:0];
  end
 endmodule
 
-// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 33 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2) ----
+// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 34 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2) ----
 module ot_qkd_static_kv_timing_kvpc_s #(
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
@@ -2197,9 +2200,9 @@ module ot_qkd_static_kv_timing_kvpc_s #(
       if (!rst_n) ev_qv <= {132{1'b0}};
       else ev_qv <= {{11{ev_d[11:6]}}, {11{ev_d[5:0]}}};
     // KV-PC5: ref_c == LEAD as registered copies (ref_c <= ref_n at every non-reset edge): 0 blk/rb, 1 ready_blk_next
-    (* keep *) reg [2:0] lead_qv;
+    (* keep *) reg [4:0] lead_qv;   // KV-PC6: 3 / 4 = blk lo / hi (i4b census: copy 0 drove 38)
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) lead_qv <= {3{RW'(RPH + PERIOD) == RW'(LEAD)}}; else lead_qv <= {3{ref_n == RW'(LEAD)}};
+      if (!rst_n) lead_qv <= {5{RW'(RPH + PERIOD) == RW'(LEAD)}}; else lead_qv <= {5{ref_n == RW'(LEAD)}};
     wire [17:0] desc_acc_c;
     wire [31:0] open_nx;
     assign open_nx[15:0] = (row_gnt && ev_qv[84]) ? (open[15:0] | c_oh[15:0]) : (row_gnt && ev_qv[85]) ? (open[15:0] & ~c_oh[15:0]) :
@@ -2215,6 +2218,13 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     (* keep, ot_rst_split = 5 *) reg [9:0] bsel__qv;   // KV-PC SAFE: 2 kept copies of bsel
     function [4:0] bsel__f; input [4:0] v; bsel__f = v; endfunction
     wire [4:0] bsel = bsel__qv[4:0];reg [4:0] refresh_rr;
+    // KV-PC6: onehot(bsel) the same way (i4b census: bsel copies drove 38 decode pins of blk / ready_blk_next)
+    wire [31:0] bsel_oh;                                      // == 32'b1 << bsel
+    wire [3:0] bsel_oh_lo = 4'b1 << bsel[1:0];
+    wire [7:0] bsel_oh_hi = 8'b1 << bsel[4:2];
+    for (genvar q = 0; q < 32; q = q + 1) begin : g_bsel_oh
+      ot_kvpc5_and2 u_l (.a(bsel_oh_lo[q & 3]), .b(bsel_oh_hi[q >> 2]), .y(bsel_oh[q]));
+    end
     initial if(STATIC_REFRESH!=0 && (PULLIN!=0 || REF_MODE!=1))$fatal(1,"static RR refresh requires REFpb/no pullin");
     always @(posedge clk or negedge rst_n)if(!rst_n)refresh_rr<=0;else if(row_fire&&c_op==REFPB)refresh_rr<=refresh_rr+5'd1;
     // Exact next-state eligibility; no extra decision cycle. The cut is
@@ -2223,7 +2233,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     reg [31:0] write_ready_bank;
     wire [31:0] ready_stale_next = {desc_acc_c[2] ? open_nx[31:16] : (row_gnt && ev_qv[104]) ? 16'b0 : (row_gnt && ev_qv[103]) ? stale[31:16] & ~c_oh[31:16] : (row_gnt && ev_qv[107]) ? stale[31:16] | c_oh[31:16] : stale[31:16], desc_acc_c[1] ? open_nx[15:0] : (row_gnt && ev_qv[98]) ? 16'b0 : (row_gnt && ev_qv[97]) ? stale[15:0] & ~c_oh[15:0] : (row_gnt && ev_qv[101]) ? stale[15:0] | c_oh[15:0] : stale[15:0]};
     wire [31:0] ready_blk_next = (row_gnt && ev_qv[112]) ? 32'b0 :
-      !REF_MODE ? blk : (({{16{lead_qv[2]}}, {16{lead_qv[1]}}} & (32'b1 << bsel)) |
+      !REF_MODE ? blk : (({{16{lead_qv[2]}}, {16{lead_qv[1]}}} & bsel_oh) |
                           ({{16{!lead_qv[2]}}, {16{!lead_qv[1]}}} & blk));
     for (genvar b = 0; b < 32; b = b + 1) begin : bank
       reg [4:0] rcd, ras; reg [8:0] aok; reg [2:0] rtp; reg aok_zr, rcd_zr;   // == 0 flags, registered
@@ -2690,7 +2700,9 @@ module ot_qkd_static_kv_timing_kvpc_s #(
           else if (row_fire && (c_op == PREALL || (c_op == PRE && c_bank == so_b))) so_v <= 1'b0;
         end
         if (!PI) begin
-          if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
+          if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb <= bsel; end
+          if (REF_MODE && lead_qv[3]) blk[15:0] <= bsel_oh[15:0];      // KV-PC6: blk lo / hi per lead copy
+          if (REF_MODE && lead_qv[4]) blk[31:16] <= bsel_oh[31:16];
         end else begin
           if (row_fire && (c_op == ACT || c_op == REFPB)) sact <= 0; else if (sact != 4'hf) sact <= sact + 1'b1;
           if (ref_c == RW'(LEAD)) begin
