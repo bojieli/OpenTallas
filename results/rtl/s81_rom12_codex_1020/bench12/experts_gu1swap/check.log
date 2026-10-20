@@ -1,0 +1,6 @@
+MISMATCH edge 387 row 0 lo 0 k 1 got bdc7e8e0/0 want 3d69f500/0
+MISMATCH edge 388 row 1 lo 0 k 1 got bd540580/0 want 3bc22c00/0
+MISMATCH edge 397 row 2 lo 4 k 2 got bddd3740/0 want 3e74b5c0/0
+MISMATCH edge 398 row 3 lo 4 k 2 got bd2698c0/0 want be55c7a0/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((387, 0, (0, 1, 5), 1030354176, 0), (387, 0, (0, 1, 5), 3183995104, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 1 mutant=swap rows=4 fixture_rows=4 errors=5 END edges=1074 ret_words=12 xo_checked=1072 fault=0

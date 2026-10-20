@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: ot-epyc9       admits   812 GB (avail 757, growth 188, headroom 0, waiters 0/0 GB) load 98/128 running 48 disk 80 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2598754-1792512319 after 0 s
+BENCHA o1 rc=0 ROMOPTA_BENCH_VERDICT PASS
+BENCHA o1o2 rc=0 ROMOPTA_BENCH_VERDICT PASS
+SRCCHK v_h9nx_e5 3 not-ok
+SRCCHK v_h10_e2 3 not-ok
+SRCCHK v_h9MX_e1 3 not-ok
+SRCCHK romcap_bench 0 not-ok
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2598754-1792512319): exit 0

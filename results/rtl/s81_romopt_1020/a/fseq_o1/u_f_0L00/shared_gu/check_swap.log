@@ -1,0 +1,17 @@
+MISMATCH edge 403 row 0 lo 0 k 2 got 3e97c141/0 want 3e57d0c6/0
+MISMATCH edge 404 row 1 lo 0 k 2 got 3d20f7da/0 want bd143e06/0
+MISMATCH edge 407 row 2 lo 0 k 1 got be174f39/0 want 3b8af558/0
+MISMATCH edge 408 row 3 lo 0 k 1 got bbf040a8/0 want 3d91be1c/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((403, 0, (0, 2, 5), 1045942470, 0), (403, 0, (0, 2, 5), 1050132801, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.shared_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=5 END edges=2293 ret_words=26 xo_checked=2291 fault=0
+MISMATCH edge 403 row 2 lo 0 k 2 got 39202d00/0 want bd8306d7/0
+MISMATCH edge 414 row 0 lo 2 k 1 got 3d17ec9e/0 want 3cef3d60/0
+MISMATCH edge 415 row 1 lo 2 k 1 got 3e078ea9/0 want 3e274518/0
+PLAN_MISMATCH predicted 8 words, got 8; first diff ((403, 2, (0, 2, 5), 3179480791, 0), (403, 2, (0, 2, 5), 958409984, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.shared_gu phase 2 mutant=None rows=3 fixture_rows=3 errors=4 END edges=2293 ret_words=26 xo_checked=2291 fault=0
+MISMATCH edge 403 row 2 lo 0 k 2 got 3dfdb690/0 want 3e256d84/0
+MISMATCH edge 414 row 0 lo 2 k 1 got bc6d0396/0 want bc977537/0
+MISMATCH edge 415 row 1 lo 2 k 1 got 3be0d670/0 want bd2f9266/0
+PLAN_MISMATCH predicted 8 words, got 8; first diff ((403, 2, (0, 2, 5), 1042640260, 0), (403, 2, (0, 2, 5), 1040037520, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.shared_gu phase 3 mutant=None rows=3 fixture_rows=3 errors=4 END edges=2293 ret_words=26 xo_checked=2291 fault=0
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 146 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 715 span 652 errors 3 ["PHASE_FAIL p1: ['MISMATCH edge 403 row 0 lo 0 k 2 got 3e97c141/0 want 3e57d0c6/0', 'MISMATCH edge 404 row 1 lo 0 k 2 got 3d20f7da/0 want bd143e06/0']", "PHASE_FAIL p2: ['MISMATCH edge 403 row 2 lo 0 k 2 got 39202d00/0 want bd8306d7/0', 'MISMATCH edge 414 row 0 lo 2 k 1 got 3d17ec9e/0 want 3cef3d60/0']", "PHASE_FAIL p3: ['MISMATCH edge 403 row 2 lo 0 k 2 got 3dfdb690/0 want 3e256d84/0', 'MISMATCH edge 414 row 0 lo 2 k 1 got bc6d0396/0 want bc977537/0']"]

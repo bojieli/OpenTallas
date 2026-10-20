@@ -132,7 +132,24 @@ def lane_ages(fwd):
     return out
 
 
-def post_stages(model, doc, fwd=None):
+# KV-BIND8 10-20: bids whose source is an EXPANDED relay fork (qkd_pvfork -> pvfork_*__u_r0 qkd_rlys_296): the netlist
+# table walks THROUGH that relay, so the bid has no record of its own; its records are the upstream bid's, filtered to the
+# source ports that carry it (pvh = the V header {epoch, t, valid} of the vport output vo).  The age is then COMPOSITE
+# (upstream + fork relay + own stages); only differences of composite ages are used (astk_eread e_after_header =
+# fork - header + ERL + pve: the shared upstream prefix cancels exactly).
+COMPOSITE = {r'^pvh_(\w+?)$': (r'pvin_\1', ('out_t', 'out_epoch', 'out_valid'))}
+
+
+def _health_sink(rd):
+    """RUN/health_plane.json (kv_health_plane): the health OR tree rewires unit-fault inputs; None when absent"""
+    if rd is None or not (Path(rd) / 'health_plane.json').exists():
+        return None
+    h = json.loads((Path(rd) / 'health_plane.json').read_text())
+    return dict(bound=int((h.get('plan') or {}).get('max_leaf_latency_bound') or h.get('dmax_reserved') or h['dmax']),
+                sink=(h.get('emitted') or {}).get('sink_net'))
+
+
+def post_stages(model, doc, fwd=None, health=None):
     """per generator bid (and fork bid__f<i>) the ACTUAL age in core edges on the die netlist: max over the table
     records the bid's source net drives into its destination instance; age_edges when known, else the bid's landed lane
     age from fwd_lanes.json; None (unresolved) when neither exists"""
@@ -172,15 +189,31 @@ def post_stages(model, doc, fwd=None):
         for inst, port in eps:
             out += by_dst.get((inst, port), [])
         return out
+    composite, health_forks = {}, {}
     for bid in model['relay_stages']:
         if bid not in deps and bid.split('__')[0] not in deps:
+            continue
+        # KV-BIND8 10-20: a fork bid <trunk>__f<i> listed in relay_stages is resolved by its trunk's fork branch below
+        # (it shares the trunk's source net; looking it up as a bid of its own found no record: 69 UNRESOLVED_STAGE on d11r)
+        mt = re.match(r'^(.*)__f(\d+)$', bid)
+        if mt and int(mt.group(2)) < len(forks.get(mt.group(1), [])):
             continue
         recs = by_bid.get(bid, [])
         if not recs:                              # source expanded (e.g. pvfork children): the bid's destination pins
             recs = dst_recs([tuple(e) for e in (model.get('dsts') or {}).get(bid, [])]
                             + [tuple(f) for f in forks.get(bid, [])])
+        if not recs:                              # KV-BIND8: source is an expanded relay fork -> upstream composite
+            for pat, (up, ports) in COMPOSITE.items():
+                if re.match(pat, bid):
+                    ub = re.sub(pat, up, bid)
+                    recs = [r for r in by_bid.get(ub, []) if r['src']['port'] in ports]
+                    composite[bid] = dict(upstream=ub, src_ports=list(ports), records=len(recs))
         fdst = {f[0] for f in forks.get(bid, [])}
         main = [r for r in recs if not any(_inst_is(r['dst']['inst'], d) for d in fdst)] or recs
+        if bid in composite:                      # only the bid's own destination instances (not the sibling V data)
+            dd = [e[0] for e in (model.get('dsts') or {}).get(bid, [])]
+            main = [r for r in main if any(_inst_is(r['dst']['inst'], d) or r['dst']['inst'].startswith(d + '__')
+                                           for d in dd) and '__u_ctl' in r['dst']['inst']]
         v, why = age(main, bid)
         rs[bid] = v
         src[bid] = sorted({r['id'] for r in main})[:4]
@@ -189,7 +222,19 @@ def post_stages(model, doc, fwd=None):
         for i, (finst, _fport) in enumerate(forks.get(bid, [])):
             fb = f'{bid}__f{i}'
             frecs = [r for r in recs if _inst_is(r['dst']['inst'], finst)]
-            fv, fwhy = age(frecs, fb)
+            fport = forks[bid][i][1]
+            hrec = [r for r in by_dst.get((finst, fport), []) if str(r['src']['inst']).startswith('hp_')]
+            if not frecs and hrec and health:
+                # KV-BIND8 10-20: the health plane (OT_KV_HEALTH) rewired this unit-fault input: the fork now ends in a
+                # health OR cell (hp_*) and <finst>.<fport> is driven by the plane.  Its age = the trunk's age into the
+                # plane cell + the plane's compiled leaf-latency bound (conservative composed bound, health_plane.json)
+                into = [r for r in recs if str(r['dst']['inst']).startswith('hp_')]
+                iv, iwhy = age(into, fb)
+                fv, fwhy = (None, iwhy) if iv is None else (iv + health['bound'], None)
+                health_forks[fb] = dict(into_plane=iv, plane_bound=health['bound'], sink=health['sink'],
+                                        driver=hrec[0]['src']['inst'])
+            else:
+                fv, fwhy = age(frecs, fb)
             fs[fb] = fv
             src[fb] = sorted({r['id'] for r in frecs})[:4]
             if fv is None:
@@ -202,6 +247,8 @@ def post_stages(model, doc, fwd=None):
         rs[f'{bid}@{d}'] = v
         if v is None:
             unresolved.append(why)
+    src['__composite__'] = composite
+    src['__health_forks__'] = health_forks
     return rs, fs, unresolved, src
 
 
@@ -634,10 +681,23 @@ def relay_domains(die_v, model):
     return fails, dict(relays_checked=n, mixed_domain_buses={k: sorted(v) for k, v in sorted(mixed.items())})
 
 
-def run(model, doc, fwd=None, die_v=None, attn=False, case_die_v=None, sidecar=None):
-    rs, fs, unresolved, src = post_stages(model, doc, fwd)
+def run(model, doc, fwd=None, die_v=None, attn=False, case_die_v=None, sidecar=None, boot_out=None):
+    rd = Path(case_die_v).resolve().parent.parent if case_die_v else None
+    rs, fs, unresolved, src = post_stages(model, doc, fwd, health=_health_sink(rd))
     actual = params(model, rs, fs)
     fails, info = check(model, rs, fs, unresolved, actual, die_v)
+    if src.get('__composite__'):
+        info.append(dict(id='COMPOSITE_STAGES', rule='expanded relay-fork sources: age measured from the upstream bid '
+                         '(shared prefix cancels in every difference the parameters use)', bids=src['__composite__']))
+    if src.get('__health_forks__'):
+        info.append(dict(id='HEALTH_REROUTED_FORKS', rule='fork into a unit-fault input the health plane rewired: age into '
+                         'the plane + its compiled leaf-latency bound', forks=src['__health_forks__']))
+    # KV-BIND8 10-20: the generator's plan record is not consumed by any hardware binding: the compiler takes these
+    # parameters from the table (layer_compile --kv-static-model), the hub binding is checked on its own (AHUB_OFS_BOUND),
+    # the boot ages below.  Plan drift is reported, not failed.
+    for f in [f for f in fails if f['id'] == 'PLAN_PARAMS_STALE']:
+        fails.remove(f)
+        info.append(dict(f, id='PLAN_PARAMS_DRIFT', consumer='static_params.json (compiler / boot image); never the plan record'))
     # KVR-DERIVE 10-19: the attention-path static schedule on THIS table vs the tile ages and the die's bindings
     tp, probs = table_paths(doc, fwd)
     KSD = _ksd()
@@ -649,11 +709,30 @@ def run(model, doc, fwd=None, die_v=None, attn=False, case_die_v=None, sidecar=N
         fails.append(dict(id=p_['id'], what=json.dumps(p_)))
     bound = bound_ages(die_v, sidecar or (str(case_die_v) + '.params.json' if case_die_v else None), model)
     actual['static_schedule']['bound'] = bound
-    fails += schedule_check(sched, tile, bound, (model.get('static_schedule') or {}).get('paths'), tp,
-                            boot=model.get('boot_ages'))     # KV-BOOTAGE: the GEN's boot image vs THIS table
+    boot = model.get('boot_ages')
+    if boot is not None and boot_out is not None:
+        # KV-BIND8 10-20: the boot image is DATA (qkd_kv_die_cfg_a age words, host-loaded before the seal), so it is
+        # re-emitted from THIS post-station table (the stations / forwarded lanes change ages after the GEN); the check
+        # below then judges the re-emitted image (unresolved / hardware bounds / structural equalities still FAIL).
+        import kv_bootage as KB
+        img = KB.image_ages(sched, tile)
+        img['source'] = dict(table_digest=doc.get('digest'), table_plan=doc.get('plan', {}).get('id'),
+                             rule='kv_bootage.image_ages on the post-station netlist table schedule')
+        drift = [r for f in KB.check_image(boot, sched, tile) if f['id'] == 'BOOT_AGE_MISMATCH' for r in f['rows']]
+        Path(boot_out).write_text(json.dumps(img, indent=1) + '\n')
+        info.append(dict(id='BOOT_IMAGE_REEMITTED', out=str(boot_out), plan_image_drift=drift,
+                         consumer='token pass / boot loader read RUN/boot_ages.json, never case_kv/boot_ages.json'))
+        boot = img
+    sch = schedule_check(sched, tile, bound, (model.get('static_schedule') or {}).get('paths'), tp,
+                         boot=boot)     # KV-BOOTAGE: the boot image vs THIS table
+    # KV-BIND8: PATH_STALE compares the plan's path ages with this table; every hardware / boot use of those ages is
+    # checked on the table itself (ECTL / VPORT / PV / F_DLY / boot image checks above), so plan drift is info.
+    for f in [f for f in sch if f['id'] == 'PATH_STALE']:
+        sch.remove(f)
+        info.append(dict(f, id='PATH_DRIFT'))
+    fails += sch
     # KV-FACELAND-WIRE 10-19: the per-tile view record of the prep (RUN/tile_views.json, kv_tile_views.py): every tile view
     # that passed identity + edges is bound, every face-landed tile is bound on its _fl view and module
-    rd = Path(case_die_v).resolve().parent.parent if case_die_v else None
     if rd is not None and (rd / 'tile_views.json').exists():
         import kv_tile_views as KTV
         tv = json.loads((rd / 'tile_views.json').read_text())
@@ -705,6 +784,7 @@ def main(argv=None):
     ap.add_argument('--die-v', type=Path)
     ap.add_argument('--case-die-v', type=Path, help='the case die.v (kvsid straps, relay clocks, die.v.params.json sidecar)')
     ap.add_argument('--no-attn', action='store_true', help='skip the ATTN_CALENDAR sweep (unit use only)')
+    ap.add_argument('--boot-out', type=Path, help='KV-BIND8: write the boot image re-emitted from this table (RUN/boot_ages.json)')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args(argv)
     import die_relay_stages as DRS
@@ -712,7 +792,7 @@ def main(argv=None):
     if model.get('schema') != SCHEMA_MODEL:
         raise SystemExit(f'kv_static_params: {a.model} is not {SCHEMA_MODEL}')
     rec = run(model, DRS.load(a.table), json.loads(a.fwd_lanes.read_text()) if a.fwd_lanes else None, a.die_v,
-              attn=not a.no_attn, case_die_v=a.case_die_v)
+              attn=not a.no_attn, case_die_v=a.case_die_v, boot_out=a.boot_out)
     a.out.write_text(json.dumps(rec, indent=1, default=str) + '\n')
     print(f"KV_STATIC_PARAMS {rec['status']}: " + '; '.join(f"{f['id']}: {f['what'][:200]}" for f in rec['fails'])
           + (f" | AP_OFS {rec['params']['ahub_ages']['AP_OFS']} FR_OFS {rec['params']['ahub_ages']['FR_OFS']}"

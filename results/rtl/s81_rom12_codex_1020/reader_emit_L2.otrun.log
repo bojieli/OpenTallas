@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: ot-epyc9       admits   984 GB (avail 815, growth 126, headroom 0, waiters 0/0 GB) load 75/128 running 41 disk 33 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2441366-1792495125 after 0 s
+READER_VECTORS /srv/opentallas-scratch/codex/s81-rom12-1020/out/pack_real/L2 segments 68 events 5612 end 11979
+READER_REPLAY L2 {'mode': 0, 'returncode': 0, 'PASS': True, 'fail_regex': None}
+READER_REPLAY L2 {'mode': 1, 'returncode': 1, 'PASS': True, 'fail_regex': 'reader fault|action mismatch'}
+READER_REPLAY L2 {'mode': 2, 'returncode': 1, 'PASS': True, 'fail_regex': 'reader fault|action mismatch'}
+DVC_EMIT_SHARED PASS L2 9 files byte-identical to reader-tested images
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2441366-1792495125): exit 0

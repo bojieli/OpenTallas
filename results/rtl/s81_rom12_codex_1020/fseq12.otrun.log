@@ -1,0 +1,38 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: ot-epyc9       admits   939 GB (avail 801, growth 144, headroom 0, waiters 0/0 GB) load 111/128 running 43 disk 34 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg4
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2661840-1792495301 after 1 s
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 1/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 2/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 3/19 mat exp61.w13 rows 1 nseg 5 faults 0 ret_words 2 calendar measured_class T 1010 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 4/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 5/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 6/19 mat exp69.w13 rows 1 nseg 5 faults 0 ret_words 2 calendar measured_class T 1008 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 7/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 8/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 9/19 mat exp112.w13 rows 1 nseg 5 faults 0 ret_words 2 calendar measured_class T 1010 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 10/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 11/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 12/19 mat exp170.w13 rows 1 nseg 5 faults 0 ret_words 2 calendar measured_class T 1008 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 13/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 14/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 15/19 mat exp299.w13 rows 1 nseg 5 faults 0 ret_words 2 calendar measured_class T 1010 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 16/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 17/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 18/19 mat exp357.w13 rows 1 nseg 5 faults 0 ret_words 2 calendar measured_class T 1008 mutant None
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/fseq12.py", line 35, in <module>
+    result=dict(op=op,period=P,positive=P==period,run_rc=r.returncode,check_rc=chk.returncode,checker=json.loads(out.read_text()))
+                                                                                                                 ~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/codex/s81-rom12-1020/out/fseq12/experts_gu/check_P145.json'
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2661840-1792495301): exit 1

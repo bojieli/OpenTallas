@@ -42,6 +42,46 @@ import numpy as np  # noqa: E402
 
 ROOT = LX.ROOT
 NSLICE, NFRAME = 16, 8
+# S81-ROMCAP (10-20): OT_XS_GU_MERGE=1 places a SwiGLU expert's gate and up rows as one matrix (rows gate ++ up, same x,
+# fmt and K), so plan_phase fills R-row phases across both tensors: 9 rows / frame -> 3 phases instead of 2 + 2.
+# Contents only (ROM images, cfg7 rows, xs streams); default 0 keeps every record byte-identical.
+import os  # noqa: E402
+import xs_flags as XO  # noqa: E402  S81-ROMOPT-A: release defaults (env overrides)
+GU_MERGE = XO.on('OT_XS_GU_MERGE')
+import xs_topo as TP  # noqa: E402  S81-RATE3: physical frames per slice (OT_XS_TOPO=1)
+# S81-ROMOPT-C (owner 10-20 ~08:45, O3): OT_XS_KSLOT=k (1 | 2 | 3) gives every element of a phase of the KSLOT_OPS up to k
+# segment CLASSES (k segments of distinct segment indices; the element takes NSEG 8 segments / 8 classes, NCH 16 chain
+# words a round, as built), so a phase holds R_k = 2 x floor(k x q pairs / nseg) rows.  Contents only (ROM images, cfg7
+# rows, xs streams / calendars); the multi-class return cadence is MEASURED (ELEM_SLOT, PV trace) and legalised.
+# Default 1 = every record byte-identical.
+KSLOT = int(os.environ.get('OT_XS_KSLOT', '1'))
+if KSLOT not in (1, 2, 3):
+    raise ValueError('OT_XS_KSLOT must be 1, 2 or 3')
+# OT_XS_KSLOT_OPS: the ops compiled with k classes, 'op' (k = OT_XS_KSLOT) or 'op:k' (per-op k, e.g. a mixed k2 / k3)
+_KO = [x.split(':') for x in os.environ.get('OT_XS_KSLOT_OPS', 'ffn.experts_gu,ffn.down').split(',') if x]
+KSLOT_OPS = tuple(x[0] for x in _KO)
+KSLOT_PER_OP = {x[0]: int(x[1]) for x in _KO if len(x) > 1}
+if any(v not in (1, 2, 3) for v in KSLOT_PER_OP.values()):
+    raise ValueError('OT_XS_KSLOT_OPS per-op k must be 1, 2 or 3')
+# OT_XS_KSLOT_STRETCH='op:f,...' (k > 1 phases only; default unset = off): that op's FP8 / FP4 stream rounds are
+# max(.., ceil(f x units)) beats, so its classes' last beats (and return words) spread f x wider -- e.g. ffn.down's 5
+# units in 8-beat rounds put classes 0 / 1 and 2 / 3 one beat apart (never in one element, E3); f 2 spaces them 2.
+# Contents only (the xs stream ROM); the stream grows by the added beats (priced by the op's measured floor).
+KSLOT_STRETCH = {o: float(f) for o, f in (x.split(':') for x in os.environ.get('OT_XS_KSLOT_STRETCH', '').split(',') if x)}
+
+
+def kslot_of(op):
+    if op in KSLOT_PER_OP:
+        return KSLOT_PER_OP[op]
+    return KSLOT if op in KSLOT_OPS else 1
+
+
+def nsr_max(nseg, npairs, k):
+    """super rows a phase holds: k = 1 the D2 rule (one segment per pair); k > 1 k segment classes per pair:
+    floor(k x npairs / nseg)"""
+    if k == 1:
+        return npairs // nseg
+    return (k * npairs) // nseg
 
 
 def sha(b):
@@ -100,9 +140,13 @@ class Fix:
         return np.fromfile(self.d / rel, dtype=np.dtype(f['dtype'])).reshape(f['shape'])
 
     def w(self, n):
+        if n.endswith('.w13'):      # S81-ROMCAP (GU_MERGE): gate rows ++ up rows of one expert (same x, fmt, K)
+            return np.concatenate([self.w(n[:-3] + 'w1'), self.w(n[:-3] + 'w3')])
         return self.arr(f'weights/{n}.bin')
 
     def sc(self, n):
+        if n.endswith('.w13'):
+            return np.concatenate([self.sc(n[:-3] + 'w1'), self.sc(n[:-3] + 'w3')])
         return self.arr(f'weights/{n}.scale.bin')
 
     def op(self, n):
@@ -140,15 +184,18 @@ def op_groups(fx, op):
         rows = list(range(fx.w('wq_b').shape[0]))
         heads = m['tp_split']['heads'][m['rank']]
         hd = len(rows) // (heads[1] - heads[0])
-        g = [[[h * hd + r for r in fr] for fr in deal(hd, NFRAME)] for h in range(NSLICE)]
+        g = [[[h * hd + r for r in fr] for fr in deal(hd, TP.nfr(h))] for h in range(NSLICE)]
         q0 = m['tp_split']['wq_b_rows'][m['rank']][0]
         return [dict(mat='wq_b', rows=rows, x=x, tie=[('attn.wq_b', q0 + r) for r in rows], groups=g, out='bf16')]
     if op == 'attn.wo_b':
         c0, c1 = m['tp_split']['wo_b_cols'][m['rank']]
         x = fx.op('attn.wo_a')[c0:c1]
         rows = list(range(fx.w('wo_b').shape[0]))
-        per = len(rows) // NSLICE
-        g = [[[s * per + r for r in fr] for fr in deal(per, NFRAME)] for s in range(NSLICE)]
+        if TP.PROP:     # S81-RATE3: slice shares in proportion to the physical frames (contiguous, CAP rbase / rcnt)
+            g = [[[js[i] for i in fr] for fr in deal(len(js), TP.nfr(s))] for s, js in enumerate(TP.slice_deal(len(rows), NSLICE))]
+        else:
+            per = len(rows) // NSLICE
+            g = [[[s * per + r for r in fr] for fr in deal(per, TP.nfr(s))] for s in range(NSLICE)]
         return [dict(mat='wo_b', rows=rows, x=x, tie=None, groups=g, out='fp32',
                      note='rank partial (wo_b by input columns): the fixture holds the all-reduced sum only')]
     if op in ('ffn.shared_gu', 'ffn.experts_gu'):
@@ -160,10 +207,20 @@ def op_groups(fx, op):
             j0 = (m['tp_split']['shared_ff_rows'] if e == 'shared' else m['tp_split']['expert_ff_rows'])[m['rank']][0]
             tot = 4 * nff
             tie_op = 'ffn.shared_gu' if e == 'shared' else f'ffn.experts.{e[3:]}.gu'
+            if GU_MERGE:    # S81-ROMCAP: ONE matrix per expert (gate ++ up rows), so a frame's 9 rows fill 3 phases, not 4
+                rows = list(range(2 * nff))
+                tie = [(tie_op, j0 + r) for r in range(nff)] + [(tie_op, tot + j0 + r) for r in range(nff)]
+                # S81-ROMOPT-A: whole (gate j, up j) pairs a frame, the frame's gates first then its ups, so gate j and
+                # up j never share a phase (they share a CAP pairing slot, see merged_cap) -- a phase <= R rows < pairs
+                g = [[[j for j in fr] + [nff + j for j in fr] for fr in deal_into(js, TP.nfr(s))]
+                     for s, js in enumerate(deal(nff, NSLICE))]
+                out.append(dict(mat=f'{e}.w13', rows=rows, x=x, tie=tie, groups=g, out='bf16', expert=e,
+                                **merged_cap(nff)))
+                continue
             # one matrix per tensor (plan_phase takes one matrix per phase): gate j and up j in the same slice/frame
             for n, base in ((n1, 0), (n3, tot)):
                 rows = list(range(nff))
-                g = [[[j for j in fr] for fr in deal_into(js, NFRAME)] for js in deal(nff, NSLICE)]
+                g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(deal(nff, NSLICE))]
                 out.append(dict(mat=n, rows=rows, x=x, tie=[(tie_op, base + j0 + r) for r in rows], groups=g,
                                 out='bf16', expert=e))
         return out
@@ -175,7 +232,7 @@ def op_groups(fx, op):
             xop = 'ffn.shared.swiglu' if e == 'shared' else f'ffn.experts.{e[3:]}.route_w'
             r0 = m['tp_split']['expert_down_rows'][m['rank']][0]
             tie_op = 'ffn.shared.down' if e == 'shared' else f'ffn.experts.{e[3:]}.down'
-            g = [[[j for j in fr] for fr in deal_into(js, NFRAME)] for js in deal(len(rows), NSLICE)]
+            g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(TP.slice_deal(len(rows), NSLICE))]
             import hdc_golden_v41 as G   # down reads bf16(a) (dv_layer_fixtures.expert)
             out.append(dict(mat=n2, rows=rows, x=G.to_bf16(fx.op(xop)), tie=[(tie_op, r0 + r) for r in rows], groups=g,
                             out='bf16', expert=e))
@@ -183,13 +240,34 @@ def op_groups(fx, op):
     if op in ('attn.idx.q', 'eng.wkv'):
         n, xop = {'attn.idx.q': ('indexer.wq_b', 'attn.q_norm.scale'), 'eng.wkv': ('engram.wkv', 'eng.rows_allgather')}[op]
         rows = list(range(fx.w(n).shape[0]))
-        g = [[[j for j in fr] for fr in deal_into(js, NFRAME)] for js in deal(len(rows), NSLICE)]
+        g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(deal(len(rows), NSLICE))]
         if op == 'eng.wkv':     # the rank's contiguous quarter of the 4 x 6,400 (k copies ++ v) rows
             tie = [('eng.wkv', m['rank'] * len(rows) + r) for r in rows]
             return [dict(mat=n, rows=rows, x=fx.op(xop), tie=tie, groups=g, out='bf16')]
         return [dict(mat=n, rows=rows, x=fx.op(xop), tie=None, groups=g, out='bf16',
                      note='the fixture holds q after RoPE + FP4 qdq only: golden tie, no fixture tie')]
     raise KeyError(op)
+
+
+def merged_cap(nff):
+    """S81-ROMOPT-A: capture-root row tags of a GU_MERGE matrix (rows gate 0..nff-1 ++ up 0..nff-1).
+    ot_s81sl_cap decodes ONE range a cfg_d: e = tag - rbase < rcnt, leaf = (e >> 6) % 5,
+    word = obase + 64 ((e >> 6) // 5) + e % 64.  Slice s owns gate / up j in [a, a + n) (deal(nff, 16)); its tags are
+    gate j -> 2 U s + (j - a), up j -> 2 U s + U + (j - a), U = 320 ceil(span / 320): rbase 2 U s, rcnt U + n.  With
+    obase = the unmerged gate region (the up region follows it, 64 ceil(span / 320) words on), every row decodes to
+    the SAME (leaf, word) as the two-matrix placement, so the consumer layout is unchanged; other slices' tags lie
+    outside [2 U s, 2 U s + 2 U) and fault (F9).  Checked by xs_calendar.py cap (layout == unmerged reference)."""
+    js_all = deal(nff, NSLICE)
+    span = max(len(js) for js in js_all)
+    U = 320 * -(-span // 320)
+    tags = [None] * (2 * nff)
+    rng = []
+    for s, js in enumerate(js_all):
+        for i, j in enumerate(js):
+            tags[j], tags[nff + j] = 2 * U * s + i, 2 * U * s + U + i
+        rng.append((2 * U * s, U + len(js)))
+    assert max(tags) < (1 << 14) and all(c < (1 << 11) for _, c in rng)   # row[13:0] (row[15:14] = flags); rcnt 11 b
+    return dict(cap_tags=tags, cap_range=rng, cap_alloc=128 * (U // 320))     # words: gate + up regions
 
 
 def deal_into(items, parts):
@@ -253,7 +331,10 @@ def cmd_tie(a):
 
 
 # ------------------------------------------------------------------------------------------------ frame field
-NPAIRS = LX.NPAIRS          # q pairs per phase (a_proj's choice; every phase of the frame uses the same field slots)
+NPAIRS = int(XO.get('OT_XS_QPAIRS'))
+if NPAIRS not in (10, 12):
+    raise ValueError('OT_XS_QPAIRS must be 10 (legacy) or 12 (all physical pairs)')
+# q pairs per phase (a_proj's choice; every phase of the frame uses the same field slots)
 # element-work term per (fmt, units / segment, rows / element): MEASURED on the frame bench only (lower_xs.ELEM_EXTRA is
 # the fp8 a_proj measurement); a class missing here is placed and imaged with calendar_unmeasured
 ELEM_EXTRA = {('fp8',) + k: v for k, v in LX.ELEM_EXTRA.items()}
@@ -270,6 +351,24 @@ ELEM_SEG = {('fp8', 5120, 5): [33] * 5,        # a_proj bench_xs + shared_gu ben
             ('fp4', 2304, 5): [-14] * 5,       # down bench_xsp down (phase 47); predicts phase 50; PV trace p50 exact
             ('fp8', 2304, 5): [0, 0, 0, 0, -14],   # shared down, PV trace p44 (bench_xsp_pv)
             ('fp8', 1280, 3): [0, 0, -14]}     # wq_b, PV trace p1 (bench_xsp_pv)
+# S81-ROMOPT-C: MEASURED multi-slot cadence per (fmt, K, nseg, k): slot j of an element holding n slots (one segment
+# index) leaves slot_extra[n][j] edges after its single-slot E(pair, seg) (frame bench PV trace, release FSEQ tb
+# -DTB_PVTRACE).  A shape missing here compiles with 0 and is reported calendar_unmeasured (no cycle-exact claim).
+PVK = 'results/rtl/s81_romopt_1020/c/pv'
+# MEASURED (PV trace, release FSEQ tb -DTB_PVTRACE, u_f_0L00 col_h9_l4_nx LK5 + u_f_3L01 col_h10_l4 LK2, k2 + k3):
+# an element holding k segment classes whose single-slot edges E(pair, seg) are pairwise >= 2 apart emits EVERY class
+# exactly at E(pair, seg) (2,681 / 2,681 pv words); class sets closer than 2 edges shift (+1, fp8 adder interleave)
+# and are refused by the legaliser (frame_return_plan.leaves_for E3).  So the multi-class cadence term is 0.
+_Z = {n: [0] * n for n in (1, 2, 3)}
+ELEM_SLOT = {('fp4', 5120, 5): dict(slot_extra=_Z, evidence=PVK + ' experts_gu k2/k3 2 frames: 1,260 words exact'),
+             ('fp4', 2304, 5): dict(slot_extra=_Z, evidence=PVK + ' ffn.down routed k2/k3 2 frames: 1,224 words exact'),
+             ('fp8', 2304, 5): dict(slot_extra=_Z, evidence=PVK + ' ffn.down shared k2/k3 2 frames: 197 words exact')}
+
+def _prov_slot(k):
+    """an UNMEASURED k-slot shape: provisional cadence slot j at +j x OT_XS_KSLOT_PROV edges (default 0: the classes' own last beats), so the
+    phase compiles (images exact) for the PV-trace measurement; its calendar is reported calendar_unmeasured"""
+    d = int(os.environ.get('OT_XS_KSLOT_PROV', '0'))
+    return {n: [j * d for j in range(n)] for n in range(1, k + 1)}
 
 
 def frame_slot(die, frame):
@@ -280,17 +379,21 @@ def frame_slot(die, frame):
     raise KeyError(frame)
 
 
-def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None):
+def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None, kslot=1, nsr=None, stretch=None):
     """legalise one phase on pairs (a contiguous run qa[off:off + n]); assign_slots in field-slot indexing"""
     import frame_return_plan as P
     import v41_rom_ksplit_bankmap as S
     sx = ELEM_SEG.get((mat.fmt, mat.K, nseg))
+    kx = ELEM_SLOT.get((mat.fmt, mat.K, nseg)) if kslot > 1 else None
+    if kx is not None and not all(n in kx['slot_extra'] for n in range(1, kslot + 1)):
+        kx = None      # a slot count without a measurement: unmeasured
     plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
-                        seg_extra=sx, assign=assign)
+                        seg_extra=sx, assign=assign, kslot=kslot, nsr=nsr, stretch=stretch,
+                        slot_extra=_prov_slot(kslot) if kx is None else {int(n): v for n, v in kx['slot_extra'].items()})
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
     units = {S.unit_range(mat.fmt, a0, el)[1] - S.unit_range(mat.fmt, a0, el)[0] for a0, el in S.segments(mat.K, nseg)}
-    plan['elem_class'] = [mat.fmt, max(units), 2]
-    plan['calendar'] = 'measured_class' if sx is not None else 'calendar_unmeasured'
+    plan['elem_class'] = [mat.fmt, max(units), 2] + ([kslot] if kslot > 1 else [])
+    plan['calendar'] = 'measured_class' if sx is not None and (kslot == 1 or kx is not None) else 'calendar_unmeasured'
     plan['emission'] = dict(plan['emission'], elem_extra=sx)
     return plan
 
@@ -317,7 +420,7 @@ def phase_list(fx, ops, npairs=NPAIRS):
             f = fmt_of(fx, grp['mat'])
             K = fx.w(grp['mat']).shape[1] * (2 if f == 'fp4' else 1)
             nseg, _ = nseg_for(f, K, npairs)
-            R = 2 * (npairs // nseg)
+            R = 2 * nsr_max(nseg, npairs, kslot_of(op))
             most = max(len(fr) for sl in grp['groups'] for fr in sl)
             for c in range(-(-most // R)):
                 seq.append((op, gi, c, nseg, R))
@@ -335,14 +438,20 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     q, bf = B.frame_pairs(LX.base_master(master))
     fxa = LX.load_fixture(fixd)
     fx = Fix(fixd)
-    _, pl = LX.placement(die, sl)
+    _, pl = LX.placement(die, sl, fxa)
     p0 = pl[j]
     phases = []
     if p0['rows']:
         mats, gidx = LX.frame_mats(fxa, p0['rows'])
-        _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'])
+        _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'], rank_rows=p0['rows'],
+                                cap_cfg=LX.aproj_capture_contract(die, sl, fxa, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
     else:
         qa = q[:NPAIRS]
+    if NPAIRS == 12:
+        assert len(q) == 12, ('twelve physical q pairs required', master, len(q))
+        # Preserve phase-0's measured ten-pair order; its two idle slots become
+        # available to later phases. No frame ports, element RTL or views change.
+        qa = list(qa) + [p for p in q if p not in qa]
     import xs_bf as XB
     nbf = len(bf) if any(o in XB.BF_OPS for o in ops) else 0
     field = I.Field(16, 1, nbf, depth=8192, active=len(qa) + nbf, pp=True, fast=True)
@@ -359,25 +468,55 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     for op, gi, c, nseg, R in phase_list(fx, [o for o in ops if o not in XB.BF_OPS]):
         grp = groups[op][gi]
         sel_all = grp['groups'][g][j]
-        sel = sel_all[c * R:(c + 1) * R]
+        sel = TP.chunk(grp, sel_all, c, R)
+        assert sel, ('empty FP chunk on a frame', op, gi, c, frame)
         mat = make_mat(fx, grp, sel, op)
+        ks = kslot_of(op)
         npair = (len(qa) // nseg) * nseg
+        nsr_k = None
+        if ks > 1:     # S81-ROMOPT-C: the phase's real super rows (no SENT super rows), k classes a pair, all q pairs
+            nsr_k = -(-mat.rows // 2)
+            assert nsr_k <= nsr_max(nseg, len(qa), ks), ('k-slot phase over its rows', op, mat.rows, ks)
+            npair = len(qa)
+        if XO.on('OT_XS_COMPACT_TAILS') and mat.rows and ks == 1:
+            # The full pair budget used to allocate completely SENT superrows
+            # on short tails. Only real superrows need weight/config storage.
+            npair = min(npair, -(-mat.rows // 2) * nseg)
         k = len(field.phases)
-        if only is None or k in only:
-            plan = phase_plan(master, lk, qa[:npair], 0, mat, grp['x'], nseg, iters)
-        else:
-            plan = phase_plan(master, lk, qa[:npair], 0, mat, grp['x'], nseg, 0)
+        # Cycle the unused pair positions across phases to use all twelve ROMs.
+        # The planner sees actual physical pairs; assignments are then translated
+        # back to the stable field-slot numbering used by cfg and image writers.
+        slot_ids = list(range(len(qa)))
+        if NPAIRS == 12:
+            rot = (k * npair) % len(qa)
+            slot_ids = slot_ids[rot:] + slot_ids[:rot]
+        slot_ids = slot_ids[:npair]
+        pairs = [qa[i] for i in slot_ids]
+        measured = only is None or k in only
+        st_k = KSLOT_STRETCH.get(op) if ks > 1 else None
+        plan = phase_plan(master, lk, pairs, 0, mat, grp['x'], nseg, iters if measured else 0, kslot=ks, nsr=nsr_k,
+                          stretch=st_k)
+        plan['assign_slots'] = [(slot_ids[i], r, seg) for i, r, seg in plan['assign_slots']]
+        if not measured:
             plan['calendar'] = 'not_legalised'
-        ph = add_planned(field, plan, mat, nseg)
+        field.stretch = st_k
+        try:
+            ph = add_planned(field, plan, mat, nseg)
+        finally:
+            field.stretch = None
         tie = [grp['tie'][grp['rows'].index(grp['rows'][i])] if grp['tie'] else None for i in sel]
         phases.append(dict(phase=k, op=op, mat=grp['mat'], fmt=mat.fmt, K=mat.K, chunk=c, rows=len(sel),
-                           row_index=[grp['rows'][i] for i in sel], tie=tie, nseg=nseg, rows_per_phase=R,
+                           row_index=[grp['rows'][i] for i in sel], tie=tie, nseg=nseg, rows_per_phase=R, **({'kslot': ks} if ks > 1 else {}),
                            nbeat=ph['nbeat'], sbase=ph['sbase'], faults=plan['faults'], ret_words=plan['ret_words'],
                            calendar=plan['calendar'], elem_class=plan['elem_class'], ret=plan['ret'],
                            emission=plan['emission'], placement=plan['placement'], plan=plan, sel=sel, gi=gi))
     bfo = [o for o in ops if o in XB.BF_OPS]
     if bfo:
         phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa))
+    if LX.aproj_topology_enabled():
+        field.aproj_rank_rows = list(p0['rows'])
+        phases[0]['row_index'] = list(p0['rows'])
+        phases[0]['ownership'] = 'physical-frame contiguous tensor rows; CAP/gather unadmitted'
     fill = [int(v) for v in field.fill]
     return dict(frame=frame, master=master, lk=lk, slice=sl, slice_index=g, frame_index=j, pairs=qa, q_pairs=q,
                 bf_pairs=bf, phases=phases, fill=fill, depth=field.depth, nphases=len(field.phases),
@@ -485,6 +624,9 @@ def write_images(field, qa, q, bf, inst, out):
         banked = [[0] * 4096 for _ in range(7)]
         for p in range(nph):
             words = list(field.cfg[p][slot_all[k]]) if k in slot_all else [0] * 25
+            if p == 0 and LX.aproj_rank_tags_enabled():
+                assert hasattr(field, 'aproj_rank_rows'), 'production a_proj rank owner map missing'
+                words = LX.rank_cfg_words(words, field.aproj_rank_rows)
             d = bdesc.get(p, {}).get(slot_all.get(k))
             if d:     # ot_s81_cfg7_seq_bfp: desc[24 w +: 24] in the spare columns [71:48] of cfg word w = 0..3
                 for w_ in range(4):
@@ -519,6 +661,9 @@ def encode_bank72(words):
 
 def cmd_frame(a):
     import dv_layer_compile as C
+    import xs_capacity as XCAP   # S81-ROMOPT-B: the die compile refuses a stage map that overfills the ROM / cfg7
+    if XCAP.enabled():
+        XCAP.verdict(stage=os.environ.get("OT_XS_STAGE"))
     die = C.Die(C.die_tree(a.die_ref, a.die_src))
     rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'] + BF_OPS['L0'], iters=a.iters,
                                only=None if a.only is None else set(a.only))
@@ -579,6 +724,8 @@ def gen_one(a, rec, field, ph, out):
         tie = ph['tie'][r]
         rows[r] = dict(vals=plan['rows_vals'][str(r)], acc=gold[r][0], bf16=gold[r][1], src=list(mat.src[r]),
                        out_index=tie[1] if tie else None, tie=tie)
+        if grp.get('cap_tags'):     # S81-ROMOPT-A: GU_MERGE capture-root tag (xs_calendar gen --tags rank)
+            rows[r]['cap_tag'] = grp['cap_tags'][ph['sel'][r]]
     vm = [int(struct.unpack('<I', struct.pack('<f', float(v)))[0]) for v in np.asarray(grp['x'], dtype=np.float32)]
     (out / 'vm.hex').write_text(''.join(f'{v:08x}\n' for v in vm))
     plan = {k_: v for k_, v in plan.items() if k_ != 'stream'}
@@ -789,7 +936,7 @@ def lower_placed(die, op, ctx):
         f = fmt_of(fx, grp['mat'])
         K = fx.w(grp['mat']).shape[1] * (2 if f == 'fp4' else 1)
         nseg, units = nseg_for(f, K, NPAIRS)
-        mats.append(dict(mat=grp['mat'], fmt=f, K=K, nseg=nseg, rows_per_phase=2 * (NPAIRS // nseg),
+        mats.append(dict(mat=grp['mat'], fmt=f, K=K, nseg=nseg, rows_per_phase=2 * nsr_max(nseg, NPAIRS, kslot_of(name)),
                          phases=sum(1 for x in seq if x[1] == gi), rows_per_frame=[len(fr) for fr in grp['groups'][g]],
                          calendar='measured_class' if (f, K, nseg) in ELEM_SEG else 'calendar_unmeasured',
                          tie='fixture' if grp['tie'] else 'golden', note=grp.get('note')))
@@ -803,8 +950,46 @@ def lower_placed(die, op, ctx):
         schema='opentallas.s81_dv.xs_place.v1', op=op, slice=sl, slice_index=g, phases_die_wide=len(seq), mats=mats,
         bench=bench, images='python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (all phases of '
         'the frame field; gen --op OP for one phase\'s bench vectors)'), indent=1) + '\n'}
+    if name == 'attn.wq_b':
+        # TOKSIM-S81D/WQBP 10-20: the slice xs CALENDAR of the wq_b phases (+ attn.idx.q phases of the same field on
+        # sparse layers) is now compiled here: xs_wqb_die.wqb_calendar, default PIPELINE P126 / cfg_lead 52 (ctx
+        # wqb_calendar = 'serial' keeps the serial path), static checks recorded; refuses P < 126 (compile fault)
+        import xs_wqb_die as WD
+        fr0 = die.frames_of(sl)[0]
+        ops_, phase_, stream_, plist_, _ = WD.layer_field(fx, ctx.get('layer', 'L0'), die.inst[fr0]['master'],
+                                                          die.strap(fr0, 'lk'))
+        mode_ = ctx.get('wqb_calendar') or 'pipeline'
+        cal_ = WD.wqb_calendar(phase_, stream_, list(range(len(plist_))), slc=g, mode=mode_)
+        crec = dict(WD.calendar_record(cal_), schema='opentallas.s81_dv.xs_wqb_calendar.v1', layer=ctx.get('layer'),
+                    slice=sl, slice_index=g, ops=ops_, field_phases=plist_, compiler_emitted=True)
+        rec['files'][f'prog/xs/{op["id"]}.calendar.json'] = json.dumps(crec, indent=1) + '\n'
+        from pq_calendar import viamap
+        cw = cal_['packed']
+        rec['files'][f'prog/xs/{op["id"]}/pq_calendar_action.viamap.hex'] = viamap([w & ((1 << 72) - 1) for w in cw] + [0] * (4096 - len(cw)))
+        rec['files'][f'prog/xs/{op["id"]}/pq_calendar_time.viamap.hex'] = viamap([w >> 72 for w in cw] + [0] * (4096 - len(cw)))
+        rec['files'][f'prog/xs/{op["id"]}/is_d.txt'] = ''.join(f'{t} {v:040x}\n' for t, v in sorted(cal_['issuers'].items()))
+    fcal_ = None
+    if name not in ('attn.wq_b', 'attn.idx.q'):     # idx.q phases ride in the wq_b calendar (same field, same x)
+        # S81-CALPIPE 10-20: every other multi-phase FP8 field op gets its pipelined calendar (xs_field_calendar,
+        # measured per-op floor, static checks; refuses P < floor = compile fault)
+        import xs_field_calendar as XF
+        files_, fcal_ = XF.emit_files(die, op, ctx, sl)
+        if files_:
+            rec['files'].update(files_)
     unm = sorted({m['mat'] for m in mats if m['calendar'] != 'measured_class'})
-    miss = REST + ('' if bench else '; this op has no frame bench of its own (the placement compiler is benched on '
+    rest = REST
+    if name == 'attn.wq_b':
+        # S81-WQBP 10-20: the die-wide multi-phase xs calendar of this op IS compiled above (prog/xs/<id>.calendar.json,
+        # ROM images, is_d); its fullsix RTL run + consumer retire / deadline bench: results/rtl/s81_wqbp_1020
+        rest = ('xs calendar COMPILED (xs_wqb_die pipeline P126, static checks; fullsix RTL run = this emission, consumer '
+                'retire / deadline check results/rtl/s81_wqbp_1020); open: cap cfg_d descriptors of this 8-frame / '
+                f'{cal_["nphases"]}-phase shape (only the private fullsix 6-frame / 15-phase CAP lowering exists, '
+                'codex/token-cap-contract-1020) and the image writer\'s rank-local row tags')
+    if isinstance(fcal_, dict):
+        rest = (f'xs calendar COMPILED (xs_field_calendar pipeline P{fcal_["period"]}, {fcal_["nphases"]} phases, measured '
+                'floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer\'s '
+                'rank-local row tags')
+    miss = rest + ('' if bench else '; this op has no frame bench of its own (the placement compiler is benched on '
                    'another op of the same field)') + (f'; element-work term unmeasured for {unm} (calendar not '
                                                       'cycle-exact until one bench of that class)' if unm else '')
     return dict(rec, status='PARTIAL', gap=dict(module='ot_s81sl_xs / ot_s81sl_cap', port='pq_calendar_action / '
@@ -848,7 +1033,14 @@ def lower_placed_bf(die, op, ctx, rec, fx, sl, g):
         unmeasured_shapes=sorted(unm),
         images='python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (BF phases appended after '
         'the FP8 / FP4 phases; gen --op OP for one phase\'s bench vectors)'), indent=1) + '\n'}
-    miss = REST + ('' if bench else '; no production frame bench PASS of this op yet') + (
+    import xs_field_calendar as XF
+    files_, fcal_ = XF.emit_files(die, op, ctx, sl)      # S81-CALPIPE 10-20: BF pipelined calendar (P231 label floor)
+    rest = REST
+    if files_:
+        rec['files'].update(files_)
+        rest = (f'xs calendar COMPILED (xs_field_calendar BF pipeline P{fcal_["period"]}, {fcal_["nphases"]} phases, '
+                'seg-label floor 231, static + layer checks); open: cap cfg_d descriptors of this shape')
+    miss = rest + ('' if bench else '; no production frame bench PASS of this op yet') + (
         f'; programme / emission unmeasured for shapes {sorted(unm)} (BF_LEGACY measurement run of each shape owed)'
         if unm else '')
     return dict(rec, status='PARTIAL', gap=dict(module='ot_s81sl_xs / ot_s81sl_cap', port='pq_calendar_action / '

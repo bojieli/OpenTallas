@@ -1,0 +1,25 @@
+CAP_FIN 469 A=1/08038045/bd4d4f74 C=0 B=0/00000020/00000000 C=1
+CAP_FIN 470 A=1/0803a045/3d1244f1 C=0 B=0/00000020/00000000 C=1
+CAP_FIN 473 A=1/0803c025/3d09c5aa C=0 B=0/00000020/00000000 C=1
+CAP_FIN 474 A=1/0803e025/3c9a1862 C=0 B=0/00000020/00000000 C=1
+CAP_FIN 479 A=1/0803c225/bc3a2b28 C=0 B=0/08038065/bd4d4f74 C=1
+CAP_FIN 480 A=1/0803e225/bc5a0f6e C=0 B=0/0803a065/3d1244f1 C=1
+CAP_FIN 486 A=1/0803c445/3be163be C=0 B=0/00000020/00000000 C=1
+CAP_FIN 487 A=1/0803e445/bcad3be1 C=0 B=0/0803c045/3d09c5aa C=0
+CAP_CAUSE 489 cause=0000 F5=1 F6=0 F7=0 F8=0 F9=0 F11=0 n6=0 leaf=0
+CAP_FIN 489 A=1/08038445/bb766d7a C=0 B=1/0803c045/3cb675c0 C=0
+CAP_CAUSE 490 cause=0010 F5=1 F6=0 F7=0 F8=0 F9=0 F11=0 n6=0 leaf=0
+CAP_FIN 490 A=1/0803a445/3bc75336 C=0 B=1/0803e045/3bb442ac C=0
+CAP_FIN 499 A=0/0803e445/bcad3be1 C=0 B=1/0803c065/3ceeceb0 C=1
+CAP_FIN 500 A=0/0803e225/bc5a0f6e C=0 B=1/0803e065/bc802b36 C=1
+CAP_WRITE 507 0 1 30 3cef0000
+CAP_WRITE 508 0 1 31 bc800000
+CAP_MISSING 101cbd5d0000
+CAP_MISSING 101d3d2b0000
+CAP_FAULT 1
+CAP_REPLAY_END edges=1100 writes=2 expected=4 errors=3 fault=1
+FAIL actual_aproj_to_candidate_CAP
+- /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootcapdiag/results/arch/s81_rate3_admission_1020/native_cap/tb_aproj_cap_diag.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.097 s; speed 11.398 us/s
+- Verilator: cpu 0.097 s on 1 threads; allocated 8 MB

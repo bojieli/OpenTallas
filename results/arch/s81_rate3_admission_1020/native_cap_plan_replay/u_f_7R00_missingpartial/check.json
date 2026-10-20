@@ -1,0 +1,305 @@
+{
+ "frame": "u_f_7R00",
+ "slice": "u_s_7S",
+ "physical_lane": 4,
+ "mutant": "missingpartial",
+ "PASS": false,
+ "expected_PASS": false,
+ "exit": 0,
+ "expected_rows": 3,
+ "observed_root_words": 9,
+ "capture_lines": [
+  "CAP_WRITE 511 0 0 18 bdda0000",
+  "CAP_WRITE 516 0 0 17 3d4f0000",
+  "CAP_MISSING 0010bc820000",
+  "CAP_FAULT 1",
+  "CAP_REPLAY_END edges=1100 writes=2 expected=3 errors=2 fault=1",
+  "FAIL actual_aproj_to_candidate_CAP"
+ ],
+ "frame_log_sha256": "1d0fbd6f008863a03cf3d0320234c052ac6e93922d0fe86f87fb3b01c286477e",
+ "frame_meta_sha256": "b05571367dfdff7d2c5aecaa1664e6119bf481dd8bfa059273b569c926612462",
+ "contract": {
+  "scope": "PROSPECTIVE_CAPTURE_ADDRESS_CONTRACT_ONLY",
+  "admitted": false,
+  "slice": "u_s_7S",
+  "slice_index": 14,
+  "die_sha": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8",
+  "cfg": {
+   "obase": 0,
+   "ops": 0,
+   "np": 0,
+   "fmt": 2,
+   "rbase": 16780,
+   "rcnt": 28,
+   "rsplit": 0,
+   "lo32": 0,
+   "hi32": 0
+  },
+  "cfg_d": "0000000000000000000000000003883190000000",
+  "flags": 1,
+  "frames": [
+   {
+    "frame": "u_f_7L00",
+    "master": "col_h9_l4",
+    "lk": 2340,
+    "rows": [
+     396,
+     397,
+     398,
+     399
+    ]
+   },
+   {
+    "frame": "u_f_7L01",
+    "master": "col_h10_l4",
+    "lk": 1170,
+    "rows": [
+     400,
+     401,
+     402,
+     403
+    ]
+   },
+   {
+    "frame": "u_f_7L02",
+    "master": "col_h9_MX_l4",
+    "lk": 585,
+    "rows": [
+     404,
+     405,
+     406,
+     407
+    ]
+   },
+   {
+    "frame": "u_f_7L03",
+    "master": "col_h9_l4",
+    "lk": 1170,
+    "rows": [
+     408,
+     409,
+     410,
+     411
+    ]
+   },
+   {
+    "frame": "u_f_7R00",
+    "master": "col_h9_l4",
+    "lk": 2925,
+    "rows": [
+     412,
+     413,
+     414
+    ]
+   },
+   {
+    "frame": "u_f_7R01",
+    "master": "col_h10_l4",
+    "lk": 1170,
+    "rows": [
+     415,
+     416,
+     417
+    ]
+   },
+   {
+    "frame": "u_f_7R02",
+    "master": "col_h9_MX_l4",
+    "lk": 585,
+    "rows": [
+     418,
+     419,
+     420
+    ]
+   },
+   {
+    "frame": "u_f_7R03",
+    "master": "col_h9_l4",
+    "lk": 1170,
+    "rows": [
+     421,
+     422,
+     423
+    ]
+   }
+  ],
+  "rows": [
+   {
+    "rank_row": 396,
+    "tensor": "wkv",
+    "tensor_row": 76,
+    "golden_output_index": 1356
+   },
+   {
+    "rank_row": 397,
+    "tensor": "wkv",
+    "tensor_row": 77,
+    "golden_output_index": 1357
+   },
+   {
+    "rank_row": 398,
+    "tensor": "wkv",
+    "tensor_row": 78,
+    "golden_output_index": 1358
+   },
+   {
+    "rank_row": 399,
+    "tensor": "wkv",
+    "tensor_row": 79,
+    "golden_output_index": 1359
+   },
+   {
+    "rank_row": 400,
+    "tensor": "wkv",
+    "tensor_row": 80,
+    "golden_output_index": 1360
+   },
+   {
+    "rank_row": 401,
+    "tensor": "wkv",
+    "tensor_row": 81,
+    "golden_output_index": 1361
+   },
+   {
+    "rank_row": 402,
+    "tensor": "wkv",
+    "tensor_row": 82,
+    "golden_output_index": 1362
+   },
+   {
+    "rank_row": 403,
+    "tensor": "wkv",
+    "tensor_row": 83,
+    "golden_output_index": 1363
+   },
+   {
+    "rank_row": 404,
+    "tensor": "wkv",
+    "tensor_row": 84,
+    "golden_output_index": 1364
+   },
+   {
+    "rank_row": 405,
+    "tensor": "wkv",
+    "tensor_row": 85,
+    "golden_output_index": 1365
+   },
+   {
+    "rank_row": 406,
+    "tensor": "wkv",
+    "tensor_row": 86,
+    "golden_output_index": 1366
+   },
+   {
+    "rank_row": 407,
+    "tensor": "wkv",
+    "tensor_row": 87,
+    "golden_output_index": 1367
+   },
+   {
+    "rank_row": 408,
+    "tensor": "wkv",
+    "tensor_row": 88,
+    "golden_output_index": 1368
+   },
+   {
+    "rank_row": 409,
+    "tensor": "wkv",
+    "tensor_row": 89,
+    "golden_output_index": 1369
+   },
+   {
+    "rank_row": 410,
+    "tensor": "wkv",
+    "tensor_row": 90,
+    "golden_output_index": 1370
+   },
+   {
+    "rank_row": 411,
+    "tensor": "wkv",
+    "tensor_row": 91,
+    "golden_output_index": 1371
+   },
+   {
+    "rank_row": 412,
+    "tensor": "wkv",
+    "tensor_row": 92,
+    "golden_output_index": 1372
+   },
+   {
+    "rank_row": 413,
+    "tensor": "wkv",
+    "tensor_row": 93,
+    "golden_output_index": 1373
+   },
+   {
+    "rank_row": 414,
+    "tensor": "wkv",
+    "tensor_row": 94,
+    "golden_output_index": 1374
+   },
+   {
+    "rank_row": 415,
+    "tensor": "wkv",
+    "tensor_row": 95,
+    "golden_output_index": 1375
+   },
+   {
+    "rank_row": 416,
+    "tensor": "wkv",
+    "tensor_row": 96,
+    "golden_output_index": 1376
+   },
+   {
+    "rank_row": 417,
+    "tensor": "wkv",
+    "tensor_row": 97,
+    "golden_output_index": 1377
+   },
+   {
+    "rank_row": 418,
+    "tensor": "wkv",
+    "tensor_row": 98,
+    "golden_output_index": 1378
+   },
+   {
+    "rank_row": 419,
+    "tensor": "wkv",
+    "tensor_row": 99,
+    "golden_output_index": 1379
+   },
+   {
+    "rank_row": 420,
+    "tensor": "wkv",
+    "tensor_row": 100,
+    "golden_output_index": 1380
+   },
+   {
+    "rank_row": 421,
+    "tensor": "wkv",
+    "tensor_row": 101,
+    "golden_output_index": 1381
+   },
+   {
+    "rank_row": 422,
+    "tensor": "wkv",
+    "tensor_row": 102,
+    "golden_output_index": 1382
+   },
+   {
+    "rank_row": 423,
+    "tensor": "wkv",
+    "tensor_row": 103,
+    "golden_output_index": 1383
+   }
+  ],
+  "producer_added_phases": 0,
+  "producer_added_edges": 0,
+  "source_to_cap_ages": null,
+  "requires": [
+   "actual frame-to-CAP arrival calendar and FIN lifetime",
+   "registered cfg path for current source CAP candidate",
+   "actual capture-to-consumer gather addresses and ages"
+  ]
+ }
+}

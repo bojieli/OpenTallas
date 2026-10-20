@@ -467,6 +467,40 @@
    "MUT": 0
   }
  },
+ "qkd_seq_xs_s": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_bind3_1019/receipts/receipts/qkd_seq_xs_s.json",
+   "sha256": "a23c3aa28ab9602fb7240948200b859e2bd6eda73286a8da3c33db7478b13de6"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "b64499af000f2df2e43da4df2e64e2cbdb560a84658c6fc6be54abf97b50c08f",
+    "child_lint.json": "66a0c9bf33b267edf2f42a61477914e20eb18a5b98e57a0870c88431c433966a",
+    "export_ff.log": "5e2d7c1c3dbc3fbdd3f72e2c459b1b062bf788fa9cb1f6e6d952f7082ef186ed",
+    "export_ff.tcl": "6338aa38811a75a8744ad92c9e8bb49c3711ae971ceaa6e6804b41c8b3b4cd80",
+    "export_ss.log": "6625d86cdda4786ab36d6074232be858e1daba01404d0e099f46bf00142a52ea",
+    "export_ss.tcl": "b6bb19f3d6e72b27cd6ed647c8bf24bc9d084d14226804569fe3342eecb767ae",
+    "export_tt.log": "02e19d3b52e8d59f7f290a7890f0fda6a060e8c99287906f0a18be86041b2c6f",
+    "export_tt.tcl": "dabdec68a043005d66c80ec1df74ba4806099044e749559825fe578e4f7b9332",
+    "insertion.json": "ac8813f969653574d1d75098e828f53d54fe4e215c2c5a3e47543197b7ac7ac8",
+    "provenance/abstract_pin_stub.json": "18e49f42c7d1d401088f928e2f66d0d4531aa8262c54c9df679985bedf4e19fd",
+    "provenance/raw/qkd_seq_xs_s.lef": "b79275b64e7d014d37e0127321c60d480f0db898fbd5acd0ce55714c31befc69",
+    "provenance/view_export.abstract.json": "40185b0e11f95860bd2a3e03f112cbeb7851baa88b18c47ae8fb0ebf915c36e9",
+    "qkd_seq_xs_s.lef": "df3ef5be271e77b270f763fc047abd7c9a7345215558574e4d51f83fbc02d841",
+    "qkd_seq_xs_s_ff.lib": "b7c4d846941a5a13f0197d9ef643238708ba5e14b4c64bc03f2658adf5d6d058",
+    "qkd_seq_xs_s_ss.lib": "e2d2ac0e346924f3efc404b4e77f3fa3ce7842a6ba5ac22641ff1a77d2473642",
+    "qkd_seq_xs_s_tt.lib": "69b691038e724cfbaad0a7ee8fe19786c07d81ed6d89bff6014deaba97bf1624"
+   },
+   "rtl": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+    "sha256": "c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42"
+   },
+   "view": "physical/ref_tile/qkd_seq_xs_s/views/qkd_seq_xs_s"
+  },
+  "parameters": {
+   "MUT": 0
+  }
+ },
  "qkh_head_gather_stage": {
   "frozen_receipt": {
    "path": "results/arch/kv_bind3_1019/receipts/receipts/qkh_head_gather_stage.json",

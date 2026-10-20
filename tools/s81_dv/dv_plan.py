@@ -38,6 +38,7 @@ P4F = False                       # p4f (10-17): row-2 frames MX (no x chain ove
 P4G = False                       # p4g (10-17, coordinator 0cw+ (3)): the 8500 x 250 dsfd_ctrl strip (34:1) -> 16 regional
                                   # 2-PC controllers on the PHY face + explicit registered svc <-> controller links
 CTRL_N, CTRL_H = 16, 250.0        # p4g: 16 x (531.25 x 250 um, 2.1:1), same 2.125 mm2 as the strip
+CTRL_VIEW_W = None               # opt-in actual closed/prospective controller body, centered in unchanged PHY pitch
 PC_RQ, PC_RD, PC_DFI = 341, 280, 695   # per pseudo-channel: rq {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v};
                                   # rd {data 256, tag 17, beat 4, v} + rk + wd; PHY DFI 22,238 / 32 ~ 695 (dsfd_ctrl.sv)
 P4H = False                       # p4h (10-17, coordinator COORD ~11:15): the two service halves -> 16 REGIONAL service slices, one
@@ -78,6 +79,18 @@ PATHFIX = False                   # --pathfix (MU-DIE-S81/PATH 10-19, p4l only):
                                   # relay bodies -- lr/lt_lk lanes 25 um from the end-column frame faces (562 relay 62.6 um
                                   # across), jd_W 10 um under the row-2 frames, 276 xring / unit lanes 15-30 um apart (relay
                                   # 32.4 um across), HBM rq / rd jogs 30 um over the controllers (682 relay 75.6 um across)
+IDXRD = 0                         # --idxrd 3 (S81-DIEPLACE2 10-20, p4l MU only; 0 = default, byte-identical): the L20 index
+                                  # readers in-line on the HBM rq / rd path, ONE READER A CONTROLLER PAIR (pitch 1,062.5 um =
+                                  # 2 x 531.25) directly above the controllers; the regional service band widened into the
+                                  # column-2 / column-5 voids (below s_2S / s_5S) with shorter slices so the reader row fits
+                                  # under it; the row-1 S-tier frames over the band (f_2R01 .. f_5L01) give way.  Why
+                                  # (geometry facts idx_fit): the ENG=1 reader (32 closed hslices, 4 columns = 691.2 um, 9 x
+                                  # 1024x256 macros, ~0.68 mm2 of hard macro) cannot fit a 531.25-um region pitch at any height
+                                  # the band leaves (max in-line slot 518.4 x 777.6 = 0.403 mm2 with the p4l service slices)
+IDX3_W, IDX3_H = 1036.8, 1036.8   # --idxrd 3 reader-pair slot (24 x 43.2 square): 32 hslices 691.2 x 829.44 + 9 SRAM column
+                                  # 174.744 wide + halos / std band (~1.075 mm2 for 2 regions; 0.537 a region)
+IDX3_RSV_H = 1100.0               # --idxrd 3 service slice height (band 9.55 .. 22.42 mm -> slice 1,512 x 1,100 = 1.663 mm2)
+IDX_QF_W, IDX_QF_H = 259.2, 432.0  # query fan-out / frame source dsdv_idx_qf (S81-L20DIE)
 STREET_PITCH = 34.0               # PATHFIX: 276 street lanes 34 um apart (relay 32.4 across + 1.6 um); 11 slots -170..+170
 COL_EXW, COL_EXE = {}, {}         # p4k: extra slice-column width W / E of the slice, per column (um)
 SVC_CH = 512                      # p4i: svc_rs chain lane per direction (S81U-1 sp_w / sp_e partial-score lane, 512 b)
@@ -245,11 +258,20 @@ def place_rsv(P, facts):
     Slice k serves controller k: lower row = even controllers, upper row = odd ones.  The upper slices' rq / rd come
     down the column gaps (the gap left of column j, column 0 shares gap 1), so the gaps are sized for 1,244 b per
     controller at cut <= 0.55 (21.1 tracks/um on two layers at 75%: 1,244 / 0.55 / 21.1 = 107 um)."""
-    rows1 = [P.blocks[P.idx[f'f_{c}{s}01']] for c, s in P4H_DROP]
+    rows1 = [P.blocks[P.idx[f'f_{c}{s}0{2 if IDXRD else 1}']] for c, s in P4H_DROP]
     x0 = min(b['x'] for b in rows1); x1 = max(b['x'] + b['w'] for b in rows1)
     ytop = min(b['y'] for b in rows1) - 30.0
     ctop = 1200.0 + CTRL_H
     y0 = ctop + RSV_CH
+    if IDXRD == 3:
+        # the band spans the column voids W / E of the dropped frames (below s_2S / s_5S, y < the slice bottoms),
+        # keeping a 300-um strip beside the column-2 L / column-5 R frames: their x / r lanes (144 um) rise there to
+        # the slice, and 3 / 2 die lanes (iq_src x 2 + mu_0S W, is_tail + mu_7S E) pass the band ends at 34-um pitch
+        (c0, _), (c1, _) = P4H_DROP[0], P4H_DROP[-1]
+        x0 = P.blocks[P.idx[f'f_{c0}L02']]['x'] + FRAME_W + 300.0
+        x1 = P.blocks[P.idx[f'f_{c1}R02']]['x'] - 300.0
+        y0 = ctop + 40.0 + IDX3_H + 220.0
+        ytop = y0 + 2 * IDX3_RSV_H + RSV_GAP
     # each upper slice takes the column gap (left or right) nearest its controller; a gap is RSV_GU wide per
     # controller it carries (RSV_GAP when none); two passes so the assignment sees the sized gaps
     cxs = [DIE_W / 2 - 4250 + (k + 0.5) * 8500.0 / CTRL_N for k in range(CTRL_N)]
@@ -295,11 +317,11 @@ def rsv_links(P, facts, colx):
     for k in range(CTRL_N):
         cn = f'ctrl_{k:02d}'; C = P.blocks[P.idx[cn]]
         for j in range(2):
-            x = C['x'] + cw * (j + 0.5) / 2
+            x = C['x'] + C['w'] * (j + 0.5) / 2
             P.link(f'dfi_{k:02d}_{j}', 'dfi', PC_DFI, (cn, f'dfi{j}', (x, C['y'])), ('phy_hbm', f'dfi{k}_{j}', (x, 1197.0)),
                    [(x, C['y']), (x, 1197.0)], 'PHY DFI of one pseudo-channel (abutted face)')
         rn = f'rsv_{k:02d}'; R = P.blocks[P.idx[rn]]
-        ctop = C['y'] + C['h']; xc = C['x'] + cw / 2
+        ctop = C['y'] + C['h'] + (40.0 + IDX3_H if IDXRD == 3 else 0.0); xc = C['x'] + C['w'] / 2
         col = k // 2
         for cls_, bits, dx, yj in ((('rq', 2 * PC_RQ, -30, 44), ('rd', 2 * PC_RD + 2, 30, 116)) if PATHFIX else
                                    (('rq', 2 * PC_RQ, -30, 30), ('rd', 2 * PC_RD + 2, 30, 70))):
@@ -648,6 +670,13 @@ def mu_lanes(P, facts, colx, streets):
         yl = rbot - 60.0 + 30.0 * k                    # between the rsv bottoms and the controller tops
         xs = S['x'] + S['w'] / 2.0 + (120.0 if sn == 's_0S' else -120.0)
         pts = [(qw, yq), (xm, yq), (xm, yb), (xg, yb), (xg, yl), (xs, yl), (xs, S['y'])]
+        if IDXRD:     # reader row under the band: the strip above the band is free (row-1 frames gone) only over the
+            # dropped footprints; leave the band at its W / E end below the reader row top, then under the frames
+            rs_ = [B(f'rsv_{i:02d}') for i in range(16)]
+            yb = rtop + 130.0 + 34.0 * k
+            xe = (min(b['x'] for b in rs_) - 98.0) if sn == 's_0S' else (max(b['x'] + b['w'] for b in rs_) + 64.0)
+            yu = 1620.0 + 30.0 * k
+            pts = [(qw, yq), (xm, yq), (xm, yb), (xe, yb), (xe, yu), (xs, yu), (xs, S['y'])]
         P._link(nm, 'unit', 276, ('seqhost', 'mu' + sn[2:], pts[0]), (sn, 'mu', pts[-1]), pts,
                 f'MU: seqhost {{mu_c, mu_rc}} -> end slice {sn} (rsv gap, under the frames)')
     L = {l['i']: l for l in P.links}
@@ -709,7 +738,7 @@ def build():
                     if r == 2:
                         y = streets[t] + STREET
                     h = hs[4 * t + r]
-                    if P4H and t == 0 and r == 0 and (c, side) in P4H_DROP:
+                    if P4H and t == 0 and (r == 0 or (r == 1 and IDXRD)) and (c, side) in P4H_DROP:
                         y += h      # p4h: this footprint becomes the regional service region (no frame)
                         continue
                     mst = ('col_h9' if h == H9 else 'col_h10') + ('_MX' if ((ROW0_MX or LAYOUT == 'p3') and r == 0) or (P4F and r == 2) else '')
@@ -742,7 +771,9 @@ def build():
         # north face over their own PCs (DFI = abutted face) -- a square-ish tile per region, not a 34:1 strip
         cw = 8500.0 / CTRL_N
         for k in range(CTRL_N):
-            P.block(f'ctrl_{k:02d}', 'dsfd_ctrl_rg2', 'ctrl', 'south', phy_x + k * cw, 1200, cw, CTRL_H)
+            body_w = CTRL_VIEW_W if CTRL_VIEW_W is not None else cw
+            assert body_w <= cw, ('controller body exceeds PHY pitch', body_w, cw)
+            P.block(f'ctrl_{k:02d}', 'dsfd_ctrl_rg2', 'ctrl', 'south', phy_x + k * cw + (cw - body_w) / 2, 1200, body_w, CTRL_H)
     else:
         P.block('hbm_ctrl', 'dsfd_ctrl', 'ctrl', 'south', phy_x, 1210, 8500, 250)
     if P4H:
@@ -1016,7 +1047,7 @@ def build():
         for k in range(CTRL_N):
             cn = f'ctrl_{k:02d}'; C = P.blocks[P.idx[cn]]
             for j in range(2):
-                x = C['x'] + cw * (j + 0.5) / 2
+                x = C['x'] + C['w'] * (j + 0.5) / 2
                 P.link(f'dfi_{k:02d}_{j}', 'dfi', PC_DFI, (cn, f'dfi{j}', (x, C['y'])), ('phy_hbm', f'dfi{k}_{j}', (x, 1197.0)),
                        [(x, C['y']), (x, 1197.0)], 'PHY DFI of one pseudo-channel (abutted face)')
             side = 'W' if k < CTRL_N // 2 else 'E'
@@ -1028,7 +1059,7 @@ def build():
             for j, (cls_, bits, dx) in enumerate((('rq', 2 * PC_RQ, -30), ('rd', 2 * PC_RD + 2, 30))):
                 lane = 2 * m + j
                 y = ctop + 15 + 15 * lane
-                xk = C['x'] + cw / 2 + dx
+                xk = C['x'] + C['w'] / 2 + dx
                 if y <= stop - 10:
                     pts = [(sx, y), (xk, y), (xk, ctop)]
                 else:          # above the service half's top: leave its N face (lanes stacked away from the PHY)
@@ -1043,6 +1074,11 @@ def build():
                     P.link(f'hrd_{k:02d}', 'hbm', bits, ctl_e, svc_e, pts[::-1], 'HBM reads + rk/wd + {fault, live} of 2 PCs (regional controller -> svc half)')
         facts['ctrl'] = dict(n=CTRL_N, um=[round(cw, 2), CTRL_H], aspect=round(cw / CTRL_H, 2) if cw > CTRL_H else round(CTRL_H / cw, 2),
                              mm2=round(CTRL_N * cw * CTRL_H / 1e6, 3), replaces='dsfd_ctrl 8500 x 250 strip (34:1)')
+        if CTRL_VIEW_W is not None:
+            facts['ctrl'].update(um=[CTRL_VIEW_W, CTRL_H], pitch_um=cw,
+                                 aspect=round(max(CTRL_VIEW_W / CTRL_H, CTRL_H / CTRL_VIEW_W), 2),
+                                 mm2=round(CTRL_N * CTRL_VIEW_W * CTRL_H / 1e6, 3),
+                                 qualification='MODEL_ONLY actual body dimensions; routed view/bind/native qualification owed')
     # collective lanes: edge PHYs <-> end-slice outer face along the street (ring-stop feed-through to coll_edge)
     for side in 'WE':
         c = 0 if side == 'W' else NCOL - 1
@@ -1072,7 +1108,70 @@ def build():
         host_lanes(P, facts, colx, streets)
     if P4L and MU:
         mu_lanes(P, facts, colx, streets)
+    if P4L and IDXRD == 3:
+        idx_readers3(P, facts)
     return P, facts
+
+
+def idx_readers3(P, facts):
+    """S81-DIEPLACE2 (10-20) --idxrd 3: 8 index readers dsdv_idx_rg2, one per controller PAIR (regions 2p, 2p+1),
+    in-line on both regions' rq / rd: svc_rs k -> reader p (rqi{k%2}) -> ctrl k; ctrl k -> reader p (rdi{k%2}) -> svc_rs k.
+    The reader row abuts the controller row (40-um registered hop), the service band sits 220 um above it.  Query chain
+    qi / qo (2 x 276) and score chain si / so (276) W -> E between abutted neighbours; qf (query fan-out) W of reader 0
+    fed by 2 x 276 from s_3S; score tail irg_07 so -> bk_sel W face (column-4 W lane margin)."""
+    cw = 8500.0 / CTRL_N
+    pw = 2 * cw
+    phy_x = DIE_W / 2 - 4250
+    yr = 1200.0 + CTRL_H + 40.0
+    NR = CTRL_N // 2
+    for p in range(NR):
+        P.block(f'irg_{p:02d}', 'dsdv_idx_rg2', 'idx', 'south', phy_x + p * pw + (pw - IDX3_W) / 2, yr, IDX3_W, IDX3_H)
+    P.block('iqf', 'dsdv_idx_qf', 'idx', 'south', phy_x - 40.0 - IDX_QF_W, yr, IDX_QF_W, IDX_QF_H)
+    for l in P.links:      # rsv_links ended every rq / rd lane at the reader N face (ctop moved up): retarget
+        if l['i'][:4] in ('hrq_', 'hrd_'):
+            k = int(l['i'][4:]); e = 1 if l['i'][:4] == 'hrq_' else 0
+            l['e'][e][0] = P.idx[f'irg_{k // 2:02d}']; l['e'][e][1] = ('rqi' if e else 'rdo') + str(k % 2)
+    for k in range(CTRL_N):
+        I = P.blocks[P.idx[f'irg_{k // 2:02d}']]; C = P.blocks[P.idx[f'ctrl_{k:02d}']]
+        xc = C['x'] + C['w'] / 2; ct = C['y'] + C['h']
+        P.link(f'hrqc_{k:02d}', 'hbm', 2 * PC_RQ, (I['name'], f'rqo{k % 2}', (xc - 30, yr)), (C['name'], 'rq', (xc - 30, ct)),
+               [(xc - 30, yr), (xc - 30, ct)], 'HBM requests of 2 PCs (reader station, slice priority -> controller, abutted)')
+        P.link(f'hrdc_{k:02d}', 'hbm', 2 * PC_RD + 2, (C['name'], 'rd', (xc + 30, ct)), (I['name'], f'rdi{k % 2}', (xc + 30, yr)),
+               [(xc + 30, ct), (xc + 30, yr)], 'HBM reads + rk/wd + {fault, live} of 2 PCs (controller -> reader station, abutted)')
+    for p in range(NR - 1):
+        A, Bk = P.blocks[P.idx[f'irg_{p:02d}']], P.blocks[P.idx[f'irg_{p + 1:02d}']]
+        for j, (cls_, po, pi, yf) in enumerate((('iq', 'qo', 'qi', 0.30), ('iq', 'qo', 'qi', 0.36), ('is', 'so', 'si', 0.50))):
+            ya = A['y'] + A['h'] * yf
+            nm = f'{cls_}_{p:02d}_{p + 1:02d}' + (f'_l{j}' if cls_ == 'iq' else '')
+            P._link(nm, 'idx', 276, (A['name'], po, (A['x'] + A['w'], ya)), (Bk['name'], pi, (Bk['x'], ya)),
+                    [(A['x'] + A['w'], ya), (Bk['x'], ya)], 'index query chain {d, v} (neighbour)' if cls_ == 'iq' else 'index score chain (neighbour)')
+    Q = P.blocks[P.idx['iqf']]; R0 = P.blocks[P.idx['irg_00']]
+    for j, yf in enumerate((0.30, 0.36)):
+        ya = R0['y'] + R0['h'] * yf
+        P._link(f'iq_qf_l{j}', 'idx', 276, ('iqf', 'qo', (Q['x'] + Q['w'], ya)), ('irg_00', 'qi', (R0['x'], ya)),
+                [(Q['x'] + Q['w'], ya), (R0['x'], ya)], 'query frame into the chain head')
+    S3 = P.blocks[P.idx['s_3S']]; S4 = P.blocks[P.idx['s_4S']]
+    rs = [b for b in P.blocks if b['name'].startswith('rsv_')]
+    rx0 = min(b['x'] for b in rs); rx1 = max(b['x'] + b['w'] for b in rs); rtop_b = max(b['y'] + b['h'] for b in rs)
+    for j in range(2):      # s_3S W face margin -> over the band top -> down the band's W side -> qf N face
+        xs = S3['x'] - 40 - 34 * j
+        yb = rtop_b + 30 + 34 * j
+        xw = rx0 - 30 - 34 * j
+        ych = Q['y'] + Q['h'] + 60 + 34 * j
+        xm = Q['x'] + 60 + 40 * j
+        pts = [(xs, S3['y']), (xs, yb), (xw, yb), (xw, ych), (xm, ych), (xm, Q['y'] + Q['h'])]
+        P._link(f'iq_src_l{j}', 'idx', 276, ('s_3S', 'iq', pts[0]), ('iqf', 'qs', pts[-1]), pts, 'index query frame source (s_3S -> qf)')
+    R7 = P.blocks[P.idx[f'irg_{NR - 1:02d}']]; BK = P.blocks[P.idx['bk_sel']]
+    xl = S4['x'] - 40.0
+    ya = R7['y'] + R7['h'] * 0.5
+    pts = [(R7['x'] + R7['w'], ya), (rx1 + 30, ya), (rx1 + 30, rtop_b + 200), (xl, rtop_b + 200), (xl, BK['y'] + 60), (BK['x'], BK['y'] + 60)]
+    P._link('is_tail', 'idx', 276, (R7['name'], 'so', pts[0]), ('bk_sel', 'vi_idx', pts[-1]), pts, 'score chain tail -> vmux at the bk_sel W face')
+    L = {l['i']: l for l in P.links}
+    facts['idxrd'] = dict(n=NR, regions_per_reader=2, master='dsdv_idx_rg2', um=[IDX3_W, IDX3_H], mm2_each=round(IDX3_W * IDX3_H / 1e6, 3),
+                          mm2=round(NR * IDX3_W * IDX3_H / 1e6, 2), pitch_um=pw, place='row abutting the ctrl row (y %.1f), one reader over its controller pair' % yr,
+                          frames_dropped_row01=[f'f_{c}{s}01' for c, s in P4H_DROP],
+                          lanes={n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L']) for n in
+                                 ('hrq_01', 'hrd_01', 'hrqc_00', 'hrdc_00', 'iq_00_01_l0', 'iq_qf_l0', 'iq_src_l0', 'iq_src_l1', 'is_tail')})
 
 
 def geometry_facts(P, facts):
@@ -1350,6 +1449,9 @@ def main():
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2/3)')
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
+    ap.add_argument('--idxrd', type=int, default=0, choices=(0, 3), help='S81-DIEPLACE2 (p4l MU): 3 = 8 in-line index readers dsdv_idx_rg2 (one per controller pair) above the controllers, service band widened into the column-2/5 voids, row-1 band frames dropped (0 default, byte-identical)')
+    ap.add_argument('--ctrl-view-size', nargs=2, type=float, metavar=('W', 'H'), help='MODEL ONLY: actual controller body centered in each unchanged 531.25-um PHY pitch; rederive reader/service rows and all links')
+    ap.add_argument('--array-y-shift', type=float, default=0.0, help='MODEL ONLY: move the array/street origins north, retaining die outline and the 250-um north frame guard')
     ap.add_argument('--pathfix', action='store_true', help='MU-DIE-S81/PATH (p4l): street lanes keep their realized band (pin span / relay body) clear of blocks and neighbour relays')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
@@ -1357,6 +1459,13 @@ def main():
     ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
+    global CTRL_H, CTRL_VIEW_W, BAND
+    if a.ctrl_view_size:
+        assert a.p4l and a.mu, '--ctrl-view-size needs --p4l --mu'
+        CTRL_VIEW_W, CTRL_H = a.ctrl_view_size
+        assert CTRL_VIEW_W > 0 and CTRL_H > 0, '--ctrl-view-size must be positive'
+    assert a.array_y_shift >= 0, '--array-y-shift must be nonnegative'
+    BAND += a.array_y_shift
     global ROW0_MX, TIER_W, LANES, P4F
     ROW0_MX = a.row0_mx
     P4F = a.p4f or a.p4g or a.p4h
@@ -1367,8 +1476,10 @@ def main():
     PATHFIX = a.pathfix
     assert not PATHFIX or P4L, '--pathfix needs --p4l'
     MU = a.mu
-    global LK_SLOTS
+    global LK_SLOTS, IDXRD
     LK_SLOTS = a.lk_slots
+    IDXRD = a.idxrd
+    assert not IDXRD or (P4L and MU), '--idxrd needs --p4l --mu'
     assert not MU or P4L, '--mu needs --p4l'
     NO_MIX4 = NO_MIX4 or P4L
     P4K = a.p4k or P4L

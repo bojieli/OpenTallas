@@ -1,0 +1,48 @@
+{
+  "source": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_cold_t.sv",
+  "source_sha256": "31329422777c580178de0d676aeaa39b407c58cd74002cb1ce60dcd8f8843938",
+  "legacy_source_sha256": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+  "default_off_parameter": "COLD_INIT=0 in new master; original master/file untouched",
+  "model": {
+    "new_reset_tree_flops": 68,
+    "root_fanout_bound": 22,
+    "data_leaf_reset_loads": 32,
+    "new_data_flops": 0,
+    "data_flops_newly_resettable": 1536,
+    "startup_assert_edges_added": 2,
+    "startup_release_edges_added": 2,
+    "token_edges_added": 0,
+    "storage_note": "Existing t_r 4096-bit flop storage and other inherited storage still require native policy review; no gate."
+  },
+  "positive": [
+    "cold/verdict.log",
+    "legacy/verdict.log",
+    "cold_rp1/verdict.log"
+  ],
+  "negative": {
+    "witness": "missing_yr/verdict.log",
+    "mut": 2,
+    "regex": "PV_JOIN_COLD FAIL"
+  },
+  "source_theorem": {
+    "free_initial_state": true,
+    "no_zero_init_assumption": true,
+    "arithmetic_outputs_arbitrary": true,
+    "RESET_PIN0": "proof_m0/result.json",
+    "RESET_PIN1": "proof_rp1/result.json",
+    "negative": "proof_m2/result.json",
+    "scope": "1536 xr/yr/y bits clear after physical reset propagation, not full arithmetic equivalence"
+  },
+  "census": {
+    "keep_hook": "physical/common_flow/ot_keep_regs.tcl at 54e9d9c39",
+    "keep_hook_sha256": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b",
+    "kind": "generic bit-cell synthesis, no ABC mapping; diagnostic lower-level census",
+    "reset_named_over32": 0,
+    "whole_component_over32": 291,
+    "max_loads": 513,
+    "status": "FAIL; no gate permitted"
+  },
+  "native_receipt": false,
+  "adopted": false,
+  "next": "Partition inherited write enables and arithmetic fanout, resolve >2kb storage, then exact mapped census and a new closed native view. Price +2 actual reset/startup edges before die binding. Full native parameter proof must use that physical source; old view not reused."
+}
