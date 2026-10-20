@@ -1,18 +1,18 @@
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
-ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
-ot-run: ot-epyc6       admits   942 GB (avail 773, growth 113, headroom 0, waiters 0/0 GB) load 169/128 running 44 disk 5627 GB 
-ot-run: ot-epyc7       admits   759 GB (avail 632, growth 101, headroom 0, waiters 0/0 GB) load 52/96 running 24 disk 6148 GB 
-ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a2/src
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a3/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a3/src
+ot-run: ot-epyc6       admits   993 GB (avail 809, growth 113, headroom 0, waiters 0/0 GB) load 133/128 running 42 disk 5617 GB 
+ot-run: ot-epyc7       admits   610 GB (avail 528, growth 101, headroom 0, waiters 0/0 GB) load 56/96 running 25 disk 6144 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a3/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a3/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-coll-s3-1019/a3/src
 ot-run: -> ot-epyc7
-ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1581609-1792453734 after 2 s
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2802184-1792453934 after 0 s
 Verilator 5.050 2026-07-01 rev v5.050
 COLL_SAFE3_COVERAGE naks=3/5 replays=7/5 timeouts=2/2 crc_err=12/31 relocks=7 fifo_fwd=9994 replay_fwd=0 credit_rx_fwd=20727 gearbox_fwd=24572
 COLL_SAFE3_BOUNDARY PASS checks=79994 sent=37025 received=36912 resets=2 crcerr_cycles=61 blackout_cycles=2507 faults=000/000
 - rtl/dsrom_sys/s81_ph/test/tb_coll_safe3_boundary.sv:93: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 40us; walltime 3.453 s; speed 11.585 us/s
-- Verilator: cpu 3.451 s on 1 threads; allocated 9 MB
+- Verilator: $finish at 40us; walltime 3.539 s; speed 11.302 us/s
+- Verilator: cpu 3.538 s on 1 threads; allocated 9 MB
 sim exit 0
-ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1581609-1792453734): exit 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2802184-1792453934): exit 0

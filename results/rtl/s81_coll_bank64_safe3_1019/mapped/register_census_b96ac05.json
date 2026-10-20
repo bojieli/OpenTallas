@@ -1,0 +1,42 @@
+{
+ "netlist": "map_safe3/work/orfs/results/asap7/opentallas_dsfd_coll_lane_w_safe3_asap7_coll_safe3_map/base/1_2_yosys.v",
+ "cells": 60528,
+ "flops": 16237,
+ "over32": [
+  {
+   "driver": "_68338_",
+   "type": "AO21x1_ASAP7_75t_R",
+   "pin": "Y",
+   "loads": 56,
+   "kind": "combinational",
+   "sample": [
+    "_68341_",
+    "_68348_",
+    "_68474_",
+    "_68484_",
+    "_68489_",
+    "_68494_"
+   ]
+  },
+  {
+   "driver": "\\u.u_ep.una[0]$_DFF_PN0_",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "loads": 35,
+   "kind": "register",
+   "sample": [
+    "_68101_",
+    "_68209_",
+    "_68211_",
+    "_68216_",
+    "_68219_",
+    "_68223_"
+   ]
+  }
+ ],
+ "max_loads_by_kind": {
+  "reset": 0,
+  "register": 35,
+  "combinational": 56
+ }
+}
