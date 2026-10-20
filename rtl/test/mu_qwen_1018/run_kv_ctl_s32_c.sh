@@ -24,6 +24,7 @@ case "$CASE" in
  m_land) pb 1; MF=$S32; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
  m_cnt) pb 1; MF=$S32; FROM=".a(cn1[LO+:16]),.b(ng_f[32*gk+LO+:16])"; TO=".a(ng_f[32*gk+LO+:16]),.b(cn1[LO+:16])";;
  m_om) pb 1; MF=$S32; FROM=".a(meta_f[68*1+LO+:W])"; TO=".a((gs==1)?meta_f[68*2+LO+:W]:meta_f[68*1+LO+:W])";;
+ m_priority) pb 1; MF=$S32; FROM="assign p={e[3]&&!(|e[2:0]),e[2]&&!(|e[1:0]),e[1]&&!e[0],e[0]};"; TO="assign p=4'b0;";;
  *) echo "S32C $CASE: unknown case"; exit 2;;
 esac
 W="$OUT/src_$CASE"; rm -rf "$W"; mkdir -p "$W"

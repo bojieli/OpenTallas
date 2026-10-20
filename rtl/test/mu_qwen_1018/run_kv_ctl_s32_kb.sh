@@ -34,6 +34,7 @@ case "$CASE" in
  kb_collide) IMG=$K/mut_collide.hex; PX=+NOLIST;;
  m_tl) MF=$LP; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
  m_cnt) MF=$LP; FROM=".a(cn1[LO+:16]),.b(ng_f[32*gk+LO+:16])"; TO=".a(ng_f[32*gk+LO+:16]),.b(cn1[LO+:16])";;
+ m_priority) MF=$LP; FROM="assign p={e[3]&&!(|e[2:0]),e[2]&&!(|e[1:0]),e[1]&&!e[0],e[0]};"; TO="assign p=4'b0;";;
  *) echo "S32KB $CASE: unknown case"; exit 2;;
 esac
 W="$OUT/src_$CASE"; rm -rf "$W"; mkdir -p "$W"
