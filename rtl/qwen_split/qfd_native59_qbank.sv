@@ -196,7 +196,7 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  output wire qb_v,output wire[4:0]qb_beat,output wire[511:0]qb_row,output wire qb_full,output wire qb_committed,output wire qb_bad
 );
  // ---------------------------------------------------------------- QB_STAGE (qbank10, QW-CB16A0-3 10-20)
- // Codex 6507f9b64 necessary 380-um endpoint model: +561 uniform input capture FFs (every input port, +1 edge), the 512-b
+ // Codex 6507f9b64 necessary 380-um endpoint model: +561 uniform input capture FFs (every data input port, +1 edge), the 512-b
  // stage-A row split into two 4-writer partials (+512 FF, merged by the existing qrow_r with +512 OR2, 0 edges) and +1076
  // uniform output FFs (every output port, +1 edge).  Every port relation is unchanged; the whole bank is +2 edges
  // (flat bench SOFF 3 -> 5, ROFF 4 -> 6).  QB_STAGE 0 = the qbank9 RTL bit for bit.
@@ -204,18 +204,12 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  reg[547:0]dd_o_n;reg lcv_o_n;reg[5:0]stage_o_n;reg qb_v_n;reg[4:0]qb_beat_n;wire[511:0]qb_row_n;reg qb_full_n,qb_committed_n,qb_bad_n;
  // reset copy forest (kept; ot_rst_copies <= 32 loads each): pin 472 + read copies ~700 + relays 7, seen 512 + controls
  (* keep = "true" *) reg[39:0]rst_cp_bp;(* keep = "true" *) reg[19:0]rst_cp_bs;
- // QB_STAGE: the reset enters through the same +1-edge input stage as every data port (rst_q, sampled, no async path),
- // so the whole bank, reset included, is the qbank9 bank one edge later.
- wire rst_x,rst_x1,rst_x2;   // three kept copies (20 / 20 / 20 reset-copy loads each)
- always @(posedge ck or negedge rst_x)
-  if(!rst_x)rst_cp_bp[19:0]<='0;
-  else rst_cp_bp[19:0]<='1;
- always @(posedge ck or negedge rst_x1)
-  if(!rst_x1)rst_cp_bp[39:20]<='0;
-  else rst_cp_bp[39:20]<='1;
- always @(posedge ck or negedge rst_x2)
-  if(!rst_x2)rst_cp_bs<='0;
-  else rst_cp_bs<='1;
+ // QB_STAGE keeps the qbank9 reset entry (rst_n -> async reset copies; the kit's reset landing redistributes it): the bank's
+ // reset release is one data edge earlier than in qbank9 -- unobservable under the static calendar's idle window after
+ // reset (the same argument as the split's service release; benched: rnd_reset8 / rnd RST_EVERY 400).
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)begin rst_cp_bp<='0;rst_cp_bs<='0;end
+  else begin rst_cp_bp<='1;rst_cp_bs<='1;end
  wire rst_pin=rst_cp_bp[0],rst_top=rst_cp_bs[0];
  // ---------------------------------------------------------------- face registers (the only flops on the input pins)
  // NO reset on the face registers: they stand for the raw pins, which the flat block's kept replicas sample on every edge
@@ -391,16 +385,12 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
   assign dd_x=i_dd;assign lcv_x=i_lcv;assign stage_x=i_stage;assign qs_x=i_qs;assign qsb_x=i_qsb;
   // output stage (N face): a pure one-edge delay of every output (no reset: the source registers carry the reset, so
   // the port shows the reset value exactly one edge after the qbank9 port does)
-  (* keep = "true" *) reg[2:0]rst_q;
-  always @(posedge ck)rst_q<={3{rst_n}};
-  assign rst_x=rst_q[0];assign rst_x1=rst_q[1];assign rst_x2=rst_q[2];
   reg[547:0]o_dd;reg[511:0]o_row;reg o_lcv;reg[5:0]o_stage;reg o_v,o_full,o_comm,o_bad;reg[4:0]o_beat;
   always @(posedge ck)begin o_dd<=dd_o_n;o_row<=qb_row_n;o_lcv<=lcv_o_n;o_stage<=stage_o_n;
    o_v<=qb_v_n;o_beat<=qb_beat_n;o_full<=qb_full_n;o_comm<=qb_committed_n;o_bad<=qb_bad_n;end
   assign dd_o=o_dd;assign lcv_o=o_lcv;assign stage_o=o_stage;assign qb_v=o_v;assign qb_beat=o_beat;assign qb_row=o_row;
   assign qb_full=o_full;assign qb_committed=o_comm;assign qb_bad=o_bad;
  end else begin:g_nostage
-  assign rst_x=rst_n;assign rst_x1=rst_n;assign rst_x2=rst_n;
   assign dd_x=dd_i;assign lcv_x=layer_context_v;assign stage_x=command_stage;assign qs_x=q_slot;assign qsb_x=q_slot_beat;
   assign dd_o=dd_o_n;assign lcv_o=lcv_o_n;assign stage_o=stage_o_n;assign qb_v=qb_v_n;assign qb_beat=qb_beat_n;assign qb_row=qb_row_n;
   assign qb_full=qb_full_n;assign qb_committed=qb_committed_n;assign qb_bad=qb_bad_n;
