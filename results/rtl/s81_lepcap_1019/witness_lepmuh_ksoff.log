@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 332, landed 80, replayed 80) host 19/19 ks 0/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 0 tx 0 hostplane 0 | faults 000
+FAIL lep_muh: ok 0 rx 0 tx 0 hostplane 0 faults 000 F1 1
+BENCH_FAIL lepmuh MUT=KSOFF seed 1
+rc=1

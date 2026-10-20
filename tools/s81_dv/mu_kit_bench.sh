@@ -37,7 +37,7 @@ lepmu|lepmuh)
     --top-module $TB -Mdir $O/obj_$R $SRCS --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \
     > $O/build_$R.log 2>&1 || { grep -m10 %Error $O/build_$R.log; echo "BUILD_FAILED $R"; exit 3; }
   $O/obj_$R/V$TB > $O/run_$R.log 2>&1
-  grep -E "^(LEP_MU_STATS|LEPMUH_STATS|MISMATCH|PASS|FAIL|ERR)" $O/run_$R.log | head -12
+  grep -E "^(LEP_MU_STATS|LEPMUH_STATS|MISMATCH|PASS|FAIL|ERR)|%Fatal" $O/run_$R.log | head -12
   grep -q "^PASS $VR:" $O/run_$R.log && { echo "BENCH_PASS $B MUT=$M seed $S"; exit 0; }
   echo "BENCH_FAIL $B MUT=$M seed $S"; exit 1 ;;
 hslot)

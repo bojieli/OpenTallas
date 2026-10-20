@@ -1,0 +1,4 @@
+Verilator 5.050 2026-07-01 rev v5.050
+[10412000] %Fatal: ot_s81sl_slice_lep.sv:459: Assertion failed in tb_s81sl_lep_mu.la.u.g_tx[1].g_safe_write.g_address[17]: TX regional state differs lane1 group17
+BENCH_FAIL lepmu MUT=VSKEW seed 1
+rc=1

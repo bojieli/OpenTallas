@@ -1,0 +1,12 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH M landed 0 (ring 168) cyc 0 vs R 8297
+MISMATCH M landed 1 (ring 169) cyc 0 vs R 8298
+MISMATCH M landed 2 (ring 170) cyc 0 vs R 8300
+MISMATCH M ri 168 (ring 171) rt 8040012e exp 00000000 cyc 8297 vs R 8301
+MISMATCH M landed 3 (ring 172) cyc 0 vs R 8302
+MISMATCH M landed 4 (ring 173) cyc 0 vs R 8304
+MISMATCH M landed 5 (ring 174) cyc 0 vs R 8305
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 168, landed 80, replayed 0) host 19/19 ks 27/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 324 tx 0 hostplane 0 | faults 101
+FAIL lep_muh: ok 0 rx 324 tx 0 hostplane 0 faults 101 F1 1
+BENCH_FAIL lepmuh MUT=LANDCUT seed 1
+rc=1

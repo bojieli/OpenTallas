@@ -1,0 +1,12 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH A beat 2 cyc 8062: got 879ad98975ac4667.. rt 00000000 exp 308b32be6dcfa845.. rt 00000000
+MISMATCH A beat 3 cyc 8063: got 308b32be6dcfa845.. rt 00000000 exp e48e49e8c278d267.. rt 00000000
+MISMATCH A beat 6 cyc 8070: got 4ce211cc8540e687.. rt 00000000 exp b82304fdfd47e475.. rt 00000000
+MISMATCH A beat 7 cyc 8071: got b82304fdfd47e475.. rt 00000000 exp 429e5a1a13c6c827.. rt 00000000
+MISMATCH A beat 9 cyc 8074: got 7846dd85c4f40045.. rt 00000000 exp 1af097fd84fa8e17.. rt 00000000
+MISMATCH A beat 10 cyc 8075: got 1af097fd84fa8e17.. rt 00000000 exp d462da9b30212c15.. rt 00000000
+MISMATCH A beat 13 cyc 8085: got 2480d764728abe25.. rt 00000000 exp 7f45cead92fcbe47.. rt 00000000
+LEP_MU_STATS A recv 199/280 B recv 81/240 mismatches 551 | latency user identity 0 (A 118 beats, ref 120) | main faults 0110011 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 242/240 landed 158/160
+FAIL lep_mu: recv A 199/280 B 81/240 mismatches 551 identity 0 main faults 0110011 F1 1 F2 1 F3 1 return P 242/240 L 158/160
+BENCH_FAIL lepmu MUT=STALEHD seed 1
+rc=1
