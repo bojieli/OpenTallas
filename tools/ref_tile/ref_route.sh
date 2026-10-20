@@ -11,6 +11,12 @@
 #   a stop stage runs the flow only that far (pre_route_gate.py --remote uses floorplan; --cts the calibration run)
 set -uo pipefail
 KITENV=$1; NAME=$2; OUT=$3; STOP=${4:-}
+# The gate passes a command argument, captured read-only before kit shell code.
+# A kit/environment override cannot turn admission off before placement.
+readonly REF_GATE_NATIVE_CENSUS=${5:-}
+if [ -n "$REF_GATE_NATIVE_CENSUS" ] && [ "$REF_GATE_NATIVE_CENSUS" != --native-census ]; then
+  echo 'REF_TILE unsupported admission argument' >&2; exit 2
+fi
 SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
 OT_ENV_PD=${PD:-}; OT_ENV_NC=${NC:-}
 # A partly sourced kit must never fall through to default PG, pins or hooks.
@@ -60,7 +66,7 @@ if [ -n "${OT_PG_JOB_STRICT:-}" ] && [ "$OT_PG_JOB_STRICT" != "$OT_PG_STRICT" ];
 fi
 PG=()
 NATIVE=()
-if [ "${OT_GATE_NATIVE_CENSUS:-0}" = 1 ]; then
+if [ "$REF_GATE_NATIVE_CENSUS" = --native-census ]; then
   NATIVE=(--step-tcl PRE_FLOORPLAN=tools/ref_tile/native_census.tcl)
 fi
 if [ "${OT_PG_STRICT:-0}" = 1 ]; then
