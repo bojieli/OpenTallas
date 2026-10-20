@@ -1,0 +1,127 @@
+{
+ "name": "hidx_sel_s3p_a-s3pa-COMMIT",
+ "block": "ot_hidx_s3_q",
+ "ref_tile": true,
+ "owner": "Codex IDX/E86 takeover",
+ "purpose": "PIPE_HAZARD priced fault-edge safe geometry qualification",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/hbm-idx-fast-counter-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/index/sel_s3",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_s3_selector_vectors.py",
+   "tools/landed_parent",
+   "results/rtl/hbm_idx_static/selector_s3_fan32",
+   "physical/ref_tile/hidx_sel_s3p_a/cell_band.tcl",
+   "results/rtl/hbm_idx_static/selector_fast_count_1020"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hidx_s3_q #(.FAST_COUNT(0), .PIPE_HAZARD(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pipe_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_s3_pipe_equiv.sh {RUN}/pipe_m0 m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "pass_regex": "S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 3",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_fast_count_1020/pipe_completed_receipts/pipe_m0.log"
+   },
+   {
+    "name": "pipe_bad_numeric",
+    "cmd": "bash rtl/test/hbm_idx_static/run_s3_pipe_equiv.sh {RUN}/pipe_p8 p8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "S3_COUNT_PIPE_MISMATCH",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_fast_count_1020/pipe_completed_receipts/pipe_p8.log",
+    "why": "Actual delayed numeric counter vs original every edge"
+   },
+   {
+    "name": "pipe_bad_tie",
+    "cmd": "bash rtl/test/hbm_idx_static/run_s3_pipe_equiv.sh {RUN}/pipe_d1 d1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "S3_EQUIV FAIL",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_fast_count_1020/pipe_completed_receipts/pipe_d1.log",
+    "why": "Wrong tie compare on active datapath"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_sel_s3p_a/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_sel_s3p_a/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_sel_s3p_a --out {RUN}/record/views/ot_hidx_s3_q --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_sel_s3p_a/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_sel_s3p_a/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_sel_s3p_a/hidx_sel_s3p_a-s3pa-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "PIPE_HAZARD=1 default-off structural source bae9e6f10/compiler3434731fb; active data+0, private selected/fault+1 edge; compiler finalNOP1 frame1433->1434 firstTX1305 unchanged. ActualORFS native30/0 depth566.8ps, sourceSHA8646e261d854b12a432da4413c7fe80c8b014482ce7a9268e0b0fcc62fd0aa10. Prior combinational candidates rejected depth663..748ps. Square345.6, literalR0 macros on43.2 lattice and45.336um channels, one37.8um lower EXCLUSIVE standard band at49% measured sourcefill. All1257pins S fullface 3.64/um; clk near register mass. Overall lowfill due macro-channel/pinface lower bound, no qualification implied; actualclock/fullreach/nativePG/GRT owed."
+}

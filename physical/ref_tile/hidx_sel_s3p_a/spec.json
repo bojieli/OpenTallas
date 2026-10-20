@@ -1,0 +1,170 @@
+{
+ "name": "hidx_sel_s3p_a",
+ "top": "ot_hidx_s3_q",
+ "sources": [
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "pins": {
+  "S": [
+   "in_line",
+   "cw",
+   "thr",
+   "ties",
+   "ret",
+   "qfault_o",
+   "selected_v_o",
+   "selected_line_o",
+   "rst_n",
+   "clk"
+  ]
+ },
+ "outline": {
+  "w": 345.6,
+  "h": 345.6,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[0].mem",
+   "at": [
+    86.4,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[1].mem",
+   "at": [
+    86.4,
+    172.8
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "gm[2].mem",
+   "at": [
+    86.4,
+    259.20000000000005
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_hidx_s3_pfx",
+   "ot_hidx_s3_pri"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: inputs land in kept pin flops (quadrant: cw -> 11 kept P1 copies, thr -> 6 kept threshold copies, ties -> 4 kept tie copies, in_line -> in_p1; ctl: cw_r/k_r, a_ret/a_qf), outputs are registers (quadrant: selected_v_o/selected_line_o/ret/qfault_o; ctl: cw, threshold, ties, fault); every edge is in the IDX calendar (registered_s3). A synthesis wrapper would add a second, unpriced stage. clk / rst_n pass through."
+ },
+ "structural_change": "PIPE_HAZARD=1 default-off structural source bae9e6f10/compiler3434731fb; active data+0, private selected/fault+1 edge; compiler finalNOP1 frame1433->1434 firstTX1305 unchanged. ActualORFS native30/0 depth566.8ps, sourceSHA8646e261d854b12a432da4413c7fe80c8b014482ce7a9268e0b0fcc62fd0aa10. Prior combinational candidates rejected depth663..748ps. Square345.6, literalR0 macros on43.2 lattice and45.336um channels, one37.8um lower EXCLUSIVE standard band at49% measured sourcefill. All1257pins S fullface 3.64/um; clk near register mass. Overall lowfill due macro-channel/pinface lower bound, no qualification implied; actualclock/fullreach/nativePG/GRT owed.",
+ "slot_change_request": "Four345.6square quadrants require >=691.2x691.2 plus ctl/landings; old600x450 invalid. Parent adoption/clock/ret fault-tail binding and full calendar integration remain owed.",
+ "job": {
+  "owner": "Codex IDX/E86 takeover",
+  "branch": "codex/hbm-idx-fast-counter-1020",
+  "tag": "s3pa",
+  "purpose": "PIPE_HAZARD priced fault-edge safe geometry qualification",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/index/sel_s3",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_s3_selector_vectors.py",
+   "tools/landed_parent",
+   "results/rtl/hbm_idx_static/selector_s3_fan32",
+   "physical/ref_tile/hidx_sel_s3p_a/cell_band.tcl",
+   "results/rtl/hbm_idx_static/selector_fast_count_1020"
+  ],
+  "benches": [
+   {
+    "name": "pipe_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_s3_pipe_equiv.sh {RUN}/pipe_m0 m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "pass_regex": "S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 3",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_fast_count_1020/pipe_completed_receipts/pipe_m0.log"
+   },
+   {
+    "name": "pipe_bad_numeric",
+    "cmd": "bash rtl/test/hbm_idx_static/run_s3_pipe_equiv.sh {RUN}/pipe_p8 p8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "S3_COUNT_PIPE_MISMATCH",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_fast_count_1020/pipe_completed_receipts/pipe_p8.log",
+    "why": "Actual delayed numeric counter vs original every edge"
+   },
+   {
+    "name": "pipe_bad_tie",
+    "cmd": "bash rtl/test/hbm_idx_static/run_s3_pipe_equiv.sh {RUN}/pipe_d1 d1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "S3_EQUIV FAIL",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_fast_count_1020/pipe_completed_receipts/pipe_d1.log",
+    "why": "Wrong tie compare on active datapath"
+   }
+  ]
+ },
+ "kind": "tile",
+ "layer_cap": "M5",
+ "recipe": 4,
+ "clock": "cts",
+ "hold_budget": "die",
+ "params": {
+  "FAST_COUNT": 0,
+  "PIPE_HAZARD": 1
+ },
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "std_area_um2": 6335.082791999997,
+ "pin_hook_before_flops": [
+  "physical/ref_tile/hidx_sel_s3p_a/cell_band.tcl"
+ ],
+ "synth_keep_modules": [
+  "ot_hidx_s3_pfx",
+  "ot_hidx_s3_pri"
+ ]
+}
