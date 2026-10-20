@@ -3,7 +3,7 @@
 // LANDED PARENT (PARENTS-LANDED 10-18): 2 clock regions (core, rt), 12 landed crossings (D 4, E = K = 2, +3 edges each), 0 alignment pads,
 // regional reset runs depth 2 (+ t(child) per child).  Record: results/arch/landed_parent_1018/s81sl_capc5/ot_s81sl_capc5_record.json
 // MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,
-//     4 = child reset run of 'u_rt' one stage long
+//     4 = child reset run of 'u_rt' 64 stage(s) long
 module ot_s81sl_capc5 #(
     parameter integer MUT = 0
 ) (
@@ -117,7 +117,7 @@ module ot_s81sl_capc5 #(
     wire lpr_c_u_tw;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_tw (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_tw));   // t(u_tw) = 0
     wire lpr_c_u_te;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_te (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_te));   // t(u_te) = 0
     wire lpr_c_u_ed;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ed (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_ed));   // t(u_ed) = 0
-    wire lpr_c_u_rt;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 4 : 3)) u_lprc_u_rt (.ck(ck_rt), .d(lpr_rt), .q(lpr_c_u_rt));   // t(u_rt) = 3
+    wire lpr_c_u_rt;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 67 : 3)) u_lprc_u_rt (.ck(ck_rt), .d(lpr_rt), .q(lpr_c_u_rt));   // t(u_rt) = 3
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
     ot_pl_pad #(.W(280), .N(1)) u_fw (.ck(ck_core), .d(rt_w), .q(wq));   // region core, t = 0
     ot_pl_pad #(.W(280), .N(1)) u_fe (.ck(ck_core), .d(rt_e), .q(eq));   // region core, t = 0

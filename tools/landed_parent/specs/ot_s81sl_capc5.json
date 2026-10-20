@@ -84,6 +84,12 @@
  "bench": {
   "cycles": 3000,
   "reset_cycles": 16,
-  "sim": "verilator"
- }
+  "sim": "verilator",
+  "mut_waivers": {
+   "1": "random lockstep stimulus faults u_rt's sticky decode (F9/F10) within warm-up and the cap is valid-qualified, so a 1-bit landing slip is invisible to random words; the same RTL mutant FAILS the golden-vector bench tools/s81_slice/cap_c5_gold_bench.sh MUT=1 (witness results/rtl/s81_slice_1017/capc5_1020/gold_mut1.out)",
+   "2": "as MUT 1 (random stimulus blind); FAILS cap_c5_gold_bench.sh MUT=2 (witness results/rtl/s81_slice_1017/capc5_1020/gold_mut2.out)",
+   "4": "u_rt is event-driven (valid-qualified, no free-running calendar); MUT 4 holds its reset 64 stages longer and FAILS cap_c5_gold_bench.sh MUT=4 on golden vectors (witness results/rtl/s81_slice_1017/capc5_1020/gold_mut4.out)"
+  }
+ },
+ "mut4_stages": 64
 }
