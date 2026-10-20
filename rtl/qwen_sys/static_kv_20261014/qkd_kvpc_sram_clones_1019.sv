@@ -235,7 +235,7 @@ module qkd_kvpc_s_fan_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19:
     );
 endmodule
 
-// ---- qkd_kvpc_s_emb_nc_b: clone of qkd_static_kv_pc_path_emb_nc_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv) with 2 substitution(s) ----
+// ---- qkd_kvpc_s_emb_nc_b: clone of qkd_static_kv_pc_path_emb_nc_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv) with 6 substitution(s) ----
 module qkd_kvpc_s_emb_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19: -> qkd_static_kv_pc_path_nc MU
     input wire pll_hbm,
     input wire pll_hbm_port,
@@ -335,12 +335,13 @@ module qkd_kvpc_s_emb_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19:
 );
     wire [287:0] es_merged;
     // hard child: no #() overrides (its defaults ROW0 24427 / MUT 0 are the production values; ref_tile rtl gate)
+    wire [19:0] erk;                                   // KV-PC5-C: er_v copies (u_path -> u_esm)
     qkd_kvpc_s_esm u_esm (
         .ck(ck), .rst_n(rsi), .pc(pc), .cfg_stack(cfg_stack), .wes(wes),
         .emb_boot_ready(emb_boot_ready), .emb_issue_v(emb_issue_v), .emb_token(emb_token),
         .emb_word_index(emb_word_index), .emb_half(emb_half), .emb_scale(emb_scale), .emb_epoch(emb_epoch),
         .emb_return_slot(emb_return_slot), .hes(hes), .her(her), .completion_v(completion_v),
-        .completion_we(completion_we), .hcv(hcompletion_v), .hcw(hcompletion_we), .es(es_merged), .er(er),
+        .completion_we(completion_we), .hcv(hcompletion_v), .hcw(hcompletion_we), .es(es_merged), .er(er), .erk(erk),
         .beat_v(emb_beat_v), .beat_data(emb_beat_data), .beat_token(emb_beat_token), .beat_word(emb_beat_word),
         .beat_half(emb_beat_half), .beat_scale(emb_beat_scale), .beat_epoch(emb_beat_epoch),
         .corrected(emb_corrected), .emb_outstanding(emb_outstanding), .fault(es_merge_fault));
@@ -356,6 +357,7 @@ module qkd_kvpc_s_emb_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19:
         .pc(pc),
         .es(es_merged),
         .er(er),
+        .erk(erk),
         .po(po),
         .pi(pi),
         .ki(ki),
@@ -419,7 +421,7 @@ module qkd_kvpc_s_emb_nc_b #(parameter integer MU = 0) (   // MU-ADOPT-KV 10-19:
     );
 endmodule
 
-// ---- qkd_kvpc_s_path_nc: clone of qkd_static_kv_pc_path_nc (rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) with 4 substitution(s) ----
+// ---- qkd_kvpc_s_path_nc: clone of qkd_static_kv_pc_path_nc (rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv) with 6 substitution(s) ----
 module qkd_kvpc_s_path_nc #(parameter integer MU = 0) (
     input wire pll_hbm,
     input wire pll_hbm_port,  // u_ctrl.u_port HBM clock entry (same clock as pll_hbm; separate die entry)
@@ -432,6 +434,7 @@ module qkd_kvpc_s_path_nc #(parameter integer MU = 0) (
     input wire [4:0] pc,
     input wire [287:0] es,
     output wire [260:0] er,
+    output wire [19:0]  erk,
     output wire [327:0] po,
     input wire [288:0] pi,
     input wire [32:0] ki,
@@ -517,6 +520,7 @@ module qkd_kvpc_s_path_nc #(parameter integer MU = 0) (
         .co(controller_co),
         .es(es),
         .er(er),
+        .erk(erk),
         .po(po),
         .pi(pi),
         .ki(ki),
@@ -616,7 +620,7 @@ module qkd_kvpc_s_path_nc #(parameter integer MU = 0) (
     );
 endmodule
 
-// ---- qkd_kvpc_s_ctrl: clone of qkd_ctrl_pc_host_static_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 5 substitution(s) ----
+// ---- qkd_kvpc_s_ctrl: clone of qkd_ctrl_pc_host_static_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 7 substitution(s) ----
 module qkd_kvpc_s_ctrl #(
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
@@ -661,6 +665,7 @@ module qkd_kvpc_s_ctrl #(
     output wire [281:0] co,           // (nc) the ECC child landing {l_data, l_row, l_sec, l_v}; no legacy pass fields
     input  wire [287:0] es,
     output wire [260:0] er,
+    output wire [19:0]  erk,
     output wire [327:0] po,
     input  wire [288:0] pi,
     input  wire [32:0]  ki,
@@ -713,7 +718,7 @@ module qkd_kvpc_s_ctrl #(
         .native_observer_fault(native_observer_fault));
     qkd_kvpc_s_cdc_child #(.WDONE(WDONE),.PROFILE(PROFILE),.EVMUT(EVMUT),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE)) u_cdc (
         .pll_hbm(pll_hbm_cdc), .hrst(hrst), .ck(ck), .rsi(rsi), .pc(pc), .pc_q(pc_q),
-        .es(es), .er(er), .cfg_stack(cfg_stack),
+        .es(es), .er(er), .erk(erk), .cfg_stack(cfg_stack),
         .es_context(es_context), .es_expected_valid(es_expected_valid), .es_expected_identity(es_expected_identity),
         .es_expected_address(es_expected_address), .es_expected_pc(es_expected_pc), .es_expected_stack(es_expected_stack),
         .completion_v(completion_v), .completion_we(completion_we), .completion_fault(completion_fault),
@@ -1055,7 +1060,7 @@ module qkd_kvpc_s_sched #(
       end
 endmodule
 
-// ---- qkd_kvpc_s_cdc_child: clone of qkd_ctrl_pc_cdc_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 1 substitution(s); kept copy families hr_q[1]x2(1), rs_q[1]x3(1) ----
+// ---- qkd_kvpc_s_cdc_child: clone of qkd_ctrl_pc_cdc_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 3 substitution(s); kept copy families hr_q[1]x2(1), rs_q[1]x3(1) ----
 module qkd_kvpc_s_cdc_child #(
     parameter integer WDONE = 17,
     parameter integer PROFILE = 0,
@@ -1071,6 +1076,7 @@ module qkd_kvpc_s_cdc_child #(
     input  wire [4:0]   pc_q,                          // sched hclk strap register
     input  wire [287:0] es,
     output wire [260:0] er,
+    output wire [19:0]  erk,                           // KV-PC5-C: 20 kept copies of er_v (er[0])
     input wire [1:0] cfg_stack,
     input wire [317:0] es_context,
     input wire es_expected_valid,input wire [60:0] es_expected_identity,
@@ -1143,6 +1149,9 @@ module qkd_kvpc_s_cdc_child #(
     always @(posedge hclk or negedge h_rn) if(!h_rn) c_v<=1'b0; else c_v<=c_v_w;
     always @(posedge hclk) begin c_d<=c_d_w; c_context<=c_context_w; end
     reg          er_v, er_cr, er_f;
+    (* keep *) reg [19:0] erk_q;                     // KV-PC5-C: er_v copies (same D, same reset)
+    assign erk = erk_q;
+    always @(posedge ck or negedge rs_q) if (!rs_q) erk_q <= 20'd0; else erk_q <= {20{e_v}};
     reg  [257:0] er_d;
     always @(posedge ck or negedge rs_q)
         if (!rs_q) begin er_v <= 1'b0; er_cr <= 1'b0; er_f <= 1'b0; end
@@ -1305,7 +1314,7 @@ module qkd_kvpc_s_wobs #(parameter integer STRICT=1)(
   end
 endmodule
 
-// ---- qkd_kvpc_s_port_child: clone of qkd_ctrl_pc_port_child_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 1 substitution(s); kept copy families rv_q[1]x56(2), col_sr_q[1]x2(2) ----
+// ---- qkd_kvpc_s_port_child: KV-PC5-C native32 REWRITE of qkd_ctrl_pc_port_child_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv, sha 15c8d96e67c4c788); same function ----
 module qkd_kvpc_s_port_child #(
     parameter integer RQD = 64,
     parameter integer MUT = 0
@@ -1323,30 +1332,32 @@ module qkd_kvpc_s_port_child #(
     output wire [257:0] em_d,
     output wire         fault
 );
-    (* keep *) reg hr_q;
-    always @(posedge hclk) hr_q <= hrst;
-    wire h_rn = hr_q;
-    (* keep *) reg col_v_q, col_we_q;
-    (* keep, ot_rst_split *) reg [1:0] col_sr_q__qv;   // KV-PC SAFE: 2 kept copies of col_sr_q
-    function col_sr_q__f; input v; col_sr_q__f = v; endfunction
-    wire col_sr_q = col_sr_q__qv[0:0];
-    (* keep, ot_rst_split *) reg [55:0] rv_q__qv;   // KV-PC SAFE: 56 kept copies of rv_q (KV-PC2: 27 -> 56, 1576 loads = 59 / copy at 27)
-    function rv_q__f; input v; rv_q__f = v; endfunction
-    wire rv_q = rv_q__qv[0:0];
+    (* keep, ot_rst_split *) reg [23:0] hr_q__qv;      // KV-PC5-C: reset capture as 24 kept identical copies
+    always @(posedge hclk) hr_q__qv <= {24{hrst}};
+    wire h_rn = hr_q__qv[0];
+    (* keep *) reg col_v_q, col_we_q, w_v_q;
+    (* keep *) reg [4:0] csk;                           // col_sr_q copies: [0] wr_static / wr_kv, [1..4] kq data
+    (* keep *) reg [22:0] rvk;                          // rv_q copies (pi[0] -> 23 loads + the sched rv_q)
+    (* keep *) reg [24:0] wsk, wvk;                     // wr_static / w_v lookahead copies
+    (* keep *) reg [4:0] rik;                           // rd_issue lookahead copies
     (* keep *) reg [287:0] rd_q;
-    (* keep *) reg w_v_q;
     (* keep *) reg [255:0] w_d_q;
     always @(posedge hclk or negedge h_rn)
-        if (!h_rn) begin rv_q__qv <= {56{rv_q__f(1'b0)}}; col_v_q <= 1'b0; col_we_q <= 1'b0; col_sr_q__qv <= {2{col_sr_q__f(1'b0)}}; w_v_q <= 1'b0; end
-        else begin rv_q__qv <= {56{rv_q__f(pi[0])}}; col_v_q <= col_v_e; col_we_q <= col_we_e; col_sr_q__qv <= {2{col_sr_q__f(col_sr_e)}}; w_v_q <= w_v; end
+        if (!h_rn) begin
+            rvk <= 23'd0; col_v_q <= 1'b0; col_we_q <= 1'b0; csk <= 5'd0; w_v_q <= 1'b0;
+            wsk <= 25'd0; wvk <= 25'd0; rik <= 5'd0;
+        end else begin
+            rvk <= {23{pi[0]}}; col_v_q <= col_v_e; col_we_q <= col_we_e; csk <= {5{col_sr_e}}; w_v_q <= w_v;
+            wsk <= {25{col_v_e && col_we_e && col_sr_e}}; wvk <= {25{w_v}}; rik <= {5{col_v_e && !col_we_e}};
+        end
     always @(posedge hclk) begin rd_q <= pi[288:1]; w_d_q <= w_d; end
     ot_qfd_emb_pcport_nkw_kvpc_s #(.RQD(RQD), .MUT(MUT)) u_port (
-        .clk(hclk), .rst_n(h_rn), .col_v(col_v_q), .col_we(col_we_q), .col_sr(col_sr_q),
-        .w_v(w_v_q), .w_d(w_d_q), .wd(wd),
-        .r_v(rv_q), .r_d(rd_q), .kv_v(kv_v), .kv_d(kv_d), .em_v(em_v), .em_d(em_d), .fault(fault));
+        .clk(hclk), .rst_n(h_rn), .col_v(col_v_q), .col_we(col_we_q), .csk(csk),
+        .wvk(wvk), .w_d(w_d_q), .wd(wd), .wsk(wsk), .rik(rik),
+        .rvk(rvk), .r_d(rd_q), .kv_v(kv_v), .kv_d(kv_d), .em_v(em_v), .em_d(em_d), .fault(fault));
 endmodule
 
-// ---- ot_qfd_emb_pcport_nkw_kvpc_s: clone of ot_qfd_emb_pcport_nkw (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 2 substitution(s); kept copy families wr[3]x49(2), wc1_st[1]x24(2), v1[1]x22(2), wc1_kv[1]x13(2), kr[7]x3(2), y1[32]x4(1), kv_v[1]x2(2) ----
+// ---- ot_qfd_emb_pcport_nkw_kvpc_s: KV-PC5-C native32 REWRITE of ot_qfd_emb_pcport_nkw (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv, sha d6ea6f33c801240f); same function ----
 module ot_qfd_emb_pcport_nkw_kvpc_s #(
     parameter integer RQD = 32,
     parameter integer WQD = 4,
@@ -1356,11 +1367,13 @@ module ot_qfd_emb_pcport_nkw_kvpc_s #(
     input  wire         rst_n,
     input  wire         col_v,
     input  wire         col_we,
-    input  wire         col_sr,
-    input  wire         w_v,
+    input  wire [4:0]   csk,              // col_sr copies
+    input  wire [24:0]  wvk,              // w_v copies (24 slices + master)
     input  wire [255:0] w_d,
     output wire [287:0] wd,
-    input  wire         r_v,
+    input  wire [24:0]  wsk,              // wr_static = col_v && col_we && col_sr, registered one edge early
+    input  wire [4:0]   rik,              // rd_issue = col_v && !col_we, registered one edge early
+    input  wire [22:0]  rvk,              // r_v copies
     input  wire [287:0] r_d,
     output wire         kv_v,
     output reg  [287:0] kv_d,
@@ -1368,9 +1381,6 @@ module ot_qfd_emb_pcport_nkw_kvpc_s #(
     output reg  [257:0] em_d,             // {ue, ce, data}
     output reg          fault
 );
-    (* keep, ot_rst_split *) reg [1:0] kv_v__qv;   // KV-PC SAFE: 2 kept copies of kv_v
-    function kv_v__f; input v; kv_v__f = v; endfunction
-    assign kv_v = kv_v__qv[0:0];
   // ---- SECDED(72,64): ot_gpu_w6_secded_pkg layout (Hamming positions 1..71, check bits at 2^k, overall parity bit 71)
   function automatic [71:0] enc64(input [63:0] data);
     reg [71:0] c; integer p, k, j;
@@ -1414,71 +1424,122 @@ module ot_qfd_emb_pcport_nkw_kvpc_s #(
     end
   endfunction
 
+
+  // KV-PC5-C: cor64 with the corrected-position decode split over four syndrome copies (data positions 16k..16k+15
+  // read copy k; ue / ce read copy 0).  d_j = code[p_j-1] ^ (ov && sy == p_j); ce = ov && sy <= 71;
+  // ue = sy != 0 && !(ov && sy <= 71): exactly cor64.
+  function automatic [65:0] cor64q(input [71:0] code, input [7:0] s0, input [7:0] s1, input [7:0] s2, input [7:0] s3);
+    reg [7:0] so; reg [63:0] d; integer p, j;
+    begin
+      d = '0; j = 0;
+      for (p = 1; p <= 71; p = p + 1)
+        if ((p & (p - 1)) != 0) begin
+          so = (j < 16) ? s0 : (j < 32) ? s1 : (j < 48) ? s2 : s3;
+          d[j] = code[p-1] ^ (so[0] && so[7:1] == 7'(p));
+          j = j + 1;
+        end
+      cor64q = {(s0[7:1] != 7'd0) && !(s0[0] && s0[7:1] <= 7'd71), s0[0] && s0[7:1] <= 7'd71, d};
+    end
+  endfunction
+
     localparam integer RA = $clog2(RQD);
     localparam integer WA = (WQD > 1) ? $clog2(WQD) : 1;
-    initial if (WA != 2 || RA != 6) $error("ot_qfd_emb_pcport_nkw_kvpc_s: kept copy widths assume WQD 4, RQD 64");
+    localparam integer NS = 24, SW = 12;              // wq / st1_wd / s2_wd slices
+    localparam integer NK = 20, KW = 15;              // kv_d slices (19 x 15 + 3)
+    initial if (WA != 2 || RA != 6) $error("ot_qfd_emb_pcport_nkw_kvpc_s: copy layout assumes WQD 4, RQD 64");
     reg [RQD-1:0] kq;
-    reg [RA:0] kw;
-    (* keep, ot_rst_split = 7 *) reg [20:0] kr__qv;   // KV-PC SAFE: 3 kept copies of kr
-    function [6:0] kr__f; input [6:0] v; kr__f = v; endfunction
-    wire [6:0] kr = kr__qv[6:0];
-    reg [287:0] wq [0:WQD-1];
-    reg [WA:0] ww;
-    (* keep, ot_rst_split = 3 *) reg [146:0] wr__qv;   // KV-PC SAFE: 49 kept copies of wr
-    function [2:0] wr__f; input [2:0] v; wr__f = v; endfunction
-    wire [2:0] wr = wr__qv[2:0];
-    wire rd_issue = col_v && !col_we;
-    wire wr_static = col_v && col_we && col_sr;
-    wire wr_kv = col_v && col_we && !col_sr;      // no KV write data source: a KV WR column is a fault
+    // pointer copies: kwv (4 kq write decode quarters, copy 0 = master), kra / krb / krc, wrv / wwv per slice + master
+    (* keep *) reg [4*(RA+1)-1:0] kwv;          // copy e = kwv[e*(RA+1) +: RA+1]
+    (* keep *) reg [RA:0] kra, krb, krc;
+    (* keep *) reg [(NS+1)*(WA+1)-1:0] wrv, wwv; // copy g = [g*(WA+1) +: WA+1]
+    wire [RA:0] kw = kwv[0 +: RA+1], kr = krc;
+    wire [WA:0] ww = wwv[NS*(WA+1) +: WA+1], wr = wrv[NS*(WA+1) +: WA+1];
+    wire r_v = rvk[22];
+    wire w_v = wvk[NS];
+    wire rd_issue = rik[4];
+    wire wr_static = wsk[NS];
+    wire wr_kv = col_v && col_we && !csk[0];      // no KV write data source: a KV WR column is a fault
     wire k_empty = kw == kr;
     wire k_full = (kw[RA-1:0] == kr[RA-1:0]) && (kw[RA] != kr[RA]);
     wire w_empty = ww == wr;
     wire w_full = (ww[WA-1:0] == wr[WA-1:0]) && (ww[WA] != wr[WA]);
-    wire cls = kq[kr[RA-1:0]];
-    // KVW 2 timing: wd two edges after every WR column
-    (* keep, ot_rst_split *) reg [12:0] wc1_kv__qv;   // KV-PC SAFE: 13 kept copies of wc1_kv
-    function wc1_kv__f; input v; wc1_kv__f = v; endfunction
-    wire wc1_kv = wc1_kv__qv[0:0];
-    (* keep, ot_rst_split *) reg [23:0] wc1_st__qv;   // KV-PC SAFE: 24 kept copies of wc1_st
-    function wc1_st__f; input v; wc1_st__f = v; endfunction
-    wire wc1_st = wc1_st__qv[0:0]; reg [287:0] st1_wd, s2_wd;
+    // cls = kq[kr]: four 16:1 muxes (kra: quarters 0/1, krb: 2/3), then 4:1 on krc[5:4]
+    wire [3:0] clsq;
+    assign clsq[0] = kq[{2'd0, kra[3:0]}]; assign clsq[1] = kq[{2'd1, kra[3:0]}];
+    assign clsq[2] = kq[{2'd2, krb[3:0]}]; assign clsq[3] = kq[{2'd3, krb[3:0]}];
+    wire cls = clsq[krc[5:4]];
+    (* keep *) reg kv_v_q; assign kv_v = kv_v_q;
+    (* keep *) reg [NS-1:0] wc1_kvk, wc1_stk;     // KVW 2 timing: wd two edges after every WR column
+    (* keep, ot_rst_split *) reg [21:0] v1__qv;  // v1 enables em_d (258 b): 22 kept copies (unchanged)
+    wire v1 = v1__qv[0];
+    reg [287:0] st1_wd, s2_wd, c1;
     assign wd = s2_wd;
-    always @(posedge clk) begin
-        if (wr_static) st1_wd <= wq[wr[WA-1:0]];
-        if (wc1_kv) s2_wd <= 288'd0; else if (wc1_st) s2_wd <= st1_wd;
-    end
-    (* keep, ot_rst_split *) reg [21:0] v1__qv;   // KV-PC SAFE: 22 kept copies of v1
-    function v1__f; input v; v1__f = v; endfunction
-    wire v1 = v1__qv[0:0]; reg [287:0] c1; (* keep, ot_rst_split = 32 *) reg [127:0] y1__qv;   // KV-PC SAFE: 4 kept copies of y1
-    function [31:0] y1__f; input [31:0] v; y1__f = v; endfunction
- wire [31:0] y1 = y1__qv[31:0];
+    (* keep *) reg [127:0] y1k;                   // syndrome copies: lane i copy k = y1k[(i*4+k)*8 +: 8]
     integer i;
+    genvar g, e;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            kw <= 0; kr__qv <= {3{kr__f(0)}}; ww <= 0; wr__qv <= {49{wr__f(0)}}; kv_v__qv <= {2{kv_v__f(1'b0)}}; em_v <= 1'b0; v1__qv <= {22{v1__f(1'b0)}}; fault <= 1'b0;
-            wc1_kv__qv <= {13{wc1_kv__f(1'b0)}}; wc1_st__qv <= {24{wc1_st__f(1'b0)}};
+            kra <= 0; krb <= 0; krc <= 0; kv_v_q <= 1'b0; em_v <= 1'b0; v1__qv <= 22'd0; fault <= 1'b0;
         end else begin
-            if (rd_issue) begin kw <= kw + 1'b1; if (k_full) fault <= 1'b1; end
-            if (r_v) begin kr__qv <= {3{kr__f(kr + 1'b1)}}; if (k_empty) fault <= 1'b1; end
-            kv_v__qv <= {2{kv_v__f(r_v && !cls)}};
-            v1__qv <= {22{v1__f(r_v && cls)}};
+            if (rd_issue && k_full) fault <= 1'b1;
+            if (rvk[20]) kra <= kra + 1'b1;
+            if (rvk[21]) krb <= krb + 1'b1;
+            if (r_v) begin krc <= krc + 1'b1; if (k_empty) fault <= 1'b1; end
+            kv_v_q <= r_v && !cls;
+            v1__qv <= {22{r_v && cls}};
             em_v <= v1;
-            if (w_v) begin ww <= ww + 1'b1; if (w_full) fault <= 1'b1; end
-            if (wr_static) begin wr__qv <= {49{wr__f(wr + 1'b1)}}; if (w_empty) fault <= 1'b1; end
-            wc1_kv__qv <= {13{wc1_kv__f(wr_kv)}}; wc1_st__qv <= {24{wc1_st__f(wr_static)}};
-            if (wc1_kv) fault <= 1'b1;
+            if (w_v && w_full) fault <= 1'b1;
+            if (wr_static && w_empty) fault <= 1'b1;
+            if (wc1_kvk[0]) fault <= 1'b1;
         end
+    for (e = 0; e < 4; e = e + 1) begin : g_kw
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) kwv[e*(RA+1) +: RA+1] <= 0; else if (rik[e]) kwv[e*(RA+1) +: RA+1] <= kwv[e*(RA+1) +: RA+1] + 1'b1;
+        for (g = 0; g < 16; g = g + 1) begin : g_kq
+            always @(posedge clk) if (rik[e] && kwv[e*(RA+1) +: RA] == RA'(e * 16 + g)) kq[e * 16 + g] <= csk[1 + e];
+        end
+    end
+    for (g = 0; g <= NS; g = g + 1) begin : g_wp
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin wrv[g*(WA+1) +: WA+1] <= 0; wwv[g*(WA+1) +: WA+1] <= 0; end
+            else begin
+                if (wsk[g]) wrv[g*(WA+1) +: WA+1] <= wrv[g*(WA+1) +: WA+1] + 1'b1;
+                if (wvk[g]) wwv[g*(WA+1) +: WA+1] <= wwv[g*(WA+1) +: WA+1] + 1'b1;
+            end
+    end
+    wire [287:0] wenc = enc256(w_d);
+    for (g = 0; g < NS; g = g + 1) begin : g_ws
+        reg [SW-1:0] wq0, wq1, wq2, wq3;
+        always @(posedge clk) begin
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd0) wq0 <= wenc[g*SW +: SW];
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd1) wq1 <= wenc[g*SW +: SW];
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd2) wq2 <= wenc[g*SW +: SW];
+`ifdef OT_KVPC5_TAP_MUT
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd3) wq3 <= (g == 7) ? ~wenc[g*SW +: SW] : wenc[g*SW +: SW];   // bench mutant
+`else
+            if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd3) wq3 <= wenc[g*SW +: SW];
+`endif
+            if (wsk[g]) st1_wd[g*SW +: SW] <= (wrv[g*(WA+1) +: WA] == 2'd0) ? wq0 : (wrv[g*(WA+1) +: WA] == 2'd1) ? wq1 :
+                                              (wrv[g*(WA+1) +: WA] == 2'd2) ? wq2 : wq3;
+            if (wc1_kvk[g]) s2_wd[g*SW +: SW] <= {SW{1'b0}}; else if (wc1_stk[g]) s2_wd[g*SW +: SW] <= st1_wd[g*SW +: SW];
+        end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin wc1_kvk[g] <= 1'b0; wc1_stk[g] <= 1'b0; end
+            else begin wc1_kvk[g] <= wr_kv; wc1_stk[g] <= wsk[g]; end
+    end
+    for (g = 0; g < NK; g = g + 1) begin : g_kv
+        localparam integer LO = g * KW, WD = (288 - LO < KW) ? 288 - LO : KW;
+        always @(posedge clk) if (rvk[g]) kv_d[LO +: WD] <= r_d[LO +: WD];
+    end
     always @(posedge clk) begin : dp
         reg [65:0] dc; reg ue, ce; reg [255:0] d;
-        if (rd_issue) kq[kw[RA-1:0]] <= col_sr;
-        if (w_v) wq[ww[WA-1:0]] <= enc256(w_d);
-        if (r_v) begin
-            kv_d <= r_d; c1 <= r_d;
-            y1__qv <= {4{y1__f({syn64(r_d[3*72 +: 72]), syn64(r_d[2*72 +: 72]), syn64(r_d[1*72 +: 72]), syn64(r_d[0*72 +: 72])})}};
-        end
+        c1 <= r_d;                                                   // read only under v1 (the edge after r_v)
+        for (i = 0; i < 4; i = i + 1) y1k[i*32 +: 32] <= {4{syn64(r_d[i*72 +: 72])}};
         ue = 1'b0; ce = 1'b0;
         for (i = 0; i < 4; i = i + 1) begin
-            dc = cor64(c1[i*72 +: 72], (MUT == 3) ? 8'd0 : y1[i*8 +: 8]);
+            if (MUT == 3) dc = cor64q(c1[i*72 +: 72], 8'd0, 8'd0, 8'd0, 8'd0);
+            else dc = cor64q(c1[i*72 +: 72], y1k[(i*4+0)*8 +: 8], y1k[(i*4+1)*8 +: 8], y1k[(i*4+2)*8 +: 8],
+                             y1k[(i*4+3)*8 +: 8]);
             d[i*64 +: 64] = dc[63:0]; ue = ue | dc[65]; ce = ce | dc[64];
         end
         if (v1) em_d <= {ue, ce, d};
@@ -2672,7 +2733,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
   end endgenerate
 endmodule
 
-// ---- qkd_kvpc_s_chain: clone of qkd_kv_pc_chain_station_b (rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv) with 5 substitution(s); kept copy families rs_q[1]x10(1), bt[1]x12(2), ss[1]x4(2), hit[1]x11(2), emb_issue_v[1]x4(2) ----
+// ---- qkd_kvpc_s_chain: KV-PC5-C native32 REWRITE of qkd_kv_pc_chain_station_b (rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv, sha 4d2ff98743d43d7b); same function ----
 module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     input  wire          ck,
     input  wire          rst_n,
@@ -2696,7 +2757,7 @@ module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     output reg  [17:0]   emb_token,
     output reg  [5:0]    emb_word_index,
     output reg           emb_half,
-    output reg           emb_scale,
+    output wire          emb_scale,
     output reg  [15:0]   emb_epoch,
     output reg           emb_return_slot,
     // the PC's return station
@@ -2704,6 +2765,8 @@ module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     output reg           transfer_slot,
     output reg           fault
 );
+    (* keep, ot_rst_split *) reg [2:0] emb_scale__qv;   // KV-PC5-C: 3 kept copies of emb_scale (45 loads)
+    assign emb_scale = emb_scale__qv[0];
     (* keep, ot_rst_split *) reg [3:0] emb_issue_v__qv;   // KV-PC SAFE: 4 kept copies of emb_issue_v
     function emb_issue_v__f; input v; emb_issue_v__f = v; endfunction
     assign emb_issue_v = emb_issue_v__qv[0:0];
@@ -2711,14 +2774,14 @@ module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
                        F_EV = 615, F_EPC0 = 617, F_EPC1 = 622, F_EST = 627, F_EID = 629, F_EAD = 690,
                        F_SS = 719, F_TOK = 720, F_EP = 738, F_CV = 754, F_CPC = 755, F_CRG = 760, F_CVL = 763, F_BT = 779,
                        W = 780;
-    (* keep, ot_rst_split *) reg [9:0] rs_q__qv;   // KV-PC SAFE: 10 kept copies of rs_q
+    (* keep, ot_rst_split *) reg [13:0] rs_q__qv;   // KV-PC SAFE: 14 kept copies of rs_q (KV-PC5-C: 10 -> 14)
     function rs_q__f; input v; rs_q__f = v; endfunction
     wire rs_q = rs_q__qv[0:0];
     // KV-PC SAFE: wes[0] (the es valid, 575 loads in the controller CDC intake) as 24 kept copies; wes[287:1] plain
-    reg [287:1] wes_d;
+    reg [287:1] wes_d;   // KV-PC5-C: = hq[286:0] (sliced tap below)
     (* keep, ot_rst_split *) reg [23:0] wes0__qv;
     assign wes = {wes_d, wes0__qv[0]};
-    always @(posedge ck) rs_q__qv <= {10{rs_q__f(rst_n)}};
+    always @(posedge ck) rs_q__qv <= {14{rs_q__f(rst_n)}};
     // ---- the hop register (pin flop) ----
     reg [W-1:0] c;
     always @(posedge ck) c[W-1:F_V+2] <= di[W-1:F_V+2];
@@ -2756,12 +2819,54 @@ module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     wire hit = hit__qv[0:0];                       // context valid (bit 317), lagged
     reg [60:0] ctx_id;
     // lag stage (CTX_LAG = 1): context / expected computed from the hop register one edge later than wes
-    reg        hit_a, x_a; reg [60:0] ctx_a, eid_a; reg [28:0] ead_a; reg [4:0] epc_a; reg [1:0] est_a;
+    reg        hit_a, x_a; reg [60:0] ctx_a, eid_a; reg [28:0] ead_a; reg [4:0] epc_a; reg [1:0] est_a;   // ctx_a / eid_a / ead_a / epc_a / est_a: sliced taps
+    // KV-PC5-C native32 taps (census f1: h0|h1 598 / 342, h0 select 256, x0|x1 104, bh 287 x2, bt copy 287): the wide
+    // enabled captures are cut into <= 16-bit slices; slice g reads its OWN kept copies of the pin registers it
+    // qualifies on (valid bits / bt, flop-direct from di like c, same reset), and each tap group has its own kept copy
+    // of the PC-id fields for its match compare (the match gate then drives <= 22 slice gates).  Same edges, same
+    // function: every copy is a register of the same di bit (identical from the first edge; the unreset id copies are
+    // only read while a reset valid copy is set).
+    localparam integer HN = 22, XN = 7, BN = 18, SL = 16;
+    (* keep *) reg [HN-1:0] hv0k, hv1k;            // c[F_V] / c[F_V+1] copies (wes / ctx taps)
+    (* keep *) reg [XN-1:0] xe0k, xe1k;            // ev0 / ev1 copies (expected taps)
+    (* keep *) reg [BN-1:0] btk;                   // bt copies (boot tap)
+    (* keep *) reg [4:0] hpc0k, hpc1k, xpc0k, xpc1k, bpc0k;   // PC-id field copies, one per tap group
     always @(posedge ck) begin
-        if (h0 | h1) wes_d[287:1] <= {c[F_SV], c[F_SV], c[F_AD +: 29], h0 ? c[F_D0 +: 256] : c[F_D1 +: 256]};
-        if (h0 | h1) ctx_a <= c[F_CTX +: 61];
-        if (x0 | x1) begin eid_a <= c[F_EID +: 61]; ead_a <= c[F_EAD +: 29]; epc_a <= x0 ? c[F_EPC0 +: 5] : c[F_EPC1 +: 5];
-                           est_a <= c[F_EST +: 2]; end
+        hpc0k <= di[F_PC0 +: 5]; hpc1k <= di[F_PC1 +: 5]; xpc0k <= di[F_EPC0 +: 5]; xpc1k <= di[F_EPC1 +: 5];
+        bpc0k <= di[F_PC0 +: 5];
+    end
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin hv0k <= 0; hv1k <= 0; xe0k <= 0; xe1k <= 0; btk <= 0; end
+        else begin
+            hv0k <= {HN{di[F_V]}}; hv1k <= {HN{di[F_V + 1]}}; xe0k <= {XN{di[F_EV]}}; xe1k <= {XN{di[F_EV + 1]}};
+            btk <= {BN{di[F_BT]}};
+        end
+    wire hm0 = (hpc0k & pm) == (spc & pm), hm1 = (hpc1k & pm) == (spc & pm);
+    wire xm0 = xpc0k == spc, xm1 = xpc1k == spc;
+    // wes / ctx tap: {ctx_a 61, wes_d[287:1] 287} = 348 b, data A (h0) / B (h1) differ only in the 256 data bits
+    reg [347:0] hq;
+    wire [347:0] hdA = {c[F_CTX +: 61], c[F_SV], c[F_SV], c[F_AD +: 29], c[F_D0 +: 256]};
+    wire [347:0] hdB = {c[F_CTX +: 61], c[F_SV], c[F_SV], c[F_AD +: 29], c[F_D1 +: 256]};
+    always @(*) begin wes_d[287:1] = hq[286:0]; ctx_a = hq[347:287]; end
+    // expected tap: {est 2, epc 5, ead 29, eid 61} = 97 b
+    reg [96:0] xq;
+    wire [96:0] xdA = {c[F_EST +: 2], c[F_EPC0 +: 5], c[F_EAD +: 29], c[F_EID +: 61]};
+    wire [96:0] xdB = {c[F_EST +: 2], c[F_EPC1 +: 5], c[F_EAD +: 29], c[F_EID +: 61]};
+    always @(*) begin est_a = xq[96:95]; epc_a = xq[94:90]; ead_a = xq[89:61]; eid_a = xq[60:0]; end
+    genvar gs;
+    for (gs = 0; gs < HN; gs = gs + 1) begin : g_ht
+        localparam integer LO = gs * SL, WD = (348 - LO < SL) ? 348 - LO : SL;
+        wire g0 = hv0k[gs] && hm0, g1 = hv1k[gs] && hm1;
+`ifdef OT_KVPC5_TAP_MUT
+        always @(posedge ck) if (g0 | g1) hq[LO +: WD] <= (g0 && gs != 5) ? hdA[LO +: WD] : hdB[LO +: WD];   // bench mutant
+`else
+        always @(posedge ck) if (g0 | g1) hq[LO +: WD] <= g0 ? hdA[LO +: WD] : hdB[LO +: WD];
+`endif
+    end
+    for (gs = 0; gs < XN; gs = gs + 1) begin : g_xt
+        localparam integer LO = gs * SL, WD = (97 - LO < SL) ? 97 - LO : SL;
+        wire g0 = xe0k[gs] && xm0, g1 = xe1k[gs] && xm1;
+        always @(posedge ck) if (g0 | g1) xq[LO +: WD] <= g0 ? xdA[LO +: WD] : xdB[LO +: WD];
     end
     always @(posedge ck or negedge rs_q)
         if (!rs_q) begin wes0__qv <= 24'd0; hit_a <= 1'b0; x_a <= 1'b0; end
@@ -2791,7 +2896,13 @@ module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     //      boot stream; note.md).
     wire [4:0] bpm = (MUT == 6) ? 5'h0f : 5'h1f;
     wire bh = bt && ((c[F_PC0 +: 5] & bpm) == (spc & bpm));
-    always @(posedge ck) if (bh) land_es[287:1] <= {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};
+    // KV-PC5-C: boot tap in BN <= 16-bit slices, slice g on its own bt copy (bh itself stays for land_es[0] / fault)
+    wire bm = (bpc0k & bpm) == (spc & bpm);
+    wire [286:0] bdat = {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};
+    for (gs = 0; gs < BN; gs = gs + 1) begin : g_bt
+        localparam integer LO = gs * SL, WD = (287 - LO < SL) ? 287 - LO : SL;
+        always @(posedge ck) if (btk[gs] && bm) land_es[1 + LO +: WD] <= bdat[LO +: WD];
+    end
     always @(posedge ck or negedge rs_q) if (!rs_q) land_es[0] <= 1'b0; else land_es[0] <= bh;
     (* keep *) reg ler_v, ler_cr, ler_f;
     always @(posedge ck or negedge rs_q)
@@ -2818,7 +2929,7 @@ module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
             for (k = 0; k < 8; k = k + 1) r[k] <= 16'hffff;
             cnt <= 16'd0; last <= 16'd0; act <= 1'b0; fault <= 1'b0;
             emb_issue_v__qv <= {4{emb_issue_v__f(1'b0)}}; emb_return_slot <= 1'b0; capture_slot <= 1'b0; transfer_slot <= 1'b0;
-            emb_token <= 18'd0; emb_epoch <= 16'd0; emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale <= 1'b0;
+            emb_token <= 18'd0; emb_epoch <= 16'd0; emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale__qv <= 3'd0;
         end else begin
             if (cv && c[F_CPC +: 5] == spc) begin
                 r[c[F_CRG +: 3]] <= c[F_CVL +: 16];
@@ -2837,13 +2948,13 @@ module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
             emb_return_slot <= act && (cnt == r[1] || (home && cnt == r[5]));
             capture_slot    <= act && (cnt == r[2] || (home && cnt == r[6]));
             transfer_slot   <= act && (cnt == trn  || (home && cnt == r[7]));
-            if (act && cnt == r[0]) begin emb_word_index <= {sst, spc[4:1]}; emb_half <= spc[0]; emb_scale <= 1'b0; end
-            else if (act && home && cnt == r[4]) begin emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale <= 1'b1; end
+            if (act && cnt == r[0]) begin emb_word_index <= {sst, spc[4:1]}; emb_half <= spc[0]; emb_scale__qv <= 3'd0; end
+            else if (act && home && cnt == r[4]) begin emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale__qv <= 3'b111; end
             if ((h0 && h1) || (x0 && x1) || bfault || (bh && (h0 || h1))) fault <= 1'b1;
         end
 endmodule
 
-// ---- qkd_kvpc_s_esm: clone of qkd_static_kv_pc_es_merge_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv) with 1 substitution(s); kept copy families own[1]x11(2) ----
+// ---- qkd_kvpc_s_esm: clone of qkd_static_kv_pc_es_merge_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv) with 5 substitution(s); kept copy families own[1]x11(2) ----
 module qkd_kvpc_s_esm #(
     parameter integer ROW0 = 24427,
     parameter integer MUT  = 0,
@@ -2872,6 +2983,7 @@ module qkd_kvpc_s_esm #(
     // the controller face
     output reg  [287:0]  es,
     input  wire [260:0]  er,
+    input  wire [19:0]   erk,                          // KV-PC5-C: er[0] copies
     output wire          beat_v,
     output wire [255:0]  beat_data,
     output wire [17:0]   beat_token,
@@ -2883,8 +2995,10 @@ module qkd_kvpc_s_esm #(
     output wire          emb_outstanding,
     output wire          fault
 );
-    (* keep *) reg rs_q;
-    always @(posedge ck) rs_q <= rst_n;
+    // KV-PC5-C: rs_q (36 loads) as 3 kept identical copies (ot_rst_split: reset pins weigh 1 each)
+    (* keep, ot_rst_split *) reg [2:0] rs_q__qv;
+    wire rs_q = rs_q__qv[0];
+    always @(posedge ck) rs_q__qv <= {3{rst_n}};
     // KV-PC3 sr6: embedding boot-ready level landing register (pin register; +1 ck edge on a level)
     reg ebr_q;
 `ifdef OT_KVPC_LAND_MUT
@@ -2898,17 +3012,21 @@ module qkd_kvpc_s_esm #(
     wire own = own__qv[0:0];
     always @(posedge ck or negedge rs_q) if (!rs_q) own__qv <= {11{own__f(1'b1)}}; else own__qv <= {11{own__f(!ebr_q)}};
     // slice word pin flop
-    // KV-PC SAFE: hq[0] (the slice word valid, 310 loads) as 13 kept copies; hq[287:1] plain
+    // KV-PC SAFE: hq[0] (the slice word valid, 310 loads) as 24 kept copies (KV-PC5-C: 13 -> 24); hq[287:1] plain
     reg [287:1] hq_d;
-    (* keep, ot_rst_split *) reg [12:0] hq0__qv;
+    (* keep, ot_rst_split *) reg [23:0] hq0__qv;
     wire [287:0] hq = {hq_d, hq0__qv[0]};
     always @(posedge ck) hq_d[287:1] <= hes[287:1];
-    always @(posedge ck or negedge rs_q) if (!rs_q) hq0__qv <= 13'd0; else hq0__qv <= {13{hes[0]}};
+    always @(posedge ck or negedge rs_q) if (!rs_q) hq0__qv <= 24'd0; else hq0__qv <= {24{hes[0]}};
     // the embedding endpoint (unchanged master), er steered by phase
     wire [260:0] er_e = (own && MUT != 4) ? 261'd0 : er;
+    // KV-PC5-C: er_e[0] per hold slice from its own er_v / own copies
+    (* keep *) reg [19:0] ownk;
+    always @(posedge ck or negedge rs_q) if (!rs_q) ownk <= 20'hfffff; else ownk <= {20{!ebr_q}};
+    wire [19:0] evk = erk & ~(ownk & {20{MUT != 4}});
     wire [287:0] ees;
     wire         emb_fault;
-    qkd_embedding_static_pc_strap #(.ROW0(ROW0), .MUT(MUT == 2 ? 2 : 0), .RETIME(RETIME)) u_emb (.ck(ck), .rst_n(rs_q),
+    qkd_kvpc_s_emb_strap #(.ROW0(ROW0), .MUT(MUT == 2 ? 2 : 0), .RETIME(RETIME)) u_emb (.ck(ck), .rst_n(rs_q), .evk(evk),
         .boot_ready(ebr_q), .strap_stack(cfg_stack), .strap_pc(pc),
         .issue_v(emb_issue_v), .token(emb_token), .word_index(emb_word_index), .half(emb_half), .scale(emb_scale),
         .epoch(emb_epoch), .return_slot(emb_return_slot), .es(ees), .er(er_e),
@@ -2940,7 +3058,86 @@ module qkd_kvpc_s_esm #(
     assign fault = m_fault | emb_fault;
 endmodule
 
-// ---- qkd_kvpc_s_rhop: clone of qkd_embedding_static_return_hop (rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv) with 0 substitution(s); kept copy families ts_q[1]x25(2) ----
+// ---- qkd_kvpc_s_emb_strap: clone of qkd_embedding_static_pc_strap (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv) with 4 substitution(s) ----
+module qkd_kvpc_s_emb_strap #(
+    parameter integer ROW0 = 24427,
+    parameter integer MUT  = 0,
+    parameter integer RETIME = 0
+)(input wire ck,rst_n,boot_ready,
+  input wire [1:0] strap_stack,input wire [4:0] strap_pc,
+  input wire issue_v,input wire [17:0] token,input wire [5:0] word_index,
+  input wire half,scale,input wire [15:0] epoch,
+  input wire return_slot,
+  input wire [19:0] evk,                 // KV-PC5-C: er[0] copies (one per hold slice)
+  output reg [287:0] es,input wire [260:0] er,
+  output reg beat_v,output reg [255:0] beat_data,
+  output reg [17:0] beat_token,output reg [5:0] beat_word,
+  output reg beat_half,beat_scale,output reg [15:0] beat_epoch,
+  output reg corrected,output reg fault,output wire outstanding);
+    // qkd_embedding_static_pc term for term; only `stack!=STACK||pc!=PC` reads the straps
+    wire [24:0] sector;
+    wire [1:0] stack;
+    wire [4:0] pc,bank,col;
+    wire [18:0] row;
+    wire valid_address;
+    qkd_embedding_static_map #(.ROW0(ROW0)) u_map(
+        .token(token),.word_index(word_index),.half(half),.scale(scale),
+        .logical_sector(sector),.stack(stack),.pc(pc),.bank(bank),.col(col),
+        .row(row),.valid_address(valid_address));
+    reg pending;
+    reg [17:0] token_q;
+    reg [5:0] word_q;
+    reg half_q,scale_q;
+    reg [15:0] epoch_q;
+    wire wrong_home=(MUT==2)?1'b0:(stack!=strap_stack||pc!=strap_pc);
+    assign outstanding=pending;
+    // RETIME: the held word (early arrival) or the word on the slot edge
+    reg h_v;
+    reg [259:1] h_d;
+    wire [260:0] eff=(RETIME!=0&&!er[0]&&h_v)?{er[260],h_d,1'b1}:er;
+    (* keep *) reg [19:0] hvk;                  // KV-PC5-C: h_v copies
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n) hvk<=20'd0; else hvk<={20{(RETIME!=0)&&!return_slot&&(er[0]||h_v)}};
+    genvar gh;
+    for(gh=0;gh<20;gh=gh+1) begin: g_hold
+        localparam integer LO=1+gh*13, WD=(260-LO<13)?260-LO:13;   // h_d / er bits [LO +: WD] (1..259)
+        localparam integer BW=(257-LO<WD)?((257-LO>0)?257-LO:0):WD; // beat_data bits LO-1 .. (<= 256)
+        always @(posedge ck) if(RETIME!=0&&evk[gh]) h_d[LO+:WD]<=er[LO+:WD];
+        if(BW>0) begin: g_b
+`ifdef OT_KVPC5_TAP_MUT
+            always @(posedge ck) beat_data[LO-1+:BW]<=(RETIME!=0&&!evk[gh]&&hvk[gh]&&gh!=3)?h_d[LO+:BW]:er[LO+:BW];   // bench mutant
+`else
+            always @(posedge ck) beat_data[LO-1+:BW]<=(RETIME!=0&&!evk[gh]&&hvk[gh])?h_d[LO+:BW]:er[LO+:BW];
+`endif
+        end
+    end
+    always @(posedge ck) begin
+        es[287:1] <= {1'b0,1'b0,bank,col,row,256'd0};
+        if(issue_v) begin token_q<=token;word_q<=word_index;half_q<=half;scale_q<=scale;epoch_q<=epoch;end
+beat_token<=token_q;beat_word<=word_q;
+        beat_half<=half_q;beat_scale<=scale_q;beat_epoch<=epoch_q;
+    end
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n) begin pending<=0;beat_v<=0;corrected<=0;fault<=0;es[0]<=0;h_v<=0;end
+        else begin
+            es[0]<=issue_v;
+            beat_v<=return_slot;
+            corrected<=return_slot&&eff[257];
+            if(return_slot) pending<=0;
+            if(issue_v) pending<=1;
+            if(issue_v&&(!boot_ready||pending||!valid_address||wrong_home)) fault<=1;
+            if(RETIME==0) begin
+                if(return_slot!=er[0] || (return_slot&&!pending) || er[260] || (return_slot&&er[258])) fault<=1;
+            end else begin
+                if(er[0]&&!return_slot) begin h_v<=1; if(!pending||h_v) fault<=1; end
+                if(return_slot) h_v<=0;
+                if((return_slot&&!eff[0]) || (return_slot&&er[0]&&h_v) || (return_slot&&!pending) || er[260] ||
+                   (return_slot&&eff[258])) fault<=1;
+            end
+        end
+endmodule
+
+// ---- qkd_kvpc_s_rhop: clone of qkd_embedding_static_return_hop (rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv) with 2 substitution(s); kept copy families ts_q[1]x25(2) ----
 module qkd_kvpc_s_rhop(
     input wire ck,rst_n,
     input wire capture_slot,capture_v,input wire [297:0] capture_record,
@@ -2955,9 +3152,21 @@ module qkd_kvpc_s_rhop(
     reg [297:0] record_q,retained;
     reg [298:0] up_q;
     reg occupied;
+    // KV-PC5-C: retained (298 b, census f1 301 / 297) captured in 20 x <= 15-bit slices on kept cs / cv copies
+    (* keep *) reg [19:0] csk, cvk;
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n) begin csk<=20'd0;cvk<=20'd0; end else begin csk<={20{capture_slot}};cvk<={20{capture_v}}; end
+    genvar gr;
+    for(gr=0;gr<20;gr=gr+1) begin: g_ret
+        localparam integer LO=gr*15, WD=(298-LO<15)?298-LO:15;
+`ifdef OT_KVPC5_TAP_MUT
+        always @(posedge ck) if(csk[gr]&&cvk[gr]&&gr!=2) retained[LO+:WD]<=record_q[LO+:WD];   // bench mutant
+`else
+        always @(posedge ck) if(csk[gr]&&cvk[gr]) retained[LO+:WD]<=record_q[LO+:WD];
+`endif
+    end
     always @(posedge ck) begin
         record_q<=capture_record;up_q[298:1]<=upi[298:1];
-        if(cs_q&&cv_q)retained<=record_q;
         upo[298:1]<=ts_q?retained:up_q[298:1];
     end
     always @(posedge ck or negedge rst_n)
@@ -2972,7 +3181,7 @@ module qkd_kvpc_s_rhop(
         end
 endmodule
 
-// ---- qkd_kvpc_s_rhead: clone of qkd_embedding_static_return_head (rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv) with 0 substitution(s); kept copy families ts_q[1]x25(2) ----
+// ---- qkd_kvpc_s_rhead: clone of qkd_embedding_static_return_head (rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv) with 2 substitution(s); kept copy families ts_q[1]x25(2) ----
 module qkd_kvpc_s_rhead #(parameter integer MUT = 0) (
     input wire ck,rst_n,
     input wire capture_slot,capture_v,input wire [297:0] capture_record,
@@ -2986,9 +3195,21 @@ module qkd_kvpc_s_rhead #(parameter integer MUT = 0) (
     wire ts_q = ts_q__qv[0:0];
     reg [297:0] record_q,retained;
     reg occupied;
+    // KV-PC5-C: retained (298 b, census f1 301 / 297) captured in 20 x <= 15-bit slices on kept cs / cv copies
+    (* keep *) reg [19:0] csk, cvk;
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n) begin csk<=20'd0;cvk<=20'd0; end else begin csk<={20{capture_slot}};cvk<={20{capture_v}}; end
+    genvar gr;
+    for(gr=0;gr<20;gr=gr+1) begin: g_ret
+        localparam integer LO=gr*15, WD=(298-LO<15)?298-LO:15;
+`ifdef OT_KVPC5_TAP_MUT
+        always @(posedge ck) if(csk[gr]&&cvk[gr]&&gr!=2) retained[LO+:WD]<=record_q[LO+:WD];   // bench mutant
+`else
+        always @(posedge ck) if(csk[gr]&&cvk[gr]) retained[LO+:WD]<=record_q[LO+:WD];
+`endif
+    end
     always @(posedge ck) begin
         record_q<=capture_record;
-        if(cs_q&&cv_q)retained<=record_q;
         upo[298:1]<=ts_q?retained:298'd0;
     end
     always @(posedge ck or negedge rst_n)
