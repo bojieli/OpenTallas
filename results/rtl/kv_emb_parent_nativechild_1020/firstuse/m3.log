@@ -1,0 +1,10 @@
+DIFF parent t=2760000 n=1/0 o=1/1
+DIFF parent t=2762000 n=0/0 o=0/1
+DIFF parent t=2764000 n=0/0 o=0/1
+DIFF parent t=2766000 n=0/0 o=0/1
+DIFF parent t=2768000 n=0/0 o=0/1
+DIFF parent t=2770000 n=0/0 o=0/1
+DIFF parent t=2772000 n=0/0 o=0/1
+[2796000] %Fatal: tb_parent.sv:65: Assertion failed in tb_parent: FAIL parent missing 66th-slot fault
+%Error: results/rtl/kv_emb_parent_nativechild_1020/tb_parent.sv:65: Verilog $stop
+Aborting...

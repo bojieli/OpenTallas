@@ -1,0 +1,10 @@
+DIFF parent t=156000 n=0/1 o=0/0
+DIFF parent t=158000 n=0/1 o=0/0
+DIFF parent t=160000 n=0/1 o=0/0
+DIFF parent t=162000 n=0/1 o=0/0
+DIFF parent t=164000 n=0/1 o=0/0
+DIFF parent t=166000 n=0/1 o=0/0
+DIFF parent t=168000 n=0/1 o=0/0
+[620000] %Fatal: tb_parent.sv:52: Assertion failed in tb_parent.row: FAIL parent legal row fault token=17
+%Error: results/rtl/kv_emb_parent_nativechild_1020/tb_parent.sv:52: Verilog $stop
+Aborting...

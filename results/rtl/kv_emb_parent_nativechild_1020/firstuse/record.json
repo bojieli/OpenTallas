@@ -1,0 +1,45 @@
+{
+  "source_commit": "1aca6fde9",
+  "rtl_source_commit": "e2ea972a1",
+  "verilator": "5.050",
+  "flags": [
+    "--x-initial unique",
+    "--x-assign unique",
+    "+verilator+rand+reset+2"
+  ],
+  "seeds": [
+    173,
+    1,
+    901,
+    42719
+  ],
+  "comparisons_per_seed": 1642,
+  "tx_records_per_seed": 261,
+  "joined_words_per_seed": 260,
+  "starts_per_seed": 7,
+  "causal_mutants": [
+    1,
+    2,
+    3,
+    5
+  ],
+  "copy_maturity": "pending_valid[4]==pending_valid[0] every released edge after first reset",
+  "remote_verified_files": [
+    {
+      "path": "tools/qwen_kv_die/emb_parent_nativechild_gate.sh",
+      "sha256": "61611623e9ddbeeff33d625fef78c3bb591ec1af3635eedf521b01ac90b16adc"
+    },
+    {
+      "path": "results/rtl/kv_emb_parent_nativechild_1020/tb_parent.sv",
+      "sha256": "2c4bb4953f64db092ae016068940fd1575b1f857ca32aae4a7827486ca2656dc"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx_n32child.sv",
+      "sha256": "2a02bb450bf0ac124c1cbe9aaaa8ae3b80b3f5a67280abd644fbce07327115cc"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start_n32child.sv",
+      "sha256": "748155c75ed361a1fc7c06b3dcfd019ea37cb4994f1b4e459ce3615cf70e37b3"
+    }
+  ]
+}

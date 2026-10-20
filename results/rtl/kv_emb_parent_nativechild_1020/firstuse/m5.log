@@ -1,0 +1,6 @@
+DIFF parent t=3076000 n=0/0 o=0/1
+DIFF parent t=3078000 n=0/0 o=0/1
+DIFF parent t=3080000 n=0/0 o=0/1
+[3374000] %Fatal: tb_parent.sv:75: Assertion failed in tb_parent: FAIL parent mismatches=3
+%Error: results/rtl/kv_emb_parent_nativechild_1020/tb_parent.sv:75: Verilog $stop
+Aborting...
