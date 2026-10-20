@@ -1,0 +1,22 @@
+module pc_async_coupon(input wire clk,rst_n,want,output wire ok,output wire [7:0] released);
+wire q0;
+DFFASRHQNx1_ASAP7_75t_R ff0(.CLK(clk),.D(1'b1),.RESETN(rst_n),.SETN(1'b1),.QN(q0));
+wire q1;
+DFFASRHQNx1_ASAP7_75t_R ff1(.CLK(~clk),.D(~q0),.RESETN(rst_n),.SETN(1'b1),.QN(q1));
+wire q2;
+DFFASRHQNx1_ASAP7_75t_R ff2(.CLK(clk),.D(~q0),.RESETN(rst_n),.SETN(1'b1),.QN(q2));
+wire q3;
+DFFASRHQNx1_ASAP7_75t_R ff3(.CLK(clk),.D(~q0),.RESETN(rst_n),.SETN(1'b1),.QN(q3));
+wire q4;
+DFFASRHQNx1_ASAP7_75t_R ff4(.CLK(clk),.D(~q0),.RESETN(rst_n),.SETN(1'b1),.QN(q4));
+wire q5;
+DFFASRHQNx1_ASAP7_75t_R ff5(.CLK(clk),.D(~q0),.RESETN(rst_n),.SETN(1'b1),.QN(q5));
+wire q6;
+DFFASRHQNx1_ASAP7_75t_R ff6(.CLK(clk),.D(~q0),.RESETN(rst_n),.SETN(1'b1),.QN(q6));
+wire q7;
+DFFASRHQNx1_ASAP7_75t_R ff7(.CLK(clk),.D(~q0),.RESETN(rst_n),.SETN(1'b1),.QN(q7));
+wire q8;
+DFFASRHQNx1_ASAP7_75t_R ff8(.CLK(clk),.D(~q0),.RESETN(rst_n),.SETN(1'b1),.QN(q8));
+assign released=~{q8,q7,q6,q5,q4,q3,q2,q1};
+assign ok=released=={8{want}};
+endmodule

@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.kv_group.structural_copy.v1",
+ "qualified": false,
+ "original_top": "qkd_kvs_pc",
+ "top": "qkd_kvs_pc_n32",
+ "source_sha256": "6081fb5ec8d25fa56edcff3e57647e6fa145dad2376c60f908f9fdf5e19e3fea",
+ "parser_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+ "generated_sha256": "a9286e0fb7c58e81c4c4f95c8da151f405d4cc9f0060487781d9bcc5cf07c0f0",
+ "fixedpoint_history": [
+  69839,
+  69841,
+  69841
+ ],
+ "original_cells": 69757,
+ "generated_cells": 69841,
+ "max_terminal_loads": 32,
+ "copied_cells": [
+  {
+   "cell": 42769,
+   "original": "_117532_",
+   "type": "OA21x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 49426,
+   "original": "_124189_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 84430,
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_sched.hgo$_SDFFE_PN0P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 79
+  },
+  {
+   "cell": 84824,
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.desc_first[7]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 84825,
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.desc_first[8]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 86113,
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.g_desc_acc_c[8].u_l._0_",
+   "type": "AND2x4_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  }
+ ],
+ "macros": [
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.down.g_sram.u_mem.g_b[0].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76742_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.down.g_sram.u_mem.g_b[1].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76743_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.down.g_sram.u_mem.g_b[2].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76744_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.down.g_sram.u_mem.g_b[3].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76745_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.down.g_sram.u_mem.g_b[4].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76746_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.down.g_sram.u_mem.g_b[5].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76747_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.up.g_sram.u_mem.g_b[0].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76788_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.up.g_sram.u_mem.g_b[1].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76789_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.up.g_sram.u_mem.g_b[2].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76790_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.up.g_sram.u_mem.g_b[3].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76791_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.up.g_sram.u_mem.g_b[4].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u76792_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_sched.u_tq.u_e",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u89976_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_ctrl.u_sched.u_tq.u_o",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u89977_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_front.u_mem.g_b[0].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90328_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_front.u_mem.g_b[1].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90329_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_front.u_mem.g_b[2].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90330_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_front.u_mem.g_b[3].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90331_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_front.u_mem.g_b[4].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90332_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_return.u_mem.g_b[0].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90747_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_return.u_mem.g_b[1].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90748_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_return.u_mem.g_b[2].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90749_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_return.u_mem.g_b[3].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90750_c0.u_cell"
+  },
+  {
+   "original": "u_pc.u_pce.u_path.u_return.u_mem.g_b[4].u_m",
+   "type": "ot_sram_1r1w2c_32x64_m1",
+   "instance": "u90751_c0.u_cell"
+  }
+ ],
+ "required_before_gate": [
+  "mapped census after re-synthesis",
+  "source-pinned exact library model",
+  "sequential equivalence",
+  "independent arbitrary-init cold-boot/reset convergence"
+ ]
+}

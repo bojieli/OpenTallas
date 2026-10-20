@@ -1,0 +1,394 @@
+{
+  "schema": "opentallas.pc.private_async_conditioner.canonical_coupon.v1",
+  "source_graph_proof_sha256": "8a0a05e84ca546a05b511a4f73fc2db6783fd215d983e2c0378279a60eec401d",
+  "model_hashes": {
+    "canonical_ASR_normalized.v": "ee63e9a38cab2a9fa507f6fdc0480b04f047088a2f76464a5fca6182a9ba26d5",
+    "canonical_DFF_normalized.v": "cbba1c176afe1a03e677d21ee4e095c7b3d326689d8ec5ec46640d3e43a26254"
+  },
+  "async2sync": false,
+  "opt_merge": false,
+  "ignore_unknown_cells": false,
+  "memory_abstraction": false,
+  "unconstrained_initial_physical_bank_bits": 9,
+  "semantic_scope": "Source-audited one-first/eight-final canonical ASR bank; source graph/cell/pin identities and every external consumer are bound separately.",
+  "assertion": "Logical release is 0 after raw reset assertion with clock stopped at either level.",
+  "release": "No asynchronous or one-edge release; all eight final logical releases become 1 exactly at the second real destination rising edge.",
+  "source_observer_scope": "Existing ordinary-D logical release observers capture on their own subsequent destination edge; exact source graph records their clocks, not a masked/removed cycle.",
+  "baseline_passes": 2,
+  "causal_mutant_failures": 12,
+  "results": [
+    {
+      "stopped_clock": 0,
+      "mutation": "baseline",
+      "passed": true,
+      "rc": 0,
+      "independent_physical_states": {
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$250": {
+          "bits": [
+            24
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff1.QN#sampled$214": {
+          "bits": [
+            22
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff2.QN#sampled$178": {
+          "bits": [
+            19
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff3.QN#sampled$142": {
+          "bits": [
+            15
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff4.QN#sampled$430": {
+          "bits": [
+            39
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff5.QN#sampled$394": {
+          "bits": [
+            36
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff6.QN#sampled$358": {
+          "bits": [
+            33
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff7.QN#sampled$322": {
+          "bits": [
+            30
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff8.QN#sampled$286": {
+          "bits": [
+            27
+          ],
+          "init": null
+        }
+      },
+      "trace": [
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "log_sha256": "5795c4a8f984dea80d969710df5acafd57dee485aa1782544268580a97aa4609"
+    },
+    {
+      "stopped_clock": 0,
+      "mutation": "root_polarity",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped0_root_polarity.log",
+      "log_sha256": "f1486cf5897317f9ea8c80a5f8d77ffeec328112634fc7fc2f62d1ab780f8223"
+    },
+    {
+      "stopped_clock": 0,
+      "mutation": "root_assert_value",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped0_root_assert_value.log",
+      "log_sha256": "d735e5a8c9ec2b6697352f52f5396bf5a8062c1b68c9729a9bd888857b36d92e"
+    },
+    {
+      "stopped_clock": 0,
+      "mutation": "first_D",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped0_first_D.log",
+      "log_sha256": "3a8ae01f83d5bdb0ef586e3de1c93b74a6fd07ba64459e2a53b88acdffac6eae"
+    },
+    {
+      "stopped_clock": 0,
+      "mutation": "clock",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped0_clock.log",
+      "log_sha256": "746872cf52a719ce893f32ff90fabbf5df0a60a7c930d0ee52d0a02673263f71"
+    },
+    {
+      "stopped_clock": 0,
+      "mutation": "QN_polarity",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped0_QN_polarity.log",
+      "log_sha256": "6ff05e948982f1bb0a2dc491b6988510a85a809cc242dc97134e3a354f483053"
+    },
+    {
+      "stopped_clock": 0,
+      "mutation": "stage_bypass",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped0_stage_bypass.log",
+      "log_sha256": "da03422a1b183e76ff2164d3d1f3a9f469f75999dfdf90cea7a05e80ef2cde72"
+    },
+    {
+      "stopped_clock": 1,
+      "mutation": "baseline",
+      "passed": true,
+      "rc": 0,
+      "independent_physical_states": {
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$250": {
+          "bits": [
+            24
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff1.QN#sampled$214": {
+          "bits": [
+            22
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff2.QN#sampled$178": {
+          "bits": [
+            19
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff3.QN#sampled$142": {
+          "bits": [
+            15
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff4.QN#sampled$430": {
+          "bits": [
+            39
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff5.QN#sampled$394": {
+          "bits": [
+            36
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff6.QN#sampled$358": {
+          "bits": [
+            33
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff7.QN#sampled$322": {
+          "bits": [
+            30
+          ],
+          "init": null
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff8.QN#sampled$286": {
+          "bits": [
+            27
+          ],
+          "init": null
+        }
+      },
+      "trace": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "log_sha256": "32af338edc9f639ab368145af43e62f2dbdacd809d2812dd69a0af91a0f61d69"
+    },
+    {
+      "stopped_clock": 1,
+      "mutation": "root_polarity",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped1_root_polarity.log",
+      "log_sha256": "44946dd75a5b8fb6085cad4171dd5cbfec57cc3f4a6160fe4a2a9444f3ba8a04"
+    },
+    {
+      "stopped_clock": 1,
+      "mutation": "root_assert_value",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped1_root_assert_value.log",
+      "log_sha256": "e5e453b220e1833dab316685065b6b7d5aa69bc089c5d5731e2a710a79944109"
+    },
+    {
+      "stopped_clock": 1,
+      "mutation": "first_D",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped1_first_D.log",
+      "log_sha256": "7cc5eb13748c1c190e8424d38df43c9ccbc3c9e3e0a0ca000d7d2b7f3d547cb2"
+    },
+    {
+      "stopped_clock": 1,
+      "mutation": "clock",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped1_clock.log",
+      "log_sha256": "6645409bf9a08b74a4cee4d8ef4e8105e04b04c13fdeb521ece1cbbbf47441be"
+    },
+    {
+      "stopped_clock": 1,
+      "mutation": "QN_polarity",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped1_QN_polarity.log",
+      "log_sha256": "3411d0baef38dcc78178902ed2818600911d336887bc2d76b95c93940088e7c0"
+    },
+    {
+      "stopped_clock": 1,
+      "mutation": "stage_bypass",
+      "causally_failed": true,
+      "rc": 1,
+      "fail_regex": "proof did fail",
+      "fail_witness": "coupon_stopped1_stage_bypass.log",
+      "log_sha256": "52779e2bf6932368e70195ffbb087a6c71934bb98d22ba06eb9f790b736e9f78"
+    }
+  ]
+}

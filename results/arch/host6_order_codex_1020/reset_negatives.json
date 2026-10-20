@@ -1,0 +1,71 @@
+{
+  "baseline": {
+    "pass": true,
+    "first": 12,
+    "final": 288,
+    "root_loads": 12,
+    "first_max_loads": 24,
+    "final_max_loads": 30,
+    "edges": 2
+  },
+  "causal_negatives": [
+    {
+      "fixture": "root_d",
+      "expected": "refuse",
+      "actual": {
+        "pass": false,
+        "reason": "stale first count"
+      }
+    },
+    {
+      "fixture": "extra_first",
+      "expected": "refuse",
+      "actual": {
+        "pass": false,
+        "reason": "stale first count"
+      }
+    },
+    {
+      "fixture": "final_clock",
+      "expected": "refuse",
+      "actual": {
+        "pass": false,
+        "reason": "first reaches non-identical/plain final D or wrong polarity"
+      }
+    },
+    {
+      "fixture": "final_qn_polarity",
+      "expected": "refuse",
+      "actual": {
+        "pass": false,
+        "reason": "first reaches non-identical/plain final D or wrong polarity"
+      }
+    },
+    {
+      "fixture": "extra_reset_consumer",
+      "expected": "refuse",
+      "actual": {
+        "pass": false,
+        "reason": "root reaches non-identical/plain first D"
+      }
+    },
+    {
+      "fixture": "final_stage_bypass",
+      "expected": "refuse",
+      "actual": {
+        "pass": false,
+        "reason": "stale first count"
+      }
+    },
+    {
+      "fixture": "missing_final",
+      "expected": "refuse",
+      "actual": {
+        "pass": false,
+        "reason": "stale final count"
+      }
+    }
+  ],
+  "all_refused": true,
+  "note": "Graph proof does not carry Verilog init attributes; the reviewed interface must bind exact selected-source and model hashes separately."
+}

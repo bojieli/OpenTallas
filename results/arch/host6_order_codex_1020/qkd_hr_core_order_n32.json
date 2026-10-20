@@ -1,0 +1,309 @@
+{
+ "schema": "opentallas.kv_group.structural_copy.v1",
+ "qualified": false,
+ "original_top": "qkd_hr_core_order",
+ "top": "qkd_hr_core_order_n32",
+ "source_sha256": "06317cc8f8ef150c5f6ad9c908672e299815fcc59148721a1e2ce70e59969b7c",
+ "parser_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+ "generated_sha256": "c3de9cf6aeab78cbf4a01c9b6dd6b6cbf15f8f9f0839cf7f3f18bf47616a8b75",
+ "fixedpoint_history": [
+  67680,
+  67693,
+  67693
+ ],
+ "original_cells": 67371,
+ "generated_cells": 67693,
+ "max_terminal_loads": 32,
+ "copied_cells": [
+  {
+   "cell": 3406,
+   "original": "_078961_",
+   "type": "AO21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 3724,
+   "original": "_079279_",
+   "type": "AND5x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 3725,
+   "original": "_079280_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 21
+  },
+  {
+   "cell": 3809,
+   "original": "_079364_",
+   "type": "NOR2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 29
+  },
+  {
+   "cell": 3880,
+   "original": "_079435_",
+   "type": "OA31x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 3886,
+   "original": "_079441_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 4269,
+   "original": "_079824_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 38
+  },
+  {
+   "cell": 4272,
+   "original": "_079827_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 4433,
+   "original": "_079988_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 3
+  },
+  {
+   "cell": 4442,
+   "original": "_079997_",
+   "type": "NAND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 10
+  },
+  {
+   "cell": 4515,
+   "original": "_080070_",
+   "type": "NOR2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 6093,
+   "original": "_081648_",
+   "type": "AO21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 6717,
+   "original": "_082272_",
+   "type": "AND5x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 6718,
+   "original": "_082273_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 12
+  },
+  {
+   "cell": 7036,
+   "original": "_082591_",
+   "type": "AO21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 9
+  },
+  {
+   "cell": 7040,
+   "original": "_082595_",
+   "type": "AND5x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 9
+  },
+  {
+   "cell": 7041,
+   "original": "_082596_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 9
+  },
+  {
+   "cell": 7379,
+   "original": "_082934_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 7
+  },
+  {
+   "cell": 7380,
+   "original": "_082935_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 14
+  },
+  {
+   "cell": 7382,
+   "original": "_082937_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 5
+  },
+  {
+   "cell": 7404,
+   "original": "_082959_",
+   "type": "NAND2x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 7406,
+   "original": "_082961_",
+   "type": "OAI21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 10
+  },
+  {
+   "cell": 7409,
+   "original": "_082964_",
+   "type": "OA21x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 10
+  },
+  {
+   "cell": 9449,
+   "original": "_085004_",
+   "type": "OR2x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 12
+  },
+  {
+   "cell": 9734,
+   "original": "_085289_",
+   "type": "OAI21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 17
+  },
+  {
+   "cell": 9919,
+   "original": "_085474_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 19
+  },
+  {
+   "cell": 10574,
+   "original": "_086129_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 19
+  },
+  {
+   "cell": 13232,
+   "original": "_088787_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 16574,
+   "original": "_092129_",
+   "type": "AO221x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 18
+  },
+  {
+   "cell": 17930,
+   "original": "_093485_",
+   "type": "OA211x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 18
+  },
+  {
+   "cell": 19587,
+   "original": "_095142_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 24037,
+   "original": "_099592_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 18
+  },
+  {
+   "cell": 39244,
+   "original": "_114799_",
+   "type": "OA21x2_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 19
+  },
+  {
+   "cell": 44469,
+   "original": "_120024_",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 5
+  },
+  {
+   "cell": 78242,
+   "original": "u_ot_pr_core.u_rank__u_dispatch.hd[0]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  },
+  {
+   "cell": 78243,
+   "original": "u_ot_pr_core.u_rank__u_dispatch.hd[1]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  }
+ ],
+ "macros": [
+  {
+   "original": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.g_bank[0].u_mem",
+   "type": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "instance": "u70841_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.g_bank[1].u_mem",
+   "type": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "instance": "u70842_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_chain.u_map.g_sram_fifo.u_payload.g_bank[2].u_mem",
+   "type": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "instance": "u70843_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.g_bank[0].u_mem",
+   "type": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "instance": "u77050_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.g_bank[1].u_mem",
+   "type": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "instance": "u77051_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_dispatch.g_sram_fifo.u_payload.g_bank[2].u_mem",
+   "type": "ot_sram_1r1w_32x128_m1_p192_rc",
+   "instance": "u77052_c0.u_cell"
+  }
+ ],
+ "required_before_gate": [
+  "mapped census after re-synthesis",
+  "source-pinned exact library model",
+  "sequential equivalence",
+  "independent arbitrary-init cold-boot/reset convergence"
+ ]
+}

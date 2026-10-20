@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-host6-order-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-host6-order-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-host6-order-1020
+ot-run: ot-epyc9       admits   981 GB (avail 816, growth 130, headroom 0, waiters 0/0 GB) load 76/128 running 42 disk 33 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-host6-order-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-host6-order-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2470698-1792495142 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO IFP-0001] Added 1104 rows of 5520 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 302.400 302.400 ) um
+[INFO IFP-0101] Core BBox: (  2.160  2.160 ) ( 300.240 300.240 ) um
+[INFO IFP-0102] Core area:                        88851.686 um^2
+[INFO IFP-0103] Total instances area:             24931.858 um^2
+[INFO IFP-0104] Effective utilization:                0.281
+[INFO IFP-0105] Number of instances:                  93256
+ORDER_BAND kept=312 removed=792 area_um2=25110.2592 y_um=216..300.24
+ORDER_BAND_PROBE PASS width=302.4 height=302.4 site=asap7sc7p5t
+[ERROR ORD-0047] You can't load a new db file as the db is already populated
+Error: host_order_band_probe.tcl, 13 ORD-0047
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2470698-1792495142): exit 1

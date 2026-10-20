@@ -1,0 +1,121 @@
+{
+  "top": "qkd_hr_core_order_n32",
+  "measured_synthesis_standard_area_um2": 11773.81656,
+  "cell_areas": "pinned ASAP7 RVT TT Liberty",
+  "pins": {
+    "N": [
+      "ck_core",
+      "chain_f",
+      "u_rank__od",
+      "u_rank__local_marker",
+      "landed",
+      "u_rank__oa",
+      "host_upstream_quiet",
+      "u_rank__dispatch_fault",
+      "u_rank__local_marker_cr",
+      "u_rank__local_marker_v",
+      "u_rank__image_check",
+      "u_rank__ov",
+      "u_rank__owe",
+      "u_rank__ocr",
+      "u_rank__global_prefix_v"
+    ],
+    "E": [
+      "hb",
+      "issued",
+      "physical_ack_n",
+      "service_faults",
+      "host_rst_n"
+    ],
+    "W": [
+      "chain_c",
+      "chain_a",
+      "slice_ack",
+      "chain_fault_i",
+      "hb_cr"
+    ],
+    "S": []
+  },
+  "pin_counts": {
+    "N": 1561,
+    "E": 330,
+    "W": 389,
+    "S": 0
+  },
+  "added_schedule_cycles": 0,
+  "sram_count": 6,
+  "sram_origins_um": [
+    [
+      43.2,
+      43.2
+    ],
+    [
+      129.6,
+      43.2
+    ],
+    [
+      216,
+      43.2
+    ],
+    [
+      43.2,
+      129.6
+    ],
+    [
+      129.6,
+      129.6
+    ],
+    [
+      216,
+      129.6
+    ]
+  ],
+  "variants": [
+    {
+      "outline_um": [
+        302.4,
+        302.4
+      ],
+      "std_band_um": [
+        2.16,
+        216.0,
+        300.23999999999995,
+        300.23999999999995
+      ],
+      "band_area_um2": 25110.25919999998,
+      "modeled_std_density": 0.46888470828688256,
+      "pin_density_per_um": {
+        "N": 5.236849168008589,
+        "E": 3.9173789173789197,
+        "W": 4.617758784425454
+      },
+      "all_terminal_pair_distance_bound_um": 369.35898947230186,
+      "planning_reach_pass": true,
+      "clock_entry": "N centre beside all boundary/core register mass",
+      "qualification": "PLAN ONLY: actual row occupancy, clock spread, native placed reach and routing required"
+    },
+    {
+      "outline_um": [
+        345.6,
+        302.4
+      ],
+      "std_band_um": [
+        2.16,
+        216.0,
+        343.44,
+        300.23999999999995
+      ],
+      "band_area_um2": 28749.42719999998,
+      "modeled_std_density": 0.40953221356702396,
+      "pin_density_per_um": {
+        "N": 4.573956868260665,
+        "E": 3.9173789173789197,
+        "W": 4.617758784425454
+      },
+      "all_terminal_pair_distance_bound_um": 395.2386863655935,
+      "planning_reach_pass": true,
+      "clock_entry": "N centre beside all boundary/core register mass",
+      "qualification": "PLAN ONLY: actual row occupancy, clock spread, native placed reach and routing required"
+    }
+  ]
+}

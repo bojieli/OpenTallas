@@ -1,0 +1,531 @@
+{
+  "creator": "Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "modules": {
+    "shared_d_proof": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "shared_d_proof.v:1.1-11.10"
+      },
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "d0": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "d1": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "equal": {
+          "direction": "output",
+          "bits": [ 5 ]
+        }
+      },
+      "cells": {
+        "$and$shared_d_proof.v:10$5": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "shared_d_proof.v:10.14-10.41"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 6 ],
+            "B": [ 7 ],
+            "Y": [ 5 ]
+          }
+        },
+        "$eq$shared_d_proof.v:10$3": {
+          "hide_name": 1,
+          "type": "$eq",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "shared_d_proof.v:10.15-10.25"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 8 ],
+            "B": [ 9 ],
+            "Y": [ 6 ]
+          }
+        },
+        "$eq$shared_d_proof.v:10$4": {
+          "hide_name": 1,
+          "type": "$eq",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "shared_d_proof.v:10.30-10.40"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 10 ],
+            "B": [ 11 ],
+            "Y": [ 7 ]
+          }
+        },
+        "$flatten\\ff0_0.$not$canonical_DFF_normalized.v:35$2": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.83-35.85"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 12 ]
+          }
+        },
+        "$flatten\\ff0_1.$not$canonical_DFF_normalized.v:35$2": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.83-35.85"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 13 ]
+          }
+        },
+        "$flatten\\ff1_0.$not$canonical_DFF_normalized.v:35$2": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.83-35.85"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 4 ],
+            "Y": [ 14 ]
+          }
+        },
+        "$flatten\\ff1_1.$not$canonical_DFF_normalized.v:35$2": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.83-35.85"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 4 ],
+            "Y": [ 15 ]
+          }
+        },
+        "$procdff$10": {
+          "hide_name": 1,
+          "type": "$dff",
+          "parameters": {
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.57-35.86"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 15 ],
+            "Q": [ 11 ]
+          }
+        },
+        "$procdff$11": {
+          "hide_name": 1,
+          "type": "$dff",
+          "parameters": {
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.57-35.86"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 14 ],
+            "Q": [ 10 ]
+          }
+        },
+        "$procdff$12": {
+          "hide_name": 1,
+          "type": "$dff",
+          "parameters": {
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.57-35.86"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 13 ],
+            "Q": [ 9 ]
+          }
+        },
+        "$procdff$13": {
+          "hide_name": 1,
+          "type": "$dff",
+          "parameters": {
+            "CLK_POLARITY": "1",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.57-35.86"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 2 ],
+            "D": [ 12 ],
+            "Q": [ 8 ]
+          }
+        },
+        "ff0_0": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "shared_d_proof.v:3.22-3.54",
+            "module": "DFFHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_DFF_normalized.v:35.1-35.96"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff0_1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "shared_d_proof.v:5.22-5.54",
+            "module": "DFFHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_DFF_normalized.v:35.1-35.96"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff1_0": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "shared_d_proof.v:7.22-7.54",
+            "module": "DFFHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_DFF_normalized.v:35.1-35.96"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff1_1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "shared_d_proof.v:9.22-9.54",
+            "module": "DFFHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_DFF_normalized.v:35.1-35.96"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        }
+      },
+      "netnames": {
+        "$eq$shared_d_proof.v:10$3_Y": {
+          "hide_name": 1,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "shared_d_proof.v:10.15-10.25"
+          }
+        },
+        "$eq$shared_d_proof.v:10$4_Y": {
+          "hide_name": 1,
+          "bits": [ 7 ],
+          "attributes": {
+            "src": "shared_d_proof.v:10.30-10.40"
+          }
+        },
+        "$flatten\\ff0_0.$0\\QN[0:0]": {
+          "hide_name": 1,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.57-35.86"
+          }
+        },
+        "$flatten\\ff0_1.$0\\QN[0:0]": {
+          "hide_name": 1,
+          "bits": [ 13 ],
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.57-35.86"
+          }
+        },
+        "$flatten\\ff1_0.$0\\QN[0:0]": {
+          "hide_name": 1,
+          "bits": [ 14 ],
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.57-35.86"
+          }
+        },
+        "$flatten\\ff1_1.$0\\QN[0:0]": {
+          "hide_name": 1,
+          "bits": [ 15 ],
+          "attributes": {
+            "src": "canonical_DFF_normalized.v:35.57-35.86"
+          }
+        },
+        "ck": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "shared_d_proof.v:1.34-1.36"
+          }
+        },
+        "d0": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "shared_d_proof.v:1.48-1.50"
+          }
+        },
+        "d1": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "shared_d_proof.v:1.62-1.64"
+          }
+        },
+        "equal": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "shared_d_proof.v:1.77-1.82"
+          }
+        },
+        "ff0_0.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff0_0 CLK",
+            "src": "canonical_DFF_normalized.v:35.35-35.38"
+          }
+        },
+        "ff0_0.D": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff0_0 D",
+            "src": "canonical_DFF_normalized.v:35.39-35.40"
+          }
+        },
+        "ff0_0.QN": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "hdlname": "ff0_0 QN",
+            "src": "canonical_DFF_normalized.v:35.52-35.54"
+          }
+        },
+        "ff0_1.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff0_1 CLK",
+            "src": "canonical_DFF_normalized.v:35.35-35.38"
+          }
+        },
+        "ff0_1.D": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff0_1 D",
+            "src": "canonical_DFF_normalized.v:35.39-35.40"
+          }
+        },
+        "ff0_1.QN": {
+          "hide_name": 0,
+          "bits": [ 9 ],
+          "attributes": {
+            "hdlname": "ff0_1 QN",
+            "src": "canonical_DFF_normalized.v:35.52-35.54"
+          }
+        },
+        "ff1_0.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff1_0 CLK",
+            "src": "canonical_DFF_normalized.v:35.35-35.38"
+          }
+        },
+        "ff1_0.D": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "hdlname": "ff1_0 D",
+            "src": "canonical_DFF_normalized.v:35.39-35.40"
+          }
+        },
+        "ff1_0.QN": {
+          "hide_name": 0,
+          "bits": [ 10 ],
+          "attributes": {
+            "hdlname": "ff1_0 QN",
+            "src": "canonical_DFF_normalized.v:35.52-35.54"
+          }
+        },
+        "ff1_1.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff1_1 CLK",
+            "src": "canonical_DFF_normalized.v:35.35-35.38"
+          }
+        },
+        "ff1_1.D": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "hdlname": "ff1_1 D",
+            "src": "canonical_DFF_normalized.v:35.39-35.40"
+          }
+        },
+        "ff1_1.QN": {
+          "hide_name": 0,
+          "bits": [ 11 ],
+          "attributes": {
+            "hdlname": "ff1_1 QN",
+            "src": "canonical_DFF_normalized.v:35.52-35.54"
+          }
+        },
+        "q0_0": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "shared_d_proof.v:2.6-2.10"
+          }
+        },
+        "q0_1": {
+          "hide_name": 0,
+          "bits": [ 9 ],
+          "attributes": {
+            "src": "shared_d_proof.v:4.6-4.10"
+          }
+        },
+        "q1_0": {
+          "hide_name": 0,
+          "bits": [ 10 ],
+          "attributes": {
+            "src": "shared_d_proof.v:6.6-6.10"
+          }
+        },
+        "q1_1": {
+          "hide_name": 0,
+          "bits": [ 11 ],
+          "attributes": {
+            "src": "shared_d_proof.v:8.6-8.10"
+          }
+        }
+      }
+    }
+  }
+}
