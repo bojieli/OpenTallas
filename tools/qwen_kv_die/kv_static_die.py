@@ -2352,9 +2352,22 @@ def place(m, K, geo, F):
         # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6 placement): kvs_attn against the D2D end's W face, kvs_emb W of it
         anchors.update(d2d_side_anchors(d2d, FRAME['attn'], FRAME['emb']))
         order = [('kvs_ctl', 'ctl'), ('kvs_attn', 'attn'), ('kvs_emb', 'emb')]
+    emb_keep = []
+    if EMB_WEST:
+        # KV-BIND12 10-20 (OT_KV_EMB_WEST=1, default off): with OT_KV_D2D_FIT the bound d2ds view (475.6 x 283) sits centred
+        # under the UCIe PHY and kvs_emb (anchored 40 um W of it) hugs its W face over the HOST root's NW corner: the
+        # HOST-top / D2D-bottom channel (131.8 um, the only approach to the view's S-face payload pins x 2..395) is then
+        # entered through a 77.8-um slot under kvs_emb, and d15p/g stranded ks_kvs_attn__attn__tx_payload stage 8 at
+        # (6490.8, 27010.8) 698 um from its farthest D2D pin.  kvs_emb moves W of the HOST root's W face (E face one halo W
+        # of it, same row) and the pocket HOST-top x [HOST.x - halo, D2D.x] x [HOST-top, D2D-top] is kept free of tiles, so the
+        # channel is open from the W column: relay stations for the S-face words (att / emb tx payload, rec_tx / rec_rx)
+        ew_ = FRAME['emb'][0]
+        anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - ew_ / 2), anchors['kvs_emb'][1])
+        emb_keep = [('emb_west_pocket', host.x - 21.6, host.y + host.h, d2d.x - (host.x - 21.6), d2d.y + d2d.h - host.y - host.h)]
+        m['geo']['emb_west'] = dict(pocket=list(emb_keep[0][1:]), anchor=list(anchors['kvs_emb']))
     for nm, kind in order + hro:
         w, h = FRAME[kind]
-        x, y = free_spot(m, w, h, anchors[nm], GX, GY)
+        x, y = free_spot(m, w, h, anchors[nm], GX, GY, extra=emb_keep)
         m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
     if NATIVE_SLOTS:
@@ -2389,6 +2402,7 @@ def place(m, K, geo, F):
 # sit inside the KV service window, so the net is NOT a gain on this floorplan: default OFF, not proposed for adoption
 # until the start words get a direct channel S (KV-PLAN4 floorplan item).
 ATTN_AT_D2D = os.environ.get('OT_KV_ATTN_AT_D2D', '0') == '1'
+EMB_WEST = os.environ.get('OT_KV_EMB_WEST', '0') == '1'      # KV-BIND12 10-20: kvs_emb W of the HOST root (see the anchors)
 ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.0'))
 
 
@@ -2401,13 +2415,14 @@ def d2d_side_anchors(d2d, attn_wh, emb_wh, halo=21.6, top=None):
     return dict(kvs_attn=(d2d.x - halo - aw / 2, yt - ah / 2), kvs_emb=(d2d.x - 2 * halo - aw - ew / 2, yt - ah / 2))
 
 
-def free_spot(m, w, h, anchor, GX, GY, halo=21.6, rmax=4000.0):
-    """the on-grid w x h spot nearest (Manhattan, centre) to anchor that keeps a halo to every frame / keep-out"""
+def free_spot(m, w, h, anchor, GX, GY, halo=21.6, rmax=4000.0, extra=()):
+    """the on-grid w x h spot nearest (Manhattan, centre) to anchor that keeps a halo to every frame / keep-out
+    (extra: more (name, x, y, w, h) keep-outs for this placement only)"""
     ax, ay = anchor
     W, H = m['die']['w'], m['die']['h']
     x0, x1, y0, y1 = ax - rmax - w, ax + rmax + w, ay - rmax - h, ay + rmax + h
     occ = [(i.x - halo, i.y - halo, i.x + i.w + halo, i.y + i.h + halo) for i in m['insts']]
-    occ += [(x - halo, y - halo, x + ww + halo, y + hh + halo) for _, x, y, ww, hh in m.get('keepouts', [])]
+    occ += [(x - halo, y - halo, x + ww + halo, y + hh + halo) for _, x, y, ww, hh in list(m.get('keepouts', [])) + list(extra)]
     occ = [r for r in occ if not (r[2] < x0 or r[0] > x1 or r[3] < y0 or r[1] > y1)]
     step = 21.6                          # candidate pitch (the routing cell); positions snap to the placement grid
     n = int(rmax / step)
