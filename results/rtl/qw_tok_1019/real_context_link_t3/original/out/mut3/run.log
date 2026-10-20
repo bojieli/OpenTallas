@@ -1,0 +1,8 @@
+MUCTX_END run=0 n=0 loads=0 native=00 abort=10 transport=01/00 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_END run=1 n=0 loads=0 native=01 abort=11 transport=01/04 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_END run=2 n=0 loads=0 native=01 abort=11 transport=01/04 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_REAL_LINK_FAIL errors=3 n=0 loads=0
+- rtl/test/qwen_split/tb_mu_context_real_link.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 417us; walltime 9.036 s; speed 46.102 us/s
+- Verilator: cpu 9.026 s on 1 threads; allocated 7 MB

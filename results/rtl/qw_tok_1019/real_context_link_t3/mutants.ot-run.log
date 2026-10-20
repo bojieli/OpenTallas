@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-token-real-link-t3
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-token-real-link-t3
+ot-run: ot-epyc6       admits  1139 GB (avail 911, growth 113, headroom 0, waiters 0/0 GB) load 77/128 running 35 disk 5505 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-token-real-link-t3
+ot-run: ot-epyc8       admits  1176 GB (avail 895, growth 72, headroom 0, waiters 0/0 GB) load 29/128 running 13 disk 34 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-token-real-link-t3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-token-real-link-t3
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-309562-1792456927 after 0 s
+MUCTX_REAL_LINK_FAIL errors=6 n=6 loads=3
+MUCTX_REAL_LINK_FAIL errors=3 n=6 loads=0
+MUCTX_REAL_LINK_FAIL errors=3 n=0 loads=0
+MUCTX_REAL_LINK_FAIL errors=9 n=6 loads=3
+MUCTX_REAL_LINK_FAIL errors=3 n=0 loads=0
+MUCTX_FULL_STREAM_DIAGNOSTIC_NATIVE_FAULT expected unsupported later producer scope
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-309562-1792456927): exit 0

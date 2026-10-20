@@ -1,0 +1,17 @@
+{
+  "native_packet": "SU-ref-v2",
+  "frozen_transport": "dedf4c794",
+  "bench": "f8f2d2f9a",
+  "fleet_unit": "oth-ubuntu-335389-1792457016",
+  "fleet_exit": 0,
+  "source_hashes_all_verified": true,
+  "positive": "PASS",
+  "actual_mutants_caught": 5,
+  "full_original_stream": "NATIVE_FAULT_DIAGNOSTIC_PRESERVED",
+  "su_reference_full548_bit_comparisons": 3,
+  "su_reference_all_identical": true,
+  "wire_O61_tuples": 6,
+  "independent_filler_captures": 3,
+  "production_allocator_or_retained_fullowner": "NOT_PROVEN",
+  "full_token_SU_MU": "NOT_PROVEN"
+}

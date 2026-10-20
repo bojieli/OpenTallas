@@ -1,0 +1,13 @@
+rtl/lib/ot_rst_pipe.sv
+rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
+rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv
+rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv
+rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
+rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv
+rtl/qwen_sys/mu_qwen_20261018/qkd_host_record_port_mu.sv
+rtl/qwen_split/mu/qfd_mu_ctx_rx.sv
+physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
