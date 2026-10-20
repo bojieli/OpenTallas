@@ -35,12 +35,12 @@ def audit():
  libs=os.environ['PVM_BF_TIE_LIBRARIES'].splitlines();roles,receipts=liberty_roles(libs)
  rd,rb=load(ref);ad,ab=load(actual);rc=cohort(rb);ac=cohort(ab)
  require(len(rc)==56000 and set(rc)==set(ac),'KERNEL_INSTANCE_SET')
- rn=rb.findNet('_18312_');an=ab.findNet('_18312_');require(rn is not None and an is not None,'TIE_NET_MISSING')
+ tn=os.environ['PVM_BF_TIE_NET'];rn=rb.findNet(tn);an=ab.findNet(tn);require(rn is not None and an is not None,'TIE_NET_MISSING')
  oldrows=rows(rn);kernelrows=[x for x in oldrows if x[0] in rc];drivers=outputs(rn)
- require(len(oldrows)==1756 and len(kernelrows)==112 and all(x[1]=='SETN' for x in kernelrows) and len(drivers)==1,'REFERENCE_TIE_INVENTORY')
+ require(len(kernelrows)==112 and all(x[1]=='SETN' for x in kernelrows) and len(drivers)==1,'REFERENCE_TIE_INVENTORY')
  driver=drivers[0];identity=(driver.getInst().getName(),driver.getInst().getMaster().getName(),driver.getMTerm().getName())
  require(const(driver,roles)=='1' and not driver.getInst().isDoNotTouch(),'REFERENCE_TIE_VALUE_OR_PROTECTION')
- removed=[x for x in oldrows if x[0] not in rc and x[2]=='INPUT'];require(len(removed)==1643,'REFERENCE_EXTERNAL_COUNT')
+ removed=[x for x in oldrows if x[0] not in rc and x[2]=='INPUT'];require(len(removed)==len(oldrows)-113 and len(removed)>0,'REFERENCE_EXTERNAL_COUNT')
  mode=os.environ.get('PVM_BF_AUDIT_MUTANT','')
  if mode=='kernel_rewire':
   t=ac[kernelrows[0][0]].findITerm(kernelrows[0][1]);t.connect(odb.dbNet.create(ab,'PVM_BF_NEG_KERNEL_NET'))
@@ -67,21 +67,21 @@ def audit():
  nets={t.getNet().getName():t.getNet() for i in rc.values() for t in i.getITerms() if t.getNet() and str(t.getSigType()) not in ('POWER','GROUND')}
  for name,n in nets.items():
   other=ab.findNet(name);require(other is not None,'KERNEL_NET_MISSING '+name)
-  if name=='_18312_':continue
+  if name==tn:continue
   require(str(n.getSigType())==str(other.getSigType()) and rows(n)==rows(other) and bterms(n)==bterms(other),'NON_TIE_NET_GRAPH '+name)
  evidence=[];private_nets=set();tie_drivers=set()
  for inst,pin,direction,sig in removed:
   i=ab.findInst(inst);require(i is not None and inst not in ac,'DETACHED_INSTANCE')
   t=i.findITerm(pin);require(t is not None and str(t.getIoType())==direction and str(t.getSigType())==sig,'DETACHED_PIN_ROLE')
-  n=t.getNet();require(n is not None and n.getName()!='_18312_' and not bterms(n),'DETACHED_NET_BOUNDARY')
+  n=t.getNet();require(n is not None and n.getName()!=tn and not bterms(n),'DETACHED_NET_BOUNDARY')
   terms=list(n.getITerms());ds=outputs(n);require(len(terms)==2 and len(ds)==1 and sum(str(t.getIoType())=='INPUT' for t in terms)==1,'DETACHED_OWN_DRIVER_SHAPE')
   dt=ds[0];di=dt.getInst();require(di.getName() not in ac and not di.isDoNotTouch(),'DETACHED_TIE_PROTECTED_OR_KERNEL')
   require(const(dt,roles)=='1','DETACHED_CONSTANT_VALUE')
   require(n.getName() not in private_nets and di.getName() not in tie_drivers,'DETACHED_DRIVER_SHARED')
   private_nets.add(n.getName());tie_drivers.add(di.getName())
   evidence.append(dict(load=inst+'/'+pin,net=n.getName(),driver=di.getName()+'/'+dt.getMTerm().getName(),master=di.getMaster().getName(),value='1',protected=False))
- report=dict(status='PASS',schema='opentallas.pvm_exact_tie_external_detach.v1',reference_odb_sha256=sha(ref),actual_odb_sha256=sha(actual),kernel_cells=56000,every_kernel_pin_including_pg_exact=True,global_net='_18312_',original_terms=1756,current_terms=113,kernel_setn_terms=112,original_driver=identity,driver_constant='1',all_loaded_liberty=receipts,detached_external_loads=len(evidence),own_unprotected_constant_drivers=len(tie_drivers),evidence=evidence,mutant=mode)
- out.write_text(json.dumps(report,indent=2)+'\n');print('TIE_DETACH_PASS kernel56000/allpins exact;112SETN+same1driver;1643distinctunprotectedconstant1drivers')
+ report=dict(status='PASS',schema='opentallas.pvm_exact_tie_external_detach.v1',reference_odb_sha256=sha(ref),actual_odb_sha256=sha(actual),kernel_cells=56000,every_kernel_pin_including_pg_exact=True,global_net=tn,original_terms=len(oldrows),current_terms=113,kernel_setn_terms=112,original_driver=identity,driver_constant='1',all_loaded_liberty=receipts,detached_external_loads=len(evidence),own_unprotected_constant_drivers=len(tie_drivers),evidence=evidence,mutant=mode)
+ out.write_text(json.dumps(report,indent=2)+'\n');print('TIE_DETACH_PASS kernel56000/allpins exact;112SETN+same1driver;%ddistinctunprotectedconstant1drivers net=%s'%(len(evidence),tn))
 try:audit()
 except Exception as e:
  out=Path(os.environ['PVM_BF_TIE_REPORT']);out.write_text(json.dumps(dict(status='FAIL',reason=str(e),mutant=os.environ.get('PVM_BF_AUDIT_MUTANT','')),indent=2)+'\n');print('TIE_DETACH_REFUSED',e);raise SystemExit(1)

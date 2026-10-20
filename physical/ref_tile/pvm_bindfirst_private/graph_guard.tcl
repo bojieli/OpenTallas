@@ -46,8 +46,19 @@ proc pvm_bf_guard {stage} {
     foreach row [lindex $expected 1] {dict set oldnets [lindex $row 0] $row}
     foreach row [lindex $actual 1] {dict set newnets [lindex $row 0] $row}
     if {[dict keys $oldnets] ne [dict keys $newnets]} {set scope_ok 0}
+    # The global TIEHI net name is a synthesis-assigned id (_18312_ in r2/r3,
+    # _17114_ after the PVM9 resynthesis): accept exactly ONE drifted net whose
+    # expected row carries the 112 kernel SETN loads; the helper proves the rest.
+    set drifted {}
     dict for {name row} $oldnets {
-      if {$name ne "_18312_" && (![dict exists $newnets $name] || $row ne [dict get $newnets $name])} {set scope_ok 0}
+      if {![dict exists $newnets $name] || $row ne [dict get $newnets $name]} {lappend drifted $name}
+    }
+    if {[llength $drifted] != 1} {set scope_ok 0} else {
+      set tie_net [lindex $drifted 0]; set setn 0
+      foreach ep [lindex [dict get $oldnets $tie_net] 2] {
+        if {[lindex $ep 1] eq "SETN" && [string match {*g_native7.u_native.*} [lindex $ep 0]]} {incr setn}
+      }
+      if {$setn != 112} {set scope_ok 0} else {set ::env(PVM_BF_TIE_NET) $tie_net}
     }
     if {$scope_ok} {
       set ::env(PVM_BF_AUDIT_ODB) [file join $::env(PVM_BF_RECEIPTS) "$stage.tie_candidate.odb"]
