@@ -2,12 +2,12 @@
  "name": "hbm_hcq_tree16_c1-c1-COMMIT",
  "block": "ot_hbm_hc_qtree16_static",
  "ref_tile": true,
- "owner": "Claude:HBM-HCBANK6",
+ "owner": "Claude:HBM-HC7-QHUB",
  "purpose": "HC quarter hub tree slice (levels 1..4 over 16 chunk sums, native-fanout LAT-7 adders) = hard child x4 of hbm_hcq_hub_c1",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/hcbank6-hub-1020",
+  "branch": "claude/hc7q-tree16-sub-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/tb_hbm_hc_qtree16.sv",
