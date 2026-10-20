@@ -1,0 +1,17 @@
+{
+  "pid": 3852152,
+  "args": [
+    "bash",
+    "/home/ubuntu/claude-takeover-20261007/lanes/s81-die9-mu6-waiter.sh",
+    "1b7b9d5d772008559e1b2467bc12de0fc067e2bd",
+    "c0768b96a8f6c54fa061c73e8cd1e0e982bc9e05"
+  ],
+  "children": {
+    "2552855": "sleep 300 "
+  },
+  "after_state": "State:\tT (stopped)",
+  "action": "SIGSTOP parent only",
+  "authorized_by": "ROOT explicit instruction 07:21 takeover",
+  "reason": "old804 SELF-table polarity relabel is not native clock qualification; block automatic GRT until native family truth + reviewed consumer + coherent source review",
+  "resume": "SIGCONT3852152 only after ROOT review; existing recipe unchanged; do not start a second chain"
+}

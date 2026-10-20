@@ -1,0 +1,83 @@
+[
+  {
+    "master": "col_h10_l4",
+    "source": "1b7b9d5d7:rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4.sv",
+    "sha256": "3d6e0cbf289fc9df6df2ae995dc6628ac900141d2404a1b53e42c2ef9ed5f663",
+    "exists": true,
+    "output_forward_relays": [
+      {
+        "master": "dsfd_dvrly_276_NS",
+        "instance": "u_xo0",
+        "input_xk": 0,
+        "output_xok": 0
+      },
+      {
+        "master": "dsfd_dvrly_276_NS",
+        "instance": "u_xo1",
+        "input_xk": 1,
+        "output_xok": 1
+      },
+      {
+        "master": "dsfd_dvrly_276_NS",
+        "instance": "u_xo2",
+        "input_xk": 2,
+        "output_xok": 2
+      },
+      {
+        "master": "dsfd_dvrly_276_NS",
+        "instance": "u_xo3",
+        "input_xk": 3,
+        "output_xok": 3
+      }
+    ]
+  },
+  {
+    "master": "col_h10_l4_nx",
+    "source": "1b7b9d5d7:rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4_nx.sv",
+    "sha256": "d4721c4686ca2a3e056054c7c464e356f6e48a4969c89dd4cb5550549f9874b4",
+    "exists": true,
+    "output_forward_relays": []
+  },
+  {
+    "master": "col_h9_MX_l4",
+    "source": "1b7b9d5d7:rtl/dsrom_sys/s81_dv/frame_l4/col_h9_MX_l4.sv",
+    "sha256": "c470d67ad25579e7a1529bf4e4745451f742779975dd6b3453f58281c9c51099",
+    "exists": true,
+    "output_forward_relays": [
+      {
+        "master": "dsfd_dvrly_276_NS",
+        "instance": "u_xo0",
+        "input_xk": 0,
+        "output_xok": 0
+      },
+      {
+        "master": "dsfd_dvrly_276_NS",
+        "instance": "u_xo1",
+        "input_xk": 1,
+        "output_xok": 1
+      },
+      {
+        "master": "dsfd_dvrly_276_NS",
+        "instance": "u_xo2",
+        "input_xk": 2,
+        "output_xok": 2
+      },
+      {
+        "master": "dsfd_dvrly_276_NS",
+        "instance": "u_xo3",
+        "input_xk": 3,
+        "output_xok": 3
+      }
+    ],
+    "delegates_identity_to": "col_h9_l4",
+    "delegate_source": "1b7b9d5d7:rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4.sv",
+    "delegate_sha256": "b55f3e9a08362281581729d3d93db56837c752c8bdb3563a43f637a56c6833a5"
+  },
+  {
+    "master": "col_h9_l4_nx",
+    "source": "1b7b9d5d7:rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4_nx.sv",
+    "sha256": "bd7bb80b318f9fc139db2acce266f18496ee1c2998ae5a10ff655138ca104538",
+    "exists": true,
+    "output_forward_relays": []
+  }
+]

@@ -1,0 +1,15 @@
+SRC 1b7b9d5d772008559e1b2467bc12de0fc067e2bd phys_files 3863
+DEFAULT_PLAN_RC 0
+DEFAULT_IDENTITY DIFF ['facts', 'links']
+MU6_PLAN_RC 0
+BIND_RC 0
+DIE_PORT_BIND PASS masters=42 instances=9864 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=40 pad_bits=210018 spare_out_bits=201616 unresolved_children=0 ambiguous_children=0 variant_children=16 landing_reset_mismatch=0 landing_reset_unresolved=0
+MAINCHK_RC 0
+DIE_PORT_BIND PASS masters=42 instances=9864 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=40 pad_bits=210018 spare_out_bits=201616 unresolved_children=0 ambiguous_children=0 variant_children=16 landing_reset_mismatch=0 landing_reset_unresolved=0
+75b71038d3ffe04850816771d51899bac6453b49ad79661eb6340c677630a9f2  /srv/opentallas-scratch2/claude/s81-die9-mu6/bind_mu6/bind/die.v
+75b71038d3ffe04850816771d51899bac6453b49ad79661eb6340c677630a9f2  /srv/opentallas-scratch2/claude/s81-die9-mu6/bind_mu6_mainchk/bind/die.v
+bind_mu6 PASS undriven 0 tied 0 unconn 0 stub 0 unbound 0
+bind_mu6 LOG DIE_PORT_BIND PASS masters=42 instances= LANDING_RESET_lines 0
+bind_mu6_mainchk PASS undriven 0 tied 0 unconn 0 stub 0 unbound 0
+bind_mu6_mainchk LOG DIE_PORT_BIND PASS masters=42 instances= LANDING_RESET_lines 0
+STRICT_BIND PASS
