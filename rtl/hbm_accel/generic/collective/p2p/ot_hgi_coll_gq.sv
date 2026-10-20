@@ -42,10 +42,35 @@
 // merged with the gather fields in the ring-A merge register: +2 edges on every ISA ring-A command relative to the
 // v5 parent (the compiler adds 2 to every ring-A-relative constant: rr outputs, carry / result timing). A field driven
 // by both in one edge is a fault.
+// VM_RT (HBM-COLLFUSE2-VME 2026-10-20, port of HBM-BANKLAT-COLL's main-line parameter onto the k4 leaf; d4g bank latency
+// class: hcollgi VM_RT 74 = faces bank pin +1, read share BANK_RT excess, die lanes). Default 0 = everything above,
+// byte-identical (generate). VM_RT = V > 0 (15 <= V <= 80): read REQUESTS keep their edges (@0 / @15); every stage from the
+// rr capture on moves V edges later (capture @8+V / @23+V, quantiser, P @24+V, ring B / ring A commands, publishes); the
+// landing leaf is unchanged because ld_ev / ld_fire / ld_desc leave V edges later too. SAFE-DESIGN item 5: the V-edge part of
+// the event / read-expectation / fire pipeline is NOT a flop chain: it is one fixed-delay SRAM ring (ot_hgi_coll_gq_vmring,
+// 2 x ot_sram_1r1w_64x16_m1, II 1, registered in / out) from stage TAP to stage V; only the tapped stages stay flops.
+// COMPILER: tools/hgi_sim/collq_gather_1018.py --vm-rt V (ISSUE_TO_INJECT 29+V, writes +V, span +V; reads unchanged).
+// ISSUE_AHEAD (HBM-VMEARLY-COLL contract, k4 form; default 0 = the above, byte-identical; requires OT_GQ_FAN32): N > 0 (N <= 3)
+// = NB = N + 1 descriptor SLOTS; the slot is the STATIC descriptor field [101 +: SW] (SW 1 at N = 1, 2 at N = 2..3) chosen by
+// the compiler (gather i -> i mod NB). A descriptor may fire as soon as the previous gather finished ISSUING (its reads are in
+// flight / its data streams through the quantisers, rings, landing). Held state: the issue group (gather_q, qa, sfv/scd) is
+// loaded at fire as built (the issuing gather is always the newest); every LATER stage group (plain read @13/@14, quantiser
+// feed @7+V, payload decode @22+V, exponent words) holds its own copy, loaded from the slot bank of the entry's slot (carried
+// in the event pipeline, ev_s) when the gather's FIRST entry (ev_fst) reaches it -- the pipeline is in order and the issue
+// stream serial, so a stage group never serves two gathers in one edge. The slot and first bits ride the same SRAM ring.
+// A fire while the previous gather still ISSUES, into a slot whose gather has not drained (ND edges after its last issue), or
+// with a slot >= NB faults (static check, never a timing change; no credit / ready / slot-free handshake). The landing leaf
+// takes the slot on ld_desc[53 +: SW] / ld_ev_k[10 +: SW] (ports widen only for N > 0).
+// COMPILER (collq_gather_1018.py --issue-ahead N): next fire >= previous fire + issue_rel(K - 1) + IA_GAP (11), slot reuse
+// fire >= fire(i - NB) + issue_rel(K - 1) + ND + 1, RAW: a gather reading a word a previous gather writes fires after that
+// write's bank sample.
 module ot_hgi_coll_gq_issue #(
-    parameter integer MUT = 0       // bench mutants: 1 rx src of h=1 uses the CW table on CCW, 2 exponent bias 126,
+    parameter integer MUT = 0,      // bench mutants: 1 rx src of h=1 uses the CW table on CCW, 2 exponent bias 126,
                                     // 3 publish lands at i+1, 4 self-land skipped, 5 ring-B command one edge late,
-                                    // 6 quantiser element line one bank short (x one edge early)
+                                    // 6 quantiser element line one bank short (x one edge early), 7 aq13 line (LMUT),
+                                    // 8 (ISSUE_AHEAD > 0) slot index ignored: every gather in slot 0, no live check
+    parameter integer VM_RT = 0,
+    parameter integer ISSUE_AHEAD = 0
 )(
     input  wire          clk, rst_n,
     input  wire [1:0]    qid,
@@ -105,15 +130,28 @@ module ot_hgi_coll_gq_issue #(
     input  wire [1027:0] vm_rr_lo, vm_rr_hi,
     // to the landing leaf: descriptor at fire, event stream (stage 0), payload P (stage 24)
     output reg           ld_fire,
-    output reg  [52:0]   ld_desc,      // {r2, self, qbg, F[9:0], Bs[7:0], dst[15:0], stride[15:0]}
+    output reg  [52+(ISSUE_AHEAD > 1 ? 2 : (ISSUE_AHEAD > 0 ? 1 : 0)):0] ld_desc,  // {[slot,] r2, self, qbg, F[9:0], Bs[7:0], dst[15:0], stride[15:0]}
     output wire          ld_ev_v,
-    output wire [9:0]    ld_ev_k,
+    output wire [9+(ISSUE_AHEAD > 1 ? 2 : (ISSUE_AHEAD > 0 ? 1 : 0)):0] ld_ev_k,  // {[slot,] k}
     output wire [1:0]    ld_p_v,
     output wire [511:0]  ld_p_d
 );
-    localparam integer ND = 40;                      // event pipeline depth (last use: ev[36])
-    localparam integer S_QR = 0, S_PR = 15, S_QCAP = 8, S_PCAP = 23, S_P = 24;
-    localparam integer S_BLP = 24, S_BRD = 25, S_BINJ = 27, S_BRX = 27;   // + 2h
+    localparam integer V = VM_RT;
+    localparam integer ND = 40 + V;                  // event pipeline depth (last use: ev[36+V])
+    localparam integer IA = ISSUE_AHEAD, NB = IA + 1, SW = (IA > 1) ? 2 : 1, LSW = (IA > 0) ? SW : 0;
+    // VM_RT ring: ev / fire / slot enter at stage TAP and leave at stage V (D = V - TAP <= 66 for the 64-slot ring)
+    localparam integer TAP = (V > 74) ? V - 66 : 8, DRING = V - TAP;
+    localparam integer NE = (V == 0) ? ND : 15;      // flop stages of the early event pipeline ev[0 .. NE-1] (V > 0: up to @14)
+    localparam integer NRX = (V == 0) ? 8 : 7 + TAP; // flop stages of the early read-expectation pipeline rdx[0 .. NRX-1]
+    generate
+        if (IA < 0 || IA > 3) begin : g_ia_range $error("ISSUE_AHEAD must be 0..3"); end
+        if (V != 0 && (V < 15 || V > 80)) begin : g_v_range $error("VM_RT must be 0 or 15..80 (SRAM ring form)"); end
+`ifndef OT_GQ_FAN32
+        if (IA > 0) begin : g_ia_fan $error("ISSUE_AHEAD > 0 is built on the OT_GQ_FAN32 leaf only"); end
+`endif
+    endgenerate
+    localparam integer S_QR = 0, S_PR = 15, S_QCAP = 8 + V, S_PCAP = 23 + V, S_P = 24 + V;
+    localparam integer S_BLP = 24 + V, S_BRD = 25 + V, S_BINJ = 27 + V, S_BRX = 27 + V;   // + 2h
     // ------------------------------------------------------------------ reset relay (3 edges) + straps
     // r4 (TW7-GQISSUE, SAFE-DESIGN items 1/3): the port lands in 2 registered stages at the face (kit reset_landing ->
     // ot_pin_regs.tcl OT_RST_LAND), then this relay gives one kept copy per region (r3: one relay flop drove 1,154
@@ -166,11 +204,11 @@ module ot_hgi_coll_gq_issue #(
         .launch_v(launch_v), .program_active(active), .program_cfg_we(p_we), .program_cfg_addr(p_wa),
         .program_cfg_data(p_wd), .program_start_v(p_sv), .program_start_base(p_sb), .program_start_limit(p_sl),
         .program_start_loops(p_lp), .configured(configured), .fault(tgt_fault));
-    localparam integer DW = 101;
+    localparam integer DW = 101 + LSW;               // ISSUE_AHEAD > 0: + the static slot field [101 +: SW]
 `ifdef OT_GQ_FAN32
     wire [DW-1:0] rf [0:15];
     generate for(genvar c=0;c<13;c=c+1)begin:g_rf_column
-        localparam integer CW=(c==12)?5:8;
+        localparam integer CW=(c==12)?DW-96:8;
         wire [16*CW-1:0] rows;
         ot_hgi_coll_gq_rf_column #(.W(CW)) u_col(.clk(clk),.we(p_bank_we[c]),.addr(p_bank_addr[8*c+:4]),.d(p_wd[8*c+:CW]),.rows(rows));
         for(genvar r=0;r<16;r=r+1)begin:g_row
@@ -199,9 +237,10 @@ module ot_hgi_coll_gq_issue #(
     end
     wire [DW-1:0] rc = rc_t;
 `ifdef OT_GQ_FAN32
-    wire [2:0] fire_allow_bank,fire_time_bank;
+    localparam integer NFP = (IA > 0) ? 4 : 3;      // ISSUE_AHEAD > 0: copy 3 loads the slot banks
+    wire [NFP-1:0] fire_allow_bank,fire_time_bank;
     wire fire_allow=fire_allow_bank[0],fire_time=fire_time_bank[0];
-    generate for(genvar g=0;g<3;g=g+1)begin:g_fire_prefix
+    generate for(genvar g=0;g<NFP;g=g+1)begin:g_fire_prefix
         (* keep="true" *)ot_hgi_coll_gq_fire_prefix u_p(.run(run),.cur(cur),.lim(lim),.tl(tl),.start_time(rc[18:3]),
             .allow(fire_allow_bank[g]),.at_time(fire_time_bank[g]));
     end endgenerate
@@ -225,10 +264,22 @@ module ot_hgi_coll_gq_issue #(
     reg g_qbg, g_r2, g_self; reg [9:0] g_f, g_kn; reg [7:0] g_bs; reg [15:0] g_src, g_dst, g_str;
 `endif
     //                                   // ring indices K = ceil(F / R)
-    reg iss; reg [9:0] ik; reg [1:0] iph; reg [5:0] drain;
+    localparam integer DRW = $clog2(ND);             // 6 b at VM_RT 0 (as built)
+    reg iss; reg [9:0] ik; reg [1:0] iph; reg [DRW-1:0] drain;
+    // ISSUE_AHEAD > 0: slot of the issuing gather, slots in flight and their drain counters
+    reg [SW-1:0] is_s; reg [NB-1:0] live; reg [DRW-1:0] dr [0:NB-1];
+    wire [SW-1:0] f_slot;                             // the fired descriptor's static slot (MUT 8: ignored)
+    wire f_sbad;                                      // slot field >= NB
+    generate if (IA > 0) begin : g_fslot
+        assign f_slot = (MUT == 8) ? '0 : rc[101 +: SW];
+        assign f_sbad = (MUT != 8) && ({1'b0, rc[101 +: SW]} >= (SW+1)'(NB));
+    end else begin : g_fslot0
+        assign f_slot = '0; assign f_sbad = 1'b0;
+    end endgenerate
+    wire busy_any = (IA == 0) ? busy : |live;
     wire [9:0] f_kn = rc[1] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
     wire [7:0] f_es = 8'((rc[36:29] + 8'd31) >> 5);
-    wire f_bad = rc[28:19] == 10'd0 || |rc[71:69] ||
+    wire f_bad = rc[28:19] == 10'd0 || |rc[71:69] || f_sbad ||
                  (rc[0] && (rc[36:29] == 8'd0 || rc[36:29] > 8'd64 || {2'b0, rc[28:19]} != {2'b0, rc[36:29]} + {4'b0, f_es}));
     wire ev_in_v = iss && iph != 2'd2;
 `ifdef OT_GQ_FAN32
@@ -297,7 +348,8 @@ module ot_hgi_coll_gq_issue #(
 `endif
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            run <= 1'b0; busy <= 1'b0; iss <= 1'b0; fault <= 1'b0; active <= 1'b0; done <= 1'b0; drain <= 6'd0;
+            run <= 1'b0; busy <= 1'b0; iss <= 1'b0; fault <= 1'b0; active <= 1'b0; done <= 1'b0; drain <= '0;
+            live <= '0; is_s <= '0; for (integer s = 0; s < NB; s = s + 1) dr[s] <= '0;
             cur <= 4'd0; b0 <= 4'd0; cur_oh <= 16'd1;
 `ifndef OT_GQ_FAN32
             b0_oh <= 16'd1;
@@ -314,10 +366,10 @@ module ot_hgi_coll_gq_issue #(
 `endif
         end else begin
             done <= 1'b0;
-            active <= run || busy || p_sv;
-            if (active && !(run || busy || p_sv)) done <= 1'b1;
+            active <= run || busy_any || p_sv;
+            if (active && !(run || busy_any || p_sv)) done <= 1'b1;
             if (p_sv) begin
-                if (run || busy || p_sl > 9'd16 || rf[p_sb[3:0]][100:85] == 16'd0) fault <= 1'b1;
+                if (run || busy_any || p_sl > 9'd16 || rf[p_sb[3:0]][100:85] == 16'd0) fault <= 1'b1;
                 run <= 1'b1; cur <= p_sb[3:0]; b0 <= p_sb[3:0]; cur_oh <= 16'd1 << p_sb[3:0];
 `ifndef OT_GQ_FAN32
                 b0_oh <= 16'd1 << p_sb[3:0];
@@ -354,8 +406,15 @@ module ot_hgi_coll_gq_issue #(
 `endif
             end
             if (fire) begin
-                if (busy || f_bad) fault <= 1'b1;
-                busy <= 1'b1; iss <= 1'b1;
+                if (IA == 0) begin
+                    if (busy || f_bad) fault <= 1'b1;
+                    busy <= 1'b1;
+                end else begin
+                    // static checks only: the issue stream is serial; a slot is reused only after its gather drained
+                    if (iss || (live[f_slot] && MUT != 8) || f_bad) fault <= 1'b1;
+                    live[f_slot] <= 1'b1; is_s <= f_slot;
+                end
+                iss <= 1'b1;
 `ifndef OT_GQ_FAN32
                 ik <= 10'd0; iph <= 2'd0;
 `endif
@@ -364,19 +423,31 @@ module ot_hgi_coll_gq_issue #(
 `ifndef OT_GQ_FAN32
                     ik <= ik + 10'd1;
 `endif
-                    if (ik == g_kn - 10'd1) begin iss <= 1'b0; drain <= 6'(ND - 1); end
+                    if (ik == g_kn - 10'd1) begin iss <= 1'b0; if (IA == 0) drain <= DRW'(ND - 1); else dr[is_s] <= DRW'(ND - 1); end
                 end
 `ifndef OT_GQ_FAN32
                 iph <= (iph == 2'd2) ? 2'd0 : iph + 2'd1;
 `endif
-            end else if (busy) begin
-                if (drain == 6'd0) busy <= 1'b0; else drain <= drain - 6'd1;
+            end else if (IA == 0 && busy) begin
+                if (drain == '0) busy <= 1'b0; else drain <= drain - 1'b1;
             end
+            // ISSUE_AHEAD > 0: every drained slot counts down independently of later fires / issues
+            if (IA > 0) for (integer s = 0; s < NB; s = s + 1)
+                if (live[s] && !(iss && is_s == SW'(s)) && !(fire && f_slot == SW'(s))) begin
+                    if (dr[s] == '0) live[s] <= 1'b0; else dr[s] <= dr[s] - 1'b1;
+                end
             if (|(aq_fault_q & aq_vo_q)) fault <= 1'b1;
             if (flt_n) fault <= 1'b1;
         end
     end
-    always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
+    // ld_fire / ld_desc: V = 0 as built (+ the slot field at ISSUE_AHEAD > 0); V > 0 below (VM_RT ring)
+    wire rg_fire; wire [SW-1:0] rg_fslot;             // fire / its slot delayed V edges (VM_RT ring; V > 0 only)
+    wire [SW-1:0] rg_fslc [0:1];                      // two copies of rg_fslot (ld_desc slot select)
+    generate if (V == 0) begin : g_ld0
+        always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
+    end else begin : g_ldv
+        always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= rg_fire;
+    end endgenerate
 `ifdef OT_GQ_FAN32
     wire [15:0] fire_qc;
     generate for (genvar fc = 0; fc < 16; fc = fc + 1) begin : g_fire_copy
@@ -388,7 +459,45 @@ module ot_hgi_coll_gq_issue #(
     (* keep = "true", dont_touch = "true" *) reg fire_q;   // r4: = ld_fire (own kept copy for the exponent-word clear)
     always @(posedge clk or negedge rn) if (!rn) fire_q <= 1'b0; else fire_q <= fire;
 `endif
-    always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]};
+    // descriptor slot bank (ISSUE_AHEAD > 0): {qbg, r2, self, F, Bs, src, dst, stride} of every slot, loaded at fire into
+    // the fired slot (fire copy 3, one kept AND per <= 16-b hold); read by the later stage groups and (V > 0) ld_desc
+    localparam integer BW = 69;
+    wire [BW-1:0] sb_q [0:NB-1];
+    wire [BW-1:0] sb_d = {rc[0], rc[1], rc[2], rc[28:19], rc[36:29], rc[52:37], rc[68:53], rc[84:69]};
+    function automatic [52:0] sb_desc(input [BW-1:0] b);   // the ld_desc order {r2, self, qbg, F, Bs, dst, stride}
+        sb_desc = {b[67], b[66], b[68], b[65:56], b[55:48], b[31:16], b[15:0]};
+    endfunction
+`ifdef OT_GQ_FAN32
+    generate if (IA > 0) begin : g_sbank
+        for (genvar sl = 0; sl < NB; sl = sl + 1) begin : g_slot
+            for (genvar sh = 0; sh < 5; sh = sh + 1) begin : g_h
+                localparam integer HW = (sh == 4) ? BW - 64 : 16;
+                ot_hgi_coll_gq_slot_load #(.W(HW), .SW(SW), .S(sl)) u_ld(.clk(clk), .a(fire_allow_bank[3]), .b(fire_time_bank[3]),
+                    .s(f_slot), .d(sb_d[16*sh +: HW]), .q(sb_q[sl][16*sh +: HW]));
+            end
+        end
+    end endgenerate
+`endif
+    generate if (V == 0) begin : g_desc0
+        if (LSW == 0) begin : g_d0 always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]}; end
+        else begin : g_ds always @(posedge clk) ld_desc <= {f_slot, rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]}; end
+    end else begin : g_descv
+        // fire delayed V edges; the descriptor comes from the gather state loaded at fire (IA 0: held, fires never overlap;
+        // IA > 0: the fired slot travels V edges with the fire and selects its bank entry: a slot is not re-fired for ND > V)
+        if (LSW == 0) begin : g_d0 always @(posedge clk) ld_desc <= {g_r2, g_self, g_qbg, g_f, g_bs, g_dst, g_str}; end
+        else begin : g_ds
+            reg [52:0] dsel;
+            // two ring copies of the slot select (each <= 27 of the 53 mux bits; checklist item 3)
+            always @* begin
+                dsel = sb_desc(sb_q[0]);
+                for (integer j = 1; j < NB; j = j + 1) begin
+                    if (rg_fslc[0] == SW'(j)) dsel[26:0] = sb_desc(sb_q[j]) >> 0;
+                    if (rg_fslc[1] == SW'(j)) dsel[52:27] = sb_desc(sb_q[j]) >> 27;
+                end
+            end
+            always @(posedge clk) ld_desc <= {rg_fslot, dsel};
+        end
+    end endgenerate
 `ifndef OT_GQ_FAN32
     always @(posedge clk) if (fire) begin
         g_qbg <= rc[0]; g_r2 <= rc[1]; g_self <= rc[2]; g_f <= rc[28:19]; g_bs <= rc[36:29];
@@ -401,14 +510,56 @@ module ot_hgi_coll_gq_issue #(
     // (r2 route: g_f -> rb_rx_* -30, g_f -> vm_rq -32, g_f / g_bs -> ld_p_d -50 / -98).
     reg [ND-1:0] ev_v; reg [9:0] ev_k [0:ND-1]; reg [1:0] ev_f [0:ND-1], ev_c [0:ND-1];
     reg [1:0] sfv, scd;                               // = fv(ik, r), is_code(flit_i(ik, r)) at every edge of a gather
-    always @(posedge clk or negedge rn1)
-        if (!rn1) ev_v <= '0; else ev_v <= {ev_v[ND-2:0], ev_in_v};
-    always @(posedge clk) begin
-        ev_k[0] <= ik; ev_f[0] <= sfv; ev_c[0] <= scd;
-        for (integer s = 1; s < ND; s = s + 1) begin ev_k[s] <= ev_k[s-1]; ev_f[s] <= ev_f[s-1]; ev_c[s] <= ev_c[s-1]; end
-    end
+    // ISSUE_AHEAD > 0: the entry's slot ev_s and first-entry flag ev_fst (k = 0) travel with it (constant 0 otherwise)
+    reg [SW-1:0] ev_s [0:ND-1]; reg [ND-1:0] ev_fst;
+    // VM_RT ring outputs (stage V) of the event entry and of the read expectation rdx[6+V]
+    wire rg_v, rg_fst; wire [9:0] rg_k; wire [1:0] rg_f, rg_c; wire [SW-1:0] rg_s; wire [7:0] rg_rdx;
+    generate if (V == 0) begin : g_ev0
+        always @(posedge clk or negedge rn1)
+            if (!rn1) ev_v <= '0; else ev_v <= {ev_v[ND-2:0], ev_in_v};
+        always @(posedge clk) begin
+            ev_k[0] <= ik; ev_f[0] <= sfv; ev_c[0] <= scd;
+            for (integer s = 1; s < ND; s = s + 1) begin ev_k[s] <= ev_k[s-1]; ev_f[s] <= ev_f[s-1]; ev_c[s] <= ev_c[s-1]; end
+        end
+    end else begin : g_evv
+        // stages 0 .. NE-1 (early: issue-side taps up to @14) and V+1 .. ND-1 (late) are flops; V is the ring output
+        always @(posedge clk or negedge rn1)
+            if (!rn1) ev_v <= '0;
+            else begin
+                ev_v[0] <= ev_in_v;
+                for (integer s = 1; s < ND; s = s + 1) if (s < NE || s > V) ev_v[s] <= ev_v[s-1];
+                ev_v[V] <= rg_v;
+            end
+        always @(posedge clk) begin
+            ev_k[0] <= ik; ev_f[0] <= sfv; ev_c[0] <= scd;
+            for (integer s = 1; s < ND; s = s + 1) if (s < NE || s > V) begin ev_k[s] <= ev_k[s-1]; ev_f[s] <= ev_f[s-1]; ev_c[s] <= ev_c[s-1]; end
+            ev_k[V] <= rg_k; ev_f[V] <= rg_f; ev_c[V] <= rg_c;
+        end
+    end endgenerate
+    generate if (IA > 0) begin : g_evs
+        always @(posedge clk or negedge rn1)
+            if (!rn1) ev_fst <= '0;
+            else begin
+                ev_fst[0] <= ev_in_v && ik == 10'd0;
+                for (integer s = 1; s < ND; s = s + 1) if (V == 0 || s < NE || s > V) ev_fst[s] <= ev_fst[s-1];
+                if (V > 0) ev_fst[V] <= rg_fst;
+            end
+        always @(posedge clk) begin
+            ev_s[0] <= is_s;
+            for (integer s = 1; s < ND; s = s + 1) if (V == 0 || s < NE || s > V) ev_s[s] <= ev_s[s-1];
+            if (V > 0) ev_s[V] <= rg_s;
+        end
+    end else begin : g_evs0
+        always @* begin ev_fst = '0; for (integer s = 0; s < ND; s = s + 1) ev_s[s] = '0; end
+    end endgenerate
+    // later-stage held state: as built = the copies loaded at fire; ISSUE_AHEAD > 0 = per-stage-group copies loaded from the
+    // slot bank on the gather's first entry (ot_hgi_coll_gq_stage_hold: own kept slot copy, <= 16 mux bits each)
+    wire qbg_pr14, qbg_qc, qbg_pp; wire [7:0] bs_pp;   // g_qbg @S_PR-1 (plain read), @S_QCAP-1, @S_P-2; g_bs @S_P-2
 `ifdef OT_GQ_FAN32
     wire[13:0]flit_r2;
+    wire[15:0]g_src_pr[0:1],g_src_qc[0:7],g_src_pp[0:1];
+    wire[7:0]em_r2,em_qbg;
+    generate if (IA == 0) begin : g_hold_fire
     ot_hgi_coll_gq_control_hold #(.W(14))u_flit_r2(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d(
 `ifdef OT_GQ_MUT_FLIT_CTL
         ({14{rc[1]}}^14'h001)
@@ -416,19 +567,64 @@ module ot_hgi_coll_gq_issue #(
         {14{rc[1]}}
 `endif
         ),.q(flit_r2));
-`else
-    wire[13:0]flit_r2={14{g_r2}};
-`endif
-    wire[15:0]g_src_pr[0:1],g_src_qc[0:7],g_src_pp[0:1];
-`ifdef OT_GQ_FAN32
     wire[191:0]src_copy;
-    generate for(genvar g=0;g<12;g=g+1)begin:g_src_copy
+    for(genvar g=0;g<12;g=g+1)begin:g_src_copy
         ot_hgi_coll_gq_control_hold #(.W(16))u_hold(.clk(clk),.a(fire_allow_bank[2]),.b(fire_time_bank[2]),.d(rc[52:37]),.q(src_copy[16*g+:16]));
         if(g<2)assign g_src_pr[g]=src_copy[16*g+:16];
         else if(g<10)assign g_src_qc[g-2]=src_copy[16*g+:16];
         else assign g_src_pp[g-10]=src_copy[16*g+:16];
+    end
+    ot_hgi_coll_gq_control_hold #(.W(16))u_em_flags(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d({{8{rc[0]}},{8{rc[1]}}}),.q({em_qbg,em_r2}));
+    assign qbg_pr14 = g_qbg; assign qbg_qc = g_qbg; assign qbg_pp = g_qbg; assign bs_pp = g_bs;
+    end else begin : g_hold_stage
+        // issue group (flit_r2[3:0]: sfv / scd at the issue edge) stays loaded at fire
+        ot_hgi_coll_gq_control_hold #(.W(4))u_flit_r2(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d(
+`ifdef OT_GQ_MUT_FLIT_CTL
+            ({4{rc[1]}}^4'h1)
+`else
+            {4{rc[1]}}
+`endif
+            ),.q(flit_r2[3:0]));
+        // bank fields of every slot, slot-major (d[j*W +: W] = slot j)
+        wire [NB*16-1:0] f_src, f_em; wire [NB-1:0] f_qbg; wire [NB*2-1:0] f_r2x2; wire [NB*3-1:0] f_qc; wire [NB*15-1:0] f_pp;
+        for (genvar j = 0; j < NB; j = j + 1) begin : g_bf
+            assign f_src[16*j +: 16] = sb_q[j][47:32];
+            assign f_qbg[j] = sb_q[j][68];
+            assign f_r2x2[2*j +: 2] = {2{sb_q[j][67]}};
+            assign f_qc[3*j +: 3] = {sb_q[j][68], {2{sb_q[j][67]}}};
+            assign f_pp[15*j +: 15] = {sb_q[j][68], {6{sb_q[j][67]}}, sb_q[j][55:48]};
+            assign f_em[16*j +: 16] = {{8{sb_q[j][68]}}, {8{sb_q[j][67]}}};
+        end
+        // plain read group @S_PR-2 (src 2 x 16, r2 x 2) and the plain read gate @S_PR-1 (qbg)
+        for (genvar g = 0; g < 2; g = g + 1) begin : g_pr
+            ot_hgi_coll_gq_stage_hold #(.W(16), .NB(NB), .SW(SW)) u_src(.clk(clk), .a(ev_v[S_PR-3]), .b(ev_fst[S_PR-3]),
+                .sp(ev_s[S_PR-4]), .d(f_src), .q(g_src_pr[g]));
+        end
+        ot_hgi_coll_gq_stage_hold #(.W(2), .NB(NB), .SW(SW)) u_pr_r2(.clk(clk), .a(ev_v[S_PR-3]), .b(ev_fst[S_PR-3]),
+            .sp(ev_s[S_PR-4]), .d(f_r2x2), .q(flit_r2[5:4]));
+        ot_hgi_coll_gq_stage_hold #(.W(1), .NB(NB), .SW(SW)) u_pr_qbg(.clk(clk), .a(ev_v[S_PR-2]), .b(ev_fst[S_PR-2]),
+            .sp(ev_s[S_PR-3]), .d(f_qbg), .q(qbg_pr14));
+        // quantiser feed group @S_QCAP-1 (src 8 x 16, qbg, r2 x 2)
+        for (genvar g = 0; g < 8; g = g + 1) begin : g_qc
+            ot_hgi_coll_gq_stage_hold #(.W(16), .NB(NB), .SW(SW)) u_src(.clk(clk), .a(ev_v[S_QCAP-2]), .b(ev_fst[S_QCAP-2]),
+                .sp(ev_s[S_QCAP-3]), .d(f_src), .q(g_src_qc[g]));
+        end
+        ot_hgi_coll_gq_stage_hold #(.W(3), .NB(NB), .SW(SW)) u_qc_f(.clk(clk), .a(ev_v[S_QCAP-2]), .b(ev_fst[S_QCAP-2]),
+            .sp(ev_s[S_QCAP-3]), .d(f_qc), .q({qbg_qc, flit_r2[7:6]}));
+        // payload decode group @S_P-2 (src 2 x 16, qbg, r2 x 6, Bs; exponent-mask flags 8 qbg + 8 r2)
+        for (genvar g = 0; g < 2; g = g + 1) begin : g_pp
+            ot_hgi_coll_gq_stage_hold #(.W(16), .NB(NB), .SW(SW)) u_src(.clk(clk), .a(ev_v[S_P-3]), .b(ev_fst[S_P-3]),
+                .sp(ev_s[S_P-4]), .d(f_src), .q(g_src_pp[g]));
+        end
+        ot_hgi_coll_gq_stage_hold #(.W(15), .NB(NB), .SW(SW)) u_pp_f(.clk(clk), .a(ev_v[S_P-3]), .b(ev_fst[S_P-3]),
+            .sp(ev_s[S_P-4]), .d(f_pp), .q({qbg_pp, flit_r2[13:8], bs_pp}));
+        ot_hgi_coll_gq_stage_hold #(.W(16), .NB(NB), .SW(SW)) u_em(.clk(clk), .a(ev_v[S_P-3]), .b(ev_fst[S_P-3]),
+            .sp(ev_s[S_P-4]), .d(f_em), .q({em_qbg, em_r2}));
     end endgenerate
 `else
+    wire[13:0]flit_r2={14{g_r2}};
+    wire[15:0]g_src_pr[0:1],g_src_qc[0:7],g_src_pp[0:1];
+    assign qbg_pr14 = g_qbg; assign qbg_qc = g_qbg; assign qbg_pp = g_qbg; assign bs_pp = g_bs;
     generate for(genvar g=0;g<2;g=g+1)begin:g_src_plain
         assign g_src_pr[g]=g_src;assign g_src_pp[g]=g_src;
     end
@@ -498,7 +694,7 @@ module ot_hgi_coll_gq_issue #(
         if (!rn1) begin pr_v <= 2'd0; qc_v <= 2'd0; end
         else for (integer r = 0; r < 2; r = r + 1) begin
             pr_v[r] <= ev_v[S_PR-2] && ev_f[S_PR-2][r];
-            qc_v[r] <= ev_v[S_QCAP-1] && g_qbg && ev_f[S_QCAP-1][r] && ev_c[S_QCAP-1][r];
+            qc_v[r] <= ev_v[S_QCAP-1] && qbg_qc && ev_f[S_QCAP-1][r] && ev_c[S_QCAP-1][r];
         end
     always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_pq
         reg [10:0] i; reg [15:0] s;
@@ -525,7 +721,7 @@ module ot_hgi_coll_gq_issue #(
                         end
                 end
             end
-            if (!g_qbg && ev_v[S_PR-1]) begin
+            if (!qbg_pr14 && ev_v[S_PR-1]) begin
                 for (integer r = 0; r < 2; r = r + 1) begin : nb_2
                     if (pr_v[r]) for (integer b = 0; b < 8; b = b + 1) if (pr_s[r][2:0] == 3'(b)) vm_rq[b*17 +: 17] <= {1'b1, pr_s[r]};
                 end
@@ -536,10 +732,15 @@ module ot_hgi_coll_gq_issue #(
         end
     end
     // read latency: rq register @n -> bank samples n+1 -> registered response n+7 -> pin capture n+8.
-    reg [7:0] rdx [0:7];
+    // (+VM_RT: rdx[0 .. 6+TAP] flops -> ring -> rdx_v = rdx[6+V])
+    reg [7:0] rdx [0:NRX-1];
     always @(posedge clk or negedge rn1)
-        if (!rn1) for (integer d = 0; d < 8; d = d + 1) rdx[d] <= 8'd0;
-        else begin rdx[0] <= rd_exp; for (integer d = 1; d < 8; d = d + 1) rdx[d] <= rdx[d-1]; end
+        if (!rn1) for (integer d = 0; d < NRX; d = d + 1) rdx[d] <= 8'd0;
+        else begin rdx[0] <= rd_exp; for (integer d = 1; d < NRX; d = d + 1) rdx[d] <= rdx[d-1]; end
+    reg [7:0] rdx_v;
+    generate if (V == 0) begin : g_rdx0 always @* rdx_v = rdx[6]; end
+    else begin : g_rdxv always @(posedge clk or negedge rn1) if (!rn1) rdx_v <= 8'd0; else rdx_v <= rg_rdx; end
+    endgenerate
     reg [2055:0] rr_q; reg [7:0] rrv_q;
     function automatic [255:0] rdw_oh(input [7:0] oh);  // same word through a one-hot AND-OR (registered one-hot select)
         rdw_oh = 256'd0;
@@ -552,8 +753,33 @@ module ot_hgi_coll_gq_issue #(
     always @(posedge clk) rr_q <= vm_rr;
     always @(posedge clk or negedge rn1)
         if (!rn1) rrv_q <= 8'd0; else for (integer b = 0; b < 8; b = b + 1) rrv_q[b] <= vm_rr[b*257+256];
-    // rdx[6] holds the expectation of the response captured in rr_q this edge
-    wire rd_bad = rrv_q != rdx[6];
+    // rdx[6] (+V) holds the expectation of the response captured in rr_q this edge
+    wire rd_bad = rrv_q != rdx_v;
+    // ------------------------------------------------------------------ VM_RT ring (V > 0): one fixed-delay SRAM ring carries
+    // the event entry (ev[TAP] -> ev[V-1], re-registered into ev[V]), the read expectation (rdx[6+TAP] -> rdx[5+V] -> rdx_v)
+    // and the fire + its slot (fire delayed TAP+1 -> delayed V = the ld_fire / ld_desc load edge). II 1, no reset on data.
+    generate if (V > 0) begin : g_ring
+        localparam integer RW = 15 + 8 + 1 + ((IA > 0) ? 1 + SW + 2 * SW : 0);
+        reg fd [0:TAP]; reg [SW-1:0] fs [0:TAP];
+        always @(posedge clk or negedge rn1)
+            if (!rn1) for (integer j = 0; j <= TAP; j = j + 1) fd[j] <= 1'b0;
+            else begin fd[0] <= fire; for (integer j = 1; j <= TAP; j = j + 1) fd[j] <= fd[j-1]; end
+        always @(posedge clk) begin fs[0] <= f_slot; for (integer j = 1; j <= TAP; j = j + 1) fs[j] <= fs[j-1]; end
+        wire [RW-1:0] rd_i, rd_o;
+        if (IA > 0) begin : g_wi
+            assign rd_i = {fs[TAP], fs[TAP], ev_s[TAP], ev_fst[TAP], fd[TAP], rdx[6+TAP], ev_c[TAP], ev_f[TAP], ev_k[TAP], ev_v[TAP]};
+            assign {rg_fslc[1], rg_fslc[0], rg_s, rg_fst, rg_fire, rg_rdx, rg_c, rg_f, rg_k, rg_v} = rd_o;
+            assign rg_fslot = rg_fslc[0];
+        end else begin : g_w0
+            assign rd_i = {fd[TAP], rdx[6+TAP], ev_c[TAP], ev_f[TAP], ev_k[TAP], ev_v[TAP]};
+            assign {rg_fire, rg_rdx, rg_c, rg_f, rg_k, rg_v} = rd_o;
+            assign rg_s = '0; assign rg_fst = 1'b0; assign rg_fslot = '0; assign rg_fslc[0] = '0; assign rg_fslc[1] = '0;
+        end
+        ot_hgi_coll_gq_vmring #(.W(RW), .D(DRING - 1)) u_vmring(.clk(clk), .rst_n(rn1), .din(rd_i), .dout(rd_o));
+    end else begin : g_ring0
+        assign rg_v = 1'b0; assign rg_fst = 1'b0; assign rg_k = '0; assign rg_f = '0; assign rg_c = '0; assign rg_s = '0;
+        assign rg_rdx = '0; assign rg_fire = 1'b0; assign rg_fslot = '0; assign rg_fslc[0] = '0; assign rg_fslc[1] = '0;
+    end endgenerate
     // ------------------------------------------------------------------ quantiser feed (@9) and capture (@23)
     always @(posedge clk or negedge rn1)
         if (!rn1) aq_v <= 2'd0;
@@ -578,8 +804,18 @@ module ot_hgi_coll_gq_issue #(
     // ev_k -> compare / 13-b add -> decode -> 512-b mux in one edge, r2 route -98).
     reg[1:0]pp_v;
 `ifdef OT_GQ_FAN32
-    wire[63:0]pp_em[0:1];wire[7:0]em_r2,em_qbg;
-    ot_hgi_coll_gq_control_hold #(.W(16))u_em_flags(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d({{8{rc[0]}},{8{rc[1]}}}),.q({em_qbg,em_r2}));
+    // exponent-word clear: as built one edge after fire (fire_qc); ISSUE_AHEAD > 0 the words restart on the gather's own FIRST
+    // entry (16 kept copies of "first entry at S_P-2": the next gather may fire while this one's exponent flits are ahead of P)
+    wire [15:0] ex_clr;
+    generate if (IA == 0) begin : g_exc0 assign ex_clr = fire_qc; end
+    else begin : g_exc
+        for (genvar fc = 0; fc < 16; fc = fc + 1) begin : g_c
+            wire f_local;
+            (* keep = "true" *) ot_hgi_coll_gq_control_and u_dec(.a(ev_v[S_P-3]), .b(ev_fst[S_P-3]), .q(f_local));
+            ot_hgi_coll_gq_control_ff u_ff(.clk(clk), .rst_n(rn1), .d(f_local), .q(ex_clr[fc]));
+        end
+    end endgenerate
+    wire[63:0]pp_em[0:1];
     generate for(genvar r=0;r<2;r=r+1)begin:g_em_ring
         for(genvar c=0;c<4;c=c+1)begin:g_chunk
             wire[5:0]k;
@@ -603,13 +839,13 @@ module ot_hgi_coll_gq_issue #(
         ic=flit_i(ev_k[S_P-2],r,flit_r2[12+r]);
         s = sec_add(g_src_pp[r], 13'(flit_i(ev_k[S_P-2],r,flit_r2[10+r])));
 `ifndef OT_GQ_FAN32
-        pp_em[r] <= (ev_v[S_P-2] && g_qbg && ev_f[S_P-2][r] && ev_c[S_P-2][r]) ? (64'd1 << i[5:0]) : 64'd0;
+        pp_em[r] <= (ev_v[S_P-2] && qbg_pp && ev_f[S_P-2][r] && ev_c[S_P-2][r]) ? (64'd1 << i[5:0]) : 64'd0;
 `endif
         for (integer c = 0; c < 8; c = c + 1) begin
-            pp_rawc[r*8 + c] <= g_qbg ? 8'd0 : oh8(s[2:0]);
-            pp_codec[r][c] <= g_qbg && ev_c[S_P-2][r];
-            pp_loc[r][c] <= g_qbg && !ev_c[S_P-2][r] && ic == {3'b0, g_bs};
-            pp_hic[r][c] <= g_qbg && !ev_c[S_P-2][r] && ic != {3'b0, g_bs};
+            pp_rawc[r*8 + c] <= qbg_pp ? 8'd0 : oh8(s[2:0]);
+            pp_codec[r][c] <= qbg_pp && ev_c[S_P-2][r];
+            pp_loc[r][c] <= qbg_pp && !ev_c[S_P-2][r] && ic == {3'b0, bs_pp};
+            pp_hic[r][c] <= qbg_pp && !ev_c[S_P-2][r] && ic != {3'b0, bs_pp};
         end
     end
     always @* begin : nb_5
@@ -626,7 +862,7 @@ module ot_hgi_coll_gq_issue #(
         // exponent flit of the new gather merges before S_P >= 24 edges later, and the previous gather has drained.
 `ifdef OT_GQ_FAN32
         for (integer fc = 0; fc < 16; fc = fc + 1)
-            ex[32*fc +: 32] <= fire_qc[fc] ? 32'd0 : ex_n[32*fc +: 32];
+            ex[32*fc +: 32] <= ex_clr[fc] ? 32'd0 : ex_n[32*fc +: 32];
 `else
         if (fire_q) ex <= '0; else ex <= ex_n;
 `endif
@@ -678,7 +914,10 @@ module ot_hgi_coll_gq_issue #(
         if (!rn3) begin a1 <= '0; b1 <= '0; end
         else begin a1 <= cb[0]; b1 <= cb[1]; end
     wire [255:0] a1_d = p_d[0], b1_d = p_d[1];
-    assign ld_ev_v = ev_v[0]; assign ld_ev_k = ev_k[0]; assign ld_p_v = p_v; assign ld_p_d = {p_d[1], p_d[0]};
+    assign ld_ev_v = ev_v[V];
+    generate if (LSW == 0) begin : g_lk0 assign ld_ev_k = ev_k[V]; end
+    else begin : g_lks assign ld_ev_k = {ev_s[V], ev_k[V]}; end endgenerate
+    assign ld_p_v = p_v; assign ld_p_d = {p_d[1], p_d[0]};
     reg [290:0] b2; reg [255:0] b2_d;
     always @(posedge clk or negedge rn3) if (!rn3) b2 <= '0; else b2 <= b1;
     always @(posedge clk) b2_d <= b1_d;
@@ -738,13 +977,17 @@ endmodule
 
 // Landing leaf: captures both rings' publishes and the local payload P, and writes the quadrant VM through the COLL
 // kq port (via the kq share). Every input pin-registered, every output a register. Stages as the issue leaf's.
-module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
+// ISSUE_AHEAD > 0 (HBM-COLLFUSE2-VME 10-20): ld_desc / ld_ev_k carry the static slot; the descriptor lands in a slot bank at
+// ld_fire and each lane group (self-land @23, publish h @28+2h) holds its own copy, loaded from the bank of the entry's slot
+// when the gather's FIRST entry reaches it (in-order pipeline, serial issue: a group never serves two gathers in one edge).
+// Default 0 = the leaf as built.
+module ot_hgi_coll_gq_land #(parameter integer MUT = 0, parameter integer ISSUE_AHEAD = 0)(
     input  wire          clk, rst_n,
     input  wire [1:0]    qid,
     input  wire          ld_fire,
-    input  wire [52:0]   ld_desc,
+    input  wire [52+(ISSUE_AHEAD > 1 ? 2 : (ISSUE_AHEAD > 0 ? 1 : 0)):0] ld_desc,
     input  wire          ld_ev_v,
-    input  wire [9:0]    ld_ev_k,
+    input  wire [9+(ISSUE_AHEAD > 1 ? 2 : (ISSUE_AHEAD > 0 ? 1 : 0)):0] ld_ev_k,
     input  wire [1:0]    ld_p_v,
     input  wire [511:0]  ld_p_d,
     input  wire [1:0]    pa_v, pb_v,
@@ -755,6 +998,7 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
     output reg           fault
 );
     reg [2247:0] vm_kq; assign vm_kq_lo = vm_kq[1123:0]; assign vm_kq_hi = vm_kq[2247:1124];
+    localparam integer IA = ISSUE_AHEAD, NB = IA + 1, SW = (IA > 1) ? 2 : 1, LSW = (IA > 0) ? SW : 0;
     localparam integer NL = 36;      // le[j] = the entry of issue stage j + 1
     localparam integer S_KQ = 31;    // publish kq register @31+2h (entry at stage 30+2h = le[29+2h]); self-land kq @26
     wire [0:0] rl;
@@ -771,21 +1015,23 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
         srcq = s;
     endfunction
     // pin registers
-    reg f_q; reg [52:0] d_q; reg [1:0] pl_v; reg [511:0] pl_d;
+    reg f_q; reg [52+LSW:0] d_q; reg [1:0] pl_v; reg [511:0] pl_d;
     reg [NL-1:0] le_v; reg [9:0] le_k [0:NL-1];
     always @(posedge clk or negedge rn)
         if (!rn) begin f_q <= 1'b0; pl_v <= 2'd0; le_v <= '0; end
         else begin f_q <= ld_fire; pl_v <= ld_p_v; le_v <= {le_v[NL-2:0], ld_ev_v}; end
     always @(posedge clk) begin
-        d_q <= ld_desc; pl_d <= ld_p_d; le_k[0] <= ld_ev_k;
+        d_q <= ld_desc; pl_d <= ld_p_d; le_k[0] <= ld_ev_k[9:0];
         for (integer j = 1; j < NL; j = j + 1) le_k[j] <= le_k[j-1];
     end
-    // descriptor (held for the gather; gathers never overlap: the issue leaf faults a fire while busy)
+    // descriptor (IA 0: held for the gather; gathers never overlap: the issue leaf faults a fire while busy)
     reg g_r2, g_self, g_qbg; reg [9:0] g_f; reg [7:0] g_bs; reg [15:0] g_dst, g_str;
-    always @(posedge clk) if (f_q) {g_r2, g_self, g_qbg, g_f, g_bs, g_dst, g_str} <= d_q;
-    function automatic [10:0] flit_i(input [9:0] k, input integer r); flit_i = g_r2 ? {k, 1'(r)} : (r == 0 ? {1'b0, k} : 11'h7ff); endfunction
-    function automatic fv(input [9:0] k, input integer r);
-        reg [10:0] i; i = flit_i(k, r); fv = (r == 0 || g_r2) && i < {1'b0, g_f};
+    always @(posedge clk) if (f_q) {g_r2, g_self, g_qbg, g_f, g_bs, g_dst, g_str} <= d_q[52:0];
+    // per lane group descriptor view: group 0 = self-land (@23), group h = publish hop h (@28+2h)
+    wire gr2 [0:3]; wire [9:0] gf [0:3]; wire gsf; wire [15:0] gb [0:3][0:3];
+    function automatic [10:0] flit_g(input [9:0] k, input integer r, input r2); flit_g = r2 ? {k, 1'(r)} : (r == 0 ? {1'b0, k} : 11'h7ff); endfunction
+    function automatic fv_g(input [9:0] k, input integer r, input r2, input [9:0] f);
+        reg [10:0] i; i = flit_g(k, r, r2); fv_g = (r == 0 || r2) && i < {1'b0, f};
     endfunction
     function automatic [15:0] sec_add(input [15:0] s, input [12:0] a); sec_add = {s[15:13], s[12:0] + a}; endfunction
     // ------------------------------------------------------------------ publish capture (@30+2h) and VM landing (@31+2h)
@@ -801,6 +1047,46 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
     // >= 23 edges after the descriptor fires).
     reg [15:0] base_q [0:3];
     always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) base_q[q] <= sec_add(g_dst, 13'(g_str * q));
+    generate if (IA == 0) begin : g_grp0
+        for (genvar g = 0; g < 4; g = g + 1) begin : g_g
+            assign gr2[g] = g_r2; assign gf[g] = g_f;
+            for (genvar q = 0; q < 4; q = q + 1) begin : g_q assign gb[g][q] = base_q[q]; end
+        end
+        assign gsf = g_self;
+    end else begin : g_grp
+        // slot bank (53 b per slot, loaded at f_q into the descriptor's slot) and its registered sector bases
+        wire [52:0] lb [0:NB-1]; reg [15:0] lbase [0:NB-1][0:3];
+        for (genvar j = 0; j < NB; j = j + 1) begin : g_slot
+            for (genvar sh = 0; sh < 4; sh = sh + 1) begin : g_h
+                localparam integer HW = (sh == 3) ? 5 : 16;
+                ot_hgi_coll_gq_slot_load #(.W(HW), .SW(SW), .S(j)) u_ld(.clk(clk), .a(f_q), .b(1'b1), .s(d_q[53 +: SW]),
+                    .d(d_q[16*sh +: HW]), .q(lb[j][16*sh +: HW]));
+            end
+            always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) lbase[j][q] <= sec_add(lb[j][31:16], 13'(lb[j][15:0] * q));
+        end
+        // entry slot and first-entry flag pipelines
+        reg [SW-1:0] le_s [0:NL-1]; reg [NL-1:0] le_fst;
+        always @(posedge clk or negedge rn)
+            if (!rn) le_fst <= '0; else le_fst <= {le_fst[NL-2:0], ld_ev_v && ld_ev_k[9:0] == 10'd0};
+        always @(posedge clk) begin le_s[0] <= ld_ev_k[10 +: SW]; for (integer j = 1; j < NL; j = j + 1) le_s[j] <= le_s[j-1]; end
+        wire [NB*12-1:0] f_d; wire [NB*16-1:0] f_b [0:3];
+        for (genvar j = 0; j < NB; j = j + 1) begin : g_bf
+            assign f_d[12*j +: 12] = {lb[j][51], lb[j][52], lb[j][49:40]};
+            for (genvar q = 0; q < 4; q = q + 1) begin : g_q assign f_b[q][16*j +: 16] = lbase[j][q]; end
+        end
+        wire [11:0] gd [0:3];
+        for (genvar g = 0; g < 4; g = g + 1) begin : g_g
+            localparam integer LS = (g == 0) ? 22 : S_KQ + 2*g - 4;   // load stage = use stage - 1
+            ot_hgi_coll_gq_stage_hold #(.W(12), .NB(NB), .SW(SW)) u_d(.clk(clk), .a(le_v[LS]), .b(le_fst[LS]), .sp(le_s[LS-1]),
+                .d(f_d), .q(gd[g]));
+            for (genvar q = 0; q < 4; q = q + 1) begin : g_q
+                ot_hgi_coll_gq_stage_hold #(.W(16), .NB(NB), .SW(SW)) u_b(.clk(clk), .a(le_v[LS]), .b(le_fst[LS]), .sp(le_s[LS-1]),
+                    .d(f_b[q]), .q(gb[g][q]));
+            end
+            assign gr2[g] = gd[g][10]; assign gf[g] = gd[g][9:0];
+        end
+        assign gsf = gd[0][11];
+    end endgenerate
     // lanes 0..5 = publish (h - 1) * 2 + r, lanes 6..7 = self-land r
     reg [7:0] ln_en; reg [7:0] ln_bk [0:7]; reg [15:0] ln_s [0:7]; reg [1:0] ln_sq [0:5]; reg [5:0] ln_d;
     always @(posedge clk or negedge rn)
@@ -809,16 +1095,16 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
             reg [9:0] k; reg [10:0] i; reg [1:0] sq; reg [15:0] s;
             for (integer h = 1; h <= 3; h = h + 1)
                 for (integer r = 0; r < 2; r = r + 1) begin
-                    k = le_k[S_KQ + 2*h - 3]; i = flit_i(k, r); sq = srcq(q_id, k[0], h);
-                    s = {base_q[sq][15:13], base_q[sq][12:0] + 13'(i) + ((MUT == 3) ? 13'd1 : 13'd0)};
-                    ln_en[(h-1)*2 + r] <= le_v[S_KQ + 2*h - 3] && fv(k, r);
+                    k = le_k[S_KQ + 2*h - 3]; i = flit_g(k, r, gr2[h]); sq = srcq(q_id, k[0], h);
+                    s = {gb[h][sq][15:13], gb[h][sq][12:0] + 13'(i) + ((MUT == 3) ? 13'd1 : 13'd0)};
+                    ln_en[(h-1)*2 + r] <= le_v[S_KQ + 2*h - 3] && fv_g(k, r, gr2[h], gf[h]);
                     ln_bk[(h-1)*2 + r] <= 8'd1 << s[2:0]; ln_s[(h-1)*2 + r] <= s;
                     ln_sq[(h-1)*2 + r] <= sq; ln_d[(h-1)*2 + r] <= k[0];
                 end
             for (integer r = 0; r < 2; r = r + 1) begin
-                k = le_k[23]; i = flit_i(k, r);
-                s = {base_q[q_id][15:13], base_q[q_id][12:0] + 13'(i)};
-                ln_en[6 + r] <= g_self && MUT != 4 && le_v[23] && fv(k, r);
+                k = le_k[23]; i = flit_g(k, r, gr2[0]);
+                s = {gb[0][q_id][15:13], gb[0][q_id][12:0] + 13'(i)};
+                ln_en[6 + r] <= gsf && MUT != 4 && le_v[23] && fv_g(k, r, gr2[0], gf[0]);
                 ln_bk[6 + r] <= 8'd1 << s[2:0]; ln_s[6 + r] <= s;
             end
         end
@@ -866,7 +1152,7 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
 endmodule
 // The gather master as placed per quadrant: issue leaf (F20 target, calendar, VM reads, quantisers, payload, ring-A merge
 // register, ring-B commands) + landing leaf (publish capture, VM writes). Wires only.
-module ot_hgi_coll_gq #(parameter integer MUT = 0)(
+module ot_hgi_coll_gq #(parameter integer MUT = 0, parameter integer VM_RT = 0, parameter integer ISSUE_AHEAD = 0)(
     input  wire clk_issue, clk_land, rst_n,
     input  wire [1:0] qid, input wire [7:0] tgt,
     input  wire cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
@@ -888,8 +1174,9 @@ module ot_hgi_coll_gq #(parameter integer MUT = 0)(
     input  wire [1:0] pa_v, pb_v, input wire [3:0] pa_src, pb_src, input wire [5:0] pa_tag, pb_tag, input wire [511:0] pa_d, pb_d,
     output wire [135:0] vm_rq, input wire [2055:0] vm_rr, output wire [2247:0] vm_kq
 );
-    wire ld_fire, ld_ev_v; wire [52:0] ld_desc; wire [9:0] ld_ev_k; wire [1:0] ld_p_v; wire [511:0] ld_p_d;
-    ot_hgi_coll_gq_issue #(.MUT(MUT)) u_issue(.clk(clk_issue), .rst_n(rst_n), .qid(qid), .tgt(tgt), .cfg_v(cfg_v),
+    localparam integer LSW = (ISSUE_AHEAD > 1) ? 2 : ((ISSUE_AHEAD > 0) ? 1 : 0);
+    wire ld_fire, ld_ev_v; wire [52+LSW:0] ld_desc; wire [9+LSW:0] ld_ev_k; wire [1:0] ld_p_v; wire [511:0] ld_p_d;
+    ot_hgi_coll_gq_issue #(.MUT(MUT), .VM_RT(VM_RT), .ISSUE_AHEAD(ISSUE_AHEAD)) u_issue(.clk(clk_issue), .rst_n(rst_n), .qid(qid), .tgt(tgt), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .tgt_fault(tgt_fault),
         .active(active), .done(done), .fault(fault), .isa_ring(isa_ring), .isa_lp_data(isa_lp_data),
@@ -907,7 +1194,7 @@ module ot_hgi_coll_gq #(parameter integer MUT = 0)(
         .rb_rx_kind(rb_rx_kind), .rb_rx_src(rb_rx_src), .rb_rx_tag(rb_rx_tag), .vm_rq_lo(vm_rq[67:0]), .vm_rq_hi(vm_rq[135:68]),
         .vm_rr_lo(vm_rr[1027:0]), .vm_rr_hi(vm_rr[2055:1028]),
         .ld_fire(ld_fire), .ld_desc(ld_desc), .ld_ev_v(ld_ev_v), .ld_ev_k(ld_ev_k), .ld_p_v(ld_p_v), .ld_p_d(ld_p_d));
-    ot_hgi_coll_gq_land #(.MUT(MUT)) u_land(.clk(clk_land), .rst_n(rst_n), .qid(qid), .ld_fire(ld_fire), .ld_desc(ld_desc),
+    ot_hgi_coll_gq_land #(.MUT(MUT), .ISSUE_AHEAD(ISSUE_AHEAD)) u_land(.clk(clk_land), .rst_n(rst_n), .qid(qid), .ld_fire(ld_fire), .ld_desc(ld_desc),
         .ld_ev_v(ld_ev_v), .ld_ev_k(ld_ev_k), .ld_p_v(ld_p_v), .ld_p_d(ld_p_d), .pa_v(pa_v), .pb_v(pb_v), .pa_src(pa_src),
         .pb_src(pb_src), .pa_tag(pa_tag), .pb_tag(pb_tag), .pa_d(pa_d), .pb_d(pb_d), .vm_kq_lo(vm_kq[1123:0]),
         .vm_kq_hi(vm_kq[2247:1124]), .fault(land_fault));
@@ -1011,6 +1298,59 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_gq_issue_allow(input wire iss,input wire[1:0]iph,output wire q);
     assign q=iss&&iph!=2'd2;
+endmodule
+// ISSUE_AHEAD slot bank load: W-bit hold loaded on a && b && s == S (fire of a descriptor into slot S); kept AND per hold.
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_gq_slot_load #(parameter integer W = 16, SW = 1, S = 0)(input wire clk, a, b, input wire [SW-1:0] s,
+    input wire [W-1:0] d, output wire [W-1:0] q);
+    wire load;
+    (* keep = "true" *) ot_hgi_coll_gq_slot_and #(.SW(SW), .S(S)) u_load(.a(a), .b(b), .s(s), .q(load));
+    (* keep = "true", dont_touch = "true" *) reg [W-1:0] r;
+    always @(posedge clk) if (load) r <= d;
+    assign q = r;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_gq_slot_and #(parameter integer SW = 1, S = 0)(input wire a, b, input wire [SW-1:0] s, output wire q);
+    assign q = a && b && s == SW'(S);
+endmodule
+// ISSUE_AHEAD stage-group hold: loaded on a && b (= the gather's first entry one stage ahead of the use) from slot entry s of
+// d (slot-major, NB x W). The slot select is the hold's own kept register of the entry's slot (sp = slot one stage earlier),
+// so one slot flop drives <= W mux bits (checklist item 3).
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_gq_stage_hold #(parameter integer W = 16, NB = 2, SW = 1)(input wire clk, a, b, input wire [SW-1:0] sp,
+    input wire [NB*W-1:0] d, output wire [W-1:0] q);
+    wire load;
+    (* keep = "true" *) ot_hgi_coll_gq_control_and u_load(.a(a), .b(b), .q(load));
+    (* keep = "true", dont_touch = "true" *) reg [SW-1:0] s;
+    always @(posedge clk) s <= sp;
+    reg [W-1:0] m;
+    always @* begin m = d[W-1:0]; for (integer j = 1; j < NB; j = j + 1) if (s == SW'(j)) m = d[j*W +: W]; end
+    (* keep = "true", dont_touch = "true" *) reg [W-1:0] r;
+    always @(posedge clk) if (load) r <= m;
+    assign q = r;
+endmodule
+// VM_RT ring (HBM-COLLFUSE2-VME 10-20): fixed delay D (4..66) at II 1 on 64-slot SRAM macros (ot_sram_1r1w_64x16_m1, one
+// per 16 b), dout = din D edges earlier (= q[D-1] of a D-stage shift register). Registered input (in_q) and output (dout:
+// macro-local full-cycle capture), write address wp, read address wp - (D - 3) (never the write slot: D - 3 <= 63). Data are
+// never reset; dout is held 0 until the ring has been written D - 1 times after reset (valid bits ride the data).
+module ot_hgi_coll_gq_vmring #(parameter integer W = 32, D = 66)(input wire clk, rst_n, input wire [W-1:0] din,
+    output reg [W-1:0] dout);
+    localparam integer NM = (W + 15) / 16;
+    initial begin if (D < 4 || D > 66 || W > 16 * NM) $fatal(1, "ot_hgi_coll_gq_vmring: illegal shape"); end
+    reg [W-1:0] in_q; reg [5:0] wp; reg [6:0] filled;
+    wire [5:0] ra = wp - 6'(D - 3);
+    wire [16*NM-1:0] rd; wire [16*NM-1:0] wd = {{(16*NM-W){1'b0}}, in_q};
+    for (genvar m = 0; m < NM; m = m + 1) begin : g_m
+        ot_sram_1r1w_64x16_m1 u_mem(.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(rd[16*m +: 16]),
+            .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(wd[16*m +: 16]), .w_mask_in(16'hffff));
+    end
+    always @(posedge clk) in_q <= din;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin wp <= 6'd0; filled <= 7'd0; dout <= '0; end
+        else begin
+            wp <= wp + 6'd1; if (filled < 7'(D)) filled <= filled + 7'd1;
+            dout <= (filled >= 7'(D - 1)) ? rd[W-1:0] : '0;
+        end
 endmodule
 //16x<=8-bit programme columns; one same-edge target pointer/enable percolumn.
 (* keep_hierarchy="yes" *)

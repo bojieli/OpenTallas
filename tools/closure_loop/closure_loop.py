@@ -1992,7 +1992,7 @@ def host_cores(cfg):
     return max(1, cfg.get("cores") or cfg.get("cap") or 1)
 
 
-TOOL_REF_HOST = "ot-epyc4"  # 10-16: EPYC1 being released (owner); 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
+TOOL_REF_HOST = "ot-epyc5"  # EPYC4-RETIRE 10-19: ot-epyc4 terminated (toolchain probe identical on epyc5/6/8); 10-16: EPYC1 being released (owner); 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
 PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
 TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
@@ -3489,8 +3489,12 @@ FH_FILES = (("orfs_hold_mm.py", "tools"), ("orfs_hold_mm.tcl", "tools"), ("h1_pa
 # h1_patch.py.  Every main-vs-snapshot difference is an additive flow fix already on main, so the same refresh applies.
 TTB_DIRS = ("/srv/opentallas-scratch/claude/ttbatch/26f14af32", "/home/ubuntu/closure-loop-local/ttbatch/26f14af32")
 TTB_FILES = (("tt_overlay.py", "tools/closure_loop"), ("h1_patch.py", "tools/closure_loop"),
-             *((n, "physical/common_flow") for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+             *((n, "physical/common_flow") for n in ("native_pg_binding.tcl", "cg_pushdown.tcl", "clk_net_protect.tcl",
+                                                    "link_budget_hook.tcl",
                                                     "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
+# INFRA-PG 2026-10-19: native_pg_binding.tcl is refreshed with (and before) the hooks that source it; the snapshot used
+# to carry main's clk_net_protect.tcl without any binding, so tt_overlay shipped it over pinned srcs whose binding lacked
+# ot_pg_install_unsupported_birth_guards (standard-mode CTS crash, ot_qkh_ktree_lkp-lkp1-52f03a544).
 SNAPSHOT_REFRESH = ((FH_DIRS, FH_FILES), (TTB_DIRS, TTB_FILES))
 
 
