@@ -68,6 +68,8 @@ endmodule
 // (sr1 text:) 32 x 297 {epoch16, co[281:1]} on 5 banks; bank k writes on its storage root pll_hbm_data[min(k,3)] (the original
 // 4 roots, same phase as pll_hbm), reads on pll_hbm.  The 16 read-pointer copies (2405-load roots) are gone: the read
 // address is one 5-bit next-pointer into 5 macro address pins.  Control logic is the original, line for line.
+// KV-PC5 10-20: native32 front (Codex codex/kv-pc-native32-1020 @2d1da9e9e, qkd_kvpc_front_native32_1020.sv): 20 <=15-bit
+// out_q slices each enabled by its own kept emitting copy; reset leaves hr__qv[0..2] (same edge, no new release edge).
 module qkd_kvpc_s_front #(
     parameter integer NBLK = 4,
     parameter integer BLK = 8,
@@ -103,7 +105,9 @@ module qkd_kvpc_s_front #(
         $error("elastic front: NBLK>=2 and BLK>=2 powers of two, STRIDE>=1, NBLK*BLK<=32");
 
     // item 3: hr (50 loads) and emitting (606: take = emitting enables the 297-bit out_q) are kept copy families
-    (* keep, ot_rst_split *) reg [2:0] hr__qv;
+    // KV-PC5: no ot_rst_split on hr__qv / emitting__qv: every copy is referenced directly (the rst_copies re-point
+    // weighs a 15-bit enable slice as 15 loads, mapped it is 30: two slices per copy = 60 > 32 in tile census f1)
+    (* keep *) reg [2:0] hr__qv;
     wire hr = hr__qv[0];
     always @(posedge pll_hbm) hr__qv <= {3{hrst}};
     (* keep *) reg land_v;
@@ -119,7 +123,7 @@ module qkd_kvpc_s_front #(
     (* keep *) reg go_q;
     always @(posedge pll_hbm or negedge hr) if (!hr) go_q <= 1'b0; else go_q <= blk_go;
     reg [PW-1:0] pending;
-    (* keep, ot_rst_split *) reg [25:0] emitting__qv;
+    (* keep *) reg [25:0] emitting__qv;
     wire emitting = emitting__qv[0];
     reg [BW-1:0] cnt;
     reg [SW-1:0] sc;
@@ -131,8 +135,8 @@ module qkd_kvpc_s_front #(
     // ot_rst_copies, gate 164813: 590 loads on one flop).  emitting_m holds the state; every copy loads emitting_nx.
     (* keep *) reg emitting_m;
     wire emitting_nx = start ? 1'b1 : (last ? 1'b0 : emitting_m);
-    always @(posedge pll_hbm or negedge hr)
-        if (!hr) begin emitting_m <= 1'b0; emitting__qv <= 26'd0; end
+    always @(posedge pll_hbm or negedge hr__qv[1])
+        if (!hr__qv[1]) begin emitting_m <= 1'b0; emitting__qv <= 26'd0; end
         else begin emitting_m <= emitting_nx; emitting__qv <= {26{emitting_nx}}; end
     reg put_q;
     reg [296:0] out_q;
@@ -140,7 +144,7 @@ module qkd_kvpc_s_front #(
     // storage: registered read of mem[ra(t)] issued at t-1 with ra(t) = ra + take (the original pointer copies advance
     // on take exactly as rp).  A same-edge write to that entry blocks the read (no physical collision).
     reg [AW-1:0] ra;
-    wire [AW-1:0] ra_next = (MUT == 5) ? ra : take ? ra + 1'b1 : ra;
+    wire [AW-1:0] ra_next = (MUT == 5) ? ra : (emitting__qv[21] && sc==C_S1) ? ra + 1'b1 : ra;
     wire w_hit = land_v && wp[AW-1:0] == ra_next;
 `ifdef OT_KVPC_FRONT_MUT4
     localparam integer RAM_MUT = 1;                 // tile-bench mutant: bank permutation inside the tile
@@ -158,33 +162,40 @@ module qkd_kvpc_s_front #(
     end
 `endif
 
-    always @(posedge pll_hbm or negedge hr)
-        if (!hr) begin
-            wp <= 0; rp <= 0; bs <= 0; pending <= 0; cnt <= 0; sc <= 0; ra <= C_RA0;
-            put_q <= 0; blk_freed <= 0; hold <= 0; stall_edges <= 0; fault_overflow <= 0; fault_go <= 0; idle <= 1'b1;
-            occupancy <= 0;
-        end else begin
-            put_q <= 0; blk_freed <= 0;
-            occupancy <= wp - rp;
-            idle <= wp == rp && !land_v && pending == 0 && !emitting;
-            if (land_v) begin
-                wp <= wp + 1'b1;
-                if (wp - rp == C_DEPTH) fault_overflow <= 1'b1;
+    // Reset leaves are existing same-edge face copies: no new release edge.
+    // hr0: pointer/counter state27+land/go2; hr1: emitting27; hr2: flags32.
+    always @(posedge pll_hbm or negedge hr__qv[0])
+        if(!hr__qv[0])begin wp<=0;rp<=0;bs<=0;cnt<=0;sc<=0;ra<=C_RA0;end
+        else begin
+            if(land_v)wp<=wp+1'b1;
+            if(emitting__qv[22])begin
+                sc<=(sc==C_S1)?C_S0:sc+1'b1;
+                if(sc==C_S1)begin rp<=rp+1'b1;cnt<=cnt+1'b1;ra<=ra+1'b1;end
             end
-            pending <= pending + (go_q ? C_P1 : C_P0) - (start ? C_P1 : C_P0);
-            if (go_q && pending == C_NBLK) fault_go <= 1'b1;
-            hold <= pending != 0 && idle_next && !ready;
-            if (pending != 0 && idle_next && !ready && stall_edges != 16'hffff) stall_edges <= stall_edges + 1'b1;
-            if (emitting) begin
-                sc <= (sc == C_S1) ? C_S0 : sc + 1'b1;
-                if (take) begin
-                    put_q <= 1'b1; rp <= rp + 1'b1; cnt <= cnt + 1'b1; ra <= ra + 1'b1;
-                    if (last) blk_freed <= 1'b1;
-                end
-            end
-            if (start) begin cnt <= 0; sc <= C_S1; bs <= bs + C_BLK; end
+            if(start)begin cnt<=0;sc<=C_S1;bs<=bs+C_BLK;end
         end
-    always @(posedge pll_hbm) if (take) out_q <= mem_rd;
+    always @(posedge pll_hbm or negedge hr__qv[2])
+        if(!hr__qv[2])begin
+            pending<=0;put_q<=0;blk_freed<=0;hold<=0;stall_edges<=0;
+            fault_overflow<=0;fault_go<=0;idle<=1;occupancy<=0;
+        end else begin
+            put_q<=0;blk_freed<=0;occupancy<=wp-rp;
+            idle<=wp==rp&&!land_v&&pending==0&&!emitting;
+            if(land_v&&wp-rp==C_DEPTH)fault_overflow<=1;
+            pending<=pending+(go_q?C_P1:C_P0)-(start?C_P1:C_P0);
+            if(go_q&&pending==C_NBLK)fault_go<=1;
+            hold<=pending!=0&&idle_next&&!ready;
+            if(pending!=0&&idle_next&&!ready&&stall_edges!=16'hffff)stall_edges<=stall_edges+1'b1;
+            if(emitting__qv[23]&&sc==C_S1)begin put_q<=1;if(last)blk_freed<=1;end
+        end
+    // Distinct kept control state is referenced by each <=15-bit payload slice.
+    // The old canonical pin split balanced direct loads but INV-transparent
+    // effective union still gave one emitting root586. No new edge or storage.
+    for(genvar g=0;g<20;g=g+1)begin:g_native_payload
+        localparam integer LO=g*15,WD=297-LO<15?297-LO:15;
+        wire take_local=emitting__qv[g+1] && sc==C_S1;
+        always @(posedge pll_hbm)if(take_local)out_q[LO+:WD]<=mem_rd[LO+:WD];
+    end
     assign co_out = {out_q[280:0], put_q};
     assign epoch_out = out_q[296:281];
     assign compiled_hbm_put = put_q;
