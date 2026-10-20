@@ -14,12 +14,27 @@
 // give ((s0+s1)+(s2+s3)) = the pairwise node of the 16 chunks of the 128-token block, exactly the golden order.
 // Every illegal request (entry not finished, pending write, merge or publication active, port collision) is a sticky
 // fault; nothing waits.  MUT 4 = the fold reads entry b in place of a (b + b: bench negative control).
+// PVMD (L2H-SMATT 2026-10-19, H.STA.BLK.14.3.1 review of Codex fae1ece6e; fleet census of fae1ece6e: e_tag / fold / publication
+// captures sat in async-reset processes without a reset value, so the reset group became their enable (group 13: 162 loads);
+// pub_d1 182 / pub_active 154 loads (the wn_k copies' controls); fd1_k 64, ev operand copies 52, fold copy 50):
+//  * NS = 64 operand slices of 8 bits (kept per-slice copies of fd0/fd1/turn state, ev_operand, first_operand);
+//  * ev split: 64 operand, 64 stack-write byte, 8 entry (per-entry recurrence) copies + 1 control copy (ev);
+//  * fold_operand[3:0]: kept fold_start copies, one per 16 slices (fd0_k sources);
+//  * every register without a reset value sits in a plain clocked process (its enable is low while reset is asserted:
+//    ev / finish / publication / fold controls are all reset), so no reset group drives data enables;
+//  * pub_d1 / pub_active kept copies, one per 4 publication bits (wn_k / pub_data_s2 controls), reset group 52;
+//  * pub_d0 kept copies, one per 16 pub_buffer bits (capture enables; sourced from 4 pub_start copies), reset group 53;
+//    node_tag[pub_slot] read per 4-bit quarter from its own pub_slot copy; slot0/tag0 captured on the pub_start copies,
+//    slot1/tag1 on 3 more pub_d0 copies (pd0_o), the pub_word/pub_out_slot/pub_tag output captures on 3 more pub_d1 copies (pd1_o).
+// Reset groups (third-level tree outputs, <= 32 flops each): 0 bp/turn/ring/ov, 1-4 adder valids, 5-12 entry k/c/n,
+// 13 entry busy/fl/fin + pv_v + m_fault, 14 fold state, 15 publication state (+ wrapper output valids), 16-47 slice
+// copies (2 slices each), 48-51 wn_k copies, 52 pub_d1/pub_active copies, 53 pub_d0 copies.
 module ot_hbm_sm_pv_merge_distributed_core #(
-    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0,
+    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=1,
     // TURNREG 1 (HH-12 2026-10-19, smh_pvm gate: setup -341 ps at 770 ps on bp -> 8:1 entry-state mux -> operand select ->
     // 1,024-bit operand mux -> adder decode): the turn entry's state is registered one cycle ahead (entry nb = bp+1 is
     // only written at its own turn, 8 cycles earlier, so the copy equals e_*[r] exactly).  Cycle-identical; 0 = old form.
-    parameter integer TURNREG=0,
+    parameter integer TURNREG=1,                      // PVMD: the only legal value (default so a stand-alone elaboration is legal)
     // SAFE 1 (HBM-PVM-SAFE 2026-10-19, smh_pvm route r3 NEEDS_RTL TT -125 / FF -18: macro rd_out -> operand mux -> adder
     // A1 decode/compare in one cycle; fd1 -> 3-way write mux -> macro wd_in; flop delay line fw_a/fw_v): structural form.
     //  (a) OPERAND REGISTERS: the operand mux lands in oa/ob/ov and the adders start from registers; the result register
@@ -40,13 +55,17 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     //      one word_next copy per pub_data bit.  Each copy is the same register as its original (same D, reset, edge), so
     //      the module is cycle-identical to SAFE 1; every copy drives <= ~32 loads.  Only ev (the input-pin capture) and
     //      tag_d stay single sources.
-    parameter integer SAFE=0
+    parameter integer SAFE=2
 )(
     input wire clk,
-    input wire [51:0] rst_core_n,
-    input wire [31:0] ev_operand, first_operand,
-    input wire [63:0] ev_write,
-    input wire ev,
+    input wire [53:0] rst_core_n,
+    input wire [63:0] ev_operand, first_operand,     // per 8-bit operand slice
+    input wire [63:0] ev_write,                      // per stack-write byte
+    input wire [7:0] ev_entry,                       // per entry recurrence
+    input wire [3:0] fold_operand,                   // fold_start copies for fd0_k (16 slices each)
+    input wire [3:0] pub_operand,                    // pub_start copies for the pub_buffer capture enables (8 groups each)
+    input wire [14:0] pub_slot_tag,                  // 5 pub_slot copies: node_tag read mux (4 tag bits each) + slot0
+    input wire ev,                                   // control copy (turn mux / finish / faults / node_valid)
     input wire [L*32-1:0] sum,
     input wire [TAGW-1:0] tag_d,
     output reg pv_v,
@@ -202,40 +221,40 @@ module ot_hbm_sm_pv_merge_distributed_core #(
         end
     end
     // ---- SAFE 2: kept per-slice select copies (cycle-identical to SAFE 1) ----
-    localparam integer NS = 32;                       // operand slices of 16 bits
+    localparam integer NS = 64, SW = 8;               // PVMD: operand slices of 8 bits
     (* keep *) reg [NS-1:0] fd0_k, fd1_k;
     (* keep *) reg [NS-1:0] qb_k, qf_k, qklt_k, qk0_k, qck_k, qnk_k, qn0_k;
     genvar s;
     generate if (SAFE == 2) begin : g_s2
         for (s = 0; s < NS; s = s + 1) begin : g_sl
-            always @(posedge clk or negedge rst_core_n[16+s])
-                if (!rst_core_n[16+s]) begin
+            always @(posedge clk or negedge rst_core_n[16+s/2])
+                if (!rst_core_n[16+s/2]) begin
                     fd0_k[s]<=1'b0; fd1_k[s]<=1'b0;
                     qb_k[s]<=1'b0; qf_k[s]<=1'b0; qklt_k[s]<=1'b1; qk0_k[s]<=1'b1; qck_k[s]<=1'b0; qnk_k[s]<=1'b0; qn0_k[s]<=1'b0;
                 end else begin
-                    fd0_k[s]<=fold_request; fd1_k[s]<=fd0_k[s];
+                    fd0_k[s]<=PUBLISH ? fold_operand[s/16] : 1'b0; fd1_k[s]<=fd0_k[s];
                     qb_k[s]<=e_busy[qe]; qf_k[s]<=e_fl[qe]; qklt_k[s]<=(e_k[qe]<LV); qk0_k[s]<=(e_k[qe]==0);
                     qck_k[s]<=e_c[qe][e_k[qe][2:0]]; qnk_k[s]<=e_n[qe][e_k[qe][2:0]]; qn0_k[s]<=e_n[qe][0];
                 end
-            wire [15:0] st_s = st_rd[16*s +: 16], sum_s = sum[16*s +: 16], vr_s = vres[16*s +: 16], fa_s = fold_a_data2[16*s +: 16];
+            wire [SW-1:0] st_s = st_rd[SW*s +: SW], sum_s = sum[SW*s +: SW], vr_s = vres[SW*s +: SW], fa_s = fold_a_data2[SW*s +: SW];
             wire ec0 = first_operand[s] ? 1'b0 : qn0_k[s];
-            reg [15:0] a_s, b_s;
+            reg [SW-1:0] a_s, b_s;
             always @(*) begin
-                a_s = 16'd0; b_s = 16'd0;
+                a_s = {SW{1'b0}}; b_s = {SW{1'b0}};
                 if (fd1_k[s]) begin a_s = fa_s; b_s = st_s; end
                 else if (ev_operand[s]) begin
                     if (ec0) begin a_s = st_s; b_s = sum_s; end
                 end else if (qb_k[s] && !qf_k[s]) begin
                     if (qck_k[s]) begin a_s = st_s; b_s = vr_s; end
                 end else if (qb_k[s] && qf_k[s] && qklt_k[s]) begin
-                    if (qnk_k[s]) begin a_s = st_s; b_s = qk0_k[s] ? 16'd0 : vr_s; end
-                    else begin a_s = (qk0_k[s] || (MUT == 2 && t_kl1)) ? 16'd0 : vr_s; b_s = 16'd0; end
+                    if (qnk_k[s]) begin a_s = st_s; b_s = qk0_k[s] ? {SW{1'b0}} : vr_s; end
+                    else begin a_s = (qk0_k[s] || (MUT == 2 && t_kl1)) ? {SW{1'b0}} : vr_s; b_s = {SW{1'b0}}; end
                 end
             end
-            assign ma2[16*s +: 16] = a_s;
-            assign mb2[16*s +: 16] = b_s;
+            assign ma2[SW*s +: SW] = a_s;
+            assign mb2[SW*s +: SW] = b_s;
 `ifndef SYNTHESIS
-            always @(posedge clk) if (rst_n && ({a_s,b_s} !== {ma[16*s +: 16], mb[16*s +: 16]}))
+            always @(posedge clk) if (rst_n && ({a_s,b_s} !== {ma[SW*s +: SW], mb[SW*s +: SW]}))
                 $fatal(1, "pv_merge SAFE2 slice %0d operand differs from the reference mux", s);
 `endif
         end
@@ -245,34 +264,41 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     integer i;
     always @(posedge clk or negedge rst_core_n[13]) begin
         if (!rst_core_n[13]) begin
-            e_busy <= 8'd0; e_fl <= 8'd0; e_fin <= 8'd0; pv_v <= 1'b0; m_fault <= 1'b0;
-
+            pv_v <= 1'b0; m_fault <= 1'b0;
         end else begin
             pv_v <= 1'b0;
             if (|mf) m_fault <= 1'b1;
             if (ev) begin
                 if (e_busy[r]) m_fault <= 1'b1;                       // chunk arrived while the entry still merges
                 if (ev_c >= (8'd1 << (LV - 1))) m_fault <= 1'b1;      // run longer than the stack
-                e_tag[r] <= tag_d;
-
-                if (ev_c[0]) begin e_busy[r] <= 1'b1; e_fl[r] <= 1'b0; e_fin[r] <= ev_last; end
-                else if (ev_last) begin e_busy[r] <= 1'b1; e_fl[r] <= 1'b1; end
-            end else if (e_busy[r] && !e_fl[r]) begin
-                if (e_c[r][e_k[r][2:0]]) begin end
-                else if (e_fin[r]) begin e_fl[r] <= 1'b1; end
-                else e_busy[r] <= 1'b0;
-            end else if (e_busy[r] && e_fl[r]) begin
-                if (e_k[r] < LV) begin end
-                else begin e_busy[r] <= 1'b0; e_fl[r] <= 1'b0; pv_v <= 1'b1; end
-            end
+            end else if (e_busy[r] && e_fl[r] && !(e_k[r] < LV)) pv_v <= 1'b1;
         end
     end
+    generate for(genvar ei=0;ei<8;ei=ei+1) begin:g_entry_state
+        // the original per-entry busy / flush / finish recurrence on the entry's own ev copy (group 13: 24 flops + 2)
+        always @(posedge clk or negedge rst_core_n[13]) begin
+            if (!rst_core_n[13]) begin e_busy[ei] <= 1'b0; e_fl[ei] <= 1'b0; e_fin[ei] <= 1'b0; end
+            else if (r == ei) begin
+                if (ev_entry[ei]) begin
+                    if (ev_c[0]) begin e_busy[ei] <= 1'b1; e_fl[ei] <= 1'b0; e_fin[ei] <= ev_last; end
+                    else if (ev_last) begin e_busy[ei] <= 1'b1; e_fl[ei] <= 1'b1; end
+                end else if (e_busy[ei] && !e_fl[ei]) begin
+                    if (e_c[ei][e_k[ei][2:0]]) begin end
+                    else if (e_fin[ei]) e_fl[ei] <= 1'b1;
+                    else e_busy[ei] <= 1'b0;
+                end else if (e_busy[ei] && e_fl[ei]) begin
+                    if (!(e_k[ei] < LV)) begin e_busy[ei] <= 1'b0; e_fl[ei] <= 1'b0; end
+                end
+            end
+        end
+        always @(posedge clk) if (r == ei && ev_entry[ei]) e_tag[ei] <= tag_d;   // no reset value (as the original)
+    end endgenerate
     generate for(genvar ei=0;ei<8;ei=ei+1) begin:g_entry_reset
         // Exactly the original per-entry recurrence; 4+8+9=21 reset terminals.
         always @(posedge clk or negedge rst_core_n[5+ei]) begin
             if(!rst_core_n[5+ei]) begin e_k[ei]<=0; e_c[ei]<=0; e_n[ei]<=0; end
             else if(r==ei) begin
-                if(ev) begin
+                if(ev_entry[ei]) begin
                     e_n[ei]<={1'b0,ev_c}+9'd1; e_c[ei]<=ev_c;
                     if(ev_c[0]) e_k[ei]<=1;
                     else if(ev_last) e_k[ei]<=0;
@@ -298,13 +324,11 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             fd0<=fold_request;fd1<=fd0;
             fw_v<={fw_v[ALAT-1:0],fd1};
             if(fold_request)begin
-                fa0<=fold_a;fb0<=fold_b;
                 if(!node_valid[fold_a] || !node_valid[fold_b] || node_pending[fold_a] ||
                    (node_pending[fold_b] && !(SAFE && fold_write && fold_waddr==fold_b)) ||
                    fold_a==fold_b || ev || (|e_busy) || publish_request || pub_d0 || pub_d1 || pub_active || fd0)fold_fault<=1;
                 node_pending[fold_a]<=1'b1;
             end
-            if(fd0)fa1<=fa0;
             if(fd1 && (ev || (|e_busy)))fold_fault<=1;
             if(fold_write)begin
                 node_pending[fold_waddr]<=1'b0;
@@ -314,13 +338,15 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             if(ev && (|node_pending))fold_fault<=1;
         end
     always @(posedge clk)begin
+        if(fold_request)begin fa0<=fold_a;fb0<=fold_b;end   // no reset value: plain process (PVMD)
+        if(fd0)fa1<=fa0;
         if(fd0)fold_a_data<=st_rd;
         fw_a[0]<=fa1;
         for(fk=1;fk<=ALAT;fk=fk+1)fw_a[fk]<=fw_a[fk-1];
     end
     generate if (SAFE == 2) begin : g_s2fa
         for (s = 0; s < NS; s = s + 1) begin : g_fa
-            always @(posedge clk) if (fd0_k[s]) fold_a_data2[16*s +: 16] <= st_rd[16*s +: 16];
+            always @(posedge clk) if (fd0_k[s]) fold_a_data2[SW*s +: SW] <= st_rd[SW*s +: SW];
         end
     end endgenerate
     // (d) SAFE fold ring: slot fr_c is read (write-back of the add issued 8 cycles ago) and rewritten (this cycle's issue)
@@ -333,6 +359,9 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     reg [2:0] slot0,slot1;
     reg [TAGW-1:0] tag0,tag1;
     reg [511:0] pub_buffer;
+    (* keep *) reg [31:0] pd0_k;                      // PVMD pub_d0 copies (declared before the processes that read them)
+    (* keep *) reg [2:0] pd1_o;
+    (* keep *) reg [2:0] pd0_o;                       // pub_d0 copies for the slot1 / tag1 captures (group 52)
     reg [3:0] word_next;
     reg [31:0] pub_data_r, pub_data_s2;
     always @(posedge clk or negedge rst_core_n[15])
@@ -345,27 +374,77 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             if(PUBLISH && ev && ev_first)node_valid[tag_d[2:0]]<=0;
             if(fold_request)node_valid[fold_b]<=0;      // b is consumed by the fold
             if(PUBLISH && finish)begin
-                node_valid[finish_slot]<=1;node_tag[finish_slot]<=e_tag[r];
+                node_valid[finish_slot]<=1;
                 if(sw_ce)pub_fault<=1;
             end
             if(publish_request)begin
-                slot0<=pub_slot;tag0<=node_tag[pub_slot];
                 if(!node_valid[pub_slot] || ev || (|e_busy) || pub_d0 || pub_d1 ||
                    (pub_active && word_next!=14))pub_fault<=1;
             end
             if(ev && (pub_active || pub_d0 || pub_d1))pub_fault<=1;
-            if(pub_d0)begin pub_buffer<=st_rd;slot1<=slot0;tag1<=tag0;end
             if(pub_d1)begin
-                pub_data_r<=pub_buffer[((MUT==3)?32:0)+:32];
-                pub_word<=0;pub_out_slot<=slot1;pub_tag<=tag1;
                 word_next<=1;pub_active<=1;
             end else if(pub_active)begin
-                pub_data_r<=pub_buffer[32*(word_next ^ ((MUT==3)?4'd1:4'd0))+:32];
-                pub_word<=word_next;
                 if(word_next==15)begin pub_active<=0;word_next<=0;end
                 else word_next<=word_next+1;
             end
         end
+    // registers without a reset value (PVMD: plain process; every enable below is a reset register or a reset capture)
+    always @(posedge clk) begin
+        if(PUBLISH && finish) node_tag[finish_slot]<=e_tag[r];
+        if(pub_d1)begin
+            pub_data_r<=pub_buffer[((MUT==3)?32:0)+:32];
+        end else if(pub_active)begin
+            pub_data_r<=pub_buffer[32*(word_next ^ ((MUT==3)?4'd1:4'd0))+:32];
+        end
+        // PVMD: the same captures on kept copies of their enables (publish_request / pub_d0 / pub_d1)
+        if(pub_operand[2]) slot0<=pub_slot_tag[14:12];
+        if(pub_operand[0]) begin tag0[3:0]<=node_tag[pub_slot_tag[2:0]][3:0]; tag0[7:4]<=node_tag[pub_slot_tag[5:3]][7:4]; end
+        if(pub_operand[1]) begin tag0[11:8]<=node_tag[pub_slot_tag[8:6]][11:8]; tag0[TAGW-1:12]<=node_tag[pub_slot_tag[11:9]][TAGW-1:12]; end
+        if(pd0_o[0]) tag1[7:0]<=tag0[7:0];
+        if(pd0_o[1]) tag1[TAGW-1:8]<=tag0[TAGW-1:8];
+        if(pd0_o[2]) slot1<=slot0;
+        if(pd1_o[0]) pub_tag[7:0]<=tag1[7:0];
+        if(pd1_o[1]) pub_tag[TAGW-1:8]<=tag1[TAGW-1:8];
+        if(pd1_o[2]) begin pub_word<=0;pub_out_slot<=slot1; end else if(pub_active) pub_word<=word_next;
+    end
+    // PVMD: kept pub_d0 copies, one per 16 pub_buffer bits (the capture enable; group 53)
+    generate for (genvar pb = 0; pb < 32; pb = pb + 1) begin : g_pbuf
+        always @(posedge clk or negedge rst_core_n[53])
+            if (!rst_core_n[53]) pd0_k[pb] <= 1'b0; else pd0_k[pb] <= PUBLISH ? pub_operand[pb/8] : 1'b0;
+        always @(posedge clk) if (pd0_k[pb]) pub_buffer[16*pb +: 16] <= st_rd[16*pb +: 16];
+`ifndef SYNTHESIS
+        always @(posedge clk) if (rst_n && pd0_k[pb] !== pub_d0) $fatal(1, "pv_merge PVMD pub_d0 copy %0d differs", pb);
+`endif
+    end endgenerate
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && publish_request && pub_slot_tag !== {5{pub_slot}})
+        $fatal(1, "pv_merge PVMD pub_slot copy differs");
+    always @(posedge clk) if (rst_n && pub_operand !== {4{publish_request}})
+        $fatal(1, "pv_merge PVMD pub_start copy differs");
+`endif
+    // PVMD: kept pub_d1 / pub_active copies, one per 4 publication bits (same D / reset edge / transitions; group 52)
+    (* keep *) reg [7:0] pd1_k, pa_k;
+    // pd1_o: pub_d1 copies for the output field captures (group 52)
+    always @(posedge clk or negedge rst_core_n[52]) if (!rst_core_n[52]) pd1_o <= 3'd0; else pd1_o <= {3{pub_d0}};
+    always @(posedge clk or negedge rst_core_n[52]) if (!rst_core_n[52]) pd0_o <= 3'd0; else pd0_o <= PUBLISH ? pub_operand[2:0] : 3'd0;
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && {pd1_o, pd0_o} !== {{3{pub_d1}}, {3{pub_d0}}}) $fatal(1, "pv_merge PVMD pub_d1/pub_d0 output copy differs");
+`endif
+    wire [31:0] wn_grp;                               // the first wn_k copy of each 4-bit group
+    generate for (genvar pg = 0; pg < 8; pg = pg + 1) begin : g_pubc
+        always @(posedge clk or negedge rst_core_n[52])
+            if (!rst_core_n[52]) begin pd1_k[pg] <= 1'b0; pa_k[pg] <= 1'b0; end
+            else begin
+                pd1_k[pg] <= pub_d0;
+                if (pd1_k[pg]) pa_k[pg] <= 1'b1;
+                else if (pa_k[pg] && wn_grp[4*pg +: 4] == 4'd15) pa_k[pg] <= 1'b0;
+            end
+`ifndef SYNTHESIS
+        always @(posedge clk) if (rst_n && {pd1_k[pg], pa_k[pg]} !== {pub_d1, pub_active})
+            $fatal(1, "pv_merge PVMD publication control copy %0d differs", pg);
+`endif
+    end endgenerate
     // SAFE 2: one kept word_next copy per pub_data bit (same reset / transitions as word_next) and a per-bit 16:1 select
     generate if (SAFE == 2) begin : g_s2pub
         genvar b;
@@ -373,12 +452,13 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             (* keep *) reg [3:0] wn_k;
             always @(posedge clk or negedge rst_core_n[48+b/8])
                 if (!rst_core_n[48+b/8]) wn_k <= 4'd0;
-                else if (pub_d1) wn_k <= 4'd1;
-                else if (pub_active) wn_k <= (wn_k == 4'd15) ? 4'd0 : wn_k + 4'd1;
+                else if (pd1_k[b/4]) wn_k <= 4'd1;
+                else if (pa_k[b/4]) wn_k <= (wn_k == 4'd15) ? 4'd0 : wn_k + 4'd1;
+            if (b % 4 == 0) begin : g_wg assign wn_grp[4*(b/4) +: 4] = wn_k; end
             wire [3:0] ws = wn_k ^ ((MUT==3) ? 4'd1 : 4'd0);
             always @(posedge clk)
-                if (pub_d1) pub_data_s2[b] <= pub_buffer[((MUT==3)?32:0) + b];
-                else if (pub_active) pub_data_s2[b] <= pub_buffer[32*ws + b];
+                if (pd1_k[b/4]) pub_data_s2[b] <= pub_buffer[((MUT==3)?32:0) + b];
+                else if (pa_k[b/4]) pub_data_s2[b] <= pub_buffer[32*ws + b];
 `ifndef SYNTHESIS
             always @(posedge clk) if (rst_n && wn_k !== word_next) $fatal(1, "pv_merge SAFE2 word_next copy %0d differs", b);
 `endif

@@ -1,13 +1,37 @@
-# PVM distributed source draft — UNVERIFIED / NOT ADOPTED
+# PVM distributed source (H.STA.BLK.14.3.1) -- reviewed, fixed, benched (L2H-SMATT/PVMD 2026-10-19)
 
-Stopped at explicit CLAUDE IS BACK, 2026-10-19 17:44 PT. This packet contains PRIVATE new modules only; original ot_hbm_sm_pv_merge_s3 and public defaults remain byte-identical. No compiler, simulator, synthesis, OpenROAD, gate or physical job was launched. No behavioral, reset-safety, native-fanout or physical PASS is claimed.
+Successor of the SAFE2 single-source ev / tag_d[14] input-pin capture (input-fanout waiver rejected). Start: Codex private
+draft fae1ece6e (never compiled). Branch claude/hbm-pvm-dist-1019.
 
-Implemented draft: 4 first event captures to97 second copies (32operand/64write/1scheduler), separate first-tag register to32 second copies, all other inputs2edges and outputs1edge. Copied SAFE2 core has per-slice operands and per-byte stack selects driven by corresponding copies, plus per-entry reset splitting of the existing equations. Genuine ID-paramod capture/reset modules request keep_hierarchy. Actual mapped survival remains unverified.
+## Review of fae1ece6e (what was wrong, what changed)
+Draft compiled and was cycle-exact at first try (candidate == SAFE2 reference one edge later), but the fleet yosys census
+(flow keep hook, `census/`) showed the structure was not fanout-safe:
+- registers without a reset value sat in async-reset processes (e_tag, fa0/fb0/fa1, slot/tag/pub_buffer/pub_* captures),
+  so yosys made the reset group their enable: reset_core[13] drove 162 loads;
+- pub_d1 182 / pub_active 154 loads (single controls of the 32 wn_k copies), fd1_k 64, ev operand copies 52, fold copy 50;
+- the wrapper copies relied on keep_hierarchy only (a flow that flattens them merges all 97 ev copies back: 2,064 loads);
+- MUT "bp release one edge early" is an equivalent mutant (entry index renaming) -- replaced.
+Fixes (RTL: ot_hbm_sm_pv_merge_distributed.sv / _core.sv):
+- every no-reset register in a plain clocked process (its enable is a reset register or a reset capture, low in reset);
+- NS 64 operand slices of 8 bits (kept fd0/fd1/turn-state copies per slice), ev = 5 first captures -> 137 kept second
+  copies (64 operand, 64 stack-write byte, 8 per-entry recurrence, 1 control), first-tag 2 -> 64, fold_start 4 copies,
+  pub_start 4 copies, pub_slot 5 copies, kept pub_d0 x32 (pub_buffer enables) + 3, pub_d1 x8 + 3, pub_active x8;
+- per-entry busy/fl/fin/e_tag recurrence on the entry's own ev copy;
+- reset tree 2 -> 8 -> 54 third-level groups (<= 32 flops each), capture/release leaves keep_hierarchy + (* keep *) q.
 
-Reset model refined from64 capacity groups to52 live third groups: 2 raw ASR D1 first FF ->8 second ->52 third; 62 total tree FF (nominal4.5198um2). Second nodes reset balanced input command groups; third groups partition core reset terminals. Core release is3edges versus2 reference, preserving original bp=0 and pricing +1 cold-release edge alongside +1 input edge. All native reset/tie/comb fanouts must be measured. If original generic baseline17resetFF is confirmed, tree delta45FF plus672inputFF =717FF /52.2693um2 nominal, excluding ties/comb and changed native mapping. This is conditional model arithmetic, not mapped cost.
-
-Draft bench instantiates independent original SAFE2 core behind an explicit one-input/one-output reference wrapper and compares every output bit at translated +1 age, including invalid payload, without X masks. Existing full-shape exact/tight/pubearly stimulus and golden checker are reused; MUT applies only to candidate. Bench is not compiled or exercised. Source assertions, cold first-use/reassertion/stopped-clock tests, real mutation witnesses and reset-release waveform proof remain required. First startup transient/age convention may need correction based on actual simulation; do not call this test a PASS.
-
-Next: review source/reset group bill, run Verilator5.050 fullshape exact/tight/pubearly and real candidate mutation, add meaningful cold/reassert/stopped-clock coverage (including4state where needed), then native all-role BUF/INV-transparent census including ties/macros/reset and actual area/storage/reach. Correct structural failures before physical submission. Root PNG/checklist review remains mandatory. No auto pin-register duplication: eventual private kit must disable generic pin regs with explicit source-registered justification.
-
-Prepared input archive /home/ubuntu/artifacts/pvm-distributed-source-inputs-1019.tgz was copied to /srv/opentallas-scratch/claude/codex-pvm-distributed-source-1019 on ot-epyc4/5/6/7/8. These are inputs only, no live job or partial object build. Do not launch until coordinator resumes/assigns.
+## Evidence
+- bench/ (Verilator 5.050 on the fleet, `run_pv_merge_distributed_bench.sh`): candidate vs independent SAFE2 reference
+  wrapper at +1 age, EVERY output bit EVERY edge (no X/valid mask), golden on the reference stream; idle tag/sum carry junk.
+  PASS: exact, tight, reassert (rst_n re-asserted mid-merge with junk on every command input), stopclk (assert with the
+  clock stopped: tree/captures/core state checked cleared with no edge), tight_reassert, xrand_* (random initial state,
+  payload compared under valid). FAIL witnesses (`^PVM FAIL mismatches=[1-9]`): pubearly, mut1-5 (SAFE2 core), mut6 (ev
+  operand copy early), mut7 (control ev copy early), mut8 (stack-write copy early), mut11 (first-tag copy early),
+  mut9_reassert (e_busy group never reset: passes cold, fails on reassert), mut10_stopclk (one second-level node
+  synchronous: passes cold, fails stopped-clock).
+- census/ (fleet yosys 0.68 + physical/common_flow/ot_keep_regs.tcl, ASAP7 RVT TT): 15,381 flops; every flop outside the
+  shared fp32 adder drives <= 32 loads (named max 32); all 2/8/54 reset, 5/137 ev, 2/64 first-tag kept copies survive
+  as distinct paramods. Remaining >32: 160 flops inside ot_hdc_fp32_add_lat (a1_swap 142, a1 75, lz_w 66, sum_w 53,
+  rnd 53, b2_in 48, s2_byp 35) -- the shared closed adder, identical in SAFE2 s4a (CLOSED TT +50); WAIVED here, owed
+  to a fanout-safe adder leaf (separate item).
+- price.json: +1 input/result edge on every ATT.PV record (tools/hbm_pvm_edge_cost.py): DS +40.0 cycles/token
+  (0.0069%), Qwen +72.0 (0.0057%); +1 cold reset-release edge once per reset.

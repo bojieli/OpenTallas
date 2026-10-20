@@ -1,7 +1,6 @@
-# Private distributed PVM source sizing before build
-
-Original eight-edge recurrence, arithmetic, stack collision and last-write semantics stay unchanged. Two input edges and one output edge replace automatic one-input/one-output: +1 steady command/result edge. All sum/tag/publication/fold fields align. Event 4 first captures feed 97 second captures (32 operand16,64 write8,1 scheduler); first-tag32 captures align. No new indexed storage. Input state 1212 versus540, delta672 bits /48.9888um2 nominal.
-
-Reset is an explicit asynchronous-assert/synchronous-release tree: raw resets exactly2 first D1 FFs; these reset8 second D1 FFs (4 each); these reset52 third D1 FFs (at most8 each). 52 live groups replace the conservative64 capacity; no unused reset stations. The 8 second outputs also reset input-command captures in balanced groups. Each third output resets at most32 genuine core/control FF terminals, including recursive adder-valid registers. 62 tree FF /4.5198um2 nominal excluding replicated ties. Core reset releases in three edges versus reference two, an extra cold-start edge. Its bp=0 and all core initial values remain unchanged; delaying core epoch one edge aligns the extra input edge with the original barrel entry. Asynchronous assertion propagates through real FF Q transitions, with nonzero native clock-to-Q/clear delays still requiring timing proof; no instantaneous ideal assertion claim. Reassert/stopped-clock source tests required.
-
-Pipeline payload registers are unreset as in the automatic pin wrapper; their values must compare at exact translated observable ages, with no valid-low payload waiver. Reset-input event/pub/fold registers prevent stale command execution. Native all-role fanout/reset distribution/tie/storage census and mapped area/reach reconcile these preliminary counts before physical submission. Source reach uses existing macro+band floorplan provisionally; final root PNG review required. No public default/source or historical evidence changes.
+# PVM distributed source -- edge and cost model (PVMD 2026-10-19; supersedes the fae1ece6e pre-build sizing)
+Edges: inputs 2 (first capture at the pin, kept second copies), outputs 1 (unchanged): +1 steady input/result edge vs the
+SAFE2 kit (flow pin reg 1 + 1). Reset: rst_n -> 2 first (D=1) -> 8 second -> 54 third flops, async assert / sync release;
+input captures release 2 edges after rst_n (as the reference landing), the core 3 (+1 cold edge, aligns the +1 input edge
+with the original barrel entry; bp start value is not observable). Semantics unchanged: 8-edge barrel, LAT7 adders, stack,
+fold/publication calendars (bench equality every edge). Census flops 15,381 (SAFE2 reference + flow landing ~14.2k).

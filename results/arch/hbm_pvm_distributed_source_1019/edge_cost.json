@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.hbm.pvm_edge_cost.v1",
+ "mechanism": "e2e price of the PVM distributed-source +N edge (L2H-SMATT/PVMD 2026-10-19, H.STA.BLK.14.3.1).\n\not_hbm_sm_pv_merge_distributed registers every input twice at the source (2 input edges, was 1 automatic pin register)\nand keeps one output edge, so every PV-merge result (pv_v / pub_v) leaves the tile N = 1 edge later; the II-1 merge\nstream, the 8-edge barrel and the fold/publication calendar are unchanged (bench: candidate == SAFE2 reference at +1\nage, every output bit every edge).  The +1 cold reset-release edge is paid once at reset, not per token.\nMethod = tools/throughput/accepted_cost.py hbm_schedule (as tools/hbm_coll_static/injlat_cost.py --issue-edges): S2\nschedule of the exact per-die program, +N cycles on every record of the ops whose result passes the PV merge leaf\n(default ATT.PV; edges counted 1:1 as schedule cycles, conservative).\n",
+ "ops": [
+  "ATT.PV"
+ ],
+ "workloads": {
+  "ds": {
+   "records": {
+    "ATT.PV": 40
+   },
+   "att_ops": {
+    "ATT.QK": 40,
+    "ATT.PV": 40
+   },
+   "rows": [
+    {
+     "edges": 1,
+     "base_cycles": 576702.4,
+     "cycles": 576742.4,
+     "added_cycles": 40.0,
+     "e2e_loss_pct": 0.0069,
+     "per_op": {
+      "ATT.PV": {
+       "records": 40,
+       "cycles_per_record": 1,
+       "added_cycles": 40.0
+      }
+     }
+    }
+   ]
+  },
+  "qwen": {
+   "records": {
+    "ATT.PV": 2
+   },
+   "att_ops": {
+    "ATT.QK": 2,
+    "ATT.PV": 2
+   },
+   "rows": [
+    {
+     "edges": 1,
+     "base_cycles": 1269120.1,
+     "cycles": 1269192.1,
+     "added_cycles": 72.0,
+     "e2e_loss_pct": 0.0057,
+     "per_op": {
+      "ATT.PV": {
+       "records": 2,
+       "cycles_per_record": 1,
+       "added_cycles": 72.0
+      }
+     }
+    }
+   ]
+  }
+ }
+}

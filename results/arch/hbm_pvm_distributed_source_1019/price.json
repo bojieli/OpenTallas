@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.hbm.pvm_edge_price.v1",
+ "item": "H.STA.BLK.14.3.1",
+ "lane": "LEAD3-HBM/L2H-SMATT/PVMD",
+ "date": "2026-10-19",
+ "change": "PVM leaf ot_hbm_sm_pv_merge_distributed (smh_pvm_ref_s5a/s5b): every input registered twice at the source (was one flow pin register), one output edge (unchanged)",
+ "edges": {
+  "added_input_result_edges": 1,
+  "added_cold_release_edges": 1,
+  "form": "uniform +1: every PV-merge result (pv_v / pub_v stream) leaves the tile one edge later; II 1, the 8-edge barrel, fold and publication calendars unchanged (bench: candidate == SAFE2 reference one edge later, every output bit every edge); +1 reset-release edge paid once per reset, not per token",
+  "compiler_change_owed": "the attention schedule's PV-merge input->result latency +1 (ATT.PV records); smh_attn parent wiring unchanged (same ports)"
+ },
+ "method": "tools/hbm_pvm_edge_cost.py --edges 1 (tools/throughput/accepted_cost.py hbm_schedule, S2 schedule of the per-die program, +1 cycle on every ATT.PV record; same machinery as tools/hbm_coll_static/injlat_cost.py --issue-edges)",
+ "token_cycles": {
+  "ds": {
+   "base": 576702.4,
+   "added": 40.0,
+   "e2e_loss_pct": 0.0069,
+   "att_pv_records": 40
+  },
+  "qwen": {
+   "base": 1269120.1,
+   "added": 72.0,
+   "e2e_loss_pct": 0.0057,
+   "att_pv_records": 2
+  }
+ },
+ "ledger": "within accepted-cost (<=5%/unit, <=15%/design): DS +40.0 cycles/token (0.0069%), Qwen +72.0 (0.0057%)",
+ "evidence": {
+  "cost": "results/arch/hbm_pvm_distributed_source_1019/edge_cost.json",
+  "bench": "results/arch/hbm_pvm_distributed_source_1019/bench"
+ }
+}

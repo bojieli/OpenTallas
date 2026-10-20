@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       admits  1152 GB (avail 920, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 40 disk 562 GB 
+ot-run: ot-epyc6       skipped: Command '['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', 'ot-epyc6', 't
+ot-run: ot-epyc7       admits   124 GB (avail 187, growth 101, headroom 0, waiters 0/0 GB) load 51/96 running 35 disk 5845 GB 
+ot-run: ot-epyc9       admits   804 GB (avail 748, growth 185, headroom 0, waiters 0/0 GB) load 83/128 running 46 disk 468 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-pvmd/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-pvmd/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3649180-1792473046 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+PVM STOPCLK reset tree + captures + core state cleared with no clock edge
+PVM REASSERT 2 released
+- Verilator: $finish at 670ns; walltime 0.031 s; speed 21.682 us/s
+- Verilator: cpu 0.031 s on 1 threads; allocated 9 MB
+PVM PASS checked=240 (8 runs of 1..8 chunks, fold 0<-0+1, 7 publications; {'pv': '8', 'pub': '112', 'fault': '0', 'fault_cyc': '-1', 'cycles': '600', 'cmp_edges': '663', 'reassert': '2', 'xrand': '0'})
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3649180-1792473046): exit 0

@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       admits  1152 GB (avail 919, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 40 disk 562 GB 
+ot-run: ot-epyc6       skipped: Command '['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', 'ot-epyc6', 't
+ot-run: ot-epyc7       admits   124 GB (avail 187, growth 101, headroom 0, waiters 0/0 GB) load 51/96 running 35 disk 5845 GB 
+ot-run: ot-epyc9       admits   804 GB (avail 748, growth 185, headroom 0, waiters 0/0 GB) load 83/128 running 46 disk 468 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-pvmd/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-pvmd/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3650608-1792473046 after 3 s
+Verilator 5.050 2026-07-01 rev v5.050
+[534000] %Fatal: tb_pv_merge_distributed.sv:131: Assertion failed in tb_pv_merge_distributed: DISTRIBUTED_CANDIDATE_FAULT
+%Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:131: Verilog $stop
+%Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:131: Verilog $stop
+Aborting...
+PVM FAIL mismatches=33 (pv 0, pub 32, done None)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3650608-1792473046): exit 1
