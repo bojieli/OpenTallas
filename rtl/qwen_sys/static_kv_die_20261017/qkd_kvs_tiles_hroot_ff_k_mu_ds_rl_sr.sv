@@ -1190,8 +1190,18 @@ module qkd_kvs_pc (
     // KV-PC 10-19 OT_KV_PC_RLAND: each reset lands at the face in 2 registered stages on its own domain
     wire w_rland__rst_n;
     wire w_rland__hrst_n;
-    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_ck (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(w_rland__rst_n));
-    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_hck (.clk(hck), .async_rst_n(hrst_n), .sync_rst_n(w_rland__hrst_n));
+    (* async_reg = "true" *) reg rland_ck_s1;
+    (* keep, ot_rst_split, async_reg = "true" *) reg [2:0] rland_ck_s2__qv;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin rland_ck_s1 <= 1'b0; rland_ck_s2__qv <= 3'd0; end
+        else begin rland_ck_s1 <= 1'b1; rland_ck_s2__qv <= {3{rland_ck_s1}}; end
+    assign w_rland__rst_n = rland_ck_s2__qv[0];   // KV-PC5: 3 kept copies of the landed reset (ot_rst_copies)
+    (* async_reg = "true" *) reg rland_hck_s1;
+    (* keep, ot_rst_split, async_reg = "true" *) reg [3:0] rland_hck_s2__qv;
+    always @(posedge hck or negedge hrst_n)
+        if (!hrst_n) begin rland_hck_s1 <= 1'b0; rland_hck_s2__qv <= 4'd0; end
+        else begin rland_hck_s1 <= 1'b1; rland_hck_s2__qv <= {4{rland_hck_s1}}; end
+    assign w_rland__hrst_n = rland_hck_s2__qv[0];   // KV-PC5: 4 kept copies of the landed reset (ot_rst_copies)
     wire [15:0] pc__expected_epoch = i_grp[15:0];
     wire [5:0] pc__expected_layer = i_grp[21:16];
     wire [0:0] pc__expected_put = i_grp[22:22];
@@ -1569,8 +1579,18 @@ module qkd_kvs_pc_h (
     // KV-PC 10-19 OT_KV_PC_RLAND: each reset lands at the face in 2 registered stages on its own domain
     wire w_rland__rst_n;
     wire w_rland__hrst_n;
-    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_ck (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(w_rland__rst_n));
-    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_hck (.clk(hck), .async_rst_n(hrst_n), .sync_rst_n(w_rland__hrst_n));
+    (* async_reg = "true" *) reg rland_ck_s1;
+    (* keep, ot_rst_split, async_reg = "true" *) reg [2:0] rland_ck_s2__qv;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin rland_ck_s1 <= 1'b0; rland_ck_s2__qv <= 3'd0; end
+        else begin rland_ck_s1 <= 1'b1; rland_ck_s2__qv <= {3{rland_ck_s1}}; end
+    assign w_rland__rst_n = rland_ck_s2__qv[0];   // KV-PC5: 3 kept copies of the landed reset (ot_rst_copies)
+    (* async_reg = "true" *) reg rland_hck_s1;
+    (* keep, ot_rst_split, async_reg = "true" *) reg [3:0] rland_hck_s2__qv;
+    always @(posedge hck or negedge hrst_n)
+        if (!hrst_n) begin rland_hck_s1 <= 1'b0; rland_hck_s2__qv <= 4'd0; end
+        else begin rland_hck_s1 <= 1'b1; rland_hck_s2__qv <= {4{rland_hck_s1}}; end
+    assign w_rland__hrst_n = rland_hck_s2__qv[0];   // KV-PC5: 4 kept copies of the landed reset (ot_rst_copies)
     wire [15:0] pc__expected_epoch = i_grp[15:0];
     wire [5:0] pc__expected_layer = i_grp[21:16];
     wire [0:0] pc__expected_put = i_grp[22:22];

@@ -95,6 +95,19 @@ CHAIN = 'rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv'
 ESM = 'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv'
 RHOP = 'rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv'
 RHEAD = 'rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv'
+WOBS = 'rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv'
+# KV-PC5 native32 (census f1: 26 open-row write decodes drove 33..39 mapped pins, 19 row bits x 2 from shared po_q
+# address bits): the open-row write decode reads 4 kept copies of po_q[8:0] (pw, registered with po_q, same edge and
+# reset), copy {row[4], half} decodes 16 rows x one <= 10-bit half.
+WOBS_SUBS = [
+    (" input wire expected_static_column,input wire [346:0] context_word,",
+     " input wire expected_static_column,input wire [346:0] context_word,input wire [35:0] pw,"),
+    ("  if(po[0]&&po[3:1]==3'd1)open_row[po[8:4]]<=po[27:9];",
+     "  for(integer r=0;r<32;r=r+1)begin\n"
+     "   if(pw[(r/16)*18+0]&&pw[(r/16)*18+3 -: 3]==3'd1&&pw[(r/16)*18+8 -: 5]==5'(r))open_row[r][9:0]<=po[18:9];\n"
+     "   if(pw[(r/16)*18+9]&&pw[(r/16)*18+12 -: 3]==3'd1&&pw[(r/16)*18+17 -: 5]==5'(r))open_row[r][18:10]<=po[27:19];\n"
+     "  end"),
+]
 
 # KV-PC SAFE item 3 (terminal census 1248d0585 + kv-pc-contract drivers.json: 188 FF roots > 32 loads).  Copies per
 # root ~ loads / 24 (<= 32 a copy after the split, margin for mapping).  (reg, width, copies[, (port old, port new)])
@@ -131,9 +144,12 @@ OBS_PO = [
      "    // KV-PC SAFE: po_q[34:30] (col_bank: the observer's bank-indexed open-row reads, 641..43 loads) as 27 kept copies\n"
      "    (* keep *) reg [327:0] po_q_d;\n"
      "    (* keep, ot_rst_split = 5 *) reg [134:0] pob__qv;\n"
-     "    wire [327:0] po_q = {po_q_d[327:35], pob__qv[4:0], po_q_d[29:0]};"),
+     "    wire [327:0] po_q = {po_q_d[327:35], pob__qv[4:0], po_q_d[29:0]};\n"
+     "    (* keep *) reg [35:0] pw;   // KV-PC5: 4 kept copies of po_q[8:0] for the open-row write decode"),
     ("if(!h_rn)begin po_q<=0;sc_q<=0;esc_q<=0;end else begin po_q<=po;sc_q<=static_column;",
-     "if(!h_rn)begin po_q_d<=0;pob__qv<=135'd0;sc_q<=0;esc_q<=0;end else begin po_q_d<=po;pob__qv<={27{po[34:30]}};sc_q<=static_column;"),
+     "if(!h_rn)begin po_q_d<=0;pob__qv<=135'd0;pw<=36'd0;sc_q<=0;esc_q<=0;end else begin po_q_d<=po;pob__qv<={27{po[34:30]}};pw<={4{po[8:0]}};sc_q<=static_column;"),
+    ("    qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(",
+     "    qkd_kvpc_s_wobs #(.STRICT(PROFILE==0)) u_native_write_observer(.pw(pw),"),
 ]
 PORT_Y1 = [
     ("            for (i = 0; i < 4; i = i + 1) y1[i*8 +: 8] <= syn64(r_d[i*72 +: 72]);",
@@ -712,6 +728,7 @@ CLONES = [
      [('ot_qkd_static_emb_cdc #(.ENABLE(1)) u_ecdc (', 'ot_qkd_static_emb_cdc_kvpc_s #(.ENABLE(1)) u_ecdc (')],
      [('hr_q', 1, 2), ('rs_q', 1, 3)]),
     (CORE, 'qkd_ctrl_pc_obs_child', 'qkd_kvpc_s_obs_child', OBS_PO, [('hr_q', 1, 16)]),
+    (WOBS, 'qkd_static_kv_write_observer', 'qkd_kvpc_s_wobs', WOBS_SUBS),
     (CTRL, 'qkd_ctrl_pc_port_child_nc', 'qkd_kvpc_s_port_child',
      [('    ot_qfd_emb_pcport_nkw #(', '    ot_qfd_emb_pcport_nkw_kvpc_s #(')],
      [('rv_q', 1, 56), ('col_sr_q', 1, 2)]),
@@ -725,7 +742,8 @@ CLONES = [
      [('    ot_qfd_kv_landing_ecc #(.ENABLE(1), .INTERLEAVED(1)) u_ecc (',
        '    ot_qfd_kv_landing_ecc_kvpc_s #(.ENABLE(1), .INTERLEAVED(1)) u_ecc (')]),
     (ECC, 'ot_qfd_kv_landing_ecc', 'ot_qfd_kv_landing_ecc_kvpc_s', [], [('p1_v', 1, 23)]),
-    (CAL, 'qkd_controller_hbm_calendar', 'qkd_kvpc_s_calendar', [], [('rn', 1, 28), ('go_q', 1, 41)]),
+    # KV-PC5 10-20 native32: the calendar is a hand-written successor (lookahead copy families, same edges/state)
+    ('TEXT', 'tools/qwen_kv_die/kvpc_native32/qkd_kvpc_s_calendar.sv'),
     (UCTL, 'ot_qkd_static_ctrl_pc_emb', 'ot_qkd_static_ctrl_pc_emb_kvpc_s',
      [(' ot_qkd_static_kv_timing #(', ' ot_qkd_static_kv_timing_kvpc_s #(')] + UCTL_PC5,
      [('rp', 3, 2),
@@ -924,7 +942,7 @@ def render():
            '// except for the listed substitutions (instance module names; in qkd_kvpc_s_sched the tag queue and the',
            f'// replicated hr_q ({NHR}) / hgo ({NHGO}) roots).',
            '`ifndef OT_KVPC_SRAM_CLONES_1019_SV', '`define OT_KVPC_SRAM_CLONES_1019_SV', '']
-    body = [LEAF] + [clone(*c) for c in CLONES]
+    body = [LEAF] + [(ROOT / c[1]).read_text() if c[0] == 'TEXT' else clone(*c) for c in CLONES]
     return post('\n'.join(hdr) + '\n'.join(body) + '`endif\n')
 
 
@@ -949,6 +967,21 @@ def sr_tile():
         a = re.search(rf'^module {m} \(', t, re.M).start()
         b = t.index('endmodule\n', a) + len('endmodule\n')
         t = t[:a] + ns['pc_sram_text'](t[a:b]) + t[b:]
+    # KV-PC5 native32 (census f1: u_rland_hck.reset_pipe[1] drove 70 pins, u_rland_ck 53): the landed reset = the same two
+    # registered stages (ot_reset_sync ASYNC_STAGES 2: async assert, synchronous release), the second stage as kept
+    # identical copies (family ot_rst_split: ot_rst_copies spreads the D / reset pins, each a 1-pin load) -- release edge
+    # unchanged.
+    for clk, n, w, k in (('ck', 'rst_n', 'w_rland__rst_n', 3), ('hck', 'hrst_n', 'w_rland__hrst_n', 4)):
+        old = f'    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_{clk} (.clk({clk}), .async_rst_n({n}), .sync_rst_n({w}));\n'
+        if t.count(old) != 2:
+            raise SystemExit(f'kv_pc_sram_gen: rland {clk} site found {t.count(old)} times')
+        t = t.replace(old,
+            f'    (* async_reg = "true" *) reg rland_{clk}_s1;\n'
+            f'    (* keep, ot_rst_split, async_reg = "true" *) reg [{k - 1}:0] rland_{clk}_s2__qv;\n'
+            f'    always @(posedge {clk} or negedge {n})\n'
+            f"        if (!{n}) begin rland_{clk}_s1 <= 1'b0; rland_{clk}_s2__qv <= {k}'d0; end\n"
+            f"        else begin rland_{clk}_s1 <= 1'b1; rland_{clk}_s2__qv <= {{{k}{{rland_{clk}_s1}}}}; end\n"
+            f'    assign {w} = rland_{clk}_s2__qv[0];   // KV-PC5: {k} kept copies of the landed reset (ot_rst_copies)\n')
     return t.replace('// KVJ-G2 2026-10-17:', '// KV-PC 2026-10-19 OT_KV_PC_SRAM=1 (pc / pc_h: kv_static_die.pc_sram_text; kv_pc_sram_gen.py).\n'
                      '// KVJ-G2 2026-10-17:', 1)
 

@@ -1215,7 +1215,7 @@ module qkd_kvpc_s_cdc_child #(
          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault);
 endmodule
 
-// ---- qkd_kvpc_s_obs_child: clone of qkd_ctrl_pc_obs_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 2 substitution(s); kept copy families hr_q[1]x16(1) ----
+// ---- qkd_kvpc_s_obs_child: clone of qkd_ctrl_pc_obs_child (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv) with 3 substitution(s); kept copy families hr_q[1]x16(1) ----
 module qkd_kvpc_s_obs_child #(parameter integer PROFILE = 0)(
     input  wire         pll_hbm,
     input  wire         hrst,
@@ -1239,18 +1239,70 @@ module qkd_kvpc_s_obs_child #(parameter integer PROFILE = 0)(
     (* keep *) reg [327:0] po_q_d;
     (* keep, ot_rst_split = 5 *) reg [134:0] pob__qv;
     wire [327:0] po_q = {po_q_d[327:35], pob__qv[4:0], po_q_d[29:0]};
+    (* keep *) reg [35:0] pw;   // KV-PC5: 4 kept copies of po_q[8:0] for the open-row write decode
     (* keep *) reg [346:0] ctx_q;
     (* keep *) reg sc_q, esc_q;
-    always @(posedge hclk or negedge h_rn) if(!h_rn)begin po_q_d<=0;pob__qv<=135'd0;sc_q<=0;esc_q<=0;end else begin po_q_d<=po;pob__qv<={27{po[34:30]}};sc_q<=static_column;esc_q<=expected_static_column;end
+    always @(posedge hclk or negedge h_rn) if(!h_rn)begin po_q_d<=0;pob__qv<=135'd0;pw<=36'd0;sc_q<=0;esc_q<=0;end else begin po_q_d<=po;pob__qv<={27{po[34:30]}};pw<={4{po[8:0]}};sc_q<=static_column;esc_q<=expected_static_column;end
     always @(posedge hclk) ctx_q<=context_word;
     wire [60:0] obs_commit_identity; wire [28:0] obs_commit_address;
-    qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
+    qkd_kvpc_s_wobs #(.STRICT(PROFILE==0)) u_native_write_observer(.pw(pw),
         .hclk(hclk),.rst_n(h_rn),.po(po_q),.static_column(sc_q),.expected_static_column(esc_q),.context_word(ctx_q),
         .commit_valid(obs_commit_valid),.commit_identity(obs_commit_identity),.commit_address(obs_commit_address),.fault(fault));
     (* keep *) reg nc_v_q;(* keep *) reg [60:0] nc_id_q;(* keep *) reg [28:0] nc_ad_q;
     always @(posedge hclk or negedge h_rn)if(!h_rn)nc_v_q<=1'b0;else nc_v_q<=obs_commit_valid;
     always @(posedge hclk)begin nc_id_q<=obs_commit_identity;nc_ad_q<=obs_commit_address;end
     assign native_commit_valid=nc_v_q;assign native_commit_identity=nc_id_q;assign native_commit_address=nc_ad_q;
+endmodule
+
+// ---- qkd_kvpc_s_wobs: clone of qkd_static_kv_write_observer (rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv) with 2 substitution(s) ----
+module qkd_kvpc_s_wobs #(parameter integer STRICT=1)(
+ input wire hclk,rst_n,input wire [327:0] po,input wire static_column,
+ input wire expected_static_column,input wire [346:0] context_word,input wire [35:0] pw,
+ output reg commit_valid,output reg [60:0] commit_identity,
+ output reg [28:0] commit_address,output reg fault
+);
+ reg [18:0] open_row[0:31];
+ reg [31:0] opened;
+ wire command=po[28]&&static_column;
+ wire native_write=command&&context_word[346]&&po[29];
+ wire [28:0] actual_address={open_row[po[34:30]],po[34:30],po[39:35]};
+ reg [4:0] valid;
+ reg [346:0] payload[0:4];
+ reg [287:0] encoded;
+ function automatic [71:0] encode64(input [63:0] d);
+  reg [71:0] c;integer j;begin
+   c=0;j=0;for(integer p=1;p<=71;p=p+1)if((p&(p-1))!=0)begin c[p-1]=d[j];j=j+1;end
+   for(integer k=0;k<7;k=k+1)for(integer p=1;p<=71;p=p+1)if((p&(1<<k))!=0)c[(1<<k)-1]=c[(1<<k)-1]^c[p-1];
+   c[71]=^c[70:0];encode64=c;
+  end
+ endfunction
+ function automatic [287:0] encode256(input [255:0] d);
+  for(integer w=0;w<4;w=w+1)encode256[w*72+:72]=encode64(d[w*64+:64]);
+ endfunction
+ always @(posedge hclk)begin
+  for(integer r=0;r<32;r=r+1)begin
+   if(pw[(r/16)*18+0]&&pw[(r/16)*18+3 -: 3]==3'd1&&pw[(r/16)*18+8 -: 5]==5'(r))open_row[r][9:0]<=po[18:9];
+   if(pw[(r/16)*18+9]&&pw[(r/16)*18+12 -: 3]==3'd1&&pw[(r/16)*18+17 -: 5]==5'(r))open_row[r][18:10]<=po[27:19];
+  end
+  payload[0]<=context_word;
+  for(integer i=1;i<5;i=i+1)payload[i]<=payload[i-1];
+  encoded<=encode256(payload[3][255:0]);
+  commit_identity<=payload[4][345:285];commit_address<=payload[4][284:256];
+ end
+ always @(posedge hclk or negedge rst_n)
+  if(!rst_n)begin opened<=0;valid<=0;commit_valid<=0;fault<=0;end
+  else begin
+   valid<={valid[3:0],native_write};commit_valid<=valid[4];
+   if(po[0])case(po[3:1])
+    3'd1:opened[po[8:4]]<=1;
+    3'd0:opened[po[8:4]]<=0;
+    3'd5:opened<=0;
+    default:;
+   endcase
+   if(STRICT!=0&&command!=expected_static_column)fault<=1;
+   if(command&&context_word[346]&&(!po[29]||!opened[po[34:30]]||actual_address!=context_word[284:256]))fault<=1;
+   if(valid[4]&&po[327:40]!=encoded)fault<=1;
+  end
 endmodule
 
 // ---- qkd_kvpc_s_port_child: clone of qkd_ctrl_pc_port_child_nc (rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv) with 1 substitution(s); kept copy families rv_q[1]x56(2), col_sr_q[1]x2(2) ----
@@ -1565,7 +1617,19 @@ module ot_qfd_kv_landing_ecc_kvpc_s #(parameter integer ENABLE=0, MUT=0, INTERLE
  assign o_data=corrected;
 endmodule
 
-// ---- qkd_kvpc_s_calendar: clone of qkd_controller_hbm_calendar (rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv) with 0 substitution(s); kept copy families rn[1]x28(1), go_q[1]x41(2) ----
+// ---- qkd_kvpc_s_calendar: KV-PC5 native32 successor of qkd_controller_hbm_calendar (rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv) ----
+// Same ports, same edges, same register state (image, seen, sealed, active_*, wait/left/burst, outputs, fault, idle).
+// Native census f1 (tile pc sr7): the calendar's comb controls fanned out to 33..74 mapped pins (image write decodes,
+// fire[k], go_q copies, the go-load select).  Every such control is now a LOOKAHEAD kept copy family: the copy registers
+// f(next state) on the same hck edge as the state it is derived from, so copy(t) == f(state(t)) exactly (async reset rn:
+// reset value == f(reset state) == 0).  Each copy drives one <=16-bit slice directly (no ot_rst_split re-pointing):
+//   wv/pa  image write enable + address per (half, 8-bit slice) and the seen bits: we_q && !sealed && !live && addr[4]==h
+//   fc     fire[k] for the event OR (4 x ~11 command bits) and the mask / static-read / fire count
+//   fe/le  fire[k] && !go_q, live[k] && !go_q for the left/burst and wait (2 x 8 b) updates (the original "else" branch)
+//   gk/ga  go_ok = go_q && sealed && !live && !we_q for the per-entry go load (left+burst, wait 2 x 8 b) and active_* / owner / idle
+//   i84b   kept copy of image[k][84] (written with it, from its own data copy d20c): it selects half of the 19 row bits
+// The go pin feeds 5 gates (go_q + 2 go_ok D gates + 2 !go gates), each gate <= 32 copy D pins; rnx = rn copies (same D,
+// same edge) make those gates distinct so synthesis cannot re-share them.  rn stays the reset family (rst_copies).
 module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  input wire hck,rst_n,
  input wire cfg_we,input wire [4:0] cfg_addr,input wire [63:0] cfg_data,
@@ -1575,39 +1639,69 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  output reg [15:0] static_epoch,output wire expected_raw_valid,
  output reg fault,output reg idle
 );
- initial if(N<1 || N>16)$fatal(1,"calendar descriptor capacity must be 1..16");
- (* keep, ot_rst_split *) reg [27:0] rn__qv;   // KV-PC SAFE: 28 kept copies of rn
-    function rn__f; input v; rn__f = v; endfunction
- wire rn = rn__qv[0:0];
- always @(posedge hck)rn__qv <= {28{rn__f(rst_n)}};
- reg we_q, seal_q;
- (* keep, ot_rst_split *) reg [40:0] go_q__qv;   // KV-PC SAFE: 41 kept copies of go_q
-    function go_q__f; input v; go_q__f = v; endfunction
- wire go_q = go_q__qv[0:0];reg [4:0] addr_q;reg [63:0] data_q;
+ initial if(N!=16)$fatal(1,"qkd_kvpc_s_calendar: the native32 copy families assume N == 16");
+ (* keep, ot_rst_split *) reg [39:0] rn__qv;   // KV-PC5: 40 kept copies of rn (async reset of ~1100 flops)
+ wire rn = rn__qv[0];
+ always @(posedge hck)rn__qv <= {40{rst_n}};
+ (* keep *) reg [3:0] rnx;                      // KV-PC5: rn copies that only make the go gates distinct
+ always @(posedge hck)rnx <= {4{rst_n}};
+ reg we_q,seal_q,go_q;reg [63:0] data_q;
  reg [15:0] epoch_q;reg [5:0] layer_q;
- always @(posedge hck)begin addr_q<=cfg_addr;data_q<=cfg_data;epoch_q<=epoch;layer_q<=layer;end
- always @(posedge hck or negedge rn)
- if(!rn)begin we_q<=0;seal_q<=0;go_q__qv <= {41{go_q__f(0)}};end
- else begin we_q<=cfg_we;seal_q<=seal;go_q__qv <= {41{go_q__f(go)}};end
+ always @(posedge hck)begin data_q<=cfg_data;epoch_q<=epoch;layer_q<=layer;end
  reg [127:0] image[0:N-1];reg [N-1:0] low_seen,high_seen;
  reg sealed;reg [15:0] active_epoch;reg [18:0] active_row;
  reg [15:0] wait_q[0:N-1];reg [9:0] left_q[0:N-1];reg [3:0] burst_q[0:N-1];
- wire [N-1:0] fire,live;
- genvar g;
- generate for(g=0;g<N;g=g+1)begin:events
- assign live[g]=left_q[g]!=0;
- assign fire[g]=live[g]&&(wait_q[g]==0);
- end endgenerate
+ // lookahead copy families (see header)
+ (* keep *) reg [17:0] wv;            // [h*9 + s]: s 0..7 image byte slices, s 8 seen bit
+ (* keep *) reg [17*4+3:0] pa;        // addr[3:0] per wv copy
+ (* keep *) reg [5*N-1:0] fc;         // [k*5 + 0..3]: event cmd bits [10:0] [21:11] [32:22] [42:33]; +4 mask-static-count
+ (* keep *) reg [3*N-1:0] fe;         // [k*3 + 0/1/2]: left+burst / wait[7:0] / wait[15:8]
+ (* keep *) reg [2*N-1:0] le;         // [k*2 + 0/1]: live && !go_q, wait[7:0] / wait[15:8]
+ (* keep *) reg [3*N-1:0] gk;         // [k*3 + 0/1/2]: go load left+burst / wait[7:0] / wait[15:8]
+ (* keep *) reg [N-1:0] i84b;         // copy of image[k][84]
+ (* keep *) reg d20c;                 // copy of data_q[20] (feeds only i84b)
+ (* keep *) reg [2:0] ga;             // go load active_epoch / active_row / owner+idle
+ wire live_any = |{left_q[15]!=0,left_q[14]!=0,left_q[13]!=0,left_q[12]!=0,left_q[11]!=0,left_q[10]!=0,left_q[9]!=0,
+                   left_q[8]!=0,left_q[7]!=0,left_q[6]!=0,left_q[5]!=0,left_q[4]!=0,left_q[3]!=0,left_q[2]!=0,
+                   left_q[1]!=0,left_q[0]!=0};
  reg [42:0] event_cmd;reg [2:0] event_mask;
  reg static_read;integer fires,i;
+ reg [42:0] cmd_k;
  always @*begin
  event_cmd=0;event_mask=0;static_read=0;fires=0;
- for(integer k=0;k<N;k=k+1)if(fire[k])begin
- fires=fires+1;
- event_cmd=event_cmd | (image[k][84] ? {image[k][80:58],active_row,image[k][38]} : image[k][80:38]);
- event_mask=event_mask | image[k][83:81];static_read=static_read|image[k][85];
+ for(integer k=0;k<N;k=k+1)begin
+  cmd_k = image[k][80:38];
+  if(image[k][84])cmd_k[10:1]=active_row[9:0];
+  if(i84b[k])cmd_k[19:11]=active_row[18:10];
+  if(fc[k*5+0])event_cmd[10:0]=event_cmd[10:0] | cmd_k[10:0];
+  if(fc[k*5+1])event_cmd[21:11]=event_cmd[21:11] | cmd_k[21:11];
+  if(fc[k*5+2])event_cmd[32:22]=event_cmd[32:22] | cmd_k[32:22];
+  if(fc[k*5+3])event_cmd[42:33]=event_cmd[42:33] | cmd_k[42:33];
+  if(fc[k*5+4])begin fires=fires+1;event_mask=event_mask | image[k][83:81];static_read=static_read|image[k][85];end
  end
  end
+ // next entry state (the original update, branch selects from the copies)
+ reg [16*N-1:0] wait_nx;reg [10*N-1:0] left_nx;reg [4*N-1:0] burst_nx;
+ reg [N-1:0] fire_nx,live_nx;reg [16*N-1:0] wl,wf,wd;
+ always @*begin
+ for(integer k=0;k<N;k=k+1)begin
+  left_nx[k*10 +: 10] = gk[k*3] ? image[k][25:16] : (fe[k*3] ? left_q[k]-10'd1 : left_q[k]);
+  burst_nx[k*4 +: 4] = gk[k*3] ? 4'd0 : (fe[k*3] ? ((burst_q[k]==image[k][29:26]) ? 4'd0 : burst_q[k]+4'd1) : burst_q[k]);
+  wl[k*16 +: 16] = image[k][15:0]+16'(MUT==1);
+  wf[k*16 +: 16] = (burst_q[k]==image[k][29:26]) ? ((MUT==2)?16'd0:{8'b0,image[k][37:30]}) : 16'd0;
+  wd[k*16 +: 16] = wait_q[k]-16'd1;
+  wait_nx[k*16+0 +: 8] = gk[k*3+1] ? wl[k*16+0 +: 8] : fe[k*3+1] ? wf[k*16+0 +: 8] : le[k*2] ? wd[k*16+0 +: 8] : wait_q[k][7:0];
+  wait_nx[k*16+8 +: 8] = gk[k*3+2] ? wl[k*16+8 +: 8] : fe[k*3+2] ? wf[k*16+8 +: 8] : le[k*2+1] ? wd[k*16+8 +: 8] : wait_q[k][15:8];
+  live_nx[k] = left_nx[k*10 +: 10]!=0;
+  fire_nx[k] = live_nx[k] && (wait_nx[k*16 +: 16]==0);
+ end
+ end
+ wire allseen = (&low_seen)&&(&high_seen);
+ wire sealed_nx = sealed | (seal_q && allseen && !live_any);
+ wire pre_nx = sealed_nx && !(|live_nx) && !cfg_we;
+ wire gok_a = go && pre_nx && rnx[0], gok_b = go && pre_nx && rnx[1];
+ wire ng_f = !go && rnx[2], ng_l = !go && rnx[3];
+ wire wv_g = cfg_we && !sealed_nx && !(|live_nx);
  wire raw,unused_put;wire [15:0] unused_epoch;
  // Compiler accounts original controller pin-to-raw offset exactly. This leaf
  // feeds the reservation pins, so its own two pin edges precede this pipe.
@@ -1616,37 +1710,47 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  .reservation_epoch(static_epoch),.expected_raw_valid(raw),.compiled_hbm_put(unused_put),.expected_return_epoch(unused_epoch));
  assign expected_raw_valid=raw;
  reg static_read_q;
+ // image: written only by the wv/pa copies (no reset, as the original; wv is 0 while rn is low)
+ always @(posedge hck)
+ for(integer k=0;k<N;k=k+1)for(integer h=0;h<2;h=h+1)for(integer s=0;s<8;s=s+1)
+  if(wv[h*9+s] && pa[(h*9+s)*4 +: 4]==4'(k))begin
+   image[k][h*64+s*8 +: 8]<=data_q[s*8 +: 8];
+   if(h==1 && s==2)i84b[k]<=d20c;              // image[k][84] = image[k][64+20]
+  end
+ always @(posedge hck)d20c<=cfg_data[20];
+ always @(posedge hck)pa<={18{cfg_addr[3:0]}};
  always @(posedge hck or negedge rn)
  if(!rn)begin
+ we_q<=0;seal_q<=0;go_q<=0;
+ wv<=0;fc<=0;fe<=0;le<=0;gk<=0;ga<=0;
  low_seen<=0;high_seen<=0;sealed<=0;active_epoch<=0;active_row<=0;
  static_cmd_owner<=0;static_cmd<=0;reserved_rd<=0;reserved_static_col<=0;reserved_write_col<=0;
  static_epoch<=0;static_read_q<=0;fault<=0;idle<=1;
  for(i=0;i<N;i=i+1)begin wait_q[i]<=0;left_q[i]<=0;burst_q[i]<=0;end
  end else begin
- static_cmd<=event_cmd;reserved_rd<=event_mask[0];reserved_static_col<=event_mask[1];reserved_write_col<=event_mask[2];
- static_epoch<=active_epoch;static_read_q<=static_read;idle<=!(|live);
- if(fires>1 || (event_mask!=0 && (event_mask&(event_mask-1))!=0))fault<=1;
- if(we_q)begin
- if(sealed || |live || addr_q[3:0]>=N)fault<=1;
- else if(addr_q[4])begin image[addr_q[3:0]][127:64]<=data_q;high_seen[addr_q[3:0]]<=1;end
- else begin image[addr_q[3:0]][63:0]<=data_q;low_seen[addr_q[3:0]]<=1;end
- end
- if(seal_q)begin if((&low_seen)&&(&high_seen)&&!(|live))sealed<=1;else fault<=1;end
- if(go_q)begin
- if(!sealed || |live || we_q)fault<=1;
- else begin
- active_epoch<=epoch_q;active_row<=19'(ROW0)+{13'b0,layer_q};static_cmd_owner<=1;idle<=0;
+ we_q<=cfg_we;seal_q<=seal;go_q<=go;
+ wv<={{9{wv_g && cfg_addr[4]}},{9{wv_g && !cfg_addr[4]}}};
  for(i=0;i<N;i=i+1)begin
- wait_q[i]<=image[i][15:0]+16'(MUT==1);left_q[i]<=image[i][25:16];burst_q[i]<=0;
+  fc[i*5 +: 5]<={5{fire_nx[i]}};
+  fe[i*3 +: 3]<={3{fire_nx[i] && ng_f}};
+  le[i*2 +: 2]<={2{live_nx[i] && ng_l}};
+  gk[i*3 +: 3]<={3{(i<8)?gok_a:gok_b}};
+  wait_q[i]<=wait_nx[i*16 +: 16];left_q[i]<=left_nx[i*10 +: 10];burst_q[i]<=burst_nx[i*4 +: 4];
  end
+ ga<={gok_b,gok_b,gok_a};
+ static_cmd<=event_cmd;reserved_rd<=event_mask[0];reserved_static_col<=event_mask[1];reserved_write_col<=event_mask[2];
+ static_epoch<=active_epoch;static_read_q<=static_read;idle<=!live_any && !ga[2];
+ if(fires>1 || (event_mask!=0 && (event_mask&(event_mask-1))!=0))fault<=1;
+ if(we_q && (sealed || live_any))fault<=1;
+ for(i=0;i<N;i=i+1)begin
+  if(wv[8] && pa[8*4 +: 4]==4'(i))low_seen[i]<=1;
+  if(wv[17] && pa[17*4 +: 4]==4'(i))high_seen[i]<=1;
  end
- end else for(i=0;i<N;i=i+1)if(live[i])begin
- if(fire[i])begin
- left_q[i]<=left_q[i]-10'd1;
- if(burst_q[i]==image[i][29:26])begin wait_q[i]<= (MUT==2)?16'd0:{8'b0,image[i][37:30]};burst_q[i]<=0;end
- else begin wait_q[i]<=0;burst_q[i]<=burst_q[i]+4'd1;end
- end else wait_q[i]<=wait_q[i]-16'd1;
- end
+ if(seal_q)begin if(allseen&&!live_any)sealed<=1;else fault<=1;end
+ if(go_q && (!sealed || live_any || we_q))fault<=1;
+ if(ga[0])active_epoch<=epoch_q;
+ if(ga[1])active_row<=19'(ROW0)+{13'b0,layer_q};
+ if(ga[2])static_cmd_owner<=1;
  end
 endmodule
 
