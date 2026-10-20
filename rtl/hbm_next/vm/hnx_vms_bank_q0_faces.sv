@@ -36,12 +36,18 @@ module hnx_vms_bank_q0_faces #(parameter integer MUT = 0) (rq0, rr0, rq1, rr1, r
   wire [281:0] wq0__ot_pr;
   (* keep *) reg [281:0] wq0__ot_q;
   always @(posedge clk_w) wq0__ot_q <= wq0;
+  // safe3 census (10-20): wq0[281] pin register replicated as 10 KEPT copies; each masks <= 29 payload bits at capture
+  (* keep *) reg [9:0] wq0_vr__ot_q;
+  always @(posedge clk_w) wq0_vr__ot_q <= {10{wq0[281]}};
   assign wq0__ot_pr = wq0__ot_q;
   output wq_done0;
   input [281:0] wq1;
   wire [281:0] wq1__ot_pr;
   (* keep *) reg [281:0] wq1__ot_q;
   always @(posedge clk_e) wq1__ot_q <= wq1;
+  // safe3 census (10-20): wq1[281] pin register replicated as 10 KEPT copies; each masks <= 29 payload bits at capture
+  (* keep *) reg [9:0] wq1_vr__ot_q;
+  always @(posedge clk_e) wq1_vr__ot_q <= {10{wq1[281]}};
   assign wq1__ot_pr = wq1__ot_q;
   output wq_done1;
   input [2:0] bid;
@@ -80,24 +86,36 @@ module hnx_vms_bank_q0_faces #(parameter integer MUT = 0) (rq0, rr0, rq1, rr1, r
   wire [281:0] dq__ot_pr;
   (* keep *) reg [281:0] dq__ot_q;
   always @(posedge clk_s) dq__ot_q <= dq;
+  // safe3 census (10-20): dq[281] pin register replicated as 10 KEPT copies; each masks <= 29 payload bits at capture
+  (* keep *) reg [9:0] dq_vr__ot_q;
+  always @(posedge clk_s) dq_vr__ot_q <= {10{dq[281]}};
   assign dq__ot_pr = dq__ot_q;
   output dq_done;
   input [281:0] kq;
   wire [281:0] kq__ot_pr;
   (* keep *) reg [281:0] kq__ot_q;
   always @(posedge clk_n) kq__ot_q <= kq;
+  // safe3 census (10-20): kq[281] pin register replicated as 10 KEPT copies; each masks <= 29 payload bits at capture
+  (* keep *) reg [9:0] kq_vr__ot_q;
+  always @(posedge clk_n) kq_vr__ot_q <= {10{kq[281]}};
   assign kq__ot_pr = kq__ot_q;
   output kq_done;
   input [276:0] xq;
   wire [276:0] xq__ot_pr;
   (* keep *) reg [276:0] xq__ot_q;
   always @(posedge clk_w) xq__ot_q <= xq;
+  // safe3 census (10-20): xq[276] pin register replicated as 10 KEPT copies; each masks <= 29 payload bits at capture
+  (* keep *) reg [9:0] xq_vr__ot_q;
+  always @(posedge clk_w) xq_vr__ot_q <= {10{xq[276]}};
   assign xq__ot_pr = xq__ot_q;
   output xq_done;
   input [276:0] xq2;
   wire [276:0] xq2__ot_pr;
   (* keep *) reg [276:0] xq2__ot_q;
   always @(posedge clk_e) xq2__ot_q <= xq2;
+  // safe3 census (10-20): xq2[276] pin register replicated as 10 KEPT copies; each masks <= 29 payload bits at capture
+  (* keep *) reg [9:0] x2_vr__ot_q;
+  always @(posedge clk_e) x2_vr__ot_q <= {10{xq2[276]}};
   assign xq2__ot_pr = xq2__ot_q;
   output xq2_done;
   output [276:0] eg;
@@ -105,8 +123,14 @@ module hnx_vms_bank_q0_faces #(parameter integer MUT = 0) (rq0, rr0, rq1, rr1, r
   wire [285:0] pq__ot_pr;
   (* keep *) reg [285:0] pq__ot_q;
   always @(posedge clk_s) pq__ot_q <= pq;
+  // safe3 census (10-20): pq[284] pin register replicated as 10 KEPT copies; each masks <= 29 payload bits at capture
+  (* keep *) reg [9:0] pq_wr__ot_q;
+  always @(posedge clk_s) pq_wr__ot_q <= {10{pq[284]}};
+  // safe3 census (10-20): pq[285] pin register replicated as 10 KEPT copies; each masks <= 29 payload bits at capture
+  (* keep *) reg [9:0] pq_vr__ot_q;
+  always @(posedge clk_s) pq_vr__ot_q <= {10{pq[285]}};
   assign pq__ot_pr = pq__ot_q;
   output [265:0] pr;
   output [17:0] status;
-  ot_hnx_vms_bank_q0_core #(.MUT(MUT)) u_ot_pr_core (.rq0(rq0__ot_pr), .rr0(rr0), .rq1(rq1__ot_pr), .rr1(rr1), .rq2(rq2__ot_pr), .rr2(rr2), .rq3(rq3__ot_pr), .rr3(rr3), .rq4(rq4__ot_pr), .rr4(rr4), .wq0(wq0__ot_pr), .wq_done0(wq_done0), .wq1(wq1__ot_pr), .wq_done1(wq_done1), .bid(bid__ot_pr), .sid(sid__ot_pr), .clk(clk), .clk_n(clk_n), .clk_s(clk_s), .clk_e(clk_e), .clk_w(clk_w), .rst_n(rst_n), .rslot_v(rslot_v__ot_pr), .rslot(rslot__ot_pr), .wslot_v(wslot_v__ot_pr), .wslot(wslot__ot_pr), .dq(dq__ot_pr), .dq_done(dq_done), .kq(kq__ot_pr), .kq_done(kq_done), .xq(xq__ot_pr), .xq_done(xq_done), .xq2(xq2__ot_pr), .xq2_done(xq2_done), .eg(eg), .pq(pq__ot_pr), .pr(pr), .status(status));
+  ot_hnx_vms_bank_q0_core #(.MUT(MUT)) u_ot_pr_core (.rq0(rq0__ot_pr), .rr0(rr0), .rq1(rq1__ot_pr), .rr1(rr1), .rq2(rq2__ot_pr), .rr2(rr2), .rq3(rq3__ot_pr), .rr3(rr3), .rq4(rq4__ot_pr), .rr4(rr4), .wq0(wq0__ot_pr), .wq_done0(wq_done0), .wq1(wq1__ot_pr), .wq_done1(wq_done1), .bid(bid__ot_pr), .sid(sid__ot_pr), .clk(clk), .clk_n(clk_n), .clk_s(clk_s), .clk_e(clk_e), .clk_w(clk_w), .rst_n(rst_n), .rslot_v(rslot_v__ot_pr), .rslot(rslot__ot_pr), .wslot_v(wslot_v__ot_pr), .wslot(wslot__ot_pr), .dq(dq__ot_pr), .dq_done(dq_done), .kq(kq__ot_pr), .kq_done(kq_done), .xq(xq__ot_pr), .xq_done(xq_done), .xq2(xq2__ot_pr), .xq2_done(xq2_done), .eg(eg), .pq(pq__ot_pr), .pr(pr), .status(status), .dq_vr(dq_vr__ot_q), .kq_vr(kq_vr__ot_q), .xq_vr(xq_vr__ot_q), .x2_vr(x2_vr__ot_q), .wq0_vr(wq0_vr__ot_q), .wq1_vr(wq1_vr__ot_q), .pq_vr(pq_vr__ot_q), .pq_wr(pq_wr__ot_q));
 endmodule

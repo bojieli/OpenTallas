@@ -37,7 +37,9 @@ module ot_hnx_vms_bank_q0_core #(parameter integer MUT = 0) (
     output wire [276:0] eg,
     input wire [285:0] pq,
     output wire [265:0] pr,
-    output wire [17:0] status
+    output wire [17:0] status,
+    // safe3 census: replicated valid pin registers (10 kept copies each, from the faces wrapper)
+    input wire [9:0] dq_vr, kq_vr, xq_vr, x2_vr, wq0_vr, wq1_vr, pq_vr, pq_wr
 );
  wire [1284:0] rr;wire [1:0] wq_done;
  assign rr0=rr[0+:257];
@@ -69,6 +71,7 @@ module ot_hnx_vms_bank_q0_core #(parameter integer MUT = 0) (
  .pr(pr),
  .status(status),
  .rq({rq4,rq3,rq2,rq1,rq0}),.rr(rr),
- .wq({wq1,wq0}),.wq_done(wq_done));
+ .wq({wq1,wq0}),.wq_done(wq_done),
+ .dq_vr(dq_vr),.kq_vr(kq_vr),.xq_vr(xq_vr),.x2_vr(x2_vr),.wq_vr({wq1_vr,wq0_vr}),.pq_vr(pq_vr),.pq_wr(pq_wr));
 endmodule
 `default_nettype wire

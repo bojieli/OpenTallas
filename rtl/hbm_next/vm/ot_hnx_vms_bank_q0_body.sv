@@ -64,7 +64,11 @@ module ot_hnx_vms_bank_q0_body #(
     output wire [276:0] eg,
     input wire [285:0] pq,
     output wire [265:0] pr,
-    output reg [17:0] status
+    output reg [17:0] status,
+    // safe3 census (10-20): replicated pin-captured valids (10 KEPT identical copies each, faces wrapper); copy c masks
+    // payload bits [c*VC +: VC] at the body capture, so no valid flop drives more than ~29 mask gates
+    input wire [9:0] dq_vr, kq_vr, xq_vr, x2_vr, pq_vr, pq_wr,
+    input wire [WG*10-1:0] wq_vr
 );
     // Pipeline identity fields retain the closed B2 4-bit encoding.
     initial begin
@@ -116,11 +120,15 @@ module ot_hnx_vms_bank_q0_body #(
     // (gate: in->reg -54.2 ps rq_v reset recovery).  Release latency belongs to the initialization mode: the
     // compiler's first slot is >= 3 edges after the port release (not a production-calendar edge).
     (* async_reg = "true" *) reg rst_s1, rst_s2;
-    reg rst_rl;  // relay flop: the only driver of the bank-wide reset net
+    // safe3 census (10-20): the relay stage is 11 KEPT identical copies (rn had 95 reset loads); each copy resets one
+    // fixed group of <= 25 flops.  Same 3-edge release on every copy.
+    //   0 pin valids + slot valids   1 S1/fault + S2 macro controls   2 M/C/D valids, write dones, egress valid, CE/UE
+    //   3 response valids + status   4 CE counter pipe   5..9 response-enable copies of face 0..4   10 packet-enable copies
+    (* keep *) reg [10:0] rst_rl;  // relay copies: the only drivers of the bank reset nets
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rst_s1 <= 1'b0; rst_s2 <= 1'b0; rst_rl <= 1'b0; end
-        else begin rst_s1 <= 1'b1; rst_s2 <= rst_s1; rst_rl <= rst_s2; end
-    wire rn = rst_rl;
+        if (!rst_n) begin rst_s1 <= 1'b0; rst_s2 <= 1'b0; rst_rl <= '0; end
+        else begin rst_s1 <= 1'b1; rst_s2 <= rst_s1; rst_rl <= {11{rst_s2}}; end
+    wire rnA = rst_rl[0], rnB = rst_rl[1], rnC = rst_rl[2], rnD = rst_rl[3], rnE = rst_rl[4], rnP = rst_rl[10];
     // ------------------------------------------------------------------ pin flops (payload: no reset)
     reg [RG*18-1:0] rq_d; reg [WG*282-1:0] wq_d; reg [281:0] dq_d, kq_d; reg [276:0] xq_d, x2_d; reg [285:0] pq_d;
     reg [RG-1:0] rq_v; reg [WG-1:0] wq_v; reg dq_v, kq_v, xq_v, x2_v, pq_v;
@@ -142,15 +150,18 @@ module ot_hnx_vms_bank_q0_body #(
     // zero sector is not zero) are still masked, by the leaf's pin valid flop (12 loads).  The packet keeps its
     // unmasked pin flops for reads/tags and gets a separate write-payload capture.  Same edges, same written data.
     reg [275:0] pqw_d;
+    localparam integer VC = 29;  // payload bits per replicated valid copy (10 copies cover 282)
     always @(posedge clk) begin
         rq_d <= rq; pq_d <= pq;
-        for (integer g = 0; g < WG; g = g + 1) wq_d[g*282 +: 282] <= wq[g*282 + 281] ? wq[g*282 +: 282] : 282'd0;
-        dq_d <= dq[281] ? dq : 282'd0; kq_d <= kq[281] ? kq : 282'd0;
-        xq_d <= xq[276] ? xq : 277'd0; x2_d <= xq2[276] ? xq2 : 277'd0;
-        pqw_d <= (pq[285] && pq[284]) ? pq[283:8] : 276'd0;
+        // safe3: each payload bit is masked by its own replicated valid copy (bit i -> copy i/VC); same values
+        for (integer g = 0; g < WG; g = g + 1)
+            for (integer i = 0; i < 282; i = i + 1) wq_d[g*282 + i] <= wq_vr[g*10 + i/VC] & wq[g*282 + i];
+        for (integer i = 0; i < 282; i = i + 1) begin dq_d[i] <= dq_vr[i/VC] & dq[i]; kq_d[i] <= kq_vr[i/VC] & kq[i]; end
+        for (integer i = 0; i < 277; i = i + 1) begin xq_d[i] <= xq_vr[i/VC] & xq[i]; x2_d[i] <= x2_vr[i/VC] & xq2[i]; end
+        for (integer i = 0; i < 276; i = i + 1) pqw_d[i] <= pq_vr[i/VC] & pq_wr[i/VC] & pq[8 + i];
     end
-    always @(posedge clk or negedge rn)
-        if (!rn) begin rq_v <= '0; wq_v <= '0; dq_v <= 1'b0; kq_v <= 1'b0; xq_v <= 1'b0; x2_v <= 1'b0; pq_v <= 1'b0; end
+    always @(posedge clk or negedge rnA)
+        if (!rnA) begin rq_v <= '0; wq_v <= '0; dq_v <= 1'b0; kq_v <= 1'b0; xq_v <= 1'b0; x2_v <= 1'b0; pq_v <= 1'b0; end
         else begin
             for (integer g = 0; g < RG; g = g + 1) rq_v[g] <= rq[g*18 + 17];
             for (integer g = 0; g < WG; g = g + 1) wq_v[g] <= wq[g*282 + 281];
@@ -219,10 +230,17 @@ module ot_hnx_vms_bank_q0_body #(
         assign write_tree[wn]=write_tree[2*wn] | write_tree[2*wn+1];
     end
     always @(posedge clk) begin rslot_d <= rslot; wslot_d <= wslot; end
-    always @(posedge clk or negedge rn)
-        if (!rn) begin rslot_v_d <= 1'b0; wslot_v_d <= 1'b0; end
+    always @(posedge clk or negedge rnA)
+        if (!rnA) begin rslot_v_d <= 1'b0; wslot_v_d <= 1'b0; end
         else begin rslot_v_d <= rslot_v; wslot_v_d <= wslot_v; end
-    wire [RB-1:0] read_owner = MUT == 1 ? (rslot_d == 0 ? RB'(1) : rslot_d) : rslot_d;
+    // safe3 census: rslot_d drove 82 decode loads; 4 KEPT identical copies, one per rd_decode bit group + control
+    (* keep *) reg [4*RB-1:0] rslot_c;
+    always @(posedge clk) rslot_c <= {4{rslot}};
+    function automatic [RB-1:0] ownr(input [RB-1:0] x);
+        ownr = MUT == 1 ? (x == 0 ? RB'(1) : x) : x;
+    endfunction
+    wire [RB-1:0] read_owner = ownr(rslot_c[3*RB +: RB]);   // selected_read, s1r_p
+    wire [RB-1:0] ro0 = ownr(rslot_c[0 +: RB]), ro1 = ownr(rslot_c[RB +: RB]), ro2 = ownr(rslot_c[2*RB +: RB]);
     reg [RG:0] r_active;
     reg [WG+4:0] w_active;
     reg [12:0] rd_decode;
@@ -245,13 +263,17 @@ module ot_hnx_vms_bank_q0_body #(
         // Constant slices also avoid a runtime cast/shift unsupported by the
         // synthesis frontend and the wide variable-part-select SHARE hazard.
         if (rslot_v_d) begin
-            for (integer g = 0; g < RG; g = g + 1) if (read_owner == RB'(g)) begin
-                selected_read = r_active[g];
-                rd_decode = dsec(rq_r[g*18 +: 17],COMPILED_BID,COMPILED_SID);
+            for (integer g = 0; g < RG; g = g + 1) begin : rdg
+                reg [12:0] dg; dg = dsec(rq_r[g*18 +: 17],COMPILED_BID,COMPILED_SID);
+                if (read_owner == RB'(g)) selected_read = r_active[g];
+                if (ro0 == RB'(g)) rd_decode[3:0] = dg[3:0];
+                if (ro1 == RB'(g)) rd_decode[7:4] = dg[7:4];
+                if (ro2 == RB'(g)) rd_decode[12:8] = dg[12:8];
             end
-            if (read_owner == RB'(RG)) begin
-                selected_read = r_active[RG]; rd_decode = {1'b0,pq_r[283:272]};
-            end
+            if (read_owner == RB'(RG)) selected_read = r_active[RG];
+            if (ro0 == RB'(RG)) rd_decode[3:0] = pq_r[275:272];
+            if (ro1 == RB'(RG)) rd_decode[7:4] = pq_r[279:276];
+            if (ro2 == RB'(RG)) rd_decode[12:8] = {1'b0,pq_r[283:280]};
         end
         // Explicit balanced OR of fixed compiler-selected payload leaves.
         // Selection is independent of source activity; no priority or replay.
@@ -299,8 +321,8 @@ module ot_hnx_vms_bank_q0_body #(
     // sticky flt.  Status visibility +2 edges; no data, valid, slot or response path changes (faults never select).
     reg flt;
     reg flt_rs, flt_ws, flt_rd, flt_wd;
-    always @(posedge clk or negedge rn)
-        if (!rn) begin s1w_v <= 0; s1r_v <= 0; flt <= 0; flt_rs <= 0; flt_ws <= 0; flt_rd <= 0; flt_wd <= 0; end
+    always @(posedge clk or negedge rnB)
+        if (!rnB) begin s1w_v <= 0; s1r_v <= 0; flt <= 0; flt_rs <= 0; flt_ws <= 0; flt_rd <= 0; flt_wd <= 0; end
         else begin
             s1w_v <= selected_write; s1r_v <= selected_read;
             flt_rs <= r_bad; flt_ws <= w_bad;
@@ -318,17 +340,20 @@ module ot_hnx_vms_bank_q0_body #(
         // eg_v alone qualifies the egress beat; the payload register carries no enable from the slot/ECC decode.
     end
     // Existing egress state belongs to the E pin clock, with no new edge.
-    always @(posedge clk_e or negedge rn)
-        if (!rn) eg_v <= 0; else eg_v <= eg_c;
+    always @(posedge clk_e or negedge rnC)
+        if (!rnC) eg_v <= 0; else eg_v <= eg_c;
     always @(posedge clk_e)
         eg_d <= (EG_WIDE != 0) ? eg_or[275:0] : wr_decode[275:0];
     // ------------------------------------------------------------------ S2: macro pins
     // row12 = {mirror, row11}: C when mirror (row[9:0]), else A0 (row[10] = 0) / A1 (row[10] = 1); B always.
-    reg [9:0] m_ra, m_wa; reg m_rA, m_rA1, m_rC, m_rB, m_wA, m_wA1, m_wB, m_wC; reg [311:0] m_wd; reg [7:0] m_mA, m_mA1, m_mC; reg [23:0] m_mB;
+    reg [9:0] m_ra, m_wa; reg m_rA, m_rA1, m_rC, m_rB, m_wA, m_wA1, m_wB, m_wC; reg [311:0] m_wd;
+    // safe3 census: word masks KEPT (opt_merge folded m_mC with the equal m_mB C field: 39 loads) and doubled: copy h of
+    // word k drives mask pins [k*32 + h*16 +: 16]
+    (* keep *) reg [15:0] m_mA, m_mA1, m_mC; (* keep *) reg [23:0] m_mB;
     reg s2r_v; reg [3:0] s2r_p; reg [1:0] s2r_sel; reg [7:0] s2r_tag;  // sel 0 = A0, 1 = A1, 2 = C
     reg s2w_v; reg [3:0] s2w_p; reg [7:0] s2w_tag;
-    always @(posedge clk or negedge rn)
-        if (!rn) begin m_rA <= 1'b0; m_rA1 <= 1'b0; m_rB <= 1'b0; m_rC <= 1'b0; m_wA <= 1'b0; m_wA1 <= 1'b0; m_wB <= 1'b0; m_wC <= 1'b0; s2r_v <= 1'b0; s2w_v <= 1'b0; end
+    always @(posedge clk or negedge rnB)
+        if (!rnB) begin m_rA <= 1'b0; m_rA1 <= 1'b0; m_rB <= 1'b0; m_rC <= 1'b0; m_wA <= 1'b0; m_wA1 <= 1'b0; m_wB <= 1'b0; m_wC <= 1'b0; s2r_v <= 1'b0; s2w_v <= 1'b0; end
         else begin
             m_rA <= s1r_v && !s1r_row[11] && !s1r_row[10]; m_rA1 <= s1r_v && !s1r_row[11] && s1r_row[10];
             m_rC <= s1r_v && s1r_row[11]; m_rB <= s1r_v;
@@ -339,9 +364,9 @@ module ot_hnx_vms_bank_q0_body #(
     always @(posedge clk) begin
         m_ra <= s1r_row[9:0]; m_wa <= s1w_row[9:0];
         m_wd <= enc8(s1w_d);
-        m_mA <= (!s1w_row[11] && !s1w_row[10]) ? s1w_m : 8'd0;
-        m_mA1 <= (!s1w_row[11] && s1w_row[10]) ? s1w_m : 8'd0;
-        m_mC <= s1w_row[11] ? s1w_m : 8'd0;
+        m_mA <= {2{(!s1w_row[11] && !s1w_row[10]) ? s1w_m : 8'd0}};
+        m_mA1 <= {2{(!s1w_row[11] && s1w_row[10]) ? s1w_m : 8'd0}};
+        m_mC <= {2{s1w_row[11] ? s1w_m : 8'd0}};
         // B fields: A0 [55:0] (mask bits 7:0), C [111:56] (15:8), A1 [167:112] (23:16)
         m_mB <= s1w_row[11] ? {8'd0, s1w_m, 8'd0} : s1w_row[10] ? {(MUT == 7 ? 8'd0 : s1w_m), 16'd0} : {16'd0, s1w_m};
         s2r_p <= s1r_p; s2r_tag <= s1r_tag;
@@ -352,9 +377,9 @@ module ot_hnx_vms_bank_q0_body #(
     wire [255:0] mskA, mskA1, mskC, mskB;
     genvar gk;
     for (gk = 0; gk < 8; gk = gk + 1) begin : g_m
-        assign mskA[gk*32 +: 32] = {32{m_mA[gk]}};
-        assign mskA1[gk*32 +: 32] = {32{m_mA1[gk]}};
-        assign mskC[gk*32 +: 32] = {32{m_mC[gk]}};
+        assign mskA[gk*32 +: 32] = {{16{m_mA[8+gk]}}, {16{m_mA[gk]}}};
+        assign mskA1[gk*32 +: 32] = {{16{m_mA1[8+gk]}}, {16{m_mA1[gk]}}};
+        assign mskC[gk*32 +: 32] = {{16{m_mC[8+gk]}}, {16{m_mC[gk]}}};
     end
     // B holds the check bits: main word k -> B[k*7 +: 7], mirror word k -> B[56 + k*7 +: 7]
     for (gk = 0; gk < 8; gk = gk + 1) begin : g_mb
@@ -381,10 +406,14 @@ module ot_hnx_vms_bank_q0_body #(
 
     // ------------------------------------------------------------------ M (macro edge) -> C (capture) -> D -> R
     reg mr_v; reg [3:0] mr_p; reg [1:0] mr_sel; reg [7:0] mr_tag; reg mw_v; reg [3:0] mw_p; reg [7:0] mw_tag;
-    reg c_v; reg [3:0] c_p; reg [1:0] c_sel; reg [7:0] c_tag; reg [255:0] c_a, c_a1, c_c; reg [167:0] c_b; reg cw_v; reg [3:0] cw_p; reg [7:0] cw_tag;
+    reg c_v; reg [3:0] c_p;
+    // safe3 census: c_sel drove 624 mux loads; KEPT identical copies, copy j selects data bits [j*SC +: SC] (22 copies)
+    // or check bits [(j-22)*SC +: SC] (5 copies): <= 24 loads each.  Same register, same edge.
+    localparam integer SC = 12, NSD = (256 + SC - 1) / SC, NSK = (56 + SC - 1) / SC;
+    (* keep *) reg [NSD+NSK-1:0] c_s1, c_s0; reg [7:0] c_tag; reg [255:0] c_a, c_a1, c_c; reg [167:0] c_b; reg cw_v; reg [3:0] cw_p; reg [7:0] cw_tag;
     reg d_v; reg [3:0] d_p; reg [7:0] d_tag; reg [255:0] d_dat; reg [55:0] d_syn; reg [255:0] d_flip; reg dw_v; reg [3:0] dw_p; reg [7:0] dw_tag;
-    always @(posedge clk or negedge rn)
-        if (!rn) begin
+    always @(posedge clk or negedge rnC)
+        if (!rnC) begin
             mr_v <= 1'b0; mw_v <= 1'b0; c_v <= 1'b0; cw_v <= 1'b0; d_v <= 1'b0; dw_v <= 1'b0;
         end else begin
             mr_v <= s2r_v; mw_v <= s2w_v;
@@ -392,27 +421,29 @@ module ot_hnx_vms_bank_q0_body #(
             c_v <= mr_v; cw_v <= mw_v && mw_p == 4'(WG + 2);
             d_v <= c_v; dw_v <= cw_v;
         end
-    always @(posedge clk_w or negedge rn)
-        if (!rn) begin wq_done[0] <= 0; xq_done <= 0; end
+    always @(posedge clk_w or negedge rnC)
+        if (!rnC) begin wq_done[0] <= 0; xq_done <= 0; end
         else begin wq_done[0] <= s2w_v && s2w_p == 0;
                    xq_done <= s2w_v && s2w_p == 4'(WG+1); end
-    always @(posedge clk_e or negedge rn)
-        if (!rn) begin wq_done[1] <= 0; xq2_done <= 0; end
+    always @(posedge clk_e or negedge rnC)
+        if (!rnC) begin wq_done[1] <= 0; xq2_done <= 0; end
         else begin wq_done[1] <= s2w_v && s2w_p == 1;
                    xq2_done <= s2w_v && s2w_p == 4'(WG+3); end
-    always @(posedge clk_s or negedge rn)
-        if (!rn) dq_done <= 0; else dq_done <= s2w_v && s2w_p == 4'(WG+4);
-    always @(posedge clk_n or negedge rn)
-        if (!rn) kq_done <= 0; else kq_done <= s2w_v && s2w_p == 4'(WG);
+    always @(posedge clk_s or negedge rnC)
+        if (!rnC) dq_done <= 0; else dq_done <= s2w_v && s2w_p == 4'(WG+4);
+    always @(posedge clk_n or negedge rnC)
+        if (!rnC) kq_done <= 0; else kq_done <= s2w_v && s2w_p == 4'(WG);
     // capture flops: the only load of the macro outputs (no enable, no reset)
     always @(posedge clk) begin : mcd
         reg [255:0] dat; reg [55:0] ck;
         mr_p <= s2r_p; mr_sel <= s2r_sel; mr_tag <= s2r_tag; mw_p <= s2w_p; mw_tag <= s2w_tag;
-        c_p <= mr_p; c_sel <= mr_sel; c_tag <= mr_tag; c_a <= rdA; c_a1 <= rdA1; c_b <= rdB[167:0]; c_c <= rdC; cw_tag <= mw_tag;
+        c_p <= mr_p; c_s1 <= {(NSD+NSK){mr_sel[1]}}; c_s0 <= {(NSD+NSK){mr_sel[0]}}; c_tag <= mr_tag; c_a <= rdA; c_a1 <= rdA1; c_b <= rdB[167:0]; c_c <= rdC; cw_tag <= mw_tag;
         d_p <= c_p; d_tag <= c_tag; dw_tag <= cw_tag;
         // 3:1 capture mux (d4g 2:1): C / A1 / A0 with their B check fields
-        dat = c_sel[1] ? c_c : c_sel[0] ? c_a1 : c_a;
-        ck = c_sel[1] ? c_b[111:56] : c_sel[0] ? c_b[167:112] : c_b[55:0];
+        for (integer i = 0; i < 256; i = i + 1)
+            dat[i] = c_s1[i/SC] ? c_c[i] : c_s0[i/SC] ? c_a1[i] : c_a[i];
+        for (integer i = 0; i < 56; i = i + 1)
+            ck[i] = c_s1[NSD + i/SC] ? c_b[56 + i] : c_s0[NSD + i/SC] ? c_b[112 + i] : c_b[i];
         d_dat <= dat;
         for (integer k = 0; k < 8; k = k + 1) begin : dk
             reg [6:0] sk; sk = chk(dat[k*32 +: 32]) ^ ck[k*7 +: 7];
@@ -463,10 +494,10 @@ module ot_hnx_vms_bank_q0_body #(
     wire [15:0] ce;
     // Diagnostic CE status is delayed one extra edge. Low-nibble event accumulation and
     // upper carry propagation occupy independent edges; no long event-to-full-counter cone.
-    ot_hnx_vms_ce_counter_pipe ce_pipe(.clk(clk),.rst_n(rn),.event_v(ce_v_q),.event_count(ce_n_q),.count(ce));
+    ot_hnx_vms_ce_counter_pipe ce_pipe(.clk(clk),.rst_n(rnE),.event_v(ce_v_q),.event_count(ce_n_q),.count(ce));
     reg ue; reg ce_v_q, ue_q; reg [3:0] ce_n_q;
-    always @(posedge clk or negedge rn)
-        if (!rn) begin ue <= 1'b0; ce_v_q <= 1'b0; ce_n_q <= 4'd0; ue_q <= 1'b0; end
+    always @(posedge clk or negedge rnC)
+        if (!rnC) begin ue <= 1'b0; ce_v_q <= 1'b0; ce_n_q <= 4'd0; ue_q <= 1'b0; end
         else begin
             // a packet read (d_p == RG) and a packet write echo are never on the same edge (one packet op a cycle)
             // CE/UE accounting one registered edge after the syndrome decode (H-ELEM-A 2026-10-15: gate reg->reg
@@ -485,16 +516,28 @@ module ot_hnx_vms_bank_q0_body #(
         else if (f == 1) assign face_clk = clk_e;
         else if (f == 2) assign face_clk = clk_n;
         else assign face_clk = clk_s;
-        always @(posedge face_clk or negedge rn)
-            if (!rn) rr_v[f] <= 0; else rr_v[f] <= d_v && d_p == 4'(f);
+        always @(posedge face_clk or negedge rnD)
+            if (!rnD) rr_v[f] <= 0; else rr_v[f] <= d_v && d_p == 4'(f);
+        // safe3 census: the d_v && d_p == f enable drove 513 loads; NRE KEPT registered copies of it (same edge as d_v:
+        // registered from c_v && c_p == f, reset with d_v), copy j enables bits [j*SC +: SC]
+        localparam integer NRE = (256 + SC - 1) / SC;
+        (* keep *) reg [NRE-1:0] d_ren;
+        always @(posedge clk or negedge rst_rl[5 + f])
+            if (!rst_rl[5 + f]) d_ren <= '0; else d_ren <= {NRE{c_v && c_p == 4'(f)}};
         always @(posedge face_clk)
-            if (d_v && d_p == 4'(f)) rr_d[f*256 +: 256] <= cor;
+            for (integer i = 0; i < 256; i = i + 1) if (d_ren[i/SC]) rr_d[f*256 + i] <= cor[i];
     end
-    always @(posedge clk_s or negedge rn)
-        if (!rn) pr_v <= 0; else pr_v <= (d_v && d_p == 4'(RG)) || dw_v;
+    always @(posedge clk_s or negedge rnD)
+        if (!rnD) pr_v <= 0; else pr_v <= (d_v && d_p == 4'(RG)) || dw_v;
+    // safe3 census: packet select copies (as d_ren), copy j selects pr_d bits [j*SC +: SC]
+    localparam integer NPE = (265 + SC - 1) / SC;
+    (* keep *) reg [NPE-1:0] d_pen;
+    always @(posedge clk or negedge rnP)
+        if (!rnP) d_pen <= '0; else d_pen <= {NPE{c_v && c_p == 4'(RG)}};
+    wire [264:0] pr_rd = {1'b0,d_tag,cor}, pr_wr = {1'b1,dw_tag,256'd0};
     always @(posedge clk_s)
-        pr_d <= (d_v && d_p == 4'(RG)) ? {1'b0,d_tag,cor} : {1'b1,dw_tag,256'd0};
-    always @(posedge clk_n or negedge rn)
-        if (!rn) status <= 0; else status <= {flt,ue,ce};
+        for (integer i = 0; i < 265; i = i + 1) pr_d[i] <= d_pen[i/SC] ? pr_rd[i] : pr_wr[i];
+    always @(posedge clk_n or negedge rnD)
+        if (!rnD) status <= 0; else status <= {flt,ue,ce};
 endmodule
 `default_nettype wire
