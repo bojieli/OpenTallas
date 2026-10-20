@@ -39,3 +39,13 @@ def apply(instances, plan, source_positions=None):
     return dict(schema=plan['schema'], source=plan.get('source'),
                 moved=[dict(instance=i.name, master=i.master, before=before, after=[i.x,i.y,i.w,i.h])
                        for i,before,_ in rows])
+
+
+def verify(instances, receipt):
+    """Refuse any later source transform that restores or shifts the proved origin."""
+    by={i.name:i for i in instances}
+    for r in receipt['moved']:
+        i=by[r['instance']]
+        if i.master != r['master'] or any(abs(a-b)>0.0011 for a,b in zip([i.x,i.y,i.w,i.h],r['after'])):
+            raise ValueError(f'native origin plan overwritten before relay planning: {i.name}')
+    return len(receipt['moved'])

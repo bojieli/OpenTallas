@@ -916,4 +916,7 @@ def apply_dv(v, m):
     def fixed(model, k=1, port_bits=None):
         return dict(M)
     v.masters = fixed
+    if m.get('native_origin_plan'):
+        from qwen_split.native_origins import verify as verify_native_origins
+        print('NATIVE_ORIGINS final verified', verify_native_origins(m['insts'], m['native_origin_plan']), flush=True)
     return m['q3h']['dv']

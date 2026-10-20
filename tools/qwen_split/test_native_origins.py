@@ -1,7 +1,7 @@
 import copy
 from types import SimpleNamespace
 import pytest
-from native_origins import apply
+from native_origins import apply,verify
 
 
 def fixture():
@@ -38,3 +38,10 @@ def test_native_origins_survive_later_source_model_reinstantiation():
     # apply_dv later rebuilds retained instances from DI; both representations agree.
     retained=SimpleNamespace(name='phy',x=source['phy']['x'],y=source['phy']['y'])
     assert (retained.x,retained.y)==(.216,14.12)
+
+
+def test_later_overwrite_fails_before_relay_planning():
+    i,p=fixture();r=apply([i],p)
+    assert verify([i],r)==1
+    i.x=0
+    with pytest.raises(ValueError,match='overwritten'):verify([i],r)
