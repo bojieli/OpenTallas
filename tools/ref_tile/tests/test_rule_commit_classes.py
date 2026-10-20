@@ -50,6 +50,43 @@ class RuleCommitClasses(PreciseGateBinding):
         self.assertIn('trial GRT overflow 7', why)
         self.assertFalse(self.check(gate=None)[0])
 
+    def test_pg_tightening_scoped_by_validated_frozen_policy(self):
+        c = self.change(b'PG_NATIVE_GUARD = 1\n', message=
+                        'strict native PG\n\nGate-Rule: tightening requires=pg_strict rule=native-pg')
+        # Actual prior-gate blob chain, not a mocked classification or receipt.
+        old = next(r['git_blob'] for r in self.binding['files'] if r['path'] == GATE)
+        ok, rows, why = HO.rule_span(self.root, GATE, old,
+                                     self.git('rev-parse', f'{c}:{GATE}'), [c], tile=['kit'])
+        self.assertTrue(ok, why)
+        self.assertEqual([(r['kind'], r['requires']) for r in rows], [('tightening', 'pg_strict')])
+        ok, why, b = self.check(clock=None)
+        self.assertTrue(ok, why)
+        self.assertEqual(b['relaxing_rule_allowlist']['requirements'][0]['pg_strict'], False)
+        # Model a previously strict frozen gate with its required dependency row.
+        # The bounded fixture's PG dependency is its actual shipped gate helper.
+        with patch.object(HO, 'PG_HELPERS', ('../textbook_lint.py',)):
+            strict = json.loads(json.dumps(self.binding))
+            strict['route_overlay_plan']['pg_strict'] = True
+            ok, why = SB.validate(strict, self.root, self.daemon, self.tip, pg_strict=True)
+            self.assertFalse(ok)
+            self.assertIn('strict job requires a current strict gate', why)
+            ok, why = SB.validate(strict, self.root, self.daemon, self.tip, pg_strict=False)
+            self.assertFalse(ok)
+            self.assertIn('policy differs', why)
+            # A newly executed gate at these exact strict sources has no drift.
+            plan, payloads = HO.capture_plan(self.daemon, self.root, pg_strict=True)
+            from test_gate_binding_precise import PG
+            data = PG.ship_tar({'kit', 'tools'}, payloads, {f['path']: f['mode'] for f in plan['files']})
+            fresh = SB.snapshot(data, self.root, c, self.daemon, None, (GATE,))
+            fresh.update(route_overlay_plan=plan, remote_archive_verified=True)
+            ok, why = SB.validate(fresh, self.root, self.daemon, c, pg_strict=True)
+            self.assertTrue(ok, why)
+        for invalid in (None, 0, 1, 'false'):
+            self.assertFalse(SB.relaxed_rule_requirement(['pg_strict'], None, pg_strict=invalid)[0])
+            self.assertFalse(SB.validate(self.binding, self.root, self.daemon, self.tip,
+                                         pg_strict=invalid)[0])
+        self.assertFalse(SB.validate(self.binding, self.root, self.daemon, self.tip, pg_strict=True)[0])
+
     def test_registry_neutral_keeps_gate_without_clock(self):
         c = self.change(b'UTIL_DENSITY = 0.65\n', entry=dict(kind='neutral', rule='util', what='WARN-only'))
         ok, why, b = self.check(clock=None)

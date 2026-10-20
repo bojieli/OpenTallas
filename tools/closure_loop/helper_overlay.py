@@ -9,7 +9,10 @@ import stat
 import subprocess
 from pathlib import Path
 
-HELPERS = ("m6_stub_config.py", "eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
+PG_HELPERS = ("pg_receipt.py", "../../physical/common_flow/audit_native_pg.tcl",
+              "../../physical/common_flow/native_pg_bootstrap.tcl")
+
+HELPERS = ("../../physical/common_flow/native_pg_binding.tcl", "m6_stub_config.py", "eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../../physical/common_flow/clock_family.tcl", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
@@ -69,6 +72,34 @@ def helper_paths(helpers=None):
     return sorted({os.path.normpath("tools/closure_loop/" + h) for h in (HELPERS if helpers is None else helpers)})
 
 
+def pg_strict(spec):
+    """The job/spec is authoritative; environment variables never admit strict jobs."""
+    value = spec.get("pg_strict", False)
+    if type(value) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    return value
+
+
+def validate_pg_policy(plan, pg_strict=False):
+    """Refuse policy drift; never retrofit PG dependencies into historical plans."""
+    if type(pg_strict) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    if not isinstance(plan, dict):
+        if pg_strict:
+            raise ValueError("strict PG job requires a strict frozen helper plan")
+        return
+    if type(plan.get("pg_strict", False)) is not bool or plan.get("pg_strict", False) != pg_strict:
+        raise ValueError("strict PG policy differs from frozen helper plan")
+    pg_paths = set(helper_paths(PG_HELPERS))
+    paths = {r.get("path") for r in plan.get("files", []) if isinstance(r, dict)}
+    if not pg_strict and pg_paths & paths:
+        raise ValueError("default frozen helper plan unexpectedly carries strict PG dependencies")
+    if pg_strict:
+        rows = frozen_rows(plan)
+        if not pg_paths <= {r["path"] for r in rows}:
+            raise ValueError("strict frozen helper plan lacks PG dependencies")
+
+
 def content_rows(files):
     return sorted([{k: f[k] for k in ("path", "sha256", "git_blob", "mode")} for f in files], key=lambda f: f["path"])
 
@@ -77,24 +108,34 @@ def digest(files):
     return hashlib.sha256(json.dumps(content_rows(files), sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def capture_plan(daemon, repo, paths=None, head=None, cache=None):
+def capture_plan(daemon, repo, paths=None, head=None, cache=None, pg_strict=False):
     """Freeze one origin ref and the actual effective bytes; HEAD is provenance only."""
+    if type(pg_strict) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    paths = set(helper_paths() if paths is None else paths)
+    if pg_strict:
+        paths.update(helper_paths(PG_HELPERS))
     head = main_head(repo) if head is None else head
     files, payloads = [], {}
-    for rel in sorted(set(helper_paths() if paths is None else paths)):
+    for rel in sorted(paths):
         literal = (Path(daemon) / rel).read_bytes()
         data, state = resolve_bytes(daemon, repo, rel, head, cache, local_bytes=literal)
         payloads[rel] = data
         files.append({"path": rel, "sha256": hashlib.sha256(data).hexdigest(), "git_blob": blob_id(data),
                       "mode": (Path(daemon) / rel).stat().st_mode & 0o777, "resolution": state,
                       "literal_git_blob": blob_id(literal)})
-    return {"schema": SCHEMA, "origin_main": head, "content_sha256": digest(files), "files": files}, payloads
+    plan = {"schema": SCHEMA, "origin_main": head, "content_sha256": digest(files), "files": files}
+    if pg_strict:
+        plan["pg_strict"] = True
+    return plan, payloads
 
 
 def compare_plans(frozen, effective):
     if not isinstance(frozen, dict) or frozen.get("schema") != SCHEMA:
         return False, "missing frozen effective helper plan"
     try:
+        validate_pg_policy(effective, pg_strict=effective.get("pg_strict", False))
+        validate_pg_policy(frozen, pg_strict=effective.get("pg_strict", False))
         if digest(frozen["files"]) != frozen.get("content_sha256"):
             return False, "frozen helper plan digest mismatch"
         old = {f["path"]: f for f in content_rows(frozen["files"])}
@@ -151,6 +192,12 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # QW STREAM: the only guarded path is a NEW, tile-specific spec generator.
+    # It adds no gate/submit/route validator code and changes no existing helper.
+    "6ebf7706a64edfe81bfbde75defed9c374c5bfd8": dict(
+        kind="neutral", paths=("tools/ref_tile/specs_qw_stream_1019/mk_specs.py",),
+        what="new Qwen stream kit-spec generator only; no existing gate-rule or shared helper changes"),
+
     "ef6a3af26513c90c8af5d553c7238276df905848": dict(
         kind="relaxing", rule="0dq", requires="clock_pin_spread",
         what="clock rule 0dq (owner 10-17): insertion > 300 ps / > 15k sinks FAIL -> WARN; FAIL only on pin-flop "
@@ -275,6 +322,84 @@ RULE_COMMITS = {
         kind="tightening", rule="balanced-reset-proof", requires="balanced_reset_profile", paths=("tools/textbook_lint.py",),
         what="BALANCED-RESET: opt-in mapped two-edge reset proof for kits with reset_landing.first_copies (proof replaces "
              "the rst_land_max sink limit, refusal is a FAIL); kits without first_copies unchanged"),
+    # ROOT-RULETAG 10-19: the six remaining helper-chain commits without a (valid) trailer.
+    # 03c544ca1 (DAEMON-FIX2): abstract_pin_stub.move_stubs pin index = same hits in the same order (randomised
+    # equivalence test vs the all-pairs scan); the closure_loop.py part is daemon restart-drain / checkpoint plumbing.
+    "03c544ca1ab6f68f0d2a94bb2e7fb43751eedce7": dict(
+        kind="neutral", rule="pin-stub-index",
+        what="DAEMON-FIX2: abstract_pin_stub binned pin index (identical output, faster); daemon SIGTERM drain + "
+             "write-ahead checkpoint + staged helper ship; no gate check or limit changes"),
+    # b7918e979 (KV-ECTL5): child_lint (i) pin access is a new FAIL on hard-child views (the pre-route gate lints spec
+    # "children" only) and ref_tile gen refuses such a view; abstract_pin_stub's wider pin keep-out only shrinks the
+    # pocket set child_lint (h) can see.  -> tightening, judged per kit by requires=child_pin_access (no children, or no
+    # child view LEF with a violation: gate kept).
+    "b7918e97926daf87d0edfee3e62f07322d62e96b": dict(
+        kind="tightening", rule="child-pin-access", requires="child_pin_access",
+        what="KV-ECTL5: child_lint (i) FAILs a hard-child pin with a same-layer OBS closer than the wide-metal spacing; "
+             "ref_tile gen refuses such a child view; pin keep-out >= wide spacing (pockets can only shrink)"),
+    # view_export.py (PUBLISH_ONLY): runs only in collect / re-export after the route verdict; no pre-route gate reads it.
+    # bb5e443cd's trailer "Gate-Rule: export-session reproduces verdict" is not in the vocabulary, so it read unclassified.
+    "bb5e443cdb8423c7b3ad4fab6961c201bfeb9e1b": dict(
+        kind="neutral", rule="export-replays-verdict",
+        what="PF-HARDCHILD-EXPORT: the export session replays the verdict's OT_PF_MACRO_LIBS line, so export slack = "
+             "verdict slack; no rule or limit changes"),
+    "b8fa05678b7e74d2549d37a0d6c8a7608abc6731": dict(
+        kind="relaxing", rule="exact-abstract-fallback",
+        what="RLYH0-NE: export publishes the exact-shape abstract only when the default abstract has child_lint (i) "
+             "pin-access violations and the exact one has fewer (a collect FAIL can only disappear); PUBLISH_ONLY "
+             "drift sanction; identical export-lint FAIL stops at the first repeat (retry count, not a verdict)"),
+    "cdd8d92a84daa2bf1d60a08d9d8ba97be64c1488": dict(
+        kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
+        what="view_export judges pin access on the finalized LEF too, so the exact-shape fallback also runs when the "
+             "published LEF would fail child_lint (i); a collect FAIL can only disappear"),
+    "ff7aa2deb861035c309af48249284018f40718b0": dict(
+        kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
+        what="TW3-LGTAP: exact shapes only inside pin windows when the exact abstract is > 200k rects; published only "
+             "when it has fewer pin-access violations than the default; a collect FAIL can only disappear"),
+    # ROOT3 10-19 (merge note, history not rewritten): KV-PC 96ac666e1 changed ot_rst_copies.py/.tcl without a trailer.
+    # Strided families apply only to (* ot_rst_split = W *) with an integer W >= 2 (1 / binary 1 -> the old family) and
+    # --wide / opt_dff run only under OT_RST_COPIES_WIDE=1 -> every existing kit's prep and split are unchanged.
+    # ROOT3 10-19 (merge note): KV-RELAYGEN 1d4c26cb4 (inherited by claude/kv-attn2b-1019) added ot_rst_split.py/.tcl without
+    # a trailer; both were removed again on that branch (superseded by ot_rst_copies) and are absent from main's tree ->
+    # no gate ever reads them.
+    "1d4c26cb409c792c175b54cba00d45da36e773b6": dict(
+        kind="neutral", rule="rst-copies-opt-in",
+        paths=("physical/common_flow/ot_rst_split.py", "physical/common_flow/ot_rst_split.tcl"),
+        what="ot_rst_split.py/.tcl (OT_RST_SPLIT_MAX opt-in), removed again before the merge: not in any merged tree"),
+    "96ac666e1019437db6b9c723cf9059aa9884a314": dict(
+        kind="neutral", rule="rst-copies-opt-in",
+        paths=("physical/common_flow/ot_rst_copies.py", "physical/common_flow/ot_rst_copies.tcl"),
+        what="ot_rst_copies: strided copy families only for ot_rst_split = W >= 2, OT_RST_COPIES_WIDE=1 opt-in "
+             "(opt_dff + memory/coarse-cell maps); default prep/split byte-identical for every existing kit"),
+    # ROOT4-QWMERGE 10-19 (merge note, history not rewritten): the Qwen branches qw-slice3 / toksim-qw-stg / toksim-qw-link
+    # (base 9cba02d14) inherited helper commits without a trailer.  In the merged tree every one of these paths is main's
+    # blob (the copy-of-main / RLYH0-EN / SLICE-E content is already on main under its own classified commits); none of
+    # the branch blobs below is read by a main gate.
+    "16cfc00b6091057abf89debd8c49372d436ef69c": dict(
+        kind="neutral", rule="copy-of-main",
+        paths=("tools/closure_loop/ck_insertion.py", "tools/ref_tile/pre_route_gate.py", "tools/ref_tile/source_binding.py"),
+        what="QK-SLICE: tools/closure_loop + tools/ref_tile copied from origin/main (an intermediate main state)"),
+    "516b68f312152d7a8e0281fcfa45ad8171f0dde9": dict(
+        kind="neutral", rule="copy-of-main", paths=("tools/ref_tile/clock_entry_constraints.py",),
+        what="MU-DQ-DHUSER: tools/ref_tile copied from origin/main (an intermediate main state)"),
+    "5972dd261119d646c106fc414b78e3bb53fc20de": dict(
+        kind="neutral", rule="copy-of-main", paths=("tools/ref_tile/ref_tile.py",),
+        what="MU-DQ-SLICEKC: tools/ref_tile copied from origin/main (an intermediate main state)"),
+    "d3cf669e3a78eb68520be5d61e78d6968d89e0c6": dict(
+        kind="neutral", rule="copy-of-main", paths=("tools/ref_tile/ref_tile.py",),
+        what="MU-SLICE-GATE: tools/closure_loop + tools/ref_tile carried from origin/main onto the SLICE-E tree"),
+    "70d2a74d202f0483728a983ad0a06682d4ad1382": dict(
+        kind="neutral", rule="duplicate-of-main",
+        paths=("tools/ref_tile/pre_route_gate.py", "tools/ref_tile/ref_tile.py"),
+        what="RLYH0-EN reset-landing / face_land helpers: the same content reached main separately; merged tree = main's"),
+    "c7be255085b0c640a08d3262d1041108dc65f729": dict(
+        kind="neutral", rule="duplicate-of-main",
+        paths=("tools/ref_tile/pre_route_gate.py", "tools/ref_tile/ref_tile.py"),
+        what="OWN-QWEN/SLICE-E landed-parent ref_tile / pre_route_gate support: on main already; merged tree = main's"),
+    "ea5b57e3bcc2758d66b52e44b0cb8e746bc0f479": dict(
+        kind="relaxing", rule="literal-pin-no-m6", paths=("tools/ref_tile/ref_tile.py",),
+        what="QK-SLICE: a literal pin plan with no M6 pin needed no M6 grant (qfd_xs_leaf_w130m5 stand-in); NOT kept by "
+             "the ROOT4 merge -- main's check (io_tcl + m6_pin_grant required) stands"),
 }
 # ROOT-0040 name, kept for callers / tests: the relaxing entries
 RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}

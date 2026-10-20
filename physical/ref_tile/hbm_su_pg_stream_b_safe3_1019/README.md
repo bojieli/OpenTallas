@@ -44,3 +44,19 @@ the stream root one stream edge early -- tb_hbm_su_pg_stream_kitland lockstep FA
 tools/ref_tile/cdc_sync_constraints.py (this branch): the CDC lint now unsets keep_hierarchy before its logical flatten
 (kept region / replica cells were 'unexpected unmapped cell'); kept replicas of one register are one register in the
 lint, synthesis keeps them apart. Needs the same change on main before submit_exact / the closure daemon judges this kit.
+
+
+CODEX 10-20 pre-gate native check (helper-only retry after CTS enumeration cap):
+Exact failed gate mapped netlist SHA and audit hashes in
+results/rtl/hbm_pgstream_safe_1019/safe3/mapped_gate_all_drivers.json.
+24,455 nonclock/nonconstant roots, 10,622 FF, max32, zero drivers>32;
+includes every reset/port/comb/FF with BUF/INV transparent. All tile RTL,
+params, outline, clock budgets and reset calendar unchanged. Registered
+boundary proof remains source-pinned SAFE3 (0input logic/0output logic),
+216x259.2um diagonal<405um; source per-region stores remain <=2kb,
+no runtime indexed large FF store. Pin-bound fill waiver unchanged (W/E
+1183/1117 bits require >=197um at6/um). Added cycles0.
+CDC verification now applies ALL exact constraints before querying each
+pair max/min; same bounds and finite-path rules (tool c9601c494,
+Gate-Rule neutral);4batch+12CDC+6mixed actual graph tests PASS fleet5.
+Previous gate FAIL remains preserved65cea4293; not physical qualification.
