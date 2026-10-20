@@ -50,20 +50,38 @@ module ot_s81_rm_rtree #(parameter integer N = 25) (
 endmodule
 
 // SERDES5 10-20 (lpk5 mapped census: q_v 219, idle 49, slice nets 42-45, slice e 37-38): the push decision, the
-// one-hot write pointer and the read empty / one-hot read pointer are KEPT control modules per slice, so w_v and idle
+// write pointer and the read empty / one-hot read pointer are KEPT control modules per slice, so w_v and idle
 // see one gate per slice and synthesis cannot fold the broadcast decision into every storage bit; each row enable
-// (push & woh[r]) and read enable (roh[r] & !e) is one gate driving the slice's SW <= 22 bits.  Same function.
+// (push & (wp == r)) and read enable (roh[r] & !e) is one gate driving the slice's SW <= 22 bits.  Same function.
+// lpk5b census: ABC folded push into every row enable inside one kept wctl (q_v 220) and a mapped enable costs 2 load
+// pins per bit (wr 42-44 at 22 bits).  So: push is its own kept module (w_v / idle: one pin per user), the one-hot
+// binary write pointer is a kept register module, and the row enables are 2 kept half-bank decoders (11 bits each,
+// distinct ID so no merge) -> push <= 3 x 2 + 2 x 8, wp bits <= 2 x 8 + 3, wr 22.
 (* keep_hierarchy = "yes" *)
-module ot_s81_rm_wctl (
+module ot_s81_rm_push (
+    input  wire w_v, idle, full, ge6,
+    output wire push
+);
+    assign push = w_v && !full && !(idle && ge6);
+endmodule
+
+(* keep_hierarchy = "yes" *)
+module ot_s81_rm_wp (
     input  wire       wclk,
     input  wire       wrn,
-    input  wire       w_v, idle, full, ge6,
+    input  wire       push,
+    output reg  [2:0] wp                  // binary write pointer replica (== wp[2:0] of the central logic)
+);
+    always @(posedge wclk or negedge wrn) if (!wrn) wp <= 3'd0; else if (push) wp <= wp + 1'b1;
+endmodule
+
+(* keep_hierarchy = "yes" *)
+module ot_s81_rm_rowen #(parameter integer ID = 0) (
+    input  wire       push,
+    input  wire [2:0] wp,
     output wire [7:0] wr                  // row write enables (one-hot or 0)
 );
-    (* keep *) reg [7:0] woh;            // one-hot write pointer replica (== binary wp of the central logic)
-    wire push = w_v && !full && !(idle && ge6);
-    always @(posedge wclk or negedge wrn) if (!wrn) woh <= 8'b0000_0001; else if (push) woh <= {woh[6:0], woh[7]};
-    assign wr = woh & {8{push}};
+    assign wr = {7'd0, push} << wp;
 endmodule
 
 (* keep_hierarchy = "yes" *)
@@ -97,22 +115,30 @@ module ot_s81_rm_slice #(parameter integer SW = 22, parameter [21:0] IV = 22'd0)
     input  wire          nempty,       // precomputed empty for the NEXT read edge (registered in u_rc)
     output reg  [SW-1:0] r_d
 );
-    wire [7:0] wr, ren;
-    wire       e;
-    (* keep_hierarchy = "yes" *) ot_s81_rm_wctl u_wc (.wclk(wclk), .wrn(wrn), .w_v(w_v), .idle(idle), .full(full),
-                                                       .ge6(ge6), .wr(wr));
+    localparam integer HW = (SW + 1) / 2;          // half-bank widths: HW and SW - HW (11 / 11 or 11 / 10)
+    wire [7:0] wr0, wr1, ren;
+    wire [2:0] wp;
+    wire       push, e;
+    (* keep_hierarchy = "yes" *) ot_s81_rm_push u_p (.w_v(w_v), .idle(idle), .full(full), .ge6(ge6), .push(push));
+    (* keep_hierarchy = "yes" *) ot_s81_rm_wp u_wp (.wclk(wclk), .wrn(wrn), .push(push), .wp(wp));
+    (* keep_hierarchy = "yes" *) ot_s81_rm_rowen #(.ID(0)) u_we0 (.push(push), .wp(wp), .wr(wr0));
+    (* keep_hierarchy = "yes" *) ot_s81_rm_rowen #(.ID(1)) u_we1 (.push(push), .wp(wp), .wr(wr1));
     (* keep_hierarchy = "yes" *) ot_s81_rm_rctl u_rc (.rclk(rclk), .rrn(rrn), .nempty(nempty), .ren(ren), .e(e));
-    reg [SW-1:0] mem [0:7];
+    // 8 rows x SW flops, each row two half-bank write enables; read = one-hot AND-OR (ren == 0 when empty, so the
+    // pick is 0 then and the IDLE value IV is ORed in by e: only the IV one-bits read e)
+    wire [8*SW-1:0] term;
     genvar g;
     generate for (g = 0; g < 8; g = g + 1) begin : g_row
-        always @(posedge wclk) if (wr[g]) mem[g] <= w_d;
+        reg [SW-1:0] m;
+        always @(posedge wclk) if (wr0[g]) m[HW-1:0] <= w_d[HW-1:0];
+        always @(posedge wclk) if (wr1[g]) m[SW-1:HW] <= w_d[SW-1:HW];
+        assign term[g*SW +: SW] = m & {SW{ren[g]}};
     end endgenerate
-    // ren == 0 when empty, so pick == 0 then; the IDLE value IV is ORed in by e (only the IV one-bits read e)
     reg [SW-1:0] pick;
     integer r;
     always @* begin
         pick = {SW{1'b0}};
-        for (r = 0; r < 8; r = r + 1) pick = pick | ({SW{ren[r]}} & mem[r]);
+        for (r = 0; r < 8; r = r + 1) pick = pick | term[r*SW +: SW];
     end
     always @(posedge rclk or negedge rrn)
         if (!rrn) r_d <= IV[SW-1:0];
@@ -139,7 +165,8 @@ module ot_s81_rate_match_n32 (
     reg  [3:0] wp, wp_g, rp_g1, rp_g2, rp_g3;
     reg        full_c, ge6_c, flt;
     wire idle = w_d[1] && !w_d[0];
-    wire push = w_v && !full_c && !(idle && ge6_c);
+    wire push;
+    (* keep_hierarchy = "yes" *) ot_s81_rm_push u_pc (.w_v(w_v), .idle(idle), .full(full_c), .ge6(ge6_c), .push(push));
     wire [3:0] wp_n = push ? wp + 1'b1 : wp;
     wire [3:0] nfill = wp_n - g2b(rp_g2);            // = fill at the next edge (rp_g3 then holds today's rp_g2)
     wire full_n = nfill == 4'd8;

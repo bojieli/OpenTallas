@@ -1217,8 +1217,11 @@ class Parent:
             flops_land += sum(math.ceil(L["width"] / self.chunk_bits) * self.D *
                               (2 if L.get("ring_of", L["name"]) == L["name"] else 1) for L in P["lands"])
         if self.reg_we:
-            # landing_reg_we: D registered slot write enables per kept writer chunk (no schedule change)
-            flops_land += sum(math.ceil(L["width"] / self.chunk_bits) * self.D
+            # landing_reg_we: per kept writer chunk, D slots x ceil(chunk width / 8) registered write-enable copies
+            # (ot_pl_land_regwe.sv; no schedule change)
+            cb = self.chunk_bits
+            flops_land += sum(self.D * sum(math.ceil(min(cb, L["width"] - c * cb) / 8)
+                                           for c in range(math.ceil(L["width"] / cb)))
                               for L in P["lands"] if L.get("ring_of", L["name"]) == L["name"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
         flops_oreg = sum(eval_width(self.ports[p]["range"], self.env) * k for p, k in (P.get("oregs") or {}).items())

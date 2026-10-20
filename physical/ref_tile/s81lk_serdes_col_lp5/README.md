@@ -38,3 +38,9 @@ lpk5 census: 301 drivers > 32, max 219. Fixes (same regions, pins, children, out
   slice (~26 loads), row/read enables 22, slice read reset 31. Same function and cycle timing as lpk5.
 Checklist delta: 3 Fanout FIXED (pre-gate census of lpk5b by the gate's native_census before floorplan; numbers in the lane
 file); 1, 2, 4-8 unchanged from lpk5.
+### lpk5b rev 2 (after the first lpk5b gate, agidock128 ref_gate/s81lk_serdes_col_lp5-20261020-032348: census 797 > 32, max 220)
+A mapped flop enable costs 2 load pins per bit, and ABC folded push into every row enable of one kept module:
+- landing: one registered enable per slot drove 2 x (24 + 3) = 54 -> ceil(CW/8) KEPT copies per slot
+  (ot_pl_land_field_copy_bit, distinct IDs), copy k enables bits [8k, 8k+8) (+ epoch on copy 0): <= 22 pins.
+- rate matcher: wr 42-44, q_v 220 -> kept ot_s81_rm_push (w_v / idle one pin per slice), kept binary ot_s81_rm_wp
+  replica, two kept half-bank decoders ot_s81_rm_rowen (11 + 11/10 bits): wr <= 22, push <= ~22.

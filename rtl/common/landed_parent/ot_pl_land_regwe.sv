@@ -5,7 +5,7 @@
 //   we_next[s] = rsi && write_oh_next[s],  write_oh_next = rq ? rotate(write_oh) : 1-hot slot 0
 // so we[s] == rq && write_oh[s] at every edge after the first: slot data, epochs, valid, K and the reset ages are
 // cycle-identical to ot_pl_land_local_w (no schedule change). Each we[s] drives W (<= 24) data enables; rq drives
-// the counter, one-hot, valid and the we next-state (~15). Requires ot_pl_land.sv and ot_pl_land_reset_forest.sv
+// the counter, one-hot, valid and the we next-state (~15). Requires ot_pl_land.sv, ot_pl_land_field_copies.sv and ot_pl_land_reset_forest.sv
 // (reader side stays ot_pl_land_vector_reset_r). Shared files are untouched; default generation is byte-identical.
 `default_nettype none
 module ot_pl_land_local_we_w #(
@@ -21,13 +21,24 @@ module ot_pl_land_local_we_w #(
     reg rq;
     reg [AW:0] wc;
     (* keep *) reg [D-1:0] write_oh;
-    (* keep *) reg [D-1:0] we;
+    // we[s] (logical) = rq && write_oh[s]; physically NC = ceil(W/8) KEPT copies per slot (ot_pl_land_field_copy_bit,
+    // distinct IDs), copy k enabling bits [8k, 8k+8) (copy 0 also the epoch tag): a mapped enable costs 2 load pins
+    // per bit (lpk5b census: one copy per slot = 54 loads), so each copy sees <= 2 x (8 + AW + 1) = 22.
+    localparam integer NC = (W + 7) / 8;
+    wire [D*NC-1:0] wek;
+    wire [D-1:0] we;
     reg [D-1:0] valid;
-    reg [W-1:0] data [0:D-1];
-    reg [AW:0] epoch [0:D-1];
     wire [D-1:0] write_oh_n = rq ? {write_oh[D-2:0], write_oh[D-1]} : {{(D-1){1'b0}},1'b1};
     always @(posedge ck) rq <= rsi;
-    always @(posedge ck) we <= rsi ? write_oh_n : {D{1'b0}};
+    wire [D-1:0] we_n = {D{rsi}} & write_oh_n;
+    genvar s, k;
+    generate for (s=0;s<D;s=s+1) begin:g_we
+        for (k=0;k<NC;k=k+1) begin:g_cp
+            (* keep_hierarchy = "yes" *) ot_pl_land_field_copy_bit #(.ID(4096 + s*NC + k)) u_ff (
+                .ck(ck), .d(we_n[s]), .q(wek[s*NC+k]));
+        end
+        assign we[s] = wek[s*NC];
+    end endgenerate
     always @(posedge ck)
         if (!rq) begin wc <= 0; write_oh <= {{(D-1){1'b0}},1'b1}; valid <= 0; end
         else begin
@@ -35,19 +46,27 @@ module ot_pl_land_local_we_w #(
             write_oh <= write_oh_n;
             valid <= valid | write_oh;
         end
-    genvar s;
     generate for (s=0;s<D;s=s+1) begin:g_slot
-        always @(posedge ck) if (we[s]) begin data[s] <= i; epoch[s] <= wc; end
-        assign bank[s*W+:W] = data[s];
-        assign epo[s*(AW+1)+:AW+1] = epoch[s];
+        reg [AW:0] epoch;
+        always @(posedge ck) if (wek[s*NC]) epoch <= wc;
+        assign epo[s*(AW+1)+:AW+1] = epoch;
+        for (k=0;k<NC;k=k+1) begin:g_bits
+            localparam integer LO = 8*k, BW = (W - 8*k < 8) ? W - 8*k : 8;
+            reg [BW-1:0] data;
+            always @(posedge ck) if (wek[s*NC+k]) data <= i[LO +: BW];
+            assign bank[s*W+LO +: BW] = data;
+        end
     end endgenerate
     assign vld = valid;
 `ifndef SYNTHESIS
-    // the equivalence the module relies on (checked in every bench that uses it)
+    // the equivalence the module relies on (checked in every bench that uses it): every copy == rq && write_oh[s]
     reg seen = 0;
     always @(posedge ck) begin
         seen <= 1'b1;
-        if (seen && !$isunknown({rq, write_oh, we}) && we != ({D{rq}} & write_oh)) $error("LAND_WE_FAULT %m: we %b rq %b oh %b", we, rq, write_oh);
+        if (seen && !$isunknown({rq, write_oh, wek}))
+            for (integer j=0;j<D;j=j+1)
+                if (wek[j*NC +: NC] != {NC{rq && write_oh[j]}})
+                    $error("LAND_WE_FAULT %m: slot%0d copies %b rq %b oh %b", j, wek[j*NC +: NC], rq, write_oh);
     end
 `endif
 endmodule
