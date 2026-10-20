@@ -1,0 +1,14 @@
+{
+  "commit": "052221d68",
+  "model_before_RTL_commit": "b8321fb7d",
+  "bench_unit": "oth-ubuntu-4003727-1792482336",
+  "synth_unit": "oth-ubuntu-4010069-1792482375",
+  "sha256": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_red_ring32.sv": "aa8aabe498c8eb324fc23a62ec09e84f795eecbfc13d773caf886fcdd44d33c1",
+    "rtl/qwen_dv/qfd_dv_reset_tree.sv": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+    "rtl/test/qwen_dv/red_ring32/tb.sv": "07ecc0ed374e83aa12091f824038d0231a68ebeecd77e755977d8b6397381e69",
+    "rtl/test/qwen_dv/red_ring32/run.sh": "77b8280949eda214713e1fe12afa45606b408a544c00c0c6b7c1090bcb3436ec",
+    "rtl/test/qwen_dv/red_ring32/synth.sh": "b842c5492006a1a6945db257085f372f5b3af419a6cb045462ee5b2a7938db72",
+    "rtl/test/qwen_dv/red_ring32/census.py": "e9b938898b8ea37d4da2422ef5ce69e8ca83f142b554a39522356b6494b17161"
+  }
+}

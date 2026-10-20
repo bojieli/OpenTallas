@@ -1,8 +1,54 @@
 {
   "scope": "bounded reducer successor proposal before RTL; opt-in helper only first",
   "baseline_commit": "94483a34c",
-  "arithmetic_reuse": {"source": "rtl/qwen_dv/qfd_dv_station_math_g.sv", "add_latency": 7, "multiply_latency": 6, "baseline_add_latency": 3, "baseline_multiply_latency": 3, "order": "unchanged csum8 then LV4 binary temporal tree", "initiation_interval": 1},
-  "latency_edges": {"core_formula": "LM + 1 + 7*LA + LV*(LA+1) + 1", "baseline_core_last_vector_to_result": 42, "proposed_core_last_vector_to_result": 89, "delta_per_reduction": 47, "adopted": false, "layer_charge_formula": "47 * number_of_nonoverlapped_critical_reductions_per_layer", "layer_critical_reduction_count": null, "layer_price_status": "parent compiler must supply count before adoption"},
-  "ring32": {"age_edges": "D, unchanged", "stages": "input copies(1) + circular slots(D-2) + output capture(1)", "minimum_D": 3, "maximum_D": 51, "width_max": 283, "logical_store_bits_max": 2048, "over_capacity": "elaboration trap; require SRAM master, never split merely to evade limit", "slice_width": 8, "phase": "kept onehot per slice, one bit per slot", "copies_per_input_bit": "ceil((D-2)/16)", "phase_output_load_budget": "8 write-enable muxes + 8 read gates + 1 next phase = 17", "data_copy_load_budget": "16 bank D muxes", "reset_leaf_budget": "<=32 phase flops", "reset_forest": "balanced registered 32-ary two-level tree; local outputs grouped by phase bits", "extra_startup_reset_edges": 2, "steady_state_added_edges": 0, "ports_bits_per_edge": "W in, W out", "register_bits": "W*(D-2) banks + W*ceil((D-2)/16) launch copies + W output + ceil(W/8)*(D-2) phase + reset forest", "reach_requirement_um": 405, "outline_status": "unplaced helper; no physical claim", "fanout_status": "source budget only; mapped census required"},
-  "resources": {"macs_per_cycle": 0, "communication_bits_per_cycle": "2*W per ring helper", "channel_tracks": "W at each adjacent producer/consumer boundary; parent layout capacity unresolved", "replicas": "per8 data bits; independent phase costs explicit", "area_status": "fleet synth required, no fabricated area", "gate_admission": "BLOCKED until complete native<=32, storage/pin/reach/depth proof and layer price"}
+  "arithmetic_reuse": {
+    "source": "rtl/qwen_dv/qfd_dv_station_math_g.sv",
+    "add_latency": 7,
+    "multiply_latency": 6,
+    "baseline_add_latency": 3,
+    "baseline_multiply_latency": 3,
+    "order": "unchanged csum8 then LV4 binary temporal tree",
+    "initiation_interval": 1
+  },
+  "latency_edges": {
+    "core_formula": "LM + 1 + 7*LA + LV*(LA+1) + 1",
+    "baseline_core_last_vector_to_result": 42,
+    "proposed_core_last_vector_to_result": 89,
+    "delta_per_reduction": 47,
+    "adopted": false,
+    "layer_charge_formula": "47 * number_of_nonoverlapped_critical_reductions_per_layer",
+    "layer_critical_reduction_count": null,
+    "layer_price_status": "parent compiler must supply count before adoption"
+  },
+  "ring32": {
+    "age_edges": "D, unchanged",
+    "stages": "input copies(1) + circular slots(D-2) + output capture(1)",
+    "minimum_D": 3,
+    "maximum_D": 51,
+    "width_max": 283,
+    "logical_store_bits_max": 2048,
+    "over_capacity": "elaboration trap; require SRAM master, never split merely to evade limit",
+    "slice_width": 8,
+    "phase": "kept onehot per slice, one bit per slot",
+    "copies_per_input_bit": "ceil((D-2)/16)",
+    "phase_output_load_budget": "8 write-enable muxes + 8 read gates + 1 next phase = 17",
+    "data_copy_load_budget": "16 bank D muxes",
+    "reset_leaf_budget": "<=32 phase flops",
+    "reset_forest": "balanced registered 32-ary two-level tree; local outputs grouped by phase bits",
+    "extra_startup_reset_edges": 2,
+    "steady_state_added_edges": 0,
+    "ports_bits_per_edge": "W in, W out",
+    "register_bits": "W*(D-2) banks + W*ceil((D-2)/16) launch copies + W output + ceil(W/8)*(D-2) phase + reset forest",
+    "reach_requirement_um": 405,
+    "outline_status": "unplaced helper; no physical claim",
+    "fanout_status": "fleet generic ABC recursive primitive census PASS3shapes maximum32 including resets; ASAP7 mapping still required"
+  },
+  "resources": {
+    "macs_per_cycle": 0,
+    "communication_bits_per_cycle": "2*W per ring helper",
+    "channel_tracks": "W at each adjacent producer/consumer boundary; parent layout capacity unresolved",
+    "replicas": "per8 data bits; independent phase costs explicit",
+    "area_status": "fleet synth required, no fabricated area",
+    "gate_admission": "BLOCKED until complete native<=32, storage/pin/reach/depth proof and layer price"
+  }
 }

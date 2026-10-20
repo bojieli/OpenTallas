@@ -1,0 +1,162 @@
+{
+  "kind": "generic_ABC_recursive_primitive_pin_census",
+  "top": "qfd_dv_s5_red_ring32",
+  "primitive_cells": 3942,
+  "clock_exclusion": "root ck only",
+  "maximum_loads": 32,
+  "violations": [],
+  "top_drivers": [
+    {
+      "net": "qfd_dv_s5_red_ring32.reset_leaf[0]",
+      "driver": "qfd_dv_s5_red_ring32/u_reset.g_leaf[0].u_l/$auto$ff.cc:337:slice$3468/Q",
+      "loads": 32
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32.reset_leaf[2]",
+      "driver": "qfd_dv_s5_red_ring32/u_reset.g_leaf[2].u_l/$auto$ff.cc:337:slice$3466/Q",
+      "loads": 32
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32.reset_leaf[4]",
+      "driver": "qfd_dv_s5_red_ring32/u_reset.g_leaf[4].u_l/$auto$ff.cc:337:slice$3464/Q",
+      "loads": 32
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32.reset_leaf[6]",
+      "driver": "qfd_dv_s5_red_ring32/u_reset.g_leaf[6].u_l/$auto$ff.cc:337:slice$3462/Q",
+      "loads": 32
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[28]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3882/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[30]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3880/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[35]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3875/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[31]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3879/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[18]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3892/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[5]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3730/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[43]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3867/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[45]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3865/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[6]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3729/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[44]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3866/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[29]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3881/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[1]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3734/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[26]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3884/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[40]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3870/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[46]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3864/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[37]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3873/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[39]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3871/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[10]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3725/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[21]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3889/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[0]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3735/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[41]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3869/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[24]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3886/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[42]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3868/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[23]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3887/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[4]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3731/Q",
+      "loads": 17
+    },
+    {
+      "net": "qfd_dv_s5_red_ring32/g_slice[0].u_s.phase[27]",
+      "driver": "qfd_dv_s5_red_ring32/g_slice[0].u_s/$auto$ff.cc:337:slice$3883/Q",
+      "loads": 17
+    }
+  ],
+  "pass": true,
+  "limits": "ASAP7 mapped census, reach, depth, storage and registered hard-boundary checks remain required before any gate"
+}
