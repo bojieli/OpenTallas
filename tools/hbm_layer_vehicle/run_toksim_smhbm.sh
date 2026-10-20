@@ -10,7 +10,7 @@ if [ "$MODE" = sync ]; then
   REV=$1; WT=$(git -C "$(dirname "$0")" rev-parse --show-toplevel); SHA=$(git -C "$WT" rev-parse "$REV")
   ssh "$HOST" "mkdir -p $L/src $L/out $L/work && rm -rf $L/src/*" || exit 2
   git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hdc_golden_v41.py tools/hdc_golden.py tools/rtl_gpu_sm_exact.py \
-    tools/rtl_hdc_v41_blockdot_campaign.py tools/hbm_svc_packed136_image.py tools/w19_payload_loader.py tools/dshbm_matched_sm_seq.py \
+    tools/rtl_hdc_v41_blockdot_campaign.py tools/hbm_svc_packed136_image.py tools/w19_payload_loader.py tools/dshbm_matched_sm_seq.py tools/hgi_sim \
     rtl/hbm_accel rtl/lib rtl/model_ready_hbm_r14 rtl/gpu rtl/hdc rtl/v41rom rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv \
     rtl/test/hbm_accel/svg_rel physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 \
     physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
