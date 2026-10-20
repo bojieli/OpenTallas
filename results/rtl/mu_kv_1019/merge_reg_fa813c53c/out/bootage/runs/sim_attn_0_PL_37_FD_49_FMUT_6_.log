@@ -1,0 +1,16 @@
+FACE MISMATCH t=589000 valid 1/1 beat 0/0 done 0/0 rfault 0/1
+FACE MISMATCH t=591000 valid 1/1 beat 1/1 done 0/0 rfault 0/1
+FACE MISMATCH t=593000 valid 1/1 beat 2/2 done 0/0 rfault 0/1
+FACE MISMATCH t=595000 valid 1/1 beat 3/3 done 0/0 rfault 0/1
+FACE MISMATCH t=597000 valid 1/1 beat 4/4 done 0/0 rfault 0/1
+DBG fault t=2415000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=273 c_age=290 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=4879000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=217 c_age=234 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=7631000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=233 c_age=250 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=9913000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=215 c_age=232 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=12119000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=255 c_age=272 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=14273000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=178 c_age=195 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+KVBA_ATTN FAIL PL=37 FD=49 mut=0 fmut=6 checks=6651 errors=4979 cmds=24 clean_ok=18/18 start_pv=24 invalid_caught=3/3
+- /srv/opentallas-scratch/claude/refill-1725/KVREG/src/rtl/test/kv_bootage_1019/tb_kvba_attn.sv:124: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 0.011 s; speed 1.389 ms/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB

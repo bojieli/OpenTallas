@@ -1,0 +1,10 @@
+MISMATCH t=39000 done 1/1 R 1089/1089 (want 1041) tx 1750/1750
+MISMATCH t=41000 done 1/1 R 1089/1089 (want 1041) tx 1750/1750
+MISMATCH t=43000 done 1/1 R 1089/1089 (want 1041) tx 1750/1750
+MISMATCH t=45000 done 1/1 R 1089/1089 (want 1041) tx 1750/1750
+MISMATCH t=47000 done 1/1 R 1089/1089 (want 1041) tx 1750/1750
+KVBA_CALGEN FAIL Q=57 R=87 F=49 mut=6 checks=8204 errors=8192 fault_errors=0 dones=8192 phase_c=3/3
+- /srv/opentallas-scratch/claude/refill-1725/KVREG/src/rtl/test/kv_bootage_1019/tb_kvba_calgen.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.005 s; speed 3.541 ms/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB

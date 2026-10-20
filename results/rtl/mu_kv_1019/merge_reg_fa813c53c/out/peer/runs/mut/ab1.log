@@ -1,0 +1,13 @@
+ERR cyc 18418 abort: not all three retained users cancelled and acknowledged
+  cancels 0 rr 0111
+ERR cyc 38534 abort phase: cancelled u1 never POSTed
+  u1 n4
+ERR cyc 58534 abort phase: cancelled u2 never POSTed
+  u2 n4
+ERR cyc 58584 abort: allocations/contexts/POSTs/retained left
+FAIL MU_PEER_ABORT fails=4 cancels=0 posts=13
+- rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv:352: Verilog $finish
+- rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv:359: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 59us; walltime 0.286 s; speed 204.593 us/s
+- Verilator: cpu 0.285 s on 1 threads; allocated 8 MB

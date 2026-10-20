@@ -1,0 +1,12 @@
+ERR cyc 2933 retire late (waited for global drains while other users in flight)
+ERR cyc 2934 terminal test lost its !alone case (drains already high)
+ERR cyc 2934 retire late (waited for global drains while other users in flight)
+ERR cyc 2935 retire late (waited for global drains while other users in flight)
+ERR cyc 2936 terminal test lost its !alone case (drains already high)
+ERR cyc 2938 terminal test lost its !alone case (drains already high)
+ERR cyc 5429 retire late (waited for global drains while other users in flight)
+FAIL MU_HROOT_E2E fails=18 retires=12 requests=12 writer_stages=432
+- rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv:187: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.013 s; speed 598.797 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB

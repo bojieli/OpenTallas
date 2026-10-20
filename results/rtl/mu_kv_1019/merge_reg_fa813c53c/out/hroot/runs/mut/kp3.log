@@ -1,0 +1,12 @@
+ERR cyc 587 layer written twice for a user in one token
+ERR cyc 587 user layers out of order
+ERR cyc 651 layer written twice for a user in one token
+ERR cyc 651 user layers out of order
+ERR cyc 715 layer written twice for a user in one token
+ERR cyc 715 user layers out of order
+FAIL MU_HROOT_COLLIDE: no collision fault (fault=0 code=00)
+- rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv:167: Verilog $finish
+ERR cyc 779 user layers out of order
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 779ns; walltime 0.002 s; speed 490.112 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

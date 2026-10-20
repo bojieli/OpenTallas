@@ -1,0 +1,18 @@
+ERR cyc 2819 user token without 36 writer stages
+ERR cyc 2934 endpoint protocol_fault
+ERR cyc 2935 endpoint protocol_fault
+ERR cyc 2936 endpoint protocol_fault
+ERR cyc 2937 endpoint protocol_fault
+ERR cyc 2938 endpoint protocol_fault
+ERR cyc 2939 endpoint protocol_fault
+  dbg u2 pos 20087 ubusy 1111 gp 0 tc 0 wl 0 idf 0 tv 0
+  dbg u3 pos 30098 ubusy 1111 gp 0 tc 0 wl 0 idf 0 tv 0
+  dbg u0 pos 000c9 ubusy 1111 gp 0 tc 0 wl 0 idf 0 tv 0
+  dbg u1 pos 100da ubusy 1111 gp 0 tc 0 wl 0 idf 0 tv 0
+  dbg u2 pos 200eb ubusy 1111 gp 0 tc 0 wl 0 idf 0 tv 0
+  dbg u3 pos 300fc ubusy 1111 gp 0 tc 0 wl 0 idf 0 tv 0
+FAIL MU_HROOT_E2E fails=128435 retires=2 requests=4 writer_stages=146
+- rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv:187: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 79us; walltime 0.107 s; speed 741.842 us/s
+- Verilator: cpu 0.107 s on 1 threads; allocated 7 MB
