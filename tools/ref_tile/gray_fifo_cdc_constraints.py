@@ -1291,6 +1291,9 @@ def _lint(spec, root):
         record['straps'] = sorted({p for p, _ in straps_used})
         record['strap_crossings'] = sorted(f'{p}->{d}' for p, d in straps_used)
         record['macros'] = {c.lstrip('\\'): macro_domain[c] for c in sorted(macro_domain)}
+        if macro_storage:
+            record['dual'] = {c.lstrip('\\'): dict(writer=fifos[fid]['writer'], reader=fifos[fid]['reader'])
+                              for fid, (c, _) in sorted(macro_storage.items())}
         record['counts'].update(gated=len(gated), lsrc=len(levels), macro=len(macro_domain))
     return record
 
@@ -1433,8 +1436,11 @@ def bindings(record):
                      + ' '.join(f'{c} {n}' for c, n in sorted(f['chains'].items())) + '}}'
                      for fid, f in sorted(record['fifos'].items()))
     periods = ' '.join(f'{n} {p!r}' for n, p in sorted(record['periods_ps'].items()))
+    dual = ' '.join(_word(c) + ' {writer ' + d['writer'] + ' reader ' + d['reader'] + '}'
+                    for c, d in sorted(record.get('dual', {}).items()))
     text = (f'set ::ot_gf_roles [dict create {roles}]\nset ::ot_gf_fifos [dict create {fifos}]\n'
-            f'set ::ot_gf_periods [dict create {periods}]\nset ::ot_gf_uncertainty {SETUP_UNCERTAINTY_PS!r}\n')
+            f'set ::ot_gf_periods [dict create {periods}]\nset ::ot_gf_uncertainty {SETUP_UNCERTAINTY_PS!r}\n'
+            + (f'set ::ot_gf_dual [dict create {dual}]\n' if dual else ''))
     if 'levels' not in record:
         return text
     levels = ' '.join('{' + lid + '} {src ' + v['src'] + ' dst ' + v['dst'] + ' bound ' + repr(v['max_delay_ps']) + '}'
@@ -1687,7 +1693,35 @@ proc ot_gf_verify {} {
   }
   set ::ot_gf_pending {}
 }
+proc ot_gf_dual_name {cell} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  foreach n [ot_gf_names [list $full]] {if {[dict exists $::ot_gf_dual $n]} {return $n}}
+  return {}
+}
+proc ot_gf_dual_same {start pin source target source_domain target_domain} {
+  # A reviewed SRAM FIFO's dual-clock storage macro (storage_macro profile) owns two families: its write pins (w_*,
+  # wd_*) are wclk = writer pins, its read pins (r_*) and rd_out are rclk = reader pins.  The multi-root gate gives the
+  # cell ONE domain, so a same-family path to the other port looks like a crossing: admit exactly those (no exception;
+  # ordinary STA in that family), nothing else.
+  set t [ot_gf_dual_name $target]
+  if {$t ne ""} {
+    set d [dict get $::ot_gf_dual $t]
+    regsub {\[\d+\]$} [lindex [split [get_full_name $pin] /] end] {} p
+    if {[regexp {^(w_|wd_)} $p] && $source_domain eq [dict get $d writer]} {return 1}
+    if {[regexp {^r_} $p] && $source_domain eq [dict get $d reader]} {return 1}
+  }
+  set s [ot_gf_dual_name $source]
+  if {$s ne ""} {
+    regsub {\[\d+\]$} [lindex [split [get_full_name $start] /] end] {} p
+    if {$p eq "rd_out" && $target_domain eq [dict get [dict get $::ot_gf_dual $s] reader]} {return 1}
+  }
+  return 0
+}
 proc ot_gf_crossing {start pin source target source_domain target_domain} {
+  if {[info exists ::ot_gf_dual] && [ot_gf_dual_same $start $pin $source $target $source_domain $target_domain]} {
+    puts "OT_GF DUAL_SAME [get_full_name $start] -> [get_full_name $pin] ($source_domain -> $target_domain)"
+    return
+  }
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
     error "OT_GF: cross-family control pin [get_full_name $pin]"
   }
