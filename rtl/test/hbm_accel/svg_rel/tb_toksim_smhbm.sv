@@ -117,7 +117,7 @@ module tb_toksim_smhbm;
   .request(request),.xw_en(xw_en),.xw_addr(xw_addr),.xw_grp(xw_grp),.xw_data(xw_data),
   .rv(sm_rv),.rrow(rrow),.rdata(rdata),.fault(sm_fault),.schedule_fault(sm_sfault));
  // ---------------- checks / trace
- integer nres=0,ngo=0,nrun=0;reg[1:0]cr_q=0;reg[3:0]br_q=0;
+ integer nres=0,ngo=0,nrun=0,i8v_n=0;reg[1:0]cr_q=0;reg[3:0]br_q=0;
  always @(posedge hbm)if(hrst&&native_fault)begin $display("FAULT controller cycle %0d vmks %0d pc %b ofs %h",cyc,vmks_fault,pcf,ofs);$fatal(1,"native_fault");end
  always @(posedge stream)if(srst&&hrst)begin
   if(sm_rv)begin $display("R %0d %03h %064h",cyc,rrow,rdata);nres=nres+1;end
@@ -138,8 +138,10 @@ module tb_toksim_smhbm;
    $display("ISSUER rc %0d sq_n %0d gq_n %0d gh_at %0d go_busy %0d cache_ready %b block_ready %b a_v %0d p_v %0d st_v %0d s_blk %0d rd_q %0d",svg.issuer.rc,svg.issuer.sq_n,svg.issuer.gq_n,svg.issuer.gh_at,svg.issuer.go_busy,svg.issuer.cache_ready,svg.issuer.block_ready,svg.issuer.a_v,svg.issuer.p_v,svg.issuer.st_v,svg.issuer.s_blk,svg.issuer.rd_q);$fatal(1,"svg fault");end
   if(xc_fault)begin $display("FAULT xc cycle %0d",cyc);$fatal(1,"xc fault");end
   // HBM-QINT8: the svg S1 copy's INT8 view must equal the packet the SM front sees (valid every edge, tag when valid)
-  if(svg.feed.s1_packet[1098]!=sm.f_packet[1098]||(sm.f_packet[1098]&&svg.feed.s1_packet[1097:1088]!=sm.f_packet[1097:1088]))begin
-   $display("FAULT i8view cycle %0d svg %0d/%0d sm %0d/%0d",cyc,svg.feed.s1_packet[1098],svg.feed.s1_packet[1097:1088],sm.f_packet[1098],sm.f_packet[1097:1088]);$fatal(1,"i8 view");end
+  // (reported, then fatal 4 edges later so a die fault the mismatch causes is reported first)
+  if(i8v_n==0&&(svg.feed.s1_packet[1098]!=sm.f_packet[1098]||(sm.f_packet[1098]&&svg.feed.s1_packet[1097:1088]!=sm.f_packet[1097:1088])))begin
+   $display("I8VIEW mismatch cycle %0d svg %0d/%0d sm %0d/%0d",cyc,svg.feed.s1_packet[1098],svg.feed.s1_packet[1097:1088],sm.f_packet[1098],sm.f_packet[1097:1088]);i8v_n=1;end
+  else if(i8v_n!=0)begin i8v_n=i8v_n+1;if(i8v_n==5)begin $display("FAULT i8view cycle %0d",cyc);$fatal(1,"i8 view");end end
   if(cp_fault)begin $display("FAULT cp_svg cycle %0d",cyc);$fatal(1,"cp fault");end
  end
  // event player: inputs change after the edge, sampled at the next one

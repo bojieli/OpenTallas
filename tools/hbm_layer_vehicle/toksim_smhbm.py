@@ -196,6 +196,11 @@ def qwen_records(tags, seed):
         acc = np.asarray(V.csum(G.mul(W.astype(np.float32), G.to_bf16(x)[None, :])), np.float32)
         lib = np.asarray(A.sm_int8(W, x), np.float32)
         gok = bool(np.array_equal(acc.view(np.uint32), lib.view(np.uint32)))
+        # HBM-QINT8: TOKSIM_QWEN_R=tag:R also sets the INT8 (fmt 3) rows of SM 0 (TP-8 rows); the first R rows of the
+        # census-row draw, exactly as qwen_bf16w_records slices them, so INT8 and BF16w runs see the same weights
+        Ro = dict((a.split(":")[0], int(a.split(":")[1])) for a in os.environ.get("TOKSIM_QWEN_R", "").split(",") if a).get(tag)
+        if Ro:
+            R, W, acc = Ro, W[:Ro], acc[:Ro]
         out.append(dict(k=i, tag=tag, K=K, m=m, R=R, W=W, x=x, acc=acc, o=acc.view(np.uint32), ofmt="FP32", gok=gok,
                         slot=None, eid=None, fmt=0, rec=dict(tag=tag, priced=None)))
     return out
