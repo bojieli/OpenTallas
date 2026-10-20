@@ -269,7 +269,10 @@ def cmd_tie(a):
 
 
 # ------------------------------------------------------------------------------------------------ frame field
-NPAIRS = LX.NPAIRS          # q pairs per phase (a_proj's choice; every phase of the frame uses the same field slots)
+NPAIRS = int(os.environ.get('OT_XS_QPAIRS', str(LX.NPAIRS)))
+if NPAIRS not in (10, 12):
+    raise ValueError('OT_XS_QPAIRS must be 10 (legacy) or 12 (all physical pairs)')
+# q pairs per phase (a_proj's choice; every phase of the frame uses the same field slots)
 # element-work term per (fmt, units / segment, rows / element): MEASURED on the frame bench only (lower_xs.ELEM_EXTRA is
 # the fp8 a_proj measurement); a class missing here is placed and imaged with calendar_unmeasured
 ELEM_EXTRA = {('fp8',) + k: v for k, v in LX.ELEM_EXTRA.items()}
@@ -359,6 +362,11 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'])
     else:
         qa = q[:NPAIRS]
+    if NPAIRS == 12:
+        assert len(q) == 12, ('twelve physical q pairs required', master, len(q))
+        # Preserve phase-0's measured ten-pair order; its two idle slots become
+        # available to later phases. No frame ports, element RTL or views change.
+        qa = list(qa) + [p for p in q if p not in qa]
     import xs_bf as XB
     nbf = len(bf) if any(o in XB.BF_OPS for o in ops) else 0
     field = I.Field(16, 1, nbf, depth=8192, active=len(qa) + nbf, pp=True, fast=True)
@@ -379,10 +387,19 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         mat = make_mat(fx, grp, sel, op)
         npair = (len(qa) // nseg) * nseg
         k = len(field.phases)
-        if only is None or k in only:
-            plan = phase_plan(master, lk, qa[:npair], 0, mat, grp['x'], nseg, iters)
-        else:
-            plan = phase_plan(master, lk, qa[:npair], 0, mat, grp['x'], nseg, 0)
+        # Cycle the unused pair positions across phases to use all twelve ROMs.
+        # The planner sees actual physical pairs; assignments are then translated
+        # back to the stable field-slot numbering used by cfg and image writers.
+        slot_ids = list(range(len(qa)))
+        if NPAIRS == 12:
+            rot = (k * npair) % len(qa)
+            slot_ids = slot_ids[rot:] + slot_ids[:rot]
+        slot_ids = slot_ids[:npair]
+        pairs = [qa[i] for i in slot_ids]
+        measured = only is None or k in only
+        plan = phase_plan(master, lk, pairs, 0, mat, grp['x'], nseg, iters if measured else 0)
+        plan['assign_slots'] = [(slot_ids[i], r, seg) for i, r, seg in plan['assign_slots']]
+        if not measured:
             plan['calendar'] = 'not_legalised'
         ph = add_planned(field, plan, mat, nseg)
         tie = [grp['tie'][grp['rows'].index(grp['rows'][i])] if grp['tie'] else None for i in sel]
