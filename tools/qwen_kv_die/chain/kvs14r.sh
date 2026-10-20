@@ -64,6 +64,12 @@ if [ -s $R/FWD_UNLANDED_DIAGNOSTIC ]; then
   say "FWD UNLANDED DIAGNOSTIC: $(tr '\n' ' ' < $R/FWD_UNLANDED_DIAGNOSTIC) left as relays (no reserved landing frame) -- run is DIAGNOSTIC, NOT A DIE RESULT"
   echo "FWD_UNLANDED_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
 fi
+# KV-GEN8 10-19: OT_KV_PARAM_DIAG=1 = expanded leaves keep their exact parameters on unreviewed auto-profiles (no native
+# parameter receipt, K.STA.PARAMS) -> DIAGNOSTIC, never a die result
+if [ "${OT_KV_PARAM_DIAG:-0}" = 1 ]; then
+  say "PARAM DIAGNOSTIC: expanded leaf parameter profiles unqualified (OT_KV_PARAM_DIAG=1) -- NOT A DIE RESULT"
+  echo "PARAM_PROFILE_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
+fi
 if [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ]; then
   say "CLK UNMEASURED DIAGNOSTIC (R=0): $(cat $R/libs/CLK_UNMEASURED_DIAGNOSTIC | head -c 300) -- NOT A DIE RESULT"
   echo "CLK_UNMEASURED_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
@@ -102,6 +108,7 @@ unset OT_BIND_DIAGNOSTIC
 [ -s $R/FWD_UNLANDED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ -s $R/LAND_LAG_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
+[ "${OT_KV_PARAM_DIAG:-0}" = 1 ] && export OT_BIND_DIAGNOSTIC=1
 say "chain start (laned netlist; OT_BIND_DIAGNOSTIC=${OT_BIND_DIAGNOSTIC:-0})"
 bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain.log" 2>&1 || say "chain rc=$?"
 # a refused launch gate (native bind / RELAY_CHECK) stops die_chain before GRT: re-run once stamped DIAGNOSTIC so the GRT /

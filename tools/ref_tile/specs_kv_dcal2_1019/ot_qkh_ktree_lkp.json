@@ -1,0 +1,157 @@
+{
+ "name": "ot_qkh_ktree_lkp",
+ "top": "ot_qkh_ktree_lk",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 151.2,
+  "h": 97.2
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "g_f",
+   "sc_d",
+   "sc_f"
+  ],
+  "N": [
+   "gf_in",
+   "kp_in",
+   "kpv_in"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The K-tree RTL registers every input at the pin (kp_r 512, kv_r, gf_r 16 = the existing input stage; the new kpv_in[15:1] reach gf_r through one XOR + one OR) and every output (sc_d / sc_f / g_f) is a tile output register. A generic extra stage would add a cycle to the scheduled K path (head ages are compiled with the closed ot_qkh_ktree latency)."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "The RTL owns the landing: rst_n -> rst_l0 -> rst_l1 (2 registered stages at the face, async assert / sync release; 2 rst_n sinks), then the closed ot_rst_relay REGIONS 17 / SYNC_STAGES 2 gives one kept copy per adder + control. gate lk1 FAILED reset_landing without the RTL landing (19 sinks); fixed structurally."
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 112,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "v": "M5"
+  }
+ },
+ "structural_change": "KV-DCAL2 10-19 K.STA.ECTL KPV_LOCKSTEP (ROOT: no blanket lockstep admission, apply misc_b): ot_qkh_ktree_lk = the closed ot_qkh_ktree (ot_qkh_ktree_m5, same RTL + the m5 fastfp snapshot) wrapped so all 16 lane kpv are read: lane mismatch vs lane 0 -> lane fault into the existing gf_r -> g_f path (XOR16 + OR, 2 gate levels before an existing input flop). Same outline 151.2 x 97.2 (die slot unchanged), 15 new N-face pins (544 on 151.2 um = 3.6/um). +0 cycles, +0 flops. lkp: balanced full-face pins (lk1 gate showed PPL-clustered partial-face N pins ~7/um).",
+ "safe_design_checklist": {
+  "1_pins": "fixed (gate lk1): every input lands on the existing RTL input flops (kp_r/kv_r/gf_r; kpv_in[15:1] via XOR+OR into gf_r), every output is a register; rst_n now lands in 2 RTL face stages (rst_l0/rst_l1) before the 17-region relay",
+  "2_reach": "PASS: 151.2 x 97.2 um tile, every wire < 405 um",
+  "3_fanout": "PASS functional (kpv_in[0] 16 loads); reset copy u_rr.rst_n[15] 369 flops (closed m5 multiplier err/valid structure, buffered reset tree, in->reg reset slack ~397 ps) = WARN kept: the closed shared ot_qkh_ktree is not modified",
+  "4_depth": "PASS: unchanged closed adder/multiplier stages; the new logic is XOR + OR (2 levels) before gf_r; no comb in->out",
+  "5_storage": "PASS: no storage beyond pipeline registers",
+  "6_floorplan": "PASS (lkp): no macros; outline = closed m5 slot 151.2 x 97.2, full std-cell band; N face pins balanced (route.pin_balance): kp_in 512 over 122 um = 4.2/um, gf_in 16 over 9 um, kpv_in 16 over 10 um; S sc_d 32 over 100 um; <= 6/um everywhere (lk1 PPL groups clustered ~7/um: rejected)",
+  "7_clock": "PASS (to verify at gate): one root clk W face, CTS centre tree as the closed m5 (spread <= 80 TT/FF); io_hold_margin 0.03",
+  "8_schedule": "PASS: static, +0 cycles (fault latency = lane gf latency, 2 edges); new fault source handed to KV-RETIRE/KV-HEALTH (existing head g_f path, no new die port)"
+ },
+ "job": {
+  "owner": "Claude:KV-DCAL2",
+  "branch": "claude/kv-dcal2-1019",
+  "tag": "lkp1",
+  "purpose": "Per-lane KPV lockstep K-tree for the KV MU release die heads (OT_KV_KPV_LK=1 -> ot_qkh_head_native_r4_s_lk / _ft_s_lk): closed ot_qkh_ktree + all 16 lane kpv read, lane mismatch = lane fault on the existing g_f path. Replaces the KPV_LOCKSTEP unused-output classification (ROOT HOLD) by a hardware check. Static, +0 cycles.",
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/test/qwen_kv_die/tb_qkh_ktree_lk.sv",
+   "tools/qwen_kv_die/ktree_lk_bench.sh",
+   "physical/ref_tile/ot_qkh_ktree_m5/src",
+   "physical/ref_tile/ot_qkh_ktree_lkp",
+   "results/rtl/ot_qkh_ktree_lk_1019"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qkh_ktree_lk u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv rtl/lib/ot_rst_relay.sv rtl/hdc/nearhbm/ot_qkh_subtiles.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "lint-ok"
+   },
+   {
+    "name": "kpv_lockstep_miter_and_lane_injection",
+    "cmd": "bash tools/qwen_kv_die/ktree_lk_bench.sh {RUN}/lk0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS ktree_lk .*detected=32"
+   },
+   {
+    "name": "mut1_lanes_ignored_old_wiring",
+    "cmd": "bash tools/qwen_kv_die/ktree_lk_bench.sh {RUN}/lk1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL ktree_lk .*detected=0",
+    "fail_witness": "results/rtl/ot_qkh_ktree_lk_1019/ktree_lk_m1.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/ot_qkh_ktree_lkp/views",
+  "record_to": "results/rtl/ref_tile/ot_qkh_ktree_lkp"
+ },
+ "pin_ranges": {
+  "kp_in": [
+   3.0,
+   125.0
+  ],
+  "gf_in": [
+   127.0,
+   136.0
+  ],
+  "kpv_in": [
+   138.0,
+   148.0
+  ],
+  "sc_d": [
+   20.0,
+   120.0
+  ],
+  "sc_f": [
+   124.0,
+   130.0
+  ],
+  "g_f": [
+   134.0,
+   140.0
+  ]
+ }
+}

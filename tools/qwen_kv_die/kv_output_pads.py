@@ -39,16 +39,20 @@ def derive(die_v, root=ROOT, existing=None):
     # Pin-repair may insert a full-width transparent lane between the original zero-pad input and its private sink.
     # Follow only individual bit identities of these pinned families; no RTL expression/logic or name-based waiver.
     drivers = {}
+    driver_ports = {}
+    relay_inputs = {}
     for m, inst, params, cm in insts:
         if m not in families:
             continue
         aa, bb = P.expr_bits(cm.get('a',''), nets), P.expr_bits(cm.get('b',''), nets)
         if params or aa is None or bb is None or len(aa) != families[m] or len(bb) != families[m]:
             raise ValueError(f'{inst}: unqualified transparent relay width/parameters')
-        for a, b in zip(aa,bb):
+        relay_inputs[(m, inst)] = aa
+        for pos, (a, b) in enumerate(zip(aa,bb)):
             if b in drivers:
                 raise ValueError(f'{inst}: multiply driven relay payload {b}')
             drivers[b] = a
+            driver_ports[b] = (m, inst, families[m]-1-pos)
     zero_cache = {}
     def zero_source(bit):
         path, active = [], set()
@@ -64,6 +68,29 @@ def derive(die_v, root=ROOT, existing=None):
         return value
     doc = json.loads(json.dumps(existing or dict(pads={}, instances={})))
     old_pads = P.load_pads(doc)
+    # A reach-repair stage can move a declared pad's zero literal upstream while
+    # the original replica now receives a full-width bus. Recover permission by
+    # following the actual bit graph from THAT declared instance/input bit. Never
+    # infer padding from a zero alone or a different replica's logical width.
+    relocated = set()
+    for key, spec in old_pads.items():
+        if len(key) != 3 or key[1] != 'a':
+            continue
+        m, _, inst = key
+        aa = relay_inputs.get((m, inst))
+        if aa is None:
+            continue
+        width = families[m]
+        for index in P.pad_bits(spec, width):
+            bit, origin, active = aa[width-1-index], None, set()
+            while bit in drivers:
+                if bit in active:
+                    raise ValueError('cycle in declared input pad provenance')
+                active.add(bit)
+                origin = driver_ports[bit]
+                bit = drivers[bit]
+            if bit == ('CONST', 0) and origin is not None:
+                relocated.add(origin)
     masters = doc.setdefault('pads', {})
     for m in families:
         masters.pop(m, None)  # replace old master-wide input minima with exact instance declarations
@@ -91,7 +118,8 @@ def derive(die_v, root=ROOT, existing=None):
         key = (m,'a',inst) if (m,'a',inst) in old_pads else (m,'a')
         old_input = P.pad_bits(old_pads[key],width) if key in old_pads else set()
         input_spare = [width-1-msb for msb,a in enumerate(aa)
-                       if a == ('CONST',0) and (width-1-msb in old_input or width-1-msb in spare)]
+                       if a == ('CONST',0) and (width-1-msb in old_input or width-1-msb in spare
+                                                  or (m, inst, width-1-msb) in relocated)]
         entries.pop(inst, None)
         ports = {}
         for port, selected in (('a',input_spare),('b',spare)):
@@ -112,7 +140,8 @@ def derive(die_v, root=ROOT, existing=None):
             count += 1
             bits += len(spare)
     doc['source_contract'] = dict(die_sha256=hashlib.sha256(Path(die_v).read_bytes()).hexdigest(),
-                                 rtl=RTL, rtl_sha256=RTL_SHA, relay_replicas=count, paired_spare_bits=bits)
+                                 rtl=RTL, rtl_sha256=RTL_SHA, relay_replicas=count, paired_spare_bits=bits,
+                                 relocated_declared_input_bits=len(relocated))
     if any(m in FORWARDED for m, *_ in insts):
         doc['source_contract']['forwarded_source_sha256'] = FWD_SOURCES
     return doc

@@ -12,6 +12,7 @@ import helper_overlay as HO  # noqa: E402
 
 RC = "96f1d6e0d0577256388fba8ae81830b4c80f4284"
 BR = "a6d33cc985d3a0d686ba2b1d94930b3350b5de14"
+SC = "e03b80922d812ab1d803f3c4c9313e74f5eeba9b"
 
 
 def kit(tmp, spec):
@@ -51,3 +52,19 @@ def test_balanced_reset_profile(tmp_path):
     g = kit(tmp_path / "b", dict(kind="tile", reset_landing=dict(enable=True, stages=2, first_copies=dict(rst=4))))
     assert not SB.relaxed_rule_requirement(["balanced_reset_profile"], {}, g, root=tmp_path / "b")[0]
     assert not SB.relaxed_rule_requirement(["balanced_reset_profile"], {}, None, root=tmp_path / "c")[0]
+
+
+def test_single_clock_contract(tmp_path):
+    assert HO.RULE_COMMITS[SC]["kind"] == "tightening" and HO.RULE_COMMITS[SC]["paths"] == ("tools/orfs_hold_mm.tcl",)
+    g = kit(tmp_path / "a", dict(kind="tile"))
+    assert SB.relaxed_rule_requirement(["single_clock_contract"], {}, g, root=tmp_path / "a")[0]
+    g = kit(tmp_path / "b", dict(kind="tile", single_clock_contract=dict(period_ps=833)))
+    assert not SB.relaxed_rule_requirement(["single_clock_contract"], {}, g, root=tmp_path / "b")[0]
+
+
+def test_clock_batch_0929_0956_classified():
+    for c, kind in (("c0b7b4d66a11c2125ad0d1ecac53454604b54cc6", "tightening"),
+                    ("b7aff0fb8961b5ac15a3ea8d8551aa62db9facd9", "relaxing"),
+                    ("a6dc6094abd587d675adc438a0247d115bd63862", "relaxing")):
+        r = HO.classify_commit(".", c, "physical/common_flow/io_ref_routed.sdc", None, None)
+        assert r["kind"] == kind and r["source"] == "registry"

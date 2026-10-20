@@ -20,6 +20,9 @@ if ! KIT_SYNTAX=$(bash -n "$KITENV" 2>&1) || [ -n "$KIT_SYNTAX" ]; then
   printf 'REF_TILE invalid kit shell syntax: %s\n%s\n' "$KITENV" "$KIT_SYNTAX" >&2
   exit 2
 fi
+# The source-bound kit owns PG opt-in; inherited daemon environment cannot
+# enable it on an ordinary job.
+OT_PG_STRICT=0
 if ! source "$KITENV"; then
   printf 'REF_TILE could not load kit: %s\n' "$KITENV" >&2
   exit 2
@@ -51,8 +54,16 @@ if [ -n "${CLOCK_RLAYERS:-}" ]; then
   read -r OT_CLK_LO OT_CLK_HI <<< "$CLOCK_RLAYERS"
   CR=(--orfs-var "MIN_CLK_ROUTING_LAYER=$OT_CLK_LO" --orfs-var "MAX_CLK_ROUTING_LAYER=$OT_CLK_HI")
 fi
+if [ -n "${OT_PG_JOB_STRICT:-}" ] && [ "$OT_PG_JOB_STRICT" != "$OT_PG_STRICT" ]; then
+  echo "REF_TILE PG policy does not match the source-bound kit; fresh strict kit required" >&2
+  exit 2
+fi
+PG=()
+if [ "${OT_PG_STRICT:-0}" = 1 ]; then
+  PG=(--orfs-var OT_PG_STRICT=1 --orfs-var OT_PG_HELPER=/src/physical/common_flow/native_pg_binding.tcl --step-tcl PRE_FINAL_REPORT=physical/common_flow/native_pg_bootstrap.tcl)
+fi
 SO=(); [ -n "$STOP" ] && SO=(--pnr-stop-after $STOP)
-# synthesis cap: unlimited for a route; the gate's floorplan smoke passes SYNTH_TIMEOUT (a SHARE stall fails in minutes)
+# Synthesis is unlimited by default; positive SYNTH_TIMEOUT is an explicit opt-in cap.
 STO=${SYNTH_TIMEOUT:-unlimited}
 export OT_ORFS_NUM_CORES=${NC:-8} OT_SYNTH_TIMEOUT_SECONDS=$STO OT_FLOW_TIMEOUT_SECONDS=unlimited
 export OT_MM_FF_SDC=${OT_MM_FF_SDC:-$K/signoff.sdc}
@@ -60,7 +71,7 @@ echo "$(date -Is) start $NAME kit=$K src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
   --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
   "${PINS[@]}" $([ "${PINEX:-1}" = 1 ] && echo --pin-regions-exhaustive) "${EXTRA[@]}" \
-  --routing-layers $RLAYERS "${CR[@]}" --clock-port $CLKPORT --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
+  --routing-layers $RLAYERS "${CR[@]}" "${PG[@]}" --clock-port $CLKPORT --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner ${CORNER:-WC} --hold-corners ${CORNER:-WC},BC --io-delay-fraction 0.2 --stages pnr \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --synth-timeout-seconds $STO --flow-timeout-seconds unlimited \
   --orfs-var NUM_CORES=${NC:-8} --orfs-var SDC_FILE=$KIT/clock.sdc --orfs-var QDM_SDC_DIR=$D \

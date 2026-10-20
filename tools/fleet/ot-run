@@ -90,14 +90,16 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["ot-epyc4", "ot-epyc5", "ot-epyc6", "ot-epyc7", "ot-epyc8", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["ot-epyc4", "ot-epyc5", "ot-epyc6", "ot-epyc7", "ot-epyc8", "ot-epyc9", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
 # "smalldisk" (FLEET-NEW2 2026-10-19: ot-epyc8 has only 2x 1 TB NVMe in RAID1, ~820 GB): die-level jobs (huge die-chain
 # scratch) skip it while another host qualifies; other work places normally.  ot-epyc9 (2x EPYC 7543, Zen 3) joins as
 # "throughput" when it is provisioned.
-HOST_ROLE = {"ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput"}
+HOST_ROLE = {"ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
+# FLEET-GOLD 2026-10-19: ot-gold1/2 (Cherry 1037247/1037249, Chicago 2x Xeon Gold 6330 Ice Lake, AVX-512 F present -> NOT in
+# NO_AVX512) pre-set "normal" (= no special role); NOT in HOSTS until lanes/fleet-gold/bringup_gold.sh registers them.
 # ot-epyc9 (Cherry 1036669, Chicago 2x EPYC 7543, Zen 3): role pre-set; it is NOT in HOSTS until it answers ssh and is
 # provisioned (claude-takeover-20261007/lanes/fleet-new2/bringup_epyc9.sh adds it).
 # DIE CAP (FLEET-NEW2 2026-10-19, coordinator): a host listed here runs at most N die-level jobs at a time (ot-epyc8: tile
@@ -130,7 +132,7 @@ REQUEUE_S = int(os.environ.get("OT_RUN_REQUEUE_S", "120"))   # v6 REBALANCE: a q
                                    # this long (v9: 120 s, was 300; every re-place re-reads HOSTS from this file)
 SPILL_MAX_GB = int(os.environ.get("OT_RUN_SPILL_MAX_GB", "40"))   # v8 SPILL
 SPILL_MAX_DIE_GB = int(os.environ.get("OT_RUN_SPILL_MAX_DIE_GB", "400"))   # v10: die lanes spill too (incremental copy)
-DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
+DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|mu-die|die[_-]case|kvs14r-|dv2f\d)")  # COORD 10-19: MU die cases (mu-die-*, die-case, kvs14r-*, dv2f*) are die jobs (FLEET-DISK gap)
 
 
 CONF_NAMES = ("HOSTS", "HOST_ROLE", "HOST_MAX_DIE", "NO_AVX512")

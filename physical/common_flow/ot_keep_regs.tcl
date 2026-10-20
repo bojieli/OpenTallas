@@ -64,11 +64,6 @@ yosys setattr -set keep 1 {*}{@ot_kc}
 set ot_kr_n [llength [split [string trim [yosys tee -q -s result.string select -list {*}{@ot_kc}]] "\n"]]
 puts "OT_KEEP_REGS: keep set on $ot_kr_n register cells driving keep wires"
 yosys select -clear
-# OT_RST_SPLIT=1 (KV-PEER5 2026-10-19, ref_tile spec "rst_split"): spread each member's async-reset flops over the K kept
-# copies of its wrapper's reset relay (wires with attribute ot_rst_split); see physical/common_flow/ot_rst_split.tcl.
-if {[info exists ::env(OT_RST_SPLIT)] && $::env(OT_RST_SPLIT) eq "1"} {
-  source [file join [file dirname [file normalize [info script]]] ot_rst_split.tcl]
-}
 # KV-RELAYGEN 2026-10-19: regional reset relay copies (<= OT_RST_COPIES_MAX loads each; physical/common_flow/ot_rst_copies.tcl).
 # Unset / empty / 0 = nothing below runs (every other kit unchanged).
 if {[info exists ::env(OT_RST_COPIES_MAX)] && [string is integer -strict $::env(OT_RST_COPIES_MAX)] && $::env(OT_RST_COPIES_MAX) > 0} {

@@ -26,6 +26,19 @@ def bits(v, hi, lo):
     return (v >> lo) & ((1 << (hi - lo + 1)) - 1)
 
 
+def test_send_cfg_b_width():
+    # ot_s81sl_xr send config: dir B with <= 2 pairs encodes; > 2 pairs is refused (xr would fault: 513-b band word)
+    w = C.send_cfg('B', pairs=2, dst_row=5)
+    assert bits(w, 3, 0) == 8 and bits(w, 42, 41) == 1 and bits(w, 40, 31) == 5
+    assert bits(C.send_cfg('EW', pairs=4), 42, 41) == 3
+    for bad in (3, 4):
+        try:
+            C.send_cfg('BE', pairs=bad)
+        except AssertionError:
+            continue
+        raise AssertionError(f'B send with {bad} pairs accepted')
+
+
 def test_encoders():
     # ot_dsdv_fixed_issue header: [27:26] 3, [25] seal, [24:17] 0, [16:9] length, [8:7] start phase, [6:0] stage
     h = C.pw_header(37, stage=5, start_phase=2, seal=True)
@@ -246,5 +259,6 @@ if __name__ == '__main__':
     test_previous_pre_source()
     print('test_previous_pre_source PASS')
     print('test_events_g8', test_events_g8())
+    test_send_cfg_b_width()
     r = test_compile_l0()
     print('TEST_DV_LAYER_COMPILE PASS', json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke')))

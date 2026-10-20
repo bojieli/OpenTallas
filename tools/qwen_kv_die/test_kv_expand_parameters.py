@@ -24,6 +24,34 @@ MODULES = {'ot_qwen_tp8_pv_slice_t': dict(RESET_PIN=1),
            'ot_qwen_tp8_pv_wide_ctl_tb': dict(RESET_PIN=1, TRUNK_D=54, FLAG_D=58, FIRST_INPUT_AGE=127)}
 
 
+class ParameterDeclarations(unittest.TestCase):
+    def test_present_parameterless_module(self):
+        self.assertEqual(P.integer_defaults('module m(input a); endmodule', 'm'), {})
+
+    def test_absent_module_refused(self):
+        for source in ('module other(input a); endmodule',
+                       '// module m(input a);\nmodule m_suffix(input a); endmodule'):
+            with self.assertRaisesRegex(ValueError, 'requested module absent'):
+                P.integer_defaults(source, 'm')
+
+    def test_selected_module_not_later_declaration(self):
+        source = 'module m(input a); endmodule\nmodule other #(parameter integer P=3)(input a); endmodule'
+        self.assertEqual(P.integer_defaults(source, 'm'), {})
+        self.assertEqual(P.integer_defaults(source, 'other'), {'P': 3})
+
+    def test_signed_unsigned_defaults_and_overrides(self):
+        source = "module m #(parameter integer P=-1, parameter [31:0] SCALE=32'hffffffff)(input a); endmodule"
+        defaults = P.integer_defaults(source, 'm')
+        self.assertEqual(defaults, {'P': -1, 'SCALE': 4294967295})
+        values, _ = P.evaluated({'P': '1'*32, 'SCALE': '1'*32}, defaults, 'm')
+        self.assertEqual(values, defaults)
+        self.assertIsInstance(values['SCALE'], P.U32)
+
+    def test_malformed_parameter_header_refused(self):
+        with self.assertRaisesRegex(ValueError, 'unsupported parameter header'):
+            P.integer_defaults('module m #(parameter integer P=0; endmodule', 'm')
+
+
 @unittest.skipUnless(os.environ.get("KV_PARAMETER_ACTUAL_ROOT"), "fleet fixture requires pinned actual source root")
 class ExpansionParameters(unittest.TestCase):
     def setUp(self):

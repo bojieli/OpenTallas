@@ -47,7 +47,8 @@ from hgi_sim import lib as A  # noqa: E402
 F = np.float32
 I8_LAT = 2
 SMH_ATTN = "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv"
-I8_FILES = ["rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv", "rtl/hbm_accel/sm/static/ot_smh_static_int8.sv"]
+I8_FILES = ["rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv", "rtl/hbm_accel/sm/static/ot_smh_static_int8.sv",
+            "rtl/hbm_accel/sm/static/ot_smh_int8_tile.sv"]   # LH-SMATT/INT8 10-19: ENABLE_INT8 1 = the hard SAFE tile
 NSM = 16
 
 
@@ -264,7 +265,7 @@ def cmd_run(a):
     doc = dict(schema="opentallas.hbm_qwen_sm_mv_unit.v1", lane="SMB-INT8", kv=str(kv), kv_npz_sha256=meta["npz_sha256"],
                L=a.L, bundle=a.bundle, mut=a.mut or None,
                rtl="ot_hbm_accel_smh_attn #(.ENABLE_INT8(1)) (this tree) + bundle master files (DIE_DEFINES) + "
-                   "ot_smh_static_int8 / ot_hbm_accel_int8_line, tb_hbm_smh_attn -DOT_SMH_ATTN_INT8, Verilator 5.050",
+                   "ot_smh_int8_tile (hard SAFE tile, ENABLE_INT8 1) / ot_smh_static_int8 / ot_hbm_accel_int8_line, tb_hbm_smh_attn -DOT_SMH_ATTN_INT8, Verilator 5.050",
                records=report, verdict="PASS" if ok_all else "FAIL")
     Path(a.out).write_text(json.dumps(doc, indent=1, default=int) + "\n")
     print(f"QWEN_SM_MV_UNIT {'PASS' if ok_all else 'FAIL'} records={len(report)} mut={a.mut or '-'}")
