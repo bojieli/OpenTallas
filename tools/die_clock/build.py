@@ -353,7 +353,7 @@ def build(a):
             for s in sinks:
                 sink_pins[s[0]] = dict(tree=t['name'], master=s[1], x=round(s[2], 3), y=round(s[3], 3),
                                       R=target(s[1], pin_key(s[0])[1]))
-            rec['trees'][t['name']] = dict(root=root, root_xy=[round(rxy[0], 3), round(rxy[1], 3)], sinks=len(sinks), model=model)
+            rec['trees'][t['name']] = dict(root=root, root_xy=list(rxy), sinks=len(sinks), model=model)
             builders[t['name']] = b_
             log('tree', t['name'], 'sinks', len(sinks), json.dumps(model))
         unclaimed = [x for x in loads if f'{x.getInst().getName()}/{x.getMTerm().getName()}' not in claimed]
@@ -530,6 +530,9 @@ def build(a):
                         topo=topo)
         sxy = ((src_it.getBBox().xMin() + src_it.getBBox().xMax()) / 2 / u,
                (src_it.getBBox().yMin() + src_it.getBBox().yMax()) / 2 / u)
+        # A centre feed is not one of the local tree roots: retain its actual ODB
+        # pin coordinate so reach coverage includes the source-to-spine edge.
+        rec.setdefault('source_xy', {})[src] = list(sxy)
         smodel = sb.build(src, sxy, rt.spine_leaves(members, cell_xy))
         for n, cell, x, y in sb.bufs:
             insts[n] = mk(n, cell, x, y)
