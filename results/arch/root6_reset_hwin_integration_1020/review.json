@@ -1,0 +1,28 @@
+{
+  "tested_root_snapshot": "1a247c6bc",
+  "later_root_head_not_tested": "1cf6f8e37 (exporter additions), remainsunpublished perROOTstop",
+  "status": "TERMINAL_WITH_ONE_PREEXISTING_MISSING_FIXTURE_FAILURE",
+  "overall_exit": 1,
+  "summary": "1 failed,103 passed,65 subtests passed",
+  "sole_failure": "test_ref_tile.py::Job::test_contract_slot_layer_cap_dict",
+  "cause": "FileNotFoundError for results/arch/hier_contract_1012/qwen_rom_tp8.json absent from reused source/resource fixture archive",
+  "same_failure_id_in_prior_baseline": "b38c59569:results/arch/root5_native_reset_1020/matched_base_ref_tile.log.gz",
+  "source_native_hwin_actual_test_outcome": "All other103selectedchecks passed, including source-native guards,39HWINplanning tests, measured-band/fill tests, otherjobtransport and env/defaultreset suites. No clean overall-pass claim.",
+  "frozen_snapshot_archive_sha256": "4ae1c6126e79f6408e470e38c8f46a4e04db2bb4bb0f2b6748a6864a0ddd7736",
+  "tested_code_sha256": {
+    "tools/ref_tile/ref_tile.py": "5735247fb4b3af773ea02b0eb63af314e8c8291c8f403c43eaf2837c3f8004d8",
+    "tools/ref_tile/planning_birth_budget.py": "95dc9743fc09a4626681bab961f0019f7ad6d1d0628f14a01b1ae3599e9567d0",
+    "tools/ref_tile/measured_band_fill.py": "dc7883b8e7287cb92ef4f14f040ccdab72ec3d8494faeb0861c55a49a0f3d058",
+    "tools/ref_tile/tests/test_source_native_reset_landing.py": "ca82b0b800489ed2cc2f9be0d3c6db6b0eb73bf526fe7738b61d87ca3304d8f3"
+  },
+  "fleet": {
+    "host": "ot-epyc7",
+    "unit": "4130158-1792498175",
+    "session": 26026,
+    "client_pid": 3422922,
+    "terminal": true,
+    "path": "/srv/opentallas-scratch/claude/root6-reset-hwin-integration-1020"
+  },
+  "stop": "CLAUDE IS BACK received while existingjoblive; collected/committed terminalresult only. No new tests, fixtures, mainpush or deploy afterSTOP.",
+  "claude_next": "If a fullygreencombinedreceipt is desired, materialize the exact canonical qwen_rom_tp8 contract fixture (or the same reviewedindividual stub) into a NEWprivatecopy and rerun only this missingfixture Jobtest. Do not overwrite retained failure evidence. ROOT owns publication/runtime/source-native admission; interlude ORDER5bee gates remain diagnostic until current typed/source/BRP revalidation."
+}
