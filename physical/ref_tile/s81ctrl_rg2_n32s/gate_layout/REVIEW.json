@@ -1,0 +1,24 @@
+{
+  "reviewer": "codex S81-GATECOLLECT (delegated coordinator)",
+  "time": "2026-10-20T04:14:49.112945-07:00",
+  "gate_commit": "2026-10-20T04:13:41-0700",
+  "geometry_sha256": "dfb14e604037561f3876d2cf04323778c407f0343cdbf73e95b20962962bff65",
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "PASS: 2x2 SRAMs at x43.2/216, y43.218(R180 track-alignment waiver retained)/194.4; channels41/58/56um; no geometry change from pinned kit.",
+    "std_cell_band": "PASS/WARN: continuous full-width middle legal band50.5um and N/S registered face rows; actual density PNG viewed, low-density channels are open with no isolated cell/power islands. Macro-dominated fill38% WARN; N/S faces98% used.",
+    "pin_spread": "PASS: clk TT61.4/FF66.9ps; ckh TT25.2/FF30.0ps. Native max31/zero>32; complete actual CTS endpoint reach0>405/max329.595um/zero Liberty role errors (receipt results/arch/s81_gatecollect_1020/n32s_pickup).",
+    "clock_entry": "PASS: core/host entries centred on opposite registered faces with unchanged K8 regional split; insertion matched by parent/landing contract (guidance-only >300ps); io_hold_margin0.03.",
+    "shape": "PASS:388.8x324 aspect1.2;4 SRAMs2x2, channels open. Trial GRT rc0/overflow0/M3max18.31%. TT placement is diagnostic; final SS/FF route signoff remains owed."
+  },
+  "safe_design": {
+    "pins": "PASS source registered, 2-stage reset landing",
+    "reach": "PASS native CTS complete12937pairs,max329.595",
+    "fanout": "PASS max31",
+    "depth": "PASS293.4ps",
+    "storage": "PASS4 SRAMs",
+    "floorplan": "PASS/WARN38%fill,faces98%,reviewedPNG",
+    "clock": "PASS spreads<=80both TT/FF; insertion guidance priced boundary",
+    "schedule": "PASS0newedges"
+  }
+}
