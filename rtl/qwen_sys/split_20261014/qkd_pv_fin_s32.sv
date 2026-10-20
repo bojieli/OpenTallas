@@ -113,7 +113,7 @@ module qkd_pv_fin_s32 #(
  wire [511:0] saved_sum=operand_sum[0];
  genvar bank;
  generate for(bank=0;bank<4;bank=bank+1)begin:g_sram
-  ot_sram_1r1w_32x128_m1 u_mem(.clk(ck),.r_ce_in(read_slot),.r_addr_in(read_addr),.rd_out(ram_sum[128*bank+:128]),
+  ot_sram_1r1w_32x128_m1_p192_pvfin u_mem(.clk(ck),.r_ce_in(read_slot),.r_addr_in(read_addr),.rd_out(ram_sum[128*bank+:128]),
    .w_ce_in(sum_slot),.w_addr_in(wptr),.wd_in(sum[128*bank+:128]),.w_mask_in({128{1'b1}}));
  end endgenerate
  wire [2:0] hb=(MUT==1)?3'(({1'b0,rptr}+6'd1)>>3):3'(rptr>>3);

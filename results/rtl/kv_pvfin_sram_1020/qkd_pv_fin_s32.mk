@@ -1,10 +1,10 @@
 export DESIGN_NAME = qkd_pv_fin_s32
 export PLATFORM = asap7
-export VERILOG_FILES = /work/rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv /work/rtl/hdc/ot_hdc_fp32_qkh_ncr.sv /work/rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv /work/rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv /work/rtl/lib/ot_rst_relay_bounded32.sv /work/rtl/hdc/ot_hdc_fp32_add_lat_nr.sv /work/rtl/hdc/ot_hdc_fp32_add_lat.sv /work/rtl/hdc/ot_hdc_fp32_mul_lat.sv /work/rtl/hdc/ot_hdc_prefix.sv /work/rtl/hdc/ot_hdc_fastfp.sv /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v
+export VERILOG_FILES = /work/rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv /work/rtl/hdc/ot_hdc_fp32_qkh_ncr.sv /work/rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv /work/rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv /work/rtl/lib/ot_rst_relay_bounded32.sv /work/rtl/hdc/ot_hdc_fp32_add_lat_nr.sv /work/rtl/hdc/ot_hdc_fp32_add_lat.sv /work/rtl/hdc/ot_hdc_fp32_mul_lat.sv /work/rtl/hdc/ot_hdc_prefix.sv /work/rtl/hdc/ot_hdc_fastfp.sv /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin_bb.v
 export SDC_FILE = /work/results/rtl/kv_pvfin_sram_1020/synth.sdc
 export SYNTH_CANONICALIZE_TCL = /work/physical/common_flow/ot_keep_regs.tcl
 export NUM_CORES = 4
 export SYNTH_HIERARCHICAL = 0
-export ADDITIONAL_LIBS = /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib
-export ADDITIONAL_LEFS = /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef
+export ADDITIONAL_LIBS = /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin_tt.lib
+export ADDITIONAL_LEFS = /work/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.lef
 export VERILOG_TOP_PARAMS = SKEW 1 ADD_LAT 7 MUL_LAT 6 MUT 0

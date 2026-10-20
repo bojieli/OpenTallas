@@ -13,7 +13,7 @@
     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
     "rtl/hdc/ot_hdc_prefix.sv",
     "rtl/hdc/ot_hdc_fastfp.sv",
-    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v"
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin_bb.v"
   ],
   "params": {
     "ADD_LAT": 7,
@@ -33,7 +33,7 @@
   "layer_cap": "M5",
   "macros": [
     {
-      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
       "count": 1,
       "inst": "*g_sram?0??u_mem",
       "at": [
@@ -43,7 +43,7 @@
       "orient": "R0"
     },
     {
-      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
       "count": 1,
       "inst": "*g_sram?1??u_mem",
       "at": [
@@ -53,7 +53,7 @@
       "orient": "R0"
     },
     {
-      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
       "count": 1,
       "inst": "*g_sram?2??u_mem",
       "at": [
@@ -63,7 +63,7 @@
       "orient": "R0"
     },
     {
-      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin",
       "count": 1,
       "inst": "*g_sram?3??u_mem",
       "at": [
@@ -146,7 +146,7 @@
           "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
           "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
           "rtl/lib/ot_rst_relay_bounded32.sv",
-          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
@@ -175,7 +175,7 @@
           "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
           "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
           "rtl/lib/ot_rst_relay_bounded32.sv",
-          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
@@ -205,7 +205,7 @@
           "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
           "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
           "rtl/lib/ot_rst_relay_bounded32.sv",
-          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
@@ -235,7 +235,7 @@
           "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
           "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
           "rtl/lib/ot_rst_relay_bounded32.sv",
-          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
@@ -265,7 +265,7 @@
           "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
           "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
           "rtl/lib/ot_rst_relay_bounded32.sv",
-          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
@@ -295,7 +295,7 @@
           "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
           "rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv",
           "rtl/lib/ot_rst_relay_bounded32.sv",
-          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v",
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
@@ -307,7 +307,7 @@
     ],
     "extra_paths": [
       "results/rtl/kv_pvfin_sram_1020",
-      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin"
     ],
     "views_to": "physical/ref_tile/qkd_pv_fin_s32/views",
     "record_to": "results/rtl/ref_tile/qkd_pv_fin_s32"

@@ -15,7 +15,7 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 [ -x "$V" ] || V=verilator
 S=rtl/qwen_sys/split_20261014
 SRC=("$S/qkd_pv_fin_s.sv" "$S/qkd_pv_fin_s32.sv" rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
-     rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_qkh_ncr.sv rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv rtl/lib/ot_rst_relay_bounded32.sv physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv)
+     rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_qkh_ncr.sv rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv rtl/hdc/ot_hdc_fp32_mul_lat_pvfin.sv rtl/lib/ot_rst_relay_bounded32.sv physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin.v rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv)
 sha256sum "${SRC[@]}" "$0" > "$O/source.sha256"
 echo "SIM $($V --version)"
 $V --binary --timing --x-initial unique --x-assign unique -DOT_MEM_NO_INIT -j "${JOBS:-4}" -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTH -Wno-MULTIDRIVEN \

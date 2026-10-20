@@ -82,3 +82,12 @@ independent pin images. Gate admission remains blocked on R6 census.
 The live-variable multiplier independently passed 11,997 valid outputs
 per seed x3 against the original LAT6 multiplier, including subnormals,
 NaN/Inf, finite overflow, arbitrary 32-bit operands and midstream reset.
+
+Physical pre-gate correction: the original32x128 macro has199 pins on
+its20.79um SHORT face, 9.57/um, and is not admissible. The p192_pvfin
+successor uses the established p192 calibrated lead RC/cap/energy recipe:
+51.408x39.96um, 199/39.96=4.98pins/um. Storage, behavior and cycle timing
+are unchanged; TT clk-to-q274.1ps and minimum period278.6ps include the
+extra lead. Four macros total8217.055um2, conservatively ~52% slot use
+with the R5 cell area. Original master bytes stay unchanged. The final
+R7+ mapped census and gate must bind the stretched master Liberty/LEF.
