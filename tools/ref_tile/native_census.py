@@ -5,6 +5,7 @@ separate. Only constant functions, actual clock pins and transparent unary cells
 are special; reset and macro data pins count like other dynamic endpoints.
 """
 import argparse
+from collections import Counter
 import gzip
 import hashlib
 import json
@@ -18,10 +19,12 @@ import textbook_lint as TL
 
 # COORD 2026-10-20 03:30: exactly fifteen library-adder internal nodes,
 # each 34 loads, accepted at <=36. This registry admits ONLY the reviewed
-# complete mapped image, actual Liberty bytes and node identities. A resynthesis
-# with different bytes requires a new coordinator review, even at the same RTL.
+# complete mapped image, actual Liberty bytes and node identities. ROOT reviewed
+# a second image differing solely in complete positive-BUF instance IDs/order.
+# Its fixed canonical fingerprint is the only alternative to the original SHA.
 KTREE_SCOPE = 'coord-20261020-0330-ktree-15-library-adder-nodes'
 KTREE_NETLIST = '6d1d28a1d58ab5088166ffb25084c552ae7810b51ee401801a55fc3434fc7cea'
+KTREE_CANONICAL = '24f05e9e4e08b9590b5ce8d6e1d2b00958c5fb0fea739cd7934f7da46b5dc228'
 KTREE_LIBERTY = frozenset((
     '9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99',
     'fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1',
@@ -40,7 +43,8 @@ def ktree_scoped_admission(report):
     """Verify the fixed coordinator decision, retaining the raw FAIL receipt."""
     if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
             or report.get('top') != 'ot_qkh_ktree_lk_nc32c'
-            or report.get('netlist', {}).get('sha256') != KTREE_NETLIST
+            or (report.get('netlist', {}).get('sha256') != KTREE_NETLIST
+                and report.get('netlist', {}).get('positive_buf_identity_sha256') != KTREE_CANONICAL)
             or report.get('status') != 'FAIL' or report.get('limit') != 32
             or report.get('max_dynamic_loads') != 34 or report.get('role_errors')):
         return False
@@ -54,6 +58,76 @@ def ktree_scoped_admission(report):
     rows = report.get('violations', [])
     actual = {(r.get('driver'), r.get('net'), r.get('driver_role'), r.get('loads')) for r in rows}
     return len(rows) == 15 and actual == expected
+
+
+BUF = re.compile(r'^  (BUFx\w+) (_\d+_) \(\n(.*?)\n  \);', re.M | re.S)
+PIN = re.compile(r'^    \.(\w+)\(([^()]+)\)(,?)$')
+
+
+def ktree_positive_buf_canonical(raw, roles):
+    """Fixed-image fingerprint; only complete actual unary BUF IDs/order vary.
+
+    All bytes outside those statements, contact bodies and multiplicities survive.
+    Unsupported syntax/attributes, duplicate identities across any cell masters,
+    and references to a removed identity fail closed. No general equivalence claim.
+    """
+    text = raw.decode()
+    pieces, counts = [], []
+    for module in re.split(r'(?=^module )', text, flags=re.M):
+        rows, names = [], set()
+        parsed = TL.parse_verilog(module)
+        for mod in parsed.values():
+            identities = [name for _, name, _ in mod.insts]
+            if len(identities) != len(set(identities)):
+                raise ValueError('duplicate instance identity across cells')
+
+        def replace(match):
+            master, instance, body = match.groups()
+            if instance in names:
+                raise ValueError('duplicate buffer identity')
+            names.add(instance)
+            prefix = module[module.rfind(';', 0, match.start()) + 1:match.start()]
+            if '(*' in prefix or '*)' in prefix:
+                raise ValueError('buffer attribute is unsupported; preserve its association')
+            role = roles.get(master)
+            if not role or role['sequential'] or role['bus_order']:
+                raise ValueError('unsupported buffer master ' + master)
+            pins = role['pins']
+            ins = [p for p, r in pins.items() if r['direction'] == 'input']
+            outs = [p for p, r in pins.items() if r['direction'] == 'output']
+            if len(pins) != 2 or len(ins) != 1 or len(outs) != 1 or any(p['clock'] for p in pins.values()):
+                raise ValueError('not an actual unary non-clock buffer ' + master)
+            function = re.sub(r'[\s()]', '', pins[outs[0]]['function'] or '')
+            if function != ins[0]:
+                raise ValueError('not an actual positive BUF function ' + master)
+            contacts = [PIN.fullmatch(line) for line in body.splitlines()]
+            if len(contacts) != 2 or any(c is None for c in contacts):
+                raise ValueError('unsupported buffer connection statement')
+            if {c[1] for c in contacts} != set(pins) or contacts[0][3] != ',' or contacts[1][3]:
+                raise ValueError('missing/extra/duplicate buffer contact')
+            # Include master plus the COMPLETE exact contact body and multiplicity.
+            # Only this statement's instance ID and position among other BUF
+            # statements are omitted; net names and all non-BUF context survive.
+            rows.append((master, body))
+            return '  __REVIEWED_POSITIVE_BUF_STATEMENT__;'
+
+        outside = BUF.sub(replace, module)
+        # Refuse any candidate BUFx instance that did not match the supported form.
+        if re.search(r'^\s+BUFx\w+\s+\S+\s*\(', outside, re.M):
+            raise ValueError('unsupported BUFx statement left in context')
+        if names.intersection(re.findall(r'(?<![\w$])_\d+_(?![\w$])', outside)):
+            raise ValueError('buffer identity referenced outside its complete statement')
+        pieces.append(outside + '\n' + json.dumps(sorted(rows), separators=(',', ':')))
+        counts.append(dict(count=len(rows), masters=dict(Counter(m for m, _ in rows))))
+    # Refuse hierarchical instance references even when in a parent module.
+    # Escaped generated hierarchy in master/instance names is also unsupported
+    # when it names a removed buffer, since its association would be ambiguous.
+    removed = {m.group(2) for m in BUF.finditer(text)}
+    refs = set(re.findall(r'\.\s*(_\d+_)(?![\w$])', text))
+    if removed.intersection(refs):
+        raise ValueError('hierarchical buffer identity reference')
+    return ''.join(pieces).encode(), counts
+
 
 
 def groups(text):
@@ -303,6 +377,16 @@ def main():
         g, top = TL.flatten(modules, a.top)
         report['top'] = top
         report.update(census(g, roles))
+        # Compute only for this reviewed source family and actual Library set.
+        # Other images retain identical admission and role-error behavior.
+        if (report['top'] == 'ot_qkh_ktree_lk_nc32c'
+                and len(report['liberty']) == len(KTREE_LIBERTY)
+                and {r['sha256'] for r in report['liberty']} == KTREE_LIBERTY):
+            try:
+                canonical, _ = ktree_positive_buf_canonical(raw, roles)
+                report['netlist']['positive_buf_identity_sha256'] = hashlib.sha256(canonical).hexdigest()
+            except ValueError as exc:
+                report['netlist']['positive_buf_identity_refusal'] = str(exc)
     except Exception as exc:
         report.update(status='FAIL', role_errors=[f'{type(exc).__name__}: {exc}'])
     scoped = ktree_scoped_admission(report)
