@@ -26,7 +26,7 @@ module qkd_pv_fin_s32 #(
  wire [479:0] rr={rr1,rr0};
  wire rc=rr[448];
  // pin registers (control); the data pins land in tap 0 of the operand lines
- reg start_q,p0v_q,p1v_q,rzv_q;reg [15:0] epoch_q,p0e_q,p1e_q,rze_q;reg [47:0] cal_q;reg [4:0] p0b_q,p1b_q;reg [127:0] rz_q;
+ reg start_q,p0v_q,p1v_q,rzv_q;reg [15:0] epoch_q,p0e_q,p1e_q,rze_q;(* keep="true",dont_touch="true" *) reg [47:0] cal_q;reg [4:0] p0b_q,p1b_q;reg [127:0] rz_q;
  always @(posedge ck or negedge rc)
   if(!rc)begin start_q<=0;p0v_q<=0;p1v_q<=0;rzv_q<=0;end
   else begin start_q<=start;p0v_q<=p0_valid;p1v_q<=p1_valid;rzv_q<=rz_valid;end
