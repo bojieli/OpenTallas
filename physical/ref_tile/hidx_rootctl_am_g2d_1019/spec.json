@@ -107,7 +107,12 @@
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "io_flop_at_pins": {
   "cols": 4,

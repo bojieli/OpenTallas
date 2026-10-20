@@ -107,7 +107,12 @@
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "io_flop_at_pins": {
   "cols": 4,
@@ -123,7 +128,7 @@
  "children": [],
  "inter": [],
  "slot_change_request": "d4g idx_ctl 300x260 (GEN0/GEN1 SYNTH, no view) -> 475.2x259.2 hard tile, same origin, grows E toward hb_argmax (x 12105)",
- "structural_change": "L2H-IDX g2d 10-19 (fallback: E face + program_data spread, N/S as g2c): successor of hidx_rootctl_am_g2c_1019 (COORD 18:25 HELD: rst_c[1]/rst_c[2] drove 1,592/1,757 async clears; E-face pin cluster red density). RTL RSTL 1: no in-RTL 3-region ot_rst_relay; every reset flop hangs off the landed rst_n and the kit's balanced landing copy family (stage 0: 4 kept copies, stage 1: 128 kept copies, ot_rst_copies.tcl max_loads 32, loads cut by hierarchical name = by region) drives <=32 each; release = landing 2 edges (was 2 + relay 3; transaction-level). Faces spread over the full face with per-port pin_ranges (E: argmax_m / argmax_rq / cr / cq_seq / cq bottom->top, ~4 pins/um). io_hold_margin 0.025 -> 0.03. Params VM_RT 65 / CR_RT 36 / SEL_LAT 30, outline, macro, face assignment identical to g2c.",
+ "structural_change": "L2H-IDX g2d 10-19 (fallback: full-face pins in the mirrored order (E: cq / cq_seq / cr / argmax_rq / argmax_m bottom->top; N/S request buses at the W end)): successor of hidx_rootctl_am_g2c_1019 (COORD 18:25 HELD: rst_c[1]/rst_c[2] drove 1,592/1,757 async clears; E-face pin cluster red density). RTL RSTL 1: no in-RTL 3-region ot_rst_relay; every reset flop hangs off the landed rst_n and the kit's balanced landing copy family (stage 0: 4 kept copies, stage 1: 128 kept copies, ot_rst_copies.tcl max_loads 32, loads cut by hierarchical name = by region) drives <=32 each; release = landing 2 edges (was 2 + relay 3; transaction-level). Faces spread over the full face with per-port pin_ranges (E: argmax_m / argmax_rq / cr / cq_seq / cq bottom->top, ~4 pins/um). io_hold_margin 0.025 -> 0.03. Params VM_RT 65 / CR_RT 36 / SEL_LAT 30, outline, macro, face assignment identical to g2c.",
  "job": {
   "owner": "Claude:L2H-IDX",
   "branch": "claude/l2h-idx-g2d-1019",
@@ -274,7 +279,7 @@
    "why": "params VM_RT 0 -> 65, CR_RT 0 -> 36, SEL_LAT 4 -> 30 (d4g GEN2c budget) + RSTL 1 (kit-landed regional reset copies, COORD 18:25 g2c review) + full-face pin ranges; same outline/faces/macro"
   }
  },
- "floorplan_note": "HBM-IDXAM r2 10-18: gate r1 FAIL pin-flop spread TT 94.1 / FF 87.7 ps (> 80) with the default CTS tree over 10.5k flops across 475 um from the W clock pin -> clock 'spine' (balanced spine, leaf targets equalised; the KV hub's spine measured 25/60 ps). | r3 HBM-IDXAM2: same outline/faces; boundary registered in RTL. | g2d L2H-IDX (fallback: E face + program_data spread, N/S as g2c): pins spread over full faces (pin_ranges), reset regional copies.",
+ "floorplan_note": "HBM-IDXAM r2 10-18: gate r1 FAIL pin-flop spread TT 94.1 / FF 87.7 ps (> 80) with the default CTS tree over 10.5k flops across 475 um from the W clock pin -> clock 'spine' (balanced spine, leaf targets equalised; the KV hub's spine measured 25/60 ps). | r3 HBM-IDXAM2: same outline/faces; boundary registered in RTL. | g2d L2H-IDX (fallback: full-face pins in the mirrored order (E: cq / cq_seq / cr / argmax_rq / argmax_m bottom->top; N/S request buses at the W end)): pins spread over full faces (pin_ranges), reset regional copies.",
  "reroute_reason": {
   "kind": "rtl_change",
   "vs": "hidx_rootctl_am_1018-r4-49a5acb8f",
@@ -294,25 +299,45 @@
   "max_loads": 32
  },
  "pin_ranges": {
-  "argmax_m": [
+  "cq": [
    4.0,
-   70.0
-  ],
-  "argmax_rq": [
-   72.0,
-   106.0
-  ],
-  "cr": [
-   108.0,
-   176.0
+   78.0
   ],
   "cq_seq": [
-   177.5,
-   179.5
+   79.5,
+   81.5
   ],
-  "cq": [
-   181.0,
+  "cr": [
+   83.0,
+   151.0
+  ],
+  "argmax_rq": [
+   153.0,
+   187.0
+  ],
+  "argmax_m": [
+   189.0,
    255.0
+  ],
+  "index_rq": [
+   4.0,
+   35.0
+  ],
+  "index_rr": [
+   37.0,
+   471.0
+  ],
+  "vm_rq": [
+   4.0,
+   33.0
+  ],
+  "share_fault": [
+   33.5,
+   35.0
+  ],
+  "vm_rr": [
+   37.0,
+   471.0
   ],
   "program_data": [
    4.0,
