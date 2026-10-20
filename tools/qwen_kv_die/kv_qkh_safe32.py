@@ -28,6 +28,22 @@ def enabled():
     return os.environ.get(FLAG, '0') == '1'
 
 
+def data_edges():
+    """Measured complete16-lane LK delta; input/output wrapper stages stay ON."""
+    return 2 if enabled() else 0
+
+
+def capture_hxk():
+    # Real ECTL current-GEN9 component: HXK15 retires all256 tags at age82;
+    # HXK14/13 causally fail at175/174 versus expected176.
+    return 13 + data_edges()
+
+
+def calendar_d_qk(issue_age, base_consume=34):
+    # Fetch/issue age is unchanged. Only the post-issue score path moves.
+    return issue_age - base_consume + data_edges()
+
+
 def configure(views, rtl):
     if enabled():
         views.update({m: t['view'] for m, t in TARGETS.items()})
