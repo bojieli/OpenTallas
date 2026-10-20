@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_btab_s3",
+ "enable": false,
+ "reason": "SRAM input captures and kept one-hot select captures; bt_ql/bt_qh are direct capture flop Q split around centred clock. No data/reset edges added."
+}
