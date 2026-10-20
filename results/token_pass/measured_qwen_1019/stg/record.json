@@ -7,9 +7,1685 @@
   0,
   1
  ],
- "grade": "PENDING (stage runs executing on ot-epyc5; fold with collect.py)",
+ "cfgs": {
+  "base": {
+   "stages": {
+    "L0_gu": {
+     "verdict": "PASS",
+     "checks": "3073/3073",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "3072/3072"
+    },
+    "L0_od": {
+     "verdict": "PASS",
+     "checks": "515/515",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L0_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"la",
+     "span_cycles": 1555,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "TP8-gold-only (TP8 partial, split 256; no TP4 value)"
+    },
+    "L0_qk": {
+     "verdict": "PASS",
+     "checks": "7/7",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L0_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768",
+     "span_cycles": 926,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "768/768"
+    },
+    "L0_qkv": {
+     "verdict": "PASS",
+     "checks": "769/769",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "768/768"
+    },
+    "L0_resid1": {
+     "verdict": "PASS",
+     "checks": "28/28",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L0_resid1.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097",
+     "span_cycles": 1044,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097"
+    },
+    "L0_resid2": {
+     "verdict": "PASS",
+     "checks": "28/28",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L0_resid2.npz r=0x40d90860 x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097",
+     "span_cycles": 1044,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097"
+    },
+    "L0_silu": {
+     "verdict": "PASS",
+     "checks": "2/2",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L0_silu.npz act words=24 span_cycles=814 isa_gold_words=1536/1536",
+     "span_cycles": 814,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "1536/1536"
+    },
+    "L1_gu": {
+     "verdict": "PASS",
+     "checks": "3073/3073",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L1_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "3072/3072"
+    },
+    "L1_od": {
+     "verdict": "PASS",
+     "checks": "515/515",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L1_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"la",
+     "span_cycles": 1555,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "TP8-gold-only (TP8 partial, split 256; no TP4 value)"
+    },
+    "L1_qk": {
+     "verdict": "PASS",
+     "checks": "7/7",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L1_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768",
+     "span_cycles": 926,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "768/768"
+    },
+    "L1_qkv": {
+     "verdict": "PASS",
+     "checks": "769/769",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L1_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "768/768"
+    },
+    "L1_resid1": {
+     "verdict": "PASS",
+     "checks": "28/28",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L1_resid1.npz r=0x40b67dd6 x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097",
+     "span_cycles": 1044,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097"
+    },
+    "L1_resid2": {
+     "verdict": "PASS",
+     "checks": "28/28",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L1_resid2.npz r=0x409ac91d x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097",
+     "span_cycles": 1044,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097"
+    },
+    "L1_silu": {
+     "verdict": "PASS",
+     "checks": "2/2",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L1_silu.npz act words=24 span_cycles=814 isa_gold_words=1536/1536",
+     "span_cycles": 814,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "1536/1536"
+    },
+    "MUT_L0_gu_sbase1": {
+     "verdict": "FAIL",
+     "checks": "22/3073",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT gu FAIL 22/3073 mutant=sbase1 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "3072/3072",
+     "detail": [
+      "gu slice 0 row 0: got 0xbc7f590d exp 0xbc9d3436",
+      "gu slice 0 row 1: got 0x3a8111fe exp 0x3a1a2ad3",
+      "gu slice 0 row 2: got 0xbb370184 exp 0xbae6a706",
+      "gu slice 0 row 3: got 0x3b3100a7 exp 0x3b2927b7",
+      "gu slice 0 row 4: got 0x3b4d99c6 exp 0x3b18b294"
+     ]
+    },
+    "MUT_L0_od_nostagger": {
+     "verdict": "FAIL",
+     "checks": "15/515",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT od FAIL 15/515 mutant=nostagger fixture=L0_mat_od.npz {\"span_cycles\": 1513, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 436, \"down\": 436}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 81, \"last_set\": 3, \"last_on_final\": 0}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\"",
+     "span_cycles": 1513,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "TP8-gold-only (TP8 partial, split 256; no TP4 value)",
+     "detail": [
+      "S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+      "S10ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+      "S1ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+      "S2ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+      "S3ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)"
+     ]
+    },
+    "MUT_L0_qk_ropesign": {
+     "verdict": "FAIL",
+     "checks": "5/7",
+     "rc": 1,
+     "first_line": "DV_LOWER_VEC qk FAIL 5/7 mutant=ropesign commands=26 collisions=0 ar_order=slice fixture=L0_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768",
+     "span_cycles": 926,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "768/768",
+     "detail": [
+      "q: 512/512 mismatches, first (0, 0) got 0xbe2b4303 want 0xbd2223f0",
+      "k: 109/128 mismatches, first (1, 0) got 0x3db00000 want 0x40e00000",
+      "rc=1"
+     ]
+    },
+    "MUT_L0_qkv_sbase1": {
+     "verdict": "FAIL",
+     "checks": "5/769",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT qkv FAIL 5/769 mutant=sbase1 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "768/768",
+     "detail": [
+      "qkv slice 0 row 0: got 0x3a118989 exp 0x39bfcb14",
+      "qkv slice 0 row 1: got 0xba06e953 exp 0xb98e6810",
+      "qkv slice 0 row 2: got 0x39f67d75 exp 0x39e9580c",
+      "qkv slice 0 row 3: got 0x3a81c065 exp 0x3a2aae0d",
+      "qkv slice 0 row 4: got 0x3adc2258 exp 0x3a301b7a"
+     ]
+    },
+    "MUT_L0_resid1_arwin": {
+     "verdict": "FAIL",
+     "checks": "4/28",
+     "rc": 1,
+     "first_line": "DV_LOWER_VEC resid FAIL 4/28 mutant=arwin commands=72 collisions=0 ar_order=slice fixture=L0_resid1.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097",
+     "span_cycles": 1044,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097",
+     "detail": [
+      "slice 0: RB ['0x41a6c828'] want [0x412e3b9a]",
+      "slice 1: RB ['0x41a6c828'] want [0x412e3b9a]",
+      "slice 2: RB ['0x41a6c828'] want [0x412e3b9a]",
+      "slice 3: RB ['0x41a6c828'] want [0x412e3b9a]",
+      "slice 4: RB ['0x41a6c828'] want [0x412e3b9a]"
+     ]
+    },
+    "MUT_L0_silu_nor": {
+     "verdict": "FAIL",
+     "checks": "1/2",
+     "rc": 1,
+     "first_line": "DV_LOWER_VEC silu FAIL 1/2 mutant=nor commands=24 collisions=0 ar_order=slice fixture=L0_silu.npz act words=24 span_cycles=749 isa_gold_words=1536/1536",
+     "span_cycles": 749,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "1536/1536",
+     "detail": [
+      "act stream: 24/24 words wrong / off edge (first [(0, 0, 2276, 0), (0, 64, 2284, 64), (1, 128, 2277, 128)]), 24 x words at E5",
+      "rc=1"
+     ]
+    },
+    "MUT_emb_emb_late": {
+     "verdict": "FAIL",
+     "checks": "0/4096",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT emb FAIL 0/4096 mutant=emb_late fixture=0 {\"ports\": 64}",
+     "span_cycles": null,
+     "delivery_span_cycles": null,
+     "isa_gold_words": null,
+     "detail": [
+      "slice 0 X[0] (row 0): got 0x3b022952 exp 0x3c8d8d21",
+      "slice 0 X[1] (row 1): got 0xbc6f94a0 exp 0x3d284474",
+      "slice 0 X[2] (row 2): got 0xbd202286 exp 0x3c8758d7",
+      "slice 0 X[3] (row 3): got 0xbc52b11f exp 0xbd85717c",
+      "slice 0 X[4] (row 4): got 0x39d57140 exp 0x3d396ab9"
+     ]
+    },
+    "MUT_lm_amax_local": {
+     "verdict": "FAIL",
+     "checks": "13/26",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT lm FAIL 13/26 mutant=amax_local fixture=0 {\"best\": 10925, \"gather_rank\": 0, \"rounds\": 25, \"stn\": 298, \"collective_contract\": {\"arx_tag\": 10925, \"xc_tag\": 1280114688, \"tag_mismatch\": 1}}",
+     "span_cycles": null,
+     "delivery_span_cycles": null,
+     "isa_gold_words": null,
+     "detail": [
+      "slice 0: die token [45] want 10925",
+      "slice 1: die token [45] want 10925",
+      "slice 2: die token [45] want 10925",
+      "slice 3: die token [45] want 10925",
+      "slice 4: die token [45] want 10925"
+     ]
+    },
+    "emb": {
+     "verdict": "PASS",
+     "checks": "4096/4096",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT emb PASS 4096/4096 mutant=0 fixture=0 {\"ports\": 64}",
+     "span_cycles": null,
+     "delivery_span_cycles": null,
+     "isa_gold_words": null
+    },
+    "lm": {
+     "verdict": "PASS",
+     "checks": "26/26",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT lm PASS 26/26 mutant=0 fixture=0 {\"best\": 10925, \"gather_rank\": 0, \"rounds\": 25, \"stn\": 298, \"collective_contract\": {\"arx_tag\": 10925, \"xc_tag\": 1280114688, \"tag_mismatch\": 1}}",
+     "span_cycles": null,
+     "delivery_span_cycles": null,
+     "isa_gold_words": null
+    }
+   },
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "timing": "build+vec calibrate 2248 s\ntotal 2416 s\nmat rerun 226 s",
+   "slice_calibrate.out": [
+    "CALIBRATE ssq_psum_out=[83, 99, 115] sc_hop=2 per_slice={11: [83, 99], 1: [83, 99, 115]}",
+    "rc=0"
+   ],
+   "calibrate.out": [
+    "CALIBRATE raw {\"add@1\": [83, 99, 115], \"add@11\": [83, 99], \"xs@1\": [34, 42, 50, 58, 66, 74], \"xs@10\": [34, 42, 50, 58], \"silu@3\": [114, 122], \"red_vm@2\": [83], \"rs@2\": [63], \"qn@2\": [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41], \"rope_q@2\": [26, 27, 28, 29, 30, 31, 32, 33], \"rope_k@8\": [26, 27, 28, 29, 30, 31, 32, 33], \"v@10\": [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41], \"gur@3\": [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57], \"readback@1\": [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73]}",
+    "CALIBRATE PASS",
+    "rc=0"
+   ],
+   "cal_mat_calibrate.out": [
+    "CALIBRATE {\"schema\": \"opentallas.qwen.dv-mat-ages.v1\", \"l8_ar\": 26, \"ar_hop\": 2.0, \"xc_cc\": 2, \"amax_ami\": 3, \"arx_after_amv\": 3, \"faults\": []}",
+    "CALIBRATE OK",
+    "rc=0"
+   ],
+   "slice_ages.json": {
+    "schema": "opentallas.qwen.dv-slice-ages.v1",
+    "ssq_psum_out": [
+     83,
+     99,
+     115
+    ],
+    "root_cfg_lead": 4,
+    "sc_hop_measured": 2,
+    "per_slice": {
+     "11": [
+      83,
+      99
+     ],
+     "1": [
+      83,
+      99,
+      115
+     ]
+    },
+    "source": "rtl/test/qwen_dv/dv_lower_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050); offsets = edge the PSUM j word leaves the slice dn_o (S<k>SD log) - (chain entry edge + cmd arrival)",
+    "root_cfg_lead_note": "structural: the root slots clear on the ROOT cfg edge; PSUMs land >= 4 edges later"
+   },
+   "vec_ages.json": {
+    "schema": "opentallas.qwen.dv-slice-vec-ages.v1",
+    "add_psum_out": [
+     83,
+     99,
+     115
+    ],
+    "xs_out": [
+     34,
+     42,
+     50,
+     58,
+     66,
+     74
+    ],
+    "silu_out": [
+     114,
+     122
+    ],
+    "red_vm": 83,
+    "root_cfg_lead": 4,
+    "d2d": {
+     "rs": [
+      63
+     ],
+     "qn": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "rope_q": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+     ],
+     "rope_k": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+     ],
+     "v": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "gur": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+     ],
+     "readback": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73
+     ]
+    },
+    "per_probe": {
+     "add@1": [
+      83,
+      99,
+      115
+     ],
+     "add@11": [
+      83,
+      99
+     ],
+     "xs@1": [
+      34,
+      42,
+      50,
+      58,
+      66,
+      74
+     ],
+     "xs@10": [
+      34,
+      42,
+      50,
+      58
+     ],
+     "silu@3": [
+      114,
+      122
+     ],
+     "red_vm@2": [
+      83
+     ],
+     "rs@2": [
+      63
+     ],
+     "qn@2": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "rope_q@2": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+     ],
+     "rope_k@8": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+     ],
+     "v@10": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "gur@3": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+     ],
+     "readback@1": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73
+     ]
+    },
+    "source": "rtl/test/qwen_dv/dv_lower_vec_bench.py --mode calibrate (tb_qfd_dv2 N 12, Verilator 5.050). Offsets from the slice cmd landing (entry + 2 s): PSUM = leave edge of the slice dn_o (S<s>SD); x = edge at the E5 end (S11E) - 2 (11 - s); D2D = edge at W5 (S0DD) - 2 s; d2d rs / qn / gur are the VM-only ops re-targeted to the D2D window (same pipeline) = their last-write ages; red_vm = the head SSQ reducer result (PSUM-window variant) age"
+   },
+   "stn_ages.json": {
+    "schema": "opentallas.qwen.dv-mat-ages.v1",
+    "l8_ar": 26,
+    "ar_hop": 2.0,
+    "xc_cc": 2,
+    "amax_ami": 3,
+    "arx_after_amv": 3,
+    "source": "rtl/test/qwen_dv/dv_lower_mat_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050): l8_ar = S0AR edge of word 0 - far-word edge (slice 0, L8, AR dst); ar_hop from slice 11; xc_cc = S0CC edge - XC chain entry; amax_ami = AMI leaving slice 5 dn_o - emit landing (entry + cmd arrival); arx_after_amv = ARX AR word at W5 - the last AMV leaving slice 1 dn_o",
+    "faults": []
+   }
+  },
+  "rel": {
+   "stages": {
+    "L0_gu": {
+     "verdict": "PASS",
+     "checks": "3073/3073",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "3072/3072"
+    },
+    "L0_od": {
+     "verdict": "PASS",
+     "checks": "515/515",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L0_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"la",
+     "span_cycles": 1555,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "TP8-gold-only (TP8 partial, split 256; no TP4 value)"
+    },
+    "L0_qk": {
+     "verdict": "PASS",
+     "checks": "7/7",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L0_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1015 isa_gold_words=768/768",
+     "span_cycles": 1015,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "768/768"
+    },
+    "L0_qkv": {
+     "verdict": "PASS",
+     "checks": "769/769",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "768/768"
+    },
+    "L0_resid1": {
+     "verdict": "PASS",
+     "checks": "28/28",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L0_resid1.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1085 isa_gold_words=4097/4097",
+     "span_cycles": 1085,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097"
+    },
+    "L0_resid2": {
+     "verdict": "PASS",
+     "checks": "28/28",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L0_resid2.npz r=0x40d90860 x_words=64 psums=160 span_cycles=1085 isa_gold_words=4097/4097",
+     "span_cycles": 1085,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097"
+    },
+    "L0_silu": {
+     "verdict": "PASS",
+     "checks": "2/2",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L0_silu.npz act words=24 span_cycles=902 isa_gold_words=1536/1536",
+     "span_cycles": 902,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "1536/1536"
+    },
+    "L1_gu": {
+     "verdict": "PASS",
+     "checks": "3073/3073",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L1_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "3072/3072"
+    },
+    "L1_od": {
+     "verdict": "PASS",
+     "checks": "515/515",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L1_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"la",
+     "span_cycles": 1555,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "TP8-gold-only (TP8 partial, split 256; no TP4 value)"
+    },
+    "L1_qk": {
+     "verdict": "PASS",
+     "checks": "7/7",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L1_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1015 isa_gold_words=768/768",
+     "span_cycles": 1015,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "768/768"
+    },
+    "L1_qkv": {
+     "verdict": "PASS",
+     "checks": "769/769",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L1_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "768/768"
+    },
+    "L1_resid1": {
+     "verdict": "PASS",
+     "checks": "28/28",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L1_resid1.npz r=0x40b67dd6 x_words=64 psums=160 span_cycles=1085 isa_gold_words=4097/4097",
+     "span_cycles": 1085,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097"
+    },
+    "L1_resid2": {
+     "verdict": "PASS",
+     "checks": "28/28",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L1_resid2.npz r=0x409ac91d x_words=64 psums=160 span_cycles=1085 isa_gold_words=4097/4097",
+     "span_cycles": 1085,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097"
+    },
+    "L1_silu": {
+     "verdict": "PASS",
+     "checks": "2/2",
+     "rc": 0,
+     "first_line": "DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L1_silu.npz act words=24 span_cycles=902 isa_gold_words=1536/1536",
+     "span_cycles": 902,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "1536/1536"
+    },
+    "MUT_L0_gu_sbase1": {
+     "verdict": "FAIL",
+     "checks": "22/3073",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT gu FAIL 22/3073 mutant=sbase1 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "3072/3072",
+     "detail": [
+      "gu slice 0 row 0: got 0xbc7f590d exp 0xbc9d3436",
+      "gu slice 0 row 1: got 0x3a8111fe exp 0x3a1a2ad3",
+      "gu slice 0 row 2: got 0xbb370184 exp 0xbae6a706",
+      "gu slice 0 row 3: got 0x3b3100a7 exp 0x3b2927b7",
+      "gu slice 0 row 4: got 0x3b4d99c6 exp 0x3b18b294"
+     ]
+    },
+    "MUT_L0_od_nostagger": {
+     "verdict": "FAIL",
+     "checks": "15/515",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT od FAIL 15/515 mutant=nostagger fixture=L0_mat_od.npz {\"span_cycles\": 1513, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 436, \"down\": 436}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 81, \"last_set\": 3, \"last_on_final\": 0}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\"",
+     "span_cycles": 1513,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "TP8-gold-only (TP8 partial, split 256; no TP4 value)",
+     "detail": [
+      "S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+      "S10ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+      "S1ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+      "S2ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+      "S3ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)"
+     ]
+    },
+    "MUT_L0_qk_ropesign": {
+     "verdict": "FAIL",
+     "checks": "5/7",
+     "rc": 1,
+     "first_line": "DV_LOWER_VEC qk FAIL 5/7 mutant=ropesign commands=26 collisions=0 ar_order=slice fixture=L0_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1015 isa_gold_words=768/768",
+     "span_cycles": 1015,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "768/768",
+     "detail": [
+      "q: 512/512 mismatches, first (0, 0) got 0xbe2b4303 want 0xbd2223f0",
+      "k: 109/128 mismatches, first (1, 0) got 0x3db00000 want 0x40e00000",
+      "rc=1"
+     ]
+    },
+    "MUT_L0_qkv_sbase1": {
+     "verdict": "FAIL",
+     "checks": "5/769",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT qkv FAIL 5/769 mutant=sbase1 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+     "span_cycles": 407,
+     "delivery_span_cycles": 407,
+     "isa_gold_words": "768/768",
+     "detail": [
+      "qkv slice 0 row 0: got 0x3a118989 exp 0x39bfcb14",
+      "qkv slice 0 row 1: got 0xba06e953 exp 0xb98e6810",
+      "qkv slice 0 row 2: got 0x39f67d75 exp 0x39e9580c",
+      "qkv slice 0 row 3: got 0x3a81c065 exp 0x3a2aae0d",
+      "qkv slice 0 row 4: got 0x3adc2258 exp 0x3a301b7a"
+     ]
+    },
+    "MUT_L0_resid1_arwin": {
+     "verdict": "FAIL",
+     "checks": "4/28",
+     "rc": 1,
+     "first_line": "DV_LOWER_VEC resid FAIL 4/28 mutant=arwin commands=72 collisions=0 ar_order=slice fixture=L0_resid1.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1085 isa_gold_words=4097/4097",
+     "span_cycles": 1085,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "4097/4097",
+     "detail": [
+      "slice 0: RB ['0x41a6c828'] want [0x412e3b9a]",
+      "slice 1: RB ['0x41a6c828'] want [0x412e3b9a]",
+      "slice 2: RB ['0x41a6c828'] want [0x412e3b9a]",
+      "slice 3: RB ['0x41a6c828'] want [0x412e3b9a]",
+      "slice 4: RB ['0x41a6c828'] want [0x412e3b9a]"
+     ]
+    },
+    "MUT_L0_silu_nor": {
+     "verdict": "FAIL",
+     "checks": "1/2",
+     "rc": 1,
+     "first_line": "DV_LOWER_VEC silu FAIL 1/2 mutant=nor commands=24 collisions=0 ar_order=slice fixture=L0_silu.npz act words=24 span_cycles=816 isa_gold_words=1536/1536",
+     "span_cycles": 816,
+     "delivery_span_cycles": null,
+     "isa_gold_words": "1536/1536",
+     "detail": [
+      "act stream: 24/24 words wrong / off edge (first [(0, 0, 2343, 0), (0, 64, 2351, 64), (1, 128, 2344, 128)]), 24 x words at E5",
+      "rc=1"
+     ]
+    },
+    "MUT_emb_emb_late": {
+     "verdict": "FAIL",
+     "checks": "0/4096",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT emb FAIL 0/4096 mutant=emb_late fixture=0 {\"ports\": 64}",
+     "span_cycles": null,
+     "delivery_span_cycles": null,
+     "isa_gold_words": null,
+     "detail": [
+      "slice 0 X[0] (row 0): got 0x3b022952 exp 0x3c8d8d21",
+      "slice 0 X[1] (row 1): got 0xbc6f94a0 exp 0x3d284474",
+      "slice 0 X[2] (row 2): got 0xbd202286 exp 0x3c8758d7",
+      "slice 0 X[3] (row 3): got 0xbc52b11f exp 0xbd85717c",
+      "slice 0 X[4] (row 4): got 0x39d57140 exp 0x3d396ab9"
+     ]
+    },
+    "MUT_lm_amax_local": {
+     "verdict": "FAIL",
+     "checks": "13/26",
+     "rc": 1,
+     "first_line": "DV_LOWER_MAT lm FAIL 13/26 mutant=amax_local fixture=0 {\"best\": 10925, \"gather_rank\": 0, \"rounds\": 25, \"stn\": 298, \"collective_contract\": {\"arx_tag\": 10925, \"xc_tag\": 1280114688, \"tag_mismatch\": 1}}",
+     "span_cycles": null,
+     "delivery_span_cycles": null,
+     "isa_gold_words": null,
+     "detail": [
+      "slice 0: die token [45] want 10925",
+      "slice 1: die token [45] want 10925",
+      "slice 2: die token [45] want 10925",
+      "slice 3: die token [45] want 10925",
+      "slice 4: die token [45] want 10925"
+     ]
+    },
+    "emb": {
+     "verdict": "PASS",
+     "checks": "4096/4096",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT emb PASS 4096/4096 mutant=0 fixture=0 {\"ports\": 64}",
+     "span_cycles": null,
+     "delivery_span_cycles": null,
+     "isa_gold_words": null
+    },
+    "lm": {
+     "verdict": "PASS",
+     "checks": "26/26",
+     "rc": 0,
+     "first_line": "DV_LOWER_MAT lm PASS 26/26 mutant=0 fixture=0 {\"best\": 10925, \"gather_rank\": 0, \"rounds\": 25, \"stn\": 298, \"collective_contract\": {\"arx_tag\": 10925, \"xc_tag\": 1280114688, \"tag_mismatch\": 1}}",
+     "span_cycles": null,
+     "delivery_span_cycles": null,
+     "isa_gold_words": null
+    }
+   },
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "timing": "build+vec calibrate 2811 s\ntotal 3036 s\nmat rerun 301 s",
+   "slice_calibrate.out": [
+    "CALIBRATE ssq_psum_out=[104, 120, 136] sc_hop=2 per_slice={11: [104, 120], 1: [104, 120, 136]}",
+    "rc=0"
+   ],
+   "calibrate.out": [
+    "CALIBRATE raw {\"add@1\": [104, 120, 136], \"add@11\": [104, 120], \"xs@1\": [55, 63, 71, 79, 87, 95], \"xs@10\": [55, 63, 71, 79], \"silu@3\": [181, 189], \"red_vm@2\": [104], \"rs@2\": [109], \"qn@2\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62], \"rope_q@2\": [47, 48, 49, 50, 51, 52, 53, 54], \"rope_k@8\": [47, 48, 49, 50, 51, 52, 53, 54], \"v@10\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62], \"gur@3\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78], \"readback@1\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94]}",
+    "CALIBRATE PASS",
+    "rc=0"
+   ],
+   "cal_mat_calibrate.out": [
+    "CALIBRATE {\"schema\": \"opentallas.qwen.dv-mat-ages.v1\", \"l8_ar\": 26, \"ar_hop\": 2.0, \"xc_cc\": 2, \"amax_ami\": 3, \"arx_after_amv\": 3, \"faults\": [\"S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)\", \"S5ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)\"]}",
+    "CALIBRATE FAIL",
+    "rc=1"
+   ],
+   "slice_ages.json": {
+    "schema": "opentallas.qwen.dv-slice-ages.v1",
+    "ssq_psum_out": [
+     104,
+     120,
+     136
+    ],
+    "root_cfg_lead": 4,
+    "sc_hop_measured": 2,
+    "per_slice": {
+     "11": [
+      104,
+      120
+     ],
+     "1": [
+      104,
+      120,
+      136
+     ]
+    },
+    "source": "rtl/test/qwen_dv/dv_lower_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050); offsets = edge the PSUM j word leaves the slice dn_o (S<k>SD log) - (chain entry edge + cmd arrival)",
+    "root_cfg_lead_note": "structural: the root slots clear on the ROOT cfg edge; PSUMs land >= 4 edges later"
+   },
+   "vec_ages.json": {
+    "schema": "opentallas.qwen.dv-slice-vec-ages.v1",
+    "add_psum_out": [
+     104,
+     120,
+     136
+    ],
+    "xs_out": [
+     55,
+     63,
+     71,
+     79,
+     87,
+     95
+    ],
+    "silu_out": [
+     181,
+     189
+    ],
+    "red_vm": 104,
+    "root_cfg_lead": 4,
+    "d2d": {
+     "rs": [
+      109
+     ],
+     "qn": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62
+     ],
+     "rope_q": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+     ],
+     "rope_k": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+     ],
+     "v": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62
+     ],
+     "gur": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78
+     ],
+     "readback": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94
+     ]
+    },
+    "per_probe": {
+     "add@1": [
+      104,
+      120,
+      136
+     ],
+     "add@11": [
+      104,
+      120
+     ],
+     "xs@1": [
+      55,
+      63,
+      71,
+      79,
+      87,
+      95
+     ],
+     "xs@10": [
+      55,
+      63,
+      71,
+      79
+     ],
+     "silu@3": [
+      181,
+      189
+     ],
+     "red_vm@2": [
+      104
+     ],
+     "rs@2": [
+      109
+     ],
+     "qn@2": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62
+     ],
+     "rope_q@2": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+     ],
+     "rope_k@8": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+     ],
+     "v@10": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62
+     ],
+     "gur@3": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78
+     ],
+     "readback@1": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94
+     ]
+    },
+    "source": "rtl/test/qwen_dv/dv_lower_vec_bench.py --mode calibrate (tb_qfd_dv2 N 12, Verilator 5.050). Offsets from the slice cmd landing (entry + 2 s): PSUM = leave edge of the slice dn_o (S<s>SD); x = edge at the E5 end (S11E) - 2 (11 - s); D2D = edge at W5 (S0DD) - 2 s; d2d rs / qn / gur are the VM-only ops re-targeted to the D2D window (same pipeline) = their last-write ages; red_vm = the head SSQ reducer result (PSUM-window variant) age"
+   },
+   "stn_ages.json": {
+    "schema": "opentallas.qwen.dv-mat-ages.v1",
+    "l8_ar": 26,
+    "ar_hop": 2.0,
+    "xc_cc": 2,
+    "amax_ami": 3,
+    "arx_after_amv": 3,
+    "source": "rtl/test/qwen_dv/dv_lower_mat_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050): l8_ar = S0AR edge of word 0 - far-word edge (slice 0, L8, AR dst); ar_hop from slice 11; xc_cc = S0CC edge - XC chain entry; amax_ami = AMI leaving slice 5 dn_o - emit landing (entry + cmd arrival); arx_after_amv = ARX AR word at W5 - the last AMV leaving slice 1 dn_o",
+    "faults": [
+     "S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)",
+     "S5ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)"
+    ]
+   }
+  }
+ },
+ "xt1_dh2": {
+  "mu1_l4_g2": {
+   "verdict": "PASS",
+   "exact": "64/64",
+   "ops": {
+    "qkv": {
+     "first_rs": 181,
+     "first_final": 237,
+     "last_final": 244,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "8/8",
+     "rounds": [
+      [
+       237,
+       244,
+       8
+      ]
+     ]
+    },
+    "o": {
+     "first_rs": 181,
+     "first_final": 189,
+     "last_final": 228,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "24/24",
+     "rounds": [
+      [
+       189,
+       196,
+       8
+      ],
+      [
+       205,
+       212,
+       8
+      ],
+      [
+       221,
+       228,
+       8
+      ]
+     ]
+    },
+    "gu": {
+     "first_rs": 181,
+     "first_final": 429,
+     "last_final": 436,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "8/8",
+     "rounds": [
+      [
+       429,
+       436,
+       8
+      ]
+     ]
+    },
+    "down": {
+     "first_rs": 181,
+     "first_final": 221,
+     "last_final": 324,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "24/24",
+     "rounds": [
+      [
+       221,
+       228,
+       8
+      ],
+      [
+       269,
+       276,
+       8
+      ],
+      [
+       317,
+       324,
+       8
+      ]
+     ]
+    }
+   }
+  },
+  "mu1_l8_g4": {
+   "verdict": "PASS",
+   "exact": "64/64",
+   "ops": {
+    "qkv": {
+     "first_rs": 181,
+     "first_final": 237,
+     "last_final": 244,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "8/8",
+     "rounds": [
+      [
+       237,
+       244,
+       8
+      ]
+     ]
+    },
+    "o": {
+     "first_rs": 181,
+     "first_final": 189,
+     "last_final": 228,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "24/24",
+     "rounds": [
+      [
+       189,
+       196,
+       8
+      ],
+      [
+       205,
+       212,
+       8
+      ],
+      [
+       221,
+       228,
+       8
+      ]
+     ]
+    },
+    "gu": {
+     "first_rs": 181,
+     "first_final": 429,
+     "last_final": 436,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "8/8",
+     "rounds": [
+      [
+       429,
+       436,
+       8
+      ]
+     ]
+    },
+    "down": {
+     "first_rs": 181,
+     "first_final": 221,
+     "last_final": 324,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "24/24",
+     "rounds": [
+      [
+       221,
+       228,
+       8
+      ],
+      [
+       269,
+       276,
+       8
+      ],
+      [
+       317,
+       324,
+       8
+      ]
+     ]
+    }
+   }
+  },
+  "mu4_l4_g2": {
+   "verdict": "PASS",
+   "exact": "64/64",
+   "ops": {
+    "qkv": {
+     "first_rs": 181,
+     "first_final": 237,
+     "last_final": 244,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "8/8",
+     "rounds": [
+      [
+       237,
+       244,
+       8
+      ]
+     ]
+    },
+    "o": {
+     "first_rs": 181,
+     "first_final": 189,
+     "last_final": 228,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "24/24",
+     "rounds": [
+      [
+       189,
+       196,
+       8
+      ],
+      [
+       205,
+       212,
+       8
+      ],
+      [
+       221,
+       228,
+       8
+      ]
+     ]
+    },
+    "gu": {
+     "first_rs": 181,
+     "first_final": 429,
+     "last_final": 436,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "8/8",
+     "rounds": [
+      [
+       429,
+       436,
+       8
+      ]
+     ]
+    },
+    "down": {
+     "first_rs": 181,
+     "first_final": 221,
+     "last_final": 324,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "24/24",
+     "rounds": [
+      [
+       221,
+       228,
+       8
+      ],
+      [
+       269,
+       276,
+       8
+      ],
+      [
+       317,
+       324,
+       8
+      ]
+     ]
+    }
+   }
+  },
+  "mu4_l8_g4": {
+   "verdict": "PASS",
+   "exact": "64/64",
+   "ops": {
+    "qkv": {
+     "first_rs": 181,
+     "first_final": 237,
+     "last_final": 244,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "8/8",
+     "rounds": [
+      [
+       237,
+       244,
+       8
+      ]
+     ]
+    },
+    "o": {
+     "first_rs": 181,
+     "first_final": 189,
+     "last_final": 228,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "24/24",
+     "rounds": [
+      [
+       189,
+       196,
+       8
+      ],
+      [
+       205,
+       212,
+       8
+      ],
+      [
+       221,
+       228,
+       8
+      ]
+     ]
+    },
+    "gu": {
+     "first_rs": 181,
+     "first_final": 429,
+     "last_final": 436,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "8/8",
+     "rounds": [
+      [
+       429,
+       436,
+       8
+      ]
+     ]
+    },
+    "down": {
+     "first_rs": 181,
+     "first_final": 221,
+     "last_final": 324,
+     "d_clu": 165,
+     "d_head": 16,
+     "exact": "24/24",
+     "rounds": [
+      [
+       221,
+       228,
+       8
+      ],
+      [
+       269,
+       276,
+       8
+      ],
+      [
+       317,
+       324,
+       8
+      ]
+     ]
+    }
+   }
+  }
+ },
  "rtl_source": "origin/claude/qw-gen3-1019 @221cf90b7; all 31 build sources byte-identical (build_sources.sha256)",
- "bench_tools": "dv_lower_vec_bench.py / dv_lower_mat_bench.py / dv_lower_vec.py / dv_lower_mat.py / dv_layer_fixture.py from origin/claude/qw-realstg-1019 @2cdba303d (not on gen3); dv_bench.py / dv_bench2.py / dv_lower.py = gen3 (supersets of realstg). Bench change: dv_lower_bench.build reads DV_LOWER_VFLAGS (extra -G flags; -GSU_LT=1 adds dv_bench2.XSRCS); unset = original build. gen3 tb_qfd_dv2.sv wraps the slice in tb_dv2_slice (FACE 0 = master qfd_dv_slice2), ports unchanged for the benches.",
+ "bench_tools": "dv_lower_vec_bench.py / dv_lower_mat_bench.py / dv_lower_vec.py / dv_lower_mat.py / dv_layer_fixture.py from origin/claude/qw-realstg-1019 @2cdba303d (not on gen3); dv_bench.py / dv_bench2.py / dv_lower.py = gen3 (supersets of realstg). Bench change: dv_lower_bench.build reads DV_LOWER_VFLAGS (extra -G flags; -GSU_LT=1 adds dv_bench2.XSRCS); unset = original build. gen3 tb_qfd_dv2.sv wraps the slice in tb_dv2_slice (FACE 0 = master qfd_dv_slice2), ports unchanged for the benches. | 10-19 21:40 kc fix (run_mat.sh): gen3 dv_lower.cmd_stn makes kc mandatory (MU-DQ-SLICEKC); the realstg mat lowering did not pass it, so run.sh mat calibrate died (TypeError) and every mat stage/lm/emb/mat mutant ERRORed. dv_lower_mat.KC = 1 + kc=1 in the bench calibrate: the bench drives one final JB block per (round, j), and STN [66:59] = 0 is the realstg encoding (qfd_dv_redstn2: 0 = every word is a result). Mat side re-run on the same obj_n12 builds.",
  "configs": {
   "base": "tb_qfd_dv2 N12 default params (MU_NU 1, SU_LT 0) = QW-REALSTG configuration on gen3 RTL",
   "rel": "release slice kit params (physical/ref_tile/qfd_dv_slice2_{w,e} kit.env: SU_LT 1, MU_NU 4), master core FACE 0 (the lpf_lp landed-parent wrapper is not simulated here)"
@@ -25,91 +1701,37 @@
   "gu": 407,
   "od": 1555
  },
- "xt1_dh2": {
-  "grade": "REL (qw-tok 865028dcf; 70 sources, only 3 TB files differ from gen3)",
-  "source": "origin/claude/qw-tok-1019 results/rtl/qw_tok_1019/xt1dh2/{mu1,mu4}/log_nominal_{l4_g2,l8_g4}.txt.result.json",
-  "units": "cycles after hr_go (ME go at the XT1 column slice); first_rs = first rs (level-6 cluster) word, first/last_final = final words of the op on rs",
-  "per_op": {
-   "qkv": {
-    "first_rs": 181,
-    "first_final": 237,
-    "last_final": 244,
-    "rounds": [
-     [
-      237,
-      244,
-      8
-     ]
-    ],
-    "exact": "8/8"
-   },
-   "o": {
-    "first_rs": 181,
-    "first_final": 189,
-    "last_final": 228,
-    "rounds": [
-     [
-      189,
-      196,
-      8
-     ],
-     [
-      205,
-      212,
-      8
-     ],
-     [
-      221,
-      228,
-      8
-     ]
-    ],
-    "exact": "24/24"
-   },
-   "gu": {
-    "first_rs": 181,
-    "first_final": 429,
-    "last_final": 436,
-    "rounds": [
-     [
-      429,
-      436,
-      8
-     ]
-    ],
-    "exact": "8/8"
-   },
-   "down": {
-    "first_rs": 181,
-    "first_final": 221,
-    "last_final": 324,
-    "rounds": [
-     [
-      221,
-      228,
-      8
-     ],
-     [
-      269,
-      276,
-      8
-     ],
-     [
-      317,
-      324,
-      8
-     ]
-    ],
-    "exact": "24/24"
+ "summary": {
+  "base": {
+   "stages_pass": "16/16",
+   "mutants_fail": "8/8",
+   "spans": {
+    "resid1": 1044,
+    "qk": 926,
+    "silu": 814,
+    "qkv": 407,
+    "gu": 407,
+    "od": 1555
    }
   },
-  "identical_across": [
-   "mu1_l4_g2",
-   "mu1_l8_g4",
-   "mu4_l4_g2",
-   "mu4_l8_g4"
-  ],
-  "all_pass": true,
-  "consistency": "XT1 numbers are identical for MU_NU 1 and 4 and both lead/gap variants. The DV mat spans start at the first lowered DV edge with tile words driven by the bench at the TILE-DELIVERY CONTRACT edges, so they exclude tile compute: per op total = XT1 hr_go->last_final (qkv 244, o 228, gu 436, down 324) + DV-side span after the first far word. dv_lower_mat.splice uses tile_first=40 (placeholder, \"not compiled by any tool\") for ME issue -> first far word; the measured XT1 value is 181 (first_rs) / per-op first_final 189..429, so the spliced calendar must move by +141 or more cycles (not a contradiction of the DV spans, an unmeasured constant in the lowering)."
- }
+  "rel": {
+   "stages_pass": "16/16",
+   "mutants_fail": "8/8",
+   "spans": {
+    "resid1": 1085,
+    "qk": 1015,
+    "silu": 902,
+    "qkv": 407,
+    "gu": 407,
+    "od": 1555
+   }
+  }
+ },
+ "grade": "REL (gen3 221cf90b7 build sources byte-identical; Verilator 5.050): base and rel 16/16 stages PASS (14 L0/L1 + lm + emb) on real L0/L1 P8191 operands, 8/8 mutants FAIL each",
+ "ages_vs_realstg": {
+  "base": "slice/vec/stn ages IDENTICAL to the committed qlb_c4/qlb_c4b ages (vec 067ae936, stn 5d5601f3): the DIAG ages are exact for gen3 at the bench default params (MU_NU 1, SU_LT 0)",
+  "rel": "release kit params (SU_LT 1, MU_NU 4): SSQ/add psum +21 edges (83->104), x stream +21 (34->55), SiLU +67 (114->181), d2d rs +46 (63->109), d2d qn/rope/v/gur/readback +21; stn ages identical (l8_ar 26) but the rel stn calibration logs S0ST/S5ST fault bits 1000001 (any,port) -- calibration-harness only, every rel stage bench PASS; open note for QW-GEN3",
+  "spans": "base spans = realstg (resid 1044 qk 926 silu 814 qkv/gu 407 od 1555); rel resid 1085 (+41) qk 1015 (+89) silu 902 (+88), mat spans unchanged"
+ },
+ "use": "TOKSIM-QW composes the 1u token with the REL ages (rel/{slice,vec,stn}_ages.json): the release slice kit params"
 }

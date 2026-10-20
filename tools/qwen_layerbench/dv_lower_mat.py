@@ -65,6 +65,8 @@ BT = dict(qkv=0, o=8, gu=32, down=48, lm_head=72)      # BTAB word base per matr
 BT_WORDS = 512
 STN_LEAD = 6            # the round's STN lands this many edges before its first far word (>= 1: cfg before fv)
 RV_SLACK = 16           # + the measured far -> result latency: a round's STN lands after the previous round's results
+KC = 1                  # gen3 STN [66:59] kc - 1 (MU-DQ-SLICEKC 10-19): the bench drives one final JB block per (round, j), so kc = 1
+                        # (field 0 = every word is a result = the realstg encoding; qfd_dv_redstn2 header)
 XC_TO_WORD0 = 2         # cc_o at W5 on edge X -> io_collective cmd pin X + a, internal c = X + a + 1, word 0 at in pins
                         # c + 1 = X + a + 2 (a = 2 on both the cc and the ar lanes: dv2f14bq relay ages)
 LU, LS = 53, 376        # qfd_io_collective_static OT_QFDS_LU / OT_QFDS_LS defaults (die params; Q-COLLCAL: LS 377 open)
@@ -225,7 +227,7 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
             if land < lo:
                 raise LowerError(f'{name} round {r} slice {s}: STN window empty (land {land} < previous results {lo})')
             if role == 'snd':
-                c = D.cmd_stn(s, 3, 0, nw, 0, 0, 0)
+                c = D.cmd_stn(s, 3, 0, nw, 0, 0, 0, kc=KC)
             else:
                 k = [e['block'] for e in lay[s]].index(bl[0]['block'])
                 sb = lay[s][k]['sbase'] + (1 if mutant == 'sbase1' else 0)
@@ -236,7 +238,7 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
                     db = BLOCK * bl[0]['block']
                 else:
                     db = 0 if mutant == 'amax_local' else row0 + BLOCK * bl[0]['block']
-                c = D.cmd_stn(s, MODE[lv], 0, nw, sb, dst, db, amax=amax)
+                c = D.cmd_stn(s, MODE[lv], 0, nw, sb, dst, db, amax=amax, kc=KC)
                 for j in range(nw):
                     b = bl[j // 8] if lv == 7 else bl[0]
                     jj = j % 8 if lv == 7 else j
