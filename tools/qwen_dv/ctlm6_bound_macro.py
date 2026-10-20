@@ -17,7 +17,50 @@ GATES={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_XNOR_':'~(A ^ B)',
 FFS={'$_DFF_P_','$_DFF_PN0_','$_DFF_PP0_','$_DFF_PN1_','$_DFF_PP1_',
      '$_SDFF_PN0_','$_SDFF_PP0_','$_SDFF_PN1_','$_SDFF_PP1_'}
 
-def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False,retain_keep=False,macro_contracts=None):
+def refine_undef_mux(cells,ports,raw,receipt_path):
+ """Refine only source don't-care data arms covered by an exact SAT cut."""
+ path=Path(receipt_path);receipt=json.loads(path.read_text())
+ graph_hash=hashlib.sha256(json.dumps(dict(cells=cells,ports=ports),sort_keys=True,separators=(',',':')).encode()).hexdigest()
+ unknown=[]
+ for name,c in cells.items():
+  for pin,bs in c['connections'].items():
+   for b in bs:
+    if b not in ('x','z'):continue
+    if c['type']!='$_MUX_' or pin not in ('A','B') or bs!=['x']:
+     raise ValueError(f'{name}.{pin}: only one-X mux data-arm refinement supported')
+    other='B' if pin=='A' else 'A';known=c['connections'][other]
+    if (set(c['connections'])!={'A','B','S','Y'} or
+        any(len(c['connections'][p])!=1 for p in ('A','B','S','Y')) or
+        known[0] in ('x','z') or c['connections']['S'][0] in ('x','z')):
+     raise ValueError(f'{name}: both-X/unknown-control mux refinement refused')
+    unknown.append(dict(cell=name,pin=pin,known_pin=other,select=c['connections']['S'][0],known=known[0],source=c.get('attributes',{}).get('src')))
+ if receipt.get('schema')!='opentallas.undef_mux_observability.v1' or receipt.get('verdict')!='PASS':
+  raise ValueError('source undef refinement requires an observability PASS receipt')
+ if receipt.get('raw_sha256')!=hashlib.sha256(raw).hexdigest() or receipt.get('normalized_graph_sha256')!=graph_hash or receipt.get('unknown')!=unknown:
+  raise ValueError('undef observability receipt differs from exact source graph/arms')
+ if receipt.get('observability_contract')!='all_effective_next_state_reset_clock_macro_inputs_outputs':
+  raise ValueError('undef refinement requires complete consumed-state/boundary observability')
+ for key,phrase in [('positive','SAT proof finished - no model found: SUCCESS!'),('negative','SAT proof finished - model found: FAIL!'),('cut',None)]:
+  artifact=receipt.get(key,{})
+  name=artifact.get('file','');ap=path.parent/name
+  if not name or Path(name).name!=name or not ap.is_file() or hashlib.sha256(ap.read_bytes()).hexdigest()!=artifact.get('sha256'):
+   raise ValueError(f'undef observability {key} artifact missing or changed')
+  if phrase and phrase not in ap.read_text():raise ValueError(f'undef observability {key} verdict missing')
+ aliases={cells[row['cell']]['connections']['Y'][0]:row['known'] for row in unknown}
+ def resolve(bit):
+  seen=set()
+  while bit in aliases:
+   if bit in seen:raise ValueError('cyclic source undef data-arm aliases')
+   seen.add(bit);bit=aliases[bit]
+  return bit
+ for row in unknown:del cells[row['cell']]
+ for c in cells.values():c['connections']={p:[resolve(b) for b in bs] for p,bs in c['connections'].items()}
+ for p in ports.values():p['bits']=[resolve(b) for b in p['bits']]
+ return dict(receipt_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),raw_sha256=receipt['raw_sha256'],normalized_graph_sha256=graph_hash,
+             source_arms=unknown,contract=receipt['observability_contract'],qualification='Source-observability refinement only; real RTL benches and full mapped census remain required.')
+
+
+def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False,retain_keep=False,macro_contracts=None,undef_mux_proof=None):
  if not 1 <= load_cap <= 32:raise ValueError("load_cap must be1..32")
  design=json.loads(raw);m=copy.deepcopy(design['modules'][top]);cells=m['cells'];ports=m['ports']
  macro_contracts=macro_contracts or {}
@@ -239,6 +282,7 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
       for n in row['cells']:del cells[n]
      cells[name]={'type':'$_QFD_RING_','width':len(part),'depth':depth,'connections':{'C':[clock],'R':[rst],'D':[r['d'] for r in part],'Q':[r['q'] for r in part]},'port_directions':{'C':'input','R':'input','D':'input','Q':'output'}}
      ring_groups.append({'W':len(part),'D':depth,'removed_flops':sum(len(r['cells']) for r in part)})
+ refinement=refine_undef_mux(cells,ports,raw,undef_mux_proof) if undef_mux_proof else None
  original=len(cells);original_types=dict(Counter(c['type'] for c in cells.values()));added=defaultdict(int)
  for iteration in range(100):
   sinks=defaultdict(list);drivers={}
@@ -364,9 +408,9 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    event='posedge C' if typ.startswith('$_SDFF') else f'posedge C or {edge} R'
    h.append(f"always @({event}) if({test}) Q<=1'b{val};else Q<=D;")
   h.append('endmodule');helpers.append('\n'.join(h))
- return '\n'.join(lines)+'\n',helpers,dict(generic_terminal_cost_contract='MUX select counts two actual dynamic pins through inversion; other generic gate inputs one; exact child weights remain authoritative; full mapped census still required', normalized_enabled_flops=normalized_enabled, macro_contracts=macro_contracts, retained_macro_terminals=[dict(instance=n,module=c['type'],parameters=c.get('parameters',{}),original_connections=original_macros[n]['connections'],emitted_connections=c['connections'],port_directions=c['port_directions']) for n,c in cells.items() if macro(c)], source_synth_cells_before_fusion=pre_fusion_cells,fused_ao_pairs=ao_fusions,original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping',transparent_inverters=transparent_inverters,retain_mux=retain_mux,shared_helpers=shared_helpers,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,internal_load_cap=load_cap,input_load_cap=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
+ return '\n'.join(lines)+'\n',helpers,dict(**(dict(undef_mux_refinement=refinement) if refinement else {}),generic_terminal_cost_contract='MUX select counts two actual dynamic pins through inversion; other generic gate inputs one; exact child weights remain authoritative; full mapped census still required', normalized_enabled_flops=normalized_enabled, macro_contracts=macro_contracts, retained_macro_terminals=[dict(instance=n,module=c['type'],parameters=c.get('parameters',{}),original_connections=original_macros[n]['connections'],emitted_connections=c['connections'],port_directions=c['port_directions']) for n,c in cells.items() if macro(c)], source_synth_cells_before_fusion=pre_fusion_cells,fused_ao_pairs=ao_fusions,original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping',transparent_inverters=transparent_inverters,retain_mux=retain_mux,shared_helpers=shared_helpers,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,internal_load_cap=load_cap,input_load_cap=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');p.add_argument('--retain-keep',action='store_true');p.add_argument('--macro-contracts',help='JSON exact module->ports metadata; actual blackboxes retained, never replicated');a=p.parse_args()
- s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep,json.loads(Path(a.macro_contracts).read_text()) if a.macro_contracts else None);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+ p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');p.add_argument('--retain-keep',action='store_true');p.add_argument('--undef-mux-proof',help='Exact source-hash-bound SAT observability receipt; no blanket unknown-value lowering');p.add_argument('--macro-contracts',help='JSON exact module->ports metadata; actual blackboxes retained, never replicated');a=p.parse_args()
+ s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep,json.loads(Path(a.macro_contracts).read_text()) if a.macro_contracts else None,a.undef_mux_proof);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
 if __name__=='__main__':main()
