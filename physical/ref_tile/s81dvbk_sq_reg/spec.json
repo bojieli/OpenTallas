@@ -263,7 +263,7 @@
  "structural_change": "S81-TOPK2 REGIONAL CLOCK (LEAD2-S81/TOPK2 10-19): FAN32 RTL (d58faf9b0) + regional local clock roots. Per-flop CTS dump of succb (07fb519c3, 4_1_cts.odb, TT): the single 12-level tree is BIMODAL -- band / upper-stack masses (u_ps, u_hf, FQ/OFQ, IO) at 522-560 ps, the line-pool/ingest masses (u_pi 563-656, pi_line, i1_p 585-632, half of u_hc, g_m2 up to 656) hang on one late branch (+70..+100 ps): all-flop spread 158.6 TT / 138.1 FF. Fix: physical/common_flow/clock_split_km.tcl K 16 (k-means on placed sinks: one BUFx24 local root at each register-mass centroid, beside its SRAM stack; CTS builds one short tree per region and balances the 16 roots under one top tree). Crossings between regions stay the existing register-to-register paths on one phase-0 port, timed by ordinary STA; tile 324x540 (< 405 um per hop) so no ring landing / 0 added edges.",
  "job": {
   "owner": "Claude:S81-TOPK",
-  "branch": "claude/s81-topk-fan32-1019",
+  "branch": "claude/s81-topk-reg-1019",
   "tag": "fan32a",
   "purpose": "TOPK selector quarter FAN32: KEPT copies of all >256-load selector control nets + CTS without SRAM-stack detour; INDEXED13 1037 reserved cycles priced.",
   "benches": [
