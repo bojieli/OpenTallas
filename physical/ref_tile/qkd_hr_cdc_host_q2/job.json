@@ -1,5 +1,5 @@
 {
- "name": "qkd_hr_cdc_host_q2-q2-2a6a08608",
+ "name": "qkd_hr_cdc_host_q2-q2-COMMIT",
  "block": "qkd_hr_cdc_host_sram",
  "ref_tile": true,
  "owner": "CODEX:KV-HOST6",
@@ -8,24 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/kv-host6-hcdc-1020",
-  "commit": "2a6a08608",
-  "extra_paths": [
-   "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1.v",
-   "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir.v",
-   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
-   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.v",
-   "rtl/lib/ot_async_fifo.sv",
-   "rtl/lib/ot_reset_sync.sv",
-   "rtl/physical/ot_host_async_fifo_sram.sv",
-   "rtl/physical/ot_host_die_cdc_sram.sv",
-   "rtl/physical/ot_qwen_async_fifo_w.sv",
-   "rtl/physical/ot_qwen_die_cdc_ch.sv",
-   "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_visibility_fence_cdc.sv",
-   "rtl/test/host_cdc_safe_1020/bench_case.sh",
-   "rtl/test/host_cdc_safe_1020/fence_case.sh",
-   "rtl/test/host_cdc_safe_1020/tb_fence.sv",
-   "rtl/test/host_cdc_safe_1020/tb_safe.sv"
-  ]
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -172,7 +155,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_hr_cdc_host_q2/qkd_hr_cdc_host_q2-q2-2a6a08608"
+   "to": "results/rtl/ref_tile/qkd_hr_cdc_host_q2/qkd_hr_cdc_host_q2-q2-COMMIT"
   }
  ],
  "cycles_added": 0,
