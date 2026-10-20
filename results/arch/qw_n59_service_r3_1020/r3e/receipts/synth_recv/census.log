@@ -1,0 +1,10 @@
+textbook_lint: REFUSE qfd_native59_svc cells 89,787 flops 21,088 depth 470.1 ps util None reach None um (3.2 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=21088 root=port:ck rule=PASS: 21,088 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 21,088 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+textbook_lint: WARN clock_domain: clock root port ck: 21,088 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. dr_o[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+textbook_lint: REFUSE high_fanout: net _095960_/Y (AND4x1_ASAP7_75t_R): 368 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net _094197_/Y (AND5x2_ASAP7_75t_R): 368 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net _096791_/Y (AND4x1_ASAP7_75t_R): 180 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net u_ot_pr_core.u_formatter.genblk1.g_safe32.hv[5][2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 178 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN clock_guidance: clock root port:ck: 21,088 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 21,088 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+TEXTBOOK_LINT: high_fanout: net _095960_/Y (AND4x1_ASAP7_75t_R): 368 loads > 32; net _094197_/Y (AND5x2_ASAP7_75t_R): 368 loads > 32
