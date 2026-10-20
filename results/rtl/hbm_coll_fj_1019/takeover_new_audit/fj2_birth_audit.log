@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits   683 GB (avail 592, growth 113, headroom 0, waiters 0/0 GB) load 48/128 running 31 disk 533 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex-collfj2-u3-birth-audit
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex-collfj2-u3-birth-audit
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/codex-collfj2-u3-birth-audit
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex-collfj2-u3-birth-audit
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex-collfj2-u3-birth-audit
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-95895-1792495874 after 0 s
+fj2birth original_pg 2
+fj2birth classes 0
+fj2birth diagnostic_bind 0
+fj2birth sequential_reach 0
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+FJ_NATIVE_GRAPH_DUMP_COMPLETE
+2 PASS 8841 32 errors 0 violations 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-95895-1792495874): exit 0

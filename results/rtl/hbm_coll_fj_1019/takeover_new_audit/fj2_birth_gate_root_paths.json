@@ -1,0 +1,56 @@
+{
+  "snapshot": "ref_gate_hcoll_fj2_r128u3_20261020-042442.source_snapshot.json",
+  "root_main": "68b9cad6c",
+  "paths": {
+    "physical/common_flow/clock_entries.tcl": {
+      "expected": "14e35eafa4c0604fcba2f43016d65a2b1e67253616a98e75f55ab517bb66aafd",
+      "actual": "14e35eafa4c0604fcba2f43016d65a2b1e67253616a98e75f55ab517bb66aafd",
+      "match": true
+    },
+    "physical/dsrom_window_source/leaf_inhold.tcl": {
+      "expected": "45262fc77cbf9ea57825e0fc0a01b7f75ab64315bc733330c466be473d18e141",
+      "actual": "45262fc77cbf9ea57825e0fc0a01b7f75ab64315bc733330c466be473d18e141",
+      "match": true
+    },
+    "physical/dsrom_window_source/leaf_iohold.tcl": {
+      "expected": "ec9081a61b9a900c3a226bfc662a68a2bcec3888aab97ad376af0c31cf34669a",
+      "actual": "ec9081a61b9a900c3a226bfc662a68a2bcec3888aab97ad376af0c31cf34669a",
+      "match": true
+    },
+    "tools/ref_tile/native_census.py": {
+      "expected": "a83ebec367621669b737b2921421eada914ae57801e56fd875dc8fe7b2e19bda",
+      "actual": "a83ebec367621669b737b2921421eada914ae57801e56fd875dc8fe7b2e19bda",
+      "match": true
+    },
+    "tools/ref_tile/pre_route_gate.py": {
+      "expected": "c3460d68bc94b50439105f29aec5afb2bdf917e43ebda015796afb185eeec62c",
+      "actual": "c3460d68bc94b50439105f29aec5afb2bdf917e43ebda015796afb185eeec62c",
+      "match": true
+    },
+    "tools/ref_tile/raw_macro_clocks.py": {
+      "expected": "c4132bed8ea7a2aa1223c2585ae8bc91177b7151424ad6b151c0bf3605e2f8b1",
+      "actual": "c4132bed8ea7a2aa1223c2585ae8bc91177b7151424ad6b151c0bf3605e2f8b1",
+      "match": true
+    },
+    "tools/ref_tile/ref_tile.py": {
+      "expected": "ac6cd9390e35752b09584f279b5fb542512146b2169bce74227647c8838a51b6",
+      "actual": "ac6cd9390e35752b09584f279b5fb542512146b2169bce74227647c8838a51b6",
+      "match": true
+    },
+    "tools/ref_tile/source_binding.py": {
+      "expected": "2b5ef2885fd15c3c4df85dee3de8bbba3faa7f8bcf40171b1bc671ba7569c132",
+      "actual": "2b5ef2885fd15c3c4df85dee3de8bbba3faa7f8bcf40171b1bc671ba7569c132",
+      "match": true
+    },
+    "physical/common_flow/native_pg_binding.tcl": {
+      "expected": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8",
+      "actual": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8",
+      "match": true
+    },
+    "physical/common_flow/clk_net_protect.tcl": {
+      "expected": "e74b6d2c1ee8f381086a2471561707d8f9f673a86c7deca8d9ac9aea329c2277",
+      "actual": "e74b6d2c1ee8f381086a2471561707d8f9f673a86c7deca8d9ac9aea329c2277",
+      "match": true
+    }
+  }
+}

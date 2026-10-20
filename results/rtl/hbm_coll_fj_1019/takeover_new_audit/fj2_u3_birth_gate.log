@@ -1,0 +1,24 @@
+GATE INFO pin_regs: pin registers opted out: ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/faul
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc5 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hcoll_fj2_r128u3_20261020-042442.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hcoll_fj2_r128u3_20261020-042442.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hcoll_fj2_r128u3-20261020-042442
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc5 in 64 s (gate total 243 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 461, 'pin_rectangles': 461, 'pin_track_checked': 461, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 f1ddc8fc1dc67be2c08e9557ab521a809cfa076ce080dcd65dd9b337199e742e
+GATE INFO util: synthesized std area 1590 um2 + macros 899 in core 6653: util 29% (std-cell density 29.0% of placeable 5492 um2; total fill 37.4%)
+GATE INFO textbook: PASS ot_hgi_coll_fj_q2_r128 cells 10,320 flops 3,024 depth 303.4 ps util 0.377 reach 0.0 um (0.2 s)
+GATE INFO cts_calibration: ss insertion all 193.9..223.6 ps (spread 29.7), boundary mean 212.3; tt insertion all 140.4..169.1 ps (spread 28.7), boundary mean 158.3; ff insertion all 109.4..137.7 ps (spread 28.3), boundary mean 127.2; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hcoll_fj2_r128u3/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: macro->reg      5 paths, worst slack 129.7 ps (e.g. program_fault$_DFF_PN0_/D)
+GATE INFO path_classes: reg->out       60 paths, worst slack 275.5 ps (e.g. fault)
+GATE INFO path_classes: reg->reg      527 paths, worst slack 297.9 ps (e.g. u_ot_pr_core.u.u_program.step[1]$_DFF_PN0_/D)
+GATE INFO path_classes: reg->macro      8 paths, worst slack 334.4 ps (e.g. u_ot_pr_core.u.u_program.u_flow/addr_in[3])
+GATE INFO path_classes: setup WNS 1.297483231965657e-10 hold WNS 5.012444626029122e-11
+GATE INFO clock_rule: root port:clk: 3,025 sinks on the largest root; measured TT insertion 169.1 ps, FF insertion 137.7 ps, TT pin-flop spread 18.6 ps, FF pin-flop spread 17.1 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-collfj-u3-regate-1020/physical/ref_tile/hcoll_fj2_r128u3/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-collfj-u3-regate-1020/physical/ref_tile/hcoll_fj2_r128u3/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 31.28% used; GRT 33 s
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-collfj-u3-regate-1020/physical/ref_tile/hcoll_fj2_r128u3/source_binding_history/95d0b1c5e76e568accac0a5ba49d5d942f24a4b46c3e285ec7f261953a7b3bc4.json
+GATE: hcoll_fj2_r128u3/gate_result.json written (exact staged source binding; commit it with the kit)
