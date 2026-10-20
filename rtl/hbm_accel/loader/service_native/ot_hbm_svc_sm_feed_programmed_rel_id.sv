@@ -116,9 +116,9 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
  reg[51:0]rd_r;reg rd_v_r;           // {read_v, bank, epoch16, row6, tag10, retire-free} of the R stage -> bits [116:83]
  reg[82:0]cmd_r,cmd_c;reg ret_r,ret_c;reg[16:0]retf_r,retf_c;reg inj_f;
  reg[134:0]programme;reg programme_v_q;
- reg i8_r,i8_c,i8_p1,i8_p2,i8_p3,i8_f;reg[9:0]i8_t1,i8_t2,i8_t3;   // HBM-QINT8 mark (R, C) + converter view
+ reg i8_r,i8_c,i8_p1,i8_p2,i8_p3,i8_f;reg[9:0]i8_t1,i8_t2;   // HBM-QINT8 mark (R, C) + converter view
  wire raw_v=packet_observe[1098];wire[9:0]raw_tag=packet_observe[1097:1088];
- wire i8_conv=i8_p2||i8_p3;wire[9:0]i8_ctag=i8_p2?i8_t2:i8_t3;
+ wire i8_conv=i8_p2||i8_p3;   // halves of the marked packet 2 / 3 edges ago; its tag = i8_t2 on both edges
  always @(posedge stream_clk)begin
   // R stage
   rd_r<=0;cmd_r<=0;ret_r<=0;retf_r<=0;
@@ -141,14 +141,14 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   if(PREL!=0&&word_v&&ordinal==0&&c_fl)begin cmd_c[28]<=1'b1;cmd_c[27:26]<=c_fmt;end
  end
  always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)begin programme_v_q<=0;inj_f<=0;i8_r<=0;i8_c<=0;i8_p1<=0;i8_p2<=0;i8_p3<=0;i8_f<=0;i8_t1<=0;i8_t2<=0;i8_t3<=0;end
+  if(!stream_rst_n)begin programme_v_q<=0;inj_f<=0;i8_r<=0;i8_c<=0;i8_p1<=0;i8_p2<=0;i8_p3<=0;i8_f<=0;i8_t1<=0;i8_t2<=0;end
   else begin
    programme_v_q<=word_v;
    if(PREL!=0&&word_v&&ordinal==0&&c_fl&&(cmd_r!=0||ret_r))inj_f<=1;     // format launch slot not idle
    // HBM-QINT8: mark with its word's read (R) and command/packet (C) edges; converter halves at C+2 / C+3
    i8_r<=(PREL!=0)&&word_v&&word[118];i8_c<=i8_r;
    i8_p1<=i8_c&&raw_v;i8_p2<=i8_p1;i8_p3<=i8_p2;
-   i8_t1<=raw_tag;i8_t2<=i8_t1;i8_t3<=i8_t2;
+   if(i8_c&&raw_v)i8_t1<=raw_tag;i8_t2<=i8_t1;     // held tag (as ot_smh_static_int8), 2 deep: no delay line
    if((i8_c&&(!raw_v||i8_p1))||(!i8_c&&raw_v&&i8_conv))i8_f<=1;
   end
  always @* begin
@@ -167,7 +167,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
  // HBM-QINT8: the packet the SM front sees (the raw packet when no INT8 mark is in flight)
- wire[1098:0]s1_packet={i8_conv||(raw_v&&!i8_c),i8_conv?i8_ctag:raw_tag,packet_observe[1087:0]};
+ wire[1098:0]s1_packet={i8_conv||(raw_v&&!i8_c),i8_conv?i8_t2:raw_tag,packet_observe[1087:0]};
  ot_smh_static_feed consumer(
   .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(s1_packet),
   .expected_request(expected_request),.fault(feed_fault),.lt0(lt0),.lt1(lt1),.lb0(lb0),.lb1(lb1),.fm(fm));
