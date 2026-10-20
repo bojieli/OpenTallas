@@ -1,0 +1,13 @@
+EDGE land0 land1 plain_leaf ship_roots ship_second ship_leaf legacy_q plain_q ship_q legacy_active plain_active ship_active
+1 1 0 0 0 0 0 1 0 0 0 0 0
+2 1 1 0 0 0 0 1 0 0 1 0 0
+3 1 1 1 1 0 0 1 0 0 1 0 0
+4 1 1 1 1 1 0 1 1 0 1 0 0
+5 1 1 1 1 1 1 1 1 0 1 1 0
+6 1 1 1 1 1 1 1 1 1 1 1 0
+7 1 1 1 1 1 1 1 1 1 1 1 1
+RESET_EDGE PASS release-beforeE1 pin1/4/6 accept2/5/7 delta_shipping_vs_legacy5 vs_plain2
+- results/rtl/kv_pvfin_shipping_1020/tb_reset_edges.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 30ns; walltime 0.000 s; speed 335.338 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

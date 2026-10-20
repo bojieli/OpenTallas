@@ -25,7 +25,6 @@
     512
   ],
   "actual_shipping_reset_edges": 5,
-  "legacy_reset_edges": 1,
   "unwrapped_r10_reset_edges": 3,
   "command_token_age_delta": 0,
   "cycle_boundary_bits": {
@@ -36,5 +35,30 @@
   },
   "routing_ports_storage_geometry_unchanged": true,
   "measured_area_standalone_r10_um2": 39374.6,
-  "new_area_depth_fanout": "UNMEASURED"
+  "new_area_depth_fanout": {
+    "area_um2": 40913.84204,
+    "original_shipping_area_um2": 40744.4516,
+    "native": "FAIL max34/1viol/0roles"
+  },
+  "raw_reset_release": "before E1",
+  "reset_leaf_visible_after_edge": {
+    "shipping": 5,
+    "unwrapped_R10": 3,
+    "legacy": "raw release before E1"
+  },
+  "first_legal_start_pin_capture_edge": {
+    "shipping": 6,
+    "unwrapped_R10": 4,
+    "legacy": 1
+  },
+  "first_command_accept_edge": {
+    "shipping": 7,
+    "unwrapped_R10": 5,
+    "legacy": 2
+  },
+  "earliest_command_delta_vs_legacy": {
+    "shipping": 5,
+    "unwrapped_R10": 3
+  },
+  "structural_successor_delta_vs_R10_shipping": 0
 }

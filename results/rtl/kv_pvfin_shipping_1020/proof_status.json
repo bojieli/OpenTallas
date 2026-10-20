@@ -2,7 +2,7 @@
   "source_rtl_commit": "ad78bef4a",
   "source_rtl_sha256": "5da1dfb7863538d1d76e7c063f6effc34b45a318124ccf2f2dbe3ccef2a90a12",
   "gold_rtl_commit": "0ae0a0d9c",
-  "status": "BEHAVIOR_PASS_NATIVE_PENDING",
+  "status": "BEHAVIOR_PASS_NATIVE_FAIL",
   "commands": 328,
   "valid_beats": 10496,
   "cold_seeds": [
@@ -17,12 +17,13 @@
   ],
   "reset": "occupied SRAM plus periodic reset, two synchronous shipping landings +three regionalfarm edges",
   "calendar_cases": 201433,
-  "native_status": "RUNNING",
-  "mutants_status": "RUNNING",
+  "native_status": "FAIL max34/1viol/0roles",
+  "mutants_status": "MUT1/2/3 DETECTED;4/5 RUNNING",
   "new_causal_controls": {
     "stale_age_image": "DETECTED",
     "shifted_add_date": "DETECTED",
     "max_preadded_overflow": "DETECTED a=fff7,b=fff8,r=fff7"
   },
-  "native_reset_wrapper_sha256": "138da4e5fdc24d40409e1efa52d14c497f71e5c143858c37ad99e23a9bdd1232"
+  "native_reset_wrapper_sha256": "138da4e5fdc24d40409e1efa52d14c497f71e5c143858c37ad99e23a9bdd1232",
+  "reset_edge_table": "PASS pin1/4/6 accept2/5/7 legacy/unwrapped/shipping"
 }
