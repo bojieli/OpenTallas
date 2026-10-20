@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_hr_core_guard-mu1s-d222ef261 bench bench_guard_fifo_sram_m3 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/qkd_hr_core_guard-mu1s-d222ef261 log cl/bench_guard_fifo_sram_m3.a1b1.log captured 2026-10-19T18:03:45-07:00
+# fail_regex 'cycle .*control got'
+Verilator 5.050 2026-07-01 rev v5.050
+[1296000] %Fatal: tb_guard_fifo_sram.sv:28: Assertion failed in tb_guard_fifo_sram.check: cycle 129 control got 1/127/1/0 ref 1/127/0/0
+%Error: /srv/opentallas-scratch/claude/closure-loop/qkd_hr_core_guard-mu1s-d222ef261/bench_src_a1/results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv:28: Verilog $stop
+Aborting...
+GUARD_FIFO_VERILATOR_PASS mutant=3 observed_exit=1
