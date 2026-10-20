@@ -18,17 +18,36 @@ Prints one line 'QCLK_REACH PASS|FAIL ...'; exit 1 on FAIL.
 import argparse
 from collections import Counter, defaultdict
 import json
+import math
 import sys
 
 
-def nets_of(m):
-    """[(driver, [loads], [(x, y), ...])] for every driver in the manifest parent map with known coordinates."""
-    xy = {c[0]: (float(c[2]), float(c[3])) for c in m.get('cells', [])}
+def nets_of(m, details=False):
+    """Measure a parent net only when its driver AND every child have finite coordinates."""
+    xy, invalid = {}, []
+
+    def coordinate(name, value):
+        try:
+            if len(value) != 2 or any(isinstance(v, bool) for v in value):
+                raise ValueError()
+            point = tuple(float(v) for v in value)
+            if not all(math.isfinite(v) for v in point):
+                raise ValueError()
+            if name in xy and xy[name] != point:
+                raise ValueError()
+            xy[name] = point
+        except (ValueError, TypeError, OverflowError):
+            invalid.append(name)
+
+    for c in m.get('cells', []):
+        coordinate(c[0], c[2:4])
     for p, s in m.get('sinks', {}).items():
-        xy[p] = (float(s['x']), float(s['y']))
+        coordinate(p, (s.get('x'), s.get('y')))
     for t in m.get('trees', {}).values():
-        if t.get('root') and t.get('root_xy'):
-            xy.setdefault(t['root'], tuple(map(float, t['root_xy'])))
+        if t.get('root'):
+            coordinate(t['root'], t.get('root_xy', ()))
+    for p, value in m.get('source_xy', {}).items():
+        coordinate(p, value)
     # a local-root tree's root buffer input is an IDEAL regional entry (n_<rb>_spine, undriven: the GEN owes the
     # entry) unless a spine feeds it (then its parent is a spine cell): root pin -> root buffer is not a wire
     ideal = set((m.get('local_root_xy') or {}))
@@ -37,14 +56,17 @@ def nets_of(m):
         if par in ideal:
             continue
         kids[par].append(ch)
-    out, unknown = [], 0
+    out, unknown = [], []
     for d, ch in kids.items():
-        pts = [xy[x] for x in [d] + ch if x in xy]
-        if d not in xy or len(pts) < 2:
-            unknown += 1
+        missing = [x for x in [d]+ch if x not in xy or x in invalid]
+        if missing:
+            unknown.append(dict(driver=d, missing=missing, loads=len(ch)))
             continue
+        pts = [xy[x] for x in [d]+ch]
         out.append((d, ch, pts))
-    return out, unknown
+    if details:
+        return out, unknown, invalid
+    return out, len(unknown)
 
 
 def hpwl(pts):
@@ -58,23 +80,31 @@ def reach(pts):
 
 
 def check(m, limit=405.0, warn=220.0):
-    nets, unknown = nets_of(m)
-    rows = sorted(((round(reach(p), 1), d, len(ch), ch[0], round(hpwl(p), 1)) for d, ch, p in nets), reverse=True)
-    over = [r for r in rows if r[0] > limit]
-    warn_n = sum(1 for r in rows if r[0] > warn)
+    if not math.isfinite(limit) or not math.isfinite(warn) or limit <= 0 or warn <= 0:
+        raise ValueError('clock reach limits must be finite and positive')
+    nets, unknown, invalid = nets_of(m, details=True)
+    rows = sorted(((reach(p), d, len(ch), ch[0], hpwl(p)) for d, ch, p in nets), reverse=True)
+    tolerance = 1e-6  # um: numerical tolerance only; never round before admission
+    over = [r for r in rows if r[0] > limit+tolerance]
+    warn_n = sum(1 for r in rows if r[0] > warn+tolerance)
     vio = (m.get('safe_tree') or {}).get('violations', [])
     kinds = Counter(v.get('kind') for v in vio)
     by_type = Counter()
     for r in over:
         tail = r[1].rsplit('_', 1)[-1]
         by_type[''.join(ch for ch in tail if not ch.isdigit()) or tail] += 1
-    ok = not over and not vio
+    ok = bool(rows) and not unknown and not invalid and not over and not vio
     return dict(schema='opentallas.die_clock.reach.v1', verdict='PASS' if ok else 'FAIL', limit_um=limit, warn_um=warn,
-                nets=len(rows), nets_without_xy=unknown, over_limit=len(over), over_warn=warn_n,
-                max_um=rows[0][0] if rows else 0.0, over_by_driver_type=dict(by_type),
-                hpwl_over_limit=sum(1 for r in rows if r[4] > limit), hpwl_max_um=max((r[4] for r in rows), default=0.0),
+                nets=len(rows), nets_without_xy=len(unknown), unknown_nets_sample=unknown[:30],
+                invalid_coordinates=invalid[:30], coverage_complete=bool(rows) and not unknown and not invalid,
+                comparison_tolerance_um=tolerance, over_limit=len(over), over_warn=warn_n,
+                max_um=round(rows[0][0], 1) if rows else 0.0, max_raw_um=rows[0][0] if rows else None,
+                over_by_driver_type=dict(by_type),
+                hpwl_over_limit=sum(1 for r in rows if r[4] > limit+tolerance),
+                hpwl_max_um=round(max((r[4] for r in rows), default=0.0), 1),
                 safe_tree=bool(m.get('safe_tree')), safe_violations=dict(kinds),
-                worst=[dict(um=r[0], driver=r[1], loads=r[2], first_load=r[3], hpwl_um=r[4]) for r in rows[:30]],
+                worst=[dict(um=round(r[0], 1), raw_um=r[0], driver=r[1], loads=r[2], first_load=r[3],
+                            hpwl_um=round(r[4], 1)) for r in rows[:30]],
                 violations_sample=vio[:30])
 
 

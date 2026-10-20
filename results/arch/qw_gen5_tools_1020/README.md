@@ -14,6 +14,8 @@ Dependencies included:
 
 Source GEN hook `g5_clocking.py`, center-feed geometry, full die source and physical adoption are not imported here. The running GEN5 source still references its donor view; it must remain diagnostic until source/ABI selection and physical proofs are reviewed. No release gate, receiver waiver, frequency rule, mutable storage rule or timing exception is added.
 
+ROOT reach-review follow-up: every checked parent net now requires finite coordinates for its driver and every child. Incomplete, nonfinite or all-empty graphs fail. Admission compares unrounded Manhattan reach to 405 um with 1e-6 um numerical tolerance; rounding is display only. Native centre-feed pin coordinates are retained explicitly as source_xy, and tree root coordinates retain ODB precision. Missing-child/driver, NaN/Inf, all-empty and 405.04 um causal regressions are included.
+
 Validation:
 
 - Receiver/safe/SPT/target/qualification and STA source suites: local focused checks; final test log in this directory.
