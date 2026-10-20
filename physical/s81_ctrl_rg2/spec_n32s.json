@@ -1,0 +1,226 @@
+{
+ "name": "s81ctrl_rg2_n32s",
+ "top": "dsfd_ctrl_rg2",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 388.8,
+  "h": 324.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "inst": "g_pc[0].u_pc.u_r.u_mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R180"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "inst": "g_pc[0].u_pc.u_q.u_mem",
+   "at": [
+    43.2,
+    194.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "inst": "g_pc[1].u_pc.u_r.u_mem",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R180"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "inst": "g_pc[1].u_pc.u_q.u_mem",
+   "at": [
+    216.0,
+    194.4
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "rq",
+   "rd",
+   "clk",
+   "ck_o"
+  ],
+  "S": [
+   "k_v",
+   "k_rdy",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_we",
+   "k_wdata",
+   "k_wstrb",
+   "k_wr_done",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "ckh"
+  ],
+  "W": [
+   "rst_n"
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc"
+ ],
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf: two asynchronous roots (clk stream / ckh HBM) through ot_s81ph_afifo_g; every PHY-face pin is a flop at the face (k_rdy registered since S81-SAFE-FIX 10-19)",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin at its face in its own clock domain (S81-SAFE-FIX 10-19: rq pin register, rd/rk/wd/status output flops on clk; PHY k_rdy/kr_*/k_wr_done pin flops and k_* output flops on ckh -- k_rdy was the last exception and is now a face flop with kept per-group copies). The flow pin-register hook clocks one domain only; on the ckh PHY face it would put clk flops on hclk pins and add a cycle inside the PHY valid/ready loop."
+ },
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "Measured23 nonclock roots>32: reset159/116 and group32 enable64. Opt-in G12 plus kept PCR/FIFO reset leaves; asynchronous assertion, release PCR+1/FIFO+1 edges, steady data0. Separate8-region roots on both core/PHY clocks. Gate blocked until census all<=32 and full checklist passes. Response SRAMs R180: native per-bit LEF-to-IO-anchor payload reach0>405/max302.739 (was42/max457.125); requestSRAMsR0. Native32 production32PC exactPASS and3causalmutantFAILs committed. LINK4 n32r: same RTL/mapped netlist as native32 (source 808c23b00 RTL unchanged); only outline, macro origins and the pin plan change. REFILL-0325 n32s parallel fallback of n32r: same RTL/mapped netlist; outline 388.8x324 (native32 height, fits the existing die slot height), R0 request SRAMs at y 194.4 -> mid std band 29 -> 50.5 um (std-cell room for the 2956 FF and the CTS/hold-repair buffers between the N/S pin-flop rows); pins = n32r x/layers, N face at y 324.",
+ "job": {
+  "owner": "Claude:REFILL-0325/FALLBACK for S81-LINK4",
+  "branch": "claude/refill0325-ctrl-n32s-1020",
+  "tag": "n32s",
+  "purpose": "S81 CTRL rg2 SAFE: four wide-pitch (<=6 pins/um) dualclock 16x340 SRAM FIFOs, per-PC macro columns",
+  "benches": [
+   {
+    "name": "rg2_exact",
+    "cmd": "S81CTRL_NATIVE32=1 S81CTRL_FIFO_IMPL=sram_p192 bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_exact none 1024 1 48 16",
+    "expect": "pass",
+    "pass_regex": "TB_DSFD_CTRL PASS",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/s81_ctrl_rg2_s3_1019/native32_witness/rg2_exact.log"
+   },
+   {
+    "name": "rg2_mut_rd",
+    "cmd": "S81CTRL_NATIVE32=1 S81CTRL_FIFO_IMPL=sram_p192 bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_rd S81CTRL_MUT_RD 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/native32_witness/rg2_mut_rd.log"
+   },
+   {
+    "name": "rg2_mut_pack",
+    "cmd": "S81CTRL_NATIVE32=1 S81CTRL_FIFO_IMPL=sram_p192 bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_pack S81PH_MUT_PACK 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/native32_witness/rg2_mut_pack.log"
+   },
+   {
+    "name": "rg2_mut_krdy",
+    "cmd": "S81CTRL_NATIVE32=1 S81CTRL_FIFO_IMPL=sram_p192 bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_krdy S81CTRL_MUT_KRDY 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/native32_witness/rg2_mut_krdy.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81ctrl_rg2_n32s/views",
+  "record_to": "results/rtl/ref_tile/s81ctrl_rg2_n32s",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/chip",
+   "rtl/hdc/v41x",
+   "rtl/hdc/kv",
+   "physical/s81_ctrl_rg2",
+   "rtl/dsrom_sys/s81_glue",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "results/rtl/s81_ctrl_safe_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "results/rtl/s81_ctrl_rg2_s3_1019"
+  ]
+ },
+ "io_tcl": "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_n32s_pins.tcl",
+ "forwarded_clock": true,
+ "boundary_tcl": [
+  "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc"
+ ],
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk"
+ },
+ "defines": [
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32"
+ ],
+ "slot_change_request": {
+  "reason": "S81-LINK4 10-20 SAFE re-floorplan of native32 (gate 013001 HOLD: fill 28%, two thin face bands, reset reach 411 um): outline from synthesis area (macros 46117 + std 1236-1308 um2) at ~40% fill, 9x7 lattice cells, 2x2 macro columns on the 43.2 lattice with 41/58/56 um pin-escape channels, N/S faces ~3.3 pins/um. Die: tile sits centred in the 531.25 PHY-pitch slot (S seam offset <= ~71 um, << 405).",
+  "old_outline_um": [
+   531.25,
+   324.0
+  ],
+  "new_outline_um": [
+   388.8,
+   302.4
+  ]
+ },
+ "orfs_vars": {
+  "OT_CKKM_K": "8",
+  "OT_CKKM_PORT": "clk"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl",
+  "physical/s81_ctrl_rg2/clock_split_hclk.tcl"
+ ],
+ "native32_gate_blockers": [
+  "post-GRT native reset/data reach audit (reach.py, Codex prototype) on the n32r placement"
+ ]
+}
