@@ -7,6 +7,7 @@ parameters (the view name is the module name the parent instantiates), SRAMs ins
   hcoll_fj2_r128w     ot_hgi_coll_fj_q2_r128    = hcoll_v5_fj2_r128 (gate WARN 03:28, util 52%, GRT 0, spread 12.5) re-topped
   hcoll_link_e1       ot_hgi_coll_link_e1       NEW: link_e rail (registered controller faces, 4 x 64x512 retry-store SRAMs
                                                 2 x 2 on the lattice with 44.7 / 51.8-um channels, full-width std bands S and N)
+  hcoll_link_e1c      ot_hgi_coll_link_e1       PARALLEL variant: one abutted SRAM column, 259.2 x 432 (narrow rail)
   hcoll_reduce_lane   ot_hgi_coll_reduce_lane   NEW: one of 16 reduce lanes (16 x 32 b tagged state + LAT-8 FP32 add)
 
   python3 tools/hbm_coll_static/gen_coll_safe_leaf_kits.py   -> tools/ref_tile/specs_hbm_d4g/<name>.json
@@ -98,6 +99,20 @@ def link_e1():
     return s
 
 
+def link_e1c():
+    """PARALLEL variant (owner 10-19 parallel fallback): the same leaf as ONE abutted N-S SRAM column (the issuer_r128 kit
+    form), 259.2 x 432: a narrow rail that fits the parent's S row beside the control / fj / issuer (2 x 259.2 = 518.4 for
+    both rails vs 2 x 475.2).  S face 1,226 pins over 259 um = 4.7/um (< 6); W / E flits 1.4 / 1.3 pins/um."""
+    s = link_e1()
+    s["name"] = "hcoll_link_e1c"
+    s["outline"] = {"w": 259.2, "h": 432.0}
+    s["macros"] = [{"view": SRAM, "count": 1, "inst": f"u.g_bank[{b}].u_store.u_native.u_sram",
+                    "at": [43.2, round(86.4 + b * 77.808, 3)], "at_exact": True} for b in range(4)]
+    s["structural_change"] += "; PARALLEL variant c: one abutted SRAM column 259.2 x 432 (S band 86.4, E channel 44.7)"
+    s["job"] = dict(s["job"], views_to="physical/ref_tile/hcoll_link_e1c/views", record_to="results/rtl/ref_tile/hcoll_link_e1c")
+    return s
+
+
 def reduce_lane():
     s = dict(copy.deepcopy(COMMON), name="hcoll_reduce_lane", top="ot_hgi_coll_reduce_lane",
              sources=["rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv", SAFE,
@@ -132,7 +147,7 @@ def main():
                "COLLQ3 SAFE q3 parent hard child u_fj (ROWS 128 programme target, parameter-free top)"),
         rewrap("hcoll_v5_fj2_r128", "hcoll_fj2_r128w", "ot_hgi_coll_fj_q2_r128",
                "COLLQ3 SAFE q2 parent hard child u_fj (ROWS 128 programme target, parameter-free top)"),
-        link_e1(), reduce_lane()]
+        link_e1(), link_e1c(), reduce_lane()]
     for s in specs:
         (OUT / f"{s['name']}.json").write_text(json.dumps(s, indent=1) + "\n")
         print("wrote", OUT / f"{s['name']}.json")
