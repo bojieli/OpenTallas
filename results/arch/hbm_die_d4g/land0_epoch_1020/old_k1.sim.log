@@ -1,0 +1,22 @@
+EPOCH_TRACE cyc=3 en=1 enq=0 wc=0 rc=0 k=1 out=00 fault=0
+EPOCH_TRACE cyc=4 en=1 enq=1 wc=0 rc=1 k=1 out=00 fault=0
+EPOCH_TRACE cyc=5 en=1 enq=1 wc=1 rc=2 k=1 out=00 fault=0
+EPOCH_TRACE cyc=6 en=1 enq=1 wc=2 rc=3 k=1 out=00 fault=0
+EPOCH_TRACE cyc=7 en=1 enq=1 wc=3 rc=4 k=1 out=00 fault=0
+EPOCH_TRACE cyc=8 en=1 enq=1 wc=4 rc=5 k=1 out=00 fault=0
+EPOCH_TRACE cyc=9 en=1 enq=1 wc=5 rc=6 k=1 out=0a fault=1
+EPOCH_TRACE cyc=10 en=1 enq=1 wc=6 rc=7 k=1 out=94 fault=1
+EPOCH_TRACE cyc=11 en=1 enq=1 wc=7 rc=0 k=1 out=29 fault=1
+EPOCH_TRACE cyc=12 en=1 enq=1 wc=0 rc=1 k=1 out=e8 fault=1
+EPOCH_TRACE cyc=13 en=1 enq=1 wc=1 rc=2 k=1 out=c0 fault=1
+EPOCH_TRACE cyc=14 en=1 enq=1 wc=2 rc=3 k=1 out=2e fault=1
+EPOCH_TRACE cyc=15 en=1 enq=1 wc=3 rc=4 k=1 out=9c fault=1
+LOCKSTEP_MISMATCH rf0044 sink su_NW2 cyc 35
+LOCKSTEP_MISMATCH rf0044 sink su_NW2 cyc 36
+LOCKSTEP_MISMATCH rf0044 sink su_NW2 cyc 37
+LOCKSTEP_MISMATCH rf0044 sink su_NW2 cyc 38
+RELAY_LOCKSTEP FAIL checks=272 errors=162 landing_fault_cycles=94
+- /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020/land0_diag/old_k1/tb_relay_lockstep.sv:1577: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 205ns; walltime 0.002 s; speed 115.627 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 8 MB

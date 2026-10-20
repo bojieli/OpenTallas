@@ -1,0 +1,29 @@
+{
+  "baseline": "27a01b34d",
+  "actual_bus": "rf0044 pgp_NW -> su_NW0..3, 13x136-bit lanes /52landings",
+  "trigger": "FIRST1 en_q registration shifts write epoch +1; zero-hop K identity still1",
+  "old_k1": {
+    "checks": 272,
+    "errors": 162,
+    "fault_cycles": 94
+  },
+  "fixed_k2": {
+    "checks": 272,
+    "errors": 0,
+    "fault_cycles": 0
+  },
+  "mutant_land_k": {
+    "checks": 272,
+    "errors": 68
+  },
+  "mutant_encomb": {
+    "checks": 272,
+    "errors": 68
+  },
+  "checks_unchanged": true,
+  "rtl_unchanged": true,
+  "fault_masking": false,
+  "boot_release_extra_edges": 1,
+  "steady_data_delta_edges": 0,
+  "scope": "Minimum actual bus causal behavior proof. Full120 source-bound pass/mutants, new strict bind/admission and all native/physical gates remain required."
+}

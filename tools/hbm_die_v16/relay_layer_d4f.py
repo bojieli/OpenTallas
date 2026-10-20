@@ -30,7 +30,7 @@ LANDING mode (--land, HBM-LANDING 10-18, lanes/LANDING-CONTRACT.md sections 2/3/
     0-station forwarded sink gets hbfd_land0_<W>_<dir> (ck_s / en = source root / source reset); the remaining
     equal-age pad stages after it are PLAIN root-clocked hbfd_rly_<W>_WE (ck / rs on the sink root).
   * K strap per link (= bus row x sink, all lanes share it) from --land-plan {links: [{link: '<driver row>-><sink>', E,
-    K?, stations?}]}: K = (ceil(N/2) + E) mod 8 with the layer's REAL N (source and sink regional resets released on the
+    K?, stations?}]}: K = (ceil(N/2) + E + (N == 0)) mod 8 with the layer's REAL N (source and sink regional resets released on the
     same root edge; 0 encodes 8); a plan K is used only when the entry's 'stations' equals the real N (a K is valid for
     one N only: the DCC pilot plan's K uses its model N); no plan entry -> E = 1 (the ideal-clock value) placeholder,
     listed NO_E in the report.  Checked on RTL 2e482a69f (non-inverting hop 0): relay lockstep 120 buses / 230 landings
@@ -333,6 +333,12 @@ def main():
                 # (relay_lockstep_bench.py: ideal clocks give E = 1, latency ceil(N/2) + 2 at the sink pin)
                 K_ = (pe['K'] % 8) if (pe and pe.get('K') is not None and pe.get('stations') == N_) \
                     else ((-(-N_ // 2) + (E_ if E_ is not None else 1)) % 8)
+                # QK-LANDEN: FIRST=1 now registers en before the hop-0 gate.
+                # Its write epoch advances one edge; the ring slot identity K
+                # advances with it. Steady data latency and E are unchanged.
+                # Legacy plan K has the same pre-en-register epoch basis.
+                if src is None:
+                    K_ = (K_ + 1) % 8
                 if src is None:
                     sx = cen(di) or xy
                     dx, dy = xy[0] - sx[0], xy[1] - sx[1]
@@ -404,6 +410,7 @@ def main():
                 lat = (-(-N_ // 2) + 1 + E_ + (stages[s_] - 1)) if E_ is not None else None
                 land_rows.append(dict(link=lk, bus=tag, sink=s_, master=f'hbfd_land{"0" if src is None else ""}_{W}_{ldir}', width=W,
                                       lanes=T, stations=N_, E=E_, K=K_, pads=stages[s_] - 1, latency_edges=lat,
+                                      first_en_release_edges=(1 if N_ == 0 else 0), steady_latency_delta=0,
                                       latency_formula='ceil(N/2) + 1 + E + pads edges to the sink pin (+1 = the sink input flop: '
                                                       'contract N/2 + 1 + E + 1)', K_source='land plan' if pe else 'NO_E placeholder',
                                       domain=dom, cls=cls))

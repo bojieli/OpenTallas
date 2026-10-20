@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: ot-epyc6       admits   978 GB (avail 798, growth 113, headroom 0, waiters 0/0 GB) load 42/128 running 31 disk 4189 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-162144-1792496469 after 0 s
+ACTUAL_RF0044_SOURCE 63dc8058122a3265b37e0ab59cc852fd0d6c21947e443c1b75e8d6b1597a1e12 pgp_NW dict_keys(['su_NW0', 'su_NW1', 'su_NW2', 'su_NW3'])
+RELAY_LOCKSTEP_TB lane buses 1 forks 1 landings 52 mut None applied -
+RELAY_LOCKSTEP_TB lane buses 1 forks 1 landings 52 mut None applied -
+RELAY_LOCKSTEP_TB lane buses 1 forks 1 landings 52 mut land_k applied True
+LEG old_k1 RELAY_LOCKSTEP FAIL checks=272 errors=162 landing_fault_cycles=94
+LEG fixed_k2 RELAY_LOCKSTEP PASS checks=272 errors=0 landing_fault_cycles=0
+LEG mut_land_k RELAY_LOCKSTEP FAIL checks=272 errors=68 landing_fault_cycles=0
+LEG mut_encomb RELAY_LOCKSTEP FAIL checks=272 errors=68 landing_fault_cycles=0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-162144-1792496469): exit 0

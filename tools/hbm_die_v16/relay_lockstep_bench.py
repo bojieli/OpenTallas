@@ -142,7 +142,7 @@ def lane_main(a):
     (hbfd_lh0 / hbfd_lh[_f<N>] half-cycle stations with the in-band epoch, hbfd_land / hbfd_land0 landings, plain
     hbfd_rly pads).  One root clock for every region (ideal clocks: dL = N half-periods); every reset (source en, sink rs,
     pads rs) releases a quarter period after one root posedge (no edge race).  Each landing's K is set to the ideal-clock
-    value K = ceil(N/2) + 1 (E = 1; the die's K comes from the die STA E and is NOT what this bench checks), so every
+    value K = ceil(N/2) + 1 + (N == 0) (FIRST=1 en is registered; E = 1; the die's K comes from the die STA E and is NOT what this bench checks), so every
     sink pin must see the source word of exactly ceil(N/2) + 2 + pads cycles earlier on every checked cycle, all lanes in
     lockstep, and no landing may raise fault.  Mutants (each must FAIL): lane_stage (lane 0 of one landed sink gets one
     more plain stage), bitswap (bits 0/1 of one lane swapped on one hop), branch_drop (one fork branch's data cut),
@@ -216,7 +216,7 @@ def lane_main(a):
                     m = mast[nm]
                     V.append(f'  wire [{W - 1}:0] {nm}__o;')
                     if k == 0:
-                        K_ = (-(-tdep(src_node) // 2) + 1) % 8 + (1 if kmut and t == 0 else 0)
+                        K_ = (-(-tdep(src_node) // 2) + 1 + (1 if src_node is None else 0)) % 8 + (1 if kmut and t == 0 else 0)
                         K_ %= 8
                         kk = ', '.join(f".k{j}(1'b{(K_ >> j) & 1})" for j in range(3))
                         if src_node is None:
