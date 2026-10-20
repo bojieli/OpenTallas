@@ -1,0 +1,5 @@
+PROMPT_N32 PASS cycles=20000 seed=1279633141
+- exact_tb.sv:227: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 1.846 s; speed 108.353 us/s
+- Verilator: cpu 1.845 s on 1 threads; allocated 12 MB

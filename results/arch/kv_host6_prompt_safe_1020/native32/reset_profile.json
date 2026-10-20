@@ -1,0 +1,55 @@
+{
+  "profile": {
+    "schema": "opentallas.ref_tile.reset_landing.v1",
+    "top": "qkd_hr_core_prompt_n32",
+    "enable": true,
+    "stages": 2,
+    "clock": "ck_core",
+    "reset_ports": [
+      "u_rank__u_control__por_n"
+    ],
+    "first_copies": {
+      "u_rank__u_control__por_n": 1
+    },
+    "copies": {
+      "u_rank__u_control__por_n": 4
+    }
+  },
+  "proof": {
+    "pass": true,
+    "first": 1,
+    "final": 4,
+    "root_loads": 1,
+    "first_max_loads": 4,
+    "final_max_loads": 32,
+    "edges": 2
+  },
+  "generated_sha256": "ddced4a80043ea79b4f2b95c47f745ea946f4646d9dba0fb1d5b28e793697426",
+  "mapped_sha256": "698af2ef74e0100f573813549f0a4ff640933db681a6f28a3829e570675fc21b",
+  "negatives": {
+    "root_D": {
+      "pass": false,
+      "reason": "stale first count"
+    },
+    "clock": {
+      "pass": false,
+      "reason": "root reaches non-identical/plain first D"
+    },
+    "QN_polarity": {
+      "pass": false,
+      "reason": "first reaches non-identical/plain final D or wrong polarity"
+    },
+    "bypass": {
+      "pass": false,
+      "reason": "stale first count"
+    },
+    "extra_consumer": {
+      "pass": false,
+      "reason": "root reaches non-identical/plain first D"
+    },
+    "missing_stage": {
+      "pass": false,
+      "reason": "stale final count"
+    }
+  }
+}

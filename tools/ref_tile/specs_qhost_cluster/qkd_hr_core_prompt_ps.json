@@ -341,68 +341,72 @@
     "purpose": "HOST root cluster r2 child qkd_hr_core_prompt (pre-route gate + route; parent qkd_host_root is CRITICAL)",
     "benches": [
       {
-        "name": "cluster_lockstep",
+        "name": "prompt_mem_suite",
         "expect": "pass",
-        "threads": 16,
-        "peak_ram_gb": 24,
+        "threads": 4,
+        "peak_ram_gb": 6,
         "needs": [
           "verilator"
         ],
-        "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py exact --out {RUN}/bench/cg_exact",
-        "pass_regex": "CLUSTER_GATE PASS exact runs_pass=6/6",
-        "min_count_regex": "CLUSTER_GATE PASS exact runs_pass=6/6 core_cycles=(\\d+)"
+        "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh {RUN}/mem_suite",
+        "pass_regex": "PROMPT_MEM_SUITE PASS 2 positive 2 causal mutants"
       },
       {
-        "name": "cluster_child_mutant",
-        "expect": "fail",
-        "threads": 16,
-        "peak_ram_gb": 24,
-        "needs": [
-          "verilator"
-        ],
-        "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py mutant --out {RUN}/bench/cg_mut --child core_prompt",
-        "fail_regex": "CLUSTER_GATE FAIL mutant",
-        "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_prompt.log"
-      },
-      {
-        "name": "cluster_rr_mutant",
-        "expect": "fail",
-        "threads": 16,
-        "peak_ram_gb": 24,
-        "needs": [
-          "verilator"
-        ],
-        "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py rrmutant --out {RUN}/bench/cg_rrmut --define QKD_HR_PR_RR_MUTANT",
-        "fail_regex": "CLUSTER_GATE FAIL rrmutant",
-        "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_rrmutant_qkd_hr_core_prompt.log",
-        "note": "core_prompt reset relays bypassed in the cluster (flat reference keeps them): the composition must FAIL"
-      },
-      {
-        "name": "prompt_pd_equiv",
+        "name": "prompt_host_mu",
         "expect": "pass",
         "threads": 4,
         "peak_ram_gb": 8,
         "needs": [
           "verilator"
         ],
-        "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_pd_equiv.sh pass {RUN}/bench/pd_pass",
-        "pass_regex": "HKV_PROMPT_PD PASS",
-        "min_count_regex": "HKV_PD_EQUIV cycles=(\\d+) reads=\\d+ flips=\\d+ mismatches=0",
-        "note": "original qkd_host_prompt_capture_pins vs _pd lockstep with SRAM bit flips; ot_hkv_cnt_la vs plain counter"
+        "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_host_mu.sh {RUN}/host_mu",
+        "pass_regex": "PASS host MU_OUT users4 steps18 CQ entries12"
       },
       {
-        "name": "prompt_pd_mutant",
-        "expect": "fail",
+        "name": "prompt_axi",
+        "expect": "pass",
         "threads": 4,
-        "peak_ram_gb": 8,
+        "peak_ram_gb": 6,
         "needs": [
           "verilator"
         ],
-        "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_pd_equiv.sh mutant {RUN}/bench/pd_mut",
-        "fail_regex": "HKV_PROMPT_PD FAIL mutant 2/2",
-        "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/prompt_pd_mutant_FAIL_v5050.log",
-        "note": "QKD_HR_PD_MUTANT (lane^1) and OT_HKV_CNT_LA_MUTANT (early lookahead) must both FAIL"
+        "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_axi.sh {RUN}/axi",
+        "pass_regex": "PASS HOST_AXI_PACKET checks=36"
+      },
+      {
+        "name": "prompt_mem_addr",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 6,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh {RUN}/mem_addr addr",
+        "fail_regex": "PROMPT_MEM FAIL",
+        "fail_witness": "results/arch/kv_host6_prompt_safe_1020/mem_addr_fail_v5050.log"
+      },
+      {
+        "name": "prompt_mem_bypass",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 6,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh {RUN}/mem_bypass bypass",
+        "fail_regex": "PROMPT_MEM FAIL",
+        "fail_witness": "results/arch/kv_host6_prompt_safe_1020/mem_bypass_fail_v5050.log"
       }
+    ],
+    "extra_paths": [
+      "rtl/test/qwen_host/tb_hkv_prompt_mem.sv",
+      "rtl/test/qwen_host/tb_qkd_host_axi_packet.sv",
+      "rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.v",
+      "rtl/test/mu_qwen_1018/lists/tb_qkd_host_mu_out.f",
+      "tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh",
+      "tools/qwen_kv_die/host_cluster/bench/prompt_host_mu.sh",
+      "tools/qwen_kv_die/host_cluster/bench/prompt_axi.sh"
     ]
   },
   "pin_ranges": {
