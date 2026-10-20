@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81ctrl_rg2_n32s-n32s-f1f7c42d9 bench bench_rg2_mut_pack host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/s81ctrl_rg2_n32s-n32s-f1f7c42d9 log cl/bench_rg2_mut_pack.a1b1.log captured 2026-10-20T08:15:38-07:00
+# fail_regex 'TB_DSFD_CTRL FAIL'
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 20.35 max 143.02 cks cycles; response PHY -> rd mean 5.72 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL FAIL errors=5910
