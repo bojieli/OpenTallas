@@ -1,0 +1,9 @@
+N59v6 service R2 hardware 0a05e229e (QW-N59-5 pickup 10-20 02:25): RTL 5.050 all six legs PASS (receipts_round2).
+Mapped synth (ot-epyc9, synth_rc 0) SHA ecc91577dc6f899ecc363ad946da570eda860b8e4b0b5728d695abe3b01f0d96: 21050 FF / 0 SRAM,
+depth 573.4 ps.  Targeted KVN audit: 1523 marker drivers, max 28, offenders 0 (the 12 R1 KVN control/reset offenders FIXED).
+Strict native census REFUSE (census_rc 3): 273 drivers > 32 (R1 272), max 2069.  Top: u_formatter.selected[1] 2069 /
+selected[0] 1039; g_slot[1/0].result_slot 1201/1198; NOR _085572_ 1064; fs 639; g_slot[*].u_record.kernel_request_v 636/634;
+g_slot[*].u_service.vm_write_v 591/586; OR5 590; g_recv.p_qb_v 572; g_slot[*].u_record.tx_valid 542/542; AND2 511; NOR3 459;
+g_ctxmu.u_context.request_slot 207; u_qexport_control.vm_q_epoch 119; p_qb_beat[0] 79; dr_o[512] 77.
+=> service gate BLOCKED; next = R3 per-consumer kept publications of the formatter select / slot select / record / service
+valid broadcasts (native_extra.json drivers_over32 lists all 273 with upstream sources).
