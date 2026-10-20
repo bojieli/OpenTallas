@@ -13,7 +13,12 @@
 // CAP_CLK=1 (H-NETLIST 0600): the F20 input-capture rung (cv/dv/lv, target/address/data/base/limit/loops, tgt) runs on
 // clk_cap, a related same-frequency phase-0 root kept short at the face; the body (bitmap, scan, outputs) stays on clk.
 module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer PCW=10,parameter integer TGT_PIN=0,
-                                  parameter integer CAP_CLK=0)(
+                                  parameter integer CAP_CLK=0,
+                                  // QHUB-S1 10-19 (SAFE-DESIGN item 3): RLC > 1 = the internal reset (reset_live) becomes RLC KEPT
+                                  // identical copies (wire *__ot_rlv), which the kit's reset_relay_split pass
+                                  // (physical/common_flow/ot_rst_copies.tcl) spreads over the body's ~1,060 reset loads (<= 32 a
+                                  // copy).  Same assert / release edges as reset_live.  Default 1 = unchanged.
+                                  parameter integer RLC=1)(
     input wire clk,rst_n,
     input wire clk_cap,   // used only when CAP_CLK=1
     input wire [7:0] tgt,
@@ -43,6 +48,16 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin reset_meta<=0;reset_live<=0;end
         else begin reset_meta<=1;reset_live<=reset_meta;end
+    wire rl;
+    generate if(RLC>1)begin:g_rlc
+        (* keep = "true", dont_touch = "true" *) reg [RLC-1:0] rl__ot_rlv;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)rl__ot_rlv<={RLC{1'b0}};
+            else rl__ot_rlv<={RLC{reset_meta}};
+        assign rl=rl__ot_rlv[0];
+    end else begin:g_rl1
+        assign rl=reset_live;
+    end endgenerate
     reg cv,dv,lv;
     reg [7:0] target;
     wire clk_in=(CAP_CLK!=0)?clk_cap:clk;
@@ -64,11 +79,11 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         target<=cfg_target;address<=cfg_addr;data_q<=cfg_data;
         base<=desc_base;limit<=desc_limit;loops<=desc_loops;
     end
-    always @(posedge clk_in or negedge reset_live)
-        if(!reset_live)begin cv<=0;dv<=0;lv<=0;end
+    always @(posedge clk_in or negedge rl)
+        if(!rl)begin cv<=0;dv<=0;lv<=0;end
         else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;end
-    always @(posedge clk or negedge reset_live)
-        if(!reset_live)begin
+    always @(posedge clk or negedge rl)
+        if(!rl)begin
             program_cfg_we<=0;program_start_v<=0;configured<=0;fault<=0;
             installed<=0;install_open<=0;armed<=0;scanning<=0;validated<=0;missing<=0;
             scan_row<=0;scan_limit<=0;commit<=0;

@@ -7,7 +7,10 @@
 // programme issues. The HC programme is loaded and launched through ot_static_program_target (TARGET 108).
 // Golden: residual waves == VM sectors, gathered mixes == VM words, stored results land at their sectors.
 // MUT (parameter): 1/2/3 = ot_hbm_hc_q_static mutants, 4 = tap advances its return reservation,
-// 5 = x_wave beats 1/2 swapped, 6 = x_wave beat 3 one edge late (link mutants, XWB=4).
+// 5 = x_wave beats 1/2 swapped, 6 = x_wave beat 3 one edge late (link mutants, XWB=4),
+// 7 = (SAFE 1 only) gathered-reader bounds from the previous programme word (ot_hbm_hc_q_static MUT 6).
+// SAFE (QHUB-S1 10-19): 1 = ot_hbm_hc_q_static SAFE 1 (kit hbm_hcq_hub_s1); the bench also checks every edge that the
+// five per-face beat-control copies equal x_wave_v / x_wave_beat.
 // XWB = x_wave link beats (1 = the original 8,192-b form, 4 = the 2,048-b x 4 link); the waves are checked at the
 // engine's pin level, i.e. after ot_hbm_hc_xw_rx_static #(XWB) (the hc_eng receiver), and every wave prints
 // "XWAVE t=<edge> word=<w>" so the XWB=4 run is compared edge-for-edge against the XWB=1 run.
@@ -15,7 +18,8 @@
 module tb_hbm_hc_q_static;
     parameter integer MUT=0;
     parameter integer XWB=4;
-    localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:0;
+    parameter integer SAFE=0;
+    localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:(MUT==7)?6:0;
     localparam integer VM_RD=15, VM_WR=12;
     reg clk=0,rst_n=0;
     always #1 clk=~clk;
@@ -45,12 +49,14 @@ module tb_hbm_hc_q_static;
     reg result_v=0;
     reg [2:0] result_position=0;
     reg [767:0] result=0;
-    ot_hbm_hc_q_static #(.MUT(DUT_MUT),.XW_BEATS(XWB)) dut(
+    wire [4:0] xfv; wire [9:0] xfb;
+    ot_hbm_hc_q_static #(.MUT(DUT_MUT),.XW_BEATS(XWB),.SAFE(SAFE)) dut(
         .clk(clk),.rst_n(rst_n),.tgt(8'd108),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .configured(t_conf),
         .lg_rq(c_rq),.lg_wq(c_wq),.lg_rr(c_rr),.lg_w_done(c_wd),
-        .x_wave_v(xv_l),.x_wave_word(xword_l),.x_wave(xwave_l),.x_wave_beat(xbeat),.residual_done(rdone),
+        .x_wave_v(xv_l),.x_wave_word(xword_l),.x_wave(xwave_l),.x_wave_beat(xbeat),.x_face_v(xfv),.x_face_beat(xfb),
+        .residual_done(rdone),
         .gathered_mix_v(gv),.gathered_mix_row(grow),.gathered_mix_pos(gpos),.gathered_mix_data(gdata),.gather_done(gdone),
         .result_v(result_v),.result_position(result_position),.result(result),
         .program_active(prog_active),.program_done(prog_done),.fault(dut_fault));
@@ -94,10 +100,14 @@ module tb_hbm_hc_q_static;
     end
     // engine tail stand-in: the result for the store word is presented one edge ahead (compiler alignment)
     reg [767:0] res_val[0:7];
+    // programme word probe (the calendar instance sits in g_qcal (SAFE 1, ot_hbm_hc_qcal_static) or g_vcal)
+    wire pm_v0; wire [255:0] pm_md;
+    if(SAFE!=0)begin:g_pm1 assign pm_v0=dut.g_qcal.programme.valid0; assign pm_md=dut.g_qcal.programme.macro_data; end
+    else begin:g_pm0 assign pm_v0=dut.g_vcal.programme.valid0; assign pm_md=dut.g_vcal.programme.macro_data; end
     always @(posedge clk)begin
-        result_v<=dut.programme.valid0&&dut.programme.macro_data[59];
-        result_position<=dut.programme.macro_data[78:76];
-        result<=res_val[dut.programme.macro_data[78:76]];
+        result_v<=pm_v0&&pm_md[59];
+        result_position<=pm_md[78:76];
+        result<=res_val[pm_md[78:76]];
     end
     // programme
     localparam integer RNPOS=2, RBASE=256, GNPOS=3, GBASE=8192, GSTRIDE=40, SBASE=12288;
@@ -154,6 +164,10 @@ module tb_hbm_hc_q_static;
                 errors=errors+1;if(errors<5)$display("mix pos %0d row %0d mismatch",gpos,grow);end
         end
     end
+    // per-face beat-control copies must equal the single register on every edge (SAFE 1 kept copies)
+    integer face_err=0;
+    always @(negedge clk)if(rst_n&&(xfv!=={5{xv_l}}||(xv_l&&xfb!=={5{xbeat}})))begin
+        face_err=face_err+1;errors=errors+1;if(face_err<5)$display("face copy mismatch t=%0d v=%b/%b",tcyc,xfv,xv_l);end
     initial begin #400000;$display("TB_HBM_HC_Q_STATIC FAIL MUT=%0d timeout",MUT);$finish;end
 endmodule
 `default_nettype wire

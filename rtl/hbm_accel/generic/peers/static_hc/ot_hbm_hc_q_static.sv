@@ -31,8 +31,19 @@ module ot_hbm_hc_q_static #(
     parameter integer GATHER_PHASE=23,
     parameter integer DONE_LAT=19,
     parameter integer XW_BEATS=4,
-    parameter integer MUT=0 // 1 residual wave word mutant, 2 result store one sector late, 3 capture edge early,
+    parameter integer MUT=0, // 1 residual wave word mutant, 2 result store one sector late, 3 capture edge early,
                             // 4 x_wave beats 1/2 sent swapped, 5 x_wave beat 3 one edge late
+                            // 6 (SAFE) gathered-reader bounds taken from the internal check of the PREVIOUS word (gb unused)
+    // QHUB-S1 10-19 (kit hbm_hcq_hub_s1, SAFE-DESIGN checklist; default 0 = unchanged): SAFE 1 =
+    //   reset   the relay grows to RQN kept copies (u_rst) and the F20 target's internal reset to RLC kept copies, which the
+    //           kit's reset_relay_split pass spreads <= 32 loads a copy (item 3);
+    //   depth   the gathered-reader launch bounds come precomputed from the programme word (ot_hbm_hc_qcal_static gb, one
+    //           register earlier, same value): the calendar -> gather.issue_sector cone is cut (item 4, 0 edges);
+    //   fanout  the LG return is no longer gated as 2 x 2,056 data bits by the calendar's gather_phase bit: only the 8
+    //           sector valid bits are steered (the data bits reach both readers; each reader samples them only on its own
+    //           response edges, which the programme never overlaps -- an overlap still faults exactly as before);
+    //           the x_wave capture enable is ECOP kept copies and the beat control leaves per-face kept copies x_face_*.
+    parameter integer SAFE=0
 )(
     input wire clk,rst_n,
     input wire [7:0] tgt,              // identity strap: F20 target id (108+q)
@@ -54,6 +65,8 @@ module ot_hbm_hc_q_static #(
     output wire [9:0] x_wave_word,
     output wire [8192/XW_BEATS-1:0] x_wave,
     output wire [1:0] x_wave_beat,
+    output wire [4:0] x_face_v,        // per-face beat-control copies (W, N, E, S, centre); SAFE 0: = x_wave_v
+    output wire [9:0] x_face_beat,
     output wire residual_done,
     output wire gathered_mix_v,
     output wire [4:0] gathered_mix_row,
@@ -71,8 +84,9 @@ module ot_hbm_hc_q_static #(
     // release 3 clk edges later); each region resets its own flops from a relay copy placed beside it, so no net from
     // the port spans the 432 um tile. The F20 target already synchronises its own release (2 edges), the host programs
     // the target long after reset, and nothing in this master counts cycles from reset release.
-    wire [5:0] rr_n;
-    ot_rst_relay #(.REGIONS(6)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
+    localparam integer RQN=(SAFE!=0)?96:6;
+    wire [RQN-1:0] rr_n;
+    ot_rst_relay #(.REGIONS(RQN)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
     // ---- input pin registers
     reg [2055:0] rr_q;
     reg [7:0] w_done_q;
@@ -89,7 +103,7 @@ module ot_hbm_hc_q_static #(
     wire [255:0] p_data;
     wire [10:0] start_limit;
     wire [15:0] start_loops;
-    ot_static_program_target #(.PCW(10),.TGT_PIN(1)) target(
+    ot_static_program_target #(.PCW(10),.TGT_PIN(1),.RLC((SAFE!=0)?40:1)) target(
         .clk(clk),.rst_n(rr_n[0]),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .program_active(program_active),.program_cfg_we(cfg_we),.program_cfg_addr(p_addr),.program_cfg_data(p_data),
@@ -97,11 +111,19 @@ module ot_hbm_hc_q_static #(
         .program_start_loops(start_loops),.configured(configured),.fault(tgt_fault));
     // ---- programme issuer
     wire [78:0] c;
-    wire cal_v,cal_fault;
-    ot_vms_calendar_static #(.W(79)) programme(
-        .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
-        .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
-        .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault));
+    wire cal_v,cal_fault,gb;
+    generate if(SAFE!=0)begin:g_qcal
+        ot_hbm_hc_qcal_static #(.W(79)) programme(
+            .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
+            .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
+            .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault),.gb(gb));
+    end else begin:g_vcal
+        ot_vms_calendar_static #(.W(79)) programme(
+            .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
+            .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
+            .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault));
+        assign gb=1'b0;
+    end endgenerate
     wire residual_launch=c[0];
     wire [3:0] residual_npos=c[4:1];
     wire [15:0] residual_base=c[20:5];
@@ -116,15 +138,27 @@ module ot_hbm_hc_q_static #(
     wire [135:0] res_rq,gat_rq;
     wire [7:0] res_read,gat_read,write_sel;
     wire res_fault,gat_fault,wr_fault;
+    // LG return steering: SAFE 0 = the whole 2,056-b word gated per reader by gather_phase; SAFE 1 = only the 8 sector
+    // valid bits (b*257+256) are steered, the data bits go to both readers ungated
+    wire [2055:0] rr_res,rr_gat;
+    for(genvar b=0;b<8;b=b+1)begin:g_rr
+        assign rr_res[b*257+256]=gather_phase?1'b0:rr_q[b*257+256];
+        assign rr_gat[b*257+256]=gather_phase?rr_q[b*257+256]:1'b0;
+        assign rr_res[b*257+:256]=(SAFE!=0)?rr_q[b*257+:256]:(gather_phase?256'd0:rr_q[b*257+:256]);
+        assign rr_gat[b*257+:256]=(SAFE!=0)?rr_q[b*257+:256]:(gather_phase?rr_q[b*257+:256]:256'd0);
+    end
     ot_hgi_hc_residual_vm_static #(.CAPTURE_LAT(RD_CAPTURE-((MUT==3)?1:0)),.MUT_POSITION((MUT==1)?1:0),.BEATS(XW_BEATS),
-        .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0)) residual(
+        .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0),.SAFE(SAFE)) residual(
         .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),
-        .local_rq(res_rq),.local_read(res_read),.local_rr(gather_phase?2056'd0:rr_q),
-        .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.done(residual_done),.fault(res_fault));
-    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE)) gather(
+        .local_rq(res_rq),.local_read(res_read),.local_rr(rr_res),
+        .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.done(residual_done),.fault(res_fault),
+        .x_face_v(x_face_v),.x_face_beat(x_face_beat));
+    // MUT 6 (SAFE): bounds from the previous word (a stale precompute must FAIL the bench via its out-of-range vector)
+    reg gb_prev; always @(posedge clk) gb_prev<=gb;
+    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE),.EXTB((SAFE!=0)?1:0)) gather(
         .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
-        .base_sector(gather_base),.position_stride_sector(gather_stride),
-        .local_rq(gat_rq),.local_read(gat_read),.local_rr(gather_phase?rr_q:2056'd0),
+        .base_sector(gather_base),.position_stride_sector(gather_stride),.bounds_i((MUT==6)?gb_prev:gb),
+        .local_rq(gat_rq),.local_read(gat_read),.local_rr(rr_gat),
         .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),
         .gathered_mix_pos(gathered_mix_pos),.gathered_mix_data(gathered_mix_data),.done(gather_done),.fault(gat_fault));
     ot_hgi_hc_result_vm_static store(

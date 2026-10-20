@@ -7,10 +7,15 @@
 // RESP_PHASE (H-NETLIST 2026-10-15): edge of the fixed 24-edge period at which the
 // return is captured; 19 = direct tap connection (default, unchanged). A parent that
 // adds pin/leaf register edges on the request and return paths adds them here.
-module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19)(
+// EXTB (QHUB-S1 10-19, SAFE-DESIGN item 4): 1 = the launch bounds check arrives precomputed on bounds_i (registered by
+// the parent from the programme word one edge before it is the calendar word: ot_hbm_hc_qcal_static gb), instead of
+// the multiply/add/compare cone from the calendar register into issue_sector (~678 ps / 17 levels).  Same value on the
+// launch edge, so the reader is bit-identical; default 0 = the internal check (bounds_i unused).
+module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,parameter integer EXTB=0)(
     input wire clk,rst_n,launch,
     input wire [3:0] npos,
     input wire [15:0] base_sector,position_stride_sector,
+    input wire bounds_i,
     output reg [135:0] local_rq,
     output reg [7:0] local_read,
     input wire [2055:0] local_rr,
@@ -30,7 +35,8 @@ module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19)(
     wire request_slot=active&&phase==0&&issued<positions;
     wire response_slot=active&&phase==5'(RESP_PHASE)&&returned<positions;
     wire [32:0] last_sector={17'd0,base_sector}+(npos-1)*{17'd0,position_stride_sector}+2;
-    wire bounds_ok=npos>=1&&npos<=8&&!base_sector[15]&&last_sector<32768&&last_sector[14:13]==base_sector[14:13];
+    wire bounds_int=npos>=1&&npos<=8&&!base_sector[15]&&last_sector<32768&&last_sector[14:13]==base_sector[14:13];
+    wire bounds_ok=(EXTB!=0)?bounds_i:bounds_int;
     reg [7:0] expected_valid,actual_valid;
     reg [767:0] arrived;
     always @*begin
