@@ -1,0 +1,49 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-hook-synth-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-hook-synth-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-hook-synth-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-hook-synth-1020
+ot-run: ot-pve1        admits    87 GB (avail 73, growth 8, headroom 0, waiters 0/0 GB) load 13/28 running 6 disk 1174 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-tload-hook-synth-1020
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-3160875-1792484390 after 0 s
+cp /src/physical/ref_tile/qfd_dv_slice_tload_ns4/clock.sdc /work/results/asap7/opentallas_qfd_dv_slice_tload_asap7_ref_synth2/base/1_2_yosys.sdc
+touch -r /src/physical/ref_tile/qfd_dv_slice_tload_ns4/clock.sdc /work/results/asap7/opentallas_qfd_dv_slice_tload_asap7_ref_synth2/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+mkdir -p /work/objects/asap7/opentallas_qfd_dv_slice_tload_asap7_ref_synth2/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef, created 1 library cells
+link_design qfd_dv_slice_tload
+read_sdc /work/results/asap7/opentallas_qfd_dv_slice_tload_asap7_ref_synth2/base/1_2_yosys.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+eliminate_dead_logic
+Removed 69 unused instances and 69 unused nets.
+Design area 32507 um^2 100% utilization.
+source /src/physical/qwen_tload_safe4_1020/post_synth_tie32.tcl
+TLOAD_CONST32_COPY PASS copies=3 sinks=54 exact_Lib_SHA=073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e
+write_db /work/results/asap7/opentallas_qfd_dv_slice_tload_asap7_ref_synth2/base/1_synth.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_dv_slice_tload_asap7_ref_synth2/base/1_synth.sdc
+Elapsed time: 0:07.94[h:]min:sec. CPU time: user 7.63 sys 0.31 (99%). Peak memory: 383952KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb            7            374 f21b5f5a9f3025479456
+1_synth                   .sdc                             1dffdc4ea86d86a79fde
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-3160875-1792484390): exit 0

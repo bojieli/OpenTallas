@@ -1,0 +1,269 @@
+{
+  "scope": "Evidence-only immutable source and CLOSED TT/FF record snapshot. No canonical RTL, physical views, fixture helper or closure/flow helper promotion. NOT a qualified reusable leaf; complete clock envelope FAIL. Parent integration and nominal clock compensation unqualified.",
+  "record_commit": "37ee0bed18bd1459dcf5df9c6e89b2cdf9c82fe8",
+  "source_commit": "b8e6c6f863fcda1c73be9211a0a47528e3b82055",
+  "file_identity": [
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/abstract.json",
+      "sha256": "c7557887f9c50812d1ec783a5d298a5eac3f196d78f7c39dc0d331483a1b3ebe",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/child_lint.json",
+      "sha256": "f0ae0f09183da9d19b6812fcd387fb8b30c508b10aa90d0f44e0ee2c9ea3e515",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/export_ff.log",
+      "sha256": "378d110ceb75c446f034cd7348ce28c7daa39b6906cd96c006d4ef5ab977f772",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/export_ff.tcl",
+      "sha256": "fe38c24da9d1d1ec29e31f67a7b4a3fae61945d1bd6bd7fe4e6a4c07d207b723",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/export_ss.log",
+      "sha256": "485ae6eeb702ff8c528b4fb361febd60fadac8a8252bfe5453bb51658b0b88e5",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/export_ss.tcl",
+      "sha256": "ec9a00579f163448d7e3145d144aa22fa0ca6e35cfa1f0846d4bf9282af2bc83",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/export_tt.log",
+      "sha256": "1113e831b8675115f132e631232b2f4512483b273c6ea2218a69469f3f0f6988",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/export_tt.tcl",
+      "sha256": "29557e18498e0eb49211267f2da9adc680eedbc29c19fa06592e7f8754fd58bd",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/insertion.json",
+      "sha256": "2c9eb542e6403123d43f67d04fc4b02a38901416ee74652b16a9a958b1248e29",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/port_latency.json",
+      "sha256": "53eea5f384bfc6bd03bc483433992720e72721dc87ed4b79d3db6f5f8d8acf39",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/provenance/abstract_pin_stub.json",
+      "sha256": "05ed0f8147b2595c81391ce104e8e2b6e92892bda224fd1096cca391e274f22b",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/provenance/raw/qfd_dv_slice_tload.lef",
+      "sha256": "b3ff353219589721e37833578db132c7da35a5cc1991bb7faa5dbdfab60e7516",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/provenance/view_export.abstract.json",
+      "sha256": "e0efc1d2a6ea35fff375ae58c355ce4025c33d27e17ea95684b4bb69a699ed09",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/qfd_dv_slice_tload.lef",
+      "sha256": "2c2889620c988d272160144c6194e02a56af0f50a3ff764478950d2db7185c97",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/qfd_dv_slice_tload_ff.lib",
+      "sha256": "3e9bee03f583a28da645f3a5d29434bed9e582f313920e3f9f6515f74c419d1b",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/qfd_dv_slice_tload_ss.lib",
+      "sha256": "24af431e3a797c161675b91abdae67563028fd19799da99e8059f1d2932bcb4e",
+      "matches_record_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/qfd_dv_slice_tload_tt.lib",
+      "sha256": "da58be9c9e2ce837bfc57d315347da050a3831cb4b5428aef5bd667e0bc6c421",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/fail_witness/bench_f16_tload_cmut1.log",
+      "sha256": "0307900919589c4ae473bfdedbe83c26cf2c5a8fd55cc66c846dbb42a261288a",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/fail_witness/bench_f16_tload_cmut2.log",
+      "sha256": "e635152ca450c41c9506645016405444eb1b4fa8b282eedc1177cd5adaab7cf2",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/fail_witness/bench_f16_tload_mut1.log",
+      "sha256": "63f510c8f1f0b790ce63d6e96c3c38a74c4134c135ebdd07e5d29b817033ce51",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/fail_witness/bench_f16_tload_mut2.log",
+      "sha256": "615d152b910b8c686482df5e5dfec92a7a09e6feb970f7a0018cc2beb397d91f",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/fail_witness/bench_f16_tload_mut3.log",
+      "sha256": "2edf95304de757d4c340197608e13510b1032f728ea3c5c107f6cb8e92c53ce1",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/fail_witness/bench_f16_tload_mut4.log",
+      "sha256": "153f2ef0de582116376e9540b6e24e068e05e2fc2b72385a17cc496a325eb767",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/fail_witness/bench_f16_tload_mut5.log",
+      "sha256": "51f682fd8109ffc270ba4cf10a27ec80a6cac0e2c5b212731b81db90ea494e80",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/port_latency.json",
+      "sha256": "53eea5f384bfc6bd03bc483433992720e72721dc87ed4b79d3db6f5f8d8acf39",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/verdict.json",
+      "sha256": "a01258ef2d1a8f5bfa6b4eba4eb59723fabda568a57e22c2851f3b9787655744",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/rtl/ref_tile/qfd_dv_slice_tload_ns4/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/STATUS",
+      "sha256": "b8c833367f255dc86224459e6ef9ebead2433ad09a54ec30613bcc193f83923b",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/rtl/ref_tile/qfd_dv_slice_tload_ns4/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/corner_sta.json",
+      "sha256": "1f858666f05d315dfa7100ec50a13d324c889bfce54d7181d4bb9f0c57012fe8",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/rtl/ref_tile/qfd_dv_slice_tload_ns4/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/export.log",
+      "sha256": "6d2def8ee359c4cafe8d47d7f1b7c1f35479cccf6e754f8089bb249d9fbad5e6",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/rtl/ref_tile/qfd_dv_slice_tload_ns4/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/signoff.sdc",
+      "sha256": "6d26585b94cd22b017f1d215412389c42936cb5bc5de3393d940256fbacc5c64",
+      "matches_record_commit": true
+    },
+    {
+      "path": "results/rtl/ref_tile/qfd_dv_slice_tload_ns4/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/status",
+      "sha256": "5bb5d9867f9a86488fa0e9746a35929b9294e1e9cb29b209c5d9fbf3d1661d12",
+      "matches_record_commit": true
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_slice_tload.sv",
+      "sha256": "bcfb27cf7de8a9f66c7af0159399b91ece2c417b7dc9e890e7889ce0d64b72c2",
+      "matches_source_commit": true
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_table_rom_loader.sv",
+      "sha256": "3b9b054e042bc9004acb106fceabeaa2078d1c9741a1d2d589b2d3969bfa0d72",
+      "matches_source_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/signoff.sdc",
+      "sha256": "6d26585b94cd22b017f1d215412389c42936cb5bc5de3393d940256fbacc5c64",
+      "matches_source_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/kit.env",
+      "sha256": "ada13d5176d7ac884c2c04b60d62b978fa0b5226a9ca59709a0d1f13930b1717",
+      "matches_source_commit": true
+    },
+    {
+      "path": "physical/ref_tile/qfd_dv_slice_tload_ns4/spec.json",
+      "sha256": "6198e06106e64ed1fda9fc1a145f92c3393a6e380333686db9d30f87e77e7748",
+      "matches_source_commit": true
+    },
+    {
+      "path": "tools/qwen_layerbench/programme_store.py",
+      "sha256": "dc7c106ffa145507f8c7699183ba65337797f0dea35d43b0eea617bbc70813f7",
+      "matches_source_commit": true
+    },
+    {
+      "path": "tools/qwen_layerbench/table_rom_native_fixture.py",
+      "sha256": "724e07103f2f1f1dd661ffc09b6c55729a6c2bb611c70bd4773dad96509421ff",
+      "matches_source_commit": true
+    }
+  ],
+  "file_identity_PASS": true,
+  "closed_ODB_sha256": "5db687a82a49b4aed0960c1624d0ca582517be62b8f16601fe85dfcee6792c4b",
+  "corner_ODB_matches_native": true,
+  "closed_metrics": {
+    "tt_setup_ps": 19.14,
+    "ff_hold_ps": 14.46,
+    "ss_sensitivity_ps": -230.95,
+    "DRC": 0
+  },
+  "native_existing_audit": {
+    "cells_including_physical": 1536124,
+    "max_dynamic_fanout": 32,
+    "over32": 0,
+    "max_reach_um": 389.158,
+    "reach_over405": 0,
+    "PG_ITerms": 3072248,
+    "PG_unbound": 0,
+    "unknown_std_masters": [],
+    "rerun": false
+  },
+  "complete_native_clock_envelope": {
+    "tt": {
+      "root": "core_clk on ck",
+      "boundary_count": 2115,
+      "real_ROM_clock_count": 4,
+      "complete_count": 2119,
+      "min_ps": 447.4,
+      "max_ps": 533.6,
+      "complete_spread_ps": 86.2,
+      "limit_ps": 80,
+      "PASS": false,
+      "routed_reference_ps": 459.8
+    },
+    "ff": {
+      "root": "core_clk on ck",
+      "boundary_count": 2115,
+      "real_ROM_clock_count": 4,
+      "complete_count": 2119,
+      "min_ps": 357.6,
+      "max_ps": 444.5,
+      "complete_spread_ps": 86.9,
+      "limit_ps": 80,
+      "PASS": false,
+      "routed_reference_ps": 368.6
+    }
+  },
+  "macro_clock_warning": {
+    "n": 4,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": true,
+    "outliers": [
+      {
+        "pin": "u_ot_pr_core.u_ld.m2/clk",
+        "why": "ff 52 ps after the register mean > 30"
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.m3/clk",
+        "why": "ff 59 ps after the register mean > 30"
+      }
+    ]
+  },
+  "pin_wrapper_sha256": "b29484aa4338614a4855a7681a8cc3df1e0e4db296a5b6bc4cd9b9bad7964a89",
+  "pin_wrapper_matches_export": true,
+  "post_sdc_snapshots": {
+    "io_ref_routed.sdc": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095",
+    "app0_io_ref_routed.sdc": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+  },
+  "preserved_preECO_ODB": "e6037693d57ff2e9ca280c3589b39414ee540cf32e194867483a38d19fd7549d",
+  "ECO": "daemon combo +201cells/LVT, start04:33:26 finish04:43:39 installed04:44:39; same base SDC, measured routed IO referenceTT460FF369",
+  "adoption": false,
+  "snapshot_root": "results/arch/qw_tload_eco_identity_1020/snapshot"
+}

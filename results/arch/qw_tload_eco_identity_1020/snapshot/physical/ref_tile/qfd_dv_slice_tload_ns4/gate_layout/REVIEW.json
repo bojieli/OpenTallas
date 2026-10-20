@@ -1,0 +1,24 @@
+{
+  "reviewer": "codex coordinator delegated Qwen review",
+  "time": "2026-10-20T10:59:22.471538+00:00",
+  "gate_commit": "ccb102bce3d615a458074c9791c2265b0b738cf5",
+  "geometry_sha256": "4d9bbe5b204b9b7a82630aa84f38fed768189e1619a859c8d810d007e5aef1a1",
+  "verdict": "APPROVED",
+  "scope": "Approval to route; final TT setup>=0, FF hold>=0, DRC0 and native fanout/reach/PG checks required. SS sensitivity only. Existing failed ns3 remains immutable.",
+  "checklist": {
+    "lattice": "PASS four real ROMs121.824x62.91um on43.2um lattice; actual ns4 floorplan PNG viewed.",
+    "std_cell_band": "PASS connected full-width23.49um interrow band, open side and centre corridors; actual ns4 density PNG viewed.",
+    "pin_spread": "PASS W/E data1024/197.6=5.18pins/um, face spans96/97%; all functional pinFF1060IN+1054OUT and reset2-stage retained.",
+    "clock_entry": "PASS centre north clock entry with centre corridor to register mass; complete unfiltered2115boundary FF clocks +4realROM clocks=2119, TT71.3121787ps FF74.4455889ps<=80. No helper filter; actual Lib roles and finite macro setup/hold/clkQ retained.",
+    "shape": "PASS388.8x216um aspect1.8. APPROVED38.72% pin/macro-bound exception: near-full W/E faces and 2x2 real-ROM lattice limit shrink; smaller next43.2um height172.8 would place1094pins/172.8=6.33/um even before margins. Original warning preserved.",
+    "native": "PASS source-bound mapped12128cells/max32/0over32; actualGRT27831/max32/0over32,389.158um bbox upper/0over405; no unknown roles.",
+    "depth_storage_schedule": "PASS448.4ps depth; four unchanged ROMs/no added array, zeroextraedge versus ns3, production36x4fixture12672checks149640reads+7causal negatives.",
+    "PG": "PASS for gate continuity only: raw5396ordinary unboundPG->0 disposableglobal_connect; originalSHAunchanged and all instance/signal/clock/reset/placement/BTerm identities exact. Final conductors/vias/shorts/nativePG owed."
+  },
+  "evidence_source": "results/arch/qw_tload_recovery_1020",
+  "native_odb_sha256": "28b6105649fa1cfcbe530dff7499f01e76628d8af31de2adf2bef236f234685f",
+  "png_sha256": {
+    "floorplan.png": "23fca77ba60054a876bc278358e67bba372ca3d91f0162f734e88e75fb598612",
+    "density.png": "e15ad8f67f250895964d9eaaa7aa01641fa8839f4369f34d5d16978ac85bc55b"
+  }
+}

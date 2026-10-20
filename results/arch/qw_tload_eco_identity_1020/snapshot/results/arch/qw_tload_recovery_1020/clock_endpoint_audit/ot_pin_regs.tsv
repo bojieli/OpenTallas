@@ -1,0 +1,15 @@
+port	dir	width	cycles	why
+ck	input	1	0	clock
+rst_n	input	1	0	reset
+treq	input	9	1	pin register
+s_we	input	1	1	pin register
+s_kind	input	2	1	pin register
+s_addr	input	24	1	pin register
+s_data	input	1024	1	pin register
+tw_we	output	1	1	pin register
+tw_kind	output	2	1	pin register
+tw_addr	output	24	1	pin register
+tw_data	output	1024	1	pin register
+busy	output	1	1	pin register
+done	output	1	1	pin register
+fault	output	1	1	pin register

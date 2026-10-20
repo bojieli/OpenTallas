@@ -1,0 +1,309 @@
+{
+  "tt": {
+    "count": 4511,
+    "min": [
+      {
+        "pin": "tw_data[739]$_DFF_P_/CLK",
+        "arrival_ps": 433.9329468658534,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[718]$_DFF_P_/CLK",
+        "arrival_ps": 434.3392052277627,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[723]$_DFF_P_/CLK",
+        "arrival_ps": 434.3505017470834,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[811]$_DFF_P_/CLK",
+        "arrival_ps": 434.4283006258449,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[735]$_DFF_P_/CLK",
+        "arrival_ps": 434.4306320942059,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[724]$_DFF_P_/CLK",
+        "arrival_ps": 434.43843141098506,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[721]$_DFF_P_/CLK",
+        "arrival_ps": 434.4984112101301,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[823]$_DFF_P_/CLK",
+        "arrival_ps": 434.57096428507924,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[683]$_DFF_P_/CLK",
+        "arrival_ps": 434.6024946191046,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[727]$_DFF_P_/CLK",
+        "arrival_ps": 434.6421018256664,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[835]$_DFF_P_/CLK",
+        "arrival_ps": 434.649956653597,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[843]$_DFF_P_/CLK",
+        "arrival_ps": 434.6687749339396,
+        "macro_master": null,
+        "boundary": true
+      }
+    ],
+    "max": [
+      {
+        "pin": "u_ot_pr_core.u_ld.tw_data[752]$_DFF_P_/CLK",
+        "arrival_ps": 514.3042678968169,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.tw_data[779]$_DFF_P_/CLK",
+        "arrival_ps": 514.3749335926167,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.tw_data[777]$_DFF_P_/CLK",
+        "arrival_ps": 514.852440517416,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.tw_data[756]$_DFF_P_/CLK",
+        "arrival_ps": 515.2162050928879,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[743]$_DFF_P_/CLK",
+        "arrival_ps": 519.6884610097045,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[734]$_DFF_P_/CLK",
+        "arrival_ps": 519.7199913437298,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[725]$_DFF_P_/CLK",
+        "arrival_ps": 519.7627349303486,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[721]$_DFF_P_/CLK",
+        "arrival_ps": 519.8008155802455,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[720]$_DFF_P_/CLK",
+        "arrival_ps": 519.822076351252,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[793]$_DFF_P_/CLK",
+        "arrival_ps": 519.8556605978811,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[791]$_DFF_P_/CLK",
+        "arrival_ps": 519.8592133115741,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[669]$_DFF_P_/CLK",
+        "arrival_ps": 519.9484197319592,
+        "macro_master": null,
+        "boundary": false
+      }
+    ],
+    "spread_ps": 86.01547286610582
+  },
+  "ff": {
+    "count": 4511,
+    "min": [
+      {
+        "pin": "tw_data[739]$_DFF_P_/CLK",
+        "arrival_ps": 345.00535899451955,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[718]$_DFF_P_/CLK",
+        "arrival_ps": 345.0874599875187,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[724]$_DFF_P_/CLK",
+        "arrival_ps": 345.20117458127027,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[721]$_DFF_P_/CLK",
+        "arrival_ps": 345.2761701468834,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[735]$_DFF_P_/CLK",
+        "arrival_ps": 345.32352115907287,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[723]$_DFF_P_/CLK",
+        "arrival_ps": 345.4275490568959,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[673]$_DFF_P_/CLK",
+        "arrival_ps": 345.5098720945008,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[698]$_DFF_P_/CLK",
+        "arrival_ps": 345.51450727564713,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[683]$_DFF_P_/CLK",
+        "arrival_ps": 345.5188093898847,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[811]$_DFF_P_/CLK",
+        "arrival_ps": 345.52333354872815,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[727]$_DFF_P_/CLK",
+        "arrival_ps": 345.5368782696827,
+        "macro_master": null,
+        "boundary": true
+      },
+      {
+        "pin": "tw_data[726]$_DFF_P_/CLK",
+        "arrival_ps": 345.5736544075204,
+        "macro_master": null,
+        "boundary": true
+      }
+    ],
+    "max": [
+      {
+        "pin": "u_ot_pr_core.u_ld.tw_data[752]$_DFF_P_/CLK",
+        "arrival_ps": 426.5535997030153,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.tw_data[779]$_DFF_P_/CLK",
+        "arrival_ps": 426.5955383779381,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.tw_data[777]$_DFF_P_/CLK",
+        "arrival_ps": 427.05500417851516,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.tw_data[756]$_DFF_P_/CLK",
+        "arrival_ps": 427.404169321155,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[743]$_DFF_P_/CLK",
+        "arrival_ps": 433.4785325800586,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[734]$_DFF_P_/CLK",
+        "arrival_ps": 433.5120058043848,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[725]$_DFF_P_/CLK",
+        "arrival_ps": 433.55719188166756,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[721]$_DFF_P_/CLK",
+        "arrival_ps": 433.597243177441,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[720]$_DFF_P_/CLK",
+        "arrival_ps": 433.6194753935979,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[793]$_DFF_P_/CLK",
+        "arrival_ps": 433.6559739756783,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[791]$_DFF_P_/CLK",
+        "arrival_ps": 433.65985975628,
+        "macro_master": null,
+        "boundary": false
+      },
+      {
+        "pin": "u_ot_pr_core.u_ld.g_capture.payload[669]$_DFF_P_/CLK",
+        "arrival_ps": 433.7516752007834,
+        "macro_master": null,
+        "boundary": false
+      }
+    ],
+    "spread_ps": 88.74631620626383
+  },
+  "helper_sha256": "0671fc9136f9cdb25d66b8397832a5ac1d5de76678ae10bf35d5797a3e73d53c",
+  "source_ODB_SHA256": "acbd82904a30e85abc0dfcad4db0e7b2445cfb9ed679018efc20d198e5f0d68c",
+  "scope": "Read-only exactoriginalclockhelpermeasurement; ONLYadds endpointnames tostdout, no clockconstraint/network/metadatafilter changes."
+}
