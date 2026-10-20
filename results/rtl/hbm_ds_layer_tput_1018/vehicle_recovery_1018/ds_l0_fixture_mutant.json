@@ -1,0 +1,15 @@
+{
+  "scope": "pending actual RTL mutant replay, not witnessed yet",
+  "source_replay_sha256": "29fee849286adef159624c9908d1b17f7233e7e6408de29e5db49591a682698c",
+  "mutation": {
+    "kind": "VM operand sign bit flip",
+    "record": 23,
+    "sector": 264,
+    "xor_bit": 31,
+    "before": "3ea0e35f3e8f2d283e0b309c3e1874323e087e3c3dcdb42f3e22152f3e471b6a",
+    "after": "3ea0e35f3e8f2d283e0b309c3e1874323e087e3c3dcdb42f3e22152fbe471b6a",
+    "ecc": "recomputed by gen_slice_tb backdoor loader; arithmetic fault witness rather than ECC corruption"
+  },
+  "mutant_replay_sha256": "bcde522f9431752b563ed628257cb0ac6f920e78e9fcd6cba7a1fee0207b8897",
+  "expected": "record23 bit-exact check failure; must be witnessed on preserved actual RTL"
+}

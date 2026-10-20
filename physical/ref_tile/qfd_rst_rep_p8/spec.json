@@ -45,9 +45,15 @@
   "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved relays): ot_qwen_rst_rep IS pin-registered by construction -- one input flop at d, 8 pad flops, one flop per output (q0, q1); a flow pin register would add a reset-tree stage the die reset calendar (PAD + 2 = 10 edges per node) does not price"
  },
  "assigned_pin_source": {
-  "file": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bn/chain/case_r22k/elements.lef",
+  "file": "physical/ref_tile/qfd_rst_rep_p8/assigned_pins.lef",
   "note": "die-assigned faces of the Qwen compute die dv2f14bn stand-in abstract (qfd_rst_rep_p8 5.184 x 2.16, OBS M1-M3): clk + d on W (M4), q0 on E (M4), q1 on N (M5); the die leaves q1 of the PAD-8 node open (no q1 pin in its stand-in), the view keeps the real output",
-  "owner": "Q-DIE11b"
+  "owner": "Q-DIE11b",
+  "sha256": "6c0e333a697b688301fba9437070d742c4b399a2c83b1a744ad50b47dbe953c2",
+  "extracted_from": {
+   "abstract": "Qwen compute die dv2f14bn stand-in elements.lef (case_r22k, host-resident 20.7 MB; not committed)",
+   "sha256": "55ae3f2cf7e79716c280c1bc3c561c6622c677e1980e52896304e227ce0959aa",
+   "regenerate": "tools/qwen_rom_fulldie.py abstract of dv2f14bn, then awk \"/^MACRO qfd_rst_rep_p8$/,/^END qfd_rst_rep_p8$/\" elements.lef"
+  }
  },
  "route": {
   "pd": 0.45,
@@ -106,7 +112,8 @@
    "rtl/qwen_sys/reset_tree_20261013",
    "physical/qwen_rst_rep",
    "tools/qwen_split",
-   "results/arch/qwen_split_compute_1014/eg_qc_1018/bench_rst_rep"
+   "results/arch/qwen_split_compute_1014/eg_qc_1018/bench_rst_rep",
+   "physical/ref_tile/qfd_rst_rep_p8/assigned_pins.lef"
   ],
   "views_to": "physical/ref_tile/qfd_rst_rep_p8/views",
   "record_to": "results/rtl/ref_tile/qfd_rst_rep_p8"

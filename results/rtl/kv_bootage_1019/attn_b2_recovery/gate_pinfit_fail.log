@@ -1,0 +1,6 @@
+GATE INFO pin_regs: pin registers opted out: Generated wires-only parent of the static join: every tile <-> tile / die-master hop is priced in the compiled join ages with the die relays only (kv_relays, die_ages.json); a recipe-3 pin register would add an unpriced edge to every crossing.  The children land / launch their boundary nets in their
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['ufs_WS', 'ufs_WN', 'ufs_ES', 'ufs_EN', 'ufh', 'ufp0']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list  -> FIX: use the actual RTL and mapped pin names
+GATE FAIL pin_fit: the route's pin placement cannot place this plan (PPL-0093 / PPL-0111 / PPL-0086 at 3_2_place_iop; route OT_PIN_GROUP_MAX=32, 4 track(s) a pin): S face 302.4 um (ck, rst_n, ufs_WS, ufs_WN, ...): 1546 pins = 49 ordered groups of <= 32 on 1568 slots (M5 at 4 track(s), sections of 200): 2 group(s) of 32..10 pins find no section (98 % of the slots used; a section strands 8 slots)  -> FIX: give every bus its own disjoint pin_ranges and set route.pin_balance (place_pin, uniform over the range, no PPL groups), or a longer edge / a second pin layer
+GATE INFO remote: skipped: local FAIL first
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

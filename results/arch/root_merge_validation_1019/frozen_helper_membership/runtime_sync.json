@@ -1,0 +1,139 @@
+{
+  "source_commit": "6213f9e9eaf47b61ee9ef409de94f5b154f3f170",
+  "files": [
+    {
+      "path": "physical/common_flow/clock_family.tcl",
+      "mode": 420,
+      "before": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78",
+      "after": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78"
+    },
+    {
+      "path": "physical/common_flow/io_ref_routed.sdc",
+      "mode": 420,
+      "before": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095",
+      "after": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+    },
+    {
+      "path": "physical/common_flow/ot_pin_regs.tcl",
+      "mode": 420,
+      "before": "824052ac4c661520b0b428386e948f55ef750acc79db94ea89ebb790b282c2ec",
+      "after": "824052ac4c661520b0b428386e948f55ef750acc79db94ea89ebb790b282c2ec"
+    },
+    {
+      "path": "physical/common_flow/ot_rst_copies.py",
+      "mode": 420,
+      "before": "e36ddc508a732003b004582632a55607347739d6b6d816e2b17504c9f23eb535",
+      "after": "e36ddc508a732003b004582632a55607347739d6b6d816e2b17504c9f23eb535"
+    },
+    {
+      "path": "tools/closure_loop/ck_insertion.py",
+      "mode": 420,
+      "before": "b90c1dc7643b327d9b2b0a94647f6070c2de90788f5d71a673d922a6e4f057a4",
+      "after": "b90c1dc7643b327d9b2b0a94647f6070c2de90788f5d71a673d922a6e4f057a4"
+    },
+    {
+      "path": "tools/closure_loop/closure_loop.py",
+      "mode": 420,
+      "before": "0e8e157a588f503121dabd70cb4cf3be422ac837f6c08c0280cce9017053ddd6",
+      "after": "77550e3903eb63f72bee8684033bee87dad1b82d9e08fb6339c5eee8d8dfa434"
+    },
+    {
+      "path": "tools/closure_loop/helper_overlay.py",
+      "mode": 420,
+      "before": "1834890004e6be431331e223eafb1d6ae7a1d607dc0430ba38859b6e258cb762",
+      "after": "1834890004e6be431331e223eafb1d6ae7a1d607dc0430ba38859b6e258cb762"
+    },
+    {
+      "path": "tools/die_bind_unread_manifest.py",
+      "mode": 420,
+      "before": null,
+      "after": "5bee1bd857519a4ab58f3ac4a8111a04d458a970c0dfab57ad49c6ec254a5a5c"
+    },
+    {
+      "path": "tools/die_port_bind.py",
+      "mode": 420,
+      "before": "1e18f302e2f9c31cb7073fe17405bf81f4d1054af447d3801a43638d1c343374",
+      "after": "4bf68f06b20f43fe1e8950422d3633e5705acd3da951ae7e63f7645e4941d5f7"
+    },
+    {
+      "path": "tools/orfs_hold_mm.tcl",
+      "mode": 420,
+      "before": "700f52ce257a6685a5045e043c0adf32e02e23dde983eb1c0d8d9c1a36a4ec6c",
+      "after": "700f52ce257a6685a5045e043c0adf32e02e23dde983eb1c0d8d9c1a36a4ec6c"
+    },
+    {
+      "path": "tools/qwen_kv_die/kv_fwd_lanes.py",
+      "mode": 420,
+      "before": "bd98fa27214f6f5a1f4ef5331289a7907bdc312ff2b9120dcf6303eee2a2d89b",
+      "after": "bd98fa27214f6f5a1f4ef5331289a7907bdc312ff2b9120dcf6303eee2a2d89b"
+    },
+    {
+      "path": "tools/qwen_layerbench/netlist_relay_stages.py",
+      "mode": 420,
+      "before": "a990da04c2c42e9c05b390105fcd5a9025df0e3208fb3f9df0655d7fcd31bb26",
+      "after": "a990da04c2c42e9c05b390105fcd5a9025df0e3208fb3f9df0655d7fcd31bb26"
+    },
+    {
+      "path": "tools/qwen_split/land_lag_sim.py",
+      "mode": 420,
+      "before": "f453fb6e47678aeb4fd3d2a1ef982a74e303eebfa34948570b207acf6a0e9236",
+      "after": "f453fb6e47678aeb4fd3d2a1ef982a74e303eebfa34948570b207acf6a0e9236"
+    },
+    {
+      "path": "tools/ref_tile/clock_entry_constraints.py",
+      "mode": 420,
+      "before": "7e184cb89837c924bbef6db763866e8dfb2c5a26b619ccd4847797bb9eb32351",
+      "after": "7e184cb89837c924bbef6db763866e8dfb2c5a26b619ccd4847797bb9eb32351"
+    },
+    {
+      "path": "tools/ref_tile/layout_dump.tcl",
+      "mode": 420,
+      "before": "cc1a9fa11ecdbe323644c251fcd061eee26535894995967ed26b63d13d08d747",
+      "after": "cc1a9fa11ecdbe323644c251fcd061eee26535894995967ed26b63d13d08d747"
+    },
+    {
+      "path": "tools/ref_tile/lint_receipt.py",
+      "mode": 420,
+      "before": "fc1cb200950b04887f9067b48cac4f2c619daa8998fbe7d316bd6a539c9b70f3",
+      "after": "fc1cb200950b04887f9067b48cac4f2c619daa8998fbe7d316bd6a539c9b70f3"
+    },
+    {
+      "path": "tools/ref_tile/measured_band_fill.py",
+      "mode": 420,
+      "before": "40c4f27d3cf3636921b31b01a52a1d31e7e5b4b0faa926cfe452efd63fe76bf1",
+      "after": "40c4f27d3cf3636921b31b01a52a1d31e7e5b4b0faa926cfe452efd63fe76bf1"
+    },
+    {
+      "path": "tools/ref_tile/pre_route_gate.py",
+      "mode": 420,
+      "before": "ad110075bc0abec4cf0c7fc4e2c2f8207dfe1e209d83f2e93f6038bb023d2029",
+      "after": "ad110075bc0abec4cf0c7fc4e2c2f8207dfe1e209d83f2e93f6038bb023d2029"
+    },
+    {
+      "path": "tools/ref_tile/ref_tile.py",
+      "mode": 420,
+      "before": "5985c6d174e2cd23208146f2357a6e2e7a350738569f1890834525971f243647",
+      "after": "5985c6d174e2cd23208146f2357a6e2e7a350738569f1890834525971f243647"
+    },
+    {
+      "path": "tools/ref_tile/single_clock_contract.py",
+      "mode": 420,
+      "before": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52",
+      "after": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
+    },
+    {
+      "path": "tools/ref_tile/source_binding.py",
+      "mode": 420,
+      "before": "50ba6e45ccf0e9238678eed4f7a618986197f1bb9b8a9cb7957bfff83548a354",
+      "after": "50ba6e45ccf0e9238678eed4f7a618986197f1bb9b8a9cb7957bfff83548a354"
+    },
+    {
+      "path": "tools/textbook_lint.py",
+      "mode": 420,
+      "before": "72d4c9571f4a05e2f7c4fe12f26dd716c4b5f25b0a663249b15c145366448dff",
+      "after": "72d4c9571f4a05e2f7c4fe12f26dd716c4b5f25b0a663249b15c145366448dff"
+    }
+  ],
+  "status": "verified",
+  "prior_runtime_sync": "root-codex-guarded-20261019-101721"
+}

@@ -1,0 +1,90 @@
+{
+"SM.MATVEC.FP8E4M3.HBM.p1": {
+"n": 290,
+"cost": 64514.82778947379,
+"bw": 50180.21519089635,
+"bytes16": 4786176.0,
+"bytes32": 2609152.0,
+"total_bytes": 65681408
+},
+"DMA.LOAD.FP32.HBM.p0": {
+"n": 242,
+"cost": 23962.235613098866,
+"bw": 395.3952583801075,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 522560
+},
+"DMA.KVWB_DS.FP32.VM.p0": {
+"n": 40,
+"cost": 2235.6000000000013,
+"bw": 0.0,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 81920
+},
+"SM.QK.FP32.HBM.p1": {
+"n": 40,
+"cost": 23875.069444444427,
+"bw": 0.0,
+"bytes16": 163840.0,
+"bytes32": 81920.0,
+"total_bytes": 2621440
+},
+"SM.PV.FP32.HBM.p1": {
+"n": 40,
+"cost": 38135.76683937824,
+"bw": 0.0,
+"bytes16": 163840.0,
+"bytes32": 81920.0,
+"total_bytes": 2621440
+},
+"SM.MATVEC.BF16.HBM.p0": {
+"n": 85,
+"cost": 42288.74799999998,
+"bw": 44732.53076319487,
+"bytes16": 3942400.0,
+"bytes32": 2201600.0,
+"total_bytes": 57733120
+},
+"SM.MATVEC.FP4E2M1.HBM.p2": {
+"n": 720,
+"cost": 30500.60463157867,
+"bw": 86282.84820221171,
+"bytes16": 7127040.0,
+"bytes32": 3563520.0,
+"total_bytes": 88289280
+},
+"DMA.FENCE.None.None.p0": {
+"n": 40,
+"cost": 2193.9999999999986,
+"bw": 0.0,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"err": "'NoneType' object has no attribute 'indexed'"
+},
+"DMA.LOAD.U32.HBM.p0": {
+"n": 2,
+"cost": 196.40063094072696,
+"bw": 0.14527688611815393,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 192
+},
+"DMA.LOAD.FP8E4M3.HBM.p0": {
+"n": 48,
+"cost": 4716.040380206524,
+"bw": 9.297720711445436,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 12288
+},
+"DMA.LOAD.UE8M0.HBM.p0": {
+"n": 48,
+"cost": 4712.281261881451,
+"bw": 0.29055377216809575,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 384
+}
+}

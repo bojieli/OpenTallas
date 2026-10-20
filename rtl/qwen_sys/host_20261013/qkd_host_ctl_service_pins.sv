@@ -1,7 +1,8 @@
 // New candidate, original ND8 controller remains unchanged. Captured fault
 // flags block ready even when the original done/current-generation test has
 // not yet become applicable. Every intertile input is captured before logic.
-module qkd_host_ctl_service_pins #(parameter WDOG=1<<22,ENABLE_SERVICE=0,MUT=0)(
+// MU (MU-QWEN-HOST 10-18, opt-in, 0 = unchanged): qkd_host_ctl MU, 4-slot static calendar.
+module qkd_host_ctl_service_pins #(parameter WDOG=1<<22,ENABLE_SERVICE=0,MUT=0,MU=0)(
  input wire ck,rst_n,sys_ready,pb_fault,input wire[2:0]die_id,
  input wire[60:0]req,input wire[142:0]pr,input wire[743:0]tk,
  input wire service_abort,service_ready,begin_block,epoch_fault,input wire[7:0]service_ready8,
@@ -17,7 +18,7 @@ module qkd_host_ctl_service_pins #(parameter WDOG=1<<22,ENABLE_SERVICE=0,MUT=0)(
  role_q<=die_id;services_q<=service_ready8;
  for(i=0;i<8;i=i+1)faults_q[i]<=tk[93*i+88];
  end
- qkd_host_ctl #(.ND(8),.WDOG(WDOG))u_core(.ck(ck),.rst_n(rst_n),
+ qkd_host_ctl #(.ND(8),.WDOG(WDOG),.MU(MU))u_core(.ck(ck),.rst_n(rst_n),
  .ready(ready_q&&!pb_q&&role_q==0&&(MUT==1||(!abort_q&&!epoch_fault_q&&service_q&&!(|faults_q)))&&(!ENABLE_SERVICE||(MUT==2)||((&services_q)&&!block_q))),
  .req(req_q),.pr(pr_q),.tk(tk_q),.hc(hc),.res(res));
 endmodule

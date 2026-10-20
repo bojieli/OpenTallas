@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "qkd_astk_er_tap_st",
  "enable": false,
- "reason": "native EP e-read ABI: the service is combinational on SO (read request field so[12:0]) and on SI (e_rdq mux); ERL 3 = the EP's own three read stages, compiled into the PV calendar. A pin register would move every e-read and response edge against that calendar (qkd_astk_native_er_service_w has none). Only tag / valid / fault are registered, as in the service."
+ "reason": "the RTL registers every data input and output at the face itself (KV-ERTAP 2026-10-18): input flops ri_v/ri_a/eso_q/com_q/esi_q, output flops aso/response_v/response_addr/response_data/fault; the flow's extra pin registers would add another edge on each side against the KV static schedule (astk_eread erl 7)."
 }

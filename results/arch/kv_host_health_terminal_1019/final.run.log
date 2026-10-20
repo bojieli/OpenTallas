@@ -1,0 +1,5 @@
+PASS host health mechanism checks=21 profile MU=0 ENABLE_SERVICE=1; packet/physical/reset timing unqualified
+- tb.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 151ns; walltime 0.000 s; speed 1.371 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

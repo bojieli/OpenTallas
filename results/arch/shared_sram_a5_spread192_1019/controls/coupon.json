@@ -1,0 +1,221 @@
+{
+  "cases": [
+    {
+      "name": "aligned_rectangle",
+      "family": "control",
+      "pin": "a",
+      "kind": "aligned_rectangle",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            8424,
+            8676,
+            8712,
+            8700
+          ],
+          "role": "aligned_rectangle"
+        }
+      ],
+      "vias": [],
+      "neighbor_OBS": [],
+      "wire_status": "ROUTED",
+      "translation_nm": [
+        8688,
+        8688
+      ],
+      "anchor_nm": [
+        8688,
+        8688
+      ],
+      "score_roi_nm": [
+        8488,
+        8488,
+        8888,
+        8888
+      ],
+      "independent_geometry_components": [
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "name": "original_9nm_step",
+      "family": "control",
+      "pin": "a",
+      "kind": "original_9nm_step",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            10344,
+            8667,
+            10632,
+            8691
+          ],
+          "role": "original_9nm_step"
+        },
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            10608,
+            8676,
+            10632,
+            8700
+          ],
+          "role": "original_9nm_step"
+        }
+      ],
+      "vias": [],
+      "neighbor_OBS": [],
+      "wire_status": "ROUTED",
+      "translation_nm": [
+        10608,
+        8688
+      ],
+      "anchor_nm": [
+        10608,
+        8688
+      ],
+      "score_roi_nm": [
+        10408,
+        8488,
+        10808,
+        8888
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "spacing_23nm",
+      "family": "control",
+      "pin": "a",
+      "kind": "spacing_23nm",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            864,
+            10596,
+            1152,
+            10620
+          ],
+          "role": "spacing_23nm"
+        },
+        {
+          "layer": "M4",
+          "net": "b",
+          "rect_nm": [
+            864,
+            10643,
+            1152,
+            10667
+          ],
+          "role": "spacing_23nm"
+        }
+      ],
+      "vias": [],
+      "neighbor_OBS": [],
+      "wire_status": "ROUTED",
+      "translation_nm": [
+        1008,
+        10608
+      ],
+      "anchor_nm": [
+        1008,
+        10608
+      ],
+      "score_roi_nm": [
+        808,
+        10408,
+        1208,
+        10808
+      ],
+      "independent_geometry_components": [
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "name": "disconnected_contact",
+      "family": "control",
+      "pin": "a",
+      "kind": "disconnected_contact",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            2664,
+            10596,
+            2918,
+            10620
+          ],
+          "role": "disconnected_contact"
+        },
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            2928,
+            10596,
+            2952,
+            10620
+          ],
+          "role": "disconnected_contact"
+        }
+      ],
+      "vias": [],
+      "neighbor_OBS": [],
+      "wire_status": "ROUTED",
+      "translation_nm": [
+        2928,
+        10608
+      ],
+      "anchor_nm": [
+        2928,
+        10608
+      ],
+      "score_roi_nm": [
+        2728,
+        10408,
+        3128,
+        10808
+      ],
+      "independent_geometry_components": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ]
+    }
+  ]
+}

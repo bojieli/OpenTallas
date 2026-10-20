@@ -1,0 +1,30 @@
+ot-run: ot-epyc5       admits   239 GB (avail 443, growth 275, headroom 0, waiters 0/0 GB) load 162/128 running 34 disk 1548 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-133045-1792403143 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=177000 qa=31672 qb=2c1df fa=0 fb=0
+MISMATCH t=179000 qa=31672 qb=2c1df fa=0 fb=0
+MISMATCH t=493000 qa=1900d qb=3090d fa=0 fb=0
+MISMATCH t=773000 qa=3fbc9 qb=0f9d4 fa=0 fb=0
+MISMATCH t=783000 qa=3e22c qb=1e738 fa=0 fb=0
+HKV_PD_EQUIV cycles=120000 reads=58952 flips=15608 mismatches=110944 fault_seen=1
+HKV_PD_EQUIV FAIL
+- rtl/test/qwen_host/tb_hkv_prompt_pd_equiv.sv:43: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 240us; walltime 0.206 s; speed 1.163 ms/s
+- Verilator: cpu 0.199 s on 1 threads; allocated 7 MB
+MISMATCH t=15000 0000000000000003/0000000000000003 0000000000000003/0000000000000003 003/003 07/03
+MISMATCH t=23000 0000000000000007/0000000000000007 0000000000000007/0000000000000007 007/007 0b/07
+MISMATCH t=25000 0000000000000007/0000000000000007 0000000000000007/0000000000000007 007/007 0b/07
+MISMATCH t=33000 000000000000000b/000000000000000b 000000000000000b/000000000000000b 00b/00b 0f/0b
+MISMATCH t=35000 000000000000000b/000000000000000b 000000000000000b/000000000000000b 00b/00b 0f/0b
+HKV_CNT_LA cycles=200000 q1=86908 q2_wraps=169 mismatches=49945
+HKV_CNT_LA FAIL
+- rtl/test/qwen_host/tb_hkv_cnt_la.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 0.088 s; speed 4.553 ms/s
+- Verilator: cpu 0.067 s on 1 threads; allocated 7 MB
+HKV_PROMPT_PD FAIL mutant pd
+HKV_PROMPT_PD FAIL mutant cnt
+HKV_PROMPT_PD FAIL mutant 2/2
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-133045-1792403143): exit 1

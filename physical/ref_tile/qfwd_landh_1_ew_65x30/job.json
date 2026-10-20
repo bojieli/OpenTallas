@@ -1,20 +1,20 @@
 {
- "name": "qfwd_landh_1_ew_65x30-f1-371fe519b",
+ "name": "qfwd_landh_1_ew_65x30-f2-bcb6ab137",
  "block": "qfd_landh_1_EW_65x30",
  "ref_tile": true,
- "owner": "Claude:Q-DIE11-RLY",
+ "owner": "Claude:Q-DIE11b-RLY",
  "purpose": "Qwen compute die forwarded half-cycle lane frame qfd_landh_1_EW_65x30 (landing (ring D 4, read on the block root), 1 b)",
  "threads": 2,
  "peak_ram_gb": 6,
  "source": {
-  "branch": "claude/q-die11-rly-1018",
-  "commit": "371fe519b",
+  "branch": "claude/q-die11b-rly-1018",
+  "commit": "bcb6ab137",
   "extra_paths": [
    "physical/qwen_fwd_lane",
    "rtl/qwen_split/qfd_fwd_lane.sv",
    "rtl/hdc",
    "tools/qwen_split",
-   "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench"
+   "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench_r2"
   ]
  },
  "stages": {
@@ -45,7 +45,7 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh sel {RUN}/bench_sel 1",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench/w1_sel.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench_r2/w1_sel.log",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
@@ -57,7 +57,7 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh naive {RUN}/bench_naive 1",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench/w1_naive.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench_r2/w1_naive.log",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfwd_landh_1_ew_65x30/qfwd_landh_1_ew_65x30-f1-371fe519b"
+   "to": "results/rtl/ref_tile/qfwd_landh_1_ew_65x30/qfwd_landh_1_ew_65x30-f2-bcb6ab137"
   }
  ],
  "cycles_added": 0,

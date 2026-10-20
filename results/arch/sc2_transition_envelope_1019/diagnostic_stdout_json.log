@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/sc2-transition-envelope-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/sc2-transition-envelope-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/sc2-transition-envelope-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/sc2-transition-envelope-1019
+ot-run: ot-epyc8       admits  1316 GB (avail 978, growth 46, headroom 0, waiters 0/0 GB) load 18/128 running 14 disk 117 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sc2-transition-envelope-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sc2-transition-envelope-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1761836-1792441921 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/sc2-transition-envelope-1019/run_native.py", line 49, in <module>
+    records.append(dict(instance=inst,bound=bound,arcs=json.loads(data)))
+                                                       ~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 361, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ~~~~~~~~~~~~~~^^^^^^^^
+json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 4097 (char 4096)
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1761836-1792441921): exit 1

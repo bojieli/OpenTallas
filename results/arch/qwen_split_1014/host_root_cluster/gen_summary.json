@@ -17,10 +17,36 @@
  "glue_per_child": {
   "qkd_hr_core_peer": 4,
   "qkd_hr_core_prompt": 45,
-  "qkd_hr_core_guard": 25
+  "qkd_hr_core_guard": 24
  },
- "glue_cells": 74,
- "glue_assigned": 74,
+ "glue_cells": 73,
+ "glue_assigned": 73,
  "glue_left_in_parent": [],
- "glue_left_count": 0
+ "glue_left_count": 0,
+ "family_split_outputs": {
+  "qkd_hr_cdc_host": {
+   "service_faults": {
+    "core": 2,
+    "host": 4
+   }
+  },
+  "qkd_hr_cdc_pc": {
+   "service_faults": {
+    "core": 2,
+    "phy": 2
+   }
+  },
+  "qkd_hr_ingest_qm": {
+   "host_upstream_quiet": {
+    "core": 1,
+    "host": 1,
+    "ingest": 1
+   }
+  }
+ },
+ "forked_members": {
+  "qkd_host_qm_credit_pacer": 1,
+  "qkd_host_visibility_fence": 1,
+  "qkd_host_native_qm_debt": 1
+ }
 }

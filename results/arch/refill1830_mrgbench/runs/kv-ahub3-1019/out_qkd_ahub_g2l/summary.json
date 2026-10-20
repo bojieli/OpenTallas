@@ -1,0 +1,70 @@
+{
+ "job": "/srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-ahub3-1019/src/physical/ref_tile/qkd_ahub_g2l/job.json",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "results": [
+  {
+   "name": "lint",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "ahub_g2_m0",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "ahub_g2_m13",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "ahub_g2_m15",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "ahub_g2_m1",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "ahub_g2_m2",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "ahub_g2_m11",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "ahub_g2_m12",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "ahub_g2_lp_lockstep",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  }
+ ],
+ "unexpected": 0
+}

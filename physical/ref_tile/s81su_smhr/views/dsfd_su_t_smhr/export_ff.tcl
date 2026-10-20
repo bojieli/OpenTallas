@@ -9,10 +9,10 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SE
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
 read_liberty /mv0/dsfd_su_t_smc_ff.lib
 read_liberty /mv1/dsfd_su_t_smr_ff.lib
-read_db /work/results/asap7/opentallas_dsfd_su_t_smhr_asap7_ref_s81su_smhr_s81su_smhr_1ced40b32/base/6_final.odb
+read_db /work/results/asap7/opentallas_dsfd_su_t_smhr_asap7_ref_s81su_smhr_s81su_smhr_4b9efb055/base/6_final.odb
 set ::ot_ce_corner ff
-read_sdc /work/results/asap7/opentallas_dsfd_su_t_smhr_asap7_ref_s81su_smhr_s81su_smhr_1ced40b32/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_dsfd_su_t_smhr_asap7_ref_s81su_smhr_s81su_smhr_1ced40b32/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_dsfd_su_t_smhr_asap7_ref_s81su_smhr_s81su_smhr_4b9efb055/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_dsfd_su_t_smhr_asap7_ref_s81su_smhr_s81su_smhr_4b9efb055/base/6_final.spef
 set_propagated_clock [all_clocks]
 read_sdc /work/w18_extra.sdc
 read_sdc /meas/app0_io_ref_routed.sdc

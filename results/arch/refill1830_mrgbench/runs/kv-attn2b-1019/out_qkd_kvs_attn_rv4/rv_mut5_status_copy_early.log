@@ -1,0 +1,24 @@
+KVS_RVPAIR build B=r16 mut=5 RS=1 SD=213 verilator Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=2181 pvst
+MISMATCH cyc=2181 pvfst
+MISMATCH cyc=2181 ahs
+MISMATCH cyc=2181 acal
+MISMATCH cyc=2181 prg valids
+MISMATCH cyc=2182 pvst
+MISMATCH cyc=2182 pvfst
+MISMATCH cyc=2182 ahs
+MISMATCH cyc=2182 acal
+MISMATCH cyc=2183 pvst
+MISMATCH B faulted on the legal stream
+MISMATCH B STATUS never sent
+KVS_RVPAIR PASS mode=1 mut=5 checks=14315 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=2 mut=5 checks=14354 errors=0 cmds=1 req=1 Q=6 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=3 mut=5 checks=14357 errors=0 cmds=1 req=1 Q=9 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=4 mut=5 checks=14380 errors=0 cmds=1 req=1 Q=32 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=5 mut=5 checks=14383 errors=0 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=6 mut=5 checks=14387 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=7 mut=5 checks=14391 errors=0 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=8 mut=5 checks=14352 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=9 mut=5 checks=14387 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=10 mut=5 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR_ALL FAIL mut=5 modes=11 checks=129677 fails=1

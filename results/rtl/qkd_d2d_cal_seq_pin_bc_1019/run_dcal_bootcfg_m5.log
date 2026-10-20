@@ -1,0 +1,26 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-dcal-bootcfg-1019/src
+ot-run: ot-epyc5       admits   784 GB (avail 662, growth 113, headroom 0, waiters 0/0 GB) load 65/128 running 20 disk 1287 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-dcal-bootcfg-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-dcal-bootcfg-1019/src
+ot-run: ot-epyc8       admits   617 GB (avail 545, growth 113, headroom 0, waiters 0/0 GB) load 100/128 running 24 disk 442 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-dcal-bootcfg-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-dcal-bootcfg-1019/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1321307-1792420355 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+target11: rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh SEG2 TX 9 RX 10
+BAD tile forwarded 65 boot writes (66 expected)
+BAD admission start 1: DUT bases TX 9 RX 0, SEG2 9 / 10
+BAD event stream differs at t=58895000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58905000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58915000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58925000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58935000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58945000 (DUT 01 vs ref 00, phase 1)
+BAD tile fault: col 0 run 0 stale 0 early 1 seq 0
+FAIL kv_dcal_bootcfg mut5 errors502
+[2583310000] %Fatal: tb_kv_dcal_bootcfg.sv:157: Assertion failed in tb_kv_dcal_bootcfg
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bootcfg.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut5: BAD tile forwarded 65 boot writes (66 expected)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1321307-1792420355): exit 1

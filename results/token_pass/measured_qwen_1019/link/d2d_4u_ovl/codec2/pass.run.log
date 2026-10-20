@@ -1,0 +1,10 @@
+D2DOVL_USER 0 exchanges 576 (compiled 576) tokens 16 (compiled 16) tok/s 4768.1
+D2DOVL_USER 1 exchanges 540 (compiled 540) tokens 15 (compiled 15) tok/s 4470.1
+D2DOVL_USER 2 exchanges 288 (compiled 288) tokens 8 (compiled 8) tok/s 2384.0
+D2DOVL_USER 3 exchanges 252 (compiled 252) tokens 7 (compiled 7) tok/s 2086.0
+D2DOVL_MEAS H 4026800 frames C->K 63098 K->C 57783 aggregate 13708.2 tok/s (frame start 4200)
+D2DOVL_PASS OVL 1
+- rtl/test/qwen_split/tb_d2d_ovl_mu.sv:192: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 117.841 s; speed 28.550 us/s
+- Verilator: cpu 117.825 s on 1 threads; allocated 7 MB

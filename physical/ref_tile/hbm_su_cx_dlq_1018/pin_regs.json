@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_cxport_dl_q",
+ "enable": false,
+ "reason": "Every pin is registered in RTL (inputs land in pin registers / banks, every output is a register); a wrapper stage would move the fixed 3:4 seam calendar edges."
+}

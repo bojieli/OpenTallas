@@ -1,0 +1,14 @@
+%Error-MODMISSING: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv:755:5: Cannot find file containing module: 'qkd_static_kv_boot_dispatch_mu'
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        qkd_static_kv_boot_dispatch_mu
+                        qkd_static_kv_boot_dispatch_mu.v
+                        qkd_static_kv_boot_dispatch_mu.sv
+                        obj_dir/qkd_static_kv_boot_dispatch_mu
+                        obj_dir/qkd_static_kv_boot_dispatch_mu.v
+                        obj_dir/qkd_static_kv_boot_dispatch_mu.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/refill-0725/MUKVREG2/out/kv/runs/mu/src_lint_mu_kv_tiles'
+%Error-MODMISSING: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv:769:5: Cannot find file containing module: 'qkd_static_kv_layer_programme_mu'
+%Error-MODMISSING: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv:771:5: Cannot find file containing module: 'qkd_static_kv_ownership_calendar_mu'
+%Error: Exiting due to 3 error(s)

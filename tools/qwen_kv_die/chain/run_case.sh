@@ -5,6 +5,9 @@ set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 D=$(readlink -f "$1"); TCL=$2; LOG=$3; CPUS=${4:-16}; MEM=${5:-200}
 NAME=qfd_$(basename $(dirname $D))_$(basename $D)_$(basename $TCL .tcl)
+# MU-DIE-QW 10-19: every Qwen chain case is <run>/chain/case_r22k, so the name collided across concurrent runs on one host
+# (dv2f18mub: docker "name already in use" -> OT_CASE_STATUS 125).  Suffix a hash of the case path.
+NAME=${NAME}_$(printf %s "$D" | md5sum | cut -c1-8)
 date -u +%FT%TZ > $D/$LOG.start
 docker run --rm --name $NAME --cpus=$CPUS --memory=${MEM}g -e OT_ORFS_NUM_CORES=$CPUS -e OT_PDN_BBOX_OBS="${OT_PDN_BBOX_OBS:-0}" -v $D:/work -w /work ${IMAGE:-openroad/orfs:asap7lock} \
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $CPUS -no_init -exit /work/$TCL > /work/$LOG 2>&1; rc=\$?; chmod -R a+rwX /work; exit \$rc"

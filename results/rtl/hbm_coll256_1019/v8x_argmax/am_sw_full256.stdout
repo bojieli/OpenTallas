@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/coll256/src/am_sw_full256
+ot-run: ot-epyc5       admits    83 GB (avail 171, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 23 disk 1364 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/coll256/src/am_sw_full256
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/coll256/src/am_sw_full256
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/coll256/src/am_sw_full256
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/coll256/src/am_sw_full256
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/coll256/src/am_sw_full256
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1169867-1792418426 after 0 s
+MODE full256 NLINK 2 TP 192 VM_RT 96 ROWS 256 expect pass
+ARGMAX_ROWS_COMPILE PASS P=6 rows=256 II=32 last_delivery_instr=303 halt=304
+ARGMAX_V8X config NLINK2 TP192 VM_RT96 VMLAT96 ROWS256 PW8 P6 NR256
+ARGMAX_V8X host drain 55+1 edges a row
+ARGMAX_ROWS_MEASURE P6 VM_RT96 ROWS256 NR256 launch_to_first_vm_rq12 launch_to_last_delivery314 done315 positions6/6 data_err0 addr_err0 stray0 fault_first-1
+ARGMAX_ROWS PASS P6 NLINK2 TP192 VM_RT96 ROWS256 rows256
+ARGMAX_V8X full256 GATE PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1169867-1792418426): exit 0
+REMOTE_RC am_sw_full256 0

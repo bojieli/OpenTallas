@@ -29,9 +29,11 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "W": [
-   "k_v",
+  "S": [
+   "rst_n",
+   "clk",
    "k_lo",
+   "k_v",
    "k_L",
    "k_any"
   ],
@@ -42,10 +44,8 @@
    "o_ne",
    "fs"
   ],
-  "S": [
+  "W": [
    "n_corr",
-   "rst_n",
-   "clk",
    "n_unc"
   ]
  },
@@ -58,7 +58,6 @@
   "physical/ref_tile/s81lk_kp4_dchn/kit.env",
   "physical/ref_tile/s81lk_kp4_dchn/clock.sdc",
   "physical/ref_tile/s81lk_kp4_dchn/signoff.sdc",
-  "physical/ref_tile/s81lk_kp4_dchn/signoff_ffrepair.sdc",
   "physical/ref_tile/s81lk_kp4_dchn/pdn.tcl",
   "physical/ref_tile/s81lk_kp4_dchn/pre_cts.tcl",
   "physical/ref_tile/s81lk_kp4_dchn/post_cts.tcl",

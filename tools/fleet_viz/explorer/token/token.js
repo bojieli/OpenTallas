@@ -281,7 +281,8 @@ export async function mountTokenExplorer(el, opts = {}) {
       selP);
     const evidence = h('details', { class: 'evidence' }, h('summary', {}, 'Timing provenance, accounting and source records'), banner);
     const compP = compositionPanel(data.composition_1018 || (mtp ? null : arData.composition_1018), mtp);
-    const content = h('div', { class: 'content' }, ...(compP ? [compP] : []), flowP, ...(dieP ? [dieP] : []), inspector, ganttP);
+    const tpP = tokenPassPanel(data.token_pass_1019 || arData.token_pass_1019);
+    const content = h('div', { class: 'content' }, ...(compP ? [compP] : []), ...(tpP ? [tpP] : []), flowP, ...(dieP ? [dieP] : []), inspector, ganttP);
     if (mtp) content.append(hwPanel(data, (n) => openStage(n.group)));
     content.append(shareP, evidence, notes, nativePanel);
     views.forEach((v) => v && v.destroy && v.destroy()); views = [];
@@ -455,6 +456,22 @@ function compositionPanel(c, mtp) {
     h('div', { class: 'gl' }, ...Object.entries(c.by_grade).map(([k, v]) => h('span', {}, h('i', { style: `background:${COMP_COL[k] || '#888'}` }), `${k} ${fmtCyc(v)} (${fmtPct(v / T)})`))),
     h('div', { class: 'kv', style: 'margin-top:4px' }, 'inter-die exposed ', h('b', {}, fmtCyc(c.by_kind.xdie)), ' · ', c.o_rule),
     h('div', { class: 'tp-src' }, `${c.record} · ${c.tool}`));
+}
+
+/** Token pass on the RELEASE dies (tools/token_pass_status.py): verdict per users class + MU.CURVE points (PRICED) */
+function tokenPassPanel(t) {
+  if (!t) return null;
+  const fmt = (x) => Number(x).toLocaleString(undefined, { maximumFractionDigits: 1 });
+  const rows = t.cells.map((c) => h('div', { class: 'kv' }, h('b', {}, `${c.users}: ${c.verdict}`),
+    ` · ${c.rate} · elements REL ${c.tally.REL} / DIAG ${c.tally.DIAG} / PRICE ${c.tally.PRICE} / MISS ${c.tally.MISS}`));
+  const pts = t.curve.map((p) => `${p.mode} ${p.users}u ${fmt(p.per_user_tok_s)}/user, ${fmt(p.aggregate_tok_s)} agg (${p.per_user_vs_baseline_x}x)`).join(' · ');
+  const base = t.baseline.map((b) => `${b.users}u ${fmt(b.per_user_tok_s)}/user ${fmt(b.aggregate_tok_s)} agg`).join(', ');
+  return h('div', { class: 'panel', role: 'note', 'aria-label': 'token pass on release dies' },
+    h('div', { class: 'pt' }, h('b', {}, 'Token pass on the release dies'), h('span', {}, `${t.release_die} · ${t.asof}`)),
+    ...rows,
+    h('div', { class: 'kv', style: 'margin-top:4px' }, h('b', {}, 'MU.CURVE (PRICED until the token pass measures it): '), pts),
+    h('div', { class: 'kv' }, `baseline: ${t.baseline[0].grade}: ${base}`),
+    h('div', { class: 'tp-src' }, `${t.record} · tools/token_pass_status.py · REL = measured on the release die, DIAG = older/diagnostic die`));
 }
 
 /** MTP banner block: the step split into draft / verify / accept, the accepted-token accounting, other BF cases */

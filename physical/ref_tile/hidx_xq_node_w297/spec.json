@@ -1,0 +1,145 @@
+{
+ "name": "hidx_xq_node_w297",
+ "top": "ot_hbm_idx_xq_node_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_xq_node_static.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "WI": 297
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "a"
+  ],
+  "E": [
+   "b"
+  ],
+  "N": [
+   "y"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "outline": {
+  "w": 129.6,
+  "h": 129.6,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.025
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: a/b land in pin flops a_r/b_r, y leaves flops (2 edges fixed, counted by the compiler --score-chain); a synthesis wrapper would add a third unpriced stage. clk/rst_n pass through (rst_n drives only ot_rst_relay)."
+ },
+ "job": {
+  "owner": "Claude:HBM-NSFIX",
+  "branch": "claude/nsfix-xq-1018",
+  "tag": "x1",
+  "purpose": "HBM d4g GEN2 IDX cross-quadrant score tree node ot_hbm_idx_xq_node_static WI 297: stack nodes hb_idx__xq_S / hb_idx__xq_N (slots idx_xq0/idx_xq1). Pure 2-edge registered concatenation y={b,a}, regional reset relay (<=256 loads). Bench run_xq_node.sh (Verilator 5.050): MUT0 PASS, MUT1-4 FAIL (swap, latency 3, stuck bit, no reset). Resubmit of hidx_xq_node_w297-x1-3c0e6821f (NEEDS_HUMAN: Icarus 12 vvp of_RET_VEC4 abort rc 134 from a bench rnd() part-select past WI; bench fixed, now Verilator 5.050; RTL unchanged).",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static/tb_xq_node.sv",
+   "rtl/test/hbm_idx_static/run_xq_node.sh"
+  ],
+  "record_to": "results/rtl/ref_tile/hidx_xq_node_w297",
+  "views_to": "physical/ref_tile/hidx_xq_node_w297/views",
+  "benches": [
+   {
+    "name": "xq_node_w297_m0",
+    "cmd": "bash rtl/test/hbm_idx_static/run_xq_node.sh {RUN}/xq0 297 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^IDX_XQ_NODE WI297 MUT0 checks3998 errors0 PASS$",
+    "pass_witness": "results/rtl/nsfix_xq_1018/xq_w297_m0.log"
+   },
+   {
+    "name": "xq_node_w297_m1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_xq_node.sh {RUN}/xq1 297 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^IDX_XQ_NODE WI297 MUT1 checks3998 errors[1-9][0-9]* FAIL$",
+    "fail_witness": "results/rtl/nsfix_xq_1018/xq_w297_m1.log",
+    "note": "swapped halves {a,b}"
+   },
+   {
+    "name": "xq_node_w297_m2",
+    "cmd": "bash rtl/test/hbm_idx_static/run_xq_node.sh {RUN}/xq2 297 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^IDX_XQ_NODE WI297 MUT2 checks3998 errors[1-9][0-9]* FAIL$",
+    "fail_witness": "results/rtl/nsfix_xq_1018/xq_w297_m2.log",
+    "note": "3 edges (extra output stage)"
+   },
+   {
+    "name": "xq_node_w297_m3",
+    "cmd": "bash rtl/test/hbm_idx_static/run_xq_node.sh {RUN}/xq3 297 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^IDX_XQ_NODE WI297 MUT3 checks3998 errors[1-9][0-9]* FAIL$",
+    "fail_witness": "results/rtl/nsfix_xq_1018/xq_w297_m3.log",
+    "note": "y bit WI/2 stuck at 0"
+   },
+   {
+    "name": "xq_node_w297_m4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_xq_node.sh {RUN}/xq4 297 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^IDX_XQ_NODE WI297 MUT4 checks3998 errors[1-9][0-9]* FAIL$",
+    "fail_witness": "results/rtl/nsfix_xq_1018/xq_w297_m4.log",
+    "note": "reset never asserted"
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

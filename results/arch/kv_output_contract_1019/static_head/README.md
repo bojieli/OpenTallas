@@ -1,0 +1,9 @@
+# Static-QK head child node-beat contract
+
+Source helper `32e779623`, `tools/qwen_kv_die/kv_static_head_unused.py`, pins the static head RTL and generator hashes. The existing static-QK generator intentionally removes the V/node-beat face and its 32 relay children; sixteen closed `ot_qkh_lane8` children per head retain physically present `nb` outputs with no consumers. This declaration covers exactly 128 source-qualified static parent instances / 2,048 exact child output slices / 131,072 bits. Dynamic heads using the same closed child master are excluded.
+
+The helper verifies the original preexpand parents and static module mapping, parent count, lack of node-beat parent ports, child master/parameter identity and each 64-bit slice. Another consumer, driver, alias, top face, swapped slice, changed source, dynamic parent or stale relay pad receipt fails. A global `ot_qkh_lane8.nb` declaration is removed; each accepted instance receives only `nb[63:0]`. Nine focused tests pass, including the negative cases.
+
+Actual old219 canonical strict binding changes unread bits from 293,925 to **162,853**, exactly the 131,072 intentionally unused child bits. All 73 functional open-output types, four unconnected inputs and the real fault-consumer gaps remain FAIL. Tied inputs, undriven bits, multiple drivers, unresolved children and ambiguous children remain zero. No functional fault/control/clock output receives this permission.
+
+`summary.json` pins source/preexpand/expansion/netlist hashes, all approved parent identities, generated pad file hash, strict receipt hash and census. The final source-pinned derivation produces byte-identical pads to the strict run. Full artifacts are in the owned fleet directory named in the summary; no live case was edited. The KV coordinator owns composing this helper after exact relay-pad recovery in the native wrapper.

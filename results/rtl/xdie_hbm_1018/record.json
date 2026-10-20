@@ -355,15 +355,15 @@
    "flits_per_rank": 32,
    "P_link_frames": 1528,
    "crossings": 1,
-   "E_link_meas_cycles": 2669.5,
+   "E_link_meas_cycles": 2645.4,
    "C_on_die": 92.5,
-   "E_meas_cycles": 2762.0,
+   "E_meas_cycles": 2737.9,
    "O_meas_cycles": 0.0,
-   "exposed_per_instance": 2762.0,
-   "exposed_per_token": 22096.0,
+   "exposed_per_instance": 2737.9,
+   "exposed_per_token": 21903.2,
    "priced_per_instance": 4191.0,
    "priced_per_token": 33528.0,
-   "grade": "measured-extrapolated transport (current GEN2 RTL) + priced-on-die",
+   "grade": "measured transport P=1528 (current GEN2 RTL, TOKEN-XDIE-HBM2) + priced-on-die",
    "overlap_source": "d4g pricer cm_census hidden_cycles=0.0 (AR)"
   },
   {
@@ -481,12 +481,315 @@
    "priced_same_rows": 94917.3,
    "token_cycles_price5": 1268230.8
   },
-  "scaling": "E_link independent of die count (one switch chip a crossing); N enters via P_link; vehicle = 1 port pair of NL=4 parallel rails"
+  "scaling": "E_link independent of die count (one switch chip a crossing); N enters via P_link; vehicle = 1 port pair of NL=4 parallel rails",
+  "note_1018_hbm2": "TOPK_MERGE rows now use the measured P=1528 E_link 2645.4 (was extrapolated 2669.5): DS exposed -24.1/instance x 8/token = -193 cycles vs xdie_measured_exposed_cycles above (totals not recomposed here; tools/token_compose_xdie.py picks the token_compose block)"
  },
  "gaps": [
   "COLL issuer / programme (ot_hgi_coll_static_issuer_v6 inside v8g) and the epcal_<q> endpoint calendar are NOT in the vehicle: their fixed slots are driven by the bench at the cycles the compiler would program (next step: v8g parent + epcal + real F20 programme)",
   "golden-order reduction / VM writes are on-die COLL stages already benched per unit (COLLQ bench, q_hard_v5 lockstep); here priced-on-die constants",
   "ROW_GATHER kept priced; TOPK_MERGE payload extrapolated beyond the 256-frame sweep",
   "LA / LXB / GAPB derived from a calibration run's landing bounds + fixed guards; production compiler bound must add ppm-drift margin over long epochs"
- ]
+ ],
+ "coll_cosim": {
+  "lane": "TOKEN-XDIE-HBM2",
+  "date": "2026-10-18",
+  "branch": "claude/xdie-hbm2-1018",
+  "vehicle": "rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_coll.sv + run_xdie_hbm_coll.sh; compiler tools/xdie_hbm_coll_compile.py",
+  "rtl_rev": "claude/hd4g-gen2-1018 5b668d464 (all 61 RTL/macro sources byte-identical to that tree; HBM-CHAIN3 idx-n12 netlist changes do not touch COLL/ep/serdes)",
+  "verilator": "5.050",
+  "fleet": "ot-pve1 unit oth-ubuntu-539268-1792373052 (ot-run --remote auto), gate.log XDIE2_GATE rc=0",
+  "instantiated_per_die": [
+   "hb_coll_NE ot_hfd_coll_q2_hard_v8g NLINK1 TP192 (issuer_m = static_issuer_v6 + 3 programme SRAMs, F20 target 55; ctl_v5, qslots, link_e rail, reduce_static 16x LAT8, ring_ag, vmwrite v6)",
+   "hcollgi_NE ot_hgi_coll_gq_issue (ring-A merge register, not launched)",
+   "cp_ep_NE ot_static_program_target TARGET135 PCW10 + epcal_NE hfd_hgi_vm_calendar (ep_N2 = word[18:0])",
+   "10 lane relays each way",
+   "ep_N2 hfd_ep_static",
+   "lk_N2 ot_pdie_serdes (KP4)"
+  ],
+  "modelled": [
+   "SU vector source at the INJLAT-12 boundary (inputs)",
+   "VM read boundary (unused by this programme)",
+   "ring-A neighbours idle",
+   "off-chip flight SWD 333 words DS (switch 250 + cable 27.6 ns) / 4 words Qwen package",
+   "die B 300 ppm slow",
+   "pad bit errors inside FEC t=15"
+  ],
+  "programme": {
+   "collective": "cross-die ALL_REDUCE step, 2 dies x 2 FP32 x16 vectors, golden rank-order fold ((x0+x1)+x2)+x3 on both dies (bit-exact vs Python binary32 RNE golden; 6/16 lanes order-sensitive)",
+   "coll_rows": [
+    38,
+    44
+   ],
+   "calendar_words": [
+    495,
+    480
+   ],
+   "constants": "K1 11 (launch -> link row edge), K2 7 (launch -> ep calendar word), gcL 116; release = measured block ready + 8 cycles (stage B), drains spaced 10 for the FP32 dependency",
+   "static": "no ready/credit on-die; block_ready checked at the static release edge (stage pass: ready at every release)"
+  },
+  "pass_DS": {
+   "launch_to_publication_cycles": [
+    537,
+    542
+   ],
+   "first_wr_to_last_far_rx_cycles": [
+    491,
+    476
+   ],
+   "block_ready_rel": [
+    481,
+    475
+   ],
+   "static_release_rel": [
+    489,
+    483
+   ],
+   "release_slack_cycles": [
+    8,
+    8
+   ],
+   "verdict": "PASS"
+  },
+  "pass_Qwen": {
+   "launch_to_publication_cycles": [
+    208,
+    213
+   ],
+   "first_wr_to_last_far_rx_cycles": [
+    162,
+    147
+   ],
+   "block_ready_rel": [
+    152,
+    146
+   ],
+   "static_release_rel": [
+    160,
+    154
+   ],
+   "release_slack_cycles": [
+    8,
+    8
+   ],
+   "verdict": "PASS"
+  },
+  "mutants": {
+   "m_order": "die 1 folds ((x2+x3)+x0)+x1: REJECTED (XDIE2_ERR d=1 AR payload mismatch, 6 lanes)",
+   "m_flip": "die 1 second rx_expect reservation bit cleared in its programme word: REJECTED (link epoch_abort cause 008, rx 1/2)",
+   "m_early": "die 1 static release 40 cycles early: REJECTED (XDIE2_SCHED_FAIL d=1 not ready at release)",
+   "fail_regex": {
+    "m_order": "XDIE2_ERR d=1 AR payload mismatch",
+    "m_flip": "^XDIE2 .* FAIL$",
+    "m_early": "XDIE2_SCHED_FAIL d=1"
+   }
+  },
+  "logs": "results/rtl/xdie_hbm_1018/coll_cosim/ (gate.log, ds_pass.log, qw_pass.log, m_*.log fail witnesses, */plan.json + hex programmes, sources.sha256)",
+  "notes": [
+   "AR step DS 537/542 cycles launch->publication (wr->last far rx 491/476 = old vehicle E_link(P=2) 479 +- launch skew; on-die COLL inject->wr 28, rx->publication 18 incl. the last FP32 add)",
+   "Qwen package 208/213 cycles",
+   "stage A/B logs are calibration runs (A: assumed constants -> ep TX-calendar fault by design of the probe; B: generous release)"
+  ]
+ },
+ "topk_merge_point": {
+  "P": 1528,
+  "vehicle": "tb_xdie_hbm_link (DS, committed constants LA/LXB/GAPB/DRX)",
+  "E_link_meas_cycles": [
+   2644.4,
+   2645.4
+  ],
+  "replaces_extrapolated": 2669.5,
+  "log": "results/rtl/xdie_hbm_1018/coll_cosim/topk1528_ds.log",
+  "verdict": "PASS"
+ },
+ "token_compose": {
+  "terms": [
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "L2.xdie.96x512 index TOPK_MERGE",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 2312.4
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 333.0
+     },
+     {
+      "grade": "priced",
+      "E": 92.5
+     }
+    ],
+    "O": 1269.99,
+    "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4a4c0a958)",
+    "pointer": "topk_merge_point.E_link_meas_cycles",
+    "note": "TOPK_MERGE P=1528 now MEASURED (was extrapolated 2669.5) on the GEN2 transport; on-die COLL stays priced"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "L8.xdie.96x512 index TOPK_MERGE",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 2312.4
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 333.0
+     },
+     {
+      "grade": "priced",
+      "E": 92.5
+     }
+    ],
+    "O": 1269.99,
+    "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4a4c0a958)",
+    "pointer": "topk_merge_point.E_link_meas_cycles",
+    "note": "TOPK_MERGE P=1528 now MEASURED (was extrapolated 2669.5) on the GEN2 transport; on-die COLL stays priced"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "L14.xdie.96x512 index TOPK_MERGE",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 2312.4
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 333.0
+     },
+     {
+      "grade": "priced",
+      "E": 92.5
+     }
+    ],
+    "O": 0.0,
+    "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4a4c0a958)",
+    "pointer": "topk_merge_point.E_link_meas_cycles",
+    "note": "TOPK_MERGE P=1528 now MEASURED (was extrapolated 2669.5) on the GEN2 transport; on-die COLL stays priced"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "L20.xdie.96x512 index TOPK_MERGE",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 2312.4
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 333.0
+     },
+     {
+      "grade": "priced",
+      "E": 92.5
+     }
+    ],
+    "O": 1147.62,
+    "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4a4c0a958)",
+    "pointer": "topk_merge_point.E_link_meas_cycles",
+    "note": "TOPK_MERGE P=1528 now MEASURED (was extrapolated 2669.5) on the GEN2 transport; on-die COLL stays priced"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "L24.xdie.96x512 index TOPK_MERGE",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 2312.4
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 333.0
+     },
+     {
+      "grade": "priced",
+      "E": 92.5
+     }
+    ],
+    "O": 0.0,
+    "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4a4c0a958)",
+    "pointer": "topk_merge_point.E_link_meas_cycles",
+    "note": "TOPK_MERGE P=1528 now MEASURED (was extrapolated 2669.5) on the GEN2 transport; on-die COLL stays priced"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "L28.xdie.96x512 index TOPK_MERGE",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 2312.4
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 333.0
+     },
+     {
+      "grade": "priced",
+      "E": 92.5
+     }
+    ],
+    "O": 0.0,
+    "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4a4c0a958)",
+    "pointer": "topk_merge_point.E_link_meas_cycles",
+    "note": "TOPK_MERGE P=1528 now MEASURED (was extrapolated 2669.5) on the GEN2 transport; on-die COLL stays priced"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "L32.xdie.96x512 index TOPK_MERGE",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 2312.4
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 333.0
+     },
+     {
+      "grade": "priced",
+      "E": 92.5
+     }
+    ],
+    "O": 0.0,
+    "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4a4c0a958)",
+    "pointer": "topk_merge_point.E_link_meas_cycles",
+    "note": "TOPK_MERGE P=1528 now MEASURED (was extrapolated 2669.5) on the GEN2 transport; on-die COLL stays priced"
+   },
+   {
+    "design": "hbm_gen_ds",
+    "workload": "ar",
+    "slot": "L36.xdie.96x512 index TOPK_MERGE",
+    "E": [
+     {
+      "grade": "measured-current-RTL",
+      "E": 2312.4
+     },
+     {
+      "grade": "modelled-PHY",
+      "E": 333.0
+     },
+     {
+      "grade": "priced",
+      "E": 92.5
+     }
+    ],
+    "O": 0.0,
+    "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4a4c0a958)",
+    "pointer": "topk_merge_point.E_link_meas_cycles",
+    "note": "TOPK_MERGE P=1528 now MEASURED (was extrapolated 2669.5) on the GEN2 transport; on-die COLL stays priced"
+   }
+  ],
+  "evidence": {
+   "coll_cosim": "coll_cosim.pass_DS / pass_Qwen: real-COLL-parent 2-die AR step (not a slot replacement: P=2 frames SU-sourced vs VM-sourced slots)"
+  }
+ }
 }

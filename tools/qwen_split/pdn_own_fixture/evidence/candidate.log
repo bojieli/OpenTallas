@@ -1,0 +1,55 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: tech.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: qfd_rst_rep.lef, created 1 library cells
+[INFO ODB-0227] LEF file: qfd_rst_rep_p8.lef, created 1 library cells
+[WARNING ORD-2011] LEF master qfd_rst_rep has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_rst_rep_p8 has no liberty cell.
+[WARNING IFP-0028] Core area lower left (1.000, 1.000) snapped to (1.026, 1.080).
+[INFO IFP-0001] Added 436 rows of 7369 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 400.000 120.000 ) um
+[INFO IFP-0101] Core BBox: (  1.026  1.080 ) ( 398.952 118.800 ) um
+[INFO IFP-0102] Core area:                        46843.849 um^2
+[INFO IFP-0103] Total instances area:              2687.386 um^2
+[INFO IFP-0104] Effective utilization:                0.057
+[INFO IFP-0105] Number of instances:                     32
+[INFO PDN-0001] Inserting grid: core
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_0_0
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_0_1
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_0_2
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_0_3
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_1_0
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_1_1
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_1_2
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_1_3
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_2_0
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_2_1
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_2_2
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_2_3
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_3_0
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_3_1
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_3_2
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep - r0_3_3
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_0_0
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_0_1
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_0_2
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_0_3
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_1_0
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_1_1
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_1_2
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_1_3
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_2_0
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_2_1
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_2_2
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_2_3
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_3_0
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_3_1
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_3_2
+[INFO PDN-0001] Inserting grid: pg_own_qfd_rst_rep_p8 - r1_3_3
+[INFO PDN-0500] Runtime: 0.02s
+[INFO PSM-0040] All shapes on net VDD are connected.
+[INFO PSM-0040] All shapes on net VSS are connected.
+OWN_GRID_FIXTURE_PASS

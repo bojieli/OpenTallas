@@ -11,17 +11,17 @@
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/home/ubuntu/wt/qf-collq-1018/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "9916a94736fce9db625d244c84a818a969f7a6bf37dd4622e52758713f3aebd1"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656/record/views/ot_hgi_coll_static_vmwrite_roots_v6_physical/provenance/raw/ot_hgi_coll_static_vmwrite_roots_v6_physical.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656/record/views/ot_hgi_coll_static_vmwrite_roots_v6_physical/provenance/ot_hgi_coll_static_vmwrite_roots_v6_physical.candidate.lef"
+    "/home/ubuntu/wt/qf-collq-1018/tools/hier_contract/abstract_pin_stub.py",
+    "/tmp/refin_j7rda1hl/ot_hgi_coll_static_vmwrite_roots_v6_physical/provenance/raw/ot_hgi_coll_static_vmwrite_roots_v6_physical.lef",
+    "/tmp/refin_j7rda1hl/ot_hgi_coll_static_vmwrite_roots_v6_physical/provenance/ot_hgi_coll_static_vmwrite_roots_v6_physical.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 49 OBS rects moved into 49 pins: clk_meta, ingress_slot[0], ingress_slot[1], ingress_slot[2], ingress_slot[3], ingress_slot[4], rst_n, sid[0], sid[1], slot_owner[0], slot_owner[10], slot_owner[11]; pockets: 531 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 49 OBS rects moved into 49 pins: clk_meta, ingress_slot[0], ingress_slot[1], ingress_slot[2], ingress_slot[3], ingress_slot[4], rst_n, sid[0], sid[1], slot_owner[0], slot_owner[10], slot_owner[11]; pockets: 539 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,7 +30,7 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656/record/views/ot_hgi_coll_static_vmwrite_roots_v6_physical/provenance/ot_hgi_coll_static_vmwrite_roots_v6_physical.candidate.lef",
+    "lef": "/tmp/refin_j7rda1hl/ot_hgi_coll_static_vmwrite_roots_v6_physical/provenance/ot_hgi_coll_static_vmwrite_roots_v6_physical.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
@@ -147,16 +147,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 531
+          "added": 539
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "ot_hgi_coll_static_vmwrite_roots_v6_physical.lef",
-    "sha256": "58fc7f2d8ceccb311d20cf463b13e2f79b01612a69d37d99452f6c7b039445e4"
+    "sha256": "d6fab1f08753ce6d32689cbec51564e473d13fb64a0eb7140b04a179997e2a9c"
   }
 }

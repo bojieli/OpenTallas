@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_stream_tile",
+ "enable": false,
+ "reason": "The RTL registers every pin: every input bit is captured at its face in qfd_dv_stream_tile (sw/se payload, sid, cfg, SU write ports; the valid / tap-hit / write-any / config-enable bits as (* keep *) per-32-bit-group copies decoded from the pins), every output is driven directly by a register (so_e/so_w relay, tw_*/xt_* tap output registers after the interior tap relay, fault).  A flow pin stage would add a second edge and fold the kept select copies into one flop per pin (1,088-load relay select)."
+}

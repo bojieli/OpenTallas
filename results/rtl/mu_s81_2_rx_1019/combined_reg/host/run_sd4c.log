@@ -1,0 +1,10 @@
+ERR 1174 t_a valid 0 expected 1
+ERR 1175 t_a valid 0 expected 1
+ERR 1176 t_a valid 0 expected 1
+ERR 1177 t_a valid 0 expected 1
+ERR 1178 t_a valid 0 expected 1
+MUSEED COLLIDE NU 4 PASS (fault raised) t_mf 001
+- /srv/opentallas-scratch/claude/refill-0730/MUS81REG/src_7613ee7f4/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_seed.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.004 s; speed 2.921 ms/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB

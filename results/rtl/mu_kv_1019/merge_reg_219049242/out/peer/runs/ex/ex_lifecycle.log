@@ -1,0 +1,5 @@
+PASS collected lifecycle identity/drains/POST/latecancel/participant/wrap/recovery
+- rtl/test/qwen_host/tb_qkd_host_lifecycle_collected.sv:135: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 551ns; walltime 0.000 s; speed 6.720 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

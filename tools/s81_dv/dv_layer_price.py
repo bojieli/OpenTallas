@@ -4,7 +4,10 @@
 dv_price.py prices the whole token (joint longest path of results/arch/token_path_20261009/ds_rom{,_mtp}.json with the
 DV per-node deltas + the p4l land plan, half-cycle hops).  This tool re-uses exactly that machinery (same g facts, same
 dv_deltas, same solve) and reports, for each representative layer, the priced layer on the solved DV schedule:
-  span   = max(end) - min(start) over the layer's nodes (layer entry to layer exit, what a layer bench measures)
+  span   = max(end) - entry, entry = the first start of the layer's token-critical nodes (layer entry to layer exit,
+           what a layer bench measures); off-path prefetches that start earlier (the Engram E<L>.* chain, run during
+           earlier layers) are excluded and reported as prefetch_lead (S81-L20 10-19: they made AR L14 / L1 / L21
+           spans 318k / 34k / 30k)
   crit   = sum of (cycles + delta) of the layer's nodes on the token's critical path (its share of the token)
   hub    = the same two numbers on the hub DAG without DV deltas (the 10-09 price the 10-13 vehicle was compared to)
 Status COMPOSED_NOT_NATIVE: a price, not a measurement.
@@ -57,7 +60,9 @@ def layer_table(doc, delta, keys):
         row = {}
         for tag, end, dl in (('hub', e0, {}), ('dv', e1, delta)):
             st = {i: end[i] - by[i]['cycles'] - dl.get(i, 0.0) for i in ids}
-            row[f'{tag}_span'] = round(max(end[i] for i in ids) - min(st.values()), 1)
+            entry = min((st[i] for i in ids if i in crit), default=min(st.values()))
+            row[f'{tag}_span'] = round(max(end[i] for i in ids) - entry, 1)
+            row[f'{tag}_prefetch_lead'] = round(max(0.0, entry - min(st.values())), 1)
             row[f'{tag}_crit'] = round(sum(by[i]['cycles'] + dl.get(i, 0.0) for i in ids if i in crit), 1)
         row['nodes'] = len(ids)
         row['delta_cycles'] = round(sum(delta.get(i, 0.0) for i in ids), 1)

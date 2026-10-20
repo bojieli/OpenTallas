@@ -1,0 +1,40 @@
+{
+  "kind": "SOURCE_ONLY_NOT_RUN",
+  "freeze": "dfb971326",
+  "default": {
+    "H": 512,
+    "deadline": 384,
+    "age_bits": 10,
+    "declared_added_bits": 1830
+  },
+  "separate_boundary": {
+    "H": 93,
+    "deadline": 93,
+    "age_bits": 7,
+    "declared_added_bits": 1827,
+    "case": 20,
+    "required_same_edge": [
+      "native_certificate_attempt_v",
+      "raw_done_v",
+      "certificate_key_ok",
+      "native_certificate_v"
+    ]
+  },
+  "component_replays": {
+    "cases": [
+      16,
+      17,
+      18,
+      19
+    ],
+    "producer_fault_claim": false,
+    "real_cleanup_path_unchanged": true,
+    "causal_control": "current_event_guard"
+  },
+  "source_sha256": {
+    "bench/native_join_bench.sv": "3e9aeda2cfba9a1a4422badd28074efd6f8ebb770501009327ec45a833d9ff6c",
+    "scripts/run_initial.py": "2bec5949a959c61b9dd452f8b9852b907087c2f55357529fd4f8a4520483e3b0",
+    "scripts/make_mutant.py": "50ebd373446581e37454dcbb3185e54436dc9d31e5c24ac9d006663ad9901c1d",
+    "bench/BOUNDARY_REPLAY_FREEZE.md": "ef970777c6493007fbdef1f4bec2f345bc3019480623cf6611bdf683e89095b8"
+  }
+}

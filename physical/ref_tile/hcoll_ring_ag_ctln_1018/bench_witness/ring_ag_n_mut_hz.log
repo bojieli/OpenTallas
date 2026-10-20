@@ -1,0 +1,6 @@
+RING_AG_N LOCK PASS seed=1 edges=6000 fault_edges=5999 v1_first_fault=0
+RING_AG_N RR PASS rr_publishes=596 edges=6000
+RING_AG_N RR HZ PASS native_fault_edge=53
+RING_AG PASS mode=0 quadrants=4 flits_per_quadrant=224 published=2688 gather_edges=340 first_inject=4 last_inject=338 last_arrival=344
+[356000] %Fatal: tb_hgi_coll_ring_ag_n.sv:152: Assertion failed in tb_hgi_coll_ring_ag_n: RING_AG reservation mutant escaped 8
+RING_AG_N MUTANT hz FAILED

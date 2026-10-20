@@ -25,6 +25,10 @@ TOOLS = ROOT / "tools"
 PY = sys.executable
 S = Path("/srv/opentallas-scratch")
 S2 = Path("/srv/opentallas-scratch2")
+# INF.10 10-18: fixture root = $OT_EXACTNESS_FIXTURES (regress.py exports it on the bench host), else the repo-relative
+# benches.json fixtures.root (build/exactness/fixtures, gitignored; regenerate per its "regenerate" steps).
+FIX = Path(os.environ.get("OT_EXACTNESS_FIXTURES")
+           or ROOT / json.loads((ROOT / "tools/exactness/benches.json").read_text())["fixtures"]["root"])
 # reduced-vehicle goldens need `tokenizers` (V4.1 Engram token map): a venv on the bench host carries it
 VENV = S / "claude/exactness/venv/bin/python"
 HPY = str(VENV) if VENV.exists() else PY
@@ -69,7 +73,7 @@ def qwen_rom(work, mode):
 # Durable fixture tree (KEEP STATUS.md in every dir; literal path so tools/fleet/fleet_sweep.py protects it): the TP2
 # P8191 gold regenerated 2026-10-08 on the local GPU and verified against the committed oracle digests
 # (tools/exactness/regen_fixtures.sh, fixtures.py verify); run fixtures = qwen_hbmacc_layer_parallel.py --plan.
-HBMQ = Path("/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191")
+HBMQ = FIX / "qwen_p8191"
 
 
 def hbm_qwen(work, which):
@@ -102,7 +106,7 @@ def hbm_qwen(work, which):
 # four P6 fixtures were recovered 2026-10-08 from their origin job (EPYC1 /srv/opentallas/jobs-overflow/
 # euclid-hbm-opt1-production-r1/work/p6_*_haz1_g0), every file sha256-equal to the committed
 # results/rtl/dshbm_hbm_opt_20261005/joint_r2/retained_layouts.json source_sha256.
-JOINT = Path("/srv/opentallas-scratch/claude/exactness/fixtures/hbm_ds_joint")
+JOINT = FIX / "hbm_ds_joint"
 
 
 def hbm_ds_joint(work):
@@ -176,7 +180,7 @@ def v41_mtp(work):
 # -- DS ROM S81 one-layer token bench (gaps-design 2026-10-08, tools/s81/token_bench_l20.py) ---------------------
 # fixture = the prep output (1,792 binding, L20 plan / x / rank-0 checkpoint slices, golden layer record + executor VM
 # snapshots), made on the checkpoint host by `token_bench_l20.py prep` and kept with a STATUS.md
-S81TOK = S / "claude/exactness/fixtures/s81_token_l20"
+S81TOK = FIX / "s81_token_l20"
 
 
 def s81_token(work):
@@ -198,7 +202,7 @@ def s81_token(work):
 
 # -- DSpark MTP in RTL (mtp-exact 2026-10-08; records results/rtl/mtp_exact_20261008) ---------------------------------
 # fixtures: GPU-host goldens (ROM MTP images, the 2-stage wavefront images, HBM golden traces) kept with STATUS.md
-MTPX = S / "claude/exactness/fixtures/mtp_exact"
+MTPX = FIX / "mtp_exact"
 V5050 = dict(os.environ, PATH=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin") + ":" +
              os.environ.get("PATH", ""))      # the pinned Verilator (5.032 hits an internal V3Delayed error on the array bench)
 MTPX_ROM = ("img_gold4_forced_g5_n12", "img_oracle3_forced_g5_n12", "img_oracle5_forced_g5_n12", "img_gold4_dspark_g5_n12")

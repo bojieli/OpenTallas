@@ -19,9 +19,9 @@ cp "$d/ot_hgi_dma_back_static_vp_banks.sv" "$out/banks.sv"   # landing bank leaf
 python3 - "$out/vp.sv" <<'PYFIX'
 import pathlib,sys
 p=pathlib.Path(sys.argv[1]);s=p.read_text()
-a='    assign bank_write_slot=expect_tag[7];'
+a='    assign bank_write_slot=(RR_RT==7)?expect_tag[7]:land_tag_rt;'
 assert s.count(a)==1,'bank_write_slot assign not found'
-p.write_text(s.replace(a,'    reg [6:0] bank_write_slot_sim; always @* bank_write_slot_sim=expect_tag[7]; assign bank_write_slot=bank_write_slot_sim;'))
+p.write_text(s.replace(a,'    reg [6:0] bank_write_slot_sim; always @* bank_write_slot_sim=(RR_RT==7)?expect_tag[7]:land_tag_rt; assign bank_write_slot=bank_write_slot_sim;'))
 PYFIX
 cp "$out/vp.sv" "$out/vp_src.sv"
 case "$mut" in

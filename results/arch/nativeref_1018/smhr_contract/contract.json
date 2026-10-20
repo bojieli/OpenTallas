@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.nativeref.smh_parent_contract.v1",
+  "by": "NATIVE-REF 2026-10-18",
+  "what": "dsfd_su_t_smh parent clock contract for the root smhr vs the quads smhq, re-derived after the smhr kit change (refglob u_ld* + SYM spine, gate 2dcce4622 on ot-epyc4 /srv/opentallas-scratch/claude/ref_gate/s81su_smhr-20261018-183511)",
+  "old": {"kit": "cf471b3c2 (route 1ced40b32)", "R_tt": 700.2, "R_ff": 549.4, "own_R": {"launch": 168.5, "capture": 205.2},
+          "contract": "+20 ps (smhr flops 20 ps after the quads; C = R - 20: launch 188.5, capture 185.2)",
+          "why": "capture floor = route-time input hold pads (155-170 ps per input) from the io_ref first-register fallback"},
+  "new": {"R_tt": 482.7, "R_ff": 387.6, "insertion_max_tt": 501.8, "spread_tt": 28.7, "spread_ff": 21.5,
+          "own_R": {"launch": 170.4, "launch_pin": "m_nmb[17]", "capture": 167.2, "capture_pin": "q_e[149]"},
+          "offset_window_ps": [-22.8, 49.6],
+          "contract": "0 ps: the parent delivers smhr's clock at its own boundary R like the quads (smhr child-flop target = its routed boundary mean); any offset d in -22.8..+49.6 ps also passes (launch 170.4 + d <= 220, capture 167.2 - d <= 190)"},
+  "basis": "tools/ref_tile/cts_native_probe.py own-R mode (CTS placement RC, diagnostic); re-check on the routed smhr view when it closes",
+  "files": ["native_audit.json", "insertion.json", "probe.tcl"]
+}

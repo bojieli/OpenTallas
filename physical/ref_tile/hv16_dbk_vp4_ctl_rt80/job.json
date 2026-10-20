@@ -1,0 +1,159 @@
+{
+ "name": "hv16_dbk_vp4_ctl_rt80-rt80-fb3d6ff98",
+ "block": "ot_hgi_dma_back_static_vp4_controller",
+ "ref_tile": true,
+ "owner": "Claude:HBM-BANKLAT-DMA",
+ "purpose": "DMA STORE back controller leaf for the d4g die: RR_RT 80 (VM read round trip at the controller pins, d4g budget: faces bank pin flop + GEN2c lanes 33..58, worst-case landing E 72, GEN2d headroom; die pads the 17-bit rq lanes). Landing slot = landing counter, response mask rebuilt from 2 delayed bits/edge (issued, last partial column); minimum drain lag RR_RT+3 enforced. ONE master for all four quadrants (stk strap). Bench: tb_dma_vp4_banklat faces bank model + GEN2c NE lanes padded to 80 PASS through the real landing SRAMs; mutants old latency 7 / pad short / lag-1 FAIL. Pins/faces = HH-7 per-face controller (bank_read_addr/slots split S/W/N, claude/hh7-dbkcpl-1019).",
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/hbm-banklat-dma-1019",
+  "commit": "fb3d6ff98",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/lib",
+   "tools/hbm_v15_harden"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_dma_back_static_vp4_controller #(.RR_RT(80)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "banklat_rt80",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_banklat.sh {RUN}/bench/pass pass",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BANKLAT PASS RR_RT_die=80",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "banklat_default",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_banklat.sh {RUN}/bench/base base",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BANKLAT PASS RR_RT_die=7",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "old_latency_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_banklat.sh {RUN}/bench/mut_oldlat mut_oldlat",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BANKLAT FAIL mv_fault",
+    "fail_witness": "tools/hbm_v15_harden/evidence/dma_banklat_1019/mut_oldlat.log"
+   },
+   {
+    "name": "pad_short_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_banklat.sh {RUN}/bench/mut_padshort mut_padshort",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BANKLAT FAIL mv_fault",
+    "fail_witness": "tools/hbm_v15_harden/evidence/dma_banklat_1019/mut_padshort.log"
+   },
+   {
+    "name": "drain_lag_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_banklat.sh {RUN}/bench/mut_lag mut_lag",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BANKLAT FAIL mv_fault .* lag_ok 0",
+    "fail_witness": "tools/hbm_v15_harden/evidence/dma_banklat_1019/mut_lag.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hv16_dbk_vp4_ctl_rt80/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hv16_dbk_vp4_ctl_rt80/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hv16_dbk_vp4_ctl_rt80 --out {RUN}/record/views/ot_hgi_dma_back_static_vp4_controller  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hv16_dbk_vp4_ctl_rt80/hv16_dbk_vp4_ctl_rt80-rt80-fb3d6ff98"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": "main",
+ "structural_change": "HBM-BANKLAT-DMA 10-19: RR_RT parameter (default 7 = closed hv15_dbk_vp4_ctl, byte-identical path). At RR_RT 80: +2x81 delay flops + 7-bit landing counter; 8-deep expect_tag/expect_mask swept; lag check RR_RT+3. Same ports/pins.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+  "why_route": "d4g faces banks + GEN2c relay lanes: DMA VM read round trip 33..58 (worst E 72) vs the closed view fixed 7; new parameterised view RR_RT 80 (closed hv15_dbk_vp4_ctl stays for RR_RT 7)."
+ }
+}

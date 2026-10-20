@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_dv_slice2_stnrgc",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T18:30:00-07:00",
+ "gate_commit": "5b788830b",
+ "checklist": {
+  "lattice": "5 SRAM 32x64 macros in a regular 2-column grid, ~20 um channels",
+  "std_cell_band": "std cells fill all around, even green density, no red clusters",
+  "pin_spread": "616 pins spread over all 4 faces, no partial-face cluster",
+  "clock_entry": "W-face centre clock entry; spread 55.1/53.9 TT/FF, insertion 277.5/231.9",
+  "shape": "151.2 square, util 48%, GRT ovf 0, setup +91.9 hold +37.9"
+ },
+ "notes": "COORD 10-19: approved; region tile of the 8-region station (fault ring landed); parent Q.STA.SLICE.1 next",
+ "geometry_sha256": "92e4b45385db7b4c60f0636c567f990b148225726f6c4f0b683bfb0ca897aca3"
+}

@@ -1,0 +1,48 @@
+{
+ "op": "attn.idx.topk_local",
+ "t_issue": 10802,
+ "t_first_in": 4865,
+ "t_last_in": 23427,
+ "ingress_beats": 8356,
+ "window": [
+  24067,
+  24142
+ ],
+ "drain": {
+  "vi_n_edge": 24057,
+  "vo_edge": 24059,
+  "payload": 680283,
+  "n": 76,
+  "d": 1
+ },
+ "calendar_issue": 24042,
+ "words": 37,
+ "sel_per_quarter": [
+  24,
+  18,
+  17,
+  453
+ ],
+ "golden_ok": true,
+ "golden": "golden rule over the subtree keys [0, 262144) (dies [0, 1, 2, 3, 4, 5])",
+ "tail_budget": 640,
+ "shard": {
+  "k_dies": 6,
+  "die": 0,
+  "rank": 0,
+  "base": 0,
+  "keys": 43691,
+  "children": [
+   1,
+   3
+  ],
+  "child_arrival": [
+   19225,
+   20538
+  ],
+  "t_q": 4865,
+  "depth": 0
+ },
+ "span_edges": 19276,
+ "price_cycles": 4225.0
+}

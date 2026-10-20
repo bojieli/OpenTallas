@@ -1,0 +1,44 @@
+[
+  {
+    "run": "audit_r1",
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-1580430-1792442664",
+    "exit_status": 1,
+    "interpretation": "Missing ancillary qwen_rom_fulldie path; preserved default.stderr"
+  },
+  {
+    "run": "audit_r2",
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-1580785-1792442676",
+    "exit_status": 1,
+    "interpretation": "Inherited full-file staleness outside selected GRP modules; default/private exports preserved"
+  },
+  {
+    "run": "audit_r3",
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-1584159-1792442772",
+    "exit_status": 1,
+    "interpretation": "Expected fullfile retained old generated module comments; all private bodies already matched"
+  },
+  {
+    "run": "audit_r4",
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-1593668-1792442837",
+    "exit_status": 0,
+    "interpretation": "PASS prechange baseline, exact selected bodies, metadata"
+  },
+  {
+    "run": "audit_r5",
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-1601378-1792442901",
+    "exit_status": 0,
+    "interpretation": "PASS final docstring source layout"
+  },
+  {
+    "run": "audit_r6",
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-1602503-1792442959",
+    "exit_status": 0,
+    "interpretation": "PASS standalone private pair binding and all other source bindings identical"
+  }
+]

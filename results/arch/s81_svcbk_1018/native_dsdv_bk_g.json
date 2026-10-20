@@ -1,0 +1,26 @@
+{
+ "cell": "dsdv_bk_g",
+ "view": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g",
+ "lib_cell": "dsdv_bk_g",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 265.1,
+ "spread_ps": 74.6,
+ "outputs": 2613,
+ "inputs": 1097,
+ "launch_ps": 247.0,
+ "launch_pin": "ln3[513]",
+ "capture_ps": 84.7,
+ "capture_pin": "vi_s[79]",
+ "launch_over": 2,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 72.3,
+ "ff_launch_min_ps": 38.2,
+ "ff_hold_need_ps": 11.2,
+ "pass": false,
+ "fail_why": "launch 247.02341 > 220 (2 pins)"
+}

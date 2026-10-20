@@ -1,0 +1,14 @@
+# case amax_pass_s2 top tb_amax_mu MUT=0 plusargs '+seed=2 +heads=150' host regular-crane 2026-10-19T00:07:54-07:00
+# sources: rtl/qwen_dv/mu/qfd_dv_amax_mu.sv results/rtl/mu_qwen_1018/head/amax_today_ref.sv results/rtl/mu_qwen_1018/head/tb_amax_mu.sv
+895e775532cb4edc95b810d2f71c3b72a11b795c54fba5cf7a1810cd706f6b33  rtl/qwen_dv/mu/qfd_dv_amax_mu.sv
+d4ecd5db465376782cf9365e306e3a189af78585e1c2d2e62ceea84e195dfddf  results/rtl/mu_qwen_1018/head/amax_today_ref.sv
+2a8c5cda00431731cfcf7608d2c5c4a9bf0f7256a3466ff87cfd0c9aae50a5c1  results/rtl/mu_qwen_1018/head/tb_amax_mu.sv
+phase A: 60000 edges compared, 0 mismatches
+phase B: users 4 heads/user 150 chunks/head 8 rows/head 512 emits 600 mismatches 0
+phase B: cross-chunk-tie heads 468, chunk-boundary-tie heads 154, permuted-order heads 326, back-to-back other-op 2391, mu_fault 0, emit_empty 0
+TB_AMAX_MU PASS MUT=0 NEG=0 seed=2
+- results/rtl/mu_qwen_1018/head/tb_amax_mu.sv:188: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 208us; walltime 0.076 s; speed 2.742 ms/s
+- Verilator: cpu 0.076 s on 1 threads; allocated 7 MB
+# exit 0

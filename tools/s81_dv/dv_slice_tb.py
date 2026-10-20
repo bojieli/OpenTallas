@@ -4,7 +4,8 @@
 The bench (tb_<top>.sv) instantiates the slice top and:
   * clocks: every die region clock and every forwarded-root clock port (slice_ports kind `clock`) from ONE bench clock
     (functional RTL: the landings and relays are fixed-latency; skew is a timing question, as tb_dv_die_probe);
-  * reset: die rst_n low NRST cycles, released at a falling edge; cycle k = the k-th rising edge after release (k = 0
+  * reset: die rst_n asserted at 0.1 ns (a falling edge, so asynchronous clears reach flops whose gated clock is still
+    stopped -- the hop-0 lane gate, S81-LBGAP/G1), low NRST cycles, released at a falling edge; cycle k = the k-th rising edge after release (k = 0
     first);
   * replay inputs (+IN=<file>): lines `<cycle> <port index> <hex value>`; an integer cycle k is applied at the falling
     edge before rising edge k (sampled at k); a half cycle k.5 (forwarded half-cycle hop face) is applied right after
@@ -41,7 +42,7 @@ def main(argv=None):
          '    parameter integer NRST = 64;',
          '    integer NCYC = 2000;',
          '    reg ck = 1\'b0; always #0.4165 ck = ~ck;',
-         '    reg rst_n = 1\'b0;',
+         '    reg rst_n = 1\'b1;   // power-on: asserted at 0.1 ns (an edge: async clears of stopped gated clocks, LANDING-CONTRACT L3)',
          '    integer cyc = -1;      // rising edges since release (-1 = in reset)',
          f'    localparam integer MAXW = {W};']
     conn, flt = [], []
@@ -128,6 +129,7 @@ def main(argv=None):
           '        if ($value$plusargs("OUT=%s", fn)) begin fout = $fopen(fn, "r"); if (fout == 0) begin $display("TB_DV_SLICE FAIL no OUT %s", fn); $finish; end end',
           '        if ($value$plusargs("TRACE=%s", fn)) ftr = $fopen(fn, "w");',
           '        next_in(); next_out();',
+          '        #0.1 rst_n = 1\'b0;',
           '        repeat (NRST) @(posedge ck);',
           '        @(negedge ck);',
           '        $system("date +DV_SLICE_T0=%s.%N");',

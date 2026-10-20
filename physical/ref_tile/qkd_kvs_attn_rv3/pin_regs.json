@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kvs_attn_fl",
+ "enable": false,
+ "reason": "Every public pin is registered IN THE RTL (checklist 1): d2d RX record/event land straight in the codec landing flops (no logic, no enable), TX slot pins in ls_* flops, uf* fault pins one flop per pin, fin / i_ctl in ot_pin_land face flops (issue: 12 kept face copies); every output is a flop (tx launch, prg launch, root/face registers; OT_KEEP_PIN_REGS + pin_reg_split give each output pin its own launch flop). A kit recipe-3 pin register would add an unpriced edge to every crossing."
+}

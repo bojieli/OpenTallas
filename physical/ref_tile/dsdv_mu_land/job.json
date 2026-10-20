@@ -1,0 +1,127 @@
+{
+ "name": "dsdv_mu_land-dsdv_mu_land-COMMIT",
+ "block": "dsdv_mu_land",
+ "ref_tile": true,
+ "owner": "Claude:MU-S81",
+ "purpose": "MU-S81/KIT: multi-user second h landing leaf (NS 1, NB 80, 5 SRAM) to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/mu-s81-kit-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "tools/s81_dv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/common_flow/clock_split_km.tcl",
+   "results/rtl/mu_s81_kit_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lepmu_exact_s1",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_exact_s1 lepmu none 1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "pass_regex": "^BENCH_PASS lepmu MUT=none seed 1$",
+    "min_count_regex": "^PASS lep_mu: 6 users .*, (\\d+) \\+ \\d+ beats bit-exact"
+   },
+   {
+    "name": "lepmu_exact_s5",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_exact_s5 lepmu none 5",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "pass_regex": "^BENCH_PASS lepmu MUT=none seed 5$"
+   },
+   {
+    "name": "land_mut_ovr",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/land_mut_ovr lepmu LANDOVR 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "fail_regex": "^FAIL lep_mu: .* F1 0 F2",
+    "fail_witness": "results/rtl/mu_s81_kit_1019/witness_land_ovr.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsdv_mu_land/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsdv_mu_land/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_mu_land --out {RUN}/record/views/dsdv_mu_land --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsdv_mu_land/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsdv_mu_land/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsdv_mu_land/dsdv_mu_land-dsdv_mu_land-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "MU-S81/KIT 10-19: NEW leaf dsdv_mu_land (MU-S81/LINK 0e11a04bb, results/rtl/mu_s81_link_1018/README.md): the second h landing of an MU end-slice link endpoint (owner MU.DECIDE option A), NS 1 x NB 80 x 1,104 b in 5 x ot_sram_1r1w_128x256_m1_r2c2 (88,320 b), static land / replay, sticky faults, no ready / credit. Sits N of the lep (s81sl_lepmu N face = ml_wv / ml_wd / ml_rv / ml_rd / ml_f), so every port is on the S face: 2,226 pins on 475.2 um (4.68/um, lep width). Macros (W/E data pins) in two rows (3 + 2) >= 64.8 um from the pin face, >= 30 um channels; S band holds the 2.2k wd / rd / rc pin flops. Clock: 8 region roots by 2-D k-means (clock_split_km.tcl, as s81sl_xr1 / s81sl_lep)."
+}

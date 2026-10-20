@@ -37,18 +37,24 @@
    "wb_fill_epoch",
    "wb_reserve_sectors",
    "wb_reserve_base",
-   "wb_fill_start"
+   "wb_fill_start",
+   "bank_read_addr_n",
+   "bank_read_slot_n",
+   "bank_write_slot_n"
   ],
   "W": [
    "rq",
    "rr_valid_i",
    "bank_read_en",
-   "bank_read_slot",
-   "bank_write_slot",
-   "bank_output_en"
+   "bank_output_en",
+   "bank_read_addr_w",
+   "bank_read_slot_w",
+   "bank_write_slot_w"
   ],
   "S": [
-   "bank_read_addr"
+   "bank_read_addr_s",
+   "bank_read_slot_s",
+   "bank_write_slot_s"
   ]
  },
  "layer_cap": "M5",
@@ -63,10 +69,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:H-HARDEN",
-  "branch": "claude/hnl-harden-2210",
-  "tag": "st1",
-  "purpose": "DMA STORE back DESC_LAT4 controller leaf, ONE master for all four stacks (stk[1:0] strap pin replaces STK/QID; DEDUPE); pins re-planned for the hb_dbk parent; logic otherwise = closed native-PASS rm1 (TT +71.41/FF +21.67). Bench: vp4 lockstep vs cursor + actual 4-stack 32VM/128SRAM production with stk=0..3 + mutants (stride, rows, landing addr, strap ignored) + reset/fault + wb_ready.",
+  "owner": "Claude:HOURLY-HBM/HH-7",
+  "branch": "claude/hh7-dbkcpl-1019",
+  "tag": "h7",
+  "purpose": "HH-7 10-19: parent hv16_dbk_cpl-q1-65c2387ab NEEDS_RTL TT -12.3 (routed sign-off, 4 endpoints): u_control/bank_read_addr[166] -> L[5].read_addr[6] -12.30 (S-face pin, bank in the NW corner: ~457 um U-turn around the controller) and u_control/bank_write_slot[6] -> L[2].write_slot[6] -11.73 (one W-face 7-bit broadcast star to all 8 banks; the SE bank leg ~360 um). The controller faces were planned for the old NE-corner parent; in the 4x3 parent the controller sits in col1 rows 1-2. Fix: bank_read_addr and both slot broadcasts split per bank group onto the face toward it (S banks 0-2, W banks 3-4, N banks 5-7), point-to-point copies of the same registers (0 cycles, exact). Worst parent leg 457 -> ~343 um (maze estimate). Benches unchanged (lockstep vs cursor + 4-stack production + mutants + reset/fault + wb_ready).",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -107,7 +113,9 @@
     "peak_ram_gb": 8,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_regex": "write beat mismatch",
+    "fail_witness": "results/rtl/ref_tile/hv15_dbk_vp4_ctl/witness/mutant1.log"
    },
    {
     "name": "mutant2",
@@ -117,7 +125,9 @@
     "peak_ram_gb": 8,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_regex": "control mismatch",
+    "fail_witness": "results/rtl/ref_tile/hv15_dbk_vp4_ctl/witness/mutant2.log"
    },
    {
     "name": "landing_address_mutant",
@@ -128,7 +138,8 @@
     "needs": [
      "iverilog"
     ],
-    "fail_regex": "write beat mismatch"
+    "fail_regex": "write beat mismatch",
+    "fail_witness": "results/rtl/ref_tile/hv15_dbk_vp4_ctl/witness/landing_address_mutant.log"
    },
    {
     "name": "strap_mutant",
@@ -138,7 +149,9 @@
     "peak_ram_gb": 8,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_regex": "dispatcher/engine fault at\\d+",
+    "fail_witness": "results/rtl/ref_tile/hv15_dbk_vp4_ctl/witness/strap_mutant.log"
    },
    {
     "name": "native_fault_reset",
@@ -172,17 +185,19 @@
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "fail_regex": "not-ready fault edge",
+    "fail_witness": "results/rtl/ref_tile/hv15_dbk_vp4_ctl/witness/wbready_fault_mutant.log"
    }
   ],
   "merge_target": "main"
  },
  "params": {},
- "structural_change": "DEDUPE (owner 19:50 fewer tiles, H-DIE grants v7): ONE controller master for all four stacks; the STK/QID parameters (descriptor stack check a_mv[134:133], acceptance c_hend_d[36:35], request sector queue bits) become a 2-bit strap pin stk[1:0] captured by a pin flop stk_q (die-level declared constant per instance). Pin faces re-planned for the hb_dbk parent (controller in the NE corner): die control + clock on E, writeback on N, rq/rr_valid/bank strobes W, bank_read_addr S. 0 cycles.",
+ "structural_change": "HH-7 10-19: parent hv16_dbk_cpl-q1-65c2387ab NEEDS_RTL TT -12.3 (routed sign-off, 4 endpoints): u_control/bank_read_addr[166] -> L[5].read_addr[6] -12.30 (S-face pin, bank in the NW corner: ~457 um U-turn around the controller) and u_control/bank_write_slot[6] -> L[2].write_slot[6] -11.73 (one W-face 7-bit broadcast star to all 8 banks; the SE bank leg ~360 um). The controller faces were planned for the old NE-corner parent; in the 4x3 parent the controller sits in col1 rows 1-2. Fix: bank_read_addr and both slot broadcasts split per bank group onto the face toward it (S banks 0-2, W banks 3-4, N banks 5-7), point-to-point copies of the same registers (0 cycles, exact). Worst parent leg 457 -> ~343 um (maze estimate).",
  "reroute_reason": {
   "kind": "rtl_change",
   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-  "why_route": "stk strap pin replaces the STK/QID parameters (one master x4, DEDUPE); pin faces re-planned for the hb_dbk wires-only parent; closed rm1 view is STK=0-only."
+  "why_route": "controller output ports split per bank-group face (bank_read_addr_s/w/n, bank_read_slot_s/w/n, bank_write_slot_s/w/n) for the hv16_dbk_cpl parent; parent job hv16_dbk_cpl-q1-65c2387ab failed TT -12.3 on these two pin groups"
  },
  "children": [],
  "inter": [],

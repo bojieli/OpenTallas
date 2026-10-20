@@ -1,0 +1,12 @@
+WARNING: /srv/opentallas-scratch/claude/s81sf-sh/hnp/apbskip8/tb.sv:48: $readmemh(desc.mem): Not enough words in the file for the requested range [0:15].
+WARNING: /srv/opentallas-scratch/claude/s81sf-sh/hnp/apbskip8/tb.sv:49: $readmemh(pay.mem): Not enough words in the file for the requested range [0:63].
+WARNING: /srv/opentallas-scratch/claude/s81sf-sh/hnp/apbskip8/tb.sv:50: $readmemh(nb.mem): Not enough words in the file for the requested range [0:15].
+DONEW cnt=24
+DONEW cnt=26
+DONEW cnt=53
+DONEW cnt=54
+DONEW cnt=86
+DONEW cnt=87
+VIS errors=0
+HING descs=8 beats=45/45 sectors=87 reads=0 errors=0 oob=0 dones=6/6 tag_err=0 fault_words=0 fault=0 ck_cycles=1353 timeout=0 share=0 first_o=56 last_o=858 marks=0 mark_bad=0
+/srv/opentallas-scratch/claude/s81sf-sh/hnp/apbskip8/tb.sv:169: $finish called at 1126112 (1ps)

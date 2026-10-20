@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.flow_artifact_note.v1",
+ "lane": "OWN-RINGAG",
+ "time": "2026-10-18T21:55:00-07:00",
+ "job": "hcoll_ring_ag_ctln_1018-r5c-5fec11fdc",
+ "verdict": "NEEDS_RTL TT +150.79 / FF +18.22 / DRC 0; only failed check ttb_routed_at_TC (no cl/ttb_corner.txt)",
+ "classification": "FLOW ARTIFACT, not RTL/geometry",
+ "cause": "route.a1.sh runs under 'set -o pipefail'; the tt_overlay pick `ls -d A B 2>/dev/null | head -1 | grep . || echo tools/closure_loop/tt_overlay.py` exits non-zero when fleet path B (/home/ubuntu/closure-loop-local/ttbatch/26f14af32) is missing, so the echo fallback is appended and python3 gets a two-line path ('can't open file .../tt_overlay.py\\ntools/closure_loop/tt_overlay.py'). B was missing on the new host ot-epyc5 at route launch 19:58 (symlink created 21:18). The && chain then also skipped 'export OT_CTS_FIX_HOOKS=cg_pushdown/clk_net_protect/link_budget_hook', so the route did not run the intended flow and no TC mark was written.",
+ "evidence": {
+  "route_log": "ot-epyc5:/srv/opentallas-scratch/claude/closure-loop/hcoll_ring_ag_ctln_1018-r5c-5fec11fdc/cl/route.a1.log line 4",
+  "route_corner_check": "ROUTE_CORNER OK: place_gp/place_resized/cts/grt read TT liberties only",
+  "clock": "TT/FF insertion 217.7/183.3, pin-flop spread 41.7/40.1",
+  "host_fix": "ot-epyc5:/home/ubuntu/closure-loop-local/ttbatch/26f14af32 -> /srv/opentallas-scratch/claude/ttbatch/26f14af32 (21:18)"
+ },
+ "action": "re-route the APPROVED r5c geometry unchanged (kit, RTL, REVIEW.json identical to 5fec11fdc); daemon pick should be made pipefail-safe ((ls ...; true) | head -1)"
+}

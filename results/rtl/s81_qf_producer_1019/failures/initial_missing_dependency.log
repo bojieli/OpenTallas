@@ -1,0 +1,241 @@
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'rb_v'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:62:28: ... Location of port declaration
+   62 |     output reg             rb_v,               
+      |                            ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'rb_d'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:63:28: ... Location of port declaration
+   63 |     output reg  [31:0]     rb_d,
+      |                            ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'g_v'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:71:28: ... Location of port declaration
+   71 |     output reg             g_v,                
+      |                            ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'g_c'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:72:28: ... Location of port declaration
+   72 |     output reg  [1:0]      g_c,
+      |                            ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'g_d'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:73:28: ... Location of port declaration
+   73 |     output reg  [31:0]     g_d,
+      |                            ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'x_go'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:75:28: ... Location of port declaration
+   75 |     output reg             x_go,
+      |                            ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'x_mode'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:76:28: ... Location of port declaration
+   76 |     output reg             x_mode,
+      |                            ^~~~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'x_eps'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:77:28: ... Location of port declaration
+   77 |     output reg  [31:0]     x_eps,
+      |                            ^~~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'x_scale'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:78:28: ... Location of port declaration
+   78 |     output reg  [31:0]     x_scale,
+      |                            ^~~~~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'x_sv'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:79:28: ... Location of port declaration
+   79 |     output reg             x_sv,
+      |                            ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'x_si'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:80:28: ... Location of port declaration
+   80 |     output reg  [7:0]      x_si,
+      |                            ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'x_s'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:81:28: ... Location of port declaration
+   81 |     output reg  [31:0]     x_s,
+      |                            ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'is_v'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:85:28: ... Location of port declaration
+   85 |     output reg             is_v,
+      |                            ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'is_d'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:86:35: ... Location of port declaration
+   86 |     (* keep *) output reg [159:0] is_d,
+      |                                   ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'cfg_v'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:87:28: ... Location of port declaration
+   87 |     output reg             cfg_v,
+      |                            ^~~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:13:24: Instance has missing pin: 'cfg_d'
+   13 |  ot_s81sl_xr #(.HB(1)) u_xr(.clk(clk),.rst_n(rst),.sid(4'd6),
+      |                        ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv:88:35: ... Location of port declaration
+   88 |     (* keep *) output reg [159:0] cfg_d,
+      |                                   ^~~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 's_v'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:60:26: ... Location of port declaration
+   60 |     output reg           s_v,
+      |                          ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 's_d'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:61:26: ... Location of port declaration
+   61 |     output reg  [159:0]  s_d,
+      |                          ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'x_qv'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:64:26: ... Location of port declaration
+   64 |     output reg           x_qv,
+      |                          ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'x_qd'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:65:26: ... Location of port declaration
+   65 |     output reg  [255:0]  x_qd,
+      |                          ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'hw_v'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:71:26: ... Location of port declaration
+   71 |     output reg           hw_v, output reg [2:0] hw_j, output reg hw_hf, output reg [255:0] hw_d,
+      |                          ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'hw_j'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:71:49: ... Location of port declaration
+   71 |     output reg           hw_v, output reg [2:0] hw_j, output reg hw_hf, output reg [255:0] hw_d,
+      |                                                 ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'hw_hf'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:71:66: ... Location of port declaration
+   71 |     output reg           hw_v, output reg [2:0] hw_j, output reg hw_hf, output reg [255:0] hw_d,
+      |                                                                  ^~~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'hw_d'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:71:92: ... Location of port declaration
+   71 |     output reg           hw_v, output reg [2:0] hw_j, output reg hw_hf, output reg [255:0] hw_d,
+      |                                                                                            ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'hr_v'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:72:26: ... Location of port declaration
+   72 |     output reg           hr_v, output reg [2:0] hr_j, output reg hr_hf,
+      |                          ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'hr_j'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:72:49: ... Location of port declaration
+   72 |     output reg           hr_v, output reg [2:0] hr_j, output reg hr_hf,
+      |                                                 ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'hr_hf'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:72:66: ... Location of port declaration
+   72 |     output reg           hr_v, output reg [2:0] hr_j, output reg hr_hf,
+      |                                                                  ^~~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'n_go'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:74:26: ... Location of port declaration
+   74 |     output reg           n_go, output reg [127:0] n_pre,
+      |                          ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'n_pre'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:74:51: ... Location of port declaration
+   74 |     output reg           n_go, output reg [127:0] n_pre,
+      |                                                   ^~~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'm_v'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:75:26: ... Location of port declaration
+   75 |     output reg           m_v, output reg m_q, output reg m_b, output reg [7:0] m_i,
+      |                          ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'm_q'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:75:42: ... Location of port declaration
+   75 |     output reg           m_v, output reg m_q, output reg m_b, output reg [7:0] m_i,
+      |                                          ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'm_b'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:75:58: ... Location of port declaration
+   75 |     output reg           m_v, output reg m_q, output reg m_b, output reg [7:0] m_i,
+      |                                                          ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'm_i'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:75:80: ... Location of port declaration
+   75 |     output reg           m_v, output reg m_q, output reg m_b, output reg [7:0] m_i,
+      |                                                                                ^~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'wl_v'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:76:26: ... Location of port declaration
+   76 |     output reg           wl_v, output reg [2:0] wl_i, output reg [255:0] wl_d,
+      |                          ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'wl_i'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:76:49: ... Location of port declaration
+   76 |     output reg           wl_v, output reg [2:0] wl_i, output reg [255:0] wl_d,
+      |                                                 ^~~~
+%Warning-PINMISSING: tools/s81_dv/layer_prog/qf_producer/tb_qf_config.sv:25:14: Instance has missing pin: 'wl_d'
+   25 |  ot_s81sl_vp u_vp(.clk(clk),.rst_n(rst),.c_v(cvp),.c_d(cdp),.sw_v(swvp),
+      |              ^~~~
+                     rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:76:74: ... Location of port declaration
+   76 |     output reg           wl_v, output reg [2:0] wl_i, output reg [255:0] wl_d,
+      |                                                                          ^~~~
+%Error-MODMISSING: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:85:9: Cannot find file containing module: 'ot_hdc_fp32_add_f12_l6x'
+   85 |         ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(vm), .a(m0), .b(m1), .y(a1), .err(ea1), .valid_out(va1));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_hdc_fp32_add_f12_l6x
+                        ot_hdc_fp32_add_f12_l6x.v
+                        ot_hdc_fp32_add_f12_l6x.sv
+                        /srv/opentallas-scratch/claude/s81-qf-producer-source-1019/out_v1/obj/ot_hdc_fp32_add_f12_l6x
+                        /srv/opentallas-scratch/claude/s81-qf-producer-source-1019/out_v1/obj/ot_hdc_fp32_add_f12_l6x.v
+                        /srv/opentallas-scratch/claude/s81-qf-producer-source-1019/out_v1/obj/ot_hdc_fp32_add_f12_l6x.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/s81-qf-producer-source-1019'
+%Error-MODMISSING: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:93:9: Cannot find file containing module: 'ot_hdc_fp32_add_f12_l6x'
+   93 |         ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va1), .a(m2d), .b(a1), .y(a2), .err(ea2), .valid_out(va2));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:101:9: Cannot find file containing module: 'ot_hdc_fp32_add_f12_l6x'
+  101 |         ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va2), .a(m3d), .b(a2), .y(a3), .err(ea3), .valid_out(va3));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:109:9: Cannot find file containing module: 'ot_hdc_fp32_add_f12_l6x'
+  109 |         ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(va3), .a(m4d), .b(a3), .y(a4), .err(ea4), .valid_out(va4));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 4 error(s)

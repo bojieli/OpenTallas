@@ -1,0 +1,5 @@
+TX edge=24 op=14 id=0000
+FAIL POST_POISON_CSR_MUTATION edge=41
+[410000] %Fatal: bridge_tb.sv:23: Assertion failed in bridge_tb.fail: POST_POISON_CSR_MUTATION
+%Error: bridge_tb.sv:23: Verilog $stop
+Aborting...

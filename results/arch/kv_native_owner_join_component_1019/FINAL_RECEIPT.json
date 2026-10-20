@@ -1,0 +1,23 @@
+{
+  "verdict": "BOUNDED_PRIVATE_COMPONENT_TASK_COMPLETE",
+  "functional_RTL": "a8ddbb4c1",
+  "final_boundary_bench": "19717842b",
+  "enabled_passing_cases": 20,
+  "actual_DUT_causal_controls_caught": 16,
+  "default_off": "70 scheduler outputs,26 cases,2977 edges; core257 edges; unchanged codecs SHA exact",
+  "H512_added_declared_bits": 1830,
+  "H93_added_declared_bits": 1827,
+  "selected_newly_live_reused_packet_bits": 2,
+  "all8_unpruned_packet_bits": 16,
+  "whole_EVENT_functional_bits": 2912,
+  "no_live_fleet_job": true,
+  "failure_history_preserved": true,
+  "hold": [
+    "production health producer/H/calendar/native phase",
+    "CDC/root/main activation",
+    "physical SRAM/read-write/OLD/latency/collision",
+    "native routing/timing/PG/fanout/copies/whole-seam cost",
+    "full token SU/MU qualification"
+  ],
+  "parent_sole_merger": true
+}

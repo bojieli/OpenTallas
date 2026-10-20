@@ -55,6 +55,10 @@ QUALIFY = 1.10          # measured / price limit of the throughput gate
 UNIT_LIMIT = 5.0        # % end-to-end tok/s loss a single acceptance may cost
 DESIGN_LIMIT = 15.0     # % total of all acceptances in one design
 GRADES = ("committed_bench", "interim_log")
+# superseded: the row's unit belongs to a retired design revision (e.g. the S81 hub die replaced by the DV die).  The
+# row is KEPT for history with row["superseded"] = {from_status, by (superseding die rev), reason, date} and counts in
+# no total, no limit and no table line.
+STATUSES = ("proposed", "accepted", "superseded")
 
 DESIGNS = {
     "qwen_rom": dict(kind="rom", workloads={"ar": "qwen_rom"}),
@@ -301,7 +305,10 @@ def totals(led):
                     proposed_rows=sum(r["status"] == "proposed" for r in rows),
                     headroom_pct=round(DESIGN_LIMIT - acc, 3),
                     owner_exception_rows=sum(bool(r.get("owner_exception")) for r in rows if r["status"] == "accepted"),
-                    over_limit_by_owner_exception=acc > DESIGN_LIMIT)
+                    over_limit_by_owner_exception=acc > DESIGN_LIMIT,
+                    superseded_rows=sum(r["status"] == "superseded" for r in rows),
+                    superseded_pct_not_counted=round(sum(r["e2e_loss_pct"] for r in rows
+                                                         if r["status"] == "superseded"), 3))
     return t
 
 
@@ -321,6 +328,9 @@ def find(led, design, unit):
 def propose(led, row, supersede_accepted=""):
     """supersede_accepted: the decision (owner, date) that replaces an accepted row with a new measurement."""
     old = find(led, row["design"], row["unit"])
+    if old and old["status"] == "superseded":
+        raise LedgerError(f"{row['design']} {row['unit']} is superseded ({old['superseded']['by']}); a unit of the "
+                          f"current design needs its own row name")
     if old and old["status"] == "accepted" and supersede_accepted:
         row["supersedes"] = {k: old.get(k) for k in ("measured", "price", "unit_ratio", "e2e_loss_pct", "status",
                                                         "accepted_date", "acceptance_note")}
@@ -376,6 +386,24 @@ def accept(led, design, unit, root=ROOT, note="", owner_exception=""):
     return row
 
 
+def supersede(led, design, pattern, by, reason, date=None):
+    """Mark every proposed / accepted row of `design` whose group (or unit) matches regex `pattern` superseded: the
+    unit belongs to a retired design revision.  `by` names the superseding die revision, `reason` the decision.
+    Rows are never deleted; their numbers stay; they leave every total.  -> the rows marked."""
+    if not by or not reason:
+        raise LedgerError("supersede needs the superseding die revision (by) and a reason")
+    rx = re.compile(pattern)
+    hits = [r for r in led["rows"] if r["design"] == design and r["status"] in ("proposed", "accepted")
+            and (rx.search(r.get("group") or r["unit"]) or rx.search(r["unit"]))]
+    if not hits:
+        raise LedgerError(f"no proposed / accepted {design} row matches {pattern!r}")
+    for r in hits:
+        r["superseded"] = dict(from_status=r["status"], by=by, reason=reason,
+                               date=date or datetime.date.today().isoformat())
+        r["status"] = "superseded"
+    return hits
+
+
 SHARE_BASES = ("measured", "modelled")
 
 
@@ -414,8 +442,10 @@ def check(led, root=ROOT):
             bad.append(f"unknown design {r['design']}")
         if r.get("share_basis", "modelled") not in SHARE_BASES:   # absent = not stated yet
             bad.append(f"{r['design']} {r['unit']}: share basis {r.get('share_basis')!r}")
-        if r["status"] not in ("proposed", "accepted"):
+        if r["status"] not in STATUSES:
             bad.append(f"{r['design']} {r['unit']}: status {r['status']!r}")
+        if r["status"] == "superseded" and not all((r.get("superseded") or {}).get(k) for k in ("by", "reason", "from_status")):
+            bad.append(f"{r['design']} {r['unit']}: superseded without by / reason / from_status")
         if r.get("unit_ratio") is None and r.get("price"):
             bad.append(f"{r['design']} {r['unit']}: a priced row without a unit ratio")
         if abs(r["e2e_loss_pct"] - max(v["e2e_loss_pct"] for v in r["per_workload"].values())) > 1e-6:
@@ -427,6 +457,8 @@ def table(led):
     out = ["| design | unit | measured | price | unit ratio | e2e loss % | binding workload | within 5 % | grade | token share | status |",
            "|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in led["rows"]:
+        if r["status"] == "superseded":          # retired design revision: kept in the JSON, not rendered or counted
+            continue
         out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price'] or 'unpriced'} | "
                    f"{r['unit_ratio'] if r['unit_ratio'] is not None else '-'} | "
                    f"{r['e2e_loss_pct']:.3f} | {r['binding_workload']} | {'yes' if r['within_unit_limit'] else 'NO'} | "
@@ -439,7 +471,9 @@ def table(led):
     for d, t in totals(led).items():
         out.append(f"{d}: accepted {t['accepted_pct']} % + proposed {t['proposed_pct']} % = "
                    f"{t['accepted_plus_proposed_pct']} % of {DESIGN_LIMIT} %"
-                   + (" -- OVER THE LIMIT BY OWNER EXCEPTION" if t.get("over_limit_by_owner_exception") else ""))
+                   + (" -- OVER THE LIMIT BY OWNER EXCEPTION" if t.get("over_limit_by_owner_exception") else "")
+                   + (f" ({t['superseded_rows']} superseded rows, {t['superseded_pct_not_counted']} %, not counted)"
+                      if t.get("superseded_rows") else ""))
     return "\n".join(out)
 
 
@@ -476,6 +510,11 @@ def main(argv=None):
     p.add_argument("unit", help="the row's unit string, or its group when one row holds it")
     p.add_argument("--share-basis", choices=SHARE_BASES)
     p.add_argument("--append", default="", help="text appended to the row note (once)")
+    p = sub.add_parser("supersede", help="mark rows of a retired design revision superseded (never deleted)")
+    p.add_argument("design", choices=DESIGNS)
+    p.add_argument("pattern", help="regex on the row group (or unit)")
+    p.add_argument("--by", required=True, help="the superseding die revision")
+    p.add_argument("--reason", required=True)
     sub.add_parser("table")
     sub.add_parser("check")
     a = ap.parse_args(argv)
@@ -500,6 +539,11 @@ def main(argv=None):
             row = annotate(led, a.design, a.unit, a.share_basis, a.append)
             save_ledger(led, a.ledger)
             print(f"ANNOTATED {row['design']} {row['unit']}: share basis {row.get('share_basis', 'not stated')}")
+        elif a.cmd == "supersede":
+            rows = supersede(led, a.design, a.pattern, a.by, a.reason)
+            save_ledger(led, a.ledger)
+            print("\n".join(f"SUPERSEDED {r['design']} {r.get('group') or r['unit']} (was {r['superseded']['from_status']})"
+                            for r in rows))
         elif a.cmd == "table":
             print(table(led))
         else:

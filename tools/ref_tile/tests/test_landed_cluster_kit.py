@@ -50,14 +50,38 @@ endmodule
 '''
 
 
-def view(root):
+# TW-HBM-COLLP 10-19 (COLL writer ot_hgi_coll_static_vmwrite_roots_v6_physical): a child with a CHECK-ONLY clock pin
+# CLK2 (setup/hold arcs, no clk->Q: a landing-capture domain; OpenSTA's all_registers -clock_pins never lists it) and a
+# second LAUNCH clock pin CLK3 (clk->Q) on the same region root.  The landed body must reach CLK2 structurally (its net
+# is wired to the root) in the ORFS multi-mode load (read_sdc -mode ss: get_property <pin> clocks is empty there), and
+# a child with two register clock pins on ONE root is one owner (OT_MULTI_ROOT ownership), not a duplicate.
+ETM_MULTI = ETM.replace('    pin(Q)', '''    pin(CLK2) { direction : input; clock : true; capacitance : 1; }
+    pin(D2) { direction : input; capacitance : 1;
+      timing() { related_pin : "CLK2"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); } fall_constraint(scalar) { values("20"); } }
+      timing() { related_pin : "CLK2"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); } fall_constraint(scalar) { values("10"); } } }
+    pin(CLK3) { direction : input; clock : true; capacitance : 1; }
+    pin(Q3) { direction : output;
+      timing() { related_pin : "CLK3"; timing_type : rising_edge; cell_rise(scalar) { values("100"); } cell_fall(scalar) { values("100"); } } }
+    pin(Q)''')
+LEF_MULTI = LEF.replace('PIN Q ', '''PIN CLK2 DIRECTION INPUT ; USE CLOCK ; PORT LAYER M4 ; RECT 0.1 0.7 0.2 0.8 ; END END CLK2
+PIN D2 DIRECTION INPUT ; USE SIGNAL ; PORT LAYER M4 ; RECT 0.1 1.0 0.2 1.1 ; END END D2
+PIN CLK3 DIRECTION INPUT ; USE CLOCK ; PORT LAYER M4 ; RECT 0.1 1.3 0.2 1.4 ; END END CLK3
+PIN Q3 DIRECTION OUTPUT ; USE SIGNAL ; PORT LAYER M4 ; RECT 9.8 0.7 9.9 0.8 ; END END Q3
+PIN Q ''')
+
+
+def view(root, multi=False):
     v = root / 'hard'
     v.mkdir()
     for c in CE.CORNERS:
-        (v / f'hard_{c}.lib').write_text(ETM.replace('hard_tt', 'hard_' + c))
-    (v / 'hard.lef').write_text(LEF)
-    (v / 'insertion.json').write_text(json.dumps(dict(lib_clock_pin='CLK', clock='ck', **{
-        c: dict(boundary=dict(n=4, min=90, mean=100, max=110)) for c in CE.CORNERS})))
+        (v / f'hard_{c}.lib').write_text((ETM_MULTI if multi else ETM).replace('hard_tt', 'hard_' + c))
+    (v / 'hard.lef').write_text(LEF_MULTI if multi else LEF)
+    rec = dict(lib_clock_pin='CLK', clock='ck', **{c: dict(boundary=dict(n=4, min=90, mean=100, max=110)) for c in CE.CORNERS})
+    if multi:
+        rec['clock_measurements'] = dict(
+            CLK=dict(rec), CLK2=dict(rec, lib_clock_pin='CLK2', **{c: dict(boundary=dict(n=4, min=60, mean=70, max=80)) for c in CE.CORNERS}),
+            CLK3=dict(rec, lib_clock_pin='CLK3', **{c: dict(boundary=dict(n=4, min=80, mean=85, max=90)) for c in CE.CORNERS}))
+    (v / 'insertion.json').write_text(json.dumps(rec))
     return v
 
 
@@ -166,15 +190,21 @@ class LandedClusterOpenroad(unittest.TestCase):
     def run_flow(self, mutant=''):
         with tempfile.TemporaryDirectory() as d:
             w = Path(d)
-            view(w)
+            multi = mutant.startswith('multi')
+            view(w, multi)
             s = spec(w)
             s['children'][0]['view'] = 'hard'
             s['landed_record'] = 'top_lp_record.json'
             if mutant == 'two_children':
                 s['children'][0]['count'] = 2
-            rtl = RTL.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
+            rtl = RTL
+            if multi:   # multi_wrong_root: the check-only pin on the OTHER region root (must fail closed)
+                ck2 = 'ck_rb' if mutant == 'multi_wrong_root' else 'ck_ra'
+                rtl = RTL.replace('.D(d), .Q(hq)', f'.CLK2({ck2}), .CLK3(ck_ra), .D(d), .D2(d), .Q(hq), .Q3()')
+            rtl = rtl.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
             (w / 't.v').write_text(rtl)
-            entries = 'set ::ot_ce_require_wire 1\n' + CE.generate(s, w) + CE.landed_sdc(s, w)
+            mm = mutant == 'multi_mm_pre_cts'
+            entries = ('set ::ot_ref_pre_cts 1\n' if mm else 'set ::ot_ce_require_wire 1\n') + CE.generate(s, w) + CE.landed_sdc(s, w)
             if mutant == 'leaf_tile_body':
                 entries = entries.replace(CE.LANDED_BODY, CE.LEAF_BODY).replace('set ::ot_ce_landed_cluster 1\n', '')
             (w / 'clocks.tcl').write_text(CE.clocks(s, 833.333))
@@ -193,7 +223,7 @@ link_design top
 initialize_floorplan -die_area {0 0 100 100} -core_area {5.4 5.4 94.6 94.6} -site asap7sc7p5t
 source $P/openRoad/make_tracks.tcl
 place_pins -hor_layers M4 -ver_layers M5
-source /w/clocks.tcl
+READ_CLOCKS
 source $P/setRC.tcl
 set u [[ord::get_db_block] getDbUnitsPerMicron]
 set k 0
@@ -210,11 +240,19 @@ set ::ot_ce_counts [dict create hard 1]
 source /src/physical/common_flow/clock_entries.tcl
 clock_tree_synthesis -sink_clustering_enable -buf_list BUFx4_ASAP7_75t_R -root_buf BUFx4_ASAP7_75t_R
 estimate_parasitics -placement
-source /w/entries.tcl
+READ_ENTRIES
 puts "LANDED_RESULT PASS"
 '''.replace('FLAG', flag)
+            # multi_mm_pre_cts = the synthesis/floorplan SDC load of the ORFS multi-mode flow (tools/orfs_hold_mm.tcl
+            # ot_mm_read_sdc: read_sdc -mode ss, ideal clocks, no CTS), where the AD-HBM-COLLP lpk4 gates failed 47 of 54
+            if mm:
+                flow = flow.replace('READ_CLOCKS\n', '').replace(flow[flow.index('set ::ot_ce_cts_roots'):flow.index('READ_ENTRIES')],
+                                                                 'set ::ot_ce_cts_roots {ck_ra ck_rb}\n')
+                flow = flow.replace('READ_ENTRIES', 'read_sdc -mode ss /w/clocks.tcl\nread_sdc -mode ss /w/entries.tcl')
+            flow = flow.replace('READ_CLOCKS', 'source /w/clocks.tcl').replace('READ_ENTRIES', 'source /w/entries.tcl')
             (w / 'run.tcl').write_text(flow)
-            proc = subprocess.run(['docker', 'run', '--rm', '-v', f'{w}:/w', '-v', f'{ROOT}:/src:ro',
+            env = ['-e', 'OT_HOLD_MM=1'] if mm else []   # as the ORFS config of a multi-mode gate exports it
+            proc = subprocess.run(['docker', 'run', '--rm', *env, '-v', f'{w}:/w', '-v', f'{ROOT}:/src:ro',
                                    IMAGE, OR, '-no_init', '-exit', '/w/run.tcl'], capture_output=True, text=True, timeout=120)
             return proc.returncode, proc.stdout + proc.stderr
 
@@ -231,9 +269,28 @@ puts "LANDED_RESULT PASS"
         self.assertIn('OT_LP_LAND_SDC 1 of 1 landings constrained', out)
         self.assertIn('LANDED_RESULT PASS', out)
 
+    def test_check_only_and_multi_clock_child(self):
+        rc, out = self.run_flow('multi')
+        self.assertEqual(rc, 0, out[-6500:])
+        self.assertIn('OT_LANDED CHECK_CLOCK_PIN ck_ra h/CLK2', out)
+        self.assertRegex(out, r'OT_LANDED CHILD_SINK tt ck_ra h/CLK2 wire=[\d.eE+-]+ R=70')
+        self.assertRegex(out, r'OT_LANDED CHILD_SINK tt ck_ra h/CLK3 wire=[\d.eE+-]+ R=85')
+        self.assertRegex(out, r'OT_LANDED CHILD_SINK tt ck_ra h/CLK wire=[\d.eE+-]+ R=100')
+        self.assertIn('OT_MULTI_ROOT OWNERSHIP PASS roots=2', out)
+        self.assertIn('LANDED_RESULT PASS', out)
+
+    def test_check_only_pin_reached_in_multi_mode_pre_cts(self):
+        rc, out = self.run_flow('multi_mm_pre_cts')
+        self.assertEqual(rc, 0, out[-6500:])
+        self.assertIn('OT_LANDED CHECK_CLOCK_PIN ck_ra h/CLK2', out)
+        self.assertRegex(out, r'OT_LANDED CHILD_SINK tt ck_ra h/CLK2 wire=[\d.eE+-]+ R=70')
+        self.assertIn('OT_MULTI_ROOT OWNERSHIP PASS roots=2', out)
+        self.assertIn('LANDED_RESULT PASS', out)
+
     def test_mutants_fail_closed(self):
         for mutant, why in (('two_children', 'OT_ENTRIES: bound child count mismatch|OT_LANDED'),
-                            ('leaf_tile_body', 'OT_HYBRID')):
+                            ('leaf_tile_body', 'OT_HYBRID'),
+                            ('multi_wrong_root', 'OT_LANDED')):
             with self.subTest(mutant=mutant):
                 rc, out = self.run_flow(mutant)
                 self.assertNotEqual(rc, 0, out[-4000:])

@@ -1,0 +1,63 @@
+{
+  "canonical_host_sha256": "7c55c39ba8493d3d0840d8cd149909c1babfdaa5e1c13ac61032a78528bd75e9",
+  "selected_issuer": "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv",
+  "selected_issuer_sha256": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f",
+  "contract": "nondecreasing issue order, enforced at seal with fault code3",
+  "decoded_original_rows": [
+    {
+      "row": 0,
+      "issue": 193,
+      "done": 198,
+      "engine": 2,
+      "arg": 128
+    },
+    {
+      "row": 1,
+      "issue": 9377,
+      "done": 9382,
+      "engine": 2,
+      "arg": 129
+    },
+    {
+      "row": 2,
+      "issue": 11235,
+      "done": 11240,
+      "engine": 2,
+      "arg": 2
+    },
+    {
+      "row": 3,
+      "issue": 11224,
+      "done": 0,
+      "engine": 14,
+      "arg": 0
+    },
+    {
+      "row": 4,
+      "issue": 11244,
+      "done": 0,
+      "engine": 15,
+      "arg": 0
+    }
+  ],
+  "invalid_transitions": [
+    {
+      "previous": {
+        "row": 2,
+        "issue": 11235,
+        "done": 11240,
+        "engine": 2,
+        "arg": 2
+      },
+      "next": {
+        "row": 3,
+        "issue": 11224,
+        "done": 0,
+        "engine": 14,
+        "arg": 0
+      }
+    }
+  ],
+  "verdict": "CANONICAL_F03_IMAGE_INVALID_FOR_CURRENT_MAIN_WALKER",
+  "proposed_correction": "Stable-sort exact76bit row multiset by issue; change no issue/done/engine/arg bits or non-PW hostwords/gold/stimulus/deadline. Actual originalcode3 witness required before corrected replay."
+}

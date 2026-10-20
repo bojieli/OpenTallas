@@ -1,0 +1,32 @@
+{
+  "verdict": "STATION_SUPPORT_PASS",
+  "native_capture_binding": "PENDING",
+  "scope": "41-node station support only; no full native/token/timing/physical claim",
+  "add_inputs": 2562,
+  "add_outputs": 2562,
+  "source_pin_words": 2560,
+  "actual_held_words": 2560,
+  "pin_held_mismatches": [],
+  "duplicates": [],
+  "roots": [
+    {
+      "episode": "0",
+      "age": "591",
+      "counter_age": "592",
+      "elapsed_ps": "657192",
+      "data": "40a2a1ed",
+      "captures": "1280",
+      "adds": "1281"
+    },
+    {
+      "episode": "1",
+      "age": "591",
+      "counter_age": "592",
+      "elapsed_ps": "657192",
+      "data": "3fa2a1ed",
+      "captures": "1280",
+      "adds": "1281"
+    }
+  ],
+  "failures": []
+}

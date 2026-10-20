@@ -1,0 +1,118 @@
+{
+ "schema": "opentallas.qwen_kv.astk_expand_check.v1",
+ "rc": 0,
+ "frame_um": [
+  328.32,
+  9205.92
+ ],
+ "face_land": [
+  "astk_rly_296"
+ ],
+ "frames": {
+  "qkd_astk": {
+   "instances": 1,
+   "leaves": 282,
+   "tie_pin_bits": 7054,
+   "checks": {
+    "undriven_inputs": 0,
+    "multiple_drivers": 0,
+    "unbound_parent_inputs": 0,
+    "overlaps": 0,
+    "outside_slot": 0
+   },
+   "open_parent_inputs": {},
+   "rtl_ports_without_die_port": []
+  },
+  "qkd_astk_n": {
+   "instances": 1,
+   "leaves": 282,
+   "tie_pin_bits": 7054,
+   "checks": {
+    "undriven_inputs": 0,
+    "multiple_drivers": 0,
+    "unbound_parent_inputs": 0,
+    "overlaps": 0,
+    "outside_slot": 0
+   },
+   "open_parent_inputs": {},
+   "rtl_ports_without_die_port": []
+  }
+ },
+ "leaves": {
+  "qkd_astk_ctl_s": {
+   "view": "physical/ref_tile/qkd_astk_ctl_s/views/qkd_astk_ctl_s",
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"
+  },
+  "qkd_astk_ep_s": {
+   "view": "physical/ref_tile/qkd_astk_ep_s/views/qkd_astk_ep_s",
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"
+  },
+  "qkd_astk_er_owner_st": {
+   "view": "physical/ref_tile/qkd_astk_er_owner_st/views/qkd_astk_er_owner_st",
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv"
+  },
+  "qkd_astk_ex_s": {
+   "view": "physical/ref_tile/qkd_astk_ex_s/views/qkd_astk_ex_s",
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"
+  },
+  "qkd_astk_fault_join": {
+   "view": "physical/ref_tile/qkd_astk_fault_join/views/qkd_astk_fault_join",
+   "rtl": "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv"
+  },
+  "qkd_astk_rly_296_fl": {
+   "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl",
+   "rtl": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv"
+  },
+  "qkd_astk_zn": {
+   "view": "physical/ref_tile/qkd_astk_zn/views/qkd_astk_zn",
+   "rtl": "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv"
+  }
+ },
+ "fl_instances": 456,
+ "plain_rly_instances": 0,
+ "view_readiness": {
+  "qkd_astk_ctl_s": {
+   "ready": true,
+   "reasons": []
+  },
+  "qkd_astk_ep_s": {
+   "ready": true,
+   "reasons": []
+  },
+  "qkd_astk_ex_s": {
+   "ready": true,
+   "reasons": []
+  },
+  "qkd_astk_zn": {
+   "ready": true,
+   "reasons": []
+  },
+  "qkd_astk_rly_296": {
+   "ready": true,
+   "reasons": []
+  },
+  "qkd_astk_fault_join": {
+   "ready": true,
+   "reasons": []
+  },
+  "qkd_astk_er_owner_st": {
+   "ready": true,
+   "reasons": []
+  }
+ },
+ "host_run": "ot-epyc5:/srv/opentallas-scratch/claude/qwen-kvsys/kvrviews-astk-8373a6734 (commit 8373a6734, kvs14r env, OT_KV_FACE_LAND=astk_rly_296)",
+ "tie_pin_bits_classified": {
+  "per_frame": 7054,
+  "functional": 0,
+  "classes": {
+   "qkd_astk_delay chunk width padding (stage-0 a bits above W, {(C*296-W){1b0}}; their last-stage outputs are dropped by q=line[D][W-1:0])": 6612,
+   "chain head rsp[0]=0 into owner 0 prev_data/prev_addr/prev_v/prev_fault": 305,
+   "qkd_astk_ep_s eo strap (9e + RL(e + e/2)), 8 x 8 b": 64,
+   "qkd_astk_ep_s sq strap {st, e}, 8 x 5 b": 40,
+   "qkd_astk_er_owner_st owner_id strap, 8 x 3 b": 24,
+   "qkd_astk_zn zc strap {z, st}, 4 x 2 b": 8,
+   "qkd_astk_zn chain head fi of zn 0": 1
+  }
+ },
+ "note": "frame-local harness (die case blocked by relay placement pvc_WS_3_7, KVR-PLACE): kv_expand --astk-static on the 328.32 x 9205.92 envelope; all relay children bound to qkd_astk_rly_296_fl (456 / 2 frames), 0 plain rly_296"
+}

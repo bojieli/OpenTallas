@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_kvs_attn_fl",
+ "enable": false,
+ "reason": "the RTL lands it: the safe native source already carries the original 2-stage reset landing (rst_n -> one plain landing flop, 1 sink) plus the 3-edge ot_rst_relay; a second landing (R1, 6042 FF) was rejected. Reset fan-out <=24 per driver in the source (no copy splitting needed)."
+}

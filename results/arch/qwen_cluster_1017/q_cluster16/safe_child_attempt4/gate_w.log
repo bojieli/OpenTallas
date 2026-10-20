@@ -1,0 +1,21 @@
+GATE INFO pin_regs: pin registers opted out: ring capture flops and registered read output are the landed bank endpoint; adding input stages changes the priced ring window
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_c_land_w258_narrow_20261019-081733.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_c_land_w258_narrow_20261019-081733.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_c_land_w258_narrow-20261019-081733
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 31 s (gate total 148 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1292, 'pin_rectangles': 1292, 'pin_track_checked': 1292, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 82cfb982e7fde5041a0b9a37e5bfa426f9ccadbb1d9adbbd633a350653fb54a3
+GATE WARN util: synthesized std area 638 um2 + macros 0 in core 7577: util 8%  -> FIX: set "std_area_um2": 638 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qfd_c_land_w258_narrow cells 4,692 flops 1,088 depth 120.0 ps util 0.084 reach 96.5 um (0.1 s)
+GATE WARN textbook.util_channel: utilisation 8.4% outside 45%-65% (std 636 + macro 0 um2 in 7577 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 152.4..208.5 ps (spread 56.1), boundary mean 180.3; tt insertion all 114.4..170.1 ps (spread 55.7), boundary mean 143.2; ff insertion all 92.4..146.9 ps (spread 54.5), boundary mean 121.3; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_c_land_w258_narrow/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->reg       300 paths, worst slack 308.0 ps (e.g. u.g_slice[3].u/b3[18]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS 3.0803681827507035e-10 hold WNS 4.59506599437276e-11
+GATE INFO clock_rule: root port:ck: 1,088 sinks on the largest root; measured TT insertion 170.1 ps, FF insertion 146.9 ps, TT pin-flop spread 50.4 ps, FF pin-flop spread 49.3 ps (spread <= 80 ps)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/safe-qw-cb16-1019/physical/ref_tile/qfd_c_land_w258_narrow/gate_layout/floorplan.png; density /home/ubuntu/wt/safe-qw-cb16-1019/physical/ref_tile/qfd_c_land_w258_narrow/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 19.98% used; GRT 29 s
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/safe-qw-cb16-1019/physical/ref_tile/qfd_c_land_w258_narrow/source_binding_history/e47d9a9a427fdc2a07638142330c33b1c0ba631e7e0a944e5099f345e4f7fd4e.json
+GATE: qfd_c_land_w258_narrow/gate_result.json written (exact staged source binding; commit it with the kit)

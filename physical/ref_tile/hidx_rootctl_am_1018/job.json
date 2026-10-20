@@ -1,0 +1,219 @@
+{
+ "name": "hidx_rootctl_am_1018-r4-COMMIT",
+ "block": "ot_hbm_idx_rootctl_static_am",
+ "ref_tile": true,
+ "owner": "Claude:HBM-IDXAM2",
+ "purpose": "r3 (lane HBM-IDXAM2 10-18): r2 hidx_rootctl_am_1018-r2-0385e1977 EARLY_FAIL_SETUP -577.7 ps / 3,621 endpoints at CTS. Classified (TT STA on the r2 4_cts.odb with link_budget_consistent.sdc): 2,194 port-to-port combinational endpoints (index_rq/argmax_rq -> vm_rq, vm_rr -> index_rr, sf/lf -> fault, selected_v -> ingest_v) at -570..-815 = STRUCTURAL (in-max 518.7 + out-max 518.7 of 773 ps); wire reach / wide select into and out of TOPK and the share (vm_rr -> merge -240 x510, vm_rr -> TOPK capture -85/-246, cq/busy -231/-245 from engine flops ~235 um from the face, topk_go -> 200 descriptor enables -139). Not logic depth, not one high-fanout net. Fix = registered boundary: share ot_hbm_idx_vm_share_static_amr (request pin flops, vm_rr pin flops in the leaves, owner tap n+8, ARGMAX 4-edge chain -> 2-stage OR tree so ARGMAX port-to-port edges are UNCHANGED), TOPK command/result pin flops + engine RT_EXTRA 1 / ACK 13, ingest_v predicted from the root's own sel_op stream (SEL_LAT 4, selected_v checked -> fault), fault/share_fault pin flops. Latency: INDEX rq +1 / rr +1 (SW operand reader n+12), ARGMAX +0, TOPK go +1 / row +1 / writes +1 / done +1, fault +1, share_fault +1. Base r2: d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbm-idxam2-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+   "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+   "rtl/gpu/ot_gpu_fadd.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_rootctl_static_am u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_bench",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/bench",
+    "expect": "pass",
+    "pass_regex": "^IDX_ROOTCTL_AM_BENCH PASS$",
+    "pass_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_bench.log",
+    "min_count_regex": "^EQ AMMUT=0 cycles \\d+ checked \\d+ argmax_resp (\\d+) ",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut1 eq 1",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=1 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut1.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut2",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut2 eq 2",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=2 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut2.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut3",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut3 eq 3",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=3 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut3.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut4 eq 4",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=4 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut6",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut6 eq 6",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=6 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut6.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_eq_mut7",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_eq_mut7 eq 7",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=7 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_eq_mut7.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_path_ties1_mut4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_path_ties1_mut4 path 1 4",
+    "expect": "fail",
+    "fail_regex": "^PATH TIES=1 AMMUT=4 .* errors [1-9][0-9]* IDX_AM_PATH FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_path_ties1_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_topk_mut5",
+    "cmd": "bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/idx_rootctl_am_topk_mut5 topk 5",
+    "expect": "fail",
+    "fail_regex": "^TOPK AMMUT=5 .* errors [1-9][0-9]* IDX_AM_TOPK FAIL",
+    "fail_witness": "results/rtl/hbm_idxam2_1018/idx_rootctl_am_topk_mut5.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_rootctl_am_1018/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_rootctl_am_1018/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_rootctl_am_1018 --out {RUN}/record/views/ot_hbm_idx_rootctl_static_am --macro-view physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_rootctl_am_1018/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_rootctl_am_1018/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_rootctl_am_1018/hidx_rootctl_am_1018-r4-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "r3 (lane HBM-IDXAM2 10-18): r2 hidx_rootctl_am_1018-r2-0385e1977 EARLY_FAIL_SETUP -577.7 ps / 3,621 endpoints at CTS. Classified (TT STA on the r2 4_cts.odb with link_budget_consistent.sdc): 2,194 port-to-port combinational endpoints (index_rq/argmax_rq -> vm_rq, vm_rr -> index_rr, sf/lf -> fault, selected_v -> ingest_v) at -570..-815 = STRUCTURAL (in-max 518.7 + out-max 518.7 of 773 ps); wire reach / wide select into and out of TOPK and the share (vm_rr -> merge -240 x510, vm_rr -> TOPK capture -85/-246, cq/busy -231/-245 from engine flops ~235 um from the face, topk_go -> 200 descriptor enables -139). Not logic depth, not one high-fanout net. Fix = registered boundary: share ot_hbm_idx_vm_share_static_amr (request pin flops, vm_rr pin flops in the leaves, owner tap n+8, ARGMAX 4-edge chain -> 2-stage OR tree so ARGMAX port-to-port edges are UNCHANGED), TOPK command/result pin flops + engine RT_EXTRA 1 / ACK 13, ingest_v predicted from the root's own sel_op stream (SEL_LAT 4, selected_v checked -> fault), fault/share_fault pin flops. Latency: INDEX rq +1 / rr +1 (SW operand reader n+12), ARGMAX +0, TOPK go +1 / row +1 / writes +1 / done +1, fault +1, share_fault +1. Base r2: d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "r3 c6073c492 pin-registered boundary (vm_share_static_amr, TOPK/fault pin flops) after r2 hidx_rootctl_am_1018-r2-0385e1977 EARLY_FAIL_SETUP -577.7 ps (2,194 port-to-port comb faces); r3 gate WARN setup +80.8 / GRT 0; io_hold_margin 0.025 (KITS rule 10-18)"
+ }
+}

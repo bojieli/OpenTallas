@@ -2,7 +2,11 @@
 // Calendar tile boundary proof only. Compiler literals are expected controls;
 // no arithmetic/result stimulus exists inside this DUT.
 module tb_qkd_cal_pin;
+ `ifdef CALPIN_MU
+ `include "d2d_cal_image_mu.svh"
+ `else
  `include "d2d_cal_image.svh"
+ `endif
  parameter integer MUT=0;
  reg ck=0,rst_n=0,reload=0,epoch_go=0,halt=0;always #5 ck=~ck;
  wire tw,rw,cs,sg,ready,running,ad,ts,fault;wire[5:0] addr,layer;wire[31:0] data;

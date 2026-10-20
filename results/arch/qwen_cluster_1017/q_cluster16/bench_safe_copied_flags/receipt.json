@@ -1,0 +1,20 @@
+{
+ "host": "ot-epyc4",
+ "verilator": "5.050",
+ "shape": "W258;4flag copies per24bit slice;44flag pins",
+ "pass_regex": [
+  "SAFE_LAND_EXIT 0",
+  "BANK_RELAY_EXIT 0"
+ ],
+ "normal_data_latency_edges": 2,
+ "reset_epoch_added_edges": 1,
+ "source_sha256": {
+  "rtl/physical/qcluster/qfd_c_land_safe.sv": "a4182dc989947779317cbef092547de6a4152280dc044989c593dfa131629ea5",
+  "rtl/test/tb_qfd_c_land_safe.sv": "49444b6464845e717062eca13c82e39e3e4dfecc3f421aed155cd8139a2ec09d",
+  "rtl/test/tb_qfd_c_bank_relay.sv": "11c13fd3c17af9c0b6e84063b169acf2ee861f48970472248ac027b4fe8eb267"
+ },
+ "mutant_regex": [
+  "SAFE_LAND_FAIL MUT1",
+  "BANK_RELAY_FAIL HOPS4"
+ ]
+}

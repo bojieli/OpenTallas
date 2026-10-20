@@ -1,0 +1,13 @@
+# XDIE functional admission and SU/MU payload contract — 2026-10-20
+
+Original out_u5 SU is rejected: raw verdict FAIL, 12,016/12,096 payload mismatches, although all LAND timing rows pass the guard-2 window and invariance. The raw and old checker output timestamps agree (2026-10-19 23:52:59 PT); this is independent checks disagreeing on eligibility, not stale run-age evidence.
+
+The generator reserves bits 1077:1045 only with mu_users>0. SU has users=0, but executes on MU=1 endpoints whose RX clears the tag field. The random SU payload fills those spare bits; 80 short argmax beats avoid that region, explaining 12096−80=12016 mismatches. The opt-in `--reserve-mu-tag` keeps the SU schedule and every other payload bit unchanged, while describing the actual endpoint format. Legacy generation stays byte-identical unless opted in. This is a test input contract fix, with no RTL change or masked DUT comparison.
+
+`mu_check.py` now requires one functional PASS, complete unique LAND coverage, no unknown instance, zero mismatch/late/extra/fault counters, all lanes live, the deadline window, and per-user invariance. `record.py` uses the same admission before writing metrics or composition. Timing-only passes remain visible in the diagnostic JSON but cannot qualify a run. Shell gates aggregate build, simulation, and checker status; only a successful aggregate creates DONE, with an explicit FAILED marker otherwise. Mutant runs qualify only as expected rejection with the declared witness regex.
+
+Builds record source SHA256 inventory. Runs snapshot golden metadata and input/build/executable hashes before simulation. Existing live out_u5 jobs and source are unmodified.
+
+Validation: 15 tests PASS on fleet (tests_final.log), including failed payload with timing PASS, false PASS label with nonzero mismatches, missing verdict, missing/duplicate/unknown LAND rows, early-landing mutant, record refusal, shell build/run/check failure propagation, and exact reserved-bit-only generator change. `su.strict.json` rejects the archived real failing run while retaining timing diagnostics. Original source, input, raw log, checker JSON and build identities are in original.sha256 and original_out_u5/. The original stimulus was removed by the old gate; its remaining golden-directory hash is observed evidence, not a historical per-run input receipt.
+
+Corrective SU-only replay (unit oth-ubuntu-1480915-1792482217) is pending at ot-epyc5:/srv/opentallas-scratch/claude/codex-token-xdie-functional-1020/out_repair. It uses the exact original out_u5/bU executable by read-only symlink and writes a new input receipt. No new decode-rate claim is made until that run qualifies; the four original live MU cases remain independent pending work.

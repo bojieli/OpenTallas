@@ -1,0 +1,271 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv uniform_model_corners/rounding_miter.sv; prep -top rounding_miter; flatten; sat -prove ok 1 -show x -show golden -show vs -show cap -verify' --
+
+1. Executing Verilog-2005 frontend: uniform_model_corners/rounding_miter.sv
+Parsing SystemVerilog input from `uniform_model_corners/rounding_miter.sv' to AST representation.
+Generating RTLIL representation for module `\rounding_miter'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \rounding_miter
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \rounding_miter
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 8 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:17$24'.
+Creating decoders for process `\rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:16$17'.
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\rounding_miter.\fmt_d$func$uniform_model_corners/rounding_miter.sv:17$2.$result' from process `\rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:17$24'.
+No latch inferred for signal `\rounding_miter.\bf16$func$uniform_model_corners/rounding_miter.sv:16$1.$result' from process `\rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:16$17'.
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:17$24'.
+Removing empty process `rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:16$17'.
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rounding_miter.
+<suppressed ~6 debug messages>
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rounding_miter.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rounding_miter..
+Removed 0 unused cells and 21 unused wires.
+<suppressed ~1 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module rounding_miter...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rounding_miter.
+<suppressed ~1 debug messages>
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\rounding_miter'.
+Computing hashes of 11 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+Computing hashes of 10 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+Computing hashes of 9 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+Computing hashes of 8 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+<suppressed ~9 debug messages>
+Removed a total of 3 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \rounding_miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \rounding_miter.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\rounding_miter'.
+Computing hashes of 8 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rounding_miter..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rounding_miter.
+<suppressed ~1 debug messages>
+
+2.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \rounding_miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+2.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \rounding_miter.
+Performed a total of 0 changes.
+
+2.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\rounding_miter'.
+Computing hashes of 7 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+Removed a total of 0 cells.
+
+2.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rounding_miter..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+2.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rounding_miter.
+
+2.7.14. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.15. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \rounding_miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+2.7.16. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \rounding_miter.
+Performed a total of 0 changes.
+
+2.7.17. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\rounding_miter'.
+Computing hashes of 7 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+Removed a total of 0 cells.
+
+2.7.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rounding_miter..
+
+2.7.19. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rounding_miter.
+
+2.7.20. Finished fast OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 17 bits (of 32) from port B of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:14$5 ($add).
+Removed top 31 bits (of 32) from port B of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:14$6 ($add).
+Removed top 1 bits (of 33) from port A of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$22 ($add).
+Removed top 18 bits (of 33) from port B of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$22 ($add).
+Removed top 32 bits (of 33) from port B of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$23 ($add).
+Removed top 1 bits (of 33) from port Y of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$23 ($add).
+Removed top 1 bits (of 33) from port A of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$23 ($add).
+Removed top 1 bits (of 33) from port Y of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$22 ($add).
+Removed top 1 bits (of 33) from wire rounding_miter.$0\bf16$func$uniform_model_corners/rounding_miter.sv:16$3.s[32:0]$21.
+Removed top 1 bits (of 33) from wire rounding_miter.$add$uniform_model_corners/rounding_miter.sv:10$29_Y.
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rounding_miter..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rounding_miter.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\rounding_miter'.
+Computing hashes of 7 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+Computing hashes of 6 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+Computing hashes of 5 cells of `\rounding_miter'.
+Finding duplicate cells in `\rounding_miter'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rounding_miter..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Executing SORT pass.
+
+2.13. Printing statistics.
+
+=== rounding_miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       17 wires
+     2374 wire bits
+       16 public wires
+     2342 public wire bits
+        6 ports
+      548 port bits
+        5 cells
+        2   $add
+        3   $eq
+
+2.14. Executing CHECK pass (checking for obvious problems).
+Checking module rounding_miter...
+Found and reported 0 problems.
+
+3. Executing FLATTEN pass (flatten design).
+
+4. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 5 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+Import show expression: \x
+Import show expression: \golden
+Import show expression: \vs
+Import show expression: \cap
+
+Solving problem with 2503 variables and 6265 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: a97d582ff3, time: 0.01s, user: 0.01s, system: 0.00s, MEM: 27.29 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 27% 6x opt_clean (0 sec), 19% 2x read_verilog (0 sec), ...

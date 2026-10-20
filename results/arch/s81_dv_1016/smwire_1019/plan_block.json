@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.s81_dv.plan_block_delta.v1",
+ "for": "S81-DIEPLACE (die placement) -- S81-SMWIRE 10-19, branch claude/s81-smwire-1019",
+ "basis": "declared state (dsdv_sm_so_target declared_state.json 2729 FF/head) + new leaves counted from RTL; SRAM area = historical ot_sram_1r1w_32x64_m1 552.40704 um2 (b65718325 views). NOT a synthesis area: a yosys area of dsdv_svc_rs with SMT=1 is owed before the svc_rs kit.",
+ "blocks": {
+  "dsdv_svc_rs (x14) / dsdv_svc_rs_entry (x2)": {
+   "new_children": {"u_tgt dsdv_sm_so_target": {"sram": "4 x ot_sram_1r1w_32x64_m1", "sram_um2": 2209.63, "ff": 2729},
+                    "u_sot dsdv_svc_sot": {"ff": 245}, "u_gw dsdv_sm_gw": {"ff": 549}, "u_gx dsdv_sm_gx (entry only)": {"ff": 85},
+                    "so_pend": {"ff": 1}},
+   "est_added_um2_per_slice": 4800,
+   "outline_rule": "plan rsv tile 1252.0 x 1337.8 um (1.675 mm2, need 1.491, fit 1.124): +0.0048 mm2 -> need ~1.496, fit 1.120; no outline change; place the 4 macros on the 43.2 lattice beside the SM share (w_* face internal, the 555-b write face is a local seam)",
+   "pins": "w_* face removed from the tile boundary (-555 out); entry +48 out (pv_x, pv lane bits 514..561)"
+  },
+  "ot_s81sl_xg (rstop)": {"ff_added": 830, "note": "V train holding register 828 b + count; inside the existing xg tile"},
+  "ot_s81sl_xr (C3 xr3)": {"ff_added": 1035, "note": "SO assembler lo/hi 1024 b + idx/route/state; HB=1 only (C1 xr1: B input tied off inside the wrapper, logic folds)"},
+  "dsfd_dvland_pvrd": {"ff_added": 3, "note": "o[6:4] route / head flag fields"}
+ },
+ "links": "no new plan link; pv_W / pv_E already 562 b (48 spare bits now carry pv_x)"
+}

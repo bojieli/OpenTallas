@@ -86,8 +86,26 @@ def tie_local(case, lines, p8):
     return keep, dict(dropped_ladder_lines=len(dropped), m9_pitch=p9, m9_width=w9)
 
 
-def regroup(case, p8, out, skip_prefix=(), pos_json=None, tie_local_pg=False):
+def die_masters(die_v):
+    """instance -> master from the case netlist (one instance per line: `  master inst (`)"""
+    rx, mp = re.compile(r'^\s+([A-Za-z_]\w*)\s+(?:#\(.*?\)\s*)?([A-Za-z_]\w*)\s*\('), {}
+    for line in open(die_v):
+        g = rx.match(line)
+        if g:
+            mp[g.group(2)] = g.group(1)
+    return mp
+
+
+def regroup(case, p8, out, skip_prefix=(), pos_json=None, tie_local_pg=False, own_grid=None):
+    """own_grid {master: (offset, pitch)}: Q-DIE15 10-18 -- masters whose PG pins cannot be reached by the 8.64 core
+    lattice (closed qfd_rst_rep / _p8, 12.96 x 6.48: VSS AND VDD only as M5 straps in y 2.137..4.343, a 2.2-um window
+    the 4.32-um VSS/VDD core spacing can never cross with both nets -> PDN-0185 on the phase-2.16 grid, dv2f14bi) get
+    their own macro grid: M8 VSS/VDD pairs at the instance-relative offset/pitch (both inside the pin window), joined
+    to the core by M5->M8 vias at the pins and M8->M9 where the 9.091-um M9 lattice crosses (>= one per net per
+    12.96-um macro)."""
     case = Path(case)
+    own_grid = own_grid or {}
+    inst_master = die_masters(case / 'die.v') if own_grid else {}
     src = (case / 'pdn.tcl').read_text().split('\n')
     if pos_json:      # before the real case has placed the die: the build's own instance origins (rom_tp8b.json)
         pos = {i['n']: (i['x'], i['y']) for i in json.loads(Path(pos_json).read_text())['insts']}
@@ -115,10 +133,14 @@ def regroup(case, p8, out, skip_prefix=(), pos_json=None, tie_local_pg=False):
     head[0] = '# r6 full-die PDN (tools/qwen_split/pdn_regroup.py): M8 core + macro stripes at %.3f um = %d x %.2f-um macro lattice (one phase per lattice row class), M9 bump pitch unchanged' % (p8, round(p8 / GY), GY)
     groups, missing = {}, []
     skipped = 0
+    own = {}
     for g in m8:
         for n in g['names']:
             if skip_prefix and n.startswith(tuple(skip_prefix)):
                 skipped += 1
+                continue
+            if inst_master.get(n) in own_grid:
+                own.setdefault(inst_master[n], []).append(n)
                 continue
             if n not in pos:
                 missing.append(n)
@@ -141,12 +163,20 @@ def regroup(case, p8, out, skip_prefix=(), pos_json=None, tie_local_pg=False):
             # M8 only through the die-wide M5..M7 ladder r8 removes (C21sa-r8 check_power_grid: 784 such islands);
             # their own macro grid now stacks M5 -> M8 where the M8 stripes cross the pins
             L.append(f'add_pdn_connect -grid {g} -layers {{M5 M8}}')
+    for mst, names in sorted(own.items()):
+        g, (off, pitch) = f'pg_own_{mst}', own_grid[mst]
+        L.append(f'define_pdn_grid -macro -instances {{{" ".join("^" + n + "$" for n in sorted(names))}}} -voltage_domains CORE '
+                 f'-name {g} -starts_with GROUND -grid_over_boundary')
+        L += [f'add_pdn_stripe -grid {g} -layer M8 -width .48 -pitch {pitch:.3f} -offset {off:.3f}',
+              f'add_pdn_connect -grid {g} -layers {{M5 M8}}', f'add_pdn_connect -grid {g} -layers {{M7 M8}}',
+              f'add_pdn_connect -grid {g} -layers {{M8 M9}}']
     for g in m5:
         L += g['lines']
     (case / out).write_text('\n'.join(L) + '\n')
     return dict(case=str(case), out=out, p8=p8, m8_grids_before=len(m8), m8_grids_after=len(groups),
                 m5_grids=len(m5), instances=sum(len(v) for v in groups.values()), skipped_no_macro_grid=skipped,
                 skip_prefix=list(skip_prefix), r8_tie_local=r8,
+                own_grids={m: dict(instances=len(v), offset=own_grid[m][0], pitch=own_grid[m][1]) for m, v in own.items()},
                 phases={str(k): len(v) for k, v in sorted(groups.items())})
 
 
@@ -160,5 +190,11 @@ if __name__ == '__main__':
     ap.add_argument('--pos', help='instance origins from the build (OUT/rom_tp8b.json) instead of the placed DEF')
     ap.add_argument('--tie-local', action='store_true',
                     help='r8: die-top stdcell PG only around the cells (die_tie_rows.tcl), no die-wide M3..M7 ladder')
+    ap.add_argument('--own-grid', action='append', default=[], metavar='MASTER=OFFSET,PITCH',
+                    help='instances of MASTER get their own M8 macro grid at the instance-relative OFFSET/PITCH')
     a = ap.parse_args()
-    print(json.dumps(regroup(a.case, a.p8, a.out, a.skip_prefix, a.pos, a.tie_local)))
+    og = {}
+    for x in a.own_grid:
+        m_, v_ = x.split('=')
+        og[m_] = tuple(float(t) for t in v_.split(','))
+    print(json.dumps(regroup(a.case, a.p8, a.out, a.skip_prefix, a.pos, a.tie_local, og)))

@@ -57,10 +57,34 @@ def on():
     return os.environ.get('OT_KV_BUNDLE_EQ', '1') == '1'
 
 
-def plan(stages):
-    """{member: n} -> {member: pads}: every member reaches max(n)"""
-    t = max(stages.values()) if stages else 0
-    return {k: t - n for k, n in stages.items()}
+def plan(stages, offsets=None):
+    """{member: n} -> {member: pads}: every member reaches max(n + offset) (offset 0 = a plain record bundle)"""
+    off = offsets or {}
+    t = max(n + off.get(k, 0) for k, n in stages.items()) if stages else 0
+    return {k: t - n - off.get(k, 0) for k, n in stages.items()}
+
+
+def _mem(x):
+    """bundle member (si, port, di[, offset]) -> ((si, port, di), offset)"""
+    return (tuple(x[:3]), x[3] if len(x) > 3 else 0)
+
+
+def seq_kvn_bundle(m, by, land):
+    """HKV-DIE 10-19: qkd_seq_static_s checks the D2D end's KVN word (kvn_word_valid / tag, die port skw) against a FIXED
+    edge after the attention programme's CMD decode (core KVN_A0 = 32, a constant of the closed leaf qkd_seq_core_st_s):
+    the bench wires both direct from the D2D end.  On the die the CMD reaches the seq through K.rx_record (d2d_kv.srx ->
+    kvs_attn, S_rx stages) + the programme + ks_prg (S_prg) [+1 launched prg_l under OT_KV_ATTN_LAND]; the KVN word through
+    seqst_kw (S_kw).  The check holds only when S_kw == S_rx + S_prg + LAND: as a bundle, member prg carries offset
+    S_rx + LAND, member skw offset 0 (the shorter side gets sink-end pads; kvs14p as built: S_rx 11, S_prg 5, S_kw 4 ->
+    the seq faulted f_arr at the first KVN word, 12 edges early, 13 under LAND)."""
+    if not all(i in by for i in ('seq', 'kvs_attn', 'd2d_kv')):
+        return None
+    hits = [v[0] for k, v in _walk(m, by, ('d2d_kv', 'srx')).items() if k[0] == 'kvs_attn']
+    if len(hits) != 1:
+        raise ValueError(f'kv_bundle_eq: d2d_kv.srx reaches kvs_attn on {len(hits)} pins (one expected)')
+    if not any(k[0] == 'seq' for k in _walk(m, by, ('d2d_kv', 'skw'))):
+        return None
+    return {'S.seq_kvn': [('kvs_attn', 'prg', 'seq', hits[0] + int(land)), ('d2d_kv', 'skw', 'seq', 0)]}
 
 
 # ----------------------------------------------------------------------------------------------- table form
@@ -74,6 +98,7 @@ def equalized_table(doc, bundles=None):
     add, rows = {}, {}
     for name, mem in (bundles or MODEL_BUNDLES).items():
         st = {}
+        mem = [_mem(x)[0] for x in mem]
         for si, port, di in mem:
             bs = _chain_buses(T, si, port, di)
             if not bs:
@@ -168,9 +193,11 @@ def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60
     """n pad frames: each within cap of the previous point, the last within cap of the sink pin; nearest the sink first"""
     out, pt = [], prev_pt
     span = rmax * grid + 2 * cap + 400.0
+    lo_x, hi_x = min(prev_pt[0], sink_pt[0]) - span, max(prev_pt[0], sink_pt[0]) + span
+    lo_y, hi_y = min(prev_pt[1], sink_pt[1]) - span, max(prev_pt[1], sink_pt[1]) + span
     near = [i for i in list(m['insts']) + staged + [K.F.Inst(kn, 'keepout', kx, ky, kw, kh, 'R0')
                                                      for kn, kx, ky, kw, kh in m.get('keepouts', [])]
-            if abs(i.x + i.w / 2 - sink_pt[0]) < span + i.w / 2 and abs(i.y + i.h / 2 - sink_pt[1]) < span + i.h / 2]
+            if i.x < hi_x and i.x + i.w > lo_x and i.y < hi_y and i.y + i.h > lo_y]
     for k in range(n):
         last = k == n - 1
         cands = []
@@ -184,7 +211,11 @@ def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60
                 b_ = (x + w, y + h / 2)
                 din = abs(a_[0] - pt[0]) + abs(a_[1] - pt[1])
                 dout = abs(b_[0] - sink_pt[0]) + abs(b_[1] - sink_pt[1])
-                if din > cap or dout > cap:
+                # Every individual wire stays within cap. Intermediate frames
+                # may bridge a long branch; only the final output must already
+                # be within one hop of the sink. Do not demand that all frames
+                # sit in the source/sink overlap when n provides a real route.
+                if din > cap or dout > cap * (n - k):
                     continue
                 cands.append((dout + 0.01 * din, x, y))
         cands.sort()
@@ -196,8 +227,10 @@ def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60
     return out
 
 
-def equalize(K, m, bundles=None):
-    """pad the plan m in place (kv_die module K for geometry helpers); returns m"""
+def equalize(K, m, bundles=None, plan_fn=None, record_key='bundle_eq', rule=None):
+    """pad the plan m in place (kv_die module K for geometry helpers); returns m.
+    plan_fn(name, {member: stages}, walk) -> {member: pads} replaces the bundle-max plan (KV-ECTL4 kv_k_rt_eq: a fixed
+    round-trip target); record_key / rule name the record (default the record-bundle pass)."""
     by = {i.name: i for i in m['insts']}
     M = K.masters(m, 1)
 
@@ -208,7 +241,9 @@ def equalize(K, m, bundles=None):
             return (it.x + it.w if east else it.x, it.y + it.h / 2)
         return K.pin_xy(it, M[it.master], port)
     rec, added, staged = {}, [], []
-    for name, mem in (bundles or MODEL_BUNDLES).items():
+    for name, mem_ in (bundles or MODEL_BUNDLES).items():
+        offs = dict(_mem(x) for x in mem_)
+        mem = list(offs)
         if not all(si in by and di in by for si, _, di in mem):
             rec[name] = dict(skipped='instance missing in this plan')
             continue
@@ -222,11 +257,12 @@ def equalize(K, m, bundles=None):
                 raise ValueError(f'kv_bundle_eq: {name}: {si}.{port} -> {di} lands on {sorted(k[1] for k, _ in hits)} '
                                  f'at depths {sorted({v[0] for _, v in hits})}: one destination pin expected')
             info[(si, port, di)] = hits[0]
-        p = plan({k: v[1][0] for k, v in info.items()})
+        st_ = {k: v[1][0] for k, v in info.items()}
+        p = plan_fn(name, st_, lambda src: _walk(m, by, src)) if plan_fn else plan(st_, offs)
         rows = {}
         for (si, port, di), ((dinst, dport), (n, _, _)) in info.items():
             k = p[(si, port, di)]
-            rows[f'{si}.{port}->{di}'] = dict(stages=n, pads=k)
+            rows[f'{si}.{port}->{di}'] = dict(stages=n, pads=k, **({'offset': offs[(si, port, di)]} if offs[(si, port, di)] else {}))
             if not k:
                 continue
             path = _walk(m, by, (si, port), with_path=True)[(dinst, dport)][3]   # fresh: a member may have split a net
@@ -260,29 +296,39 @@ def equalize(K, m, bundles=None):
             by.update({it.name: it for it in pads})
             # the sink leaves its old net (a fork net keeps its other loads) and takes the pad chain
             loads = [e for j, e in enumerate(eps[1:], 1) if j != li]
-            m['buses'][bi] = (bid, cl, bits, [eps[0]] + loads) if loads else None
+            # A physical output pin drives ONE net. When its original bus
+            # retains other loads, attach the first pad to that same net;
+            # a second bus from eps[0] would overwrite the pin connection in
+            # the die renderer and leave the original branch undriven.
+            m['buses'][bi] = (bid, cl, bits, [eps[0]] + loads + [(pads[0].name, 'a')]) if loads else None
             hops, src_ep = [], eps[0]
             for q, it in enumerate(pads):
-                hops.append((f'{bid}__beq{q}', cl, bits, [src_ep, (it.name, 'a')]))
+                if not (loads and q == 0):
+                    hops.append((f'{bid}__beq{q}', cl, bits, [src_ep, (it.name, 'a')]))
                 src_ep = (it.name, 'b')
             hops.append((f'{bid}__beq{len(pads)}', cl, bits, [src_ep, eps[li]]))
             m['buses'].extend(hops)
             m.setdefault('relay_stages', {})[base] = m.get('relay_stages', {}).get(base, 0) + k
             for it in pads:
-                added.append(dict(bundle=name, bus=bid, relay=it.name, clock_source=si, x=it.x, y=it.y))
-        rec[name] = dict(members=rows, stages=max(r['stages'] + r['pads'] for r in rows.values()))
+                added.append(dict(bundle=name, bus=bid, relay=it.name, clock_source=si, x=it.x, y=it.y,
+                                  launch=(si, port), sink=(dinst, dport)))
+        rec[name] = dict(members=rows, stages=max(r['stages'] + r['pads'] + r.get('offset', 0) for r in rows.values()))
     m['buses'] = [b for b in m['buses'] if b is not None]
     m['insts'].extend(staged)
-    for row in added:      # each pad joins the core clock trunk of its chain's source (kv_pin_repair rule)
-        src = row['clock_source']
-        j = next((j for j, (_, cl, _, eps) in enumerate(m['buses']) if cl == 'clock_trunk' and any(i == src for i, _ in eps)),
-                 None)
-        if j is None:
-            j = next(j for j, (b, _, _, _) in enumerate(m['buses']) if b == 'clk_core_c')
+    import kv_pin_repair as KPR
+    byall = dict(by, **{it.name: it for it in staged})
+    for row in added:      # KVR-DERIVE 10-19: each pad joins the LAUNCHING pin's clock trunk (kv_pin_repair.relay_trunk;
+        # the old rule took the first trunk touching the source and could land a core record on n_clk_hbm)
+        j, dom = KPR.relay_trunk(m['buses'], byall, row.pop('launch'), row.pop('sink'))
+        row.update(domain=dom, clock=m['buses'][j][0])
+        if KPR.trunk_domain(row['clock']) != ('core' if dom == 'mixed' else dom):
+            raise ValueError(f'kv_bundle_eq: pad {row["relay"]} clock {row["clock"]} != launch domain {dom}')
         b_, cl_, w_, eps_ = m['buses'][j]
         m['buses'][j] = (b_, cl_, w_, list(eps_) + [(row['relay'], 'ck')])
-    m['bundle_eq'] = dict(bundles=rec, added=added, rule='every record bundle member padded to the bundle max at its sink '
-                          'end (tools/qwen_kv_die/kv_bundle_eq.py)')
+    prev = m.get(record_key) or {}
+    m[record_key] = dict(bundles={**prev.get('bundles', {}), **rec}, added=prev.get('added', []) + added,
+                         rule=rule or 'every record bundle member padded to the bundle max (stages + offset) at its sink '
+                                      'end (tools/qwen_kv_die/kv_bundle_eq.py)')
     return m
 
 

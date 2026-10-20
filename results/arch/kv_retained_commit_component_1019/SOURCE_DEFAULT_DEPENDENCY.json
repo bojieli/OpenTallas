@@ -1,0 +1,497 @@
+{
+  "grant": "ROOT via LEAD-KV: three private default-off clones plus actual dependency component harness only",
+  "basis_commit": "529324549",
+  "production_source_commit": "5f2ce19bc",
+  "mode": "observed-fault/restart fail-stop until RAW POR; experimental",
+  "defaults": {
+    "ENABLE_RETAINED_COMMIT": 0,
+    "HEALTH_CUTOFF_EDGES": 0,
+    "STEP_RESPONSE_DEADLINE_EDGES": 0
+  },
+  "contract_type": "COMPONENT_FIXTURE_ONLY",
+  "production_calendar": null,
+  "production_cutoff": null,
+  "production_deadline": null,
+  "physical_storage": "HOLD: functional2848-bit event table is not SRAM receipt",
+  "unchanged_inputs": [
+    {
+      "path": "README.md",
+      "sha256": "f3984cbad5049be972a3bac876a13dd88b0dd0fe27657bbbabe26fc7c8b56c51",
+      "bytes": 31781
+    },
+    {
+      "path": "admission_graph_candidates.txt",
+      "sha256": "d822da6e73c383e513f2f6a6f09b9b8c1fb9d6bdfba1bf9be1b8f6ec3ec5704b",
+      "bytes": 6553
+    },
+    {
+      "path": "basis/1f4241db0/README.md",
+      "sha256": "7aaaba3e4bd38c72967499a1e68dda83d56a382e41906d2fbef671ac9ce60645",
+      "bytes": 11391
+    },
+    {
+      "path": "basis/1f4241db0/collector_model.json",
+      "sha256": "568861a948c1b9584395994d32ab7cfea519773240e95dac2896b2938b5a1b2a",
+      "bytes": 653312
+    },
+    {
+      "path": "basis/1f4241db0/host_commit_model.json",
+      "sha256": "a6827363b62939c7c11392a72547594f178babeaf2b069c71ac6dc0793f5653a",
+      "bytes": 12887
+    },
+    {
+      "path": "basis/1f4241db0/host_source/ot_host_if_pb2_observed.sv",
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d",
+      "bytes": 39228
+    },
+    {
+      "path": "basis/1f4241db0/host_source/qkd_host_control_packet_observed.sv",
+      "sha256": "ec55a81b675965f7b5756b142ad95f11ad2730c4ead8c0d8f3c37015aa1d19cb",
+      "bytes": 10760
+    },
+    {
+      "path": "basis/1f4241db0/host_source/qkd_host_control_prompt_observed.sv",
+      "sha256": "38b86a259ae631f56318587a13cdf235b4908ba925ab4ef599c9ea6dac49599d",
+      "bytes": 7681
+    },
+    {
+      "path": "basis/1f4241db0/host_source/qkd_host_fullcontrol_observed.sv",
+      "sha256": "dae8b9d0b549478d54953c22a819e5ead96fc84d34552be303b18f8749b1e574",
+      "bytes": 13710
+    },
+    {
+      "path": "basis/1f4241db0/host_source/qkd_host_if_pins_observed.sv",
+      "sha256": "c7f8a0a8d88f43c4b122b405c32f34ca8bcb81c8bc63e080f24adfa5dc86d270",
+      "bytes": 16625
+    },
+    {
+      "path": "basis/1f4241db0/host_source/qkd_host_rank_services.sv",
+      "sha256": "155e1f883fc3443bef192acc2f1947c66a7e459ef723a81b2c9b9a36331ebc88",
+      "bytes": 21105
+    },
+    {
+      "path": "basis/1f4241db0/host_source_identity.json",
+      "sha256": "f7f186392576e08d7405196a6b582adc8b3a9b9b6d452ae84d7ab3e8cf2c9eb1",
+      "bytes": 1978
+    },
+    {
+      "path": "basis/1f4241db0/primitive/README.md",
+      "sha256": "35d0fac68f04bc912b3396ac121653debd92bb9aace74e104244a6e5c5d857ee",
+      "bytes": 3152
+    },
+    {
+      "path": "basis/46b698cfa/README.md",
+      "sha256": "46cbbb1935598e2aca7b554f56e857ee835947f00ee6232e9d7fc4e42bc84242",
+      "bytes": 5571
+    },
+    {
+      "path": "basis/46b698cfa/ahub/README.md",
+      "sha256": "ee9f72aa057738d6101dcfb7a0d3a1a579e0526d9ad0c37363b9bc55393c9719",
+      "bytes": 2445
+    },
+    {
+      "path": "basis/46b698cfa/host/README.md",
+      "sha256": "f203465f04437741a37b74a1951803fba291191b55214ec2d734238f3b43a9eb",
+      "bytes": 2633
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_hbm_boot_pc.sv",
+      "sha256": "445921e88b5177bc3527fc2a4659e36af08d4c5660c80e3e52d6720267d58067",
+      "bytes": 1899
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_hbm_boot_static.sv",
+      "sha256": "2dfe24158efe1d80c724a0fdfdfab6f96540c93a80c45c4474bf8a67a866963b",
+      "bytes": 1667
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_hbm_boot_static_completion.sv",
+      "sha256": "fd4d71c80b86adb7ccbea8aac2d1060c3f1b02eeff6198af5ed3fcdbdb0b8612",
+      "bytes": 2682
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_host_pc_slice.sv",
+      "sha256": "5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa",
+      "bytes": 2891
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_host_pc_slice_die.sv",
+      "sha256": "b2b1d1e72368059e32aedc071824779dcc68425284b53122fde623dae604511c",
+      "bytes": 7406
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_host_static_pc_emback.sv",
+      "sha256": "c9c6208fb9219217d8900ee1e8a8de0c6390fe8e6300fd1153d3e2c4ea79866c",
+      "bytes": 3139
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_kvs_pc.sv",
+      "sha256": "768601918ced5e1432306db69714f65b550ab7096f588d0d91e70cde999b7a11",
+      "bytes": 7634
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_kvs_pc_h.sv",
+      "sha256": "e4308631e9403eedc28e6137b83f9185009b0583569a3a9d03118bc8c9f5ddab",
+      "bytes": 7487
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_static_completion_ownerdemux.sv",
+      "sha256": "922105c31c62edb779b914b724d068af59f020c485af548a01d4c153a92fcf9c",
+      "bytes": 1504
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_static_kv_pc_es_merge_b.sv",
+      "sha256": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a",
+      "bytes": 6306
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_static_kv_pc_path_emb.sv",
+      "sha256": "20aefbf588250017a2136f8fdf69eebd15eb9461ff714e3e2a6659b0ddd3d749",
+      "bytes": 7439
+    },
+    {
+      "path": "basis/46b698cfa/host/source/qkd_static_kv_pc_path_fan_nc_b.sv",
+      "sha256": "90f9a4ec6dbb0ee2e1d644ac0878566c709ba5a1ec68601a4d250a50fa4f98fe",
+      "bytes": 15623
+    },
+    {
+      "path": "basis/579134a33/README.md",
+      "sha256": "279595bd7bf2d7fd3d6a9533e8956bb417fad28cddface51de223b652c7661c4",
+      "bytes": 6512
+    },
+    {
+      "path": "basis/579134a33/basis/qkd_host_service_guard.sv",
+      "sha256": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045",
+      "bytes": 5562
+    },
+    {
+      "path": "basis/579134a33/basis/qkd_host_service_guard_wh.sv",
+      "sha256": "ae251e6b9649f14ee76d938258d00efbd80ecc23cdcf0a772beffb1e40ff33c1",
+      "bytes": 4618
+    },
+    {
+      "path": "basis/579134a33/model.json",
+      "sha256": "5931ff8ad0d2dacbea8c86a1bf16aab9e74a27a39212e76020b665527f081ef1",
+      "bytes": 6823
+    },
+    {
+      "path": "binding_source_manifest.json",
+      "sha256": "2f602d4ec9f5d573510db0eacb4c155c0e4fd667117f69304d39f9044db70442",
+      "bytes": 6784
+    },
+    {
+      "path": "clock_graph_candidates.txt",
+      "sha256": "054cbd2f8de38aa732717889bf9676ff7aec6da0d0997c9997cc6d07b0a597f4",
+      "bytes": 3770
+    },
+    {
+      "path": "extra_source_manifest.json",
+      "sha256": "45cecdd4f6e758bcdb0599d1fd273db755c2ad91eca284374a4669ce64e56785",
+      "bytes": 3141
+    },
+    {
+      "path": "model.json",
+      "sha256": "1173ac93962f07a58de99a6e80dec126f3f1b9addbeca94658cccf07513a3e8e",
+      "bytes": 3283
+    },
+    {
+      "path": "reset_causes.json",
+      "sha256": "5f93e91b2beeb61a46f163a31d7d8fc7801fefdf06a04653fcd95effc5e19b01",
+      "bytes": 1693
+    },
+    {
+      "path": "selected_source/rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "bytes": 811
+    },
+    {
+      "path": "selected_source/rtl/physical/ot_qwen_host_ctl.sv",
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436",
+      "bytes": 3549
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv",
+      "sha256": "0c05ae5b59d242b4a99c937e47683224fe4e25d802b6543b8717e3d677c60767",
+      "bytes": 6651
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv",
+      "sha256": "aef489bf2ecf88b88dc6287b115bd0a4744dc1dac490b0e0034e6d18bacf7b15",
+      "bytes": 12129
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+      "sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8",
+      "bytes": 1587
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
+      "sha256": "fb1f5dbfe76a33e302cd35d5c488d72ca9c2e658364384bc2a18d45202f265b4",
+      "bytes": 2552
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv",
+      "sha256": "b99255434849edd8876f4cf254b88396d6cfb3ab0a3a4c4c961e35330b6a0ee6",
+      "bytes": 2239
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+      "sha256": "99c4995462015346850f04a7d3a09aa12505748ec5ea14730ccab2756a46df66",
+      "bytes": 4038
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv",
+      "sha256": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045",
+      "bytes": 5562
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv",
+      "sha256": "2aa7d880f1b96c7a6922e875e4d8c7902d304232c93be65896b9a42a9840c58e",
+      "bytes": 10395
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_tx_class.sv",
+      "sha256": "a1ea3c3a40853034e0582d7312423d61b2b414a9f7b23bb4b13ffafd5db1c9c2",
+      "bytes": 3063
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d",
+      "bytes": 39228
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv",
+      "sha256": "6413323907a589970013f744dca1f7f3af5859c4739264cd9864b35371801031",
+      "bytes": 11050
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv",
+      "sha256": "38b86a259ae631f56318587a13cdf235b4908ba925ab4ef599c9ea6dac49599d",
+      "bytes": 7681
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_coordinator_services.sv",
+      "sha256": "cf4d1222f56a5ef0852062980adbf3ba81efa81ccc0394416f2bcbfde4caacdb",
+      "bytes": 5947
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+      "sha256": "544639e6add23a4f106f6ff67960c7f02496d8835f06d860b4bdde1f1dc7c470",
+      "bytes": 19893
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+      "sha256": "dae8b9d0b549478d54953c22a819e5ead96fc84d34552be303b18f8749b1e574",
+      "bytes": 13710
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_if_pins_observed.sv",
+      "sha256": "c7f8a0a8d88f43c4b122b405c32f34ca8bcb81c8bc63e080f24adfa5dc86d270",
+      "bytes": 16625
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_lifecycle_collected.sv",
+      "sha256": "705ad5a15bf138d5f62effd958fc5e15371178d8062da154cfa649dc64b1f0df",
+      "bytes": 10035
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+      "sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7",
+      "bytes": 6704
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv",
+      "sha256": "8216a88b0850a74747cc2402775e9189414182aa0178895caa930b79c7b766c8",
+      "bytes": 7493
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_coordinator_codec.sv",
+      "sha256": "a11922a003e5302b39ba4fbc1089dd92b02194c44d071a7ead253983acb5b16f",
+      "bytes": 10578
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv",
+      "sha256": "e66a6dabed4e5a9e19ddabe6e0179df58053834697127118cadde9d891cbdae7",
+      "bytes": 9297
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv",
+      "sha256": "1d8e481b09e822cb0b02bf57c9d2906b0c9aa210f102a3908213f32c5dde5cdc",
+      "bytes": 3355
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+      "sha256": "3ef013ca6db4c5358c7eff2a1f6a9c41d6c16995af1386889368197149dab657",
+      "bytes": 9312
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_cohort_mu.sv",
+      "sha256": "a3cf3ff073ffb95176b406002bcf50d49305e4f238d75f9ade3235e42beb0fb6",
+      "bytes": 8057
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/ot_qwen_tp8_token_epoch_allocator_mu.sv",
+      "sha256": "681968a50a2e54661bac7979bf41240725a2786ed59f9c35855a71e13164b7a2",
+      "bytes": 8163
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/qkd_host_coordinator_services_mu.sv",
+      "sha256": "d9998f7cb7935b04cd12785915e517f8678f7ce55bf3508f27149db7c4e48b9d",
+      "bytes": 9340
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+      "sha256": "7b35c728e8c0a719ae01ea50db5c185b0c6141b77620e5b934b799fb7d333637",
+      "bytes": 25443
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/qkd_host_lifecycle_collected_mu.sv",
+      "sha256": "50364e9878c640c9e8f50ed8391d48f729e2598665f24c549b407bba6be6be06",
+      "bytes": 15617
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+      "sha256": "ddedc0776e0fe742b236871a525f62efe2e88c9cdc1515afceae4b306c76a0bb",
+      "bytes": 12299
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/qkd_host_peer_coordinator_codec_mu.sv",
+      "sha256": "00117c17aa338fff5524d2a675af4b2910d8a45749a477c1789c274d707ae7bf",
+      "bytes": 18395
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/qkd_host_post_collector_mu.sv",
+      "sha256": "e7fa0c9e9708f8b96fff57b84ab015d49f226242df9ca702bf1555c720dbcc0a",
+      "bytes": 6803
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/mu_qwen_20261018/qkd_host_tp8_coordinator_mu.sv",
+      "sha256": "e0b275156af2b577533b38fe4e20f5417c7b836e1b0de8d6752a24cdcad45f5c",
+      "bytes": 11683
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/ot_qwen_sys_rst_seq.sv",
+      "sha256": "77582b3c1092c26bfc567ca4bf3cef8be2bb7ab627e9a8b1a79996f65f807246",
+      "bytes": 4158
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv",
+      "sha256": "56396c2a8ff6ed64760c38e5fd4b798866d11aedb88d08496be930f99647e919",
+      "bytes": 4805
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv",
+      "sha256": "3a7d297b3492b1a3eb3d0ce2a067d3962e034328e8614956cd63f08e005180fd",
+      "bytes": 4778
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+      "sha256": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+      "bytes": 45568
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+      "sha256": "931d838764e4cbcd77a56368228214357507bd472e00278709669d51b3795095",
+      "bytes": 1312
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+      "sha256": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+      "bytes": 7622
+    },
+    {
+      "path": "selected_source/rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+      "sha256": "9dc960a01a40d7a4a873599bce8eeb11c12c16d454332e27dcc2533caad9b962",
+      "bytes": 12871
+    },
+    {
+      "path": "selected_source/tools/qwen_kv_die/kv_die.py",
+      "sha256": "517ada21587fdb68d87f55530a0b80402f3888d4d46f617e60f7949f23f73903",
+      "bytes": 353283
+    },
+    {
+      "path": "selected_source/tools/qwen_kv_die/kv_host_bindings.py",
+      "sha256": "2dc23ab96994aae6b6d59584943a46ab15c3eb6508f2a413efa3a074545290c5",
+      "bytes": 5081
+    },
+    {
+      "path": "selected_source/tools/qwen_kv_die/kvsys_clocks.py",
+      "sha256": "6be49a3a0538b7c4e868265043f4ccce1da614d312cc83be10e0eb7ecdfb0fcd",
+      "bytes": 7463
+    }
+  ],
+  "minimum_compile_files": [
+    {
+      "new_file": "private/ot_host_if_pb2_observed_rc.sv",
+      "from": "selected_source/rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+      "status": "NOT_CREATED_NOT_GRANTED"
+    },
+    {
+      "new_file": "private/qkd_host_axi_packet_rc.sv",
+      "from": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv",
+      "status": "NOT_CREATED_NOT_GRANTED"
+    },
+    {
+      "new_file": "private/qkd_host_native_token_endpoint_cancel_rc.sv",
+      "from": "selected_source/rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+      "status": "NOT_CREATED_NOT_GRANTED"
+    },
+    {
+      "new_file": "private/tb_retained_commit.cpp",
+      "role": "independent scoreboard, engine/health conditional model, packet responder",
+      "status": "NOT_CREATED_NOT_GRANTED"
+    },
+    {
+      "existing_file": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    },
+    {
+      "existing_file": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    },
+    {
+      "existing_file": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    },
+    {
+      "existing_file": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_sys_csr_service.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    },
+    {
+      "existing_file": "selected_source/rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    },
+    {
+      "existing_file": "selected_source/rtl/qwen_sys/ot_qwen_sys_rst_seq.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    },
+    {
+      "existing_file": "selected_source/rtl/lib/ot_reset_sync.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    },
+    {
+      "existing_file": "selected_source/rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    },
+    {
+      "existing_file": "selected_source/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+      "role": "unchanged actual ingress/reset dependency"
+    }
+  ],
+  "prohibited": [
+    "public source edits",
+    "root binding",
+    "helper activation",
+    "physical/synthesis run",
+    "MU4 integration",
+    "production manifest claim"
+  ],
+  "resources": {
+    "measured_status": "ep4 admits1156GB/load46/128; ep5 223GB/48/128; ep6 1221GB/28/128; ep7 986GB/31/96; ep8 1332GB/18/128",
+    "initial_component_admission_GB": 32,
+    "threads": 8,
+    "disk_GB": 20,
+    "placement": "unpinned ot-run --dir lane; no local simulation/synthesis",
+    "inventory": "three small source modules, unchanged13-entry compile closure and private harness; measure build RSS and object disk before enlarging"
+  }
+}

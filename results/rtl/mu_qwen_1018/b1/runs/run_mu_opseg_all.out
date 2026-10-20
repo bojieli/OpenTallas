@@ -1,0 +1,23 @@
+ot-run: ot-epyc4       admits   427 GB (avail 427, growth 128, headroom 0, waiters 1/288 GB) load 124/128 running 29 disk 536 GB 
+ot-run: ot-epyc5       admits   538 GB (avail 549, growth 172, headroom 0, waiters 0/0 GB) load 209/128 running 23 disk 668 GB 
+ot-run: ot-epyc6       skipped: no /home/ubuntu/ot-bench/mu-qw-b1-1019/src
+ot-run: ot-epyc7       skipped: no /home/ubuntu/ot-bench/mu-qw-b1-1019/src
+ot-run: ot-epyc8       skipped: no /home/ubuntu/ot-bench/mu-qw-b1-1019/src
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-bench/mu-qw-b1-1019/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-bench/mu-qw-b1-1019/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-686621-1792404932 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+OK   opseg_m0: MU_OPSEG_PASS mut 0
+OK   opseg_m21: MU_OPSEG_FAIL mut 21: red C1 mu faulted: cal [(4394, '000001')] opf [] end (1, '000001', 0, 0, '0000') | red C4 command fires != compiled (got 4607 want 3677; missing 1110 e.g. [(5292, 2, 77884452878022414427957444938305587), (6207, 1, 77884452878022414430209554006411269)]; extra 2040 e.g. [(4826, 2, 77884452878022414427957444938305587), (5023, 1, 77884452878022414430209554006411269)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 280 want 205; missing [(5394, 2, 16, 8738, 8174), (10325, 3, 16, 9011, 8168)]; extra [(4928, 2, 16, 8738, 8174), (6854, 3, 16, 9011, 8168)]) | red C2 latency user dc differs mu vs solo (98/99; first diffs [(4395, '78000000000000'), (18361, '7c000300000051'), (18361, '74000300000051'), (35812, '70000300000051')])
+OK   opseg_m22: MU_OPSEG_FAIL mut 22: neg_coll: required fault not raised at ~6469 (opf log [])
+OK   opseg_m23: MU_OPSEG_FAIL mut 23: red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 102 want 102; missing [(43314, 2, 8738), (55504, 1, 4099)]; extra [(43314, 2, 4099), (55504, 1, 8465)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(28723, 1, 16, 4099, 8181), (40149, 1, 16, 4099, 8181)]; extra [(28723, 1, 16, 8465, 8180), (40149, 1, 16, 8465, 8180)])
+OK   opseg_m24: MU_OPSEG_FAIL mut 24: red C1 mu faulted: cal [(18332, '000010')] opf [] end (1, '000010', 0, 0, '0000') | red C3 u_cal starts != compiled playback (1481 vs 1481; missing [(2822, 1, 1, 1, 0, 9), (4393, 1, 1, 1, 12, 1), (4543, 2, 1, 1, 0, 2)]; extra [(2823, 1, 1, 1, 0, 9), (4394, 1, 1, 1, 12, 1), (4544, 2, 1, 1, 0, 2)]) | red C4 command fires != compiled (got 3650 want 3677; missing 1946 e.g. [(2831, 1, 77884452878022414427957444938303507), (2846, 1, 77884452878022414430209541121509381)]; extra 1919 e.g. [(2832, 1, 77884452878022414427957444938303507), (2847, 1, 77884452878022414430209541121509381)]) | red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 102 want 102; missing [(27789, 1, 8465), (43314, 2, 8738)]; extra [(27790, 1, 8465), (43315, 2, 8738)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3208, 1, 16, 8465, 8180), (5395, 2, 16, 8738, 8174)]) | red C2 latency user dc differs mu vs solo (98/99; first diffs [(18333, '78000000000000'), (18361, '7c000300000051'), (18361, '74000300000051'), (35812, '70000300000051')])
+OK   opseg_m25: MU_OPSEG_FAIL mut 25: red C3 u_cal starts != compiled playback (547 vs 1481; missing [(19093, 1, 2, 1, 24, 13), (20010, 2, 2, 1, 24, 5), (21388, 3, 1, 1, 24, 5)]; extra []) | red C4 command fires != compiled (got 1781 want 3677; missing 1896 e.g. [(19183, 1, 77884452878022414430209571186280453), (19815, 1, 77884452878022414430209575481247749)]; extra 0 e.g. []) | red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 48 want 102; missing [(27789, 1, 8465), (43314, 2, 8738)]; extra []) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 102 want 205; missing [(28723, 1, 16, 4099, 8181), (30948, 3, 16, 9011, 8168)]; extra [])
+OK   opseg_m26: MU_OPSEG_FAIL mut 26: neg_drift: required fault not raised at ~18591 (opf log [])
+BAD  old_ctlm (want MU_CTLM BENCHES: PASS): MU_CTLM BENCHES: FAIL
+OK   old_tok: MU_TOK_SMOKE BENCHES: PASS
+MU_OPSEG BENCHES: FAIL
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-686621-1792404932): exit 1
+
+[exited with code 0]

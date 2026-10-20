@@ -1,0 +1,18 @@
+[INFO RSZ-0048] Inserted 18 buffers in 18 nets.
+[INFO CTS-0037] Total number of delay buffers: 91
+[INFO DPL-0009] Utilization: 58.8%
+OT_HM_GUARD: margin 30 kept: 21479 endpoints in margin, ~25268 buffers, +2.3 util pts (21479 endpoints in margin > 10000)
+OT_HOLD_GUARD start: hold ws -82.49 tns -35265.8 viol 1468 (margin 30, chunk 1000 it)
+[INFO RSZ-0046] Found 21479 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 25401 hold buffers.
+OT_HOLD_GUARD chunk 1: hold ws -51.56 (+30.93) tns -1517.8 (+95.7%) viol 153, 95 s
+[INFO RSZ-0046] Found 1334 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 2532 hold buffers.
+OT_HOLD_GUARD chunk 2: hold ws 12.91 (+64.47) tns 0.0 (+100.0%) viol 0, 106 s
+[INFO RSZ-0046] Found 10 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 13 hold buffers.
+OT_HOLD_GUARD chunk 3: hold ws 30.00 (+17.10) tns 0.0 (+0.0%) viol 0, 108 s
+[INFO DPL-0009] Utilization: 61.2%
+Design area 53002 um^2 61% utilization.
+839
+BF_BAND skip a_ctr[13]

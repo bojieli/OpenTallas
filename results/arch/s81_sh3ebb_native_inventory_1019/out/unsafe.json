@@ -1,0 +1,1568 @@
+[
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_rd\\[0\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 323,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.fence.g_on.rp\\[0\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 166,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[18\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[19\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[41\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[45\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[20\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[49\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[53\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[57\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[61\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[81\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[85\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[89\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[12\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[93\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[17\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[112\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d\\[233\\]$_DFFE_PP_/QN",
+    "role": "FF",
+    "loads": 60,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[4\\]$_DFFE_PN_/QN",
+    "role": "FF",
+    "loads": 63,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[38\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[16\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[15\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[14\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[13\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[0\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[1\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[2\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[3\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[4\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[5\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[6\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[7\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[8\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[9\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[10\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[11\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[21\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[22\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[23\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[24\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[25\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[26\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[27\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[28\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[29\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[30\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[31\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[32\\]$_DFFE_PN1P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[33\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[34\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh\\[35\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[36\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[35\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[3\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[5\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[7\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[9\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[11\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[13\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[15\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[17\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[19\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[29\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[31\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[33\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[43\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[45\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[47\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[49\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[57\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[61\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc\\[63\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_rd\\[2\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 81,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_rd\\[1\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 162,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[1\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[5\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[9\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[13\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[17\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[21\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[25\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[29\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[33\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[37\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c\\[41\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.fence.g_on.rp\\[2\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 148,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.fence.g_on.rp\\[1\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 156,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d\\[217\\]$_DFFE_PP_/QN",
+    "role": "FF",
+    "loads": 62,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d\\[232\\]$_DFFE_PP_/QN",
+    "role": "FF",
+    "loads": 61,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[0\\]$_DFFE_PN_/QN",
+    "role": "FF",
+    "loads": 41,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[1\\]$_DFFE_PN_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[2\\]$_DFFE_PN_/QN",
+    "role": "FF",
+    "loads": 35,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch\\[3\\]$_DFFE_PN_/QN",
+    "role": "FF",
+    "loads": 65,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_kind\\[1\\]$_DFF_P_/QN",
+    "role": "FF",
+    "loads": 513,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d\\[216\\]$_DFFE_PP_/QN",
+    "role": "FF",
+    "loads": 63,
+    "master": "DFFHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_rsc.reset_pipe\\[0\\]$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 44,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.mk_d2$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 102,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_okb$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 161,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_okx$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 210,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok1$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 255,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok0$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 331,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 194,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.sr_hold$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 105,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c11$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c12$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c13$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c14$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c15$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c16$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c17$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c18$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c19$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c27$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c28$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c29$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c30$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 33,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c31$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 34,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "ot_rrs__u_ot_pr_core_rr__ot_rlv__c10$_DFF_PN0_/QN",
+    "role": "FF",
+    "loads": 72,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_113732_/Y",
+    "role": "comb",
+    "loads": 34,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_064050_/Y",
+    "role": "comb",
+    "loads": 595,
+    "master": "AO221x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_064115_/Y",
+    "role": "comb",
+    "loads": 586,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_064148_/Y",
+    "role": "comb",
+    "loads": 584,
+    "master": "OR3x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_064199_/Y",
+    "role": "comb",
+    "loads": 204,
+    "master": "NAND2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_064209_/Y",
+    "role": "comb",
+    "loads": 585,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_064242_/Y",
+    "role": "comb",
+    "loads": 42,
+    "master": "AND5x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_064245_/Y",
+    "role": "comb",
+    "loads": 75,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_064274_/Y",
+    "role": "comb",
+    "loads": 69,
+    "master": "AOI21x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_065033_/Y",
+    "role": "comb",
+    "loads": 66,
+    "master": "NAND2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066019_/Y",
+    "role": "comb",
+    "loads": 298,
+    "master": "NAND2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066046_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066482_/Y",
+    "role": "comb",
+    "loads": 361,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066484_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "AND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066490_/Y",
+    "role": "comb",
+    "loads": 63,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066513_/Y",
+    "role": "comb",
+    "loads": 414,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066771_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066772_/Y",
+    "role": "comb",
+    "loads": 34,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066773_/Y",
+    "role": "comb",
+    "loads": 39,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066776_/Y",
+    "role": "comb",
+    "loads": 35,
+    "master": "AND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066783_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "AO21x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066812_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "AND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_066842_/Y",
+    "role": "comb",
+    "loads": 49,
+    "master": "NAND2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_067583_/Y",
+    "role": "comb",
+    "loads": 37,
+    "master": "AOI21x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_067585_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_071557_/Y",
+    "role": "comb",
+    "loads": 190,
+    "master": "AND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_074456_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_074467_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_080650_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_080679_/Y",
+    "role": "comb",
+    "loads": 33,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_084878_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR5x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085151_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085224_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085296_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085368_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR5x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085440_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085515_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085587_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085659_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR5x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085729_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR5x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085801_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085873_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_085945_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR5x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_086017_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR5x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_086089_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_086161_/Y",
+    "role": "comb",
+    "loads": 64,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_086234_/Y",
+    "role": "comb",
+    "loads": 143,
+    "master": "NAND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_086237_/Y",
+    "role": "comb",
+    "loads": 141,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_087300_/Y",
+    "role": "comb",
+    "loads": 158,
+    "master": "AND4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_087306_/Y",
+    "role": "comb",
+    "loads": 238,
+    "master": "OR4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_087772_/Y",
+    "role": "comb",
+    "loads": 158,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_087776_/Y",
+    "role": "comb",
+    "loads": 238,
+    "master": "OR4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_088266_/Y",
+    "role": "comb",
+    "loads": 284,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_088270_/Y",
+    "role": "comb",
+    "loads": 112,
+    "master": "OR4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_088775_/Y",
+    "role": "comb",
+    "loads": 217,
+    "master": "AND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_088804_/Y",
+    "role": "comb",
+    "loads": 179,
+    "master": "NAND2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_089282_/Y",
+    "role": "comb",
+    "loads": 258,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_089289_/Y",
+    "role": "comb",
+    "loads": 191,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_089291_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "AOI211x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_089303_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_090478_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_090488_/Y",
+    "role": "comb",
+    "loads": 322,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_091613_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "AND3x4_ASAP7_75t_R"
+  },
+  {
+    "driver": "_091617_/Y",
+    "role": "comb",
+    "loads": 190,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_091626_/Y",
+    "role": "comb",
+    "loads": 322,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_092750_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "AND3x4_ASAP7_75t_R"
+  },
+  {
+    "driver": "_092755_/Y",
+    "role": "comb",
+    "loads": 190,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_092764_/Y",
+    "role": "comb",
+    "loads": 322,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_093888_/Y",
+    "role": "comb",
+    "loads": 323,
+    "master": "AND3x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_093890_/Y",
+    "role": "comb",
+    "loads": 323,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_093892_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "OA21x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_093896_/Y",
+    "role": "comb",
+    "loads": 190,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_095027_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "AND3x4_ASAP7_75t_R"
+  },
+  {
+    "driver": "_095031_/Y",
+    "role": "comb",
+    "loads": 190,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_096162_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "AND3x4_ASAP7_75t_R"
+  },
+  {
+    "driver": "_096166_/Y",
+    "role": "comb",
+    "loads": 190,
+    "master": "OR3x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_096175_/Y",
+    "role": "comb",
+    "loads": 322,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_097299_/Y",
+    "role": "comb",
+    "loads": 257,
+    "master": "NAND2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_097303_/Y",
+    "role": "comb",
+    "loads": 512,
+    "master": "AND2x6_ASAP7_75t_R"
+  },
+  {
+    "driver": "_098465_/Y",
+    "role": "comb",
+    "loads": 267,
+    "master": "OR4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_098780_/Y",
+    "role": "comb",
+    "loads": 194,
+    "master": "OR3x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_099006_/Y",
+    "role": "comb",
+    "loads": 36,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_099258_/Y",
+    "role": "comb",
+    "loads": 549,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_099336_/Y",
+    "role": "comb",
+    "loads": 259,
+    "master": "AND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_102215_/Y",
+    "role": "comb",
+    "loads": 549,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_102854_/Y",
+    "role": "comb",
+    "loads": 549,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_103496_/Y",
+    "role": "comb",
+    "loads": 549,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104138_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104142_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104268_/Y",
+    "role": "comb",
+    "loads": 80,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104362_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104364_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104452_/Y",
+    "role": "comb",
+    "loads": 80,
+    "master": "NOR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104547_/Y",
+    "role": "comb",
+    "loads": 68,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104634_/Y",
+    "role": "comb",
+    "loads": 52,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104729_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104731_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104818_/Y",
+    "role": "comb",
+    "loads": 80,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104921_/Y",
+    "role": "comb",
+    "loads": 50,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104922_/Y",
+    "role": "comb",
+    "loads": 45,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_104928_/Y",
+    "role": "comb",
+    "loads": 172,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105039_/Y",
+    "role": "comb",
+    "loads": 84,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105220_/Y",
+    "role": "comb",
+    "loads": 50,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105222_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105324_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105327_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105422_/Y",
+    "role": "comb",
+    "loads": 49,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105424_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105526_/Y",
+    "role": "comb",
+    "loads": 83,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105662_/Y",
+    "role": "comb",
+    "loads": 50,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105664_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105766_/Y",
+    "role": "comb",
+    "loads": 44,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105770_/Y",
+    "role": "comb",
+    "loads": 42,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_105866_/Y",
+    "role": "comb",
+    "loads": 86,
+    "master": "NOR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106006_/Y",
+    "role": "comb",
+    "loads": 84,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106144_/Y",
+    "role": "comb",
+    "loads": 46,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106154_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106243_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106246_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106341_/Y",
+    "role": "comb",
+    "loads": 86,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106480_/Y",
+    "role": "comb",
+    "loads": 84,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106618_/Y",
+    "role": "comb",
+    "loads": 46,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106628_/Y",
+    "role": "comb",
+    "loads": 40,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106717_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_106720_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "NOR2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_108826_/Y",
+    "role": "comb",
+    "loads": 72,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_108941_/Y",
+    "role": "comb",
+    "loads": 90,
+    "master": "OR2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_109043_/Y",
+    "role": "comb",
+    "loads": 90,
+    "master": "OR4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_109144_/Y",
+    "role": "comb",
+    "loads": 90,
+    "master": "OR4x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_109247_/Y",
+    "role": "comb",
+    "loads": 90,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_109348_/Y",
+    "role": "comb",
+    "loads": 90,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_109449_/Y",
+    "role": "comb",
+    "loads": 90,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_109550_/Y",
+    "role": "comb",
+    "loads": 90,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_109858_/Y",
+    "role": "comb",
+    "loads": 103,
+    "master": "OR3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_109979_/Y",
+    "role": "comb",
+    "loads": 47,
+    "master": "AND3x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_110201_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "NAND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_110385_/Y",
+    "role": "comb",
+    "loads": 43,
+    "master": "AND3x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_110507_/Y",
+    "role": "comb",
+    "loads": 47,
+    "master": "AO21x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "_110629_/Y",
+    "role": "comb",
+    "loads": 61,
+    "master": "NAND2x1_ASAP7_75t_R"
+  },
+  {
+    "driver": "_112811_/Y",
+    "role": "comb",
+    "loads": 37,
+    "master": "AND2x2_ASAP7_75t_R"
+  },
+  {
+    "driver": "u_ot_pr_core.u_h.host.u_hi.u_eng.ra_wp\\[0\\]$_DFFE_PN0P_/QN",
+    "role": "FF",
+    "loads": 526,
+    "master": "DFFASRHQNx1_ASAP7_75t_R"
+  },
+  {
+    "driver": "clone24330/Y",
+    "role": "comb",
+    "loads": 34,
+    "master": "AO21x2_ASAP7_75t_R"
+  }
+]

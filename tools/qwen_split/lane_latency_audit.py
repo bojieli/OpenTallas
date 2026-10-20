@@ -12,7 +12,10 @@ and FAILS when
   (b) a landing's K straps disagree with fwd_lanes.json (GEN drift), or a lane's frame count does;
   (c) the collective calendar does not absorb the SerDes lanes: io_collective's elaboration LX0..2 (die.v.params.json,
       the parameters the strict bind elaborates it with; missing = 0) != TX(peer port) + RX(own) from the netlist lanes,
-      or a UCIe FDI lane has cycles (no UCIe calendar knob).
+      or a UCIe FDI lane has cycles (no UCIe calendar knob);
+  (d) Q-COLLCAL3 10-18: the collective calendar PERIOD does not cover the lanes: the elaborated LS (die.v.params.json
+      LS; missing = the master's RTL default 376) < lane_groups.collective_calendar(LX as built).LS = max_j KC + KW + 17 +
+      PS + LX_j + R_j + R_peer(j) (dv2f14bq LX 10/0/9 needs 377: the real-lane TP8 bench FAILS at 376, PASSES at 377).
 
     lane_latency_audit.py DIE_V [--lanes fwd_lanes.json] [--params die.v.params.json] --out audit.json
 (defaults: fwd_lanes.json / die.v.params.json beside DIE_V).  Exit 0 = PASS, 1 = FAIL, 2 = cannot audit.
@@ -120,14 +123,22 @@ def main():
     if has_coll and got != cll['LX']:
         fails.append(f'collective calendar LX {got} ({params_p.name if params_p.exists() else "no params sidecar"}) != '
                      f'SerDes lane cycles TX(peer) + RX(own) {cll["LX"]}: every die would fault its static schedule')
+    # (d) the calendar period (Q-COLLCAL3): the elaborated LS must absorb the netlist lanes
+    cal = LG.collective_calendar(cll['LX'], {k: v for k, v in prm.items() if k != 'LS'})
+    ls_got = int(prm['LS']) if 'LS' in prm else cal['rtl_default_LS']
+    if has_coll and ls_got < cal['LS']:
+        fails.append(f'collective calendar period LS {ls_got} ({"die.v.params.json" if "LS" in prm else "RTL default"}) < '
+                     f'{cal["LS"]} needed by the SerDes lanes as built (port {cal["binding_port"]}: '
+                     f'{cal["ports"][cal["binding_port"]]}; {cal["rule"]}): the face reads its RX slot before the peer frame lands')
     rec = dict(schema='opentallas.qwen_split.lane_latency_audit.v1', die_v=str(a.die_v), lanes=str(lanes_p) if fl else None,
                params=str(params_p) if params_p.exists() else None, buses=len(bus),
                forwarded=sum(b['kind'] == 'fwd' for b in bus), plain=sum(b['kind'] == 'plain' for b in bus),
-               groups=gl, collective=dict(has_instance=has_coll, LX_params=got, LX_lanes=cll['LX'], ports=cll['ports']),
+               groups=gl, collective=dict(has_instance=has_coll, LX_params=got, LX_lanes=cll['LX'], ports=cll['ports'],
+                                          LS_params=ls_got, LS_need=cal['LS'], calendar=cal),
                verdict='FAIL' if fails else 'PASS', fails=fails)
     a.out.write_text(json.dumps(rec, indent=1) + '\n')
     print(f"LANE_LATENCY_AUDIT {rec['verdict']} buses={rec['buses']} fwd={rec['forwarded']} plain={rec['plain']} "
-          f"groups={len(gl)} LX_params={got} LX_lanes={cll['LX']} fails={len(fails)}" + (f' first: {fails[0]}' if fails else ''))
+          f"groups={len(gl)} LX_params={got} LX_lanes={cll['LX']} LS={ls_got} LS_need={cal['LS']} fails={len(fails)}" + (f' first: {fails[0]}' if fails else ''))
     return 1 if fails else 0
 
 

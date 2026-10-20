@@ -1,0 +1,8 @@
+ARGMAX_V8X config NLINK2 TP192 VM_RT0 VMLAT0 ROWS64 PW6 P1 NR64
+ARGMAX_V8X host drain 55+1 edges a row
+ARGMAX_ROWS_MEASURE P1 VM_RT0 ROWS64 NR64 launch_to_first_vm_rq12 launch_to_last_delivery58 done59 positions1/1 data_err0 addr_err0 stray0 fault_first-1
+ARGMAX_ROWS PASS P1 NLINK2 TP192 VM_RT0 ROWS64 rows64
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_v8x_argmax.sv:178: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.095 s; speed 44.803 us/s
+- Verilator: cpu 0.095 s on 1 threads; allocated 9 MB

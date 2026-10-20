@@ -1,0 +1,2496 @@
+{
+ "schema": "opentallas.hbm.placement_coverage.v1",
+ "verdict": "FAIL",
+ "actual_instances": 1214,
+ "placed_instances": 1214,
+ "defects": 155,
+ "by_reason": {
+  "generic_centroid_fallback": 155
+ },
+ "affected_area_um2": 22908683.8656,
+ "extra_placed_instances": [],
+ "rows": [
+  {
+   "instance": "cic_NE",
+   "master": "ot_hgi_coll_inj_copy",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_coll_inj_copy",
+    "x": 15924.6,
+    "y": 18300.6,
+    "o": "R0",
+    "w": 34.56,
+    "h": 34.56,
+    "rule": "centroid of 7 placed peers (1296 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 1194.3936
+  },
+  {
+   "instance": "cic_NW",
+   "master": "ot_hgi_coll_inj_copy",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_coll_inj_copy",
+    "x": 6366.6,
+    "y": 17577.0,
+    "o": "R0",
+    "w": 34.56,
+    "h": 34.56,
+    "rule": "centroid of 7 placed peers (1296 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 1194.3936
+  },
+  {
+   "instance": "cic_SE",
+   "master": "ot_hgi_coll_inj_copy",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_coll_inj_copy",
+    "x": 15924.6,
+    "y": 13429.8,
+    "o": "R0",
+    "w": 34.56,
+    "h": 34.56,
+    "rule": "centroid of 7 placed peers (1296 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 1194.3936
+  },
+  {
+   "instance": "cic_SW",
+   "master": "ot_hgi_coll_inj_copy",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_coll_inj_copy",
+    "x": 4239.0,
+    "y": 13408.2,
+    "o": "R0",
+    "w": 34.56,
+    "h": 34.56,
+    "rule": "centroid of 7 placed peers (1296 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 1194.3936
+  },
+  {
+   "instance": "col_idx",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_static_cfg_collar__pv2",
+    "x": 9995.4,
+    "y": 13716.0,
+    "o": "R0",
+    "w": 59.4,
+    "h": 59.4,
+    "rule": "centroid of 10 placed peers (1570 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 3528.36
+  },
+  {
+   "instance": "col_sfu_NE",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_static_cfg_collar__pv0",
+    "x": 12398.4,
+    "y": 21097.8,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "centroid of 3 placed peers (906 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2687.3856
+  },
+  {
+   "instance": "col_sfu_NW",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_static_cfg_collar__pv0",
+    "x": 7938.0,
+    "y": 20989.8,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "centroid of 3 placed peers (906 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2687.3856
+  },
+  {
+   "instance": "col_sfu_SE",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_static_cfg_collar__pv0",
+    "x": 12398.4,
+    "y": 10530.0,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "centroid of 3 placed peers (906 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2687.3856
+  },
+  {
+   "instance": "col_sfu_SW",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_static_cfg_collar__pv0",
+    "x": 7749.0,
+    "y": 10692.0,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "centroid of 3 placed peers (906 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2687.3856
+  },
+  {
+   "instance": "col_su",
+   "master": "ot_hbm_static_cfg_collar",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_static_cfg_collar__pv1",
+    "x": 12976.2,
+    "y": 12479.4,
+    "o": "R0",
+    "w": 51.84,
+    "h": 51.84,
+    "rule": "centroid of 3 placed peers (583 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2687.3856
+  },
+  {
+   "instance": "cxdl_NE0",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv3",
+    "x": 16945.2,
+    "y": 20152.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_NE1",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv7",
+    "x": 14628.6,
+    "y": 19666.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_NE2",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv11",
+    "x": 16945.2,
+    "y": 17852.4,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_NE3",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv15",
+    "x": 14045.4,
+    "y": 17560.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_NW0",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv2",
+    "x": 3315.6,
+    "y": 20152.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_NW1",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv6",
+    "x": 5707.8,
+    "y": 19666.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_NW2",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv10",
+    "x": 3315.6,
+    "y": 17852.4,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_NW3",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv14",
+    "x": 6291.0,
+    "y": 17560.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_SE0",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv1",
+    "x": 16945.2,
+    "y": 11566.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_SE1",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv5",
+    "x": 14628.6,
+    "y": 12047.4,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_SE2",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv9",
+    "x": 16945.2,
+    "y": 13867.2,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_SE3",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv13",
+    "x": 14045.4,
+    "y": 14158.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_SW0",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv0",
+    "x": 3196.8,
+    "y": 11556.0,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_SW1",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv4",
+    "x": 5513.4,
+    "y": 12047.4,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_SW2",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv8",
+    "x": 3196.8,
+    "y": 13856.4,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxdl_SW3",
+   "master": "ot_hbm_su_static_cxport_dl",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_dl__pv12",
+    "x": 5513.4,
+    "y": 15076.8,
+    "o": "R0",
+    "w": 49.68,
+    "h": 49.68,
+    "rule": "centroid of 2 placed peers (1630 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2468.1024
+  },
+  {
+   "instance": "cxij_NE",
+   "master": "ot_hbm_su_static_cxport_ij",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_ij__pv2",
+    "x": 15935.4,
+    "y": 19072.8,
+    "o": "R0",
+    "w": 105.84,
+    "h": 105.84,
+    "rule": "centroid of 5 placed peers (5120 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 11202.1056
+  },
+  {
+   "instance": "cxij_NW",
+   "master": "ot_hbm_su_static_cxport_ij",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_ij__pv1",
+    "x": 4357.8,
+    "y": 18905.4,
+    "o": "R0",
+    "w": 105.84,
+    "h": 105.84,
+    "rule": "centroid of 5 placed peers (5120 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 11202.1056
+  },
+  {
+   "instance": "cxij_SE",
+   "master": "ot_hbm_su_static_cxport_ij",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_ij__pv0",
+    "x": 15935.4,
+    "y": 12587.4,
+    "o": "R0",
+    "w": 105.84,
+    "h": 105.84,
+    "rule": "centroid of 5 placed peers (5120 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 11202.1056
+  },
+  {
+   "instance": "cxij_SW",
+   "master": "ot_hbm_su_static_cxport_ij",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_ij__pv3",
+    "x": 4168.8,
+    "y": 12576.6,
+    "o": "R0",
+    "w": 105.84,
+    "h": 105.84,
+    "rule": "centroid of 5 placed peers (5120 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 11202.1056
+  },
+  {
+   "instance": "cxrc_NE",
+   "master": "ot_hbm_su_static_cxport_rc",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_rc",
+    "x": 12960.0,
+    "y": 19737.0,
+    "o": "R0",
+    "w": 67.824,
+    "h": 68.04,
+    "rule": "centroid of 4 placed peers (1419 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 4614.74496
+  },
+  {
+   "instance": "cxrc_NW",
+   "master": "ot_hbm_su_static_cxport_rc",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_rc",
+    "x": 7360.2,
+    "y": 19737.0,
+    "o": "R0",
+    "w": 67.824,
+    "h": 68.04,
+    "rule": "centroid of 4 placed peers (1419 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 4614.74496
+  },
+  {
+   "instance": "cxrc_SE",
+   "master": "ot_hbm_su_static_cxport_rc",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_rc",
+    "x": 12960.0,
+    "y": 11966.4,
+    "o": "R0",
+    "w": 67.824,
+    "h": 68.04,
+    "rule": "centroid of 4 placed peers (1419 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 4614.74496
+  },
+  {
+   "instance": "cxrc_SW",
+   "master": "ot_hbm_su_static_cxport_rc",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_static_cxport_rc",
+    "x": 7171.2,
+    "y": 11966.4,
+    "o": "R0",
+    "w": 67.824,
+    "h": 68.04,
+    "rule": "centroid of 4 placed peers (1419 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 4614.74496
+  },
+  {
+   "instance": "epcal_NE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "hfd_hgi_vm_calendar_f20",
+    "x": 12252.6,
+    "y": 25029.0,
+    "o": "R0",
+    "w": 241.92,
+    "h": 116.64,
+    "rule": "centroid of 2 placed peers (343 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 28217.5488
+  },
+  {
+   "instance": "epcal_NW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "hfd_hgi_vm_calendar_f20",
+    "x": 7705.8,
+    "y": 24613.2,
+    "o": "R0",
+    "w": 241.92,
+    "h": 116.64,
+    "rule": "centroid of 2 placed peers (343 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 28217.5488
+  },
+  {
+   "instance": "epcal_SE",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "hfd_hgi_vm_calendar_f20",
+    "x": 12484.8,
+    "y": 6112.8,
+    "o": "R0",
+    "w": 241.92,
+    "h": 116.64,
+    "rule": "centroid of 2 placed peers (343 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 28217.5488
+  },
+  {
+   "instance": "epcal_SW",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "hfd_hgi_vm_calendar_f20",
+    "x": 7635.6,
+    "y": 7095.6,
+    "o": "R0",
+    "w": 241.92,
+    "h": 116.64,
+    "rule": "centroid of 3 placed peers (362 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 28217.5488
+  },
+  {
+   "instance": "fcx_NE",
+   "master": "ot_hbm_fault_leaf",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_fault_leaf__pv6",
+    "x": 14828.4,
+    "y": 19699.2,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 7 placed peers (7 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "fcx_NW",
+   "master": "ot_hbm_fault_leaf",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_fault_leaf__pv6",
+    "x": 5481.0,
+    "y": 19699.2,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 7 placed peers (7 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "fcx_SE",
+   "master": "ot_hbm_fault_leaf",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_fault_leaf__pv6",
+    "x": 14877.0,
+    "y": 12047.4,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 7 placed peers (7 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "fcx_SW",
+   "master": "ot_hbm_fault_leaf",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_fault_leaf__pv6",
+    "x": 5238.0,
+    "y": 12047.4,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 7 placed peers (7 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "fs_NE",
+   "master": "ot_hbm_fault_leaf_n8_s0",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_fault_leaf_n8_s0",
+    "x": 12360.6,
+    "y": 30180.6,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 2 placed peers (9 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "fs_SE",
+   "master": "ot_hbm_fault_leaf_n8_s0",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_fault_leaf_n8_s0",
+    "x": 12360.6,
+    "y": 1560.6,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 2 placed peers (9 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "x": 12522.6,
+    "y": 28695.6,
+    "o": "R0",
+    "w": 239.976,
+    "h": 240.84,
+    "rule": "centroid of 10 placed peers (4598 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 57795.81984
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_dma_back_static_vp4_banks_cp",
+    "x": 12522.6,
+    "y": 2829.6,
+    "o": "R0",
+    "w": 239.976,
+    "h": 240.84,
+    "rule": "centroid of 10 placed peers (4598 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 57795.81984
+  },
+  {
+   "instance": "hb_idx__nwsh",
+   "master": "ot_hbm_idx_vm_share2_static",
+   "slot": "idx_nwsh",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_vm_share2_static",
+    "x": 3148.2,
+    "y": 20768.4,
+    "o": "R0",
+    "w": 131.76,
+    "h": 131.76,
+    "rule": "centroid of 9 placed peers (4384 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 17360.6976
+  },
+  {
+   "instance": "hb_idx__op_NE",
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "slot": "idx_op_NE",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_vm_query_static_n12",
+    "x": 18559.8,
+    "y": 30261.6,
+    "o": "R0",
+    "w": 216.0,
+    "h": 108.0,
+    "rule": "centroid of 2 placed peers (1080 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 23328.0
+  },
+  {
+   "instance": "hb_idx__op_NW",
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "slot": "idx_op_NW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_vm_query_static_n12",
+    "x": 1425.6,
+    "y": 30261.6,
+    "o": "R0",
+    "w": 216.0,
+    "h": 108.0,
+    "rule": "centroid of 2 placed peers (1080 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 23328.0
+  },
+  {
+   "instance": "hb_idx__op_SE",
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "slot": "idx_op_SE",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_vm_query_static_n12",
+    "x": 783.0,
+    "y": 189.0,
+    "o": "R0",
+    "w": 216.0,
+    "h": 108.0,
+    "rule": "centroid of 2 placed peers (1080 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 23328.0
+  },
+  {
+   "instance": "hb_idx__op_SW",
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "slot": "idx_op_SW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_vm_query_static_n12",
+    "x": 2311.2,
+    "y": 189.0,
+    "o": "R0",
+    "w": 216.0,
+    "h": 108.0,
+    "rule": "centroid of 2 placed peers (1080 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 23328.0
+  },
+  {
+   "instance": "hb_idx__q_NE",
+   "master": "ot_hbm_idx_query_static",
+   "slot": "idx_q_NE",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_query_static",
+    "x": 18559.8,
+    "y": 30396.6,
+    "o": "R0",
+    "w": 179.712,
+    "h": 180.36,
+    "rule": "centroid of 1 placed peers (569 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 32412.85632
+  },
+  {
+   "instance": "hb_idx__q_NW",
+   "master": "ot_hbm_idx_query_static",
+   "slot": "idx_q_NW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_query_static",
+    "x": 1458.0,
+    "y": 30396.6,
+    "o": "R0",
+    "w": 179.712,
+    "h": 180.36,
+    "rule": "centroid of 1 placed peers (569 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 32412.85632
+  },
+  {
+   "instance": "hb_idx__q_SE",
+   "master": "ot_hbm_idx_query_static",
+   "slot": "idx_q_SE",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_query_static",
+    "x": 793.8,
+    "y": 324.0,
+    "o": "R0",
+    "w": 179.712,
+    "h": 180.36,
+    "rule": "centroid of 1 placed peers (569 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 32412.85632
+  },
+  {
+   "instance": "hb_idx__q_SW",
+   "master": "ot_hbm_idx_query_static",
+   "slot": "idx_q_SW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_query_static",
+    "x": 2327.4,
+    "y": 324.0,
+    "o": "R0",
+    "w": 179.712,
+    "h": 180.36,
+    "rule": "centroid of 1 placed peers (569 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 32412.85632
+  },
+  {
+   "instance": "hb_idx__qctl_NE",
+   "master": "ot_hbm_idx_qctl_static",
+   "slot": "idx_qctl_NE",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_qctl_static",
+    "x": 10179.0,
+    "y": 13575.6,
+    "o": "R0",
+    "w": 194.616,
+    "h": 195.48,
+    "rule": "centroid of 5 placed peers (333 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 38043.53568
+  },
+  {
+   "instance": "hb_idx__qctl_NW",
+   "master": "ot_hbm_idx_qctl_static",
+   "slot": "idx_qctl_NW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_qctl_static",
+    "x": 9995.4,
+    "y": 13797.0,
+    "o": "R0",
+    "w": 194.616,
+    "h": 195.48,
+    "rule": "centroid of 5 placed peers (333 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 38043.53568
+  },
+  {
+   "instance": "hb_idx__qctl_SE",
+   "master": "ot_hbm_idx_qctl_static",
+   "slot": "idx_qctl_SE",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_qctl_static",
+    "x": 9774.0,
+    "y": 13716.0,
+    "o": "R0",
+    "w": 194.616,
+    "h": 195.48,
+    "rule": "centroid of 5 placed peers (333 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 38043.53568
+  },
+  {
+   "instance": "hb_idx__qctl_SW",
+   "master": "ot_hbm_idx_qctl_static",
+   "slot": "idx_qctl_SW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_qctl_static",
+    "x": 9865.8,
+    "y": 13494.6,
+    "o": "R0",
+    "w": 194.616,
+    "h": 195.48,
+    "rule": "centroid of 5 placed peers (333 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 38043.53568
+  },
+  {
+   "instance": "hb_idx__s_NE",
+   "master": "ot_hbm_idx_score_quarter_static",
+   "slot": "idx_s1_h1",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_score_quarter_static",
+    "x": 17026.2,
+    "y": 29732.4,
+    "o": "R0",
+    "w": 1508.976,
+    "h": 1509.84,
+    "rule": "centroid of 4 placed peers (4396 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 2278312.32384
+  },
+  {
+   "instance": "hb_idx__s_NW",
+   "master": "ot_hbm_idx_score_quarter_static",
+   "slot": "idx_s1_h0",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_score_quarter_static",
+    "x": 1663.2,
+    "y": 29732.4,
+    "o": "R0",
+    "w": 1508.976,
+    "h": 1509.84,
+    "rule": "centroid of 4 placed peers (4396 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 2278312.32384
+  },
+  {
+   "instance": "hb_idx__s_SE",
+   "master": "ot_hbm_idx_score_quarter_static",
+   "slot": "idx_s0_h1",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_score_quarter_static",
+    "x": 129.6,
+    "y": 529.2,
+    "o": "R0",
+    "w": 1508.976,
+    "h": 1509.84,
+    "rule": "centroid of 4 placed peers (4396 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 2278312.32384
+  },
+  {
+   "instance": "hb_idx__s_SW",
+   "master": "ot_hbm_idx_score_quarter_static",
+   "slot": "idx_s0_h0",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_score_quarter_static",
+    "x": 1663.2,
+    "y": 529.2,
+    "o": "R0",
+    "w": 1508.976,
+    "h": 1509.84,
+    "rule": "centroid of 4 placed peers (4396 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 2278312.32384
+  },
+  {
+   "instance": "hb_idx__xq_N",
+   "master": "ot_hbm_idx_xq_node_static",
+   "slot": "idx_xq1",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_xq_node_static__pv0",
+    "x": 8812.8,
+    "y": 20260.8,
+    "o": "R0",
+    "w": 29.16,
+    "h": 29.16,
+    "rule": "centroid of 3 placed peers (1188 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 850.3056
+  },
+  {
+   "instance": "hb_idx__xq_S",
+   "master": "ot_hbm_idx_xq_node_static",
+   "slot": "idx_xq0",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_xq_node_static__pv0",
+    "x": 6102.0,
+    "y": 10994.4,
+    "o": "R0",
+    "w": 29.16,
+    "h": 29.16,
+    "rule": "centroid of 3 placed peers (1188 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 850.3056
+  },
+  {
+   "instance": "hb_idx__xqr",
+   "master": "ot_hbm_idx_xq_node_static",
+   "slot": "idx_xqr",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_idx_xq_node_static__pv1",
+    "x": 8175.6,
+    "y": 15147.0,
+    "o": "R0",
+    "w": 47.736,
+    "h": 48.6,
+    "rule": "centroid of 2 placed peers (1188 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 2319.9696
+  },
+  {
+   "instance": "hb_quant_NW",
+   "master": "ot_hgi_qdq_host_split",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_qdq_host_split",
+    "x": 3148.2,
+    "y": 20925.0,
+    "o": "R0",
+    "w": 239.544,
+    "h": 239.76,
+    "rule": "centroid of 9 placed peers (2571 b, bits^2 weighted) OWNER-BLOCK MISFIT (240x240 fits none of ['quant_NW0', 'quant_NW1', 'quant_NW2']...)"
+   },
+   "area_um2": 57433.06944
+  },
+  {
+   "instance": "hcb_NE0",
+   "master": "ot_hbm_hc_bankq0_static",
+   "slot": "hcb_NE0",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq0_static",
+    "x": 14013.0,
+    "y": 16146.0,
+    "o": "R0",
+    "w": 548.856,
+    "h": 549.72,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 301717.12032
+  },
+  {
+   "instance": "hcb_NE1",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NE1",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 14585.4,
+    "y": 16146.0,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2078 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NE2",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "slot": "hcb_NE2",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_ft_static",
+    "x": 13440.6,
+    "y": 15778.8,
+    "o": "R0",
+    "w": 548.208,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (3174 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300768.83712
+  },
+  {
+   "instance": "hcb_NE3",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NE3",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 15157.8,
+    "y": 15773.4,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NE4",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NE4",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 16426.8,
+    "y": 15865.2,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NE5",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NE5",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 18716.4,
+    "y": 15865.2,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2078 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NE6",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "slot": "hcb_NE6",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_ft_static",
+    "x": 19288.8,
+    "y": 16146.0,
+    "o": "R0",
+    "w": 548.208,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (3174 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300768.83712
+  },
+  {
+   "instance": "hcb_NE7",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NE7",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 19288.8,
+    "y": 22987.8,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NW0",
+   "master": "ot_hbm_hc_bankq0_static",
+   "slot": "hcb_NW0",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq0_static",
+    "x": 7333.2,
+    "y": 16146.0,
+    "o": "R0",
+    "w": 548.856,
+    "h": 549.72,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 301717.12032
+  },
+  {
+   "instance": "hcb_NW1",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NW1",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 5027.4,
+    "y": 16146.0,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2078 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NW2",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "slot": "hcb_NW2",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_ft_static",
+    "x": 4449.6,
+    "y": 16146.0,
+    "o": "R0",
+    "w": 548.208,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (3174 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300768.83712
+  },
+  {
+   "instance": "hcb_NW3",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NW3",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 4449.6,
+    "y": 15573.6,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NW4",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NW4",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 3877.2,
+    "y": 15660.0,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NW5",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NW5",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 2143.8,
+    "y": 15827.4,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2078 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_NW6",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "slot": "hcb_NW6",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_ft_static",
+    "x": 302.4,
+    "y": 16146.0,
+    "o": "R0",
+    "w": 548.208,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (3174 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300768.83712
+  },
+  {
+   "instance": "hcb_NW7",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_NW7",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 302.4,
+    "y": 22577.4,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SE0",
+   "master": "ot_hbm_hc_bankq0_static",
+   "slot": "hcb_SE0",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq0_static",
+    "x": 14207.4,
+    "y": 15076.8,
+    "o": "R0",
+    "w": 548.856,
+    "h": 549.72,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 301717.12032
+  },
+  {
+   "instance": "hcb_SE1",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SE1",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 14779.8,
+    "y": 15076.8,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2078 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SE2",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "slot": "hcb_SE2",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_ft_static",
+    "x": 15352.2,
+    "y": 15076.8,
+    "o": "R0",
+    "w": 548.208,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (3174 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300768.83712
+  },
+  {
+   "instance": "hcb_SE3",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SE3",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 15924.6,
+    "y": 15076.8,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SE4",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SE4",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 15854.4,
+    "y": 15649.2,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SE5",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SE5",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 16999.2,
+    "y": 15865.2,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2078 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SE6",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "slot": "hcb_SE6",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_ft_static",
+    "x": 17571.6,
+    "y": 15865.2,
+    "o": "R0",
+    "w": 548.208,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (3174 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300768.83712
+  },
+  {
+   "instance": "hcb_SE7",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SE7",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 18144.0,
+    "y": 15865.2,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SW0",
+   "master": "ot_hbm_hc_bankq0_static",
+   "slot": "hcb_SW0",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq0_static",
+    "x": 7333.2,
+    "y": 15076.8,
+    "o": "R0",
+    "w": 548.856,
+    "h": 549.72,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 301717.12032
+  },
+  {
+   "instance": "hcb_SW1",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SW1",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 6755.4,
+    "y": 15595.2,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2078 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SW2",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "slot": "hcb_SW2",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_ft_static",
+    "x": 6177.6,
+    "y": 15595.2,
+    "o": "R0",
+    "w": 548.208,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (3174 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300768.83712
+  },
+  {
+   "instance": "hcb_SW3",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SW3",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 5605.2,
+    "y": 15595.2,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SW4",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SW4",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 5027.4,
+    "y": 15503.4,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SW5",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SW5",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 3877.2,
+    "y": 15087.6,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2078 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hcb_SW6",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "slot": "hcb_SW6",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_ft_static",
+    "x": 3299.4,
+    "y": 15741.0,
+    "o": "R0",
+    "w": 548.208,
+    "h": 548.64,
+    "rule": "centroid of 2 placed peers (3174 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300768.83712
+  },
+  {
+   "instance": "hcb_SW7",
+   "master": "ot_hbm_hc_bankq_static",
+   "slot": "hcb_SW7",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_hc_bankq_static",
+    "x": 2721.6,
+    "y": 15827.4,
+    "o": "R0",
+    "w": 547.776,
+    "h": 548.64,
+    "rule": "centroid of 1 placed peers (2352 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 300531.82464
+  },
+  {
+   "instance": "hleaf_NE",
+   "master": "ot_hbm_host_cfg_leaf_ne2",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_host_cfg_leaf_ne2",
+    "x": 12252.6,
+    "y": 25169.4,
+    "o": "R0",
+    "w": 21.816,
+    "h": 22.68,
+    "rule": "centroid of 14 placed peers (3235 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 494.78688
+  },
+  {
+   "instance": "hleaf_NW",
+   "master": "ot_hbm_host_cfg_leaf_nw",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_host_cfg_leaf_nw",
+    "x": 7878.6,
+    "y": 24521.4,
+    "o": "R0",
+    "w": 69.12,
+    "h": 69.12,
+    "rule": "centroid of 16 placed peers (3841 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 4777.5744
+  },
+  {
+   "instance": "hleaf_SE",
+   "master": "ot_hbm_host_cfg_leaf_se2",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_host_cfg_leaf_se2",
+    "x": 12576.6,
+    "y": 6064.2,
+    "o": "R0",
+    "w": 22.248,
+    "h": 22.68,
+    "rule": "centroid of 15 placed peers (3560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 504.58464
+  },
+  {
+   "instance": "hleaf_SW",
+   "master": "ot_hbm_host_cfg_leaf_sw",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_host_cfg_leaf_sw",
+    "x": 7765.2,
+    "y": 7003.8,
+    "o": "R0",
+    "w": 69.12,
+    "h": 69.12,
+    "rule": "centroid of 17 placed peers (3842 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 4777.5744
+  },
+  {
+   "instance": "host_cp_ingress",
+   "master": "ot_hbm_host_static_ingress",
+   "slot": "host_cp_ingress",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_host_static_ingress",
+    "x": 11113.2,
+    "y": 14958.0,
+    "o": "R0",
+    "w": 216.0,
+    "h": 216.0,
+    "rule": "centroid of 9 placed peers (2664 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 46656.0
+  },
+  {
+   "instance": "refcfg_NE",
+   "master": "ot_hbm_pc_refresh_cfg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_pc_refresh_cfg",
+    "x": 12252.6,
+    "y": 25234.2,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 17 placed peers (408 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "refcfg_SE",
+   "master": "ot_hbm_pc_refresh_cfg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_pc_refresh_cfg",
+    "x": 12576.6,
+    "y": 5999.4,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 17 placed peers (408 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "sfault_NE",
+   "master": "ot_hbm_svc_stack_fault",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_svc_stack_fault",
+    "x": 12339.0,
+    "y": 30375.0,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 33 placed peers (145 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "sfault_SE",
+   "master": "ot_hbm_svc_stack_fault",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_svc_stack_fault",
+    "x": 12339.0,
+    "y": 1377.0,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 33 placed peers (145 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "str_C",
+   "master": "ot_hbm_su_stree_root",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_stree_root",
+    "x": 11113.2,
+    "y": 16599.6,
+    "o": "R0",
+    "w": 43.2,
+    "h": 43.2,
+    "rule": "centroid of 12 placed peers (820 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 1866.24
+  },
+  {
+   "instance": "subr_NE",
+   "master": "ot_hbm_su_bridge_release_s",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_bridge_release_s",
+    "x": 15282.0,
+    "y": 19548.0,
+    "o": "R0",
+    "w": 12.96,
+    "h": 12.96,
+    "rule": "centroid of 12 placed peers (18 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 167.9616
+  },
+  {
+   "instance": "subr_NW",
+   "master": "ot_hbm_su_bridge_release_s",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_bridge_release_s",
+    "x": 4449.6,
+    "y": 18867.6,
+    "o": "R0",
+    "w": 12.96,
+    "h": 12.96,
+    "rule": "centroid of 12 placed peers (18 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 167.9616
+  },
+  {
+   "instance": "subr_SE",
+   "master": "ot_hbm_su_bridge_release_s",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_bridge_release_s",
+    "x": 15924.6,
+    "y": 12781.8,
+    "o": "R0",
+    "w": 12.96,
+    "h": 12.96,
+    "rule": "centroid of 12 placed peers (18 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 167.9616
+  },
+  {
+   "instance": "subr_SW",
+   "master": "ot_hbm_su_bridge_release_s",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_su_bridge_release_s",
+    "x": 4260.6,
+    "y": 12830.4,
+    "o": "R0",
+    "w": 12.96,
+    "h": 12.96,
+    "rule": "centroid of 12 placed peers (18 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 167.9616
+  },
+  {
+   "instance": "wbc_NE",
+   "master": "ot_hbm_svc_wbw_copy",
+   "slot": "pc_NW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_svc_wbw_copy",
+    "x": 12339.0,
+    "y": 30137.4,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 5 placed peers (215 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "wbc_NW",
+   "master": "ot_hbm_svc_wbw_copy",
+   "slot": "pc_NW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_svc_wbw_copy",
+    "x": 8980.2,
+    "y": 30223.8,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 5 placed peers (215 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "wbc_SE",
+   "master": "ot_hbm_svc_wbw_copy",
+   "slot": "pc_SW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_svc_wbw_copy",
+    "x": 12339.0,
+    "y": 1603.8,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 5 placed peers (215 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "wbc_SW",
+   "master": "ot_hbm_svc_wbw_copy",
+   "slot": "pc_SW",
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_svc_wbw_copy",
+    "x": 8926.2,
+    "y": 1398.6,
+    "o": "R0",
+    "w": 21.6,
+    "h": 21.6,
+    "rule": "centroid of 5 placed peers (215 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 466.56
+  },
+  {
+   "instance": "wbk_NE",
+   "master": "ot_hbm_svc_wb_kport_q",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_svc_wb_kport_q",
+    "x": 12252.6,
+    "y": 29430.0,
+    "o": "R0",
+    "w": 470.232,
+    "h": 470.88,
+    "rule": "centroid of 4 placed peers (4624 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 221422.84416
+  },
+  {
+   "instance": "wbk_SE",
+   "master": "ot_hbm_svc_wb_kport_q",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_svc_wb_kport_q",
+    "x": 12252.6,
+    "y": 1868.4,
+    "o": "R0",
+    "w": 470.232,
+    "h": 470.88,
+    "rule": "centroid of 4 placed peers (4624 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 221422.84416
+  },
+  {
+   "instance": "xl_NE_aqhi",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 18592.2,
+    "y": 22642.2,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "centroid of 3 placed peers (1560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 19828.8
+  },
+  {
+   "instance": "xl_NE_aqlo",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 18797.4,
+    "y": 22642.2,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "centroid of 3 placed peers (1560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 19828.8
+  },
+  {
+   "instance": "xl_NE_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 19251.0,
+    "y": 22577.4,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "centroid of 11 placed peers (2599 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 151165.44
+  },
+  {
+   "instance": "xl_NW_aqhi",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 3040.2,
+    "y": 24834.6,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "centroid of 3 placed peers (1560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 19828.8
+  },
+  {
+   "instance": "xl_NW_aqlo",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 3245.4,
+    "y": 24834.6,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "centroid of 3 placed peers (1560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 19828.8
+  },
+  {
+   "instance": "xl_NW_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 3040.2,
+    "y": 24424.2,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "centroid of 20 placed peers (11004 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 151165.44
+  },
+  {
+   "instance": "xl_SE_aqhi",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 18592.2,
+    "y": 9023.4,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "centroid of 3 placed peers (1560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 19828.8
+  },
+  {
+   "instance": "xl_SE_aqlo",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 18797.4,
+    "y": 9023.4,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "centroid of 3 placed peers (1560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 19828.8
+  },
+  {
+   "instance": "xl_SE_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 19251.0,
+    "y": 8807.4,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "centroid of 11 placed peers (2599 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 151165.44
+  },
+  {
+   "instance": "xl_SW_aqhi",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 3040.2,
+    "y": 6831.0,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "centroid of 3 placed peers (1560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 19828.8
+  },
+  {
+   "instance": "xl_SW_aqlo",
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 3245.4,
+    "y": 6831.0,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "centroid of 3 placed peers (1560 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 19828.8
+  },
+  {
+   "instance": "xl_SW_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 3040.2,
+    "y": 6960.6,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "centroid of 20 placed peers (11004 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 151165.44
+  },
+  {
+   "instance": "xq_NE_p0_bd",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bdring",
+    "x": 12479.4,
+    "y": 25731.0,
+    "o": "R0",
+    "w": 86.4,
+    "h": 302.4,
+    "rule": "centroid of 2 placed peers (2156 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 26127.36
+  },
+  {
+   "instance": "xq_NE_p0_bfq0",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 18970.2,
+    "y": 22253.4,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_NE_p0_bfq1",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19661.4,
+    "y": 22663.8,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_NE_p0_bfq2",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19251.0,
+    "y": 23560.2,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_NE_p0_bfq3",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19575.0,
+    "y": 23560.2,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_NE_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_xq_pegress",
+    "x": 12322.8,
+    "y": 26055.0,
+    "o": "R0",
+    "w": 369.36,
+    "h": 369.36,
+    "rule": "centroid of 2 placed peers (4126 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 136426.8096
+  },
+  {
+   "instance": "xq_NE_p1_bd",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bdring",
+    "x": 16988.4,
+    "y": 25731.0,
+    "o": "R0",
+    "w": 86.4,
+    "h": 302.4,
+    "rule": "centroid of 2 placed peers (2156 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 26127.36
+  },
+  {
+   "instance": "xq_NE_p1_bfq0",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19861.2,
+    "y": 22987.8,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_NE_p1_bfq1",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 18991.8,
+    "y": 21929.4,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_NE_p1_bfq2",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19251.0,
+    "y": 23884.2,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_NE_p1_bfq3",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19575.0,
+    "y": 23884.2,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_NE_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_xq_pegress",
+    "x": 16842.6,
+    "y": 26055.0,
+    "o": "R0",
+    "w": 369.36,
+    "h": 369.36,
+    "rule": "centroid of 2 placed peers (4126 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 136426.8096
+  },
+  {
+   "instance": "xq_SE_p0_bd",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bdring",
+    "x": 12468.6,
+    "y": 5740.2,
+    "o": "R0",
+    "w": 86.4,
+    "h": 302.4,
+    "rule": "centroid of 2 placed peers (2156 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 26127.36
+  },
+  {
+   "instance": "xq_SE_p0_bfq0",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19251.0,
+    "y": 8483.4,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_SE_p0_bfq1",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19251.0,
+    "y": 8159.4,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_SE_p0_bfq2",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 18970.2,
+    "y": 9217.8,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_SE_p0_bfq3",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19575.0,
+    "y": 8483.4,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_SE_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_xq_pegress",
+    "x": 12322.8,
+    "y": 5346.0,
+    "o": "R0",
+    "w": 369.36,
+    "h": 369.36,
+    "rule": "centroid of 2 placed peers (4126 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 136426.8096
+  },
+  {
+   "instance": "xq_SE_p1_bd",
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bdring",
+    "x": 16988.4,
+    "y": 5740.2,
+    "o": "R0",
+    "w": 86.4,
+    "h": 302.4,
+    "rule": "centroid of 2 placed peers (2156 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 26127.36
+  },
+  {
+   "instance": "xq_SE_p1_bfq0",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19661.4,
+    "y": 8807.4,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_SE_p1_bfq1",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19575.0,
+    "y": 8159.4,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_SE_p1_bfq2",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19251.0,
+    "y": 7830.0,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_SE_p1_bfq3",
+   "master": "ot_hgi_sm_xload_cl2_bfqg",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_cl2_bfqg",
+    "x": 19575.0,
+    "y": 7830.0,
+    "o": "R0",
+    "w": 302.4,
+    "h": 298.08,
+    "rule": "centroid of 2 placed peers (1320 b, bits^2 weighted) -> outside plan blocks"
+   },
+   "area_um2": 90139.392
+  },
+  {
+   "instance": "xq_SE_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "slot": null,
+   "reason": "generic_centroid_fallback",
+   "actual_home": {
+    "m": "ot_hgi_sm_xload_xq_pegress",
+    "x": 16842.6,
+    "y": 5346.0,
+    "o": "R0",
+    "w": 369.36,
+    "h": 369.36,
+    "rule": "centroid of 2 placed peers (4126 b, bits^2 weighted) (>= 0.1 mm2: outside the band strips) -> outside plan blocks"
+   },
+   "area_um2": 136426.8096
+  }
+ ],
+ "native_release_qualified": false,
+ "qualification": "Placement provenance census only; no geometry, reset, clock or timing waiver."
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "fixture": "/srv/opentallas-scratch/claude/refill-1225/QWLAYER/fx_qk/L0_mat_qkv_tp8.npz",
+    "sha256": "1eacb299857342e340347bb0c28781e24e3d6103e1d7c1d436244ecedf011969",
+    "rows": 768,
+    "split": 512,
+    "k_per_chunk": 8,
+    "isa_equal": 768,
+    "isa_words": 768,
+    "mismatches": [],
+    "cluster_bits_sha256": "a051c75428fea92420effb91d61df88f153f93252e9740dbbef52a90092fb032",
+    "scale_before_tree_different": 288,
+    "sequential_clusters_different": 0,
+    "existing_bench_cluster_and_y_equal": true
+  },
+  {
+    "fixture": "/srv/opentallas-scratch/claude/refill-1225/QWLAYER/fx_qk/L0_mat_gu_tp8.npz",
+    "sha256": "671bd39496a53ca8800e348167ebb23482e057ac0823d512819961eb71d8b2d4",
+    "rows": 3072,
+    "split": 128,
+    "k_per_chunk": 32,
+    "isa_equal": 3072,
+    "isa_words": 3072,
+    "mismatches": [],
+    "cluster_bits_sha256": "395b766584fba1bdc843e8bfbb48c03301832f6ea49cde33aaf2bb39cd6f3523",
+    "scale_before_tree_different": 1250,
+    "sequential_clusters_different": 0,
+    "existing_bench_cluster_and_y_equal": true
+  },
+  {
+    "fixture": "/srv/opentallas-scratch/claude/refill-1225/QWLAYER/fx_qk/L1_mat_qkv_tp8.npz",
+    "sha256": "4854a083d486d12763b3e20e8bf3c27d4eb02b7129a512253f82dbce9f7a0ba1",
+    "rows": 768,
+    "split": 512,
+    "k_per_chunk": 8,
+    "isa_equal": 768,
+    "isa_words": 768,
+    "mismatches": [],
+    "cluster_bits_sha256": "e909eda422e153c1ea63623e9dcdabde74d37ca24ab86d7c4039113d636bae79",
+    "scale_before_tree_different": 442,
+    "sequential_clusters_different": 338,
+    "existing_bench_cluster_and_y_equal": true
+  },
+  {
+    "fixture": "/srv/opentallas-scratch/claude/refill-1225/QWLAYER/fx_qk/L1_mat_gu_tp8.npz",
+    "sha256": "c90e600a531233d0a1521e2a7aa010948c84effc276512f67d30d2b49b8e0d53",
+    "rows": 3072,
+    "split": 128,
+    "k_per_chunk": 32,
+    "isa_equal": 3072,
+    "isa_words": 3072,
+    "mismatches": [],
+    "cluster_bits_sha256": "dfa10e31cfd5c53ea3649d3d8f38fd1e6179d58d332b64ff4a3f8e3e3fc601ee",
+    "scale_before_tree_different": 1155,
+    "sequential_clusters_different": 0,
+    "existing_bench_cluster_and_y_equal": true
+  }
+]

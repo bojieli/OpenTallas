@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_rlyh_600_EN_104x106",
+ "outline": {
+  "w": 104.088,
+  "h": 105.816
+ },
+ "instances": null,
+ "pins": {
+  "E": [
+   "a",
+   "ea"
+  ],
+  "N": [
+   "b",
+   "eb"
+  ]
+ },
+ "pin_ranges": {
+  "a": [
+   9.636,
+   95.892
+  ],
+  "ea": [
+   96.036,
+   96.036
+  ],
+  "b": [
+   8.772,
+   95.028
+  ],
+  "eb": [
+   95.172,
+   95.172
+  ]
+ },
+ "ports": {
+  "a": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 600,
+   "range_um": [
+    9.636,
+    95.892
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "ea": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    96.036,
+    96.036
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "b": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 600,
+   "range_um": [
+    8.772,
+    95.028
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  },
+  "eb": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    95.172,
+    95.172
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null
+  },
+  "ckf": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     51.244,
+     49.908
+    ]
+   ]
+  },
+  "ck_o": {
+   "face": "S",
+   "layer": "M8",
+   "bits": 1,
+   "range_um": [
+    52.044,
+    52.044
+   ],
+   "bit0_at": "lo",
+   "direction": "output",
+   "peer": null,
+   "interior": true,
+   "positions_xy_um": [
+    [
+     52.844,
+     49.908
+    ]
+   ]
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "note": "QK-FWD class master (tools/qwen_split/fwd_lane_classes.py): data faces of the class rep, positions informational (the flow places the face pins; the die adopts the view pins); centre area pins go to the free face in the kit"
+}

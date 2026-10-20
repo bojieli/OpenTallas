@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.cb16.cp_place.v1",
+ "diagnostic_only": true,
+ "source": "ac8e4c483",
+ "outline_um": {
+  "w": 3153.6000000000004,
+  "h": 5227.2
+ },
+ "step_um": 777.6,
+ "area_mm2": 16.484497920000003,
+ "area_ratio": 1.2897526501766787,
+ "status": "INFEASIBLE",
+ "solver_wall_s": 1471.7014265060425,
+ "shape_policy": "stations90.72x64.8; xstn90.72x129.6; split64.8x129.6; all pins<=6/um",
+ "clock_domain_rule": "logical domain unchanged; physical regions may overlap; clock closure unqualified",
+ "reset_hardening_remaining": 547,
+ "storage_waiver_required": false,
+ "paired_land_restriction": true,
+ "landing_child_profile": "split64.8x129.6",
+ "release_ready": false,
+ "infeasible_edge_core": []
+}

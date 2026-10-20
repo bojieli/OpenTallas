@@ -1,0 +1,23 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc7       admits   927 GB (avail 749, growth 101, headroom 0, waiters 1/16 GB) load 51/96 running 36 disk 6319 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4120644-1792438136 after 1 s
+SEQHOST_PROG PASS C=11 kit_offset=7 rows=8 status=00000000000 
+L0_all: SEQHOST_MU PASS users=46 user0_identical=True events=414 ctx_beats/user=1 
+L2_A: SEQHOST_MU PASS users=23 user0_identical=True events=207 ctx_beats/user=1 
+L2_B: SEQHOST_MU PASS users=23 user0_identical=True events=207 ctx_beats/user=1 
+m_shift4: SEQHOST_MU FAIL users=2 user0_identical=False events=16 ctx_beats/user=1 (a) user 0 differs from the single-user run at event 0 (multi None vs single ('VO S', 374, '0000000000000000000000003001f4000000000000000000000000001fc0000200801')); (b) 2 expected events missing (first ('VO S', 438, '000000000000000000000000000000000000000000000000001800002840000200801')); (c) issuer fault at edge 432 code 9; (c) final issuer state PROG FCODE 9 fault 1 jobs 2 (want code 0 fault 0 jobs 2)
+m_ctx3: SEQHOST_MU FAIL users=3 user0_identical=False events=18 ctx_beats/user=1 (a) user 0 differs from the single-user run at event 0 (multi None vs single ('VO S', 374, '0000000000000000000000003001f4000000000000000000000000001fc0000200801')); (b) 9 expected events missing (first ('VO S', 390, '0000000000000000000400003001fb000000000000000000000000001fc0000200801')); (c) issuer fault at edge 379 code 5; (c) final issuer state PROG FCODE 5 fault 1 jobs 2 (want code 0 fault 0 jobs 3)
+m_raw: SEQHOST_MU FAIL users=2 user0_identical=True events=9 ctx_beats/user=1 (b) 9 expected events missing (first ('VO S', 21687, '0000000000000000000200003001f7800000000000000000000000001fc0000200801')); (c) issuer fault at edge 21676 code 5; (c) final issuer state PROG FCODE 5 fault 1 jobs 1 (want code 0 fault 0 jobs 2); (c) unit status fault t_host[75] = 1
+m_drop: SEQHOST_MU FAIL users=46 user0_identical=True events=414 ctx_beats/user=1 (b) 45 expected events missing (first ('VO S', 21686, '0000000000000000000200003001f7800000000000000000000000001fc0000200801')); (b) 45 unexpected events (first ('VO S', 21686, '0000000000000000000000003001f7800000000000000000000000001fc0000200801'))
+m_shift4 issuer: PROG FAULT 432 code 9
+m_ctx3 issuer: PROG FAULT 379 code 5
+m_raw issuer: PROG FAULT 21676 code 5
+m_drop issuer: no fault
+LEG prog rc=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120644-1792438136): exit 0

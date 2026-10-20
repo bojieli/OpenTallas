@@ -1,5 +1,5 @@
 {
- "name": "hbm_su_sfustore_hw_1018-r1-1ed83738e",
+ "name": "hbm_su_sfustore_hw_1018-r3-COMMIT",
  "block": "ot_hbm_su_static_sfustore_hw",
  "ref_tile": true,
  "owner": "Claude:RTL-BUILD-HBM/sfus",
@@ -7,13 +7,14 @@
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/rtl-build-hbm-1018-sfus",
-  "commit": "1ed83738e71621b2320fdcfa6ad913dc8a63fd02",
+  "branch": "claude/hbm-sfuhw-1018",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/adapters/static_su",
    "rtl/lib",
    "physical/asap7_memory_macros_v2",
-   "results/rtl/rbh_1018/sfus"
+   "results/rtl/rbh_1018/sfus",
+   "results/rtl/hbm_sfuhw_1018"
   ]
  },
  "stages": {
@@ -47,6 +48,15 @@
     "peak_ram_gb": 4
    },
    {
+    "name": "sfus_lockstep_q2",
+    "cmd": "OUT={RUN}/bench/lock2 bash rtl/hbm_accel/generic/adapters/static_su/collport/run_sfustore_hw.sh 0 3 2",
+    "expect": "pass",
+    "pass_regex": "SFUSTORE_HW_GATE PASS MUT=0",
+    "min_count_regex": "SFUSTORE_HW LOCKSTEP PASS checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
     "name": "sfus_orig_gate",
     "cmd": "OUT={RUN}/bench/orig bash rtl/hbm_accel/generic/adapters/static_su/collport/run_sfustore.sh",
     "expect": "pass",
@@ -59,7 +69,7 @@
     "cmd": "OUT={RUN}/bench/m1 bash rtl/hbm_accel/generic/adapters/static_su/collport/run_sfustore_hw.sh 1 1",
     "expect": "fail",
     "fail_regex": "SFUSTORE_HW LOCKSTEP FAIL|SFUSTORE_HW_GATE FAIL",
-    "fail_witness": "results/rtl/rbh_1018/sfus/mut1.log",
+    "fail_witness": "results/rtl/hbm_sfuhw_1018/mut1.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "note": "lane n^1 read data"
@@ -69,7 +79,7 @@
     "cmd": "OUT={RUN}/bench/m2 bash rtl/hbm_accel/generic/adapters/static_su/collport/run_sfustore_hw.sh 2 1",
     "expect": "fail",
     "fail_regex": "SFUSTORE_HW LOCKSTEP FAIL|SFUSTORE_HW_GATE FAIL",
-    "fail_witness": "results/rtl/rbh_1018/sfus/mut2.log",
+    "fail_witness": "results/rtl/hbm_sfuhw_1018/mut2.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "note": "write row bits swapped"
@@ -79,10 +89,30 @@
     "cmd": "OUT={RUN}/bench/m3 bash rtl/hbm_accel/generic/adapters/static_su/collport/run_sfustore_hw.sh 3 1",
     "expect": "fail",
     "fail_regex": "SFUSTORE_HW LOCKSTEP FAIL|SFUSTORE_HW_GATE FAIL",
-    "fail_witness": "results/rtl/rbh_1018/sfus/mut3.log",
+    "fail_witness": "results/rtl/hbm_sfuhw_1018/mut3.log",
     "threads": 1,
     "peak_ram_gb": 4,
     "note": "lane n^1 identity-check bits"
+   },
+   {
+    "name": "sfus_mut4",
+    "cmd": "OUT={RUN}/bench/m4 bash rtl/hbm_accel/generic/adapters/static_su/collport/run_sfustore_hw.sh 4 1",
+    "expect": "fail",
+    "fail_regex": "SFUSTORE_HW LOCKSTEP FAIL|SFUSTORE_HW_GATE FAIL",
+    "fail_witness": "results/rtl/hbm_sfuhw_1018/mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "note": "read capture dropped (vi_q n+2 instead of n+3)"
+   },
+   {
+    "name": "sfus_mut5",
+    "cmd": "OUT={RUN}/bench/m5 bash rtl/hbm_accel/generic/adapters/static_su/collport/run_sfustore_hw.sh 5 1",
+    "expect": "fail",
+    "fail_regex": "SFUSTORE_HW LOCKSTEP FAIL|SFUSTORE_HW_GATE FAIL",
+    "fail_witness": "results/rtl/hbm_sfuhw_1018/mut5.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "note": "lanes 8..15 compare against a bit-swapped qid replica"
    }
   ],
   "calibrate": {
@@ -135,14 +165,14 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_su_sfustore_hw_1018/hbm_su_sfustore_hw_1018-r1-1ed83738e"
+   "to": "results/rtl/ref_tile/hbm_su_sfustore_hw_1018/hbm_su_sfustore_hw_1018-r3-COMMIT"
   }
  ],
- "cycles_added": 0,
+ "cycles_added": 1,
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
- "notes": "read vi_q n+2 and write commit n+1 unchanged; fault +1 edge (n+2); reset release +3 clk edges (ot_rst_relay)",
+ "notes": "r3: same RTL as r2 (vi_q n+3, write n+1, fault n+2); SRAM clk pins on their own balanced post-CTS branch (macro_branch.tcl, pad 1)",
  "merge_target": null,
- "structural_change": "RBH-SFUS 10-18 first hardening of sfus_<q> (lanes/HBM-SU.md: NOT-STARTED, 32 clock pins clk_bank[16]+clk_bank_macro[16]): ONE clk root for all 16 banks and SRAM clock pins, ot_rst_relay (4 column regions), flop-first identity check (fault n+2); per-lane ports + qid identity strap pin (one view for all 4 quadrants) so each lane's 114 pins sit on the S face over its SRAM column (4 abutted columns x 4 SRAMs on the 43.2 lattice, 34.8 um pin channels, one S std-cell band of pin flops)."
+ "structural_change": "HBM-SFUHW2 10-18 r3: r2 route NEEDS_RTL TT -28.63 / FF -66.08 (setup rd_out -> rd_cap launch late; hold pin flops -> SRAM inputs capture late). Post-route TT SRAM clk 288..567 ps vs registers 331..419: TritonCTS macro tree = 4 root delay buffers + one 214 ps leaf per 4-macro column, detoured in routing. Fix: physical/ref_tile/hbm_su_sfustore_hw_1018/macro_branch.tcl (PRE_CTS, bnd_branch class): after CTS the 16 SRAM clk pins move onto a dedicated balanced 3-level BUFx24 tree (trunk 6 um below the SRAM array for every cross-column split since the SRAMs obstruct M1..M4 under the M5 cap, Manhattan corner buffers, vertical column feeds only; stem at the clk port, 1 pad stage of compensation against the register mass, median H-tree columns then pairs, repeaters <= 80 um, equal buffer count), old macro-tree buffers deleted. Global-route probe on the r2 CTS placement: SRAM clk TT 388..405 vs pin flops mean 441, FF 324..346 vs 368; rd_out->rd_cap TT +123, wa_pin->w_addr_in FF hold +43. Same RTL, SDC, pins, outline, macro placement. Prior: HBM-SFUHW 10-18 r2 after r1 route NEEDS_RTL (TT -102.29 / FF -42.33 / DRC 2; job hbm_su_sfustore_hw_1018-r1-96ce9e47a). Classes (path_summary on the r1 route): setup = SRAM rd_out -> 8:1 word mux -> ~170 um wire -> S-face read_data pin flop (345 paths) + ks -> read_data (54) + qid_q -> 16-lane compare/OR -> bad_q (14 levels, fanout); hold = S-face pin flops -> SRAM wd_in/addr/ce (clock-skewed pair: macro clock ~200 ps SS after the register tree: CTS-0033 put 3 delay buffers on the macro tree and its H-tree detoured the abutted SRAM stacks, 338 ps slew). Fix: (1) RTL read capture register after the word mux beside each macro (tile-local lane bank ot_hbm_su_sfustore_hw_bank; vi_q n+3); (2) qid replicated per lane + per-lane registered compare bad_l (fault timing unchanged); (3) CTS: no macro-tree delay buffers (-delay_buffer_derate 0) and -no_obstruction_aware (s81 gather leaf precedent) so the macro clock is not later than the register tree."
 }

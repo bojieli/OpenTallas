@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_astk_ep_s",
+ "reviewer": "coordinator (2026-10-18 ~08:05)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T08:05:00-07:00",
+ "gate_commit": "8e2a7a9ac",
+ "checklist": {
+  "lattice": "PASS: 6 SRAMs (2x 256x128, 4x 64x128) in one centred column, regular pitch",
+  "std_cell_band": "PASS: logic on both sides of the SRAM column; fill 0.27; one hot strip at the N edge (pin-register band under the N bus)",
+  "pin_spread": "PASS: W and E faces full height plus the N bus; 4,467 pins (N/S faces at 98% pin demand)",
+  "clock_entry": "PASS: W face centre; pin-flop spread 61.1 TT / 56.6 FF (<=80); insertion 350/289 (guidance only)",
+  "shape": "ACCEPT: 162x345.6 (2.1:1), set by the SRAM column and the W/E pin count; GRT overflow 0"
+ },
+ "notes": "Gate WARN 0 fail. Pre-route reg->reg -55 ps: watch at route. If the route stays negative, pipeline or replicate the N-band path (the hot strip) instead of masking. Approved under closure-first.",
+ "geometry_sha256": "c5d736403838c9fca752031eb3f55cb5f5e1ec42543d3b86506e5e8751dd0722"
+}

@@ -53,6 +53,10 @@ module tb_hbm_hc_eng4_static;
 `ifndef HC_QDRLY
 `define HC_QDRLY `HC_DRLY
 `endif
+    // HH-9 10-19: +define+HC_CPR=1 = bank chain pin registers (qeng CPR, root QCHX 11; programme RAW0 + 11)
+`ifndef HC_CPR
+`define HC_CPR 0
+`endif
     // HC-XRDU 10-18: LANDED root <-> quarter links.  HC_XRD/HC_XRU/HC_XRDQ/HC_XRUQ = the root's compiled parameters;
     // HC_DIE_XRDQ / HC_DIE_XRUQ = the die's compiled per-quarter link latency (byte q, edges from driver pin to sink pin:
     // a landed lane = ceil(N/2) + 1 + E, tools/hbm_die_v16/d4g_hc_xr.py), modelled here as that many register stages
@@ -82,7 +86,7 @@ module tb_hbm_hc_eng4_static;
     // quarter-side copies after the die links
     wire [3:0] ld_v, ld_ss, li_v, li_kind, lps_v, lps_f, l_fault; wire [27:0] ld_nv; wire [39:0] ld_wa, ld_xa, li_word;
     wire [7:0] li_slot; wire [19:0] li_lo, li_w; wire [47:0] li_cnt; wire [127:0] lps;
-    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .XRD(`HC_XRD), .XRU(`HC_XRU), .XRDQ(`HC_XRDQ), .XRUQ(`HC_XRUQ)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .XRD(`HC_XRD), .XRU(`HC_XRU), .XRDQ(`HC_XRDQ), .XRUQ(`HC_XRUQ), .QCHX(11 * `HC_CPR)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured),
         .qd_v(qd_v), .qd_ss(qd_ss), .qd_nv(qd_nv), .qd_wa(qd_wa), .qd_xa(qd_xa), .qi_v(qi_v), .qi_kind(qi_kind),
@@ -104,7 +108,7 @@ module tb_hbm_hc_eng4_static;
             .q({lps_v[gqi], lps[gqi*32 +: 32], lps_f[gqi], l_fault[gqi]}));
     end
     for (gqi = 0; gqi < 4; gqi = gqi + 1) begin : g_q
-        ot_hbm_hc_qeng_static #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY)) u_q (
+        ot_hbm_hc_qeng_static #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY), .CPR(`HC_CPR)) u_q (
             .clk(clk), .rst_n(rst_n),
             .d_v(ld_v[gqi]), .d_ss(ld_ss[gqi]), .d_nv(ld_nv[gqi*7 +: 7]), .d_wa(ld_wa[gqi*10 +: 10]), .d_xa(ld_xa[gqi*10 +: 10]),
             .i_v(li_v[gqi]), .i_kind(li_kind[gqi]), .i_slot(li_slot[gqi*2 +: 2]), .i_lo(li_lo[gqi*5 +: 5]),

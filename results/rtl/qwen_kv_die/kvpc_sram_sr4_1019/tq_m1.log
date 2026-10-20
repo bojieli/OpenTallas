@@ -1,0 +1,16 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=7 tr=3 h0 3408a4398/000000000 h1 000000000/000000000
+MISMATCH t=24 tr=9 h0 000000000/000000000 h1 1bf20d7a3/000000000
+MISMATCH t=33 tr=13 h0 2bc226027/2bc226027 h1 2d84a41dc/3f7574d41
+MISMATCH t=37 tr=14 h0 18b3dbf4f/2d84a41dc h1 364bd4fe5/364bd4fe5
+MISMATCH t=41 tr=15 h0 364bd4fe5/364bd4fe5 h1 027a14f2d/000000000
+MISMATCH t=43 tr=16 h0 027a14f2d/027a14f2d h1 05513fae6/364bd4fe5
+MISMATCH t=45 tr=18 h0 096183af6/000000000 h1 181e78f54/181e78f54
+MISMATCH t=46 tr=19 h0 2e1219124/181e78f54 h1 000000000/000000000
+MISMATCH t=52 tr=21 h0 1fec27d47/000000000 h1 18845ae94/18845ae94
+KVPC_TQ FAIL edges=50000 checks=49997 errors=10246 bypassed=10246 mut=1
+- rtl/test/qwen_static_kv/kvpc_sram/tb_kvpc_tq.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 51us; walltime 0.016 s; speed 3.233 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+

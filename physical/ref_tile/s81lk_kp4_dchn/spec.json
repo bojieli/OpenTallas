@@ -8,9 +8,11 @@
  ],
  "macros": [],
  "pins": {
-  "W": [
-   "k_v",
+  "S": [
+   "rst_n",
+   "clk",
    "k_lo",
+   "k_v",
    "k_L",
    "k_any"
   ],
@@ -21,29 +23,35 @@
    "o_ne",
    "fs"
   ],
-  "S": [
+  "W": [
    "n_corr",
-   "rst_n",
-   "clk",
    "n_unc"
   ]
  },
  "pin_ranges": {
+  "rst_n": [
+   86.4,
+   87.48
+  ],
+  "clk": [
+   90.72,
+   91.8
+  ],
   "k_lo": [
-   4.32,
-   178.2
+   100.44,
+   190.08
   ],
   "k_v": [
-   180.36,
-   182.52
+   192.24,
+   194.4
   ],
   "k_L": [
-   184.68,
-   187.92
+   196.56,
+   199.8
   ],
   "k_any": [
-   190.08,
-   191.16
+   201.96,
+   203.04
   ],
   "cw_q": [
    4.32,
@@ -66,20 +74,12 @@
    191.16
   ],
   "n_corr": [
-   45.36,
-   84.24
-  ],
-  "rst_n": [
-   90.72,
-   91.8
-  ],
-  "clk": [
-   96.12,
-   97.2
+   4.32,
+   43.2
   ],
   "n_unc": [
-   103.68,
-   142.56
+   47.52,
+   86.4
   ]
  },
  "params": {},
@@ -106,15 +106,15 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.03,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  dchn: forward Chien / Forney over 55 lanes (two registered stages, kept-hierarchy inverse), 64-leaf root-count tree, decision, correction masks re-cut to PMA words; no macro; 194.4 um square (decb std ~23.5k less the dout part -> util ~0.55-0.6; ~4.6k sinks; enc gate 1 at 194.4 measured TT 210-243 ps / spread 32).  k_* full W face (from dsyn), cw_q + decision full N face (to dout, 2.9/um), clk S centre (cluster outer face). S81-TILES4 10-17: route t2-cef44c405 refused FLOORPLAN_MARGIN (util 61.3%: std 22,149 in 36,130 um2 core) -> outline grown E to 216 x 194.4 (5 x 43.2 wide, ~53% util); height kept 194.4 so the W k_* seam stays aligned with dsyn and the 21.6-um seam below dout is unchanged; pins unchanged.",
+ "structural_change": "TW-S81/SERDES 10-19: SerDes COLUMN re-pin (results/arch/s81_link_col_1019/serdes_column_plan.json; decision results/arch/s81_dv_1016/p4l_lkcol/lk_slot_decision.json @ origin/claude/die-s81-lead-1019): ot_pdie_serdes becomes ONE landed column parent 259.2 wide along the die edge, children stacked N-S (dsyn, ddly, dchn, dout, rate_match, enc above the analog PMA), the kp4_dec 2x2 level is retired (its p2 gate failed the clock rule: one spine, child pairs TT 83.5 / FF 87.2 > 80). This tile: k_* W -> S (from dsyn below), n_corr/n_unc S -> W. Same RTL, outline and macro; route.io_hold_margin_ns 0.0 -> 0.03 (KITS 10-18 >= 0.025). PREVIOUS: S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  dchn: forw",
  "job": {
-  "owner": "Claude:S81-TILES2",
-  "branch": "claude/s81kp4-1017",
-  "tag": "t2",
+  "owner": "Claude:TW-S81/SERDES",
+  "branch": "claude/tw-s81-serdes-1019",
+  "tag": "col",
   "cycles_added": 2,
   "purpose": "S81 link KP4 decoder tile dchn (Chien / Forney / decision) of the 4-tile cluster ot_s81_kp4_dec, 10-17. Bench = cluster equivalence vs 33a35eb7d and the Forney mutant DMUT 2.",
   "extra_paths": [
@@ -178,5 +178,10 @@
  "pin_regs": {
   "enable": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "DIE-S81-LEAD SerDes slot decision 10-19 (results/arch/s81_dv_1016/p4l_lkcol/lk_slot_decision.json @ origin/claude/die-s81-lead-1019) -> column plan results/arch/s81_link_col_1019/serdes_column_plan.json: k_* W -> S (from dsyn below), n_corr/n_unc S -> W",
+  "contract": "results/arch/s81_link_col_1019/serdes_column_plan.json"
+ }
 }

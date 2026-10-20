@@ -1,0 +1,1118 @@
+{
+ "schema": "opentallas.hbm_smbudget_unit.v1",
+ "name": "imut1",
+ "mut": null,
+ "defines": [
+  "IMUT=1"
+ ],
+ "rtl": "cp_svg ot_static_run_target -> ot_hbm_svc_sm_group_rel_id (issuer_rel + feed_programmed_rel_id, 2,048-word store) -> 4 controller leaves -> DRAM fixture; xc ot_hbm_svc_sm_xcal_rel_t; SM = ot_hbm_accel_smh_attn die master (bundle master_files, DIE_DEFINES); tb_hbm_svg_rel_sm.sv, Verilator 5.050",
+ "budget": {
+  "descriptors": 39,
+  "table_rows": 256,
+  "programme_words_matvec": 112,
+  "attention_reserved": 1019,
+  "store_top": 1131,
+  "store_words": 2048,
+  "distinct_programmes": 14,
+  "per_kind": [
+   {
+    "name": "L14",
+    "layer": 14,
+    "descriptors": 39,
+    "nonexpert_blocks": 27,
+    "routed_expert_descriptors": 12,
+    "lstride": 216,
+    "kbase": 0,
+    "estride": 16,
+    "expert_ids": {
+     "0": 26,
+     "1": 29,
+     "2": 114,
+     "3": 155,
+     "4": 334,
+     "5": 352
+    },
+    "ids_at_rc": 8996,
+    "rc_end": 14476
+   }
+  ],
+  "install_ingress_edges": 302,
+  "per_layer_ingress_edges_this_sm": 3,
+  "blocks_addressed": 95400
+ },
+ "events": {
+  "NI": 305,
+  "NX": 9048,
+  "ND": 1,
+  "END": 16001
+ },
+ "fault": null,
+ "done": "DONE cycles=16001 results=93 gos=39 runs=1 ing=305/305 xw=9048/9048 ids=1/1 dram_reads=8300",
+ "runs_done": [
+  14801
+ ],
+ "gos": 39,
+ "go_slots_exact": true,
+ "sim_s": 182.1,
+ "run_rc": 0,
+ "run_log_sha256": "e67ad0c304a8ec876a5d8ccafbdc13e1e1e00211304d97fd689b12c1b7846d63",
+ "ops": [
+  {
+   "layer": "L14",
+   "k": 8,
+   "tag": "engram.wkv",
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 266,
+   "R": 9,
+   "Gn": 6,
+   "slot": null,
+   "eid": null,
+   "blocks": 7,
+   "lines": 432,
+   "priced": 738.71,
+   "first_cmd_abs": 984,
+   "last_cmd_abs": 2091,
+   "verdict": "FAIL",
+   "results": 9,
+   "n_bad": 18,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bd02ce5a"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bd030000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "bc882cf8"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "bc880000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 1227
+  },
+  {
+   "layer": "L14",
+   "k": 27,
+   "tag": "wq_a",
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 13,
+   "R": 1,
+   "Gn": 5,
+   "slot": null,
+   "eid": null,
+   "blocks": 1,
+   "lines": 40,
+   "priced": 199.97,
+   "first_cmd_abs": 2659,
+   "last_cmd_abs": 2722,
+   "verdict": "FAIL",
+   "results": 1,
+   "n_bad": 2,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bd60a9d2"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bd610000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 182
+  },
+  {
+   "layer": "L14",
+   "k": 29,
+   "tag": "wkv",
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 5,
+   "R": 1,
+   "Gn": 5,
+   "slot": null,
+   "eid": null,
+   "blocks": 1,
+   "lines": 40,
+   "priced": 199.97,
+   "first_cmd_abs": 3290,
+   "last_cmd_abs": 3353,
+   "verdict": "FAIL",
+   "results": 1,
+   "n_bad": 2,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3dc829b2"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3dc80000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 182
+  },
+  {
+   "layer": "L14",
+   "k": 32,
+   "tag": "compressor.wkv|wgate",
+   "fmt": "BF16",
+   "O_fmt": "FP32",
+   "m": 10,
+   "R": 1,
+   "Gn": 10,
+   "slot": null,
+   "eid": null,
+   "blocks": 2,
+   "lines": 80,
+   "priced": 275.94,
+   "first_cmd_abs": 4441,
+   "last_cmd_abs": 4678,
+   "verdict": "FAIL",
+   "results": 1,
+   "n_bad": 2,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3d7030c0"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3d7030c0"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 371
+  },
+  {
+   "layer": "L14",
+   "k": 36,
+   "tag": "indexer.wq_b",
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 42,
+   "R": 2,
+   "Gn": 2,
+   "slot": null,
+   "eid": null,
+   "blocks": 1,
+   "lines": 32,
+   "priced": 174.98,
+   "first_cmd_abs": 4934,
+   "last_cmd_abs": 4997,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bf55b418"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bf560000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "c020df8a"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "c0210000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 167
+  },
+  {
+   "layer": "L14",
+   "k": 41,
+   "tag": "wq_b (head-aligned: head h on die h)",
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 512,
+   "R": 16,
+   "Gn": 2,
+   "slot": null,
+   "eid": null,
+   "blocks": 4,
+   "lines": 256,
+   "priced": 482.82,
+   "first_cmd_abs": 5253,
+   "last_cmd_abs": 5838,
+   "verdict": "FAIL",
+   "results": 16,
+   "n_bad": 32,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bf901edd"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bf900000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3f6a1047"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3f6a0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 693
+  },
+  {
+   "layer": "L14",
+   "k": 63,
+   "tag": "wo_a K-split: the die's head against its o-group's 1,024 rows",
+   "fmt": "BF16",
+   "O_fmt": "FP32",
+   "m": 1024,
+   "R": 32,
+   "Gn": 1,
+   "slot": null,
+   "eid": null,
+   "blocks": 4,
+   "lines": 256,
+   "priced": 489.83,
+   "first_cmd_abs": 6094,
+   "last_cmd_abs": 6679,
+   "verdict": "FAIL",
+   "results": 32,
+   "n_bad": 64,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bd3d6c08"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bd3d6c08"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3c20e7b6"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3c20e7b6"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 697
+  },
+  {
+   "layer": "L14",
+   "k": 65,
+   "tag": "wo_b",
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 53,
+   "R": 2,
+   "Gn": 8,
+   "slot": null,
+   "eid": null,
+   "blocks": 2,
+   "lines": 128,
+   "priced": 320.92,
+   "first_cmd_abs": 7559,
+   "last_cmd_abs": 7796,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "be8d0df6"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "be8d0000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3e98a5b6"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3e990000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 359
+  },
+  {
+   "layer": "L14",
+   "k": 70,
+   "tag": "router gate",
+   "fmt": "BF16",
+   "O_fmt": "FP32",
+   "m": 4,
+   "R": 1,
+   "Gn": 10,
+   "slot": null,
+   "eid": null,
+   "blocks": 2,
+   "lines": 80,
+   "priced": 275.94,
+   "first_cmd_abs": 8884,
+   "last_cmd_abs": 9121,
+   "verdict": "FAIL",
+   "results": 1,
+   "n_bad": 2,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "c0427a43"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "c0427a43"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 371
+  },
+  {
+   "layer": "L14",
+   "k": 74,
+   "tag": "expert slot 6 w1+w3",
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 48,
+   "R": 2,
+   "Gn": 5,
+   "slot": null,
+   "eid": null,
+   "blocks": 2,
+   "lines": 80,
+   "priced": null,
+   "first_cmd_abs": 9689,
+   "last_cmd_abs": 9926,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3ba07720"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3ba00000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "becd5a2e"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "becd0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 353
+  },
+  {
+   "layer": "L14",
+   "k": 79,
+   "tag": "expert slot 0 w1+w3",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 48,
+   "R": 2,
+   "Gn": 3,
+   "slot": 0,
+   "eid": 26,
+   "blocks": 1,
+   "lines": 48,
+   "priced": null,
+   "first_cmd_abs": 10286,
+   "last_cmd_abs": 10349,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3e432bc8"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3e430000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3dfee6fc"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3dff0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 176
+  },
+  {
+   "layer": "L14",
+   "k": 87,
+   "tag": "expert slot 1 w1+w3",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 48,
+   "R": 2,
+   "Gn": 3,
+   "slot": 1,
+   "eid": 29,
+   "blocks": 1,
+   "lines": 48,
+   "priced": null,
+   "first_cmd_abs": 10709,
+   "last_cmd_abs": 10772,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bea54c6e"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bea50000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3dc9c570"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3dca0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 176
+  },
+  {
+   "layer": "L14",
+   "k": 89,
+   "tag": "expert slot 2 w1+w3",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 48,
+   "R": 2,
+   "Gn": 3,
+   "slot": 2,
+   "eid": 114,
+   "blocks": 1,
+   "lines": 48,
+   "priced": null,
+   "first_cmd_abs": 11132,
+   "last_cmd_abs": 11195,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bf07e1c9"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bf080000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3b8c9f00"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3b8d0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 176
+  },
+  {
+   "layer": "L14",
+   "k": 91,
+   "tag": "expert slot 3 w1+w3",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 48,
+   "R": 2,
+   "Gn": 3,
+   "slot": 3,
+   "eid": 155,
+   "blocks": 1,
+   "lines": 48,
+   "priced": null,
+   "first_cmd_abs": 11555,
+   "last_cmd_abs": 11618,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3cfe1100"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3cfe0000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3ed0f404"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3ed10000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 176
+  },
+  {
+   "layer": "L14",
+   "k": 93,
+   "tag": "expert slot 4 w1+w3",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 48,
+   "R": 2,
+   "Gn": 3,
+   "slot": 4,
+   "eid": 334,
+   "blocks": 1,
+   "lines": 48,
+   "priced": null,
+   "first_cmd_abs": 11978,
+   "last_cmd_abs": 12041,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3e79f91c"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3e7a0000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3d251d30"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3d250000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 176
+  },
+  {
+   "layer": "L14",
+   "k": 94,
+   "tag": "expert slot 5 w1+w3",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 48,
+   "R": 2,
+   "Gn": 3,
+   "slot": 5,
+   "eid": 352,
+   "blocks": 1,
+   "lines": 48,
+   "priced": null,
+   "first_cmd_abs": 12401,
+   "last_cmd_abs": 12464,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "be459f58"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "be460000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "bcca6ba0"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "bcca0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 176
+  },
+  {
+   "layer": "L14",
+   "k": 98,
+   "tag": "expert slot 6 w2",
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 53,
+   "R": 2,
+   "Gn": 3,
+   "slot": null,
+   "eid": null,
+   "blocks": 1,
+   "lines": 48,
+   "priced": 65.97,
+   "first_cmd_abs": 12824,
+   "last_cmd_abs": 12887,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bd534680"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bd530000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3caf3cd0"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3caf0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 176
+  },
+  {
+   "layer": "L14",
+   "k": 101,
+   "tag": "expert slot 2 w2",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 53,
+   "R": 2,
+   "Gn": 2,
+   "slot": 2,
+   "eid": 114,
+   "blocks": 1,
+   "lines": 32,
+   "priced": 43.98,
+   "first_cmd_abs": 13143,
+   "last_cmd_abs": 13206,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3c9e60aa"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3c9e0000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3abc3fe0"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3abc0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 167
+  },
+  {
+   "layer": "L14",
+   "k": 103,
+   "tag": "expert slot 3 w2",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 53,
+   "R": 2,
+   "Gn": 2,
+   "slot": 3,
+   "eid": 155,
+   "blocks": 1,
+   "lines": 32,
+   "priced": 43.98,
+   "first_cmd_abs": 13462,
+   "last_cmd_abs": 13525,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3ca6bfc0"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3ca70000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3dde9cea"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3ddf0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 167
+  },
+  {
+   "layer": "L14",
+   "k": 105,
+   "tag": "expert slot 4 w2",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 53,
+   "R": 2,
+   "Gn": 2,
+   "slot": 4,
+   "eid": 334,
+   "blocks": 1,
+   "lines": 32,
+   "priced": 43.98,
+   "first_cmd_abs": 13781,
+   "last_cmd_abs": 13844,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3d841f50"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3d840000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3c86126c"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3c860000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 167
+  },
+  {
+   "layer": "L14",
+   "k": 106,
+   "tag": "expert slot 1 w2",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 53,
+   "R": 2,
+   "Gn": 2,
+   "slot": 1,
+   "eid": 29,
+   "blocks": 1,
+   "lines": 32,
+   "priced": 43.98,
+   "first_cmd_abs": 14100,
+   "last_cmd_abs": 14163,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "3c5c6080"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "3c5c0000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "bd062bac"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "bd060000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 167
+  },
+  {
+   "layer": "L14",
+   "k": 107,
+   "tag": "expert slot 0 w2",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 53,
+   "R": 2,
+   "Gn": 2,
+   "slot": 0,
+   "eid": 26,
+   "blocks": 1,
+   "lines": 32,
+   "priced": 43.98,
+   "first_cmd_abs": 14419,
+   "last_cmd_abs": 14482,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bc6e1fd0"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bc6e0000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3ca1c20c"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3ca20000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 167
+  },
+  {
+   "layer": "L14",
+   "k": 111,
+   "tag": "expert slot 5 w2",
+   "fmt": "FP4",
+   "O_fmt": "BF16",
+   "m": 53,
+   "R": 2,
+   "Gn": 2,
+   "slot": 5,
+   "eid": 352,
+   "blocks": 1,
+   "lines": 32,
+   "priced": 43.98,
+   "first_cmd_abs": 14738,
+   "last_cmd_abs": 14801,
+   "verdict": "FAIL",
+   "results": 2,
+   "n_bad": 4,
+   "bad": [
+    [
+     "acc",
+     0,
+     "00000000",
+     "bce40378"
+    ],
+    [
+     "O",
+     0,
+     "00000000",
+     "bce40000"
+    ],
+    [
+     "acc",
+     1,
+     "00000000",
+     "3d6a96e8"
+    ],
+    [
+     "O",
+     1,
+     "00000000",
+     "3d6b0000"
+    ]
+   ],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 167
+  }
+ ],
+ "verdict": "FAIL"
+}

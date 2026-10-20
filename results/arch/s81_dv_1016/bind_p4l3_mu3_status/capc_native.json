@@ -1,0 +1,26 @@
+{
+ "cell": "ot_s81sl_cap",
+ "view": "/home/ubuntu/scratch/codex-s81-mu3/capc_view",
+ "lib_cell": "ot_s81sl_cap",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 475.1,
+ "spread_ps": 16.3,
+ "outputs": 451,
+ "inputs": 620,
+ "launch_ps": 286.1,
+ "launch_pin": "cw_s_v[0]",
+ "capture_ps": 301.4,
+ "capture_pin": "rst_n",
+ "launch_over": 6,
+ "capture_over": 7,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 23.5,
+ "ff_launch_min_ps": 92.2,
+ "ff_hold_need_ps": -72.3,
+ "pass": false,
+ "fail_why": "launch 286.08945 > 220 (6 pins); capture 301.44697 > 190 (7 pins)"
+}

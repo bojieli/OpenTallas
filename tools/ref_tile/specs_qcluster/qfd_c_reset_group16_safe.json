@@ -1,0 +1,100 @@
+{
+ "name": "qfd_c_reset_group16_safe",
+ "top": "qfd_c_reset_group16_safe",
+ "kind": "tile",
+ "params": {},
+ "sources": [
+  "rtl/physical/qcluster/qfd_c_reset_group16_safe.sv",
+  "rtl/test/tb_qfd_c_reset_group16_safe.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 17.28,
+  "h": 17.28,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "d",
+   "ck"
+  ],
+  "N": [
+   "q"
+  ]
+ },
+ "pin_ranges": {
+  "d": [
+   0.54,
+   14.58
+  ],
+  "ck": [
+   15.12,
+   16.74
+  ],
+  "q": [
+   0.54,
+   16.74
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "each data/reset payload bit has exactly two direct registers; no extra data stage allowed"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "reset payload is itself passed through two capture registers on every channel"
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "UNBOUND parameterless16-channel hard reset group,32FF complete,exactly2captures/channel,no counter/shared enable/async clear. Parent grouping/315routes/epochs/compiler/native clocks remain unqualified; no submission.",
+ "job": {
+  "owner": "Codex:SAFE-QW-CB16",
+  "branch": "codex/safe-qw-cb16-1019",
+  "tag": "group16diag1",
+  "submit": false,
+  "purpose": "reset hard-group structural diagnostic only; no parent adoption",
+  "benches": [
+   {
+    "name": "reset_group_primary",
+    "cmd": "bash tools/qwen_cluster/bench_reset_group16_safe.sh {RUN}/group_pass pass",
+    "expect": "pass",
+    "pass_regex": "SAFE_RESET_GROUP_PASS MUT0",
+    "pass_witness": "results/arch/qwen_cluster_1017/q_cluster16/bench_reset_group16/mut0.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "sources": [
+     "tools/qwen_cluster/bench_reset_group16_safe.sh"
+    ]
+   },
+   {
+    "name": "reset_group_mutant",
+    "cmd": "bash tools/qwen_cluster/bench_reset_group16_safe.sh {RUN}/group_mut mut",
+    "expect": "fail",
+    "fail_regex": "SAFE_RESET_GROUP_FAIL MUT1 errors[1-9][0-9]*",
+    "fail_witness": "results/arch/qwen_cluster_1017/q_cluster16/bench_reset_group16/mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "sources": [
+     "tools/qwen_cluster/bench_reset_group16_safe.sh"
+    ]
+   }
+  ]
+ }
+}

@@ -71,8 +71,32 @@ import rtl_v41_fullshape_layer_campaign as LC  # noqa: E402
 
 F = np.float32
 SCHEMA = "opentallas.rtl.w19_hbm_tp96_isa.v1"
-TP = 96
+TP = int(os.environ.get("OT_DS_TP", "96"))   # LB2-HBM-NAT16 (10-18): 192 = the native d4g (16-SM die) programme
+assert TP in (96, 192), TP
 HEAD_DIES = 64
+# TP-192 placement (numerics unchanged): each of the 64 heads runs on HEAD_REPL = 2 replica dies; replica t of head h
+# computes the wo_a K-split part of its o-group's rows [og * 1024 + t * 512, + 512) (whole 512-wide head K window, so
+# every output element keeps the golden's chunk-8 csum subtree), and the 8 heads of an o-group sit in one aligned
+# sub-group of 8 ranks, reduced in the golden's pairwise head order ((p0 + p1) + (p2 + p3)) + ((p4 + p5) + (p6 + p7)).
+# Sub-group q = rank // 8 holds o-group q // HEAD_REPL, row part q % HEAD_REPL, head (q // HEAD_REPL) * 8 + rank % 8.
+HEAD_REPL = TP // 96
+HEAD_RANKS = HEAD_DIES * HEAD_REPL
+ZROWS = 1024 // HEAD_REPL          # wo_a rows of one o-group a replica computes
+
+
+# Mutant (fail-witness bench only): OT_NAT16_MUTANT=rot1 rotates the heads inside every sub-group of 8 (rank j runs head
+# j + 1 mod 8).  Every head still runs exactly once a replica, so only the o-group reduction's association changes
+# ((p1 + p2) + (p3 + p4)) + ... -- the run must then FAIL bit-exactness (the golden head order is load-bearing).
+MUTANT = os.environ.get("OT_NAT16_MUTANT", "")
+assert MUTANT in ("", "rot1"), MUTANT
+
+
+def head_of(rank: int) -> int:
+    return ((rank // 8) // HEAD_REPL) * 8 + (rank + (MUTANT == "rot1")) % 8
+
+
+def head_part(rank: int) -> int:
+    return (rank // 8) % HEAD_REPL
 KEY_BLOCK = 8                      # sequence-sharding granule of compressed rows / index keys
 KV_ROW_BYTES = 512 // 2 + 512 // 16  # a compressed-KV row in its stored FP4 (E4M3 block-16 scale) format
 REF_SEED = 20260930
@@ -166,7 +190,7 @@ class Compiler:
             g.append(("iwr", 32, 2))
         self.gather(L, g, "x_projections_gather")
         self.local(L, "q_norm_kv_row", tag="q_norm, kv_norm, RoPE, FP8 window row (replicated window)")
-        heads = [[h * 512, (h + 1) * 512] if h < HEAD_DIES else [0, 0] for h in range(TP)]
+        heads = [[head_of(d) * 512, (head_of(d) + 1) * 512] if d < HEAD_RANKS else [0, 0] for d in range(TP)]
         self.mv(L, P + "attn.wq_b.weight", "linear_q", "qr", "q", 32768, 1280, "fp8", rows=heads,
                 tag="wq_b (head-aligned: head h on die h)")
         self.local(L, "q_rope", ranks="heads", tag="q RoPE (own head)")
@@ -201,9 +225,11 @@ class Compiler:
         self.local(L, "attend", ranks="heads", yarn=yarn, tag="attention of the die's head (window + selection)")
         if self.variant == "oreduce":
             self.mv(L, P + "attn.wo_a.weight", "wo_a_part", "o_own", "zpart", 8192, 512, "bf16",
-                    rows=[[(h // 8) * 1024, (h // 8 + 1) * 1024] if h < HEAD_DIES else [0, 0] for h in range(TP)],
+                    rows=[[(head_of(d) // 8) * 1024 + head_part(d) * ZROWS,
+                           (head_of(d) // 8) * 1024 + (head_part(d) + 1) * ZROWS] if d < HEAD_RANKS else [0, 0]
+                          for d in range(TP)],
                     out_dtype="fp32", tag="wo_a K-split: the die's head against its o-group's 1,024 rows")
-            self.emit(kind="all_reduce", unit="COLL", layer=L, buf="zpart", out="z", groups=8, per_group=8,
+            self.emit(kind="all_reduce", unit="COLL", layer=L, buf="zpart", out="z", groups=8, per_group=8, parts=HEAD_REPL,
                       elems=8192, bytes=8192 * 4 * 8 // 8, dest="all", round="bf16",
                       tag="o-group tree reduce (8 contributors) + multicast")
         else:
@@ -364,7 +390,7 @@ class Executor:
         if spec == "all":
             return self.ranks
         if spec == "heads":
-            return self.ranks[:HEAD_DIES]
+            return self.ranks[:HEAD_RANKS]
         return [self.ranks[r] for r in spec]
 
     # -- weights: the rank's own rows only ------------------------------------------------------------------------
@@ -436,7 +462,7 @@ class Executor:
                 out = G.to_bf16(out)
             elif fn == "wo_a_part":                     # K-split: the die's head's 512 columns, its group's rows
                 full = self.m.w[name]
-                h = rk.r
+                h = head_of(rk.r)
                 x = rk.get("o_own")
                 j = h % 8
                 out = V.csum(G.mul(np.asarray(full[r0:r1, j * 512:(j + 1) * 512], dtype=F), G.to_bf16(x)[None, :]))
@@ -486,11 +512,15 @@ class Executor:
     def op_reduce(self, op):
         n = op["elems"]
         z = np.zeros(n, dtype=F)
+        nr = op.get("parts", 1)
+        zr = 1024 // nr
         for g in range(op["groups"]):
-            parts = [self.ranks[g * 8 + j].get(op["buf"], g * 1024, (g + 1) * 1024) for j in range(8)]
-            while len(parts) > 1:
-                parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
-            z[g * 1024:(g + 1) * 1024] = parts[0]
+            for t in range(nr):                         # replica part t of o-group g = aligned sub-group g * nr + t
+                q, lo = g * nr + t, g * 1024 + t * zr
+                parts = [self.ranks[q * 8 + j].get(op["buf"], lo, lo + zr) for j in range(8)]
+                while len(parts) > 1:
+                    parts = [G.add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+                z[lo:lo + zr] = parts[0]
         z = G.to_bf16(z)
         for rk in self.ranks:
             rk.put(op["out"], z, n=n)
@@ -616,7 +646,7 @@ class Executor:
         return V.rope_cs(self.m.freqs_yarn if self.m.ratio[L] > 0 else self.m.freqs_plain, self.pos)
 
     def f_q_rope(self, rk, op):
-        h = rk.r
+        h = head_of(rk.r)
         q = rk.get("q", h * 512, (h + 1) * 512)
         rk.put("q_own", V.rope_tail(q.reshape(1, 512), self.cs(op["layer"])).reshape(-1))
 
@@ -722,7 +752,7 @@ class Executor:
 
     def f_attend(self, rk, op):
         m, L = self.m, op["layer"]
-        h = rk.r
+        h = head_of(rk.r)
         cs = self.cs(L)
         rows = rk.win[L]
         if op["yarn"]:

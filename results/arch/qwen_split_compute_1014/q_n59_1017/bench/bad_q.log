@@ -10,4 +10,4 @@ N59DV_ERR cycle 133: native_ret(NEW,t+1) != native_ret(OLD,t)
 N59DV_ERR cycle 134: native_ret(NEW,t+1) != native_ret(OLD,t)
 N59DV_ERR cycle 135: native_ret(NEW,t+1) != native_ret(OLD,t)
 N59DV_PASS BAD_Q missing Q dd word -> sticky fault, no completion
-- /home/ubuntu/wt/qn59-1017/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv:201: Verilog $finish
+- /srv/opentallas-scratch/claude/qk-svc/src/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv:201: Verilog $finish

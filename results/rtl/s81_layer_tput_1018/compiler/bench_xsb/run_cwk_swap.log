@@ -1,0 +1,9 @@
+RET 408 00000000000000003
+END edges=1071 ret_words=1 xo_checked=1069 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 13.518 s; speed 79.637 ns/s
+- Verilator: cpu 8.023 s on 1 threads; allocated 46 MB
+CHECK MISMATCH edge 408 row 0 lo 0 k 0 got 00000000/0 want be182dc8/0
+CHECK PLAN_MISMATCH predicted 1 words, got 1; first diff ((408, 0, (0, 0, 1), 3189255624, 0), (408, 0, (0, 0, 1), 0, 0))
+XS_PLACE_CHECK FAIL cwk_swap

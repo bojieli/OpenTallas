@@ -119,7 +119,7 @@ def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',)):
     libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
     t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
                         '/work/die_repeaters.json', '--legalize', 'snap',
-                        '--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', *[x for g in skip for x in ('--skip', g)], '--libs', *libs], capture_output=True, text=True, check=True).stdout
+                        '--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', '--fclk-equalize', *[x for g in skip for x in ('--skip', g)], '--libs', *libs], capture_output=True, text=True, check=True).stdout
     (out / 'die_repeaters_step.tcl').write_text(t)
     return f'# DIE-FLOW repeater step ({dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
 
@@ -203,6 +203,11 @@ def main():
         rec = dv_bind.emit(plan, out / 'bind', Path(a.bind_table), sdir, chain_pts,
                            land_plan=Path(a.land_plan) if a.land_plan else None)
         print(json.dumps({k: v for k, v in rec.items() if k in ('relay_masters', 'clock_forward_cells', 'reset', 'port_bind_rc')}, indent=1))
+        # A caller must never launch physical work after a failed strict bind.
+        # emit() keeps its failure record; propagate that verdict to the shell.
+        rc = rec.get('port_bind_rc')
+        if rc != 0:
+            raise SystemExit(rc if isinstance(rc, int) and rc > 0 else 1)
         return
     # ------------------------------------------------------------------ abstracts (one master per kept instance)
     for i in sorted(keep):

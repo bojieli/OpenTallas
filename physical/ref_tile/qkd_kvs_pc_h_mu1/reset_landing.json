@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_kvs_pc_h",
+ "enable": false,
+ "reason": "Two reset domains: rst_n is the core_clk (ck) reset, hrst_n the hclk (hck, 1024 ps, asynchronous root) reset of the HBM-side front / return / cal / ecc / cdc logic.  The flow's landing (OT_RST_LAND) lands every reset_ports input on ONE clock (ck), which would move the hclk reset release onto core_clk flops -- an unsynchronised ck->hck reset crossing the RTL does not have.  Until the landing supports a per-port clock, both resets stay as the RTL drives them (HKV-PCH2 10-19)."
+}

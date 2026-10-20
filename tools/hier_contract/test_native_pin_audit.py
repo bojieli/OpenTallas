@@ -10,6 +10,25 @@ import native_pin_audit as N  # noqa: E402
 import test_pinreg_audit as T  # noqa: E402
 
 
+def test_reroute_reason_for():
+    """ROOT-INF1 10-18 (INF.1): a routed view failing only the TT / FF pin-flop spread yields a native_spread
+    reroute_reason that closed_stands admits; any capture / launch miss yields native_capture."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "closure_loop"))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import closed_stands as CS  # noqa: E402
+    rec = {"cell": "dsdv_sh_lk", "lib_cell": "dsdv_sh_lk", "spread_ps": 70.0, "ff_spread_ps": 88.3,
+           "launch_ps": 150.0, "capture_ps": 120.0, "launch_over": 0, "capture_over": 0, "comb_pins": 0, "pass": False}
+    rr = N.reroute_reason_for(rec, "results/closure/x/native_audit.json", [])
+    assert rr["kind"] == "native_spread" and rr["cell"] == "dsdv_sh_lk" and rr["fix"], rr
+    show = lambda ref, path: json.dumps(rec) if path == rr["source"] else None  # noqa: E731
+    assert CS.committed_native_fail(rr, show, "abc") == ["ff_spread_ps 88.3 ps > 80"]
+    rr2 = N.reroute_reason_for(dict(rec, capture_over=1, capture_ps=201.0), rr["source"], ["x"])
+    assert rr2["kind"] == "native_capture" and rr2["fix"] == "x", rr2
+    with tempfile.TemporaryDirectory() as td:
+        assert N.receipt_path(Path(td) / "r" / "s81.json", td) == "r/s81.json"
+        assert N.receipt_path("/elsewhere/s81.json", td) == "/elsewhere/s81.json"
+
+
 def main():
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
@@ -56,6 +75,13 @@ def main():
         r = N.audit_one((str(root), "t", "physical/ref_tile/k/views/t", comp))
         assert "TT boundary vs neighbour 110.0 > 80" in r["fail_why"], r
         assert N.PA.compensation("tt=160,ff=120") == {"tt": 160.0, "ff": 120.0, "src": "given tt=160,ff=120"}
+        # CASE PINS (QK-FWD / NS-CASE 10-18): a die-SDC case-analysed strap leaves the capture metric and is listed;
+        # --static-pins is the same option; a pattern matching no input pin is an error, never a silent pass
+        r = N.audit_one((str(root), "t", "physical/ref_tile/k/views/t", None, ["far_*"]))
+        assert r["case_pins"] == ["far_i"] and r["capture_pin"] == "ok_i" and r["capture_ps"] == 120.0, r
+        assert r["case_pins_raw_capture_ps"]["far_i"] == 310.0, r
+        assert "error" in N.audit_one((str(root), "t", "physical/ref_tile/k/views/t", None, ["nope"]))
+        assert N.main(["--root", str(root), "--view", "physical/ref_tile/k/views/t", "--static-pins", "nope"]) == 1
         # the CLI single-view form
         assert N.main(["--root", str(root), "--view", "physical/ref_tile/k/views/t", "--relative-to", "160"]) == 1
     assert N.family("qfd_cst_n", "") == "qwen" and N.family("dsfd_coll_ct", "") == "s81" and N.family("ot_hgi_seq_fe", "") == "hbm"
@@ -63,4 +89,5 @@ def main():
 
 
 if __name__ == "__main__":
+    test_reroute_reason_for()
     main()

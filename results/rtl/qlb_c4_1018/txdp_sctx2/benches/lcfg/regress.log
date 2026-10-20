@@ -1,0 +1,24 @@
+scn0 (must PASS): PASS kv_die_cfg_boot scn0 mut0 cap0 capv1 regions43 D19
+scn1 (must PASS): PASS kv_die_cfg_boot scn1 mut0 cap0 capv1 regions43 D19
+scn2 (must PASS): PASS kv_die_cfg_boot scn2 mut0 cap0 capv1 regions43 D19
+scn3 (must PASS): PASS kv_die_cfg_boot scn3 mut0 cap0 capv1 regions43 D19
+mut1 (must FAIL): FAIL kv_die_cfg_boot scn0 mut1 errors32
+mut3 (must FAIL): FAIL kv_die_cfg_boot scn0 mut3 errors86
+mut2 (must FAIL): FAIL kv_die_cfg_boot scn3 mut2 errors1
+/srv/opentallas-scratch/claude/qlb-c4-1018/src_2ea5808d9/results/rtl/qwen_kv_boot_dispatch_cdc_join_1017/base_dispatch.sv: No such file or directory
+error: Unable to find the root module "tb_static_boot_dispatch_lockstep" in the Verilog source.
+     : Perhaps ``-s tb_static_boot_dispatch_lockstep'' is incorrect?
+1 error(s) during elaboration.
+/srv/opentallas-scratch/claude/qlb-c4-1018/src_2ea5808d9/results/rtl/qwen_kv_boot_dispatch_cdc_join_1017/base_dispatch.sv: No such file or directory
+error: Unable to find the root module "tb_static_boot_dispatch_lockstep" in the Verilog source.
+     : Perhaps ``-s tb_static_boot_dispatch_lockstep'' is incorrect?
+1 error(s) during elaboration.
+grep: /srv/opentallas-scratch/claude/qlb-c4-1018/out_txdp/lcfg/regress/lockstep_m0.log: No such file or directory
+regression lockstep_m0: 
+grep: /srv/opentallas-scratch/claude/qlb-c4-1018/out_txdp/lcfg/regress/lockstep_m4.log: No such file or directory
+regression lockstep_m4: 
+regression cdc_m0: PASS dispatcher+160 boot_cdc+observe: setup_ready after 15 core edges, 4288 HBM sink words exact, 128 seals, 32 front applied without seal
+regression cdc_m4: FATAL: /srv/opentallas-scratch/claude/qlb-c4-1018/src_2ea5808d9/rtl/test/qwen_static_kv/tb_static_boot_dispatch_cdc.sv:72: MUT4: setup never rose (front CDCs applied 0/32)
+grep: /srv/opentallas-scratch/claude/qlb-c4-1018/out_txdp/lcfg/regress/lockstep_m0.log: No such file or directory
+regression unit receipt: PASS
+FAIL die_cfg_boot

@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   983 GB (avail 788, growth 100, headroom 0, waiters 0/0 GB) load 67/128 running 30 disk 412 GB 
+ot-run: ot-epyc5       admits   804 GB (avail 676, growth 113, headroom 0, waiters 0/0 GB) load 53/128 running 16 disk 564 GB 
+ot-run: ot-epyc6       admits   829 GB (avail 694, growth 113, headroom 0, waiters 0/0 GB) load 42/128 running 22 disk 563 GB 
+ot-run: ot-epyc7       admits   876 GB (avail 700, growth 87, headroom 0, waiters 0/0 GB) load 51/96 running 20 disk 502 GB 
+ot-run: ot-epyc8       admits  1109 GB (avail 872, growth 96, headroom 0, waiters 0/0 GB) load 48/128 running 25 disk 565 GB 
+ot-run: ot-pve1        admits   118 GB (avail 95, growth 13, headroom 0, waiters 0/0 GB) load 47/28 running 6 disk 1197 GB 
+ot-run: ot-agidock128  admits    92 GB (avail 77, growth 13, headroom 0, waiters 0/0 GB) load 13/64 running 9 disk 47 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3134916-1792424413 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PAD_STORAGE_PASS shapes=72 edges=7000 mutants=4 reset_epochs=14
+- tb.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.812 s; speed 7.188 us/s
+- Verilator: cpu 0.812 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3134916-1792424413): exit 0

@@ -1,0 +1,54 @@
+ot-run: -> ot-epyc7
+KVS_RVPAIR build B=r16 mut=4 RS=1 SD=213 verilator Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=1884 tx_valid
+MISMATCH cyc=1885 tx_valid
+MISMATCH cyc=1886 tx_valid
+MISMATCH cyc=1887 tx_valid
+MISMATCH cyc=1888 tx_valid
+MISMATCH cyc=1889 tx_valid
+MISMATCH cyc=1890 tx_valid
+MISMATCH cyc=1891 tx_valid
+MISMATCH cyc=1892 tx_valid
+MISMATCH cyc=1893 tx_valid
+MISMATCH B faulted on the legal stream
+MISMATCH B STATUS never sent
+KVS_RVPAIR PASS mode=1 mut=4 checks=14308 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=2 mut=4 checks=14347 errors=0 cmds=1 req=1 Q=6 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=3 mut=4 checks=14350 errors=0 cmds=1 req=1 Q=9 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=4 mut=4 checks=14373 errors=0 cmds=1 req=1 Q=32 TX=0 faultA=1 faultB=1
+MISMATCH cyc=1884 tx_valid
+MISMATCH cyc=1885 tx_valid
+MISMATCH cyc=1886 tx_valid
+KVS_RVPAIR FAIL mode=5 mut=4 checks=14376 errors=3 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1
+MISMATCH cyc=1884 tx_valid
+MISMATCH cyc=1885 tx_valid
+MISMATCH cyc=1886 tx_valid
+MISMATCH cyc=1887 tx_valid
+MISMATCH cyc=1888 tx_valid
+MISMATCH cyc=1889 tx_valid
+MISMATCH cyc=1890 tx_valid
+KVS_RVPAIR FAIL mode=6 mut=4 checks=14380 errors=7 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+MISMATCH cyc=1884 tx_valid
+MISMATCH cyc=1885 tx_valid
+MISMATCH cyc=1886 tx_valid
+MISMATCH cyc=1887 tx_valid
+MISMATCH cyc=1888 tx_valid
+MISMATCH cyc=1889 tx_valid
+MISMATCH cyc=1890 tx_valid
+MISMATCH cyc=1891 tx_valid
+MISMATCH cyc=1892 tx_valid
+MISMATCH cyc=1893 tx_valid
+KVS_RVPAIR FAIL mode=7 mut=4 checks=14384 errors=12 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=8 mut=4 checks=14345 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+MISMATCH cyc=1884 tx_valid
+MISMATCH cyc=1885 tx_valid
+MISMATCH cyc=1886 tx_valid
+MISMATCH cyc=1887 tx_valid
+MISMATCH cyc=1888 tx_valid
+MISMATCH cyc=1889 tx_valid
+MISMATCH cyc=1890 tx_valid
+KVS_RVPAIR FAIL mode=9 mut=4 checks=14380 errors=7 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=10 mut=4 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR_ALL FAIL mut=4 modes=11 checks=72094 fails=5
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-648162-1792457468): exit 1
+EXIT 1

@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_hr_core_queue-fl1-e1880062d bench bench_cluster_child_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_queue-fl1-e1880062d log cl/bench_cluster_child_mutant.a1b1.log captured 2026-10-19T02:02:40-07:00
+# fail_regex 'CLUSTER_GATE FAIL mutant'
+mutant: u_core_queue.host_rst_n inverted at the parent
+flat reference: 13 member instance(s) wrapped per flat_wraps.json [('qkd_host_axi_packet', 'qkd_host_axi_packet_rr'), ('qkd_host_control_prompt_observed', 'qkd_host_control_prompt_observed_rr'), ('qkd_host_hc_station', 'qkd_host_hc_station_rr'), ('qkd_host_program_loader_target', 'qkd_host_program_loader_target_rr'), ('qkd_host_program_rx_target', 'qkd_host_program_rx_target_rr'), ('qkd_host_record_port', 'qkd_host_record_port_rr'), ('qkd_host_rx_class_admission', 'qkd_host_rx_class_admission_rr'), ('qkd_host_tx_class', 'qkd_host_tx_class_rr')]
+seed=1 mode=0: MISMATCH service_faults t=3053669 fs core=3 flat=0 clu=1000000
+seed=1 mode=1: MISMATCH service_faults t=3053669 fs core=3 flat=0 clu=1000000
+seed=2 mode=0: MISMATCH service_faults t=2637002 fs core=3 flat=c0000 clu=10c0000
+seed=2 mode=1: MISMATCH service_faults t=2637002 fs core=3 flat=c0000 clu=10c0000
+seed=3 mode=0: MISMATCH service_faults t=1387001 fs core=1 flat=a0000 clu=10a0000
+seed=3 mode=1: MISMATCH service_faults t=1387001 fs core=1 flat=a0000 clu=10a0000
+CLUSTER_GATE FAIL mutant child=core_queue runs_pass=0/6 core_cycles=20000

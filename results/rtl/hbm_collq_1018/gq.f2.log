@@ -24,5 +24,5 @@ COLLQ unexpected fault gq1111 ra1111 rb0000 rs0000 ks0000
 COLLQ FAIL errors=4249
 - rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.125 s; speed 16.259 us/s
-- Verilator: cpu 0.126 s on 1 threads; alloced 1023 MB
+- Verilator: $finish at 2us; walltime 0.138 s; speed 14.790 us/s
+- Verilator: cpu 0.138 s on 1 threads; alloced 1023 MB

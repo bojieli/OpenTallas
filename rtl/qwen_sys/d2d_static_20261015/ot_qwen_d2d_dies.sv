@@ -180,7 +180,10 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 // KV/system die end (die name qkd_d2d_static; replaces qkd_d2d = ot_qkvd_kv_end + LLR, historical) + HOST services
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2, parameter [31:0] TXDP = {8'd1, 8'd1, 8'd2, 8'd1}) (
+module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2, parameter [31:0] TXDP = {8'd1, 8'd1, 8'd2, 8'd1},
+    // S-QTIES QC-12 (10-18): KV-die TX lane count.  4 = closed qkd_d2d_static r7q (port 3 built, tied idle); 3 = the dead
+    // port-3 TX lane removed (no KV->compute port-3 traffic in the compiled program; the end faults a port-3 TX event)
+    parameter integer NTX = 4) (
     input  wire         ck,                              // core D2D clock (PLL core trunk, 1.2 GHz; one CTS root incl. the slot-store SRAMs)
     input  wire         por_n, rst_n,
     input  wire         cfg_tx_we, cfg_rx_we, input wire [5:0] cfg_addr, input wire [31:0] cfg_data,
@@ -234,8 +237,8 @@ module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2
     ot_rst_pipe #(.REGIONS(1), .STAGES(2)) u_por_region
         (.clk(ck), .rst_n_in(por_n), .rst_n(local_por_n));
     localparam integer FW = 548;
-    wire [3:0] txs, rxe, rxs; wire [3:0] tk, rk; wire [4:0] tb, rb; wire [FW-1:0] rxp;
-    wire [3:0] tv; wire [4*FW-1:0] tp;
+    wire [NTX-1:0] txs; wire [3:0] rxe, rxs; wire [3:0] tk, rk; wire [4:0] tb, rb; wire [FW-1:0] rxp;
+    wire [NTX-1:0] tv; wire [NTX*FW-1:0] tp;
     wire eb, ab, endf, lu, dr, seen, rt, rec; wire [7:0] ep, fc, tf;
     wire s_vm, s_co, s_cb, s_cf, s_ea, s_ar, s_fr, s_f, kvn_f;
     ot_qwen_d2d_recovery #(.MASTER(1)) u_rec (.ck(ck), .por_n(local_por_n[0]), .rst_n(local_rst_n[0]), .abort(ab | endf),
@@ -244,7 +247,7 @@ module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2
         .fwd_epoch_i(1'b0), .fwd_epoch_o(fwd_epoch), .fwd_link_rst_n(fwd_link_rst_n), .phy_rst_n(phy_rst_n),
         .epoch_begin(eb), .epoch(ep), .link_up(lu), .links_drained(dr), .link_reset_seen(seen), .retrained(rt),
         .transport_fault(tf), .recovering(rec), .recovery_cycles(recovery_cycles));
-    ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD(TXDP), .MUT(MUT)) u_end (
+    ot_qwen_d2d_static_end #(.NT(NTX), .NR(4), .TXD(TXDP), .MUT(MUT)) u_end (
         .ck({5{ck}}), .rst_n(local_rst_n[1]), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .cal_seg(cal_seg),
         .tx_slot(txs), .tx_kind(tk), .tx_beat(tb), .tx_valid(tv), .tx_payload(tp),
@@ -260,8 +263,11 @@ module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2
     // port 2 embedding row (codec latency 1: the provider's registered word one edge after emb_tx_slot)
     assign emb_tx_slot = txs[2];
     assign tv[2] = emb_tx_v; assign tp[2*FW +: FW] = emb_tx_payload;
-    // port 3 carries no KV-die TX traffic in the compiled program: no producer, the end faults any stray valid
-    assign tv[3] = 1'b0; assign tp[4*FW-1:3*FW] = {FW{1'b0}};
+    // port 3 carries no KV-die TX traffic in the compiled program: NTX = 4 keeps the built lane tied idle (the end faults
+    // any stray valid); NTX = 3 does not build it (QC-12) and the end faults a calendar event naming port 3
+    if (NTX == 4) begin : g_tx3_idle
+        assign tv[3] = 1'b0; assign tp[4*FW-1:3*FW] = {FW{1'b0}};
+    end
     ot_qwen_d2d_status_rx u_st (.ck(ck), .rst_n(local_rst_n[2]), .epoch16(status_epoch16), .rx_event(rxe[2]), .rx_slot(rxs[2]),
         .rx_payload(rxp), .vm_drained(s_vm), .collective_drained(s_co), .collective_busy(s_cb), .crom_fault(s_cf),
         .execution_active(s_ea), .admit_ready(s_ar), .status_fresh(s_fr), .result_v(engine_result_v),
@@ -591,7 +597,7 @@ module qfd_d2d_static #(parameter integer MUT = 0, parameter integer PR = 1, par
     qfd_d2d_static_core #(.MUT(MUT), .TXDP(PR ? TXDP : {8'd2, 8'd1, 8'd2, 8'd1})) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data(c_cfg_data), .cal_start(c_cal_start), .cal_seg(c_cal_seg), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .native_tx_slot(c_native_tx_slot), .native_tx_slot_kind(c_native_tx_slot_kind), .native_tx_slot_beat(c_native_tx_slot_beat), .native_tx_v(c_native_tx_v), .native_tx_payload(c_native_tx_payload), .rx_payload(c_rx_payload), .native_rx_v(c_native_rx_v), .native_rx_slot(c_native_rx_slot), .native_rx_slot_kind(c_native_rx_slot_kind), .native_rx_slot_beat(c_native_rx_slot_beat), .prog_witness_slot(c_prog_witness_slot), .prog_auth_slot(c_prog_auth_slot), .prog_context_slot(c_prog_context_slot), .prog_tx_observed_v(c_prog_tx_observed_v), .prog_tx_record(c_prog_tx_record), .prog_rx_v(c_prog_rx_v), .emb_rx_v(c_emb_rx_v), .emb_rx_slot(c_emb_rx_slot), .kv_x3_slot(c_kv_x3_slot), .x3(c_x3), .x3_identity(c_x3_identity), .x3_generation(c_x3_generation), .status_epoch16(c_status_epoch16), .vm_drained(c_vm_drained), .collective_drained(c_collective_drained), .collective_busy(c_collective_busy), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .admit_ready(c_admit_ready), .result_v(c_result_v), .result_done(c_result_done), .result_fault(c_result_fault), .result_cause(c_result_cause), .result_tag(c_result_tag), .result_gen(c_result_gen), .result_token(c_result_token), .result_value(c_result_value), .result_cycles(c_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .transport_fault(c_transport_fault), .fault(c_fault));
 endmodule
 
-module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2, parameter integer PR = 1, parameter [31:0] TXDP = 32'd0) (
+module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2, parameter integer NTX = 4, parameter integer PR = 1, parameter [31:0] TXDP = 32'd0) (
     input  wire ck,
     input  wire por_n,
     input  wire rst_n,
@@ -994,5 +1000,5 @@ module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2, par
     reg q_fault;
     always @(posedge ck) q_fault <= c_fault;
     assign fault = PR ? q_fault : c_fault;
-    qkd_d2d_static_core #(.MUT(MUT), .NL(NL), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data(c_cfg_data), .cal_start(c_cal_start), .cal_seg(c_cal_seg), .host_link_reset_req(c_host_link_reset_req), .host_recovery_clear(c_host_recovery_clear), .host_boot_begin(c_host_boot_begin), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .att_tx_slot(c_att_tx_slot), .att_tx_kind(c_att_tx_kind), .att_tx_beat(c_att_tx_beat), .att_tx_v(c_att_tx_v), .att_tx_payload(c_att_tx_payload), .att_rx_v(c_att_rx_v), .att_rx_slot(c_att_rx_slot), .att_rx_kind(c_att_rx_kind), .att_rx_beat(c_att_rx_beat), .rx_payload(c_rx_payload), .emb_tx_slot(c_emb_tx_slot), .emb_tx_v(c_emb_tx_v), .emb_tx_payload(c_emb_tx_payload), .record_tx_observed_v(c_record_tx_observed_v), .record_tx(c_record_tx), .record_send_kind(c_record_send_kind), .record_witness_slot(c_record_witness_slot), .record_rx_v(c_record_rx_v), .record_rx(c_record_rx), .kvn_compiled_identity(c_kvn_compiled_identity), .kvn_compiled_generation(c_kvn_compiled_generation), .kvn_word_valid(c_kvn_word_valid), .kvn_word_tag(c_kvn_word_tag), .kvn_word_data(c_kvn_word_data), .kvn_word_identity(c_kvn_word_identity), .kvn_word_generation(c_kvn_word_generation), .kvn_word_slot(c_kvn_word_slot), .kvn_word_index(c_kvn_word_index), .status_epoch16(c_status_epoch16), .serdes_up(c_serdes_up), .kv_drained_local(c_kv_drained_local), .kv_flush_local(c_kv_flush_local), .host_drained_local(c_host_drained_local), .kv_active_local(c_kv_active_local), .link_up(c_link_up), .transport_fault(c_transport_fault), .native_links_drained(c_native_links_drained), .native_link_reset_seen(c_native_link_reset_seen), .native_retrained(c_native_retrained), .abort_drained(c_abort_drained), .native_kv_drained(c_native_kv_drained), .native_vm_drained(c_native_vm_drained), .native_collective_drained(c_native_collective_drained), .native_host_drained(c_native_host_drained), .native_collective_busy(c_native_collective_busy), .native_kv_flush(c_native_kv_flush), .native_admit_ready(c_native_admit_ready), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .engine_result_v(c_engine_result_v), .engine_result_done(c_engine_result_done), .engine_result_fault(c_engine_result_fault), .engine_result_cause(c_engine_result_cause), .engine_result_tag(c_engine_result_tag), .engine_result_gen(c_engine_result_gen), .engine_result_token(c_engine_result_token), .engine_result_value(c_engine_result_value), .engine_result_cycles(c_engine_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .recovery_cycles(c_recovery_cycles), .fault(c_fault));
+    qkd_d2d_static_core #(.MUT(MUT), .NL(NL), .NTX(NTX), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data(c_cfg_data), .cal_start(c_cal_start), .cal_seg(c_cal_seg), .host_link_reset_req(c_host_link_reset_req), .host_recovery_clear(c_host_recovery_clear), .host_boot_begin(c_host_boot_begin), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .att_tx_slot(c_att_tx_slot), .att_tx_kind(c_att_tx_kind), .att_tx_beat(c_att_tx_beat), .att_tx_v(c_att_tx_v), .att_tx_payload(c_att_tx_payload), .att_rx_v(c_att_rx_v), .att_rx_slot(c_att_rx_slot), .att_rx_kind(c_att_rx_kind), .att_rx_beat(c_att_rx_beat), .rx_payload(c_rx_payload), .emb_tx_slot(c_emb_tx_slot), .emb_tx_v(c_emb_tx_v), .emb_tx_payload(c_emb_tx_payload), .record_tx_observed_v(c_record_tx_observed_v), .record_tx(c_record_tx), .record_send_kind(c_record_send_kind), .record_witness_slot(c_record_witness_slot), .record_rx_v(c_record_rx_v), .record_rx(c_record_rx), .kvn_compiled_identity(c_kvn_compiled_identity), .kvn_compiled_generation(c_kvn_compiled_generation), .kvn_word_valid(c_kvn_word_valid), .kvn_word_tag(c_kvn_word_tag), .kvn_word_data(c_kvn_word_data), .kvn_word_identity(c_kvn_word_identity), .kvn_word_generation(c_kvn_word_generation), .kvn_word_slot(c_kvn_word_slot), .kvn_word_index(c_kvn_word_index), .status_epoch16(c_status_epoch16), .serdes_up(c_serdes_up), .kv_drained_local(c_kv_drained_local), .kv_flush_local(c_kv_flush_local), .host_drained_local(c_host_drained_local), .kv_active_local(c_kv_active_local), .link_up(c_link_up), .transport_fault(c_transport_fault), .native_links_drained(c_native_links_drained), .native_link_reset_seen(c_native_link_reset_seen), .native_retrained(c_native_retrained), .abort_drained(c_abort_drained), .native_kv_drained(c_native_kv_drained), .native_vm_drained(c_native_vm_drained), .native_collective_drained(c_native_collective_drained), .native_host_drained(c_native_host_drained), .native_collective_busy(c_native_collective_busy), .native_kv_flush(c_native_kv_flush), .native_admit_ready(c_native_admit_ready), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .engine_result_v(c_engine_result_v), .engine_result_done(c_engine_result_done), .engine_result_fault(c_engine_result_fault), .engine_result_cause(c_engine_result_cause), .engine_result_tag(c_engine_result_tag), .engine_result_gen(c_engine_result_gen), .engine_result_token(c_engine_result_token), .engine_result_value(c_engine_result_value), .engine_result_cycles(c_engine_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .recovery_cycles(c_recovery_cycles), .fault(c_fault));
 endmodule

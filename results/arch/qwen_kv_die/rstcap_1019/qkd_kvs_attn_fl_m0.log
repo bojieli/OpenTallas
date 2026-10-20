@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits    48 GB (avail 363, growth 329, headroom 0, waiters 0/0 GB) load 133/128 running 36 disk 695 GB 
+ot-run: ot-epyc5       admits    32 GB (avail 380, growth 357, headroom 0, waiters 6/968 GB) load 260/128 running 45 disk 1796 GB 
+ot-run: ot-pve1        admits    18 GB (avail 166, growth 153, headroom 0, waiters 0/0 GB) load 74/28 running 25 disk 1248 GB 
+ot-run: ot-agidock128  admits    14 GB (avail 33, growth 23, headroom 0, waiters 0/0 GB) load 56/64 running 7 disk 213 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 0.7 x 8 = 6 GB, admissible 6 GB: available 33 GB, growth charged 29 GB (x0.5), young 18 GB, floor 6 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3399796-1792393748 after 21 s
+FACE_LAND verilator Verilator 5.050 2026-07-01 rev v5.050
+FACE_LAND PASS top=qkd_kvs_attn_fl mut=0 checks=20196 comparisons=20196 epochs=196 toggles=38816 errors=0 first_err=-1
+- /tmp/rstcap-bench/qkd_kvs_attn_m0/tb_face_land.sv:115: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.028 s; speed 701.963 us/s
+- Verilator: cpu 0.029 s on 1 threads; allocated 7 MB
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3399796-1792393748): exit 0

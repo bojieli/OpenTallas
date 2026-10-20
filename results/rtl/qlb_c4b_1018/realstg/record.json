@@ -1,0 +1,261 @@
+{
+ "schema": "opentallas.qwen.dv-realstg.v1",
+ "lane": "QW-REALSTG",
+ "date": "2026-10-19",
+ "position": 8191,
+ "layers": [
+  0,
+  1
+ ],
+ "tp8_die": 0,
+ "vehicle": "tb_qfd_dv2 N12 (12-slice qfd_dv_slice2 chain), completed executable QW-CLAYER reg_vec/work/obj_n12 (ot-epyc5), reused unmodified; its 22 build sources are byte-identical to this branch (build_sources.sha256)",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "run_host": "ot-epyc5 (ot-run unit oth-ubuntu-2654924-1792393024)",
+ "operands": "REAL: fixtures/L<n>_fixture.json (tools/qwen_layerbench/dv_layer_fixture.py tp4): the TP4 ISA golden (fx/realmem/P8191) re-executed for layer n at P8191 from the recorded X and kv_pre; reproduction bit-exact on all 4 dies (layer X, K row, V row). Cut for TP8 die 0; the cut rows/cols equal the TP8 die-0 image weights and scales (fixtures/L<n>_tp8w.json PASS).",
+ "exactness": "every PASS = RTL bit-exact vs the bench hdc_golden expectation AND that expectation bit-exact vs the ISA golden stage output (isa_gold_words) where a TP-agnostic golden value exists",
+ "tp_dependence": {
+  "TP-agnostic (compared to TP4 gold directly)": "qk (q/k/v), qkv rows, gu rows, silu act given its gu/r inputs, resid x'/r given t",
+  "TP4-fold-carrying inputs": "t of resid1/resid2 (all-reduce returns) and everything downstream of resid1 (gu, silu, resid2, the L1 input): the values are the TP4 golden's; the TP8 die computes the same functions on the TP8-folded t (TP8 gold pending)",
+  "TP8-gold-only": "od: the TP8 o/down partial sums (512 / 1536 columns, split 256) have no TP4 value; PASS here is RTL vs hdc_golden G.matvec on the real rows; the TP8 ISA gold (qwen_tp8_layer_gold collective<s>_partial) is running (pending_results)"
+ },
+ "od_scale_note": "the ISA all-reduces RAW o/down partials and applies the post-TP scale in the residual (PC19/PC28 = DV resid pscale): the od station BTAB row scale must be BF16 1.0 for exactness; the bench drives 1.0",
+ "span_definition": "span_cycles = last checked output edge seen in the RTL log - first lowered edge (resid: E5 x words + PSUMs; qk: W5 D2D words; silu: E5 act words; od: last AR word at dvs_W5). qkv/gu land in VM (no output pin): delivery_span_cycles = last tile word consumed - first lowered edge",
+ "words_compared": {
+  "resid": "4096 x' FP32 readback + 64 BF16 x words + 160 PSUM edges/tags + 12 r",
+  "qk": "512 q + 128 k + 128 v (D2D) + 96 edges",
+  "silu": "24 BF16 act words (1536 elements)",
+  "qkv": "768 VM rows",
+  "gu": "3072 VM rows",
+  "od": "2x256 AR words (tag/last/data) + XC"
+ },
+ "stages": {
+  "L0_gu": {
+   "verdict": "PASS",
+   "checks": "3073/3073",
+   "bench": "dv_lower_mat_bench.py gu",
+   "span_cycles": 407,
+   "delivery_span_cycles": 407,
+   "isa_gold_words": "3072/3072",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}"
+  },
+  "L0_od": {
+   "verdict": "PASS",
+   "checks": "515/515",
+   "bench": "dv_lower_mat_bench.py od",
+   "span_cycles": 1555,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "TP8-gold-only",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L0_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"la"
+  },
+  "L0_qk": {
+   "verdict": "PASS",
+   "checks": "7/7",
+   "bench": "dv_lower_vec_bench.py qk",
+   "span_cycles": 926,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "768/768",
+   "rc": 0,
+   "first_line": "DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L0_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768"
+  },
+  "L0_qkv": {
+   "verdict": "PASS",
+   "checks": "769/769",
+   "bench": "dv_lower_mat_bench.py qkv",
+   "span_cycles": 407,
+   "delivery_span_cycles": 407,
+   "isa_gold_words": "768/768",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}"
+  },
+  "L0_resid1": {
+   "verdict": "PASS",
+   "checks": "28/28",
+   "bench": "dv_lower_vec_bench.py resid",
+   "span_cycles": 1044,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "4097/4097",
+   "rc": 0,
+   "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L0_resid1.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097"
+  },
+  "L0_resid2": {
+   "verdict": "PASS",
+   "checks": "28/28",
+   "bench": "dv_lower_vec_bench.py resid",
+   "span_cycles": 1044,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "4097/4097",
+   "rc": 0,
+   "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L0_resid2.npz r=0x40d90860 x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097"
+  },
+  "L0_silu": {
+   "verdict": "PASS",
+   "checks": "2/2",
+   "bench": "dv_lower_vec_bench.py silu",
+   "span_cycles": 814,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "1536/1536",
+   "rc": 0,
+   "first_line": "DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L0_silu.npz act words=24 span_cycles=814 isa_gold_words=1536/1536"
+  },
+  "L1_gu": {
+   "verdict": "PASS",
+   "checks": "3073/3073",
+   "bench": "dv_lower_mat_bench.py gu",
+   "span_cycles": 407,
+   "delivery_span_cycles": 407,
+   "isa_gold_words": "3072/3072",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L1_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}"
+  },
+  "L1_od": {
+   "verdict": "PASS",
+   "checks": "515/515",
+   "bench": "dv_lower_mat_bench.py od",
+   "span_cycles": 1555,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "TP8-gold-only",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L1_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"la"
+  },
+  "L1_qk": {
+   "verdict": "PASS",
+   "checks": "7/7",
+   "bench": "dv_lower_vec_bench.py qk",
+   "span_cycles": 926,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "768/768",
+   "rc": 0,
+   "first_line": "DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L1_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768"
+  },
+  "L1_qkv": {
+   "verdict": "PASS",
+   "checks": "769/769",
+   "bench": "dv_lower_mat_bench.py qkv",
+   "span_cycles": 407,
+   "delivery_span_cycles": 407,
+   "isa_gold_words": "768/768",
+   "rc": 0,
+   "first_line": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L1_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}"
+  },
+  "L1_resid1": {
+   "verdict": "PASS",
+   "checks": "28/28",
+   "bench": "dv_lower_vec_bench.py resid",
+   "span_cycles": 1044,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "4097/4097",
+   "rc": 0,
+   "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L1_resid1.npz r=0x40b67dd6 x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097"
+  },
+  "L1_resid2": {
+   "verdict": "PASS",
+   "checks": "28/28",
+   "bench": "dv_lower_vec_bench.py resid",
+   "span_cycles": 1044,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "4097/4097",
+   "rc": 0,
+   "first_line": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=72 collisions=0 ar_order=slice fixture=L1_resid2.npz r=0x409ac91d x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097"
+  },
+  "L1_silu": {
+   "verdict": "PASS",
+   "checks": "2/2",
+   "bench": "dv_lower_vec_bench.py silu",
+   "span_cycles": 814,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "1536/1536",
+   "rc": 0,
+   "first_line": "DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L1_silu.npz act words=24 span_cycles=814 isa_gold_words=1536/1536"
+  },
+  "MUT_L0_gu_sbase1": {
+   "verdict": "FAIL",
+   "checks": "22/3073",
+   "bench": "dv_lower_mat_bench.py gu",
+   "span_cycles": 407,
+   "delivery_span_cycles": 407,
+   "isa_gold_words": "3072/3072",
+   "rc": 1,
+   "first_line": "DV_LOWER_MAT gu FAIL 22/3073 mutant=sbase1 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+   "fail_witness": "runs/MUT_L0_gu_sbase1/gu_sbase1.log.gz",
+   "fail_witness_sha256": "b8183340c2e7d09bb385aa0b84478e66dd894bbdf14615a23ed207124c20ead1"
+  },
+  "MUT_L0_od_nostagger": {
+   "verdict": "FAIL",
+   "checks": "15/515",
+   "bench": "dv_lower_mat_bench.py od",
+   "span_cycles": 1513,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "TP8-gold-only",
+   "rc": 1,
+   "first_line": "DV_LOWER_MAT od FAIL 15/515 mutant=nostagger fixture=L0_mat_od.npz {\"span_cycles\": 1513, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 436, \"down\": 436}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 81, \"last_set\": 3, \"last_on_final\": 0}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\"",
+   "fail_witness": "runs/MUT_L0_od_nostagger/od_nostagger.log.gz",
+   "fail_witness_sha256": "13a7a66973f08369cb308dc15ef2818eda594981d8365b4e6f56843bcfcf1220"
+  },
+  "MUT_L0_qk_ropesign": {
+   "verdict": "FAIL",
+   "checks": "5/7",
+   "bench": "dv_lower_vec_bench.py qk",
+   "span_cycles": 926,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "768/768",
+   "rc": 1,
+   "first_line": "DV_LOWER_VEC qk FAIL 5/7 mutant=ropesign commands=26 collisions=0 ar_order=slice fixture=L0_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768",
+   "fail_witness": "runs/MUT_L0_qk_ropesign/run_qk_ropesign.log.gz",
+   "fail_witness_sha256": "15224c97d35116b8e26ed0cc17ece9c2b07a4bffdfb02c4ee9b42549121303f5"
+  },
+  "MUT_L0_qkv_sbase1": {
+   "verdict": "FAIL",
+   "checks": "5/769",
+   "bench": "dv_lower_mat_bench.py qkv",
+   "span_cycles": 407,
+   "delivery_span_cycles": 407,
+   "isa_gold_words": "768/768",
+   "rc": 1,
+   "first_line": "DV_LOWER_MAT qkv FAIL 5/769 mutant=sbase1 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+   "fail_witness": "runs/MUT_L0_qkv_sbase1/qkv_sbase1.log.gz",
+   "fail_witness_sha256": "0abf79801315f316c6bbb0c2874d7c12db5892a183ba836e8b54dd9019090759"
+  },
+  "MUT_L0_resid1_arwin": {
+   "verdict": "FAIL",
+   "checks": "4/28",
+   "bench": "dv_lower_vec_bench.py resid",
+   "span_cycles": 1044,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "4097/4097",
+   "rc": 1,
+   "first_line": "DV_LOWER_VEC resid FAIL 4/28 mutant=arwin commands=72 collisions=0 ar_order=slice fixture=L0_resid1.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1044 isa_gold_words=4097/4097",
+   "fail_witness": "runs/MUT_L0_resid1_arwin/run_resid_arwin.log.gz",
+   "fail_witness_sha256": "9f2f9e10582ae030678a7ff396728415a240bd6c587561d41357e0130463101e"
+  },
+  "MUT_L0_silu_nor": {
+   "verdict": "FAIL",
+   "checks": "1/2",
+   "bench": "dv_lower_vec_bench.py silu",
+   "span_cycles": 749,
+   "delivery_span_cycles": null,
+   "isa_gold_words": "1536/1536",
+   "rc": 1,
+   "first_line": "DV_LOWER_VEC silu FAIL 1/2 mutant=nor commands=24 collisions=0 ar_order=slice fixture=L0_silu.npz act words=24 span_cycles=749 isa_gold_words=1536/1536",
+   "fail_witness": "runs/MUT_L0_silu_nor/run_silu_nor.log.gz",
+   "fail_witness_sha256": "a6d0e46824241398fa9ef4ce439ad71a1c041b3e3344711c825d29e077de105d"
+  }
+ },
+ "source_sha256": {
+  "rtl/test/qwen_dv/dv_lower_vec_bench.py": "05724d030d7cbc3e39e60312b7ed7a3d9e8329347fae6a3e711050610ab6ea04",
+  "rtl/test/qwen_dv/dv_lower_mat_bench.py": "fdf8299935104398a11eba54b001103f85eeacfed73b707b2068b88c6acc0099",
+  "rtl/test/qwen_dv/dv_lower_bench.py": "8173bec4c10e488fbe6e95d958c9a1c1c1482b8e386fb4905dd0b829d982b0bb",
+  "rtl/test/qwen_dv/dv_bench.py": "e4f52f07f7e89d487990ffd12e53e337185be48bba54f0653cfe9d9bc09ac2bc",
+  "rtl/test/qwen_dv/dv_bench2.py": "3e8196ae5caa3da82ef2b2fe2b62b3a91821e09fe9e42a2a26d56349c8c4e6f4",
+  "tools/qwen_layerbench/dv_lower.py": "6703f03fb928907bad952babcf05890c41b5096ea81f81dbab7f4c01a6c800c5",
+  "tools/qwen_layerbench/dv_lower_vec.py": "bf978632554b698a4a6740c2417ecf3894eed7f52136acdd235f9317506c4f64",
+  "tools/qwen_layerbench/dv_lower_mat.py": "c35eb8c15aa15c00af8a3e97b28740c11797a1cf049c4ede3317b45923ed81bd",
+  "tools/qwen_layerbench/dv_layer_fixture.py": "e0e7e5dcc55fbed397dd3c353294928476ae1da312b9e97609c43e033142b222",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "results/rtl/qlb_c4b_1018/dv_lower_vec/vec_ages.json": "067ae9360fb0a109412f024914a52f97eccd434895cfb9fde672d432f5d20d23",
+  "results/rtl/qlb_c4b_1018/dv_lower_mat/stn_ages.json": "5d5601f353d2ed56cab28ae332d973a4a008f16c11b34c5b86333f0881c2127e",
+  "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/token_source_plan.json": "fd2668d9a4fb869fe702c88e63e9b0877a100ee0165757f315aab23f9dba3d45",
+  "results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/program.hex": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796"
+ }
+}

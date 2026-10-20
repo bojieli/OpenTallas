@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job ot_qkh_ktree_lkp-lkp1-52f03a544 bench bench_mut1_lanes_ignored_old_wiring host ot-epyc9 run /srv/opentallas-scratch/claude/closure-loop/ot_qkh_ktree_lkp-lkp1-52f03a544 log cl/bench_mut1_lanes_ignored_old_wiring.a1b1.log captured 2026-10-19T22:02:29-07:00
+# fail_regex 'FAIL ktree_lk .*detected=0'
+Verilator 5.050 2026-07-01 rev v5.050
+FAIL ktree_lk lockstep_edges=4060 mismatches=0 lane_injections=32 detected=0 ref_false=0

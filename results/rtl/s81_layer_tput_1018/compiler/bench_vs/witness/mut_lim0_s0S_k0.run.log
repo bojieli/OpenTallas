@@ -1,0 +1,23 @@
+VSOP op=12 cmd=616 cycles_cmd_to_last_result=57 slot=57
+VSOP op=9 cmd=4250 cycles_cmd_to_last_result=19 slot=19
+VSOP op=10 cmd=8360 cycles_cmd_to_last_result=147 slot=147
+VSOP op=11 cmd=8968 cycles_cmd_to_last_result=25 slot=25
+VSOP op=8 cmd=10544 cycles_cmd_to_last_result=195 slot=195
+XQ MISMATCH beat 1 kind 1 idx 00/00 e0 3ea/3f5 e1 3ea/3f3
+MISMATCH check 3 pair 0 word 0 got 00000000 want 39580000
+MISMATCH check 3 pair 0 word 1 got 00000000 want be160000
+MISMATCH check 3 pair 0 word 2 got 00000000 want bcb00000
+MISMATCH check 3 pair 0 word 3 got 00000000 want bc020000
+MISMATCH check 3 pair 0 word 4 got 00000000 want bbe40000
+MISMATCH check 3 pair 0 word 5 got 00000000 want 3ac60000
+MISMATCH check 3 pair 0 word 6 got 00000000 want ba200000
+MISMATCH check 3 pair 0 word 7 got 00000000 want bc220000
+MISMATCH check 3 pair 1 word 0 got 00000000 want bc230000
+MISMATCH check 3 pair 1 word 1 got 00000000 want bd010000
+MISMATCH check 3 pair 1 word 2 got 00000000 want ba170000
+SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=65 slot_overruns=0 missed=0 fault=vp0/vs0/vq0
+FAIL
+- /srv/opentallas-scratch/claude/tok-s81-gaps/vs/src/tools/s81_dv/layer_prog/vs/tb_vs_lowered.sv:136: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 1.697 s; speed 6.428 us/s
+- Verilator: cpu 1.639 s on 1 threads; allocated 19 MB

@@ -1,0 +1,200 @@
+{
+ "schema": "opentallas.cb16.flat_fanout.v1",
+ "netlist_sha256": "d4ae2171d2e2bb9d699b42bd5e93e5e2689ede75a78200063754cc38bb442d64",
+ "mapped_cells": 4879,
+ "flops": 1132,
+ "maximum_register_loads": 5,
+ "register_violations": [],
+ "top_register_loads": [
+  {
+   "inst": "u.g_slice[10].u.r2$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1717,
+   "loads": 5
+  },
+  {
+   "inst": "u.g_slice[10].u.sel[3]$_SDFF_PN0_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1712,
+   "loads": 3
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[0]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1437,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[10]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1447,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[11]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1448,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[12]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1449,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[13]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1450,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[14]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1451,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[15]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1452,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[16]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1453,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[17]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1454,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[18]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1455,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[19]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1456,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[1]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1438,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[20]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1457,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[21]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1458,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[22]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1459,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[23]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1357,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[2]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1439,
+   "loads": 2
+  },
+  {
+   "inst": "u.g_slice[0].u.b0[3]$_DFFE_PP_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 1440,
+   "loads": 2
+  }
+ ],
+ "flag_port_direction": "output",
+ "flag_ports": 44,
+ "flag_max_loads": 0,
+ "flag_loads": {
+  "0": 0,
+  "1": 0,
+  "2": 0,
+  "3": 0,
+  "4": 0,
+  "5": 0,
+  "6": 0,
+  "7": 0,
+  "8": 0,
+  "9": 0,
+  "10": 0,
+  "11": 0,
+  "12": 0,
+  "13": 0,
+  "14": 0,
+  "15": 0,
+  "16": 0,
+  "17": 0,
+  "18": 0,
+  "19": 0,
+  "20": 0,
+  "21": 0,
+  "22": 0,
+  "23": 0,
+  "24": 0,
+  "25": 0,
+  "26": 0,
+  "27": 0,
+  "28": 0,
+  "29": 0,
+  "30": 0,
+  "31": 0,
+  "32": 0,
+  "33": 0,
+  "34": 0,
+  "35": 0,
+  "36": 0,
+  "37": 0,
+  "38": 0,
+  "39": 0,
+  "40": 0,
+  "41": 0,
+  "42": 0,
+  "43": 0
+ },
+ "scope": "native flattened mapped netlist; excludesclock/power; output flag pins require linked receiver loads"
+}

@@ -1,0 +1,376 @@
+{
+ "schema": "opentallas.s81_scand.v1",
+ "lane": "S81-SCAND",
+ "date": "2026-10-18",
+ "grade": {
+  "reader": "measured-old-RTL (W11 reader ot_hdc_v41x_idx_kstream_range + HBM model, 1 stack a die, Verilator 5.050; this reader is NOT bound on the p4l die, see README)",
+  "legs": "measured (729-cycle S81 cross-die idx_topk_merge leg)",
+  "merge": "modelled (178 cycles a 4 x 512 final select, linear in k)",
+  "reindex": "priced (SCANCHK, unchanged by D)"
+ },
+ "reader_1stack": {
+  "32768": {
+   "cycles_charged": 2835,
+   "by_placement": {
+    "die_keys_32768_p1": 2835,
+    "die_keys_32768_p2": 2763
+   }
+  },
+  "43691": {
+   "cycles_charged": 3724,
+   "by_placement": {
+    "die_keys_43691_p1": 3724,
+    "die_keys_43691_p2": 3654
+   }
+  },
+  "65536": {
+   "cycles_charged": 5801,
+   "by_placement": {
+    "die_keys_65536_p1": 5801,
+    "die_keys_65536_p2": 5794
+   }
+  },
+  "87382": {
+   "cycles_charged": 7700,
+   "by_placement": {
+    "die_keys_87382_p1": 7700,
+    "die_keys_87382_p2": 7581
+   }
+  },
+  "131072": {
+   "cycles_charged": 11636,
+   "by_placement": {
+    "die_keys_131072_p1": 11636,
+    "die_keys_131072_p2": 11462
+   }
+  },
+  "262144": {
+   "cycles_charged": 23066,
+   "by_placement": {
+    "die_keys_262144_p1": 22461,
+    "die_keys_262144_p2": 23066
+   }
+  }
+ },
+ "reader_4stack_basis": {
+  "L2": 2835,
+  "L20": 5821
+ },
+ "basis_T_cycles": {
+  "ar": 965378.6,
+  "mtp": 1311215.8
+ },
+ "tau": 4.159,
+ "by_k": {
+  "1": {
+   "stages": 1,
+   "dies": 4,
+   "farthest_stage": 0,
+   "per_layer": {
+    "L2": {
+     "die_keys": 131072,
+     "reader_1stack": 11636,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 0.0,
+     "idx_score_node_cycles": 11752,
+     "delta": 8801.0
+    },
+    "L8": {
+     "die_keys": 131072,
+     "reader_1stack": 11636,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 0.0,
+     "idx_score_node_cycles": 11752,
+     "delta": 8801.0
+    },
+    "L14": {
+     "die_keys": 131072,
+     "reader_1stack": 11636,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 0.0,
+     "idx_score_node_cycles": 11752,
+     "delta": 8801.0
+    },
+    "L20": {
+     "die_keys": 262144,
+     "reader_1stack": 23066,
+     "reader_4stack_basis": 5821,
+     "legs_and_merge": 0.0,
+     "idx_score_node_cycles": 23182,
+     "delta": 17245.0
+    }
+   },
+   "idx_score_delta_cycles": {
+    "L2": 8801.0,
+    "L8": 8801.0,
+    "L14": 8801.0,
+    "L20": 17245.0,
+    "L24": 783.0,
+    "L28": 783.0,
+    "L32": 783.0,
+    "L36": 783.0
+   },
+   "dag_1009": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "cycles": 875646.4,
+     "added_cycles": 46780.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 5.342
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "cycles": 1310521.1,
+     "added_cycles": 133005.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 17245.0,
+     "e2e_loss_pct": 10.149
+    }
+   },
+   "composition_1018": {
+    "ar": {
+     "T_cycles": 1012158.6,
+     "tok_s": 1185.6
+    },
+    "mtp": {
+     "T_cycles": 1444220.8,
+     "tok_s": 3455.7
+    }
+   }
+  },
+  "2": {
+   "stages": 2,
+   "dies": 8,
+   "farthest_stage": 1,
+   "per_layer": {
+    "L2": {
+     "die_keys": 65536,
+     "reader_1stack": 5801,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 1636.0,
+     "idx_score_node_cycles": 5917,
+     "delta": 4602.0
+    },
+    "L8": {
+     "die_keys": 65536,
+     "reader_1stack": 5801,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 1636.0,
+     "idx_score_node_cycles": 5917,
+     "delta": 4602.0
+    },
+    "L14": {
+     "die_keys": 65536,
+     "reader_1stack": 5801,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 1636.0,
+     "idx_score_node_cycles": 5917,
+     "delta": 4602.0
+    },
+    "L20": {
+     "die_keys": 131072,
+     "reader_1stack": 11636,
+     "reader_4stack_basis": 5821,
+     "legs_and_merge": 1636.0,
+     "idx_score_node_cycles": 11752,
+     "delta": 7451.0
+    }
+   },
+   "idx_score_delta_cycles": {
+    "L2": 4602.0,
+    "L8": 4602.0,
+    "L14": 4602.0,
+    "L20": 7451.0,
+    "L24": 783.0,
+    "L28": 783.0,
+    "L32": 783.0,
+    "L36": 783.0
+   },
+   "dag_1009": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "cycles": 853255.4,
+     "added_cycles": 24389.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 2.858
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "cycles": 1239160.1,
+     "added_cycles": 61644.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 7451.0,
+     "e2e_loss_pct": 4.975
+    }
+   },
+   "composition_1018": {
+    "ar": {
+     "T_cycles": 989767.6,
+     "tok_s": 1212.4
+    },
+    "mtp": {
+     "T_cycles": 1372859.8,
+     "tok_s": 3635.3
+    }
+   }
+  },
+  "3": {
+   "stages": 3,
+   "dies": 12,
+   "farthest_stage": 1,
+   "per_layer": {
+    "L2": {
+     "die_keys": 43691,
+     "reader_1stack": 3724,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 1814.0,
+     "idx_score_node_cycles": 3840,
+     "delta": 2703.0
+    },
+    "L8": {
+     "die_keys": 43691,
+     "reader_1stack": 3724,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 1814.0,
+     "idx_score_node_cycles": 3840,
+     "delta": 2703.0
+    },
+    "L14": {
+     "die_keys": 43691,
+     "reader_1stack": 3724,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 1814.0,
+     "idx_score_node_cycles": 3840,
+     "delta": 2703.0
+    },
+    "L20": {
+     "die_keys": 87382,
+     "reader_1stack": 7700,
+     "reader_4stack_basis": 5821,
+     "legs_and_merge": 1814.0,
+     "idx_score_node_cycles": 7816,
+     "delta": 3693.0
+    }
+   },
+   "idx_score_delta_cycles": {
+    "L2": 2703.0,
+    "L8": 2703.0,
+    "L14": 2703.0,
+    "L20": 3693.0,
+    "L24": 783.0,
+    "L28": 783.0,
+    "L32": 783.0,
+    "L36": 783.0
+   },
+   "dag_1009": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "cycles": 843800.4,
+     "added_cycles": 14934.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.77
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "cycles": 1210915.1,
+     "added_cycles": 33399.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 3693.0,
+     "e2e_loss_pct": 2.758
+    }
+   },
+   "composition_1018": {
+    "ar": {
+     "T_cycles": 980312.6,
+     "tok_s": 1224.1
+    },
+    "mtp": {
+     "T_cycles": 1344614.8,
+     "tok_s": 3711.7
+    }
+   }
+  },
+  "4": {
+   "stages": 4,
+   "dies": 16,
+   "farthest_stage": 2,
+   "per_layer": {
+    "L2": {
+     "die_keys": 32768,
+     "reader_1stack": 2835,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 3450.0,
+     "idx_score_node_cycles": 2951,
+     "delta": 3450.0
+    },
+    "L8": {
+     "die_keys": 32768,
+     "reader_1stack": 2835,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 3450.0,
+     "idx_score_node_cycles": 2951,
+     "delta": 3450.0
+    },
+    "L14": {
+     "die_keys": 32768,
+     "reader_1stack": 2835,
+     "reader_4stack_basis": 2835,
+     "legs_and_merge": 3450.0,
+     "idx_score_node_cycles": 2951,
+     "delta": 3450.0
+    },
+    "L20": {
+     "die_keys": 65536,
+     "reader_1stack": 5801,
+     "reader_4stack_basis": 5821,
+     "legs_and_merge": 3450.0,
+     "idx_score_node_cycles": 5917,
+     "delta": 3430.0
+    }
+   },
+   "idx_score_delta_cycles": {
+    "L2": 3450.0,
+    "L8": 3450.0,
+    "L14": 3450.0,
+    "L20": 3430.0,
+    "L24": 783.0,
+    "L28": 783.0,
+    "L32": 783.0,
+    "L36": 783.0
+   },
+   "dag_1009": {
+    "ar": {
+     "base_cycles": 828866.4,
+     "cycles": 845778.4,
+     "added_cycles": 16912.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 2.0
+    },
+    "mtp": {
+     "base_cycles": 1177516.1,
+     "cycles": 1211578.1,
+     "added_cycles": 34062.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 3430.0,
+     "e2e_loss_pct": 2.811
+    }
+   },
+   "composition_1018": {
+    "ar": {
+     "T_cycles": 982290.6,
+     "tok_s": 1221.6
+    },
+    "mtp": {
+     "T_cycles": 1345277.8,
+     "tok_s": 3709.9
+    }
+   }
+  }
+ },
+ "adopted_k": 3,
+ "best_k_by_mtp": 3
+}

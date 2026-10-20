@@ -21,6 +21,7 @@ programme + qkd_attn_cal_gen + qkd_attn_service_root + qkd_attn_result_face):
   10-18 capability_join = the die cfg capability word (qkd_kv_die_cfg CAP=1).
 Bench + mutants: tools/qwen_kv_die/attn_result_face_gate.py.  Never a die netlist.
 """
+import os
 import kv_static as K
 import kv_static_boot_join as B
 import kv_static_kvjf_join as F
@@ -46,8 +47,10 @@ def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname=
     ins, width_of, ep = F._ctx(graph, root)
     if prog not in ins:
         raise ValueError(f'template instance {prog} missing')
-    r = F._add_unpriced(graph, ins, rname, ROOT_M, dict(PV_LEAD=None, MUT=0), root)
-    f = (F._add_unpriced(graph, ins, fname, FACE_S_M, dict(NF=NF, RESULT_RELAY=None, F_DLY=None, MUT=0), root) if stream else
+    # KV-ATTNKIT 10-18: OT_KV_ATTN_LAND -> CAL_PIPE=1 (kv_static_die.ATTN_LAND)
+    cp = 1 if os.environ.get('OT_KV_ATTN_LAND', '0') == '1' else 0
+    r = F._add_unpriced(graph, ins, rname, ROOT_M, dict(PV_LEAD=None, CAL_PIPE=cp, MUT=0), root)
+    f = (F._add_unpriced(graph, ins, fname, FACE_S_M, dict(NF=NF, RESULT_RELAY=None, F_DLY=None, CAL_PIPE=cp, MUT=0), root) if stream else
          F._add_unpriced(graph, ins, fname, FACE_M, dict(NF=NF, RESULT_RELAY=None, MUT=0), root))
     p = ins[prog]
     bound = []
@@ -71,7 +74,10 @@ def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname=
 CALGEN_M = ('rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv', 'qkd_attn_cal_gen')
 # KVJ-G2b 10-17: the die image's STRETCH=1 parameters (kv_static_programme die report: profile die, d_qk = QK_ISSUE_AGE 62 -
 # 34, d_rl = RL 95 - 19, service_end 1777, compiled_rx_cmd 2; G3S2 = the v1.4.3 staged head ingress)
-CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=28, D_RL=76, SERVICE_END=1777, MUT=0)
+# KV-ECTL4 10-18: D_QK = the die's QK_ISSUE_AGE (K_RT_BUDGET + 11, one K round trip for every ECTL frame) - 34
+import kv_static_ages as _AGES   # noqa: E402
+CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=_AGES.K_RT_BUDGET + _AGES.QK_WRITE_BEFORE_READ - _AGES.QK_ISSUE_AGE_KIT,
+                D_RL=76, SERVICE_END=1777, MUT=0)
 PROG_FROM_CALGEN = (('compiled_calendar', 'cal'), ('compiled_rx_cmd', 'rx_cmd'), ('compiled_tx_first', 'tx_first'),
                     ('compiled_end', 'end_age'))
 

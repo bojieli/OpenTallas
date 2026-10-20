@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS",
+  "message": "ot_s81sl_capc2 is CLOSED with a published view (s81sl_capc2-s81capc2-1f4c80cf6 @ 1f4c80cf6); reroute_reason native_reach: 21 native driver/endpoint paths exceed 405 um in exact closed-view receipt results/rtl/codex_s81_capc_audit_1020/native_reach_reroute.json; same RTL/parameters/outline/faces, changed pin coordinates rt_e; fix: physical pin positions and reset station placement; zero added edges; admission only, fresh gate/native qualification required",
+  "closed": [
+    "s81sl_capc2-s81capc2-1f4c80cf6"
+  ],
+  "kind": "native_reach",
+  "facts": {
+    "closed_job": "s81sl_capc2-s81capc2-1f4c80cf6",
+    "closed_commit": "1f4c80cf6",
+    "params": {},
+    "rtl": "same",
+    "rtl_detail": "7 RTL source file(s) byte-identical at 1f4c80cf6 and 7f5e8f230",
+    "evidence_gap": null
+  }
+}

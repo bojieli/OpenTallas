@@ -1,0 +1,138 @@
+{
+ "schema": "opentallas.qwen_layerbench.compile_manifest.v1",
+ "tool": "tools/qwen_layerbench/layer_compile.py",
+ "command": [
+  "python3",
+  "tools/qwen_layerbench/layer_compile.py",
+  "--out",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14q-8503e0c89/layer_compile",
+  "--compute-stages",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14q-8503e0c89/results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/compute_dv2f14bn_relay_stages.json",
+  "--kv-stages",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14q-8503e0c89/relay_stages_netlist.json.gz",
+  "--kv-commit",
+  "8503e0c89"
+ ],
+ "tool_sha256": "90a2a570ccf4075c413f0e39e1635a2b404b0179aa7f218a9574c39c85525b00",
+ "source_commits": {
+  "compute": "0a9c93921",
+  "kv": "8503e0c89"
+ },
+ "inputs": {
+  "compute_stages": {
+   "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14q-8503e0c89/results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/compute_dv2f14bn_relay_stages.json",
+   "sha256": "33c63940ab80237efcde161b314e7fdb5af900159b428292b319821356ef557e"
+  },
+  "kv_stages": {
+   "path": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14q-8503e0c89/relay_stages_netlist.json.gz",
+   "sha256": "b874d08e371f58f51dfe2992da468cb2cacde0a16b9f1484c160a1ccda4c9ef4"
+  },
+  "token_path": {
+   "path": "results/arch/token_path_20261009/qwen_rom.json",
+   "sha256": "b5bbd973447f62fab92bc391755173fa80ee5ed78725c6a1d05c740b42027394"
+  },
+  "link_handoff": {
+   "path": "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "sha256": "3316358c495df3e27a26977b3495b0588396957fa6e6bbf24539a75fd5524fa1"
+  }
+ },
+ "die_table_digests": {
+  "qwen_compute": "sha256:195fa08e4a42d1a588fb6b17771412fa0ffd1172ca9182cae46ab760cc7b3dfb",
+  "qwen_kv": "sha256:7df44a9f9f6b323ed8aae589be4d36be0c567432d8455384ff404af301610b55"
+ },
+ "layers": {
+  "L1": {
+   "X": 5,
+   "period_compiled": 6840
+  },
+  "L0": {
+   "X": -217,
+   "start": 272
+  },
+  "head": "no D2D traffic (compute-only; terminal RESULT is in the token run segment 1); ME programme = gap"
+ },
+ "stages": {
+  "CS_TXS": 2,
+  "CS_RXV": 2,
+  "CS_RXP": 2,
+  "CS_X3S": 2,
+  "SC_TX": 0,
+  "SC_X3": 2,
+  "KS_RXV": 11,
+  "KS_RXP": 11,
+  "KS_TXS": 9,
+  "KS_TXK": 9,
+  "KS_TXB": 9,
+  "SK_TXV": 11,
+  "SK_TXP": 11
+ },
+ "txd": {
+  "C": [
+   6,
+   3,
+   1,
+   9
+  ],
+  "K": [
+   23,
+   4,
+   3,
+   3
+  ]
+ },
+ "kv_programme": {
+  "RX_CMD": 2,
+  "SERVICE_END": 1777,
+  "STRETCH": 1,
+  "TX_FIRST": 1750,
+  "source": "8503e0c89:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal",
+  "law": "TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)"
+ },
+ "relay_check": {
+  "compute": "FAIL",
+  "kv": "PASS"
+ },
+ "findings": [
+  "BUNDLE_AGE C.rx_record",
+  "TXDP C",
+  "TXDP K",
+  "L0_WINDOW"
+ ],
+ "gaps": 6,
+ "files": {
+  "compute_programme/sys_face_events.json": "f404f9f1558bf673345e69e6bd4fe76a7a7e5a92efc5233388880212c6ed94e2",
+  "d2d/cal_L1/cal_C_rx.memh": "b98acde93c19fd0b2bba77675aff5ba616242a8d628970bcf4b6e7419b0802c1",
+  "d2d/cal_L1/cal_C_tx.memh": "2cd08c83571453dd31feec0be30ab8883c916c08733758f73bf2e67c07f689cd",
+  "d2d/cal_L1/cal_K_rx.memh": "5a03d85df2da7ba56ae15cb4db241ae1cf9f03d75d84f2d9f161c964e00caa55",
+  "d2d/cal_L1/cal_K_tx.memh": "0903112f9f4fa16783414b2120d961017535978e9ed06fbadbcb9c2e70e296f9",
+  "d2d/cal_L1/calendar.json": "7f6d157fd8821c228a925e1909694ec7ffb90141bfb6005b7c34ee2c2fe22675",
+  "d2d/d2d_cal_image.svh": "3906a75fffff7aa209f4f952eecb1807e2006333babc177650691abaeccf1c11",
+  "d2d/image.log": "0bbee93f806d7621502e9c024fa5f1bba0e595988a34441c4539a32893086ff7",
+  "d2d/program/cal_C_rx.memh": "a7a4021d8b3e913d25f840dda3fd7e60c41ab98f4acc33d9f6e53e57b9a5b202",
+  "d2d/program/cal_C_rx_seg1.memh": "129805c9e04279ac36de91e8a541a3b3ff5bdda8542b6e7dec6f7771439362cf",
+  "d2d/program/cal_C_rx_seg2.memh": "f2db2d93de7e606002cc2599f4cb1fbc645cc64b6ee58bab8204d5196c9e35d1",
+  "d2d/program/cal_C_tx.memh": "c493047fec9f481861d7eb0f0ca8eb8dfee0cfefb6ca358a9b5919e132a244f7",
+  "d2d/program/cal_C_tx_seg1.memh": "b596659d005974101f82a9e365eba1b188a97200f6b010039ccfd00db78c4f4d",
+  "d2d/program/cal_C_tx_seg2.memh": "b450051df1f8e4a79272a358ae93cdb22266a8bce214b28a57eb8f6bc1424e62",
+  "d2d/program/cal_K_rx.memh": "33c66f42232b49d0da0aa7feb3414e9b184cd989a491bf442b2ea0b0206b178b",
+  "d2d/program/cal_K_rx_seg1.memh": "b596659d005974101f82a9e365eba1b188a97200f6b010039ccfd00db78c4f4d",
+  "d2d/program/cal_K_rx_seg2.memh": "b450051df1f8e4a79272a358ae93cdb22266a8bce214b28a57eb8f6bc1424e62",
+  "d2d/program/cal_K_tx.memh": "8f49103dcc0777ab2305bcf27b1b9ea3e54191fa875d3d11215cae94f5a55e9a",
+  "d2d/program/cal_K_tx_seg1.memh": "129805c9e04279ac36de91e8a541a3b3ff5bdda8542b6e7dec6f7771439362cf",
+  "d2d/program/cal_K_tx_seg2.memh": "f2db2d93de7e606002cc2599f4cb1fbc645cc64b6ee58bab8204d5196c9e35d1",
+  "d2d/program/calendar.json": "7db6fe9157fcaae684d77a9cbbb30080258a67093e521818d5a74013752af2ce",
+  "d2d/program/txdp.svh": "0b6959ed5410bd624c3c388c31ba516f58d06ee8175b3413dfe67b9f48ef5c01",
+  "d2d/program.log": "91b550fc259ab7204a8cd84b5947ade9ee6350f5e19527c6a0a32a2be6d2da2e",
+  "d2d/token_path_compiled.json.gz": "f9be84a68ccc9332dc07ec1eccc0dc9f95e44cb5f659d40422f2544da9d74807",
+  "d2d/txdp.svh": "928f5842fd68ec7a56ef11142ccc10340edca40494526bb036d913661db6671e",
+  "findings.json": "1fad7baeb5eb4ad950a9f2094b17862e26f266affbcc86ff640121b75e660454",
+  "kv_programme/boot.hex": "0960b49c5ba9096ec76860ec74f9e7ab719b1527fd15e9e48132f3d73064af9a",
+  "kv_programme/layer_programme_image.svh": "e036f0fdb50e4c29776f7b9c0880795991a39728dcb3c286249334f4c53169a2",
+  "kv_programme/layer_roots.json": "470196745ae33d8203704d0e3de362a954cf1ffb800836f69f0d5532b741d74e",
+  "kv_programme.log": "c7622010d3f136bee8368b20b31ba1a883e6a753224a6d9e5c31e3b6693de307",
+  "relay_schedule/compute_compiled.json": "f605571645581e350883de13ae306d3363af25524588747778de4a63613735fe",
+  "relay_schedule/kv_compiled.json.gz": "b4e91573628f6127ec659a6536d465233610bc7baa953a6807ef12d23149c086",
+  "relay_schedule/relay_check_compute.json": "482d4923fa9c8ce0da4702e20d5010b93cb452426c663890bbd8987aa5ed6251",
+  "relay_schedule/relay_check_kv.json": "a54f304c93cce0f7b91dff4acb6c8a5e1b6f3d0c328c2ae1fa4b089b81e53781"
+ }
+}

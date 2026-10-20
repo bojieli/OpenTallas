@@ -1,0 +1,141 @@
+{
+ "schema": "opentallas.qwen_layerbench.compile_manifest.v1",
+ "tool": "tools/qwen_layerbench/layer_compile.py",
+ "command": [
+  "python3",
+  "tools/qwen_layerbench/layer_compile.py",
+  "--out",
+  "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/layer_compile",
+  "--compute-stages",
+  "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/relay_stages_compute.json",
+  "--kv-stages",
+  "results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/kv_kvs14c_relay_stages.json.gz",
+  "--compute-commit",
+  "7c660b3f7",
+  "--compute-params",
+  "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/die.v.params.json"
+ ],
+ "tool_sha256": "8917d05ad07cb5c2897e21a3b1ab45d2d0bf4d3223e36fee36fac2260bb1f118",
+ "source_commits": {
+  "compute": "7c660b3f7",
+  "kv": "f05f9338f"
+ },
+ "inputs": {
+  "compute_stages": {
+   "path": "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/relay_stages_compute.json",
+   "sha256": "af7a2b6784c2b6665a85c57e94efa0e3b551eebf3cc1a6ae19a669dbe26eb910"
+  },
+  "kv_stages": {
+   "path": "results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/kv_kvs14c_relay_stages.json.gz",
+   "sha256": "b96c385959835d9b6ed088dff243526075e73da6361a9a9c584271aa7ad3ca4e"
+  },
+  "token_path": {
+   "path": "results/arch/token_path_20261009/qwen_rom.json",
+   "sha256": "b5bbd973447f62fab92bc391755173fa80ee5ed78725c6a1d05c740b42027394"
+  },
+  "link_handoff": {
+   "path": "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "sha256": "3316358c495df3e27a26977b3495b0588396957fa6e6bbf24539a75fd5524fa1"
+  }
+ },
+ "die_table_digests": {
+  "qwen_compute": "sha256:0ce64d5f152e4a491728543c37b9ba3a4af35a395f0b3b9b137234108bb19339",
+  "qwen_kv": "sha256:957ba33f9672035cd1f0bb734e38b6767dda79af334cd0b705217db9c02d10fa"
+ },
+ "layers": {
+  "L1": {
+   "X": 7,
+   "period_compiled": 6842
+  },
+  "L0": {
+   "X": -215,
+   "start": 272
+  },
+  "head": "no D2D traffic (compute-only; terminal RESULT is in the token run segment 1); ME programme = gap"
+ },
+ "stages": {
+  "CS_TXS": 2,
+  "CS_RXV": 2,
+  "CS_RXP": 2,
+  "CS_X3S": 2,
+  "SC_TX": 2,
+  "SC_X3": 2,
+  "KS_RXV": 11,
+  "KS_RXP": 11,
+  "KS_TXS": 9,
+  "KS_TXK": 9,
+  "KS_TXB": 9,
+  "SK_TXV": 11,
+  "SK_TXP": 11
+ },
+ "txd": {
+  "C": [
+   8,
+   3,
+   1,
+   9
+  ],
+  "K": [
+   23,
+   4,
+   3,
+   3
+  ]
+ },
+ "kv_programme": {
+  "RX_CMD": 2,
+  "SERVICE_END": 1777,
+  "STRETCH": 1,
+  "TX_FIRST": 1750,
+  "source": "f05f9338f:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal",
+  "law": "TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)"
+ },
+ "relay_check": {
+  "compute": "PASS",
+  "kv": "FAIL"
+ },
+ "findings": [
+  "BUNDLE_AGE K.rx_record",
+  "BUNDLE_AGE K.tx_slot",
+  "BUNDLE_AGE K.tx_record",
+  "TXDP C",
+  "L0_WINDOW"
+ ],
+ "gaps": 6,
+ "files": {
+  "compute_programme/sys_face_events.json": "787345b9fc1845e9897f6200eaa5fe0ffd31f08a454ef75911bafb1d8a632d23",
+  "d2d/cal_L1/cal_C_rx.memh": "bdc23c871dcb166f00042da7f75a137614f081d3c30206188fdee7d9f270075b",
+  "d2d/cal_L1/cal_C_tx.memh": "2cd08c83571453dd31feec0be30ab8883c916c08733758f73bf2e67c07f689cd",
+  "d2d/cal_L1/cal_K_rx.memh": "aa899c5f41ec081bde5f4146faa7244f4b15ce2125e8a269f0f7dfc5b7c20e24",
+  "d2d/cal_L1/cal_K_tx.memh": "83156922acad455546216cf792c28c1bc67c6e5ba82ce541e3540507fed47aaa",
+  "d2d/cal_L1/calendar.json": "9d86ca5a75ec655d90b77400dfa835f3da764a1f0cdbd34e6ab4376b0d8a2b43",
+  "d2d/d2d_cal_image.svh": "a096d5ba80b83d1bec6eaad6daaa030527c000f20efdf210e538628c5bf2a4fe",
+  "d2d/image.log": "b194ca8e67bcce75bff7a35a1d5c5cb5832ba31d8bd6d33f56242a5ca71a063b",
+  "d2d/program/cal_C_rx.memh": "b995bdcf0ab406851b65a058e8becb6997257dc7b3d3a57c6bfbd7a1d3bb1770",
+  "d2d/program/cal_C_rx_seg1.memh": "129805c9e04279ac36de91e8a541a3b3ff5bdda8542b6e7dec6f7771439362cf",
+  "d2d/program/cal_C_rx_seg2.memh": "f2db2d93de7e606002cc2599f4cb1fbc645cc64b6ee58bab8204d5196c9e35d1",
+  "d2d/program/cal_C_tx.memh": "c493047fec9f481861d7eb0f0ca8eb8dfee0cfefb6ca358a9b5919e132a244f7",
+  "d2d/program/cal_C_tx_seg1.memh": "b596659d005974101f82a9e365eba1b188a97200f6b010039ccfd00db78c4f4d",
+  "d2d/program/cal_C_tx_seg2.memh": "b450051df1f8e4a79272a358ae93cdb22266a8bce214b28a57eb8f6bc1424e62",
+  "d2d/program/cal_K_rx.memh": "2bd5cad56c77de23ff4e822743c47c693b212135b9e68fbc97b8620c001d60d8",
+  "d2d/program/cal_K_rx_seg1.memh": "b596659d005974101f82a9e365eba1b188a97200f6b010039ccfd00db78c4f4d",
+  "d2d/program/cal_K_rx_seg2.memh": "b450051df1f8e4a79272a358ae93cdb22266a8bce214b28a57eb8f6bc1424e62",
+  "d2d/program/cal_K_tx.memh": "b9c036f32108055091d55e8f77f6c42ba50bcc1526f8ab4ec81667061206523c",
+  "d2d/program/cal_K_tx_seg1.memh": "129805c9e04279ac36de91e8a541a3b3ff5bdda8542b6e7dec6f7771439362cf",
+  "d2d/program/cal_K_tx_seg2.memh": "f2db2d93de7e606002cc2599f4cb1fbc645cc64b6ee58bab8204d5196c9e35d1",
+  "d2d/program/calendar.json": "d3a32c0e03f21cc264cf586102c240c5dcbfa678f7bf5cc3db53a40e7cf613af",
+  "d2d/program/txdp.svh": "235feb052097e87e52e8951724bf16c8062bf953063173f2bdeff3af21c7294d",
+  "d2d/program.log": "49a2c74a1860eebf91e357cbdad7a5f5f142ed7728baed8f579dc130e852e443",
+  "d2d/token_path_compiled.json.gz": "0899833a0b5e898d66518ef7a0fb9f081cfc66ed32336aa509372fdb5581818f",
+  "d2d/txdp.svh": "533b39b9d4f56800e3e3618184496b4e2691ee2394ca9922c81e039385e55272",
+  "findings.json": "54543b1e2ec1ce5c34dbbb666f32bb0d525bab1766b45939fd47c3fc7be28dc2",
+  "kv_programme/boot.hex": "79edb88785b94f8446abdfd82201f57b1f232d4d8bf20eba1186e681dfd5940e",
+  "kv_programme/layer_programme_image.svh": "db5d3b82046c27b80105269a8d1ff6ffe728713cfdd744855f18469cc1ff28e6",
+  "kv_programme/layer_roots.json": "947b89cb9783459af3208192842a58d1a817b95a5508861213f795bdc233fdec",
+  "kv_programme.log": "88f7bae02119951c8166f1ab0a04c7de07cdec2ec09c7be00c3fd9d9ec072ae6",
+  "relay_schedule/compute_compiled.json": "c7c2d10a394253b7e84af3448912388dd3b4dcb2865bb3c293361fbeeafa7e81",
+  "relay_schedule/kv_compiled.json.gz": "d66f6e93f99a1118455909633b4fe2ec52addaed5eb535a036b21d2746d6b1e9",
+  "relay_schedule/relay_check_compute.json": "2891defc4cec97acf773aa627fd737d7ba230522471c219d42d62fcf5bf30502",
+  "relay_schedule/relay_check_kv.json": "9f44fb6414a08989e5b73546c9b353375128c3d4dc8a696d01cb063b155b6df4"
+ }
+}

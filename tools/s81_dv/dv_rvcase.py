@@ -44,9 +44,69 @@ GITDIR = DC.GITDIR
 PITCH = DC.PIN_PITCH
 PLAT = DC.PLAT
 T_PS = 833.333
+STD_CORNERS = dict(SP.STD, ss=('SEQ_RVT_SS_nldm_220123.lib', 'INVBUF_RVT_SS_nldm_220122.lib.gz',
+                              'SIMPLE_RVT_SS_nldm_211120.lib.gz'))
 C_PS, U_PS = 25.0, 25.0
 CONST_RE = re.compile(r"\b(\d+)'[sS]?[bBhHdDoO][0-9a-fA-F_xXzZ?]+")
 LINK_RE = re.compile(r'^w_(.+)_(src|dst|lnd)$')
+_FULL_CONST = re.compile(r"\s*(\d+)'[sS]?([bBhHdDoO])([0-9a-fA-F_]+)\s*")
+
+
+def clock_sdc(table, top_ports):
+    """Declare core and off-die PHY domains from the same binding contract."""
+    domains = table.get('clock_domains', {})
+    absent = set(domains) - set(top_ports)
+    if absent:
+        raise ValueError(f'domain clock ports missing from bound die: {sorted(absent)}')
+    core = sorted(p for p in top_ports if p.startswith('ck_') and p not in domains)
+    if not core:
+        raise ValueError('bound die has no core clock ports')
+    lines = [f'create_clock -name clk -period {T_PS} [get_ports {{{" ".join(core)}}}]']
+    for port, domain in sorted(domains.items()):
+        period = domain['period_ps']
+        if period <= 0:
+            raise ValueError(f'invalid period for {port}: {period}')
+        lines.append(f'create_clock -name {port} -period {period} [get_ports {{{port}}}]')
+        if domain.get('asynchronous_to_core'):
+            lines.append(f'set_clock_groups -asynchronous -group [get_clocks clk] -group [get_clocks {port}]')
+    return '\n'.join(lines)
+
+
+def const_bits(e):
+    """a full Verilog constant 3'd4 / 12'hb6d -> [bit0, bit1, ...]; anything else (x/z, concatenation, net) -> None"""
+    m = _FULL_CONST.fullmatch(e or '')
+    if not m:
+        return None
+    w, v = int(m.group(1)), int(m.group(3).replace('_', ''), {'b': 2, 'h': 16, 'd': 10, 'o': 8}[m.group(2).lower()])
+    return [(v >> i) & 1 for i in range(w)]
+
+
+def case_strap_sdc(insts, kind, port_bind_json):
+    """NS-CASE: set_case_analysis lines for every declared strap port (strict bind masters[].straps) of every non-stand-in
+    instance whose connection is a full constant.  Guarded with get_pins -quiet (a view lacking the pin is reported in
+    the STA log, never an abort).  Returns the SDC lines (header + one line per bit)."""
+    try:
+        pb = json.load(open(port_bind_json))
+    except (OSError, ValueError):
+        return ['# NS-CASE strap case analysis: no port_bind.json -> none']
+    sp = {m: set(r.get('straps') or []) for m, r in (pb.get('masters') or {}).items()}
+    out, n = [], 0
+    for mst, nm, _, cm in insts:
+        if kind.get(nm) == 'standin' or not sp.get(mst):
+            continue
+        for p in sorted(sp[mst]):
+            bits = const_bits(cm.get(p))
+            if bits is None:
+                continue
+            for i, b in enumerate(bits):
+                pin = f'{nm}/{p}' if len(bits) == 1 else f'{nm}/{p}[{i}]'
+                out.append(f'ot_case {b} {{{pin}}}')
+                n += 1
+    hdr = ['# NS-CASE 10-18: die-constant strap pins (strict-bind straps) case-analysed with the netlist value',
+           'set ::ot_case_n 0; set ::ot_case_miss 0',
+           'proc ot_case {v p} { set q [get_pins -quiet $p]; if {[llength $q]} { set_case_analysis $v $q; incr ::ot_case_n } '
+           'else { incr ::ot_case_miss } }']
+    return hdr + out + ['puts "OT_CASE_STRAPS set $::ot_case_n missing $::ot_case_miss of %d"' % n]
 FCK_RE = re.compile(r'^n(.+)_fck$')
 RST_RE = re.compile(r'^(rs_|rsl_|rst_sync)')
 
@@ -210,6 +270,82 @@ class Placer:
         return x, y, None
 
 
+def lef_pins(path):
+    """{pin: (cx, cy, direction)} from a single-macro LEF (first RECT of each pin; line scan, LEFs are ~20 MB), plus (w, h)"""
+    pins, size, cur, d = {}, None, None, ''
+    with open(path) as fh:
+        for ln in fh:
+            t = ln.split()
+            if not t:
+                continue
+            if t[0] == 'SIZE' and size is None:
+                size = (float(t[1]), float(t[3]))
+            elif t[0] == 'PIN':
+                cur, d = t[1], ''
+            elif cur and t[0] == 'DIRECTION':
+                d = t[1].upper()
+            elif cur and t[0] == 'RECT' and cur not in pins:
+                q = [float(v) for v in t[1:5]]
+                pins[cur] = ((q[0] + q[2]) / 2, (q[1] + q[3]) / 2, d)
+            elif cur and t[0] == 'END' and len(t) > 1 and t[1] == cur:
+                cur = None
+    return size, pins
+
+
+def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0):
+    """move every fwd_<lane> (hop-0 forward cell) to the centroid of the pins that actually drive st_<lane>_0.i.
+    Returns {lane: (moved_um, n_source_pins, pin_span_um)}; lanes whose source pins cannot be found keep the plan point."""
+    mst_of = {nm: m for m, nm, _, _ in insts}
+    want = {}
+    for nm in mst_of:
+        if nm.startswith('fwd_') and f'st_{nm[4:]}_0' in ibits and 'i' in ibits[f'st_{nm[4:]}_0']:
+            want[nm] = [b for b in ibits[f'st_{nm[4:]}_0']['i'] if b[0] not in ('CONST', 'Z', 'UNDECL')]
+    need = {}
+    for f, bits in want.items():
+        for b in bits:
+            need.setdefault(b[0], set()).add(b)
+    cache, drv = {}, {}
+    for n_ in need:
+        for o in touch.get(n_, ()):
+            if o.startswith('st_') or o not in loc or o.startswith('fwd_'):
+                continue
+            cell = scell.get(o) if kind.get(o) == 'standin' else mst_of[o]
+            lp = out / 'views' / f'{cell}.lef'
+            if not lp.exists():
+                continue
+            if cell not in cache:
+                cache[cell] = lef_pins(lp)
+            _, pins = cache[cell]
+            for p, bl in ibits[o].items():
+                w = len(bl)
+                for k, b in enumerate(bl):
+                    if b[0] != n_ or b not in need[n_]:
+                        continue
+                    pn = f'{p}[{w - 1 - k}]' if f'{p}[{w - 1 - k}]' in pins else p
+                    q = pins.get(pn)
+                    if q and q[2] == 'OUTPUT':
+                        x0, y0 = loc[o][0], loc[o][1]
+                        drv[b] = (o, x0 + q[0], y0 + q[1])
+    moves = {}
+    for f, bits in sorted(want.items()):
+        pts = [drv[b] for b in bits if b in drv]
+        if not pts:
+            continue
+        srcs = collections.Counter(p[0] for p in pts)
+        o = srcs.most_common(1)[0][0]
+        pts = [p for p in pts if p[0] == o]
+        cx = sum(p[1] for p in pts) / len(pts); cy = sum(p[2] for p in pts) / len(pts)
+        span = max(p[1] for p in pts) - min(p[1] for p in pts) + max(p[2] for p in pts) - min(p[2] for p in pts)
+        bx, by, bw, bh, _ = loc[o]
+        fc = face_of(dict(x=bx, y=by, w=bw, h=bh), cx, cy)
+        dx, dy = {'W': (-gap, 0), 'E': (gap, 0), 'S': (0, -gap), 'N': (0, gap)}[fc]
+        ox, oy = loc[f][0] + 0.6, loc[f][1] + 0.3
+        px_, py_, _ = placer.put(cx + dx - 0.6, cy + dy - 0.3, 1.2, 0.6, step=1.0)
+        loc[f] = (px_, py_, 1.2, 0.6, 'PLACED')
+        moves[f[4:]] = (round(abs(px_ + 0.6 - ox) + abs(py_ + 0.3 - oy), 1), len(pts), round(span, 1))
+    return moves
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--plan', required=True, type=Path)
@@ -222,7 +358,7 @@ def main():
     ap.add_argument('--die-repair', action='store_true')
     ap.add_argument('--dieflow-ref', default='origin/main')
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
-    ap.add_argument('--corners', nargs='+', default=['tt', 'ff'])
+    ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
     a = ap.parse_args()
     out = a.out
@@ -248,6 +384,10 @@ def main():
     assigns = [x for x in insts if x[0] == '__assign__']
     insts = [x for x in insts if x[0] != '__assign__']
     views = closed_views(a.view_refs)
+    # MU-DIE-S81/PO2 (10-19): the bind table pins each landing master's view (land_views: record commit + kit) -- the
+    # SAME view dv_bind's landing reset check derived landing_reset_stages from; it overrides the first-ref-wins pick
+    for m_, v_ in T.get('land_views', {}).items():
+        views[m_] = (v_.get('commit') or v_['ref'], f"{v_['kit']}/views/{m_}")
     idx = rtl_ports(bc['port_bind_cmd'])
     kind = {}
     for mst, nm, _, _ in insts:
@@ -267,6 +407,7 @@ def main():
                     touch[n_].add(nm)
         ibits[nm] = pb
     top = set(tin) | set(tout)
+    clocks_sdc = clock_sdc(T, top)
     # clock nets: region roots, lane forwarded clocks (relay ck / ck_o, landing ck_f, forward cells), peer clocks (bind clk_peer)
     clocknets = {n for n in top if n.startswith('ck_')}
     for mst, nm, _, cm in insts:
@@ -276,7 +417,7 @@ def main():
         elif mst.startswith('dsfd_dvland_'):
             cps = ['ck_f', 'ck']
         elif mst.endswith('_ASAP7_75t_R') and nm.startswith('fwd_'):
-            cps = ['A', 'Y']
+            cps = ['A', 'Y', 'CLK', 'GCLK']     # BUFx8 forward / ICGx4 hop-0 lane clock gate (S81-LBGAP/G1)
         else:
             tm = T['masters'].get(mod2master.get(mst, ''), {})
             cps = [tm.get('clk')] + [cp['port'] for cp in tm.get('clk_peer', [])]
@@ -463,27 +604,51 @@ def main():
         (out / 'views' / f'{cell}.lib').write_text(lib_text(cell, ports, clk if clk in dirs else None,
                                                             f'{mst} bound RTL ports; ' + ('landing tile, window = land plan MCP' if is_land else 'block')))
 
-    # ------------------------------------------------------------------ case netlist (bind netlist, stand-in cells, ties -> 1-pin wires)
+    # ------------------------------------------------------------------ hop-0 forward cell at the REAL data launch point
+    # DIE-S81-LEAD 10-19 (case_p4l3_rv fclk FAIL): the hop-0 forward cell sat at the PLAN link end point, but a closed
+    # view smaller than its plan slot (dsdv_bk_col 674x648 in a 680x4179 slot) or with its own pin plan launches the
+    # data elsewhere -> fclk 2 repeaters vs data up to 27.  The forwarded clock must launch where its data launches:
+    # move fwd_<lane> to the centroid of the actual source pins of st_<lane>_0.i (closed LEF / stand-in LEF), outside
+    # that face, so fclk and data run the same wire (DIE-CLOCK +-1).
+    fwd_moves = fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell)
+    # ------------------------------------------------------------------ case netlist (bind netlist, stand-in cells, PHYSICAL ties)
+    # DIE-S81-LEAD 10-19: every constant bit is driven by its own TIEHI/TIELO cell (was a floating 1-pin wire tz_*: not
+    # physical, and the exact fclk payload audit (c5f578d5a/57459e378) counts an undriven payload bit as missing).  The
+    # ties carry no position here: run.tcl places each at its load pin and spreads them with the die repeater step's
+    # legaliser (tie_place.tcl) -- a Python nearest-free-site search stalled at abutted frames (Codex 10-18 23:39).
     tz = [0]
-    decl = []
+    decl, ties = [], []
 
-    def detie(e):
+    def detie(e, host, physical):
         def rep(m):
-            w_ = int(m.group(1)); n = f'tz_{tz[0]}'; tz[0] += 1
-            decl.append(f'  wire [{w_ - 1}:0] {n};')
+            if not physical:      # stand-in: the strap is internal to the modelled block (its LEF has the bit as an
+                w_ = int(m.group(1)); n = f'tz_{tz[0]}'; tz[0] += 1      # inner point under OBS) -> 1-pin wire, as before
+                decl.append(f'  wire [{w_ - 1}:0] {n};')
+                return n
+            bits = const_bits(m.group(0))
+            if bits is None:
+                raise SystemExit(f'dv_rvcase: unresolved constant {m.group(0)} on {host}; never float a physical input')
+            n = f'tz_{tz[0]}'; tz[0] += 1
+            decl.append(f'  wire [{len(bits) - 1}:0] {n};')
+            for k, bit in enumerate(bits):
+                mst_, pin_ = ('TIEHIx1_ASAP7_75t_R', 'H') if bit else ('TIELOx1_ASAP7_75t_R', 'L')
+                ties.append(f'  {mst_} tie_{n}_{k} (.{pin_}({n}[{k}]));')
             return n
         return CONST_RE.sub(rep, e)
     body = []
     for mst, nm, prm, cm in insts:
-        cs = ', '.join(f'.{p}({detie(e)})' for p, e in cm.items())
+        cs = ', '.join(f'.{p}({detie(e, nm, kind[nm] != "standin")})' for p, e in cm.items())
         if kind[nm] == 'standin':
             body.append(f'  {scell[nm]} {nm} ({cs});')
         else:
             body.append(f'  {mst} {nm} ({cs});')
     for _, s_, _, _ in assigns:
-        body.append('  ' + detie(s_) + ';')
+        if CONST_RE.search(s_):
+            raise SystemExit('dv_rvcase: constant assign has no physical load to place its tie at -- bind it to a port')
+        body.append('  ' + s_ + ';')
+    body += ties
     hdr = [f'// S81-DIE7 REAL-VIEW die case netlist from {a.bind_dir / "die.v"} (tools/s81_dv/dv_rvcase.py): bound instances, '
-           'stand-in cells rv_* where no closed view, tied bits -> 1-pin wires tz_*',
+           'stand-in cells rv_* where no closed view, constant bits driven by TIEHI/TIELO cells tie_tz_*',
            f'module dv_die ({", ".join(sorted(top))});']
     for n in sorted(nets):
         wv, lo = nets[n]
@@ -512,22 +677,70 @@ def main():
         else:
             continue
         link_pins[nm] = pins
-        sdc.append(f'set_multicycle_path -setup {r["E"]} -to {pins}')
+        sdc.append(f'set_multicycle_path -setup {r.get("K") or r["E"]} -to {pins}')   # S81-LBGAP/G8: the landing reads at K
         sdc.append(f'set_multicycle_path -hold {r["D"] - 1} -to {pins}')
+    # NS-CASE 10-18 (ROOT-2115): the strict bind's declared STRAP ports (port_bind.json masters[].straps: landing k,
+    # pvrd k/nw/rb, col_h* lk) carry die constants; the die STA case-analyses them bit by bit with the netlist's own
+    # value (the tile native audit --case excludes exactly these pins, so die STA must not time them either)
+    case_lines = case_strap_sdc(insts, kind, a.bind_dir / 'port_bind.json')
+    sdc += case_lines
     (out / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
 
     # ------------------------------------------------------------------ GRT run
     repair = DC.die_repair_tcl(out, a.dieflow_ref, skip=()) if a.die_repair else '# no die repair\n'
+    # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
+    # synchronous reset tree, not payload. Declare the width as well as the port
+    # so a missing/disconnected payload bit fails the structural audit.
+    if a.die_repair:
+        contracts = []
+        for master in sorted({m for m, _, _, _ in insts}):
+            match = re.fullmatch(r'dsfd_dvrlyh?_(\d+)_[A-Z]+', master)
+            if match:
+                contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {int(match[1])}}}')
+        repair = ('set ::ot_die_rep_fclk_data_ports [dict create ' + ' '.join(contracts) + ']\n' + repair)
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
             if a.die_repair else 'estimate_parasitics -global_routing\n')
+    # DIE-S81-LEAD 10-19: physical tie placement (each tie at its single load pin, then the die repeater step's spread
+    # legaliser moves it to the nearest free slot; the legaliser's per-run caches are cleared so the repeater pass
+    # rebuilds its obstacles with the ties in place and its own slot width)
+    (out / 'tie_place.tcl').write_text('''# DIE-S81-LEAD tie placement (tools/s81_dv/dv_rvcase.py)
+proc ot_rv_place_ties {report} {
+  set blk [ord::get_db_block]; set ties {}; set bad 0
+  foreach inst [$blk getInsts] {
+    set m [[$inst getMaster] getName]
+    if {$m ne "TIEHIx1_ASAP7_75t_R" && $m ne "TIELOx1_ASAP7_75t_R"} { continue }
+    set xy {}
+    foreach o [$inst getITerms] {
+      if {[$o getIoType] ne "OUTPUT" || [$o getNet] eq "NULL"} { continue }
+      foreach it [[$o getNet] getITerms] {
+        if {[$it getIoType] ne "INPUT"} { continue }
+        set b [$it getBBox]
+        set xy [list [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]; break
+      }
+    }
+    if {![llength $xy]} { incr bad; puts "OT_TIE_NOLOAD [$inst getName]"; continue }
+    $inst setLocation {*}$xy; $inst setPlacementStatus PLACED; lappend ties $inst
+  }
+  set left [ot_die_rep_spread $ties $report 0.30 8.64 0.60 3]
+  foreach v {::ot_die_rep_slw ::ot_die_rep_obs ::ot_die_rep_occ ::ot_die_rep_onobs ::ot_die_rep_maxdisp} { unset -nocomplain $v }
+  array unset ::ot_die_rep_ob
+  puts "OT_TIES placed=[llength $ties] noload=$bad unplaced=$left"; flush stdout
+  return [expr {$bad + $left}]
+}
+''')
+    tie_step = ('source /work/die_repeaters.tcl\nsource /work/tie_place.tcl\n'
+                'if {[ot_rv_place_ties /work/out/tie_spread.json] != 0} { puts "OT_TIE_PLACE_FAIL"; exit 4 }\n') if ties else '# no tie cells\n'
+    if ties and not a.die_repair:
+        raise SystemExit('dv_rvcase: tie cells need --die-repair (the tie spread uses the die repeater legaliser)')
     tcl = f'''# S81-DIE7 REAL-VIEW die case (tools/s81_dv/dv_rvcase.py) -- census in case.json (stand-ins labelled)
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 foreach f [glob /work/views/*.lef] {{ read_lef $f }}
 read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
 read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
 foreach f [glob /work/views/*.lib] {{ read_liberty $f }}
 read_verilog /work/die.v
 link_design dv_die
@@ -545,15 +758,20 @@ set p0 [clock seconds]
 source /work/place.tcl
 puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('place', max_dpl_gsites=2.0)}
-write_db /work/out/place.odb
+{tie_step}write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
 set_wire_rc -signal -layer M6
-create_clock -name clk -period {T_PS} [get_ports ck_*]
 # top-port nets (regional clock roots, rst_n, PMA, land_fault): special = not die-top routing (DIE-CLOCK roots ideal here)
 set nsp 0
 foreach bt [[ord::get_db_block] getBTerms] {{ set n [$bt getNet]; if {{$n ne "NULL"}} {{ $n setSpecial; incr nsp }} }}
 puts "OT_SPECIAL_TOP_NETS $nsp"
-{repair}set_routing_layers -signal M2-M7 -clock M5-M9
+# S81-DIE8 10-18: the die repeater step runs BEFORE create_clock.  With the region roots declared as clocks, STA
+# propagates them through the hop-0 forward cell (BUFx8 / G1 ICGx4) and repair_design silently skips every hop-0
+# forwarded-clock net even though repeat_nets un-skips it (case_p4l_rv: all 140 hop-0 fclk nets 0 repeaters,
+# 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
+# (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
+{repair}{clocks_sdc}
+set_routing_layers -signal M2-M7 -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M7 0.20
@@ -590,7 +808,7 @@ rc=$?; echo $rc > $D/out/run.exit; exit $rc
     link_list = ' '.join(f'{k} {{ld_{k}/i[*]}}' for k, v in sorted(link_pins.items()) if not v.startswith('[get_pins {'))
     lane_list = ' '.join(f'{k} {{{" ".join(lane_bits_mcp[k])}}}' for k in sorted(link_pins) if link_pins[k].startswith('[get_pins {'))
     for c in a.corners:
-        std = ' '.join(SP.STD[c])
+        std = ' '.join(STD_CORNERS[c])
         (out / f'sta_{c}.tcl').write_text(f'''# S81-DIE7 REAL-VIEW die STA {c} (tools/s81_dv/dv_rvcase.py): closed views + labelled stand-ins (case.json census)
 foreach f {{{std}}} {{ read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_$f }}
 foreach f [glob /work/views/sta/*_{c}.lib] {{ read_liberty $f }}
@@ -598,7 +816,7 @@ foreach f [glob /work/views/rv_*.lib] {{ read_liberty $f }}
 read_db /work/out/grt.odb
 source {PLAT}/setRC.tcl
 set_wire_rc -signal -layer M6
-create_clock -name clk -period {T_PS} [get_ports ck_*]
+{clocks_sdc}
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
@@ -688,7 +906,7 @@ date > $D/run_all.done; exit $sta_rc
                 closed_views={m: f'{r}:{d}' for m, (r, d) in views.items() if m in {x[0] for x in insts}},
                 standin_instances=sum(1 for v in kind.values() if v == 'standin'),
                 closed_instances=sum(1 for v in kind.values() if v == 'closed'), std_instances=sum(1 for v in kind.values() if v == 'std'),
-                tie_wires=tz[0], placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
+                tie_wires=tz[0], tie_cells=len(ties), fwd_moves_over_20um={k: v for k, v in fwd_moves.items() if v[0] > 20}, placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
                 land_plan_links_without_model=no_model, regional_roots='IDEAL top ports ck_<region> (DIE-CLOCK trees not built in this case)',
                 label=('NOT_A_DIE_RESULT: real-view case; stand-ins = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('standin:')}))
                        + ' (no closed view yet); closed = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('closed:')}))),
@@ -708,7 +926,7 @@ def klass(ep):
     inst = ep.split('/')[0]
     if inst.startswith('ld_'):
         return ('landing', cls.get(inst[3:], '?'))
-    if re.match(r'st_rs(l)?_|rst_root', inst):
+    if re.match(r'st_rs(l|g)?_|rst_root', inst):     # rsg_: hop-0 gate calendar stations (S81-LBGAP/G1)
         return ('reset', 'station')
     m = re.match(r'st_(.+)_(\d+)$', inst)
     if m:
@@ -747,6 +965,11 @@ for c in corners:
             p, mx, mn = line.rstrip('\n').split('\t')
             arr[c][p] = (float(mx) if mx not in ('-', '') else None, float(mn) if mn not in ('-', '') else None)
     except OSError: pass
+# SS is sensitivity evidence only (owner option B); pair/window verdicts remain TT/FF.
+reported_corners = corners
+corners = [c for c in corners if c in ('tt', 'ff')]
+sensitivity_windows = {nm: {k: v for k, v in w.items() if not k.startswith(('tt_', 'ff_'))} for nm, w in win.items()}
+win = {nm: {k: v for k, v in w.items() if k.startswith(('tt_', 'ff_'))} for nm, w in win.items()}
 landed = {}
 for nm, r in case['landings'].items():
     if not r['inst']: continue
@@ -794,7 +1017,7 @@ for c in corners:
         judge[f'die_clock_check_{c}'] = {k: j[k] for k in list(j)[:6] if k != 'tiles'}
     except Exception as e:
         judge[f'die_clock_check_{c}'] = f'unavailable ({e})'
-json.dump(dict(classes=res, judge=judge, landed=landed, frame_lanes=frame_lanes, pairs=pairs), open(f'{D}/sta/classes.json', 'w'), indent=1)
+json.dump(dict(classes=res, judge=judge, sensitivity=dict(corners=[c for c in reported_corners if c not in corners], windows=sensitivity_windows), landed=landed, frame_lanes=frame_lanes, pairs=pairs), open(f'{D}/sta/classes.json', 'w'), indent=1)
 for k, v in res.items():
     print(k); [print(f'  {c:40s} n={a["n"]:7d} neg={a["neg"]:7d} wns={a["wns"]:9.1f} tns={a["tns"]:12.1f} {a["worst"]}') for c, a in list(v.items())[:18]]
 print(json.dumps(judge, indent=1, default=str)[:6000])

@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_gq_land_1018-r1-b7918441e bench bench_coll_gq_mut_m2 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-r1-b7918441e-bench log cl/bench_coll_gq_mut_m2.a1b1.log captured 2026-10-18T09:17:47-07:00
+# fail_regex 'COLLQ (FAIL errors=|FAULT ESCAPED)'
+COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+COLLQ MUTANT m2 REJECTED: COLLQ DATA row2 q0 seg0 word18 got 0000000000000000000000000000767777767777777677777677777677777877 exp 0000000000000000000000000000777878777878787778787778787778787978
+COLLQ DATA row3 q3 seg1 word8 got 0000000000000000000000000000000000000000000000007e7e7e7d7d7d7d7e exp 0000000000000000000000000000000000000000000000007f7f7f7e7e7e7e7f
+COLLQ FAIL errors=64

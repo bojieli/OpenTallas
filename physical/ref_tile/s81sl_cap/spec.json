@@ -1,0 +1,181 @@
+{
+ "name": "s81sl_cap",
+ "top": "ot_s81sl_cap",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    108.0
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "rt_w"
+  ],
+  "E": [
+   "rt_e"
+  ],
+  "N": [
+   "cfg_v",
+   "cfg_d",
+   "cw_n_v",
+   "cw_n_a",
+   "cw_n_d"
+  ],
+  "S": [
+   "cw_s_v",
+   "cw_s_a",
+   "cw_s_d",
+   "clk",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81U-3 (S81-DV p4h, stub audit S-3): the slice capture root sub-leaf ot_s81sl_cap (8 frame return lanes, 7-node static return tree, direct-mapped root finish, leaf decode); flop-first pins, die hold budget.",
+ "job": {
+  "owner": "Claude:S81U-3",
+  "branch": "claude/s81u3-1017",
+  "tag": "s81sl_cap",
+  "purpose": "S81U-3: slice capture root sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/dsrom_sys/s81_static_net",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/lib",
+   "tools/s81_slice",
+   "tools/s81",
+   "results/rtl/s81_slice_1017/cap"
+  ],
+  "benches": [
+   {
+    "name": "slcap_exact",
+    "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_exact {RUN}/slcap_vec 0",
+    "expect": "pass",
+    "pass_regex": "^PASS cap MUT=0 slcap_vec$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slcap_mut1_sibling",
+    "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_m1 {RUN}/slcap_vec 1 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_MUTANT_DETECTED MUT=1 ",
+    "fail_witness": "results/rtl/s81_slice_1017/cap/mut1_real1.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slcap_mut3_leaf",
+    "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_m3 {RUN}/slcap_vec 3 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_MUTANT_DETECTED MUT=3 ",
+    "fail_witness": "results/rtl/s81_slice_1017/cap/mut3_real1.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_cap/views",
+  "record_to": "results/rtl/ref_tile/s81sl_cap"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81-SLICE): every data input lands in a flop at the pin (the *_c capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+ },
+ "util": 0.52,
+ "outline": {
+  "w": 259.2,
+  "h": 237.6
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_ranges": {
+  "rt_w": [
+   6.48,
+   231.12
+  ],
+  "rt_e": [
+   6.48,
+   231.12
+  ],
+  "cfg_v": [
+   6.48,
+   9.33
+  ],
+  "cfg_d": [
+   9.33,
+   121.961
+  ],
+  "cw_n_v": [
+   121.961,
+   126.883
+  ],
+  "cw_n_a": [
+   126.883,
+   162.184
+  ],
+  "cw_n_d": [
+   162.184,
+   252.72
+  ],
+  "cw_s_v": [
+   6.48,
+   13.901
+  ],
+  "cw_s_a": [
+   13.901,
+   79.187
+  ],
+  "cw_s_d": [
+   79.187,
+   249.683
+  ],
+  "fault": [
+   249.683,
+   252.72
+  ]
+ },
+ "children": [],
+ "inter": []
+}

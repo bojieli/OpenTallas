@@ -1,0 +1,17 @@
+# case m_prevowner build b1 args +USERS=15 +ROOTS=1 +OWNCHK=1 +XMUT=1 host regular-crane 2026-10-19T04:11:31-07:00 commit f3647da820896024289a398c8659be6cace38204
+FAIL cyc 519: attention calendar generator fault
+FAIL cyc 519: u0 counts win 0 slots 0 xdesc 0 ops 0 req 0 q 0 tx 0
+FAIL cyc 519: u1 counts win 0 slots 0 xdesc 0 ops 0 req 0 q 0 tx 0
+FAIL cyc 519: u2 counts win 0 slots 0 xdesc 0 ops 0 req 0 q 0 tx 0
+FAIL cyc 519: u3 counts win 0 slots 0 xdesc 0 ops 0 req 0 q 0 tx 0
+HASH u0 writer 0000000000000001 attention 0000000000000002
+HASH u1 writer 0000000000000001 attention 0000000000000002
+HASH u2 writer 0000000000000001 attention 0000000000000002
+HASH u3 writer 0000000000000001 attention 0000000000000002
+HASH own 35b8deab204b0d61
+FAIL KVPROG_MU fails=5 LMU=1 OMU=1 OMUT=0 users=15 xmut=1
+- results/rtl/mu_qwen_1018/kvprog/tb_kvprog_mu.sv:235: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.001 s; speed 9.952 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+# exit 0

@@ -1,0 +1,27 @@
+CAPS 01040004
+ERR retire slot 1 pos 0/0 token 20003
+ERR retire slot 1 pos 1/1 token 21003
+ERR retire slot 3 pos 0/0 token 22003
+ERR retire slot 3 pos 2/1 token 21008
+ERR start user 3 pos 1/2 busy 0 token 00406
+ERR counts cq_writes 12/24 starts 11 retires 11 / 18 outstanding 0
+ERR CQ 0 w0 3003000300a30303 w1 0002000100000035 user 3 expect pos 3 token 23012
+ERR CQ 1 w0 3008000400a30303 w1 0002000200000035 user 3 expect pos 4 token 23017
+ERR CQ 2 w0 3012000500a30325 w1 0002000300000035 user 3 expect pos 5 token 2301c
+ERR CQ 3 w0 3012000600a30303 w1 0002000400000035 user 3 expect pos 6 token 23021
+ERR CQ 4 w0 3017000700a30303 w1 0002000500000035 user 3 expect pos 7 token 23026
+ERR CQ 5 w0 301c000800a30303 w1 0002000600000035 user 3 expect pos 8 token 2302b
+ERR CQ 6 w0 0000000000000000 w1 0000000000000000 user 0 expect pos 1 token 20008
+ERR CQ 7 w0 0000000000000000 w1 0000000000000000 user 0 expect pos 2 token 2000d
+ERR CQ 8 w0 0000000000000000 w1 0000000000000000 user 0 expect pos 3 token 20012
+ERR CQ 9 w0 0000000000000000 w1 0000000000000000 user 0 expect pos 4 token 20017
+ERR CQ 10 w0 0000000000000000 w1 0000000000000000 user 0 expect pos 5 token 2001c
+ERR CQ 11 w0 0000000000000000 w1 0000000000000000 user 0 expect pos 6 token 20021
+ERR user 0 entries 6/3
+ERR user 1 entries 0/2
+ERR user 2 entries 0/4
+ERR user 3 entries 6/3
+FAIL host MU_OUT errors=33 starts 11 max_outstanding 4
+[16853000] %Fatal: tb_qkd_host_mu_out.sv:148: Assertion failed in tb_qkd_host_mu_out
+%Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop
+Aborting...
