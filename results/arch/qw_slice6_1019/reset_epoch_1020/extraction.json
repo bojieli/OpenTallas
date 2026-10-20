@@ -1,0 +1,12 @@
+{
+  "source": "d1efba843",
+  "parent_sha256": "7927680937e9fce9215f8d302dd2354f8091288c976c56f1c0d32d85055b3cba",
+  "record_depth": 10,
+  "child": "u_ctl",
+  "child_offset": 0,
+  "exact_lines": [
+    "    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck), .d(rst_n), .q(lpr_root));",
+    "    wire lpr_r_ctl;  ot_pl_pad #(.W(1), .N(9)) u_lpr_r_ctl (.ck(ck), .d(lpr_root), .q(lpr_r_ctl));   // 4 hop(s) from r_fw",
+    "    wire lpr_c_u_ctl;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_ctl (.ck(ck), .d(lpr_r_ctl), .q(lpr_c_u_ctl));   // t(u_ctl) = 0"
+  ]
+}

@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+RESET_EPOCH_PASS checks=203 epochs=3 depth=10
+- rtl/test/qwen_dv/s5/tb_s5_reset_epoch.sv:22: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 221ns; walltime 0.000 s; speed 505.796 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 6 MB

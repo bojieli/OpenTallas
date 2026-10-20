@@ -1,0 +1,4 @@
+Verilator 5.050 2026-07-01 rev v5.050
+[31000] %Fatal: tb_s5_reset_epoch.sv:19: Assertion failed in tb_s5_reset_epoch: RESET_EPOCH_FAIL cycle=29 expected=1 child_reset=0 compiler_depth=10
+%Error: rtl/test/qwen_dv/s5/tb_s5_reset_epoch.sv:19: Verilog $stop
+Aborting...
