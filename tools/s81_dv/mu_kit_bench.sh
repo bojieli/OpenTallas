@@ -33,7 +33,7 @@ lepmu|lepmuh)
   D="+define+OT_S81SL_TX_GROUP_ASSERT +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2"
   case $M in none) ;; LANDOVR) D="$D +define+OT_DSDV_MU_LAND_MUT_OVR" ;; *) D="$D +define+OT_S81SL_LEP_MUT_$M" ;; esac
   R=${B}_${M}_$S
-  $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style +incdir+$L $D -GSEED=$S -GRXSRAM=${MU_RX_SRAM:-0} \
+  $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style +incdir+$L $D -GSEED=$S -GRXSRAM=${MU_RX_SRAM:-0} -GINPIPE=${MU_IN_PIPE:-0} \
     --top-module $TB -Mdir $O/obj_$R $SRCS --build-jobs ${J:-8} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \
     > $O/build_$R.log 2>&1 || { grep -m10 %Error $O/build_$R.log; echo "BUILD_FAILED $R"; exit 3; }
   $O/obj_$R/V$TB > $O/run_$R.log 2>&1

@@ -46,7 +46,8 @@ module tb_lmh_link (
     ot_pdie_ucie #(.PMA_LAT(6)) uh1 (.clk(clk), .rst(rst_n), .tx(htx1), .rx(hrx1), .st(hst1), .pma_tx(ph1), .pma_tck(th1), .pma_rx(pa1), .pma_rck(ta1));
 endmodule
 
-module tb_s81sl_lep_muh #(parameter integer NB = 80, parameter integer RXSRAM = 0, parameter integer SEED = 1, parameter integer WAIT = 8000);
+module tb_s81sl_lep_muh #(parameter integer NB = 80, parameter integer RXSRAM = 0, parameter integer SEED = 1, parameter integer WAIT = 8000,
+                          parameter integer INPIPE = 0);   // LEPCAP: M with IN_PIPE 1 vs R fed through one TB face register
     localparam integer TG = 1045;
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
@@ -59,7 +60,7 @@ module tb_s81sl_lep_muh #(parameter integer NB = 80, parameter integer RXSRAM = 
     wire m_mwv, m_mrv; wire [1103:0] m_mwd, m_mrd;
     wire [1:0] mlv, mlr, miv, mir, mrxv, rlv, rlr, riv_, rir, rrxv; wire [2*553-1:0] mld, mid, rld, rid_;
     wire [2:0] mf0, mf1, rf0, rf1; wire [1:0] mst0, mst1, rst0, rst1;
-    ot_s81sl_lep_mu_h #(.RX_SRAM(RXSRAM), .SRAM(1), .NB(NB)) lm (.clk(clk), .rst_n(rst_n), .ro(d_ro | m_ro_x), .ri(m_ri),
+    ot_s81sl_lep_mu_h #(.RX_SRAM(RXSRAM), .SRAM(1), .NB(NB), .IN_PIPE(INPIPE)) lm (.clk(clk), .rst_n(rst_n), .ro(d_ro | m_ro_x), .ri(m_ri),
         .lo0_v(mlv[0]), .lo0_r(mlr[0]), .lo0_d(mld[0 +: 553]), .lo1_v(mlv[1]), .lo1_r(mlr[1]), .lo1_d(mld[553 +: 553]),
         .li0_v(miv[0]), .li0_r(mir[0]), .li0_d(mid[0 +: 553]), .li1_v(miv[1]), .li1_r(mir[1]), .li1_d(mid[553 +: 553]),
         .rxv(mrxv), .sl_f(1'b0), .l0_f(mf0), .l1_f(mf1), .l0_st(mst0), .l1_st(mst1),
@@ -67,11 +68,17 @@ module tb_s81sl_lep_muh #(parameter integer NB = 80, parameter integer RXSRAM = 
         .mu_c(m_mc), .mu_rt(m_rt), .ml_wv(m_mwv), .ml_wd(m_mwd), .ml_rv(m_mrv), .ml_rd(m_mrd), .ml_f(m_lf), .fault(m_f));
     dsdv_mu_land #(.NB(NB), .NS(1), .SRAM(1)) mland (.clk(clk), .rst_n(rst_n), .wv(m_mwv), .wd(m_mwd), .rc(m_rc),
         .rv(m_mrv), .rd(m_mrd), .fault(m_lf));
-    ot_s81sl_lep lr (.clk(clk), .rst_n(rst_n), .ro(d_ro), .ri(r_ri),
+    // LEPCAP: with INPIPE 1 the reference sees ro / t_host / t_kd one edge late (= M's internal face stage), so every
+    // same-cycle check below compares M with the +1-edge single-user schedule.
+    reg [1103:0] r_ro_p = 0; reg [76:0] r_th_p = 0; reg [53:0] r_tk_p = 0;
+    always @(posedge clk) begin r_ro_p <= d_ro; r_th_p <= t_host; r_tk_p <= t_kd; end
+    wire [1103:0] r_ro = (INPIPE != 0) ? r_ro_p : d_ro; wire [76:0] r_th = (INPIPE != 0) ? r_th_p : t_host;
+    wire [53:0] r_tk = (INPIPE != 0) ? r_tk_p : t_kd;
+    ot_s81sl_lep lr (.clk(clk), .rst_n(rst_n), .ro(r_ro), .ri(r_ri),
         .lo0_v(rlv[0]), .lo0_r(rlr[0]), .lo0_d(rld[0 +: 553]), .lo1_v(rlv[1]), .lo1_r(rlr[1]), .lo1_d(rld[553 +: 553]),
         .li0_v(riv_[0]), .li0_r(rir[0]), .li0_d(rid_[0 +: 553]), .li1_v(riv_[1]), .li1_r(rir[1]), .li1_d(rid_[553 +: 553]),
         .rxv(rrxv), .sl_f(1'b0), .l0_f(rf0), .l1_f(rf1), .l0_st(rst0), .l1_st(rst1),
-        .t_host(t_host), .t_kd(t_kd), .f_host(r_fh), .f_lf(r_flf), .f_ks(r_fks), .fault(r_f));
+        .t_host(r_th), .t_kd(r_tk), .f_host(r_fh), .f_lf(r_flf), .f_ks(r_fks), .fault(r_f));
     // host-side peers (HM of M, HR of R)
     reg hm0v = 0, hm1v = 0, hr0v = 0, hr1v = 0; reg [552:0] hm0d = 0, hm1d = 0, hr0d = 0, hr1d = 0;
     wire hm0r, hm1r, hr0r, hr1r, hmi0v, hmi1v, hri0v, hri1v; wire [552:0] hmi0d, hmi1d, hri0d, hri1d;

@@ -111,7 +111,9 @@ module ot_s81sl_lep_core #(
     parameter integer AB_EN = 0,       // 1: second lane pair (copy B static circuit)
     parameter integer NB = 80,         // ring beats per h message per endpoint (40,960 B / 4 end slices / 128 B)
     parameter integer RX_SRAM = 0,     // opt-in true SRAM RX, same show-ahead edge
-    parameter integer TXRP = 1         // 1: TX read pipeline register beside the SRAM column (S81-FIX3; +1 lo edge)
+    parameter integer TXRP = 1,        // 1: TX read pipeline register beside the SRAM column (S81-FIX3; +1 lo edge)
+    parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
+                                       // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -187,14 +189,40 @@ module ot_s81sl_lep_core #(
     end endgenerate
     wire rn = rr[3];                                   // host plane, outward-port valid, fault collector
     wire rnx = rr[2];                                  // RX landing + re-assembly
+    // ---------------------------------------------------------------- input face stage (IN_PIPE)
+    // ro_x / th_x / tk_x / mc_x are the core's view of ro / t_host / t_kd / mu_c.  rvx[k] / kvx[k] are the copies of the
+    // ring-valid ro[0] and the key-done t_kd[53] that feed the per-slice / push / lane landing registers (<= 28 loads each).
+    // IN_PIPE 1: every one is a register at the face (reset-free: the drivers are reset parent pin flops), so all four ports
+    // move by exactly +1 edge together and the ro[0] / t_kd[53] input nets drive 7 flops instead of 160 / 139.
+    localparam integer NVC = 6;
+`ifdef OT_S81SL_LEP_MUT_VSKEW
+    localparam integer VSKEW = 1;
+`else
+    localparam integer VSKEW = 0;
+`endif
+    wire [1103:0] ro_x; wire [76:0] th_x; wire [53:0] tk_x; wire [33:0] mc_x; wire [NVC-1:0] rvx, kvx;
+    generate if (IN_PIPE != 0) begin : g_inpipe
+      reg [1103:0] rop; reg [76:0] thp; reg [53:0] tkp; reg [33:0] mcp;
+      always @(posedge clk) begin rop <= ro; thp <= t_host; tkp <= t_kd; mcp <= mu_c; end
+      assign ro_x = rop; assign th_x = thp; assign tk_x = tkp; assign mc_x = mcp;
+      for (genvar vc = 0; vc < NVC; vc = vc + 1) begin : g_vc
+        if (VSKEW != 0 && vc == NVC - 1) begin : g_skew assign rvx[vc] = ro[0]; end   // MUTANT: one copy group skips the stage
+        else begin : g_rv (* keep=1 *) ot_s81sl_lep_vcopy u_rv (.clk(clk), .d(ro[0]), .q(rvx[vc])); end
+        if (HOST_EN != 0) begin : g_kv (* keep=1 *) ot_s81sl_lep_vcopy u_kv (.clk(clk), .d(t_kd[53]), .q(kvx[vc])); end
+        else begin : g_nkv assign kvx[vc] = 1'b0; end                  // HOST_EN 0: t_kd unread
+      end
+    end else begin : g_noinpipe
+      assign ro_x = ro; assign th_x = t_host; assign tk_x = t_kd; assign mc_x = mu_c;
+      assign rvx = {NVC{ro[0]}}; assign kvx = {NVC{t_kd[53]}};
+    end endgenerate
     reg [NL-1:0] rxv_r;
     always @(posedge clk or negedge rnx) if (!rnx) rxv_r <= {NL{1'b0}}; else rxv_r <= {NL{1'b1}};
     assign rxv = rxv_r[1:0];
 
     // ---------------------------------------------------------------- outward-port pin flops
     reg rov; reg [1103:0] roq;
-    always @(posedge clk or negedge rn) if (!rn) rov <= 1'b0; else rov <= ro[0];
-    always @(posedge clk) roq <= ro;
+    always @(posedge clk or negedge rn) if (!rn) rov <= 1'b0; else rov <= rvx[0];
+    always @(posedge clk) roq <= ro_x;
     // ---------------------------------------------------------------- host plane, TX: THOST / TKD frames
     // Link frame = one flit pair.  Ring beat: bit 0 = 1 (the beat itself).  Host-plane frame: bit 0 = 0, [3:1] type
     // (1 HOST, 2 KS: inbound; 3 THOST, 4 TKD: outbound), payload at [4 +: n] in the low half, the rest 0.
@@ -206,7 +234,7 @@ module ot_s81sl_lep_core #(
     wire hp_go, kp_go, herr; wire [76:0] ph_d; wire [53:0] pk_d;
     generate if (HOST_EN != 0) begin : g_htx
     reg [76:0] thq; reg [53:0] tkq;
-    always @(posedge clk) begin thq <= t_host; tkq <= t_kd; end
+    always @(posedge clk) begin thq <= th_x; tkq <= tk_x; end
     reg ph_v, pk_v, he; reg [76:0] pd; reg [53:0] kd; reg [11:0] st_l;
     wire ev_h = thq[64] || thq[76:65] != st_l, ev_k = tkq[53];
     wire status_reset=(MU_EN!=0 && RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+2]:rn;
@@ -260,7 +288,7 @@ module ot_s81sl_lep_core #(
     reg [33:0] mcq; reg [NBW-1:0] wn; reg w_ab, te; reg [32:0] w_t;
     for(genvar mb=0;mb<34;mb=mb+1) begin:g_command_reset
         wire command_reset=(RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+mb/24]:rn;
-        always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mu_c[mb];
+        always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mc_x[mb];
     end
     wire tag_state_reset=(RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+7]:rn;
     wire mcv = mcq[0];
@@ -313,7 +341,7 @@ module ot_s81sl_lep_core #(
         always @(posedge clk or negedge rr[FRAME_RSTBASE+fc])
           if(!rr[FRAME_RSTBASE+fc]) begin rov_r<=0;ph_r<=0;pk_r<=0;kevent_r<=0;end
           else begin
-            rov_r<=ro[0];kevent_r<=t_kd[53];
+            rov_r<=rvx[fc/23];kevent_r<=kvx[fc/23];
             if(HOST_EN!=0) begin
               if(hp) ph_r<=0;if(host_event[fc/8]) ph_r<=1;
               if(kp) pk_r<=0;if(kevent_r) pk_r<=1;
@@ -362,13 +390,13 @@ module ot_s81sl_lep_core #(
       for(genvar pg=0;pg<PUSH_GROUPS;pg=pg+1) begin:g_group
         (* keep *) reg ring_r;
         always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+pg])
-          if(!rr[CTRL_RSTBASE+NL+8+pg]) ring_r<=0;else ring_r<=ro[0];
+          if(!rr[CTRL_RSTBASE+NL+8+pg]) ring_r<=0;else ring_r<=rvx[pg/3];
         (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && frame_host_pending[pg]),.key_go(!ring_r && !frame_host_pending[pg] && frame_key_pending[pg]),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
       end
       for(genvar pl=0;pl<NL;pl=pl+1) begin:g_lane
         (* keep *) reg ring_r;
         always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl])
-          if(!rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]) ring_r<=0;else ring_r<=ro[0];
+          if(!rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]) ring_r<=0;else ring_r<=rvx[1+pl];
         (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && frame_host_pending[PUSH_GROUPS+pl]),.key_go(!ring_r && !frame_host_pending[PUSH_GROUPS+pl] && frame_key_pending[PUSH_GROUPS+pl]),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
       end
     end endgenerate
@@ -1033,7 +1061,7 @@ endmodule
 // carries no tied pad and no constant output.  Faces (kit): W lanes A, N landing (dsdv_mu_land), E ring + mu_c / mu_rt.
 module ot_s81sl_lep_mu_a #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1056,7 +1084,7 @@ module ot_s81sl_lep_mu_a #(
     input  wire            ml_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB), .IN_PIPE(IN_PIPE)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -1076,7 +1104,7 @@ endmodule
 // Faces (kit): W lanes A + l*_st, N landing (dsdv_mu_land) + host plane on the NW corner, E ring + mu_c / mu_rt.
 module ot_s81sl_lep_mu_h #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1106,7 +1134,7 @@ module ot_s81sl_lep_mu_h #(
     input  wire            ml_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(1), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(1), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB), .IN_PIPE(IN_PIPE)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -1335,4 +1363,9 @@ endmodule
 
 (* keep_hierarchy=1 *) module ot_s81sl_lep_host_preserve(input wire pending,send_now,old_valid,new_valid,output wire preserve);
  assign preserve=pending && !send_now && old_valid && !new_valid;
+endmodule
+
+// LEPCAP 10-19: one face-stage copy of a valid bit (kept hierarchy: Yosys may not merge the copies back into one flop).
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_vcopy(input wire clk, input wire d, output reg q);
+ always @(posedge clk) q <= d;
 endmodule

@@ -22,7 +22,8 @@
 //          +define+OT_S81SL_LEP_MUT_LANDCUT (RX side: dies A / B).
 // Verdict: "PASS lep_mu ..." or "FAIL lep_mu ...".
 module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, parameter integer R = 420,
-                         parameter integer RXSRAM = 0, parameter integer SEED = 1, parameter integer WAIT = 8000);
+                         parameter integer RXSRAM = 0, parameter integer SEED = 1, parameter integer WAIT = 8000,
+                         parameter integer INPIPE = 0);   // LEPCAP: dies A / B with IN_PIPE (A/B ro + mu_c +1 edge)
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
@@ -53,7 +54,7 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     `define TB_RXDIE(X, LP) \
     wire [1:0] X``lv, X``lr, X``iv, X``ir, X``rxv; wire [2*553-1:0] X``ld, X``id; wire [5:0] X``fl; \
     wire [1023:0] X``tx, X``rx; wire [3:0] X``st; wire X``mwv, X``mrv, X``mf; wire [1103:0] X``mwd, X``mrd; \
-    ot_s81sl_lep_mu_a #(.RX_SRAM(RXSRAM), .SRAM(1), .NB(NB)) l``X (.clk(clk), .rst_n(rst_n), .ro(X``_ro), .ri(X``_ri), \
+    ot_s81sl_lep_mu_a #(.RX_SRAM(RXSRAM), .SRAM(1), .NB(NB), .IN_PIPE(INPIPE)) l``X (.clk(clk), .rst_n(rst_n), .ro(X``_ro), .ri(X``_ri), \
         .lo0_v(X``lv[0]), .lo0_r(X``lr[0]), .lo0_d(X``ld[0 +: 553]), .lo1_v(X``lv[1]), .lo1_r(X``lr[1]), .lo1_d(X``ld[553 +: 553]), \
         .li0_v(X``iv[0]), .li0_r(X``ir[0]), .li0_d(X``id[0 +: 553]), .li1_v(X``iv[1]), .li1_r(X``ir[1]), .li1_d(X``id[553 +: 553]), \
         .rxv(X``rxv), .sl_f(1'b0), .l0_f(X``fl[2:0]), .l1_f(X``fl[5:3]), \
