@@ -69,7 +69,16 @@
       "multicast_and_collect_edges": "not yet measured; must price after physical partition",
       "gsum_bank_arithmetic_edges": "unchanged relative original HPIPE1 when same input capture"
     },
-    "storage_rule_basis": "real32-bin parallel arithmetic state352bits per independently hardened bank, not cosmetic array split. Every counter updates constant-index each cycle; selected gbin is two-way fixed slices, no generic runtime address flop memory."
+    "storage_rule_basis": "real32-bin parallel arithmetic state352bits per independently hardened bank, not cosmetic array split. Every counter updates constant-index each cycle; selected gbin is two-way fixed slices, no generic runtime address flop memory.",
+    "reset": {
+      "REGIONS": 20,
+      "SYNC_STAGES": 2,
+      "TREE_STAGES": 1,
+      "raw_reset_pin_loads": 22,
+      "per_bin_leaf_loads": 24,
+      "scalar_leaf_loads": 5,
+      "reset_release_edges_added": 3
+    }
   },
   "native_blockers": {
     "old_max_fanout": 1184,
@@ -87,5 +96,17 @@
     "native effective reach<=405 and registered allpins",
     "onelevel composed bank collect+multicast static schedule and production quarterbench",
     "price all boundary edges before gate/adoption"
-  ]
+  ],
+  "mapped_pilot_without_keep_canonicalization": {
+    "source": "a7ddbe55a",
+    "std_um2": 1290.46122,
+    "sequential_area_um2": 471.838,
+    "cells": 9041,
+    "warning": "area lower bound; native control copies require actual ot_keep_regs canonicalization before mapped census",
+    "candidate_outline_um": [
+      64.8,
+      43.2
+    ],
+    "fill": 0.46098437499999995
+  }
 }

@@ -23,6 +23,12 @@ module ot_s81ph_native_sel_hist_bank #(
     output reg  [16*CB-1:0]     gbin,
     output reg                  busy
 );
+    //20 preserved reset leaves: sixteen serve two bins+their clear/update
+    // controls (24 loads each), leaf16 serves5 scalarcontrols. Input reset
+    // drives2sync+20leaf clear pins=22; release adds3 startupedges.
+    wire [19:0] bank_rst;
+    ot_rst_relay #(.REGIONS(20),.SYNC_STAGES(2),.TREE_STAGES(1)) u_bank_rst
+        (.clk(clk),.rst_n_in(rst_n),.rst_n(bank_rst));
     // Every group-select input lands in kept per-output-bin registers. This
     // adds one group-query capture edge; group sums/data-update edges unchanged.
     wire [16*4-1:0] gsel_c;
@@ -47,8 +53,8 @@ module ot_s81ph_native_sel_hist_bank #(
         reg          r_v, r_clr;
         reg [W-1:0]  r_en;
         reg [W*8-1:0] r_dg;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin r_v <= 1'b0; r_clr <= 1'b0; end
+        always @(posedge clk or negedge bank_rst[16])
+            if (!bank_rst[16]) begin r_v <= 1'b0; r_clr <= 1'b0; end
             else begin r_v <= i_v; r_clr <= clr; end
         always @(posedge clk) begin r_en <= i_en; r_dg <= i_dg; end
         assign x_v = r_v; assign x_clr = r_clr; assign x_en = r_en; assign x_dg = r_dg;
@@ -67,8 +73,8 @@ module ot_s81ph_native_sel_hist_bank #(
             assign h1_lo_d[16*gl +: 16] = 16'h0001 << d[3:0];
         end
     endgenerate
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin v1 <= 1'b0; v2 <= 1'b0; end
+    always @(posedge clk or negedge bank_rst[16]) begin
+        if (!bank_rst[16]) begin v1 <= 1'b0; v2 <= 1'b0; end
         else begin v1 <= x_v && !x_clr; v2 <= v1 && !x_clr; end
     end
     always @(posedge clk) begin h1_hi <= h1_hi_d; h1_lo <= h1_lo_d; end
@@ -103,20 +109,20 @@ module ot_s81ph_native_sel_hist_bank #(
     for (gk = 0; gk < NCL; gk = gk + 1) begin : g_clc
         if (HPIPE != 0) begin : g_r
             (* keep = "true" *) reg rc;
-            always @(posedge clk or negedge rst_n)
-                if (!rst_n) rc <= 1'b0; else rc <= clr;
+            always @(posedge clk or negedge bank_rst[gk])
+                if (!bank_rst[gk]) rc <= 1'b0; else rc <= clr;
             assign x_clr_c[gk] = rc;
         end else begin : g_d
             assign x_clr_c[gk] = clr;
         end
         (* keep = "true" *) reg rv;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) rv <= 1'b0; else rv <= v1 && !x_clr_c[gk];
+        always @(posedge clk or negedge bank_rst[gk])
+            if (!bank_rst[gk]) rv <= 1'b0; else rv <= v1 && !x_clr_c[gk];
         assign v2_c[gk] = rv;
     end
     for (gb = 0; gb < NB; gb = gb + 1) begin : g_hbu
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) hbin[CB*gb +: CB] <= {CB{1'b0}};
+        always @(posedge clk or negedge bank_rst[gb/2]) begin
+            if (!bank_rst[gb/2]) hbin[CB*gb +: CB] <= {CB{1'b0}};
             else if (x_clr_c[gb / (NB / NCL)]) hbin[CB*gb +: CB] <= {CB{1'b0}};
             else if (v2_c[gb / (NB / NCL)]) hbin[CB*gb +: CB] <= hbin_d[CB*gb +: CB];
         end
@@ -180,7 +186,7 @@ module ot_s81ph_native_sel_hist_bank #(
         assign gbin_d[CB*go +: CB] = o;
     end
     always @(posedge clk) gbin <= gbin_d;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) busy <= 1'b0;
+    always @(posedge clk or negedge bank_rst[16])
+        if (!bank_rst[16]) busy <= 1'b0;
         else busy <= x_v || v1 || v2;
 endmodule
