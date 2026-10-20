@@ -453,14 +453,20 @@ module ot_s81sl_ve_fmul (
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= r3_v;
     (* keep *) reg [47:0] s2_pa, s2_pb;         // product copies: a = subnormal shift + round / sticky, b = normal pick
-    (* keep *) reg [3:0]  s2_top, s2_s47, s2_s46;   // copies: 0..2 main bytes, 3 the rest
+`ifdef OT_S81_VE_LOADSAFE5
+    localparam integer TOP_COPIES = 5, TOP_EXP = 4;
+`else
+    localparam integer TOP_COPIES = 4, TOP_EXP = 3;
+`endif
+    (* keep *) reg [TOP_COPIES-1:0] s2_top;
+    (* keep *) reg [3:0] s2_s47, s2_s46;   // copies: 0..2 main bytes, 3 the rest
     reg        s2_byp, s2_sign;
     reg [1:0]  s2_err;
     reg signed [11:0] s2_fl47, s2_fl46;
     reg [47:0] s2_mr, s2_ms;
     reg        s2_e0;
     always @(posedge clk) begin
-        s2_pa <= prod; s2_pb <= prod; s2_top <= {4{prod[47]}};
+        s2_pa <= prod; s2_pb <= prod; s2_top <= {TOP_COPIES{prod[47]}};
         s2_s47 <= {4{fl47 < -12'sd126}}; s2_s46 <= {4{fl46 < -12'sd126}};
         s2_byp <= r3_byp; s2_err <= r3_err; s2_sign <= r3_sign; s2_fl47 <= fl47; s2_fl46 <= fl46;
         s2_mr <= EQ[48:1]; s2_ms <= MS; s2_e0 <= EQ[0];
@@ -495,8 +501,8 @@ module ot_s81sl_ve_fmul (
     wire [7:0]  fa46 = s2_fl46[7:0] + 8'd127, fb46 = f46p1[7:0] + 8'd127;
     wire        oa47 = s2_fl47 > 12'sd127, ob47 = f47p1 > 12'sd127;
     wire        oa46 = s2_fl46 > 12'sd127, ob46 = f46p1 > 12'sd127;
-    wire [7:0]  fa = s2_top[3] ? fa47 : fa46, fb = s2_top[3] ? fb47 : fb46;
-    wire        oa = s2_top[3] ? oa47 : oa46, ob = s2_top[3] ? ob47 : ob46;
+    wire [7:0]  fa = s2_top[TOP_EXP] ? fa47 : fa46, fb = s2_top[TOP_EXP] ? fb47 : fb46;
+    wire        oa = s2_top[TOP_EXP] ? oa47 : oa46, ob = s2_top[TOP_EXP] ? ob47 : ob46;
     // ---- R6 ---------------------------------------------------------------------------------------------------------
     reg r_v;
     always @(posedge clk or negedge rst_n)
@@ -556,6 +562,13 @@ module ot_s81sl_ve_norm (input wire [23:0] x, input wire hp, output wire [23:0] 
     (* keep *) wire [23:0] lead;                // lead[i]: the leading one is x[i]
     assign lead[23] = x[23];
     // r4b: the normal-number term (lead[23]) of output bits 12..23 reads hp (= x[23] from the other copy): r4a x[23] 33-39
+`ifdef OT_S81_VE_LOADSAFE5
+    // Nine low terms leave room for the prefix/data uses of x[23].
+    // Fifteen high terms keep the independent hidden-bit driver below 32.
+    localparam integer NORMAL_SPLIT = 9;
+`else
+    localparam integer NORMAL_SPLIT = 12;
+`endif
     wire lead23_hi = hp;
     generate for (i = 0; i < 23; i = i + 1) begin : g_l
         assign lead[i] = x[i] & !pr[22 - i];    // pr[22 - i] = |x[23:i+1]
@@ -566,7 +579,7 @@ module ot_s81sl_ve_norm (input wire [23:0] x, input wire hp, output wire [23:0] 
         for (j = 0; j < 24; j = j + 1) begin
             yr[j] = 1'b0;
             for (k = 23 - j; k < 24; k = k + 1)   // leading one at k: y[j] = x[k - 23 + j]
-                yr[j] = yr[j] | (((k == 23 && j >= 12) ? lead23_hi : lead[k]) & x[k - 23 + j]);
+                yr[j] = yr[j] | (((k == 23 && j >= NORMAL_SPLIT) ? lead23_hi : lead[k]) & x[k - 23 + j]);
         end
     end
     assign y = yr;
