@@ -1,0 +1,116 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "children": [],
+ "params": {},
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "name": "hcoll_reduce_lane_s",
+ "top": "ot_hgi_coll_reduce_lane",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "outline": {
+  "w": 47.52,
+  "h": 47.52
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "load_v",
+   "load_tag",
+   "in_data"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "wb",
+   "wb_tag",
+   "add_read",
+   "read_tag",
+   "add_issue"
+  ],
+  "E": [
+   "pub_read",
+   "pub_tag_a",
+   "pub_tag_b",
+   "add_valid"
+  ],
+  "S": [
+   "pub_a",
+   "pub_b"
+  ]
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "peak_ram_gb": 16
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every lane input lands on a lane flop within <= 3 levels (state[t] write enable decode of load_tag / wb_tag, acc / operand / pub read registers, add-lane ap/bp/vp pin registers) and every output is flop Q (pub_a / pub_b registers, add valid pipe); a synthesis pin stage would shift the lane against the control's 8-edge writeback pipe (unbenched)"
+ },
+ "structural_change": "COLLQ3 10-19 NEW hard leaf: the q2/q3 COLL parents' soft ot_hgi_coll_reduce_static (21.2k soft flops on the sw root) split exactly into the soft control ot_hgi_coll_reduce_static_ctl + 16 of this lane (tb_hgi_coll_reduce_split_eq); state 512 b per lane (< 2 kb: flops); re-sized 47.52 x 47.52 from the gate std area 1,025 um2 (util 28 % -> ~45 %)",
+ "job": {
+  "owner": "Claude:HBM-ELEMOWN3/COLLQ3",
+  "branch": "claude/collq3-safe-1019",
+  "tag": "safe",
+  "purpose": "HBM COLL reduce lane (x16) for the SAFE q2/q3 COLL quadrant parents (lp_ars); gate first, route after checklist review",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/landed_parent_1018/collq"
+  ],
+  "benches": [
+   {
+    "name": "rsplit_eq",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/rs rs",
+    "expect": "pass",
+    "pass_regex": "RS PASS",
+    "min_count_regex": "RSPLIT_EQ PASS cycles=(\\d+)",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_reduce_lane_s/views",
+  "record_to": "results/rtl/ref_tile/hcoll_reduce_lane_s"
+ }
+}

@@ -141,13 +141,25 @@ def reduce_lane():
     return s
 
 
+def reduce_lane_s():
+    """re-sized from the hcoll_reduce_lane gate (10-19 22:1x: WARN, synthesized std 1,025 um2 -> util 28 % at 64.8 x 64.8;
+    TT setup +174 / hold +51 ps, spread 7.2 / 7.5 ps, GRT 0): 47.52 x 47.52 = util ~45 % (SAFE item 6: 40-60 %)"""
+    s = reduce_lane()
+    s["name"] = "hcoll_reduce_lane_s"
+    s["outline"] = {"w": 47.52, "h": 47.52}
+    s["structural_change"] += "; re-sized 47.52 x 47.52 from the gate std area 1,025 um2 (util 28 % -> ~45 %)"
+    s["job"] = dict(s["job"], views_to="physical/ref_tile/hcoll_reduce_lane_s/views",
+                    record_to="results/rtl/ref_tile/hcoll_reduce_lane_s")
+    return s
+
+
 def main():
     specs = [
         rewrap("hcoll_v5_fj3_r128", "hcoll_fj3_r128w", "ot_hgi_coll_fj_n2s1_r128",
                "COLLQ3 SAFE q3 parent hard child u_fj (ROWS 128 programme target, parameter-free top)"),
         rewrap("hcoll_v5_fj2_r128", "hcoll_fj2_r128w", "ot_hgi_coll_fj_q2_r128",
                "COLLQ3 SAFE q2 parent hard child u_fj (ROWS 128 programme target, parameter-free top)"),
-        link_e1(), link_e1c(), reduce_lane()]
+        link_e1(), link_e1c(), reduce_lane(), reduce_lane_s()]
     for s in specs:
         (OUT / f"{s['name']}.json").write_text(json.dumps(s, indent=1) + "\n")
         print("wrote", OUT / f"{s['name']}.json")
