@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.peer_pre_cts_stage_pin_identity.v1",
+  "status": "PASS",
+  "scope": "Read-only PRE-CTS DIAGNOSTIC3_place pin/clock/reset/source-bit identity and complete Liberty-function combinational arc graph. This is not permission to move a boundary flop; interior-vs-multistage landing remains unresolved without a prospective source-bound floorplan.",
+  "odb_path": "/gate/routes/gate/work/orfs/results/asap7/opentallas_qkd_hr_core_peer_n32_asap7_ref_gate/base/3_place.odb",
+  "odb_sha256": "3a8da5c5bbf47a9a36ac779cb623b43d91071cc58f59d0beed14426e49b565e6",
+  "audit_source_sha256": "c23f36a6c87a80d0dac441edfbd6f47054ef47c1ec0e30a22fda3274c6be3871",
+  "spec_path": "/src/physical/ref_tile/qkd_hr_core_peer_p32b/spec.json",
+  "spec_sha256": "10dc34f571f43f23b93693c6d4764baee6f6363df4d40bf9c9b9917f1c3c03fa",
+  "synchronous_memory_proof": [
+    {
+      "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.v",
+      "sha256": "6ce389d8e19d76c9e1cccf7d2a4a647d43469cc424f130be52410f7bea8c03b9",
+      "boundary": "posedge clk registered rd_out, verified in exact behavioural source"
+    }
+  ],
+  "die_um": [
+    0.0,
+    0.0,
+    518.4,
+    518.4
+  ],
+  "role_errors": [],
+  "counts": {
+    "combinational_instances": 92959,
+    "constant_function_drivers": 11645,
+    "power_ground_only_instances": 19553,
+    "actual_liberty_clock_pins_excluded": 20510,
+    "sequential_instances": 20507,
+    "synchronous_sram_instances": 3,
+    "declared_clock_ports_excluded": 1
+  },
+  "port_bit_count": 6301,
+  "sequential_instance_count": 20510,
+  "data_stage_edge_count": 1955528,
+  "combinational_cell_count": 81314,
+  "boundary_classes": {
+    "direct_port_data_input": 2802,
+    "direct_port_data_output": 3223,
+    "interior_or_multistage_landing_unresolved": 14485
+  }
+}

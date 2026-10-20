@@ -1,0 +1,52 @@
+{
+  "schema": "peer.pre_cts_boundary_density.v1",
+  "scope": "Frozen3_place diagnostic. Direct source port-stage membership only; each FF counted once per face, shared multi-face FF possible. Global<=6 over actual populated pin span and ten-micron projection are descriptive, not exact track/placement/admission proof. Native pin accessibility separately checked.",
+  "identity_sha256": "f4e123c11d50b34f19f88b593dc891e0a65d2e0b5bd98987b17a1246852024e9",
+  "odb_sha256": "b3d89bed755a5c70a5f56d635f0e02b567d46bcb886356b82b2e4d1f25e9e26e",
+  "faces": {
+    "E": {
+      "port_bits": 1557,
+      "unique_direct_boundary_FFs": 1293,
+      "actual_pin_span_um": [
+        65.148,
+        453.276
+      ],
+      "FF_per_um_over_actual_pin_span": 3.3313752164234476,
+      "peak_FF_per_um_in10um_projection": 8.4,
+      "global_density_le6": true
+    },
+    "S": {
+      "port_bits": 1638,
+      "unique_direct_boundary_FFs": 1639,
+      "actual_pin_span_um": [
+        59.676,
+        415.5
+      ],
+      "FF_per_um_over_actual_pin_span": 4.606209811592247,
+      "peak_FF_per_um_in10um_projection": 7.0,
+      "global_density_le6": true
+    },
+    "N": {
+      "port_bits": 1550,
+      "unique_direct_boundary_FFs": 1538,
+      "actual_pin_span_um": [
+        60.108,
+        415.116
+      ],
+      "FF_per_um_over_actual_pin_span": 4.332296736974942,
+      "peak_FF_per_um_in10um_projection": 5.3,
+      "global_density_le6": true
+    },
+    "W": {
+      "port_bits": 1555,
+      "unique_direct_boundary_FFs": 1555,
+      "actual_pin_span_um": [
+        65.052,
+        453.324
+      ],
+      "FF_per_um_over_actual_pin_span": 4.004924382906828,
+      "peak_FF_per_um_in10um_projection": 4.6,
+      "global_density_le6": true
+    }
+  }
+}

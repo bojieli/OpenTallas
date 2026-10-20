@@ -1,0 +1,35 @@
+# PEER exact-source admission follow-up, 10-20 third takeover
+
+The 07:20 takeover reconciled KV-HOST7/ROOT6 and actual receiving jobs read-only before launching standalone evidence work. No edits or git operations occurred in Claude's receiving worktree. Original p32a/b gates at b563ab79b remain owned by KV-HOST7.
+
+## Current authority and exact proposed scope
+
+Main dd875958b includes the plain source-native reset registry from b38. That API does not admit this mixed-publication PEER graph. The existing PEER specs' pin_regs=false/reset_landing=false explanatory records are not a reviewed exact-source authority. ROOT owns canonical interface implementation; this packet makes no shared helper change.
+
+A future reviewed path must bind the complete exact source closure, top qkd_hr_core_peer_n32, empty params/defines, core clock ck_core, raw reset ports por_n/host_rst_n, generated source SHA1277bb49de6e8e577c431282c5d8a057211f6e0ff06e6674b78b37393fce4336, all-pin capture evidence, and actual mapped default raw reset maximum2 check. It must preserve the mandatory all-driver native32 check and all actual clock/reset pin checks. The actual outer BRP2/64 mixed-polarity refusal must remain a refusal; no plain-BRP registry entry or generic waiver is proposed. No prospective flag is adopted by this document.
+
+## Newly closed evidence
+
+review_constant_set.json establishes exact equality of all277 constant output candidates with the existing source packet role inventory:265 published u_rank__u_control__u_packet__ctd bits and12 cohort_tag bits, all uninverted TIELO. The initial shorthand packet_ctd name mismatched and refused; explicit published-port mapping resolves the naming difference without broadening the allowed set. Existing boundary inventory remains2800 nonclock input D captures and3223 direct registered outputs.
+
+make_reset_observers.py checks actual graph chains for all323 regional final leaves: S1 tie-high D, S2/final inverted QN propagation, positive ck_core, physical ASR cells with tie-high SETN. An initial literal same-RESETN assumption refused; actual chains use52 distinct triples of physical reset roots. The generated runtime observers name each actual root, assume no pre-reset state relation, and activate only after all three actual reset roots are simultaneously asserted. They then check alignment and all three stage outputs against a three-edge shadow. This does not infer pre-reset equivalence from steady state.
+
+The exact source with real uninitialized SRAM and random FF initialization passed the existing100k-cycle V5.050 miter:99984 compared edges. Every new observer group passed approximately100390 checks across the periodic reset episodes. The legacy harness holds both raw resets low16cycles every256 and fixes PLL locked high. This is finite runtime evidence under that envelope, not universal asynchronous pulse or first-valid proof. The independent652-state cold formal audit remains separately preserved at42aa6ca7d.
+
+The first early-final D tie-high circuit mutation was rejected by the existing copy-state checker at edge18. A second run explicitly isolates the new observer by removing only that earlier checker; its result must be read from the retained run log, not inferred from the earlier failure.
+
+## Remaining obligations
+
+Downstream first-valid/admission dominance remains OPEN. Public valid/control outputs such as dispatch_valid, allocated_valid, native_result_v, cancel_release_v and ingest_permission terminate at plain unreset pin-capture DFFs. Their power-up state must not be assumed zero or safe. A parent boot/admission contract must account for actual reset assertion maturity, regional release and the output capture edge; the new reset-chain runtime observations do not by themselves prove safe arbitrary-power-up admission. PLL-conditioned regions must be referenced to their actual regional reset roots.
+
+Physical closure remains OPEN. Both original gates passed actual mapped native62936/max32 and all6301 pin rectangles accessible; native explicitly does not evaluate functional/pin/storage contracts. At collection they were still repairing CTS hold, with worst slack about-74.863/-68.255,20,616 FFs+3macro clock pins on one root, and no finalCTS/GRT. A standalone frozen3_place complete Liberty combinational-stage identity audit is diagnostic only. Its standardcell endpoint coordinates inherit the instance-center approximation; macro coordinates use actual pin geometry. Fullstage endpoint L1 is distinct from native single-net reach. Neither metric establishes timing, exact boundary density or final physical qualification.
+
+## Completed follow-up results and ROOT model
+
+The isolated early-final-D mutation was caught specifically by RESET_AGE_FAIL group0/stage2/u59981_c1 at200ns; log reset_observers_early_isolate.log. The positive source and prior-copy-check negative logs are separately retained. No prior failure was overwritten in the evidence packet.
+
+Both standalone pre-CTS full-Liberty data-to-sequential-stage analyses are terminal: p32a182944/1955528 pairs over405, maximum712.584um; p32b193395/1955528, maximum693.360um. The data-stage metric initially excludes output ports and asynchronous/other sequential control endpoints; a separate overlay runner adds those categories explicitly. Standardcell coordinates are center approximations. Separate transparent-native-net exact-pin geometry diagnoses2060/2246 over405 in144680 pairs for a/b. These results remain physical failures independent of functional source PASS.
+
+The source-bound nominal geometry proposal is physical_review_0720/p32a/pin_model.json with every bit/pin pair, all6301 port targets and nominal boundary FF targets. It keeps all three R0 macros and raw por_n(E),host_rst_n(S),ck_core(W),derived-reset(S) port anchors. It proposes TX[527:0]+valid+credit E->W in y88..178 and PLL status E->S beside existing derived reset output. The TX SRAM actual WD split is267W/261E; the separate raw-RX SRAM has283W/245E. All1058 exact boundary-to-macro pairs, including the previously-good rawRX bus, are checked: nominal maximum342.803130um, zero over405, minimum margin62.196870um. PLL-to-derived-reset nominal distance0.492um replaces actual481.194um. Face nominal global/local10um FF densities all<=6 with>=59.5um corner keepouts. This does not demonstrate standardcell row legality or access.
+
+ROOT alone may adopt the prospective parent pin/clock-status contract; no source/kit/flow flag was changed. Main6586b0856 newly publishes deterministic combinational-DAG/plain-reset guards, and PEER remains outside generic mixed/ASR admission. No revalidation against those newer canonical guards is claimed here. Even after a prospective interface-map change, interior/other stage failures, clock hierarchy, independent startup/admission dominance, physical signoff and parent coherent binding remain OPEN. No new gate is authorized by this packet.

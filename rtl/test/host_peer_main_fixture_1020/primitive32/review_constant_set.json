@@ -1,0 +1,17 @@
+{
+  "schema": "peer.exact_reserved_constant_set.v1",
+  "source_sha256": "1277bb49de6e8e577c431282c5d8a057211f6e0ff06e6674b78b37393fce4336",
+  "mapped_sha256": "bc09cdfa274dce50304b1fd0831f1097fc524c237885c8f656e947ff9f9d9203",
+  "status": "PASS",
+  "expected_count": 277,
+  "actual_count": 277,
+  "explicit_port_mapping": {
+    "packet_ctd": "u_rank__u_control__u_packet__ctd",
+    "cohort_tag": "cohort_tag"
+  },
+  "missing": [],
+  "unexpected": [],
+  "values": "all TIELO, no unary inversion",
+  "source_role_inventory_sha256": "5dbd7b60843b48cfd7cc69ea7c8158ff598c42c0a0887ce822b1306eaa362869",
+  "scope": "Exact frozen boundary set only; explicit published packet port name used. Initial shorthand packet_ctd match refused, corrected by explicit mapping. No new functional constant authorization."
+}
