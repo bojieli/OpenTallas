@@ -1,0 +1,150 @@
+{
+ "name": "hbfd_pad_r17x115-p1-b3ee9a94c",
+ "block": "hbfd_pad_r17x115",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-PAD",
+ "purpose": "HBM d4g exact-N pad ring hbfd_pad 17x115 (SAFE_STORAGE, kept ingress copies, 2-stage reset landing)",
+ "threads": 4,
+ "peak_ram_gb": 12,
+ "source": {
+  "branch": "claude/l2h-pad-ingress-1019",
+  "commit": "b3ee9a94c",
+  "extra_paths": [
+   "rtl/hbm_accel/die_glue/hbfd_pad.sv",
+   "rtl/hbm_accel/die_glue/tb_hbfd_pad_storage.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/hbfd_pad_storage_1019/l2h_pad"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hbfd_pad_r17x115 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/die_glue/hbfd_pad.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pad_exact72",
+    "cmd": "bash results/rtl/hbfd_pad_storage_1019/l2h_pad/kit_bench.sh pass {RUN}/bench_pass",
+    "expect": "pass",
+    "pass_regex": "PAD_STORAGE_PASS shapes=72 edges=7000 mutants=4",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pad_mut1_slot",
+    "cmd": "bash results/rtl/hbfd_pad_storage_1019/l2h_pad/kit_bench.sh mut1 {RUN}/bench_m1",
+    "expect": "fail",
+    "fail_regex": "PAD_MUTANT_WITNESS mutant=1 W=17 N=115",
+    "fail_witness": "results/rtl/hbfd_pad_storage_1019/l2h_pad/w_kit_mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pad_mut2_warmup",
+    "cmd": "bash results/rtl/hbfd_pad_storage_1019/l2h_pad/kit_bench.sh mut2 {RUN}/bench_m2",
+    "expect": "fail",
+    "fail_regex": "PAD_MUTANT_WITNESS mutant=2 W=17 N=115",
+    "fail_witness": "results/rtl/hbfd_pad_storage_1019/l2h_pad/w_kit_mut2.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pad_mut3_edge",
+    "cmd": "bash results/rtl/hbfd_pad_storage_1019/l2h_pad/kit_bench.sh mut3 {RUN}/bench_m3",
+    "expect": "fail",
+    "fail_regex": "PAD_MUTANT_WITNESS mutant=3 W=17 N=115",
+    "fail_witness": "results/rtl/hbfd_pad_storage_1019/l2h_pad/w_kit_mut3.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pad_mut4_collide",
+    "cmd": "bash results/rtl/hbfd_pad_storage_1019/l2h_pad/kit_bench.sh mut4 {RUN}/bench_m4",
+    "expect": "fail",
+    "fail_regex": "PAD_MUTANT_WITNESS mutant=4 W=17 N=115",
+    "fail_witness": "results/rtl/hbfd_pad_storage_1019/l2h_pad/w_kit_mut4.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbfd_pad_r17x115/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbfd_pad_r17x115/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 12
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbfd_pad_r17x115 --out {RUN}/record/views/hbfd_pad_r17x115  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbfd_pad_r17x115/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbfd_pad_r17x115/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbfd_pad_r17x115/hbfd_pad_r17x115-p1-b3ee9a94c"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "L2H-PAD 10-19 (H.STA.BANKLAT.PAD): exact-N SAFE_STORAGE pad ring, worst ring shape 17 b x 115 edges. Successor of codex 0c3eecf04/366dc27e7 whose 8 ingress copies were aliased by Yosys to 17 Q x 115 loads: copies are now keep_hierarchy hbfd_pad_icopy instances (8 x 17 b, <=16 row loads each); reset lands in 2 registered stages (rs_s1 + 4 kept hbfd_pad_rst_land copies, <=16 loads), the 2 landing edges paid by 2 face data stages so the total stays exactly 115 edges, II1."
+}
