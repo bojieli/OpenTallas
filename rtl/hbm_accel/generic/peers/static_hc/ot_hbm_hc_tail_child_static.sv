@@ -32,9 +32,18 @@ module ot_hbm_hc_tail_child_static #(
     output reg           fault
 );
     // ---------------------------------------------------------------- regional reset (2-stage landing + kept roots)
+    // HBM-HC7 10-20: the relay roots are async-reset by the port, so the gate-level cloner's copies of a relay root
+    // loaded rst_n (37 > 32, BFC frontier).  A second KEPT leaf stage per region is async-reset by its region root
+    // (assertion still ripples asynchronously, release +1 clk edge, boot only): the cloner now replicates the leaves
+    // (loading rn[r], <= 32) and rst_n drives only the 2 sync flops + 3 region roots.
     wire [2:0] rn;
     ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
-    wire rst_pin = rn[0], rst_ctl = rn[1], rst_core = rn[2];
+    (* keep = "true", dont_touch = "true" *) reg [2:0] rl;
+    genvar gr;
+    generate for (gr = 0; gr < 3; gr = gr + 1) begin : g_rleaf
+        always @(posedge clk or negedge rn[gr]) if (!rn[gr]) rl[gr] <= 1'b0; else rl[gr] <= 1'b1;
+    end endgenerate
+    wire rst_pin = rl[0], rst_ctl = rl[1], rst_core = rl[2];
     // ---------------------------------------------------------------- pin flops + second (fanout) stage
     reg launch_p, launch_s; reg [1631:0] d_p, d_s;
     always @(posedge clk or negedge rst_pin)
