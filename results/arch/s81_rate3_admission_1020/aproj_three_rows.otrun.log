@@ -1,0 +1,22 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootmeta
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootmeta
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootmeta
+ot-run: ot-epyc9       admits   974 GB (avail 772, growth 90, headroom 0, waiters 0/0 GB) load 56/128 running 32 disk 111 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootmeta
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootmeta
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3846829-1792507027 after 0 s
+XS_GEN u_f_3R12 (col_h9_MX_l4, lk 249 E 1) slice u_s_3N g 7 rows [236, 237, 238] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 8 beats 80 mutant None
+APROJ_FRAME u_f_3R12 col_h9_MX_l4 8 None PASS 356 []
+XS_GEN u_f_3R12 (col_h9_MX_l4, lk 249 E 1) slice u_s_3N g 7 rows [236, 237, 238] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 8 beats 80 mutant swap
+APROJ_FRAME u_f_3R12 col_h9_MX_l4 8 swap FAIL 356 ['MISMATCH edge 399 row 2 lo 0 k 2 got bd22daf8/0 want bce88b86/0']
+XS_GEN u_f_3R12 (col_h9_MX_l4, lk 249 E 1) slice u_s_3N g 7 rows [236, 237, 238] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 8 beats 80 mutant shift
+APROJ_FRAME u_f_3R12 col_h9_MX_l4 8 shift FAIL 356 ['PLAN_MISMATCH predicted 8 words, got 8; first diff ((400, 2, (0, 2, 5), 3169356678, 0), (399, 2, (0, 2, 5), 3169356678, 0))']
+XS_GEN u_f_7R00 (col_h9_l4, lk b6d E 5) slice u_s_7S g 14 rows [1372, 1373, 1374] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 8 beats 80 mutant None
+APROJ_FRAME u_f_7R00 col_h9_l4 8 None PASS 360 []
+XS_GEN u_f_7R00 (col_h9_l4, lk b6d E 5) slice u_s_7S g 14 rows [1372, 1373, 1374] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 8 beats 80 mutant swap
+APROJ_FRAME u_f_7R00 col_h9_l4 8 swap FAIL 360 ['MISMATCH edge 403 row 2 lo 0 k 2 got bd02f13c/0 want bdc024c0/0']
+XS_GEN u_f_7R00 (col_h9_l4, lk b6d E 5) slice u_s_7S g 14 rows [1372, 1373, 1374] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 8 beats 80 mutant shift
+APROJ_FRAME u_f_7R00 col_h9_l4 8 shift FAIL 360 ['PLAN_MISMATCH predicted 8 words, got 8; first diff ((404, 2, (0, 2, 5), 3183486144, 0), (403, 2, (0, 2, 5), 3183486144, 0))']
+APROJ_MECHANISM_PASS 6 source/golden/frame only; consumer ownership unadmitted
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3846829-1792507027): exit 0
