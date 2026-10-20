@@ -37,7 +37,7 @@ The closed stnrgc (PIN_IN 1) adds +1 on cfg relative to rs / nb, because its pin
 - `qfd_dv_s5_flat0`: HARD 0, stnrgc PIN_IN 0. It must equal qfd_dv_slice2 #(SU_TLS 1, SU_LT 1, HD_W130 1, MU_NU 4, PRIVATE_CALR 1) at offset 0, using the regional station source (+define+OT_STATION_REGIONAL).
 - `qfd_dv_s5_flat`: the hardened composition.
 
-**Landed parent.** `tools/qwen_dv/gen_slice5_lp_spec.py --gen` builds the landed parents from the lp.py specs `tools/landed_parent/specs/qfd_dv_s5{,b}.json`. It has 21 regions and 183 landings (28,312 bits):
+**Landed parent.** `tools/qwen_dv/gen_slice5_lp_spec.py --gen` builds the landed parents from the lp.py specs `tools/landed_parent/specs/qfd_dv_s5{,b}.json`. It has 19 regions and 183 landings (28,312 bits):
 
 | spec | D / E | landing flops |
 |---|---|---:|
@@ -80,3 +80,11 @@ Every cross-region crossing costs +3 edges in the main build (E+1) and +5 in the
 That is about 19.3k cycles/token, or ~8.3% of 194.5 us. It is above the accepted ~5% (327 cycles). With FWD st / sc it falls back to ~356 cycles/layer (~5.5%).
 
 The 182 slice<->slice face landings (claude/qw-slice4-face-1019 @7811217d7, +3/hop, already priced in that plan) are NOT yet in the parent. They are a follow-up.
+
+## Coordinator disposition, 10-20 takeover
+
+The root coordinator explicitly accepted the approximately 536-cycle/layer (8.3%) implementation bound during the 00:33 takeover, relayed through LEAD3-QW. The 327-cycle plan estimate is not a ceiling. This accepts cost while structural work proceeds; final compiler composition and throughput qualification remain required. FWD st/sc is a later performance item with its complete protocol and reset cost to be priced before adoption.
+
+Current source-cut evidence at d1efba843 passes all four zero-offset modes, seven dv_bench2 cases and landed-vs-lagref lockstep. The accepted cost is still a bound, not a measured final token-rate claim. The older full functional reset mutant survives; the separate exact reset-run epoch witness detects the real compiler-age violation (reset_epoch_1020), without replacing that older result.
+
+All native-violating old leaf WARNs are blocked from binding. BTAB safe is a separate zero-edge successor; it passes native32 prechecks and is gating. LRLY old gate mapped native32 passes, but its current-source exact re-gate is required by helper provenance. CTL bounded and reducer ring components have independent source/bench work; full physical qualification is outstanding. The 182 receiver-face landings remain absent; 107/116-bit flop LANDW views are held for their mapped fanout violations, while the SRAM wide families pass native32 subject to actual instance phase/reset/K proof.
