@@ -1,0 +1,340 @@
+[
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[206\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10880,
+    "terminals": 5,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 524.899,
+    "worst_sink": "ot_prs_01023_ff/D",
+    "endpoints": [
+      "ot_prs_01023_ff/D",
+      "_48277_/B",
+      "_44329_/A",
+      "record_rx\\[531\\]$_DFF_P_/D",
+      "ot_prs_00483_ff/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 525.1679999999999,
+    "worst_bbox_sink": "ot_prs_01023_ff/D"
+  },
+  {
+    "driver": "place21256/Y",
+    "master": "BUFx3_ASAP7_75t_R",
+    "net": 48159,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 523.8715,
+    "worst_sink": "record_rx\\[518\\]$_DFF_P_/D",
+    "endpoints": [
+      "record_rx\\[518\\]$_DFF_P_/D",
+      "_48272_/B",
+      "_44335_/B",
+      "ot_prs_00468_ff/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 524.196,
+    "worst_bbox_sink": "record_rx\\[518\\]$_DFF_P_/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[193\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10893,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 523.6030000000001,
+    "worst_sink": "record_rx\\[518\\]$_DFF_P_/D",
+    "endpoints": [
+      "record_rx\\[518\\]$_DFF_P_/D",
+      "_48272_/B",
+      "_44335_/B",
+      "ot_prs_00468_ff/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 523.8720000000001,
+    "worst_bbox_sink": "record_rx\\[518\\]$_DFF_P_/D"
+  },
+  {
+    "driver": "_33645_/Y",
+    "master": "INVx3_ASAP7_75t_R",
+    "net": 35516,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 523.441,
+    "worst_sink": "ot_prs_01023_ff/D",
+    "endpoints": [
+      "ot_prs_01023_ff/D",
+      "_44329_/A",
+      "record_rx\\[531\\]$_DFF_P_/D",
+      "ot_prs_00483_ff/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 523.7639999999999,
+    "worst_bbox_sink": "ot_prs_01023_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[197\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10889,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 522.523,
+    "worst_sink": "ot_prs_01013_ff/D",
+    "endpoints": [
+      "record_rx\\[522\\]$_DFF_P_/D",
+      "ot_prs_00473_ff/D",
+      "ot_prs_01013_ff/D",
+      "_48276_/B"
+    ],
+    "max_L1_pin_bbox_upper_um": 522.792,
+    "worst_bbox_sink": "ot_prs_01013_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[196\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10890,
+    "terminals": 5,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 522.199,
+    "worst_sink": "ot_prs_01012_ff/D",
+    "endpoints": [
+      "ot_prs_01012_ff/D",
+      "ot_prs_00472_ff/D",
+      "record_rx\\[521\\]$_DFF_P_/D",
+      "_44338_/A",
+      "_48283_/B"
+    ],
+    "max_L1_pin_bbox_upper_um": 522.468,
+    "worst_bbox_sink": "ot_prs_01012_ff/D"
+  },
+  {
+    "driver": "_33664_/Y",
+    "master": "INVx3_ASAP7_75t_R",
+    "net": 35506,
+    "terminals": 3,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 521.335,
+    "worst_sink": "ot_prs_01013_ff/D",
+    "endpoints": [
+      "record_rx\\[522\\]$_DFF_P_/D",
+      "ot_prs_00473_ff/D",
+      "ot_prs_01013_ff/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 521.6579999999999,
+    "worst_bbox_sink": "ot_prs_01013_ff/D"
+  },
+  {
+    "driver": "_33659_/Y",
+    "master": "INVx3_ASAP7_75t_R",
+    "net": 35511,
+    "terminals": 3,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 520.255,
+    "worst_sink": "ot_prs_01018_ff/D",
+    "endpoints": [
+      "ot_prs_00478_ff/D",
+      "ot_prs_01018_ff/D",
+      "record_rx\\[527\\]$_DFF_P_/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 520.578,
+    "worst_bbox_sink": "ot_prs_01018_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[202\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10884,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 519.931,
+    "worst_sink": "ot_prs_01018_ff/D",
+    "endpoints": [
+      "_48278_/B",
+      "ot_prs_00478_ff/D",
+      "ot_prs_01018_ff/D",
+      "record_rx\\[527\\]$_DFF_P_/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 520.2,
+    "worst_bbox_sink": "ot_prs_01018_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[203\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10883,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 519.823,
+    "worst_sink": "ot_prs_01019_ff/D",
+    "endpoints": [
+      "_48271_/B",
+      "ot_prs_00479_ff/D",
+      "ot_prs_01019_ff/D",
+      "record_rx\\[528\\]$_DFF_P_/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 520.092,
+    "worst_bbox_sink": "ot_prs_01019_ff/D"
+  },
+  {
+    "driver": "place21249/Y",
+    "master": "BUFx3_ASAP7_75t_R",
+    "net": 51824,
+    "terminals": 5,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 519.4435,
+    "worst_sink": "ot_prs_01022_ff/D",
+    "endpoints": [
+      "ot_prs_00482_ff/D",
+      "record_rx\\[530\\]$_DFF_P_/D",
+      "_44329_/B",
+      "ot_prs_01022_ff/D",
+      "_48265_/B"
+    ],
+    "max_L1_pin_bbox_upper_um": 519.768,
+    "worst_bbox_sink": "ot_prs_01022_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[205\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10881,
+    "terminals": 5,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 519.175,
+    "worst_sink": "ot_prs_01022_ff/D",
+    "endpoints": [
+      "ot_prs_00482_ff/D",
+      "record_rx\\[530\\]$_DFF_P_/D",
+      "_44329_/B",
+      "ot_prs_01022_ff/D",
+      "_48265_/B"
+    ],
+    "max_L1_pin_bbox_upper_um": 519.444,
+    "worst_bbox_sink": "ot_prs_01022_ff/D"
+  },
+  {
+    "driver": "_33658_/Y",
+    "master": "INVx3_ASAP7_75t_R",
+    "net": 35512,
+    "terminals": 3,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 518.689,
+    "worst_sink": "ot_prs_01019_ff/D",
+    "endpoints": [
+      "ot_prs_00479_ff/D",
+      "ot_prs_01019_ff/D",
+      "record_rx\\[528\\]$_DFF_P_/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 519.012,
+    "worst_bbox_sink": "ot_prs_01019_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[200\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10886,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 518.473,
+    "worst_sink": "ot_prs_01016_ff/D",
+    "endpoints": [
+      "ot_prs_01016_ff/D",
+      "ot_prs_00476_ff/D",
+      "record_rx\\[525\\]$_DFF_P_/D",
+      "_48281_/B"
+    ],
+    "max_L1_pin_bbox_upper_um": 518.742,
+    "worst_bbox_sink": "ot_prs_01016_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[198\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10888,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 518.3109999999999,
+    "worst_sink": "ot_prs_01014_ff/D",
+    "endpoints": [
+      "record_rx\\[523\\]$_DFF_P_/D",
+      "ot_prs_00474_ff/D",
+      "ot_prs_01014_ff/D",
+      "_48264_/B"
+    ],
+    "max_L1_pin_bbox_upper_um": 518.5799999999999,
+    "worst_bbox_sink": "ot_prs_01014_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[204\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10882,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 518.095,
+    "worst_sink": "ot_prs_01020_ff/D",
+    "endpoints": [
+      "ot_prs_01020_ff/D",
+      "ot_prs_00480_ff/D",
+      "_48275_/B",
+      "record_rx\\[529\\]$_DFF_P_/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 518.3639999999999,
+    "worst_bbox_sink": "ot_prs_01020_ff/D"
+  },
+  {
+    "driver": "_33663_/Y",
+    "master": "INVx3_ASAP7_75t_R",
+    "net": 35507,
+    "terminals": 3,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 517.933,
+    "worst_sink": "ot_prs_01014_ff/D",
+    "endpoints": [
+      "record_rx\\[523\\]$_DFF_P_/D",
+      "ot_prs_00474_ff/D",
+      "ot_prs_01014_ff/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 518.2560000000001,
+    "worst_bbox_sink": "ot_prs_01014_ff/D"
+  },
+  {
+    "driver": "u_ot_pr_core.u_core.st_he_c\\[201\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "net": 10885,
+    "terminals": 4,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 517.879,
+    "worst_sink": "ot_prs_01017_ff/D",
+    "endpoints": [
+      "record_rx\\[526\\]$_DFF_P_/D",
+      "ot_prs_01017_ff/D",
+      "ot_prs_00477_ff/D",
+      "_48270_/B"
+    ],
+    "max_L1_pin_bbox_upper_um": 518.148,
+    "worst_bbox_sink": "ot_prs_01017_ff/D"
+  },
+  {
+    "driver": "_33661_/Y",
+    "master": "INVx3_ASAP7_75t_R",
+    "net": 35509,
+    "terminals": 3,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 517.069,
+    "worst_sink": "ot_prs_01016_ff/D",
+    "endpoints": [
+      "ot_prs_01016_ff/D",
+      "ot_prs_00476_ff/D",
+      "record_rx\\[525\\]$_DFF_P_/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 517.392,
+    "worst_bbox_sink": "ot_prs_01016_ff/D"
+  },
+  {
+    "driver": "_33660_/Y",
+    "master": "INVx3_ASAP7_75t_R",
+    "net": 35510,
+    "terminals": 3,
+    "clock_terminals": 0,
+    "max_L1_pin_centers_um": 516.745,
+    "worst_sink": "ot_prs_01017_ff/D",
+    "endpoints": [
+      "record_rx\\[526\\]$_DFF_P_/D",
+      "ot_prs_01017_ff/D",
+      "ot_prs_00477_ff/D"
+    ],
+    "max_L1_pin_bbox_upper_um": 517.068,
+    "worst_bbox_sink": "ot_prs_01017_ff/D"
+  }
+]
