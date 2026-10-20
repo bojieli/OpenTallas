@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_xs4",
+ "enable": false,
+ "reason": "Source-registered (S81 slice x streamer leaf ot_s81sl_xs4): every input lands in a capture flop (gather data gd_a / issuer word ip_a.. one flop per pin bit; gather and is_v control bits in 21 / 2 kept capture copies) and every output leaves a flop (xw_d relay register xw_q, xw_v = its bit 0, fault). recipe-3 pin_regs would add a second unpriced stage on the ring-to-buffer and frame-word paths and break the K = 1 equivalence contract."
+}
