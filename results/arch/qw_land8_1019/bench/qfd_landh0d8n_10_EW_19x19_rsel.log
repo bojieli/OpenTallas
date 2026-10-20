@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-land8-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-land8-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-land8-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-land8-1019/src
+ot-run: ot-epyc8       admits  1106 GB (avail 887, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 34 disk 32 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-land8-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-land8-1019/src
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1907006-1792457961 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+seed 11: LAND8_BENCH FAIL 50436 errors in 28884 checks (72 lanes, K 0..15)
+LAND8_MISMATCH tb.l38 t=25 o=000 exp=2fa
+LAND8_MISMATCH tb.l41 t=24 o=2fa exp=28c
+LAND8_MISMATCH tb.l35 t=25 o=2fa exp=28c
+seed 2026: LAND8_BENCH FAIL 50442 errors in 28892 checks (72 lanes, K 0..15)
+LAND8_MISMATCH tb.l41 t=24 o=000 exp=28c
+LAND8_MISMATCH tb.l41 t=25 o=000 exp=0c3
+LAND8_MISMATCH tb.l35 t=25 o=2fa exp=28c
+seed 777: LAND8_BENCH FAIL 50434 errors in 28884 checks (72 lanes, K 0..15)
+LAND8_MISMATCH tb.l41 t=24 o=000 exp=28c
+LAND8_MISMATCH tb.l41 t=25 o=000 exp=0c3
+LAND8_MISMATCH tb.l35 t=25 o=2fa exp=28c
+LAND8_BENCH_ALL FAIL (rsel qfd_landh0d8n_10_EW_19x19)
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1907006-1792457961): exit 1
