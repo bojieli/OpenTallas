@@ -565,7 +565,7 @@
     "W": 1555
   },
   "packing_proposal": {
-    "status": "PRELIMINARY_NOT_A_GATE; mapped full-leaf area/native still pending",
+    "status": "MAPPED_AREA_KNOWN; native+ROOTslot+reach+clock remain HOLD",
     "outline_um": [
       432.0,
       388.8
@@ -613,7 +613,7 @@
     },
     "macro_area_um2": 57025.130112,
     "outline_area_um2": 167961.6,
-    "area_utilization": "pending full mapped area",
+    "area_utilization": 0.4136993600918305,
     "reach": "pin placement/clock location exact data reach audit pending, no >405 waiver",
     "global_data_wire_span_limit_um": 405,
     "historical_outline_um": [
@@ -622,7 +622,10 @@
     ],
     "historical_outline_area_um2": 78848.64,
     "outline_delta_um2": 89112.96,
-    "outline_ratio": 2.1301775147928996
+    "outline_ratio": 2.1301775147928996,
+    "stdcell_band_area_um2": 60013.612799999995,
+    "stdcell_band_utilization": 0.2076274989397073,
+    "fill_reason": "Existing6301pin perimeter and legal two-macro43.2-grid packing bound the outline; low full-width stdcell-band fill is explicit, not hidden."
   },
   "do_not_promote": "No layout gate without complete native32, ROOT helper acceptance and physical slot approval.",
   "legacy_reset_prep_failures": [
@@ -654,5 +657,27 @@
       "max": 219,
       "minimum_copies": 82
     }
-  ]
+  ],
+  "mapped_full_leaf": {
+    "area_um2": 69485.60644,
+    "sequential_area_um2": 6867.44244,
+    "macro_count": 2,
+    "stdcell_area_um2": 12460.476328000004,
+    "netlist_remote": "ot-epyc6:/srv/opentallas-scratch/claude/codex-kv-host-peer-safe-1020/synth_leaf6/results/asap7/peer_leaf_census/base/1_2_yosys.v",
+    "size": "13MiB",
+    "census": {
+      "status": "FAIL",
+      "roots": 65160,
+      "offenders": 384,
+      "max_loads": 731,
+      "role_errors": 0,
+      "named_peer_drivers": 1913,
+      "named_peer_max": 32,
+      "constant_output_bits": 277,
+      "constant_output_ports": {
+        "packet_ctd": 265,
+        "cohort_tag": 12
+      }
+    }
+  }
 }
