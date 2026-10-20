@@ -1,0 +1,26 @@
+[
+  {
+    "kit": "hidx_sel_s3r_a",
+    "status": "FAIL",
+    "native_max": 31,
+    "native_violations": 0,
+    "native_role_errors": [],
+    "clock": "GATE_CK ss insertion all 354.6..466.7 ps (spread 112.1), boundary mean 398.3; tt insertion all 265.7..365.4 ps (spread 99.7), boundary mean 305.6; ff insertion all 213.2..308.1 ps (spread 94.9), boundary mean 250.6; macro_clk flag False",
+    "timing": "GATE_PC setup WNS 1.7135182162064666e-11 hold WNS 4.361336292113549e-11",
+    "terminal": true,
+    "GRT_RC": 2,
+    "raw_execution_log": "/home/ubuntu/scratch/codex-hbm-idx-e86-collect-1020/s3r_a_execution.log"
+  },
+  {
+    "kit": "hidx_sel_s3r_b",
+    "status": "FAIL",
+    "native_max": 31,
+    "native_violations": 0,
+    "native_role_errors": [],
+    "clock": "GATE_CK ss insertion all 357.7..461.3 ps (spread 103.6), boundary mean 396.6; tt insertion all 268.7..363.6 ps (spread 94.9), boundary mean 304.1; ff insertion all 215.4..303.7 ps (spread 88.3), boundary mean 248.6; macro_clk flag False",
+    "timing": "GATE_PC setup WNS -3.3875124927362776e-12 hold WNS 3.590730490721228e-11",
+    "terminal": true,
+    "GRT_RC": 2,
+    "raw_execution_log": "/home/ubuntu/scratch/codex-hbm-idx-e86-collect-1020/s3r_b_execution.log"
+  }
+]
