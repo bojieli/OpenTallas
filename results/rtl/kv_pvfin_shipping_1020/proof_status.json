@@ -18,5 +18,10 @@
   "reset": "occupied SRAM plus periodic reset, two synchronous shipping landings +three regionalfarm edges",
   "calendar_cases": 201433,
   "native_status": "RUNNING",
-  "mutants_status": "RUNNING"
+  "mutants_status": "RUNNING",
+  "new_causal_controls": {
+    "stale_age_image": "DETECTED",
+    "shifted_add_date": "DETECTED"
+  },
+  "native_reset_wrapper_sha256": "138da4e5fdc24d40409e1efa52d14c497f71e5c143858c37ad99e23a9bdd1232"
 }
