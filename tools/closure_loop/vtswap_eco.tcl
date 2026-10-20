@@ -14,6 +14,18 @@
 #      OT_HOLD_FLOOR (2), OT_NPATHS (20000), OT_THREADS (8)
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
 proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
+# OT_PG_STRICT_LOADER_BEGIN
+# Opt-in source prototype. Frozen/copied ECO scripts must set OT_PG_HELPER
+# explicitly unless this script retains its repository-relative location.
+if {[envd OT_PG_STRICT 0] eq "1"} {
+  set ot_pg_helper [envd OT_PG_HELPER [file join [file dirname [info script]] .. .. physical common_flow native_pg_binding.tcl]]
+  if {![file isfile $ot_pg_helper]} { error "OT_PG_HELPER_MISSING: $ot_pg_helper" }
+  source $ot_pg_helper
+  foreach ot_pg_api {ot_pg_prepare ot_pg_assert_all_native} {
+    if {![llength [info commands $ot_pg_api]]} { error "OT_PG_HELPER_API_MISSING: $ot_pg_api" }
+  }
+}
+# OT_PG_STRICT_LOADER_END
 proc ot_libc {c} {
   if {$c eq "ss" && [info exists ::env(OT_SETUP_LIB)] && $::env(OT_SETUP_LIB) ne ""} { return [string toupper $::env(OT_SETUP_LIB)] }
   return [string toupper $c]
@@ -137,6 +149,25 @@ for {set r 1} {$r <= $rounds} {incr r} {
 set tt1 [ws max ss]; set ff1 [ws min ff]
 puts [format "OT_VTSWAP post tt %.2f ff %.2f vt %s lvt_pct %.3f swapped %d frozen %d capped %d" $tt1 $ff1 [vt_counts] [lvt_pct] [dict size $swapped] [dict size $frozen] $capped]
 set f [open $::env(OT_OUT)/vtswap_cells.txt w]; dict for {i b} $swapped { puts $f "$i ${b}_ASAP7_75t_L" }; close $f
+# OT_PG_DEFAULT_CONNECT_BEGIN
+# KV-HOST2 10-19 (KV-CLOSED-PG-AUDIT): hold/vt ECO cells and re-placed fillers were written with NULL VDD/VSS ITerms
+# (cdc_pc 589,522 / cdc_host 957,466 unbound native PG terminals in CLOSED 6_final.odb).  Bind every instance to the
+# DB's own global-connect rules before any final artifact, in DEFAULT jobs too; the strict block below still asserts.
+if {[envd OT_ECO_GLOBAL_CONNECT 1] eq "1"} {
+  if {[catch {global_connect} ot_gc_err]} { error "OT_ECO global_connect failed: $ot_gc_err" }
+  puts "OT_ECO global_connect: native PG terminals bound by the DB global-connect rules"
+}
+# OT_PG_DEFAULT_CONNECT_END
+# OT_PG_STRICT_FINAL_BEGIN
+# Insertion, master replacement and filler placement invalidate earlier maps.
+# The final check visits native MASTER PG terminals, independent of PSM.
+if {[envd OT_PG_STRICT 0] eq "1"} {
+  global_connect
+  set ot_pg_final_block [ord::get_db_block]
+  set ot_pg_final_mapping [ot_pg_prepare $ot_pg_final_block]
+  ot_pg_assert_all_native $ot_pg_final_block $ot_pg_final_mapping
+}
+# OT_PG_STRICT_FINAL_END
 write_def $::env(OT_OUT)/6_final.def
 write_db $::env(OT_OUT)/6_final.odb
 write_verilog $::env(OT_OUT)/6_final.v
