@@ -21,3 +21,11 @@ def native_depth(required, allowed=(4,8)):
 
 def strap(E, G, R0, depth=4):
     return (int(E)+int(G)-int(R0)) % contract(depth)['epoch_modulus']
+
+
+def first_read_edge(K, depth=4):
+    """Generic ot_qfd_land first output edge after receiver release, including o register."""
+    modulus=contract(depth)['epoch_modulus']
+    if not isinstance(K,int) or not 0 <= K < modulus:
+        raise ValueError('landing ring: K outside implemented epoch modulus')
+    return (K or modulus)+2

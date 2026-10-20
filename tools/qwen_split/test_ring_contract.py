@@ -1,7 +1,7 @@
 import copy
 from types import SimpleNamespace
 import pytest
-from ring_contract import contract,native_depth,strap
+from ring_contract import contract,native_depth,strap,first_read_edge
 from reset_calendar_audit import finalize_model,audit
 
 
@@ -15,6 +15,8 @@ def model(depth):
 def test_explicit_native_capacity_and_epoch():
     assert native_depth(5)==8 and native_depth(6)==8
     assert native_depth(4)==4
+    assert first_read_edge(0,8)==18 and first_read_edge(0,4)==10
+    assert first_read_edge(14,8)==16
     assert contract(8)==dict(D=8,address_bits=3,K_bits=4,epoch_modulus=16)
     assert strap(2,27,30,8)==15
     assert strap(2,27,30,4)==7

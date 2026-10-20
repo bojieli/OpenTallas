@@ -185,6 +185,11 @@ s=re.sub(r'(qfd_landh0?_\w+_65x30)', r'\1_d8', s)
 s=s.replace('wire [2:0] kk = K[2:0];', 'wire [3:0] kk = K[3:0];')
 s=s.replace('.k2(kk[2]),', '.k2(kk[2]), .k3(kk[3]),')
 s=s.replace('% 8 + 8) % 8', '% 16 + 16) % 16')
+# The D8 first-use contract is checked from the first released receiver edge,
+# including explicit zero bubbles. K=0 warms after a full modulo16 revolution.
+s=s.replace("ex_ = (te_ >= G + HREG) ?", "ex_ = (ed >= R0 + 2 + (K ? K : 16) && te_ >= G + HREG) ?")
+s=s.replace('if (ed > R0 + 10) begin', 'if (ed > R0 + 1) begin')
+
 p.write_text(s)
 PYD
 fi
