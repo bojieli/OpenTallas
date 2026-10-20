@@ -6,7 +6,7 @@
 set -u
 cd "${LP_ROOT:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel 2>/dev/null || (cd "$(dirname "$0")/../../.." && pwd))}"
 OUT=${1:-lp_bench_out}; mkdir -p "$OUT"; SIM=${SIM:-iverilog}; rc=0
-SRCS="rtl/qwen_dv/qfd_dv_redstn2_ef.sv rtl/qwen_dv/qfd_dv_redstn2_regional.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/lp/qfd_dv_redstn2_ef_lp.sv rtl/qwen_dv/lp/tb_qfd_dv_redstn2_ef_lp.sv"
+SRCS="rtl/qwen_dv/qfd_dv_redstn2_ef.sv rtl/qwen_dv/qfd_dv_redstn2_regional.sv rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv rtl/qwen_dv/qfd_dv_station_math_g.sv rtl/qwen_dv/qfd_dv_ring_delay.sv rtl/qwen_dv/qfd_dv_reset_tree.sv rtl/common/landed_parent/ot_pl_land_physical.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/lp/qfd_dv_redstn2_ef_lp.sv rtl/qwen_dv/lp/tb_qfd_dv_redstn2_ef_lp.sv"
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/qfd_dv_stn_ent.json > "$OUT/audit.log" 2>&1 && echo "AUDIT PASS" || { echo "AUDIT FAIL"; rc=1; }
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/qfd_dv_stn_ent.json --rtl "$OUT/unland.sv" --make-unland > "$OUT/audit_unland.log" 2>&1 \
   && { echo "AUDIT-UNLAND PASSED (should FAIL)"; rc=1; } || echo "AUDIT-UNLAND FAIL (expected)"

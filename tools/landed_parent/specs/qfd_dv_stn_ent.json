@@ -6,7 +6,17 @@
   "rtl/qwen_dv/qfd_dv_redstn2_ef.sv"
  ],
  "child_sources": [
-  "rtl/qwen_dv/qfd_dv_redstn2_regional.sv"
+  "rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+  "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+  "rtl/qwen_dv/qfd_dv_station_math_g.sv",
+  "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+  "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+  "rtl/common/landed_parent/ot_pl_land_physical.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v"
  ],
  "defines": [],
  "params": {},
