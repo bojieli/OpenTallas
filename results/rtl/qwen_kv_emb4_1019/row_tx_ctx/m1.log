@@ -1,3 +1,4 @@
+# Verilator 5.050 on ot-epyc9, bench tools/qwen_kv_die/kvjc_row_tx_ctx_gate.sh MUT=1
 FAIL cyc 147 token 0 item 1: got tok 00000 w 1 lo 29e38d8a99622763 exp tok 00000 w 0 lo 29e38d8a99622763
 FAIL cyc 148 token 0 item 2: got tok 00000 w 2 lo 99b00d821c390390 exp tok 00000 w 1 lo 99b00d821c390390
 FAIL cyc 149 token 0 item 3: got tok 00000 w 3 lo 512d561e03bedb7b exp tok 00000 w 2 lo 512d561e03bedb7b

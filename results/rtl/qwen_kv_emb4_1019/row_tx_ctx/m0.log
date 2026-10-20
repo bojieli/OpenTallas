@@ -1,3 +1,4 @@
+# Verilator 5.050 on ot-epyc9, bench tools/qwen_kv_die/kvjc_row_tx_ctx_gate.sh MUT=0
 POSITIVE tokens=24 items=1560 headers_ok=24 words_ok=1536 fault=0
 ROW_OPEN high_samples=5675 falls=24
 NEGATIVE cases=6 faulted=6
