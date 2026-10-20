@@ -38,7 +38,7 @@ for i,a in enumerate(boxes):
   if gap<20-1e-8:
    if facing:viol.append(['PIN_FACE_GAP',a['name'],b['name'],gap,facing])
    else:nonpin.append(dict(a=a['name'],b=b['name'],gap_um=gap,signal_pins_on_facing_faces=0,required='explicit placement+row blockage over nonpin gap; not an implicit warning exception'))
-anchors={'coarse_W':[183.6,302.4],'fine_W':[183.6,367.2],'coarse_E_capture':[226.8,302.4],'fine_E_capture':[226.8,367.2],'common_packer':[270,334.8],'line_bank0_capture':[367.2,169.836],'line_bank1_capture':[496.8,169.836]}
+anchors={'coarse_W':[183.6,302.4],'fine_W':[183.6,367.2],'coarse_E_capture':[226.8,302.4],'fine_E_capture':[226.8,367.2],'common_packer':[270,334.8],'line_bank0_capture':[367.2,324],'line_bank1_capture':[496.8,324]}
 reach={}
 for side in ['coarse','fine']:
  for f,anchor in [('W',anchors[side+'_W']),('E',anchors[side+'_E_capture'])]:
@@ -48,6 +48,12 @@ for bank in [0,1]:
  anchor=anchors['line_bank'+str(bank)+'_capture'];pins=[p for b in boxes if '.u_mem.g_b['+str(bank)+']' in b['name'] for p in b['pins']]
  reach['line'+str(bank)+'_native_pin_anchor']=max(abs(p['x']-anchor[0])+abs(p['y']-anchor[1]) for p in pins)
  reach['packer_to_line'+str(bank)+'_capture']=sum(abs(x-y) for x,y in zip(anchor,anchors['common_packer']))
+anchors['line_common_control']=[483.84,302.4]
+pins=[p for b in boxes if '.u_mem.' in b['name'] for p in b['pins']]
+anchor=anchors['line_common_control'];reach['all_line_shared_control_native_pin_anchor']=max(abs(p['x']-anchor[0])+abs(p['y']-anchor[1]) for p in pins)
+pins=[p for b in boxes if 'hist_bank' in b['master'] for p in b['pins'] if p['nearest_face']=='N']
+reach['bank_N_to_existing_sq_y334p8_columnmatched_status_guide']=max(abs(p['y']-334.8) for p in pins)
+reach['existing_sq_y334p8_to_external_sq1_N648_columnmatched_status_guide']=648-334.8
 for queue in ['u_fq','u_ofq']:
  pins=[p for b in boxes if '.'+queue+'.' in b['name'] for p in b['pins']]
  anchor=anchors['common_packer'];reach[queue+'_all_native_pin_common_anchor']=max(abs(p['x']-anchor[0])+abs(p['y']-anchor[1]) for p in pins)

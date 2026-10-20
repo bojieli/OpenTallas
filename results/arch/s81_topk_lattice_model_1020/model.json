@@ -132374,11 +132374,15 @@
     ],
     "line_bank0_capture": [
       367.2,
-      169.836
+      324
     ],
     "line_bank1_capture": [
       496.8,
-      169.836
+      324
+    ],
+    "line_common_control": [
+      483.84,
+      302.4
     ]
   },
   "planning_reach_um": {
@@ -132386,10 +132390,13 @@
     "coarse_E_actual_native_pin_anchor": 392.682,
     "fine_W_actual_native_pin_anchor": 368.802,
     "fine_E_actual_native_pin_anchor": 384.54600000000005,
-    "line0_native_pin_anchor": 242.26800000000003,
-    "packer_to_line0_capture": 262.164,
-    "line1_native_pin_anchor": 242.26799999999997,
-    "packer_to_line1_capture": 391.764,
+    "line0_native_pin_anchor": 396.432,
+    "packer_to_line0_capture": 108.0,
+    "line1_native_pin_anchor": 396.43199999999996,
+    "packer_to_line1_capture": 237.60000000000002,
+    "all_line_shared_control_native_pin_anchor": 387.792,
+    "bank_N_to_existing_sq_y334p8_columnmatched_status_guide": 280.758,
+    "existing_sq_y334p8_to_external_sq1_N648_columnmatched_status_guide": 313.2,
     "u_fq_all_native_pin_common_anchor": 319.584,
     "u_ofq_all_native_pin_common_anchor": 344.808
   },

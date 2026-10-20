@@ -1,0 +1,30 @@
+{
+  "status": "PROSPECTIVE_NOT_IMPLEMENTED",
+  "source": "8dec8d8d5 ot_s81ph_hq_tile.sv sq[831:0]<={s_bf,s_bc,s_gf,s_gc};sq1<=sq",
+  "status_output_N_region": [
+    43.2,
+    367.2
+  ],
+  "status_bits": 865,
+  "status_average_density_per_um": 2.669753086419753,
+  "coarse_gsum_source": "BANKb.gsum[k] -> s_gc[30*b+k] -> sq[30*b+k] -> sq1 -> t_s",
+  "fine_gsum_source": "BANKb.gsum[k] -> s_gf[30*b+k] -> sq[240+30*b+k] -> sq1 -> t_s",
+  "status_external_pin_x": "align bank-column x for gsum fields; distribute gbin joins in same W-side N region",
+  "existing_sq_first_capture_y": 334.8,
+  "existing_sq1_external_capture_y": 648,
+  "status_two_stage_max_anchor_reach": 313.2,
+  "command_input_N_region": [
+    168,
+    216
+  ],
+  "command_bits": 66,
+  "combined_status_command_average_density_per_um": 4.044753086419753,
+  "command_first_capture": "cq0 at N; cq/kept cq_T/Bt/cg/fg copies grouped inside band at matching centralx, NOT far arbitrarycolumn",
+  "lane_input_N_region": [
+    388.8,
+    626.4
+  ],
+  "lane_bits": 515,
+  "lane_average_density_per_um": 2.1675084175084174,
+  "remaining": "Actual source register-bit/port-order mapping, preservedcopies, every-stage graph constraints, unique clock/PG ownership and pin-reg placement not proved. No input mask/clock synthesis/arc changes."
+}
