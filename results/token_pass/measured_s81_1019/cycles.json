@@ -59,6 +59,12 @@
     "written": "2026-10-19 19:35 PT"
    },
    {
+    "branch": "claude/toksim-s81b-fsmall-1019@69b66ae1f",
+    "cls": "FSMALL",
+    "file": "results/token_pass/measured_s81_1019/elements/FSMALL.json",
+    "written": "2026-10-19 23:20 PT"
+   },
+   {
     "branch": "claude/toksim-s81b-fwoa-1019@991824b4d",
     "cls": "FWOA",
     "file": "results/token_pass/measured_s81_1019/elements/FWOA.json",
@@ -110,40 +116,40 @@
  },
  "multi_user": {
   "ar": {
-   "aggregate_tok_s": 43679.0,
+   "aggregate_tok_s": 43787.0,
    "base_aggregate_tok_s": 55780,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 980428,
    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
-   "pct_measured_per_user": 57.79,
-   "per_user_tok_s": 949.5,
+   "pct_measured_per_user": 59.28,
+   "per_user_tok_s": 951.9,
    "users": 46
   },
   "mtp": {
-   "aggregate_tok_s": 30135.0,
+   "aggregate_tok_s": 30191.0,
    "base_aggregate_tok_s": 36985,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 1303400,
    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
-   "pct_measured_per_user": 44.74,
-   "per_user_tok_s": 3013.5,
+   "pct_measured_per_user": 45.85,
+   "per_user_tok_s": 3019.1,
    "users": 10
   }
  },
  "schema": "opentallas.toksim_s81.v1",
  "workloads": {
   "ar": {
-   "T_cycles_fixed": 1263762.1,
-   "T_cycles_solved": 1285425.6,
+   "T_cycles_fixed": 1260658.1,
+   "T_cycles_solved": 1282321.6,
    "base_T_cycles": 989618.6,
    "base_tok_s": 1212.6,
    "by_grade": {
     "measured-current-RTL": 109119.0,
     "measured-newest-element-RTL": 43625.0,
-    "measured-old-RTL": 288878.9,
-    "measured-release-RTL": 577603.0,
+    "measured-old-RTL": 268782.9,
+    "measured-release-RTL": 594595.0,
     "modelled-PHY": 172975.0,
     "priced": 71561.2
    },
@@ -644,10 +650,10 @@
      "slot": "L20.scan_d_l20split_k6"
     }
    ],
-   "pct_measured": 57.79,
-   "pct_measured_on_chip": 66.96,
-   "pct_modelled_phy": 13.69,
-   "per_accepted_cycles": 1263762.1,
+   "pct_measured": 59.28,
+   "pct_measured_on_chip": 68.71,
+   "pct_modelled_phy": 13.72,
+   "per_accepted_cycles": 1260658.1,
    "per_op": [
     {
      "cls": "field",
@@ -724,9 +730,10 @@
     },
     {
      "cls": "field",
-     "cycles": 38658.5,
+     "cycles": 35554.5,
      "grades": {
-      "measured-old-RTL": 38658.5
+      "measured-old-RTL": 18562.5,
+      "measured-release-RTL": 16992.0
      },
      "n_crit": 40,
      "old_cycles": 38658.5,
@@ -1204,20 +1211,20 @@
    },
    "solved_path_changed": true,
    "tau": null,
-   "tok_s": 949.5,
-   "tok_s_solved": 933.5,
+   "tok_s": 951.9,
+   "tok_s_solved": 935.8,
    "workload": "ar"
   },
   "mtp": {
-   "T_cycles_fixed": 1656160.3,
-   "T_cycles_solved": 1656160.3,
+   "T_cycles_fixed": 1653056.3,
+   "T_cycles_solved": 1653056.3,
    "base_T_cycles": 1381860.8,
    "base_tok_s": 3611.7,
    "by_grade": {
     "measured-current-RTL": 116078.0,
     "measured-newest-element-RTL": 43625.0,
-    "measured-old-RTL": 598909.0,
-    "measured-release-RTL": 581243.0,
+    "measured-old-RTL": 578813.0,
+    "measured-release-RTL": 598235.0,
     "modelled-PHY": 187823.6,
     "priced": 128481.7
    },
@@ -1736,10 +1743,10 @@
      "slot": "wave.scan_d_l20split_k6"
     }
    ],
-   "pct_measured": 44.74,
-   "pct_measured_on_chip": 50.46,
-   "pct_modelled_phy": 11.34,
-   "per_accepted_cycles": 398211.2,
+   "pct_measured": 45.85,
+   "pct_measured_on_chip": 51.73,
+   "pct_modelled_phy": 11.36,
+   "per_accepted_cycles": 397464.8,
    "per_op": [
     {
      "cls": "field",
@@ -1827,16 +1834,6 @@
      "op": "ffn.router"
     },
     {
-     "cls": "field",
-     "cycles": 42405.5,
-     "grades": {
-      "measured-old-RTL": 42405.5
-     },
-     "n_crit": 43,
-     "old_cycles": 42405.5,
-     "op": "attn.a_proj"
-    },
-    {
      "cls": "head",
      "cycles": 41935.0,
      "grades": {
@@ -1845,6 +1842,17 @@
      "n_crit": 5,
      "old_cycles": 41935.0,
      "op": "draft.head"
+    },
+    {
+     "cls": "field",
+     "cycles": 39301.5,
+     "grades": {
+      "measured-old-RTL": 22309.5,
+      "measured-release-RTL": 16992.0
+     },
+     "n_crit": 43,
+     "old_cycles": 42405.5,
+     "op": "attn.a_proj"
     },
     {
      "cls": "hbm",
@@ -2778,8 +2786,8 @@
    },
    "solved_path_changed": false,
    "tau": 4.159,
-   "tok_s": 3013.5,
-   "tok_s_solved": 3013.5,
+   "tok_s": 3019.1,
+   "tok_s_solved": 3019.1,
    "workload": "mtp"
   }
  },

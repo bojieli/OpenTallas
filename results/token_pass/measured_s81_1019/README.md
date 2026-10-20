@@ -117,10 +117,13 @@ Composer changes (`tools/toksim_s81_compose.py`):
 
 | workload | cycles (fixed) | tok/s | measured | on-chip measured |
 |---|---:|---:|---:|---:|
-| 1 user AR | 1,263,762 | **949.5** | 57.8 % | 67.0 % |
-| 1 user MTP | 1,656,160 | **3,013.5** | 44.7 % | 50.5 % |
-| 46 users AR | | 43,679 aggregate | | |
-| 10 users MTP | | 30,135 aggregate | | |
+| 1 user AR | 1,260,658 | **951.9** | 59.3 % | 68.7 % |
+| 1 user MTP | 1,653,056 | **3,019.1** | 45.9 % | 51.7 % |
+| 46 users AR | | 43,787 aggregate | | |
+| 10 users MTP | | 30,191 aggregate | | |
+
+FSMALL (69b66ae1f): attn.a_proj 628 -> 531 folded; ffn.router and attn.idx.q pending (seq bench tied the return input; FGU's
++RETIRE bench at 4cd48a7ab fixes that).
 
 Biggest remaining measured-old-RTL: ffn.experts_gu/down in non-L0 layer classes, attn.wq_b, ffn.router, attn.a_proj (FSMALL running),
 attn.gather, MTP draft blocks. Cross-die MU co-sim job u relaunched as out_u4 (--mem 200; u2/u3 were memcg OOM at 40 GB).
