@@ -35,5 +35,26 @@
     "new compare provenance mutant actual mismatch witness",
     "standalone synthesis and actual native mapped all-driver census; fix every violation",
     "only then regenerate kit sized to measured area, review source-safe checklist and gate"
-  ]
+  ],
+  "boundary_bits_per_active_edge": {
+    "insert": 344,
+    "upstream_insert": 344,
+    "overflow": 344,
+    "upstream_output": 344
+  },
+  "comparison_work": {
+    "comparisons_per_input_block": 272,
+    "comparison_key_bits": 85,
+    "insertion_keys_per_block": 4
+  },
+  "existing_model_contract": {
+    "tile_replica_count": "unchanged; bind to existing release composition count",
+    "single_user_added_cycles": 0,
+    "added_pipeline_edges": 0,
+    "new_memory_ports": 0,
+    "new_macro_count": 0,
+    "area_price": "must use standalone mapped synthesis before floorplan sizing; no estimated performance credit"
+  },
+  "storage_scope": "static captures and statically indexed replicated control state; no newly addressed flop memory",
+  "reach_scope": "unchanged logical crossing edges/regions; actual placement required, no reach pass claimed"
 }
