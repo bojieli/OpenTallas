@@ -28,10 +28,14 @@ proc ot_mm_read_libs {} {
   foreach c [list [ot_mm_sc] BC] { foreach l [ot_mm_libs $c] { log_cmd read_liberty $l } }
 }
 proc ot_mm_read_sdc {sdc} {
-  log_cmd read_sdc -mode ss $sdc
-  log_cmd read_sdc -mode ff $sdc
+  # Scene creation clears the mode's external pin/wire loads and fanout.
+  # Establish both scenes before evaluating the original SDC once per mode.
+  set_mode ss
+  set_mode ff
   define_scene [ot_mm_sc] -mode ss -liberty [ot_mm_libs [ot_mm_sc]]
   define_scene BC -mode ff -liberty [ot_mm_libs BC]
+  log_cmd read_sdc -mode ss $sdc
+  log_cmd read_sdc -mode ff $sdc
   # ff mode never checks setup; before CTS (ideal clocks) it checks nothing either, so placement repairs exactly as a
   # WC-only flow did.  Only the CTS (3_place.sdc) and global-route (4_cts.sdc) stages sync it before their repair.
   set_mode ff
