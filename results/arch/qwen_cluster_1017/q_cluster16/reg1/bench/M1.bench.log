@@ -1,0 +1,31 @@
+Verilator 5.050 2026-07-01 rev v5.050
+plan latencies: -GL_BC=9 -GL_TAP=5 -GL_NA=7 -GL_NB=3 -GL_TO=3 -GL_NY=6 -GL_LF=9
+== M1: source lines mutated: 2
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_p_2_0a_rlo.u.g_slice[5].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_p_2_0a_rlo.u.g_slice[4].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_p_2_0a_rlo.u.g_slice[3].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_p_2_0a_rlo.u.g_slice[2].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_p_2_0a_rlo.u.g_slice[1].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_p_2_0a_rlo.u.g_slice[0].u.u_ep
+REG1_EPOCH_FAIL side=first_word edge=35 exp=34 sel=0001 vld=0111 tb.u1.u_p_2_0a_rlo.u.g_slice[10].u.u_ep
+REG1_EQ_MISMATCH out=lt_o edge=42 first_bit=0 reg1=a4b876a30e614d27 reg1b=b05dd720cc4b0170
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=42 got=a4b876a30e614d27 exp=b05dd720cc4b0170
+REG1_EQ_MISMATCH out=lt_o edge=43 first_bit=0 reg1=8b2360ae66d90eff reg1b=72c3a0070df81c10
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=43 got=8b2360ae66d90eff exp=72c3a0070df81c10
+REG1_EQ_MISMATCH out=lt_o edge=44 first_bit=1 reg1=d7118fb018641bfa reg1b=69b4a9f909ae3014
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=44 got=d7118fb018641bfa exp=69b4a9f909ae3014
+REG1_EQ_MISMATCH out=ly_o edge=45 first_bit=0 reg1=4297f7f60be4865e reg1b=5670557a4d9953f7
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=45 got=4297f7f60be4865e exp=5670557a4d9953f7
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=45 got=b9fe6ec9912a9c5e exp=b397d587a6673cbd
+REG1_EQ_MISMATCH out=ly_o edge=46 first_bit=0 reg1=31e2f15159bd78d6 reg1b=e9c13188a29a4ab1
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=46 got=31e2f15159bd78d6 exp=e9c13188a29a4ab1
+REG1_REF_MISMATCH out=lt_o top=reg1 edge=46 got=78caa103c7f179e0 exp=26a37582109aaf34
+REG1_EQ_MISMATCH out=ly_o edge=47 first_bit=1 reg1=c332199cb4e818a0 reg1b=5a98f24584be7102
+REG1_REF_MISMATCH out=ly_o top=reg1 edge=47 got=c332199cb4e818a0 exp=5a98f24584be7102
+REG1_SUMMARY MUT0 PHS=0 eq_checks=96148 eq_err=48035 (bco 0 lf_o 0 lt_o 24019 ly_o 24016) ref_checks=192218 ref_err=48035 epoch_slices w=374 r=374 first_word=374 epoch_err=44
+[24062000] %Fatal: tb_qfd_c_b16_reg1.sv:251: Assertion failed in tb: REG1_FAIL MUT0 eq_err=48035 ref_err=48035 epoch_err=44
+%Error: tools/qwen_cluster/tb_qfd_c_b16_reg1.sv:251: Verilog $stop
+Aborting...
+   (98 per-crossing epoch / first-word lines, sim exit 1)
+REG1_BENCH M1 FAILS AS REQUIRED /REG1_EPOCH_FAIL side=r edge=[0-9]+ exp=32 sel=0010 tb\.u1\.u_p_2_0a_r(lo|hi)\./
+REG1_BENCH_EXIT 0 CASES=M1

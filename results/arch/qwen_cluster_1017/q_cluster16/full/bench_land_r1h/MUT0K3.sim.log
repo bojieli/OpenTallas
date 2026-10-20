@@ -1,0 +1,5 @@
+LAND_R1H_PASS K=3 edges=20000 nonzero=19967 resets=7
+- tools/qwen_cluster/tb_land_r1h.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.015 s; speed 2.702 ms/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB

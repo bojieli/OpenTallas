@@ -1,0 +1,54 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw_land_r1h_1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw_land_r1h_1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw_land_r1h_1019
+ot-run: ot-epyc8       admits  1285 GB (avail 956, growth 50, headroom 0, waiters 0/0 GB) load 16/128 running 14 disk 346 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw_land_r1h_1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw_land_r1h_1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw_land_r1h_1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-558566-1792470505 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+== MUT0K1: K=1 source lines mutated: 0
+LAND_R1H_PASS K=1 edges=20000 nonzero=19983 resets=7
+- tools/qwen_cluster/tb_land_r1h.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.014 s; speed 2.781 ms/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 7 MB
+LAND_R1H_BENCH MUT0K1 PASS
+== MUT0K2: K=2 source lines mutated: 0
+LAND_R1H_PASS K=2 edges=20000 nonzero=19975 resets=7
+- tools/qwen_cluster/tb_land_r1h.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.016 s; speed 2.508 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+LAND_R1H_BENCH MUT0K2 PASS
+== MUT0K3: K=3 source lines mutated: 0
+LAND_R1H_PASS K=3 edges=20000 nonzero=19967 resets=7
+- tools/qwen_cluster/tb_land_r1h.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.015 s; speed 2.702 ms/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
+LAND_R1H_BENCH MUT0K3 PASS
+== M1: K=2 source lines mutated: 1
+LAND_R1H_MISMATCH K=2 edge=13 ref=e642a073caace35c dut=06475305cbf3ada0
+LAND_R1H_FAIL K=2 mism=19975 nonzero=19975 resets=7
+[40001000] %Fatal: tb_land_r1h.sv:35: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_r1h.sv:35: Verilog $stop
+Aborting...
+LAND_R1H_BENCH M1 FAILS AS REQUIRED
+== M2: K=2 source lines mutated: 2
+LAND_R1H_MISMATCH K=2 edge=5934 ref=0000000000000000 dut=86cd0014f9a085a7
+LAND_R1H_FAIL K=2 mism=14 nonzero=19975 resets=7
+[40001000] %Fatal: tb_land_r1h.sv:35: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_r1h.sv:35: Verilog $stop
+Aborting...
+LAND_R1H_BENCH M2 FAILS AS REQUIRED
+== M3: K=2 source lines mutated: 1
+LAND_R1H_MISMATCH K=2 edge=16 ref=3de16f50ed841ce0 dut=06475305cbf3ada0
+LAND_R1H_FAIL K=2 mism=9985 nonzero=19975 resets=7
+[40001000] %Fatal: tb_land_r1h.sv:35: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_r1h.sv:35: Verilog $stop
+Aborting...
+LAND_R1H_BENCH M3 FAILS AS REQUIRED
+LAND_R1H_BENCH_EXIT 0 CASES=MUT0K1 MUT0K2 MUT0K3 M1 M2 M3
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-558566-1792470505): exit 0
