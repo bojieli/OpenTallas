@@ -1,0 +1,17 @@
+read_verilog -formal -sv /graph/native.v /models/cells.v /out/miter.sv /src/rtl/hdc/v41x/ot_s81svc7_add_graph_input.sv /src/rtl/hdc/ot_hdc_fp32_f12.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_prefix.sv
+hierarchy -check -top svc7_valid_miter
+proc
+flatten
+opt_clean
+async2sync
+dffunmap
+opt_clean
+# Hardware FFs have arbitrary independent initial state. Initial reset held
+# for the specified 2-stage landing. No later reset constraints or masks.
+# Data/err converge by capture5; only capture4 needs no-valid proof.
+sat -seq 4 -set-def-inputs -set clk 1 -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -prove early 0 -prove-skip 3 -verify -show-inputs -show-outputs
+# Valid convergence max6; cover all earlier contract edges and arbitrary
+# in-flight reset. Later equality follows the capture-DAG induction.
+sat -seq 20 -set-def-inputs -set clk 1 -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -prove bad 0 -prove-skip 3 -verify -show-inputs -show-outputs
+# Nonvacuity: continuously offered legal input becomes visible; no output mask.
+sat -seq 10 -set-def-inputs -set clk 1 -set v 1 -set rst_n 1 -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -prove early 1 -prove-skip 9 -verify -show-inputs -show-outputs

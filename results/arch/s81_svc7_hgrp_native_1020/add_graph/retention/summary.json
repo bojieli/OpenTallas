@@ -1,0 +1,18 @@
+{
+  "baseline": {
+    "std_um2": 309.6792000000018,
+    "flops": 374,
+    "cells": 3105
+  },
+  "retained": {
+    "std_um2": 310.77270000000556,
+    "flops": 388,
+    "cells": 3028
+  },
+  "delta_std_um2": 1.0935000000037576,
+  "over32": 0,
+  "depth_ps": 438.4,
+  "depth_levels": 13,
+  "scope": "mapped census/depth estimate; no routed closure",
+  "latency_edges": 5
+}

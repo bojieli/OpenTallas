@@ -1,0 +1,5 @@
+SVC7_SKEW checks=27965 errors=0 reset_pulses=3 verdict=PASS
+- tools/s81_dv/svc_rs/tb_svc7_skew.sv:49: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.001 s; speed 7.179 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

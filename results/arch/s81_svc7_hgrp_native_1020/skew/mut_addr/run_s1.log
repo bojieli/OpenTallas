@@ -1,0 +1,19 @@
+SVC7_SKEW_MISMATCH D=3 cyc=18 v=0/1 data=065cc8/1dcabc
+SVC7_SKEW_MISMATCH D=3 cyc=19 v=0/1 data=000000/0d6e15
+SVC7_SKEW_MISMATCH D=5 cyc=20 v=1/1 data=0d6e15/1dcabc
+SVC7_SKEW_MISMATCH D=3 cyc=21 v=0/1 data=065cc8/174e53
+SVC7_SKEW_MISMATCH D=5 cyc=21 v=0/1 data=1d2ece/0d6e15
+SVC7_SKEW_MISMATCH D=3 cyc=22 v=0/1 data=065cc8/1b1b9d
+SVC7_SKEW_MISMATCH D=5 cyc=22 v=1/0 data=174e53/1d2ece
+SVC7_SKEW_MISMATCH D=5 cyc=23 v=1/1 data=1b1b9d/174e53
+SVC7_SKEW_MISMATCH D=3 cyc=24 v=0/1 data=065cc8/1ea822
+SVC7_SKEW_MISMATCH D=5 cyc=24 v=0/1 data=142c6c/1b1b9d
+... full remote output omitted; exact hash alongside ...
+SVC7_SKEW_MISMATCH D=15 cyc=3999 v=1/1 data=038d3b/1ec747
+SVC7_SKEW_MISMATCH D=20 cyc=3999 v=1/1 data=110c93/16a34d
+SVC7_SKEW_MISMATCH D=25 cyc=3999 v=1/1 data=0a89bd/1a6d0c
+SVC7_SKEW_MISMATCH D=30 cyc=3999 v=1/1 data=03427d/1d70ef
+SVC7_SKEW checks=27965 errors=25656 reset_pulses=3 verdict=FAIL
+[8000000] %Fatal: tb_svc7_skew.sv:49: Assertion failed in tb_svc7_skew: SVC7_SKEW_FAIL
+%Error: tools/s81_dv/svc_rs/tb_svc7_skew.sv:49: Verilog $stop
+Aborting...

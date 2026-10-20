@@ -40,33 +40,43 @@
   "provisional_skew_macros_per_group": 96,
   "provisional_skew_macro_um2": 53031.075840000005,
   "arithmetic_probe": {
-    "master": "ot_s81svc7_add_bit",
-    "replicated_output_cones": 35,
-    "function": "existing fp32 add, CUTS101010, one selected result bit",
-    "input_registered_edges": 2,
-    "output_registered": true,
-    "old_add_edges": 4,
-    "candidate_add_edges": 6,
-    "upper_area_multiplier": 35,
-    "area_status": "measure mapped retained cones; bound is pessimistic"
+    "status": "REJECTED native378 over32; output-bit cones"
   },
   "arithmetic_graph_candidate": {
-    "status": "alternative after bit-cone native FAIL378; not adopted",
-    "baseline": "golden add4 plus one real input-pin edge",
-    "register_and_logic_replication": "recursive same-input primitive copies",
+    "status": "native retained<=32; conditional, no physical gate/adoption",
+    "baseline": "golden add4/mul6 plus one real input-pin edge each",
+    "register_and_logic_replication": "recursive same-input primitive copies; SCC frontier refuses cycles",
     "maximum_logical_loads": 24,
-    "clock_reset_edges_unchanged_by_replication": true,
-    "arithmetic_edges": 5,
-    "additional_replication_edges": 0,
-    "technology": "ASAP7 RVT TT mapped primitives, source-pinned",
-    "required_proof": "clone input-function ledger and actual mapped native32 census",
-    "area_status": "measure actual replicated graph before floorplan"
+    "add": {
+      "edges": 5,
+      "std_um2": 310.7727,
+      "flops": 388,
+      "depth_ps": 438.4,
+      "depth_levels": 13,
+      "clones": 30,
+      "replica_delta_std_um2": 1.0935,
+      "replica_delta_flops": 14
+    },
+    "mul": {
+      "edges": 7,
+      "std_um2": 173.58948,
+      "flops": 305,
+      "depth_ps": 406.7,
+      "depth_levels": 12,
+      "clones": 11,
+      "replica_delta_std_um2": 2.85768,
+      "replica_delta_flops": 11
+    },
+    "required_proof": "exact cell models ASR544/HQN128 coupons; independent-init first-valid/reset proof; golden arithmetic",
+    "area_status": "arithmetic measured; parent mux/dequant/control and complete metadata storage still owed"
   },
-  "candidate_core_latency_edges": 62,
-  "candidate_group_latency_edges": 65,
+  "candidate_core_latency_edges": 52,
+  "candidate_group_latency_edges": 55,
   "old_group_latency_edges": 45,
-  "provisional_added_edges": 20,
-  "candidate_latency_note": "mul8/add6 budget only; SRAM capture must be composed",
+  "provisional_added_edges": 10,
+  "candidate_latency_note": "arithmetic composition only; extra physical input/landing/metadata edges must be priced before adoption",
+  "measured_arithmetic_std_um2_per_chunk": 3564.12474,
+  "metadata_storage_note": "six operand rings are incomplete inventory: multiplier dq-fault, reduction fault and validity histories also need explicit storage/reset implementation",
   "boundary_bits": {
     "chunk_load": 128,
     "chunk_operand": 144,
@@ -89,7 +99,7 @@
     "status": "provisional envelope; resize from native synthesis"
   },
   "obligations": [
-    "all35 add output cones native<=32",
+    "all composed parent drivers native<=32",
     "mul and dequant native<=32",
     "reset equal-age regional leaves<=32",
     "all pins registered; no functional ties",

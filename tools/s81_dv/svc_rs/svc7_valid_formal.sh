@@ -4,6 +4,7 @@ G=$(cd "${1:?graph directory}" && pwd)
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
 MODELS=$G/verify_canonical/formal_prep/library_model_formal.v
 O=$G/${2:-valid_formal}
+MUT=${3:-base}
 mkdir -p "$O"
 # Check the exact model being imported, not merely a neighboring coupon file.
 python3 - "$MODELS" <<'PY'
@@ -23,8 +24,16 @@ module svc7_valid_miter(input clk,rst_n,v,input[31:0]a,b,output bad,early);
  assign early=vg||vn;
 endmodule
 SV
+cp "$G/native.v" "$O/native.v"
+if [ "$MUT" = valid_bypass ]; then
+ python3 - "$O/native.v" <<'PYMUT'
+import re,sys
+from pathlib import Path
+p=Path(sys.argv[1]);s,n=re.subn(r'assign valid_out = (?:n|iv)[0-9]+;', 'assign valid_out = valid_in;',p.read_text());assert n==1;p.write_text(s)
+PYMUT
+elif [ "$MUT" != base ]; then exit 2; fi
 cat > "$O/proof.ys" <<'YS'
-read_verilog -formal -sv /graph/native.v /models/cells.v /out/miter.sv /src/rtl/hdc/v41x/ot_s81svc7_add_graph_input.sv /src/rtl/hdc/ot_hdc_fp32_f12.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_prefix.sv
+read_verilog -formal -sv /out/native.v /models/cells.v /out/miter.sv /src/rtl/hdc/v41x/ot_s81svc7_add_graph_input.sv /src/rtl/hdc/ot_hdc_fp32_f12.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_prefix.sv
 hierarchy -check -top svc7_valid_miter
 proc
 flatten
@@ -35,7 +44,7 @@ opt_clean
 # Hardware FFs have arbitrary independent initial state. Initial reset held
 # for the specified 2-stage landing. No later reset constraints or masks.
 # Data/err converge by capture5; only capture4 needs no-valid proof.
-sat -seq 4 -set-def-inputs -set clk 1 -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -prove early 0 -prove-skip 3 -verify -show-inputs -show-outputs
+sat -seq 4 -set-def-inputs -set clk 1 -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -prove early 0 -prove-skip 3 -verify -show-inputs -show-outputs -dump_vcd /out/early_counterexample.vcd
 # Valid convergence max6; cover all earlier contract edges and arbitrary
 # in-flight reset. Later equality follows the capture-DAG induction.
 sat -seq 20 -set-def-inputs -set clk 1 -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -prove bad 0 -prove-skip 3 -verify -show-inputs -show-outputs

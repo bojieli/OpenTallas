@@ -25,7 +25,11 @@ module ot_s81svc7_skew_sram #(
         if(!run_c) begin wc<=0;fill<=0;end
         else begin wc<=wc+5'd1;if(fill<D)fill<=fill+6'd1;end
     end
+    `ifdef SVC7_SKEW_MUT_ADDR
+    wire [4:0] r_addr=wc-(D-3);
+`else
     wire [4:0] r_addr=wc-(D-2);
+`endif
     wire [63:0] rd;
     ot_sram_1r1w_32x64_m1 u_mem(
         .clk(clk),.r_ce_in(run_c),.r_addr_in(r_addr),.rd_out(rd),
@@ -34,8 +38,12 @@ module ot_s81svc7_skew_sram #(
     reg [W:0] q;
     always @(posedge clk) begin
         if(!run_q)q<=0;
+        `ifdef SVC7_SKEW_MUT_FILL
+        else q<=rd[W:0];
+`else
         else if(fill>=D-1)q<=rd[W:0];
         else q<=0;
+`endif
     end
     assign {ov,o}=q;
 `ifndef SYNTHESIS
