@@ -15,15 +15,21 @@ KV-PC3 sr6 fixes from gate pc_h_sr3 164813 (CTS stage reproduced in a scratch co
 1 Pins: chain/boot/HBM words flop-direct in RTL; strap pins in kept pin registers; resets land 2 stages per domain
   (OT_KV_PC_RLAND); pc__hfx registered; pc__fi / pc__ki / x__est__0_1 now land in face registers (fi_q / ki_q /
   ebr_q; the sr6-boundary CTS rerun of 164813 measured the ki / boot-ready cones at -181 / -168 ps) -> PASS, no waiver
-2 Reach: outline 268 x 300 um; fi_q (S face) -> fo (N face) flop-to-flop ~300 um < 405 -> CHECK gate
-3 Fanout: kept copy families <= 32 (hgo 72, rv_q 56, streaming 10, hr_q 16) -> CHECK gate ot_rst_copies.tsv
-4 Depth: no combinational in -> out-register cone left (pc__fi landed) -> CHECK gate (SS/TT setup)
+2 Reach: outline 268 x 300 um; fi_q (S face) -> fo (N face) flop-to-flop ~300 um < 405; post-GRT setup +71 ps -> PASS
+3 Fanout: kept copy families <= 32 (hgo 72, rv_q 56, streaming 10, hr_q 16); gate ot_rst_copies.tsv 129 families
+  all OK (no REFUSED / OVER); reset_landing 2 sinks per port -> PASS
+4 Depth: no combinational in -> out-register cone left (pc__fi landed); CTS MM sync SS -36 / after repair 0.00, no path-delay group, no
+  ODB-0373; post-GRT setup +71.4 / hold +47.0 ps; gate est. one 613 ps / 16-level stage (sched koh, closes) -> PASS
 5 Storage: 23 native ot_sram_1r1w2c_32x64_m1 banks (5.95 pins/um <= 6), capacity truthful -> PASS
-6 Floorplan: banks on the 43.2 lattice, abutted N-S stacks, outline = die frame (pin-bound) -> CHECK PNG
-7 Clock: roots ck / hck; hck IO now timed against hclk after CTS (boundary_tcl) -> CHECK gate spread <= 80 TT+FF
+6 Floorplan: banks on the 43.2 lattice, abutted N-S stacks, outline = die frame (pin-bound, fill 32 %); continuous std-cell
+  band around/between the columns (density.png); faces 92-97 % at ~6 pins/um; GRT overflow 0 (M3 38 %) -> PASS
+7 Clock: roots ck / hck; hck IO now timed against hclk after CTS (boundary_tcl); pin-flop spread ck 55.5 TT / 53.5 FF, hck 49.0 TT / 45.5 FF
+  (insertion hck 450 TT / 372 FF; 18,590 sinks = guidance); ck/hck pins at the E-face bottom corner (die pin
+  assignment, MU-DIE-KV) -> PASS
 8 Schedule: static; +1 hclk edge on the fi fault chain and on the kc kick chain (ki -> ko) per PC tile, +1 ck edge on
   the boot-ready level: handed to the die schedule (lanes/KV-GEN9.md inbox) -> PASS (priced)
 
 ## Gate
 pre_route_gate --remote auto --cts --mem 32 (log /home/ubuntu/scratch/kv-pc3/gate_qkd_kvs_pc_h_sr6.log).
-CRITICAL family (qkd_static_kv_return_slots_mc successor): NO REVIEW.json / submit; review packet in lanes/KV-PC3.md.
+CRITICAL family (qkd_static_kv_return_slots_mc successor): NO REVIEW.json / submit; review packet in lanes/KV-PC3.md + lanes/KV-PC4.md.
+GATE 10-19 21:50 ot-epyc8 qkd_kvs_pc_h_sr6-20261019-180008: WARN (0 fail, 8 warn) -- gate_result.json + gate_layout/*.png committed.
