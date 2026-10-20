@@ -265,7 +265,7 @@ def compile_int8w(W, x, ops, mut="", check_lines=256):
                       row=r, glast=int(g == Gn - 1), slot=r & 7, xaddr=g * SM.C8 + t)
             li += 2 if r + Rh < R else 1
             withhold = mut == "nopkt" and oi == 0 and pi == 1
-            pc = first + p + (1 if (mut == "late" and oi == 0 and pi == 1) else 0)
+            pc = first + p + (1 if (mut == "late" and oi == 0 and pi >= 1) else 0)   # op 0's stream one edge late from line 1
             if not withhold:
                 assert pc not in cal.pkt, ("packet slot conflict", pc)
                 cal.pkt[pc] = (1 << 1098) | (tag << 1088) | word
