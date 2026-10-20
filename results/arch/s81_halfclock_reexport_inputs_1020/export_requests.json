@@ -1,0 +1,260 @@
+[
+  {
+    "master": "dsfd_dvrlyh_276_SN",
+    "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN",
+    "host": "ot-agidock128",
+    "argv": [
+      "python3",
+      "<ROOT_APPROVED_EXPORTER_CHECKOUT>/tools/tt_views/view_export.py",
+      "--orfs-dir",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_sn-h1-41e90080d/routes/s81dv_rlyh_276_sn_h1_41e90080d/work/orfs",
+      "--name",
+      "dsfd_dvrlyh_276_SN",
+      "--out",
+      "/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020/dsfd_dvrlyh_276_SN",
+      "--corners",
+      "ss,ff,tt",
+      "--forwarded-clock",
+      "ck:ck_o",
+      "--interface-sdc",
+      "<RECOVERED_IMMUTABLE_INPUTS>/dsfd_dvrlyh_276_SN/signoff.sdc",
+      "--verdict-json",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_sn-h1-41e90080d/cl/routed_ioref.a1.json",
+      "--expect-tt",
+      "383.15",
+      "--expect-ff",
+      "29.39",
+      "--require-check",
+      "--image",
+      "<ROOT_VERIFIED_ORIGINAL_IMAGE_DIGEST>"
+    ],
+    "preserve_original_OT_WS": {
+      "ss": "OT_WS max 3.123463709897578e-10 min 3.315045460361432e-11",
+      "ff": "OT_WS max 4.2307618519643597e-10 min 2.9392932532346094e-11",
+      "tt": "OT_WS max 3.8314851291687546e-10 min 3.2000804783827164e-11"
+    },
+    "requirements": [
+      "verifyallcornerloadedLibunaryfunctions; sourceHWparitynegative",
+      "preserveoriginalsignoffSDCsequence+uncertainty+load+SPEF+FFhold/TTsetup checks withinhistorical0.05ps",
+      "sourcephysicalinputhashrecheckbeforelaunch; originalORFSread-only",
+      "nativegeneratedclockperiod/waveformsourceandINVoppositeedge/localinputdelta metadata",
+      "everyotherpin/FF byteidentity rawmainETM beforemerge; archiveallrawnativeartifacts",
+      "no originalLib/route mutation, noallfamilydieadoption frompartialsix"
+    ]
+  },
+  {
+    "master": "dsfd_dvrlyh_276_WE",
+    "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN",
+    "host": "ot-agidock128",
+    "argv": [
+      "python3",
+      "<ROOT_APPROVED_EXPORTER_CHECKOUT>/tools/tt_views/view_export.py",
+      "--orfs-dir",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_we-h1-41e90080d/routes/s81dv_rlyh_276_we_h1_41e90080d/work/orfs",
+      "--name",
+      "dsfd_dvrlyh_276_WE",
+      "--out",
+      "/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020/dsfd_dvrlyh_276_WE",
+      "--corners",
+      "ss,ff,tt",
+      "--forwarded-clock",
+      "ck:ck_o",
+      "--interface-sdc",
+      "<RECOVERED_IMMUTABLE_INPUTS>/dsfd_dvrlyh_276_WE/signoff.sdc",
+      "--verdict-json",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_we-h1-41e90080d/cl/routed_ioref.a1.json",
+      "--expect-tt",
+      "412.04",
+      "--expect-ff",
+      "26.01",
+      "--require-check",
+      "--image",
+      "<ROOT_VERIFIED_ORIGINAL_IMAGE_DIGEST>"
+    ],
+    "preserve_original_OT_WS": {
+      "ss": "OT_WS max 3.580735985497796e-10 min 3.10654973967317e-11",
+      "ff": "OT_WS max 4.431442157670773e-10 min 2.6008632747487326e-11",
+      "tt": "OT_WS max 4.12040346287057e-10 min 2.8967939158519584e-11"
+    },
+    "requirements": [
+      "verifyallcornerloadedLibunaryfunctions; sourceHWparitynegative",
+      "preserveoriginalsignoffSDCsequence+uncertainty+load+SPEF+FFhold/TTsetup checks withinhistorical0.05ps",
+      "sourcephysicalinputhashrecheckbeforelaunch; originalORFSread-only",
+      "nativegeneratedclockperiod/waveformsourceandINVoppositeedge/localinputdelta metadata",
+      "everyotherpin/FF byteidentity rawmainETM beforemerge; archiveallrawnativeartifacts",
+      "no originalLib/route mutation, noallfamilydieadoption frompartialsix"
+    ]
+  },
+  {
+    "master": "dsfd_dvrlyh_512_EW",
+    "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN",
+    "host": "ot-agidock128",
+    "argv": [
+      "python3",
+      "<ROOT_APPROVED_EXPORTER_CHECKOUT>/tools/tt_views/view_export.py",
+      "--orfs-dir",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_512_ew-h1-41e90080d/routes/s81dv_rlyh_512_ew_h1_41e90080d/work/orfs",
+      "--name",
+      "dsfd_dvrlyh_512_EW",
+      "--out",
+      "/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020/dsfd_dvrlyh_512_EW",
+      "--corners",
+      "ss,ff,tt",
+      "--forwarded-clock",
+      "ck:ck_o",
+      "--interface-sdc",
+      "<RECOVERED_IMMUTABLE_INPUTS>/dsfd_dvrlyh_512_EW/signoff.sdc",
+      "--verdict-json",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_512_ew-h1-41e90080d/cl/routed_ioref.a1.json",
+      "--expect-tt",
+      "409.42",
+      "--expect-ff",
+      "24.98",
+      "--require-check",
+      "--image",
+      "<ROOT_VERIFIED_ORIGINAL_IMAGE_DIGEST>"
+    ],
+    "preserve_original_OT_WS": {
+      "ss": "OT_WS max 2.2462626203534342e-10 min 3.187305974705623e-11",
+      "ff": "OT_WS max 4.4078291017157767e-10 min 2.498218298896404e-11",
+      "tt": "OT_WS max 4.0941738888022883e-10 min 2.8115454409061158e-11"
+    },
+    "requirements": [
+      "verifyallcornerloadedLibunaryfunctions; sourceHWparitynegative",
+      "preserveoriginalsignoffSDCsequence+uncertainty+load+SPEF+FFhold/TTsetup checks withinhistorical0.05ps",
+      "sourcephysicalinputhashrecheckbeforelaunch; originalORFSread-only",
+      "nativegeneratedclockperiod/waveformsourceandINVoppositeedge/localinputdelta metadata",
+      "everyotherpin/FF byteidentity rawmainETM beforemerge; archiveallrawnativeartifacts",
+      "no originalLib/route mutation, noallfamilydieadoption frompartialsix"
+    ]
+  },
+  {
+    "master": "dsfd_dvrlyh_562_WE",
+    "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN",
+    "host": "ot-agidock128",
+    "argv": [
+      "python3",
+      "<ROOT_APPROVED_EXPORTER_CHECKOUT>/tools/tt_views/view_export.py",
+      "--orfs-dir",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_562_we-h1-41e90080d/routes/s81dv_rlyh_562_we_h1_41e90080d/work/orfs",
+      "--name",
+      "dsfd_dvrlyh_562_WE",
+      "--out",
+      "/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020/dsfd_dvrlyh_562_WE",
+      "--corners",
+      "ss,ff,tt",
+      "--forwarded-clock",
+      "ck:ck_o",
+      "--interface-sdc",
+      "<RECOVERED_IMMUTABLE_INPUTS>/dsfd_dvrlyh_562_WE/signoff.sdc",
+      "--verdict-json",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_562_we-h1-41e90080d/cl/routed_ioref.a1.json",
+      "--expect-tt",
+      "327.86",
+      "--expect-ff",
+      "26.47",
+      "--require-check",
+      "--image",
+      "<ROOT_VERIFIED_ORIGINAL_IMAGE_DIGEST>"
+    ],
+    "preserve_original_OT_WS": {
+      "ss": "OT_WS max 1.0006989681343725e-10 min 3.352065847117558e-11",
+      "ff": "OT_WS max 4.4132758558745877e-10 min 2.6473101488733164e-11",
+      "tt": "OT_WS max 3.2785579806571263e-10 min 2.989664071861853e-11"
+    },
+    "requirements": [
+      "verifyallcornerloadedLibunaryfunctions; sourceHWparitynegative",
+      "preserveoriginalsignoffSDCsequence+uncertainty+load+SPEF+FFhold/TTsetup checks withinhistorical0.05ps",
+      "sourcephysicalinputhashrecheckbeforelaunch; originalORFSread-only",
+      "nativegeneratedclockperiod/waveformsourceandINVoppositeedge/localinputdelta metadata",
+      "everyotherpin/FF byteidentity rawmainETM beforemerge; archiveallrawnativeartifacts",
+      "no originalLib/route mutation, noallfamilydieadoption frompartialsix"
+    ]
+  },
+  {
+    "master": "dsfd_dvrlyh_70_NS",
+    "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN",
+    "host": "ot-agidock128",
+    "argv": [
+      "python3",
+      "<ROOT_APPROVED_EXPORTER_CHECKOUT>/tools/tt_views/view_export.py",
+      "--orfs-dir",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_ns-h1-41e90080d/routes/s81dv_rlyh_70_ns_h1_41e90080d/work/orfs",
+      "--name",
+      "dsfd_dvrlyh_70_NS",
+      "--out",
+      "/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020/dsfd_dvrlyh_70_NS",
+      "--corners",
+      "ss,ff,tt",
+      "--forwarded-clock",
+      "ck:ck_o",
+      "--interface-sdc",
+      "<RECOVERED_IMMUTABLE_INPUTS>/dsfd_dvrlyh_70_NS/signoff.sdc",
+      "--verdict-json",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_ns-h1-41e90080d/cl/routed_ioref.a1.json",
+      "--expect-tt",
+      "406.85",
+      "--expect-ff",
+      "29.22",
+      "--require-check",
+      "--image",
+      "<ROOT_VERIFIED_ORIGINAL_IMAGE_DIGEST>"
+    ],
+    "preserve_original_OT_WS": {
+      "ss": "OT_WS max 3.4845779040004743e-10 min 3.29564847634245e-11",
+      "ff": "OT_WS max 4.4010306510244845e-10 min 2.9219675290459435e-11",
+      "tt": "OT_WS max 4.068469172668898e-10 min 3.146873039927556e-11"
+    },
+    "requirements": [
+      "verifyallcornerloadedLibunaryfunctions; sourceHWparitynegative",
+      "preserveoriginalsignoffSDCsequence+uncertainty+load+SPEF+FFhold/TTsetup checks withinhistorical0.05ps",
+      "sourcephysicalinputhashrecheckbeforelaunch; originalORFSread-only",
+      "nativegeneratedclockperiod/waveformsourceandINVoppositeedge/localinputdelta metadata",
+      "everyotherpin/FF byteidentity rawmainETM beforemerge; archiveallrawnativeartifacts",
+      "no originalLib/route mutation, noallfamilydieadoption frompartialsix"
+    ]
+  },
+  {
+    "master": "dsfd_dvrlyh_70_SN",
+    "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN",
+    "host": "ot-agidock128",
+    "argv": [
+      "python3",
+      "<ROOT_APPROVED_EXPORTER_CHECKOUT>/tools/tt_views/view_export.py",
+      "--orfs-dir",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_sn-h1-41e90080d/routes/s81dv_rlyh_70_sn_h1_41e90080d/work/orfs",
+      "--name",
+      "dsfd_dvrlyh_70_SN",
+      "--out",
+      "/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020/dsfd_dvrlyh_70_SN",
+      "--corners",
+      "ss,ff,tt",
+      "--forwarded-clock",
+      "ck:ck_o",
+      "--interface-sdc",
+      "<RECOVERED_IMMUTABLE_INPUTS>/dsfd_dvrlyh_70_SN/signoff.sdc",
+      "--verdict-json",
+      "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_sn-h1-41e90080d/cl/routed_ioref.a1.json",
+      "--expect-tt",
+      "409.59",
+      "--expect-ff",
+      "29.46",
+      "--require-check",
+      "--image",
+      "<ROOT_VERIFIED_ORIGINAL_IMAGE_DIGEST>"
+    ],
+    "preserve_original_OT_WS": {
+      "ss": "OT_WS max 3.527593495089576e-10 min 3.4269712068102365e-11",
+      "ff": "OT_WS max 4.4200756943446606e-10 min 2.9459261419173544e-11",
+      "tt": "OT_WS max 4.095912220503095e-10 min 3.207335785848642e-11"
+    },
+    "requirements": [
+      "verifyallcornerloadedLibunaryfunctions; sourceHWparitynegative",
+      "preserveoriginalsignoffSDCsequence+uncertainty+load+SPEF+FFhold/TTsetup checks withinhistorical0.05ps",
+      "sourcephysicalinputhashrecheckbeforelaunch; originalORFSread-only",
+      "nativegeneratedclockperiod/waveformsourceandINVoppositeedge/localinputdelta metadata",
+      "everyotherpin/FF byteidentity rawmainETM beforemerge; archiveallrawnativeartifacts",
+      "no originalLib/route mutation, noallfamilydieadoption frompartialsix"
+    ]
+  }
+]
