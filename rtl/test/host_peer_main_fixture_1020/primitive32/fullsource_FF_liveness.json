@@ -1,0 +1,670 @@
+{
+  "schema": "peer.fullsource_FF_liveness_inventory.v1",
+  "source_mapped_sha256": "bc09cdfa274dce50304b1fd0831f1097fc524c237885c8f656e947ff9f9d9203",
+  "actual_odb_sha256": "b3d89bed755a5c70a5f56d635f0e02b567d46bcb886356b82b2e4d1f25e9e26e",
+  "status": "PASS_ALL_MISSING_SOURCE_FF_DEAD",
+  "scope": "Conservative whole-source structural cone: all top outputs and all singleton macros are roots; traverse every actual input dependency including FF data/async/clock. No constant sensitization pruning, no equivalence alias or reset waiver. Does not establish actual pin correspondence for retained cells.",
+  "source_FF": 20616,
+  "actual_FF": 20507,
+  "missing": 109,
+  "missing_live": [],
+  "source_dead": 109,
+  "present_dead": [],
+  "missing_rows": [
+    {
+      "source_instance": "u59870_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c23$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59871_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c24$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59872_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c25$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59873_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c26$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59874_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c27$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59875_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c28$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59876_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c29$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59878_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c30$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59879_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c31$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59880_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c32$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59881_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c33$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59882_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c34$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59883_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c35$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59884_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c36$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59885_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c37$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59886_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c38$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59887_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c39$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59889_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c40$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59890_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c41$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59891_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c42$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59892_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c43$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59893_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c44$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59894_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c45$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59895_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c46$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59896_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c47$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59897_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c48$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59898_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c49$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59900_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c50$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59901_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c51$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59902_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c52$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59903_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c53$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59904_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c54$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59905_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c55$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59906_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c56$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59907_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c57$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59908_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c58$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59909_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c59$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59911_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c60$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59912_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c61$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59913_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c62$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59914_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c63$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59915_c0/u_cell",
+      "original": "ot_rrs__host_rst_n__ot_rlv__c7$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59948_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c37$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59949_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c38$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59950_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c39$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59952_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c40$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59953_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c41$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59954_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c42$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59955_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c43$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59956_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c44$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59957_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c45$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59958_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c46$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59959_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c47$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59960_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c48$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59961_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c49$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59963_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c50$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59964_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c51$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59965_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c52$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59966_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c53$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59967_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c54$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59968_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c55$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59969_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c56$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59970_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c57$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59971_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c58$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59972_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c59$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59974_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c60$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59975_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c61$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59976_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c62$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u59977_c0/u_cell",
+      "original": "ot_rrs__por_n__ot_rlv__c63$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u60033_c0/u_cell",
+      "original": "ot_rrs__u_ot_pr_core_u_rank__u_control__u_packet__u_ctrl_rst_n_qv__c3$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72657_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[0]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72659_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[11]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72660_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[12]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72661_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[13]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72665_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[17]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72666_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[18]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72667_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[19]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72669_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[20]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72670_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[21]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72671_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[22]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72672_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[23]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72673_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[24]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72674_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[25]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72675_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[26]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72676_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[27]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72677_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[28]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72678_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[29]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72680_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[30]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u72681_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.bypass[31]$_DFF_P_",
+      "source_master": "DFFHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73982_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[12]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73983_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[13]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73984_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[14]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73985_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[15]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73986_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[16]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73987_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[17]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73988_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[18]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73989_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[19]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73991_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[20]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73992_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[21]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73993_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[22]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73994_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[23]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73995_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[24]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73996_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[25]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73997_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[26]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73998_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[27]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u73999_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[28]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u74000_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[29]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u74002_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[30]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    },
+    {
+      "source_instance": "u74003_c0/u_cell",
+      "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_payload_safe.mail_hold[31]$_DFF_PN0_",
+      "source_master": "DFFASRHQNx1_ASAP7_75t_R",
+      "source_dead_by_full_cone": true
+    }
+  ],
+  "macro_roots": 3
+}

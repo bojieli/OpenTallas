@@ -1,0 +1,382 @@
+{
+  "schema": "peer.actual_dead_reset_cone_pruning.v1",
+  "mapped_source_sha256": "bc09cdfa274dce50304b1fd0831f1097fc524c237885c8f656e947ff9f9d9203",
+  "actual_odb_sha256": "b3d89bed755a5c70a5f56d635f0e02b567d46bcb886356b82b2e4d1f25e9e26e",
+  "status": "PASS_EXACT_SOURCE_DEAD_RESET_CONES",
+  "source_conditioners": 475,
+  "actual_conditioners_present": 405,
+  "missing_source_conditioners": 70,
+  "missing_by_stage": {
+    "outer_S2": 69,
+    "regional_final": 1
+  },
+  "missing_live_conditioners": [],
+  "dead_but_present_conditioners": [],
+  "source_outer_S2": 128,
+  "live_actual_outer_S2": 59,
+  "source_FF_count": 20616,
+  "actual_FF_count": 20507,
+  "FF_count_delta": 109,
+  "removed": [
+    {
+      "instance": "u59870_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59871_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59872_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59873_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59874_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59875_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59876_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59878_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59879_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59880_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59881_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59882_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59883_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59884_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59885_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59886_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59887_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59889_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59890_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59891_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59892_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59893_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59894_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59895_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59896_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59897_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59898_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59900_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59901_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59902_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59903_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59904_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59905_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59906_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59907_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59908_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59909_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59911_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59912_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59913_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59914_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59915_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": [
+        {
+          "instance": "u60033_c0.u_cell",
+          "type": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "inverted": true,
+          "original": "ot_rrs__u_ot_pr_core_u_rank__u_control__u_packet__u_ctrl_rst_n_qv__c3$_DFF_PN0_",
+          "copy": 0
+        }
+      ]
+    },
+    {
+      "instance": "u59948_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59949_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59950_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59952_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59953_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59954_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59955_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59956_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59957_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59958_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59959_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59960_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59961_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59963_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59964_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59965_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59966_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59967_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59968_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59969_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59970_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59971_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59972_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59974_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59975_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59976_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u59977_c0/u_cell",
+      "stage": "outer_S2",
+      "source_consumers": []
+    },
+    {
+      "instance": "u60033_c0/u_cell",
+      "stage": "regional_final",
+      "source_consumers": []
+    }
+  ],
+  "proof_rule": "Conservative source-profile recursive sink pruning: no consumers => dead; otherwise every consumer must be a named conditioner already proven dead. Any other functional consumer/cycle remains live. Exact absent actual names equal all source dead conditioners. This does not waive actual raw/clock/reset-polarity checks or substitute for canonical mapped reset check."
+}
