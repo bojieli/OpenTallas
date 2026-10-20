@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.order_final_stage_pin_identity.v1",
+  "status": "PASS",
+  "scope": "Actual final5_1GRT all dynamic nonclock stage endpoints through complete actual Liberty-function cones; includes interface outputs and asynchronous/other sequential controls. Every standard/macro endpoint uses actual ITerm pin getAvgXY; clocks and constant-only inputs separate. No physical admission from reach alone.",
+  "odb_sha256": "5cbace245629b9c0da108c88bb6a79e18563b32db31a40590032e7f3fd24f737",
+  "audit_source_sha256": "026f37abe83d4cd8805b04eece37f6352cc9616c97550feb9241dc00a7605d7d",
+  "counts": {
+    "combinational_instances": 95724,
+    "power_ground_only_instances": 2665,
+    "constant_function_drivers": 9507,
+    "actual_liberty_clock_pins_excluded": 18233,
+    "sequential_instances": 18227,
+    "synchronous_sram_instances": 6,
+    "declared_clock_ports_excluded": 1
+  },
+  "pairs": 5284333,
+  "over405": 0,
+  "max_L1_um": 384.149,
+  "all_pairs_by_class": {
+    "data_to_seq_or_macro:input_port -> direct_port_data_input": 692,
+    "data_to_seq_or_macro:interior_or_multistage_landing_unresolved -> direct_port_data_output": 1595,
+    "data_to_seq_or_macro:interior_or_multistage_landing_unresolved -> interior_or_multistage_landing_unresolved": 5263234,
+    "data_to_seq_or_macro:direct_port_data_input -> interior_or_multistage_landing_unresolved": 1222,
+    "data_to_seq_or_macro:direct_port_data_input -> direct_port_data_output": 4,
+    "data_to_seq_or_macro:interior_or_multistage_landing_unresolved -> macro": 6902,
+    "data_to_seq_or_macro:macro -> interior_or_multistage_landing_unresolved": 575,
+    "to_output_port:direct_port_data_output -> port_bit": 1598,
+    "async_or_other_control:interior_or_multistage_landing_unresolved -> interior_or_multistage_landing_unresolved": 8511
+  },
+  "over405_by_class": {},
+  "max_L1_by_class": {
+    "data_to_seq_or_macro:input_port -> direct_port_data_input": 9.453000000000003,
+    "data_to_seq_or_macro:interior_or_multistage_landing_unresolved -> direct_port_data_output": 344.486,
+    "data_to_seq_or_macro:interior_or_multistage_landing_unresolved -> interior_or_multistage_landing_unresolved": 371.0,
+    "data_to_seq_or_macro:direct_port_data_input -> interior_or_multistage_landing_unresolved": 367.45,
+    "data_to_seq_or_macro:direct_port_data_input -> direct_port_data_output": 360.81100000000004,
+    "data_to_seq_or_macro:interior_or_multistage_landing_unresolved -> macro": 384.149,
+    "data_to_seq_or_macro:macro -> interior_or_multistage_landing_unresolved": 341.61300000000006,
+    "to_output_port:direct_port_data_output -> port_bit": 9.582999999999998,
+    "async_or_other_control:interior_or_multistage_landing_unresolved -> interior_or_multistage_landing_unresolved": 296.77099999999996
+  },
+  "constant_only_sequential_inputs": 9507,
+  "worst20": [],
+  "role_errors": []
+}

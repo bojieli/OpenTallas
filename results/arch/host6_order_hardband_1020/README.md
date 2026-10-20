@@ -73,3 +73,60 @@ that string predates the completed-log correction. Its exact executed source is
 preserved unchanged for hash correspondence. The completed row-hook log and
 this erratum correct the description; graph, coordinates and reach arithmetic
 are unaffected.
+
+## Completed actual final-b graph and remaining obligations
+
+Final b5_1GRT ODB SHA256 is
+`5cbace245629b9c0da108c88bb6a79e18563b32db31a40590032e7f3fd24f737`.
+The compact graph proof checks5,284,333 complete dynamic nonclock stage pairs:
+all sequential/SRAM data/control inputs, all interface outputs, and asynchronous
+clear/preset/other sequential controls. It finds **zero pairs above405um**,
+maximum384.149um. Every standard-cell and macro endpoint uses actual ITerm
+pin geometry via getAvgXY, replacing the earlier center approximation. All
+unknown source/pin/function/clock/memory/cycle/unresolved-root checks fail closed.
+The source-bound actual Liberty graph, terminal index and complete compact pair
+relation are retained in final_b. This is reach evidence, not complete admission.
+
+The narrower a4_1CTS diagnostic has171 over405 pairs (max421.779um), all ending
+at u70841 macro address pins; its standard-cell centers remain approximate.
+Its original16GB data-only analyzer ended143, cause unproven. The source identity
+completed successfully and the extended all-nonclock analyzer completed with64GB;
+no b4_1 duplicate was launched. Compact a receipts are archived separately.
+
+Actual constant-only a inputs are separately enumerated9507, with actual
+consumer pin/category/sequential equations and exact constant driver function.
+They use9285 actual TIEHI function1 and222 TIELO function0 sources, including8309
+ASR SETN and202 ASR RESETN inputs plus exact SRAM static fields. Constant-only
+inputs receive no dynamic branch waiver. Clocks are a separate audited graph.
+
+Raw current-helper final native census is FAIL: emitted PG-only TAP cells lack
+Liberty roles, and the only reported load violation is the physical clock root
+ck_core646; it is not a data/reset load exception. Actual ODB proves2665 TAP
+instances have no signal-connected terminals (2351 emitted instances trigger
+that raw missing-Lib diagnostic). Clock-only function/polarity/consumer proof
+must be reviewed before any filtered interpretation. Raw evidence is preserved.
+Current textbook final reset proof also refuses: the post-GRT root first reaches
+an inserted BUFx2 buffer, while plain BRP requires direct first D; CTS leaf clock
+net identity also differs from literal source clock. Source/native preCTS proof
+and exact source binding remain separate. No generic native/reset skip is added.
+The current helper snapshot is origin/main28e76b62997f74b385de7e22529e86987d0ed45c;
+its exact bytes and reports are in final_aux_receipts.tar.gz.
+
+Actual final b occupancy is113951 functional standard cells, area15115.50882um2,
+312 rows, and zero functional cells outside the approved band. Raw PG audit
+finds25598 unbound PG ITerms on12799 ordinary signal-connected BUF instances;
+all are PLACED and not do_not_touch. They are not protected/fixed/empty-net
+exceptions. Canonical PG repair, both-grid/signal invariance and a fresh receipt
+remain open. Diagnostic TT setup remains-64.6ps; final closure timing is unproven.
+
+The four physical copied HQNs all remain in final b. Complete cone trace finds
+3149 endpoint relations and18 macro relations: c0 copies only, to r_addr_in[0:2]
+of u77050/51/52. Extra c1 copies have no direct macro-stage consumer. First-edge
+pair convergence therefore does not establish arbitrary cold-start functional
+safety: c1 can affect intermediate FF capture and later macro transactions.
+All six SRAM read enables are actual static one, so first-edge reads occur.
+The existing behavioral bench randomizes FF/SRAM states, holds reset16cycles,
+and compares only from cycle17; it is not an all-state first-use proof. Full
+macro read symbolic cold3 remains diagnostic only. Temporal reset/valid flushing
+and earliest observable/committed consumption remain explicit source obligations.
+No submit, new gate, parent promotion or closure claim is made.

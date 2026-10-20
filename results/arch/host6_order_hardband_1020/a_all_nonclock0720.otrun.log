@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-order-fullstage-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-order-fullstage-0720
+ot-run: ot-epyc7       admits  1010 GB (avail 791, growth 84, headroom 0, waiters 0/0 GB) load 48/96 running 19 disk 5382 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-order-fullstage-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-order-fullstage-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-order-fullstage-0720
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2045509-1792507667 after 0 s
+{
+  "pairs": 5284333,
+  "over405": 171,
+  "max_L1_um": 421.779,
+  "over405_by_class": {
+    "data_to_seq_or_macro:interior_or_multistage_landing_unresolved -> macro": 171
+  }
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2045509-1792507667): exit 0
