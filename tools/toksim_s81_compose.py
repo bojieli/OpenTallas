@@ -56,7 +56,7 @@ def admitted(o, exact_ops):
 
 def load_elements(d):
     """op key (dag_cls, op) -> override; slot -> override (for base layer/adjust terms); xdie part -> ratio."""
-    ops, slots, xparts, files, excluded = {}, {}, {}, [], []
+    ops, slots, xparts, files, excluded, inserts = {}, {}, {}, [], [], []
     recs = []
     for f in sorted(glob.glob(str(d / '*.json'))):
         e = json.load(open(f))
@@ -77,9 +77,42 @@ def load_elements(d):
                                           grade=o['grade'], file=o['file'])
         elif o.get('slot'):
             slots[o['slot']] = o
+        elif o.get('insert'):
+            # a measured op with no DAG node (TOKSIM-S81C LEAD decision 10-19: attn.idx.q field projection): inserted
+            # serially on the edge insert.after -> insert.before in every listed layer, at its measured cycles
+            inserts.append(o)
         elif o.get('cycles') is not None or o.get('by_old') or o.get('per_layer'):
             ops[(o.get('dag_cls'), o['op'])] = o
-    return ops, slots, xparts, files, excluded
+    return ops, slots, xparts, files, excluded, inserts
+
+
+def insert_nodes(dag, inserts):
+    """A copy of the DAG with the insert records' nodes spliced in (old cycles 0, so the base is unchanged)."""
+    if not inserts:
+        return dag
+    dag = dict(dag, nodes=list(dag['nodes']), edges=list(dag['edges']))
+    N = {n['id']: n for n in dag['nodes']}
+    for o in inserts:
+        ins = o['insert']
+        for L in ins['layers']:
+            a, b = f'L{L}.{ins["after"]}', f'L{L}.{ins["before"]}'
+            if a not in N or b not in N:
+                continue
+            nid = f'L{L}.{o["op"]}'
+            nb = N[b]
+            n = dict(id=nid, label=nid, group=nb.get('group'), cls=o.get('dag_cls'), op=o['op'], kind='inserted',
+                     base_cycles=0.0, cycles=0.0, layer=L, critical=bool(N[a].get('critical') and nb.get('critical')),
+                     src=dict(grade='inserted', record=o.get('file')))
+            dag['nodes'].append(n)
+            N[nid] = n
+            es = []
+            for e in dag['edges']:
+                if e['src'] == a and e['dst'] == b:
+                    es += [dict(e, dst=nid), dict(src=nid, dst=b, cycles=0)]
+                else:
+                    es.append(e)
+            dag['edges'] = es
+    return dag
 
 
 def node_cycles(n, ov):
@@ -267,13 +300,17 @@ def multi_user(base, res):
 
 def build(elem_dir):
     base = json.load(open(BASE))
-    ops, slots, xparts, files, excluded = load_elements(elem_dir)
-    res = {wl: compose(wl, base, json.load(open(p)), ops, slots, xparts) for wl, p in DAGS.items()}
+    ops, slots, xparts, files, excluded, inserts = load_elements(elem_dir)
+    for o in inserts:
+        ops[(o.get('dag_cls'), o['op'])] = o
+    res = {wl: compose(wl, base, insert_nodes(json.load(open(p)), inserts), ops, slots, xparts) for wl, p in DAGS.items()}
     return dict(schema=SCHEMA, design='ds_rom', die='S81 p4l-MU (release source GEN mu4c 19bf4121e)', clock_hz=F_CLK,
                 inputs=dict(base=str(BASE.relative_to(ROOT)), dags={k: str(v.relative_to(ROOT)) for k, v in DAGS.items()},
                             elements=files),
                 admission='measured grade AND bit_exact true (0-cycle merged ops and curation maps of bit-exact ops admitted)',
                 excluded_not_bit_exact=excluded,
+                inserted_nodes=[dict(op=o['op'], cycles=o.get('cycles'), grade=o['grade'], insert=o['insert'], file=o['file'])
+                                for o in inserts],
                 xdie_parts_measured={k: dict(v, ratio=round(v['ratio'], 6)) for k, v in xparts.items()},
                 workloads=res, multi_user=multi_user(base, res))
 

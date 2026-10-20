@@ -127,3 +127,39 @@ FSMALL (69b66ae1f): attn.a_proj 628 -> 531 folded; ffn.router and attn.idx.q pen
 
 Biggest remaining measured-old-RTL: ffn.experts_gu/down in non-L0 layer classes, attn.wq_b, ffn.router, attn.a_proj (FSMALL running),
 attn.gather, MTP draft blocks. Cross-die MU co-sim job u relaunched as out_u4 (--mem 200; u2/u3 were memcg OOM at 40 GB).
+
+## TOKSIM-S81C update (10-19 23:55 PT) -- supersedes the numbers above
+
+| workload | cycles / token (fixed) | solved | tok/s | measured | on-chip measured | PHY modelled |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 user AR | 1,404,451.5 | 1,426,115.0 | **854.4** | 78.8 % | 89.9 % | 12.3 % |
+| 1 user MTP (tau 4.159) | 1,790,616.2 | 1,790,616.2 | **2,787.2** | 64.4 % | 72.0 % | 10.5 % |
+| 46 users AR | per-user bound | | **39,304 agg** | | | |
+| 10 users MTP | per-user bound | | **27,872 agg** | | | |
+
+Sensitivity (not folded): the S81-RATEFIX wq_b pipelined calendar P126 (1,987, bit-exact vs golden) gives AR 889.2 / MTP 2,875.3
+tok/s once the die-level DV compiler emits it.
+
+New records (all Verilator 5.050, every returned row checked against the model golden, not a baseline):
+- **WQBG** attn.wq_b: golden check (hdc_golden_v41 segment sums + cap_model.golden_sub/golden_row, fixture shard tie) of all 625
+  frame-root words / 512 rows for P600, P224 and P126: bit-exact; P223 and P124 caught. The baseline was correct. Now admitted at
+  3,359 (+195 priced tail). `claude/toksim-s81c-wqbg-1019@c18b28c61`.
+- **FSGU** ffn.experts_gu: 3,680 in every old shape class (the old per-layer differences came from the old m221pq placement; on
+  p4l every layer has the same 24 phases on u_f_0L00). L1/L2/L14/L3/L20/L24/L21 + L0 control. `claude/toksim-s81c-fsgu-1019@32be4735b`.
+  attn.a_proj sparse classes: only the 448-row part (531) is placed by xs_place; compressor/indexer rows are a compiler gap -> not folded.
+- **FSDN** ffn.down: 3,084 in all 40 layers (L0 control, L2, L14, L20). `claude/toksim-s81c-fsdn-1019@70faab57b`.
+- **FSEQ** ffn.router 977.2 -> 1,419 (5-phase BF sequence, period floor 231: at <=230 return words carry the next phase's segment
+  index -- RTL schedule constraint NOTICE). attn.idx.q field projection (indexer.wq_b rows) 757 incremental behind wq_b on the same
+  frames (P126; standalone 925). `claude/toksim-s81c-fseq-1019@11d0bd085`.
+- **IDXQF** (LEAD decision): attn.idx.q_field is a new DAG node inserted serially wq_b -> idx.q_field -> idx.q (SU qbank 93) in
+  L2/8/14/20/24/28/32/36 (`insert` records in the composer). No double count: the sparse-layer wq_b old 1559.6 priced 8192 wq_b +
+  4096 indexer rows and is fully replaced by the fullsix wq_b-only 3,359. Flag: the frame bench measures wq_b alone at 1,554 on one
+  frame vs the slice fullsix 3,359 (epoch source schedule P224); the composer keeps the slice number.
+- **MTPD** draft.head 8,416 (+34) / draft.markov 6 / draft.fixed 0, golden bit-exact (5 drafts x 3 owners, mutant caught);
+  head.argmax_merge RTL part 119 -> 111 recorded, not folded (-8). wave.busy / mc.* / draft blocks stay old (no release run).
+  `claude/toksim-s81c-mtpd-1019@580280548`.
+- **XUG2** XDIE job u on guard 2 / win 3: out_u5 ep5 oth-ubuntu-554994-1792476654 (parallel to guard-1 out_u4 ep7); MU rows stay
+  per-user bound until it lands.
+
+Still old: attn.a_proj sparse classes 18.6k, attn.gather 6.5k, window_load 5.7k, idx.score/topk_local non-fixture layers 11.2k (AR);
+MTP adds wave.busy 161.5k, mc.* 28.9k, draft-block layers.
