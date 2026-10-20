@@ -16,10 +16,22 @@ if [ "$FAN" != 0 ]; then
  python3 tools/prepare_fp32_fan32_models.py --out "$W/native_cells.v" || exit 2
  EXTRA="rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v $W/native_cells.v"
 fi
+CORE=rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed_core.sv
+if [ "$M" = 12 ]; then
+ python3 - "$CORE" "$W/core_mut12.sv" <<'MUTANT'
+import sys
+from pathlib import Path
+s=Path(sys.argv[1]).read_text()
+a='always @(posedge clk or negedge rst_core_n[1+cg])'
+if s.count(a)!=1: raise SystemExit('MUT12 REFUSED: provenance counter source shape differs')
+Path(sys.argv[2]).write_text(s.replace(a,'always @(posedge clk)'))
+MUTANT
+ CORE="$W/core_mut12.sv"
+fi
 verilator --version
 verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSTIM="\"$W/stim.hex\"" \
   -GMUT=$M -GFAN32=$FAN -GSAFE=$S -GTIGHT=$TI -GPUBEARLY=$PE -GREASSERT=$RA -GXRAND=$XR $XF ${PVM_VFLAGS:-} --top-module tb_pv_merge_distributed --Mdir "$W/obj" -o tb \
-  $EXTRA $T/tb_pv_merge_distributed.sv rtl/hbm_accel/sm/attn/test/pvm_reference_pin_wrapper.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed_core.sv rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fp32_add_lat.sv \
+  $EXTRA $T/tb_pv_merge_distributed.sv rtl/hbm_accel/sm/attn/test/pvm_reference_pin_wrapper.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed.sv "$CORE" rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fp32_add_lat.sv \
   rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/proto/ot_fp32_add_rne_pipe.sv \
   physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v > "$W/build.log" 2>&1 \
   || { tail -20 "$W/build.log"; echo "PVM BUILD FAIL"; exit 1; }
