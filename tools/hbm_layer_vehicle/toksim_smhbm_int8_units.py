@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 OP_GAP = 256
+PFX = __import__("os").environ.get("I8_PREFIX", "fi8")   # run-name prefix (final-RTL runs)
 SHAPES = [("qkv48", 4096, 1536), ("o128", 1024, 4096), ("gu192", 4096, 6144), ("down128", 3072, 4096)]
 
 
@@ -29,7 +30,7 @@ def main():
     R = Path(runs)
     t = {}
     for n, _, _ in SHAPES:
-        d = json.loads((R / f"i8_{n}_p{P}.json").read_text())
+        d = json.loads((R / f"{PFX}_{n}_p{P}.json").read_text())
         o = d["ops"][0]
         assert d["verdict"] == "PASS" and o["verdict"] == "PASS" and o["fmt"] == "INT8", (n, d["verdict"])
         t[n] = o
@@ -47,7 +48,7 @@ def main():
         q[k] = dict(cycles=float(c), golden="PASS", rtl_master=master, bound_in_die=False, rtl_source=branch,
                     bench="rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv + tools/hbm_layer_vehicle/toksim_smhbm.py "
                           "(TOKSIM_PC=safe TOKSIM_QWEN_MODE=int8)",
-                    job=f"ot-epyc5:/srv/opentallas-scratch/claude/hbm-qint8-1019/out/i8_{n}_p{P}.json", verilator="5.050",
+                    job=f"ot-epyc5:/srv/opentallas-scratch/claude/hbm-qint8-1019/out/{PFX}_{n}_p{P}.json", verilator="5.050",
                     measured_int8_span=o["span_first_cmd_to_last_result"], blocks_int8=o["blocks"], lines_int8=o["lines"],
                     bytes_hbm=o["bytes_hbm"], R_tp8=o["R"], model_cost=cen[k]["model_cost"],
                     ratio=round(c / cen[k]["model_cost"], 4),
