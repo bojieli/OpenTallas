@@ -1,0 +1,14 @@
+{
+ "reviewer": "coordinator Claude:KV-HOST2 (LEAD2-KV delegated non-critical review)",
+ "time": "2026-10-19T16:50-07:00",
+ "gate_commit": "a5201f50f",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "one SRAM 33.696x27.54 at (43.2, 43.2) R0, on the 43.2 lattice; channels >= 31.1 um; halo 5.4 um",
+  "std_cell_band": "floorplan.png/density.png inspected: std cells fill the left 2/3 full height around the macro, red only in the W pin-flop column; right third sparse (E IO flops); pin-bound outline util 30%",
+  "pin_spread": "1351 signal/clock pins on W/E/N faces (W, E full faces <= 5.6/um) + 3 on S; actual pin geometry PASS (gate)",
+  "clock_entry": "ck_core on the W face lower third beside the register mass; TT 239.3 / FF 199.7 ps insertion, pin-flop spread 29.2 / 29.2 ps, 6,201 sinks",
+  "shape": "108 x 140.4 um, aspect 1.30",
+  "timing": "CTS gate a5201f50f: reg->reg +64.4 ps, hold +37.3 ps, trial GRT overflow 0 (M2 24.6%)"
+ }
+}
