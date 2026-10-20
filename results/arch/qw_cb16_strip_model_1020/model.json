@@ -1,0 +1,66 @@
+{
+  "source_prerequisite": "47e3ef899 pairedfullshape plus actualfailedgate ccfa620ee",
+  "status": "MODEL_ONLY_BEFORE_RTL, no newphysicalgate untiltypednative resetproof",
+  "full_production_half_bits": [
+    257,
+    258
+  ],
+  "bank_depth": 4,
+  "each_bank_array_bits": [
+    1028,
+    1032
+  ],
+  "outline_um": [
+    43.2,
+    51.84
+  ],
+  "core_um": [
+    38.88,
+    47.52
+  ],
+  "fullW258_FF": 1672,
+  "fullgroup_bits": 15,
+  "fullgroup_FF": 96,
+  "lastgroupW258_bits": 3,
+  "lastgroupW258_FF": 36,
+  "global_first_reset_FF": 4,
+  "groups": 18,
+  "expected_FFchange": 0,
+  "steady_edge_change": 0,
+  "reset_edge_change": 0,
+  "external_bw_bits_per_cycle_each_face": 258,
+  "external_face_range_um": 49.84,
+  "external_face_density": 5.1765650080256815,
+  "physical_failure": {
+    "gate257_overflow": 5279,
+    "gate258_overflow": 5358,
+    "hotspot_x_um": [
+      6.27,
+      18.81
+    ],
+    "maxM4_overflow": 3735,
+    "actualGRT_M2_track_pitch_um": 0.039,
+    "actualGRT_M4_track_pitch_um": 0.048,
+    "gate258M2_usage": 0.6715,
+    "gate258M4_usage": 0.485,
+    "diagnosis": "Westbank firstcapture packing is legal but unscoped read/selectionlogic routes across groups. Keep completewriter+reader group hierarchy and monotonic fullwidth stripfences, containinglocal mux/select/heldfeedback; preserve original failed source and PNG."
+  },
+  "strip_rows": {
+    "first17_groups_rows": 10,
+    "last_group_rows": 6,
+    "row_height_um": 0.27,
+    "total_rows": 176,
+    "fullgroup_area_um2": 104.97600000000001,
+    "lastgroup_area_um2": 62.985600000000005,
+    "source_mapping": "each fifteenactualbusbits maps onecompletewriter+readerunit, no bankbus exposed; actualcells mustbelonguniquegroup; allunmatchedtopcells explicitrootlogic only"
+  },
+  "wire_plan": "Eachgroup input15 ->fourbankwrite captures throughlocalCE, fourbankslots feedlocalreaderAND/ORbefore15longoutputpaths. Shareddata/control producers remainregistered sameedges; no crossgroup functional select. Fences span wholecorewidth, pinbit order followsstrip order, allfaceFFs legal-row allocated insidegroup. No arbitraryoutlinegrowth/densityknob reroute.",
+  "remaining_blocks": [
+    "native remapall-driver32/no ties/banks<=2048",
+    "sourceRTL4cases+wrongK and firstcaptureproof",
+    "actualtypedtwo-domain HQN resetprofile/graph",
+    "physical pinfirstcapture/fence/collision and setuphold/clockGRT",
+    "fullparent118fixedintersection18joint2infeasible needredesign"
+  ],
+  "arithmetic": "none; data forwardedbitexact"
+}
