@@ -1,23 +1,25 @@
 {
- "status": "COMPONENT_CANDIDATE_NOT_ADOPTED",
- "source": "ot_hdc_fp32_add_lat LAT7 DRST0 defaultCUTS",
- "clones": 35,
- "baseline": {
-  "cells": 3530,
-  "flops": 597,
-  "area_um2": 377.57826
- },
- "retained": {
-  "cells": 3500,
-  "flops": 629,
-  "area_um2": 384.2559
- },
- "delta_flops": 32,
- "delta_area_um2": 6.67764,
- "native_over32": 0,
- "depth_estimate_ps": 288.4,
- "depth_estimate_levels": 9,
- "added_edges": 0,
- "functional": "V5.050 seeds15/51 each49800 PASS afterwarm20inclmidreset; exactimportedmodels PASS canonicalASR544/HQN128",
- "first_valid_arbitrary_init_proof": "PENDING seq20SAT freshformal_verified_import; noadoptionuntilterminalproof+fullcaller32+physicalclosure"
+  "status": "COMPONENT_CANDIDATE_NOT_ADOPTED",
+  "source": "ot_hdc_fp32_add_lat LAT7 DRST0 defaultCUTS",
+  "clones": 35,
+  "baseline": {
+    "cells": 3530,
+    "flops": 597,
+    "area_um2": 377.57826
+  },
+  "retained": {
+    "cells": 3500,
+    "flops": 629,
+    "area_um2": 384.2559
+  },
+  "delta_flops": 32,
+  "delta_area_um2": 6.67764,
+  "native_over32": 0,
+  "depth_estimate_ps": 288.4,
+  "depth_estimate_levels": 9,
+  "added_edges": 0,
+  "functional": "V5.050 no-warm first-use seeds1/2/3/15/51 each49990PASS + direct SAT20 PASS; exact imported ASR544/HQN128 canonicalPDK coupons PASS",
+  "first_valid_arbitrary_init_proof": "PASS direct originalRTL-vs-native seq20SAT; actual7captureDAG+derived7stagevalid control extends finite influence window; ROOTreview pending",
+  "full_sat_runtime_s": 1437.28,
+  "full_sat_max_memory_mb": 4893.61
 }
