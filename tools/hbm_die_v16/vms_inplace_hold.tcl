@@ -6,7 +6,7 @@
 # -> M -> B), the hub request copies wait for the registered one-hot bank select.  Their hold need is known before
 # placement (zero wire, ~0 ps logic, 25 ps uncertainty + 30 ps margin), so g7d inserts the hold delay deterministically:
 # one HB4xp67 (~37 ps FF / ~50 ps TT) in front of each such D pin -- the cell the CTS hold repair would add one buffer at
-# a time (g6: ~40k buffers in > 3 h) -- dont_touch, placed by GPL beside its flop.  These hops carry ~800 ps of setup
+# a time (g6: ~40k buffers in > 3 h) -- placed by GPL beside its flop.  These hops carry ~800 ps of setup
 # slack (no logic, no wire), so the delay costs no setup.  Only D pins driven directly by a flop (QN through <= 3 INV / BUF) of
 # the listed classes; every other path is left to the normal flow.  0 cycles, no function change.
 set ih_blk [ord::get_db_block]
@@ -52,7 +52,9 @@ foreach e $ih_todo {
   incr ih_n
   dict incr ih_cls $cls
 }
-if {$ih_n > 0} { set_dont_touch [get_cells ot_vih_*] }
+# NOT dont_touch (g7d r1 e / nw: timing-driven GPL RSZ-3006 "failed to insert buffer before loads" on the launch nets
+# that also feed these cells): ordinary buffers to the resizer; only a setup-violating path could unbuffer them, and these
+# hops carry ~800 ps of setup slack
 dict for {k v} $ih_cls { puts "OT_IHOLD $k $v" }
 puts "OT_IHOLD inserted $ih_n in-place hold cells ([$ih_hb getName]); $ih_skip class flops not flop-driven (left to the flow)"
 if {$ih_n < 1000} { error "OT_IHOLD: only $ih_n in-place hold cells (netlist / naming changed?)" }
