@@ -1,0 +1,18 @@
+{
+  "source_commit": "66aa23ed6",
+  "positive": "fine32",
+  "defines": "OT_BMUL_RSPLIT OT_BF_TAGREP OT_BF_TILE_FREECLK OT_BF_RSTPART OT_BF_FOREP OT_BF_FOREP32 OT_BF_HELD_SRAM OT_BF_QUEUE32 OT_BF_DELAY_SRAM OT_BF_FINE32",
+  "extra_data_edges": 0,
+  "files": {
+    "rtl/v41rom/ot_v41_bf_col.sv": "f4ad99246a30ea1ed7d87e9352601b50fd4e70d483a7cdc1c2d53e7b367eeb0c",
+    "rtl/v41rom/ot_v41_bf16_lanes3.sv": "33e628a2f5fdd8cc3e38f551b24aff42481af8c5e584c829a721b54df58ace34",
+    "rtl/v41rom/ot_v41_bterm4_w10.sv": "4d52cce36c7e988f0bf24a8b614438d9a9f62932a45f0a1d9d1e2f5964eeee4b",
+    "rtl/v41rom/ot_v41_segtree5_rp.sv": "e520b87b71ebd2cc70f13d52e68bebbef2d5c457c4d27dffa21a8aa27b21c1f8",
+    "rtl/v41rom/ot_v41_fadd_rp.sv": "3a1d2a5f1d01b44166a42e05bcc8be681f5e707836c0a988e138c5e377b0facd",
+    "rtl/v41rom/ot_v41_fadd2_rp.sv": "166aaa1b421352db3c15c7ba213649666987b216fe84618e4af2b6d3ffdff22c",
+    "rtl/v41rom/ot_v41_rst_copy.sv": "8ec411a3838a4ab930aa570e9706dac411a5d8cbfecff13e6e842338cafcb467",
+    "rtl/v41rom/ot_v41_chain4_rp.sv": "79b983da4ef55ccf2e0c1299470d53cd8e611adc67177e7e0505b2d6aa24c046",
+    "rtl/v41rom/ot_v41_bmul2_rne_prepare_rp.sv": "42660f3e355b02b13d8b1825b5fffd5dc8e41652f9b43864d38f43d5541f27a0"
+  },
+  "integration": "carry required4496 dependency paths narrowly; no broad ancestry merge"
+}
