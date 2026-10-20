@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+KVPC_CTRL PASS edges=20000 checks=580624 active_out=172267 outs=16 errors=0 mut=0
+- /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019/out_qkd_kvs_pc_h_sr6/kvpc_ctrl/bench/kvpc_ctrl_m0/tb.sv:156: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.812 s; speed 20.561 us/s
+- Verilator: cpu 0.812 s on 1 threads; allocated 7 MB
+
