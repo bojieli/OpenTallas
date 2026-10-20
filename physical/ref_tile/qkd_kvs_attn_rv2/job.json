@@ -1,5 +1,5 @@
 {
- "name": "qkd_kvs_attn_rv2-rv2-COMMIT",
+ "name": "qkd_kvs_attn_rv2-rv2-e895e42d5",
  "block": "qkd_kvs_attn_fl",
  "ref_tile": true,
  "owner": "Claude:KV-ATTN2",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/kv-attn2-1019",
-  "commit": "COMMIT",
+  "commit": "e895e42d5683c28b824290cbc4b3848e0d422397",
   "extra_paths": [
    "rtl",
    "tools/qwen_kv_die/attn_rv_1019",
@@ -52,7 +52,7 @@
     "fail_witness": "results/rtl/kv_attn_rv_1019/m1/verdict.log"
    },
    {
-    "name": "rv_mut2_rx_valid_no_record_check",
+    "name": "rv_mut2_check_misaligned",
     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m2 2",
     "expect": "fail",
     "threads": 8,
@@ -172,7 +172,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kvs_attn_rv2/qkd_kvs_attn_rv2-rv2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kvs_attn_rv2/qkd_kvs_attn_rv2-rv2-e895e42d5"
   }
  ],
  "cycles_added": 0,
