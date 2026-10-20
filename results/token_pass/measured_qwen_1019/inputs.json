@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.toksim.qwen_rom.inputs.v1",
+ "release_source": "origin/claude/qw-gen3-1019 221cf90b7 (compute dv2f18dh2 -> GEN3 dv2f19g3); KV kvs14 GEN9 (no release KV build yet)",
+ "grades": "REL = RTL byte-identical to the release source; NEWEST = newest bench-passing RTL of the element (labelled); DIAG = measured on RTL that differs from the release source (re-run owed, NOT counted as measured); PRICED = plan/analytic",
+ "price_of_record": {
+  "tok_s": 4810.9,
+  "cycles": 249431,
+  "source": "results/arch/token_path_1018/qwen_rom.json price_of_record (10-13 6,835-cycle production layer)"
+ },
+ "dv": {
+  "grade": "DIAG",
+  "source": "DV family ages vec_ages/stn_ages/slice_ages (qlb_c4b/qlb_c4 benches, Verilator 5.050); realstg real-L0/L1 P8191 stages 14/14 bit-exact (claude/qw-realstg-1019 2cdba303d). 7 of 22 build sources differ from qw-gen3 -> TOKSIM-QW/STG re-runs on gen3"
+ },
+ "tile": {
+  "grade": "REL",
+  "far": 18,
+  "source": "XT1 column slice on dv2f18dh2 (claude/qw-tok-1019 865028dcf, results/rtl/qw_tok_1019/xt1dh2/mu1+mu4): 64/64 bit-exact on real TP8 rank-0 L0 ROM, MU_NU 1 and 4, NOBIND mutant FAIL; 67/70 sources byte-identical to qw-gen3 (3 TB files differ). Edges from hr go at the slice pins; far cluster +18 (XT1 note)",
+  "ops": {
+   "qkv": {
+    "first_rs": 181,
+    "first_final": 237,
+    "last_final": 244
+   },
+   "o": {
+    "first_rs": 181,
+    "first_final": 189,
+    "last_final": 228
+   },
+   "gu": {
+    "first_rs": 181,
+    "first_final": 429,
+    "last_final": 436
+   },
+   "down": {
+    "first_rs": 181,
+    "first_final": 221,
+    "last_final": 324
+   }
+  }
+ },
+ "attention": {
+  "grade": "DIAG",
+  "round_trip_plan_cycles": 1825,
+  "source": "1u compute<->KV D2D pair on dv2f18dh2 (claude/qw-tok-1019, results/rtl/qw_tok_1019/xdie_dh2/pair_img, 34/34 sources = qw-gen3): 35 layers bit-exact, mutants FAIL; roundtrip cmd issue -> r31 land 1840 = C2K 63 + KV service 1779 (KV side = kvs14c kvs_attn LAND=0 stand-in, not GEN9) + K2C; plan term = 1840 - 31 (r0..r31 landing spread) + 16 (plan done = first landed word + 16) = 1825. KV attention on GEN9 -> TOKSIM-QW/KV. TOKSIM-QW/KV: no full QK+softmax+PV16 attention measured on current KV RTL (GEN9 not built, KVJ-B2 unit not rebuildable) -> the 1779 KV service is the kvs14c stand-in => DIAG (D2D part C2K 63/K2C 62 REL)"
+ },
+ "attn_return": {
+  "grade": "DIAG",
+  "source": "QW-ATTNRET measured 98-edge attention-return family (claude/qw-attnret-1019 1ef2c2df6, qlb slice RTL)"
+ },
+ "allreduce": {
+  "grade": "REL",
+  "qtp8": {
+   "E": 286,
+   "ls_rec": 378,
+   "ls_bi": 378,
+   "source": "TOKSIM-QW/LINK claude/toksim-qw-link-1019 cb8eb6b9a: TP8 AR256 on qw-gen3 RTL (30/30 identical) with dv2f18dh2 GEN lanes, Verilator 5.050: E 286 / span 797 / first-in->first-out 541, LS 378; SerDes 339 modelled PHY"
+  },
+  "source": "TOKSIM-QW/LINK record results/token_pass/measured_qwen_1019/link/record.json (REL, 12/12 verdicts)"
+ },
+ "die_edges": {
+  "grade": "PRICED",
+  "cycles": 52,
+  "source": "TOK.QW.SCHED die edges not yet absorbed by the compiler: landings +45/layer, native59 +1, ctlm +4/+2"
+ },
+ "head": {
+  "grade": "PRICED",
+  "cycles": 3101,
+  "source": "token_path_compiled head.lm_head 3,101 (ctlm head plan); STG lm/amax bench on gen3 pending"
+ },
+ "embed_fetch": {
+  "grade": "PRICED",
+  "cycles": 272,
+  "source": "token_path embed 272 (KV-die embedding row fetch); the landing of the 256 words on the compute die is inside L0 cold (lowered)"
+ },
+ "multi_user": {
+  "users": 4,
+  "status": "NEWEST",
+  "grade": "NEWEST",
+  "frame_cycles": 4026800,
+  "tokens_per_frame": [
+   16,
+   15,
+   8,
+   7
+  ],
+  "cycles_per_token_by_user": [
+   251675,
+   268453,
+   503350,
+   575257
+  ],
+  "aggregate_cycles_per_token": 87539,
+  "aggregate_tok_s": 13708.2,
+  "per_user_tok_s": [
+   4768.1,
+   4470.1,
+   2384.0,
+   2086.0
+  ],
+  "source": "TOKSIM-QW/LINK: codec2 OVL 4-user D2D pair fullframe, real D2D ends + PHY model, 63,098 C->K + 57,783 K->C frames exact, one-playhead/collide/slot/user mutants FAIL; OVL hardware is NOT in qw-gen3 (newest = codex/sysface-ovl-1019); producers/consumers modelled -> link-schedule rate, not a full 4-user token run. MU ctx real link REL: slot->compute 18, period 249,600; TP8 4u window E 286 = 1u",
+  "note": "release die uses the serial MU calendar; no paired 4u TB exists for it (owed). Frame user 0 at 16 tok/frame = 4,768 tok/s vs 1u composed below."
+ }
+}

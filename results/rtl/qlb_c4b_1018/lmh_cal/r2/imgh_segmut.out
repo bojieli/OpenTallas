@@ -1,0 +1,14 @@
+CTLM_PROG MUT=0 BMUT=0 DEFS=OT_SEG_MUT HEAD=1 DECODE=3: FAIL 126/131  rom_go-issue None nat_go-issue None csr@1042
+    fault rise at 24695: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    missing ISSUE at 27787 (29, 0)
+    unexpected ISSUE at 24693 (1, 1)
+    unexpected ROM at 24695 None
+    unexpected ISSUE at 25191 (11, 1)
+    unexpected ROM at 25193 None
+    unexpected ISSUE at 26884 (12, 1)
+    unexpected ROM at 26886 None
+    unexpected ISSUE at 27259 (13, 0)
+    ROM command go count 15 vs ROM issues 14 (offsets None)
+rc=1

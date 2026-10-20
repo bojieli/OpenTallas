@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.qlb_c4b.lmh_cal.v1",
+ "lane": "QLB-C4b/2 (RTL gap: LM-head fixed-issue calendar armed only at prog_base 0)",
+ "date": "2026-10-18",
+ "verdict": "CLOSED in RTL + compiler: an ME programme at a nonzero base (the LM-head programme, stage 37, base 25) issues every ME op / END and arms its XPF on the compiled edges; base-0 behaviour unchanged (123/123, same QLB-PROG mutants fail identically)",
+ "rtl": {
+  "files": [
+   "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv (SEG param + start_base port; SEG 0 = as built, hierarchy g_dense.u_store unchanged)",
+   "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv (+ module ot_qwen_fixed_issue_seg_pw: base-0 rows PW976..983 as built, segment-G rows PW984..991, CALG 992 stop, CALB 993 {count, base}; start at base 0 -> seg 0, at CALB base -> seg G, other bases -> no calendar start)",
+   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv + ot_qfd_tt_ctlm_head_static_rk.sv (SEGCAL param, default 0 = as built: .start(q_h_start && (q_prog_base==0 || SEGCAL!=0)), .start_base(q_prog_base), .SEG(SEGCAL))",
+   "rtl/qwen_dv/qfd_tt_ctlm_dv.sv (SEG_CAL param, default = STAGE_ME: head SEGCAL 1 + segment-G XPF schedule (new qfd_dv_xpf_seg_loader PW993..1003 + ot_qfd_xpf_static_schedule N 3) started by the LOCAL SEG at the CALB base; every monitored issue goes to exactly one schedule; MUT 9 / 10 negative controls)"
+  ],
+  "why_xpf": "the base-0 XPF schedule faults on any monitored ME/SU issue while inactive, and the LM-head matvec needs its own x-epoch arm: the calendar fix alone would have raised xpf_sch at the first head SU command",
+  "edges": "0 extra edges on every path; images without the G words (all zero) behave as built",
+  "lint": "head_static_rk elaborates at SEGCAL 0 and 1 (Verilator 5.050 --lint-only, no %Error)"
+ },
+ "compiler": {
+  "tool": "tools/qwen_layerbench/ctlm_image.py --lm-head",
+  "programme": "LM head at base 25 = decode words: 3 SU (final RMSNorm: ssq, rsqrt, gain apply -> VM 8192, from token_source_plan head_profiles[0]) + ONE AMAX matvec (head_geometry rows 18992, 6 tiles a round, 25 rounds) + END",
+  "plan": "planned on the LM-head token-path window head.lm_head (3101 cycles) with the decode plan rules (plan_stage); LOCAL SEG at stage edge 5",
+  "g_rows": [
+   {
+    "pc": 28,
+    "unit": 1,
+    "cycle": 199,
+    "hex": "101c000000c7"
+   },
+   {
+    "pc": 29,
+    "unit": 0,
+    "cycle": 3127,
+    "hex": "401d00000c37"
+   }
+  ],
+  "g_stop": 3127,
+  "g_xpf": [
+   {
+    "consumer_pc": 28,
+    "producer_pc": 27,
+    "producer_unit": 2,
+    "arm_cycle": 103,
+    "issue_cycle": 98,
+    "first_write_cycle": 121,
+    "xpf72": "800112002010004001"
+   }
+  ],
+  "g_xpf_stop": 3127,
+  "default_image": "unchanged without --lm-head (program.memh byte-identical to the base-branch compiler, digest c36fbf0c46078f2b)"
+ },
+ "bench": {
+  "vehicle": "rtl/test/qwen_dv/tt_ctlm_prog_bench.py + tb_qfd_tt_ctlm_prog.sv (qfd_tt_ctlm_dv STAGE_ME 1 -> SEG_CAL 1), Verilator 5.050 on ot-epyc5 (fleet), run.sh / launch.sh",
+  "results": {
+   "img0 m0 (default image, base-0 regression)": "PASS 123/123",
+   "img0 bmut1 / bmut2 / mut1": "FAIL (identical to unit_c4)",
+   "imgh m0 (LM-head image: 3 decode stages + stage 37 at base 25)": "PASS 131/131 (123 + head SEG, 3 SU cmds, ME issue PC28 @head cycle 199, ROM go, XPF arm, END PC29 @3127)",
+   "imgh mut 9 (head calendar armed at base 0 only = pre-C4b gate)": "FAIL 128/131: missing ISSUE PC28 / ROM go / END PC29 (no fault: the head silently never issues = the gap)",
+   "imgh mut 10 (G XPF never starts = pre-C4b XPF start)": "FAIL 130/131: xpf_sch fault + missing XPF arm",
+   "imgh bmut 3 (image: G row 0 one cycle late)": "FAIL 129/131: ISSUE/ROM one edge late",
+   "imgh OT_SEG_MUT (segment G reads base-0 rows)": "FAIL 126/131: head fault, decode PCs issued in stage 37"
+  },
+  "fail_regex": "CTLM_PROG .*: FAIL",
+  "pass_regex": "CTLM_PROG MUT=0 BMUT=0 DEFS=- HEAD=1 DECODE=3: PASS 131/131",
+  "witnesses": "results/rtl/qlb_c4b_1018/lmh_cal/r2 (summary.txt, *.out, w_*/log_*.txt, w_*/ev_*.txt)",
+  "sources": "results/rtl/qlb_c4b_1018/lmh_cal/r2/source.sha256 (38 files, fleet == committed)"
+ },
+ "owed": [
+  "RE-HARDEN: qfd_tt_ctlm_dv / tt_ctlm view (DV die) -- SEG_CAL 1 adds the segment-G rows (8 x 47 b + 128 b desc), the G XPF loader + N 3 schedule (~3 x 188 b records) and the hr xpf mux; the die GEN must instantiate qfd_tt_ctlm_dv with STAGE_ME 1 (SEG_CAL follows) and load the --lm-head image",
+  "closed hardened kits using qfd_tt_ctlm_head_static / _rk (qfd_tt_ctlm_head*, qfd_tt_head_static*) are SEGCAL 0 = logically as built, but their source files changed (source binding digest refresh; no re-route needed for SEGCAL 0)",
+  "other ot_qwen_fixed_issue_pw instances (seq_su_bi_static / _gateway, tb_qfd_static_head_face) leave the new start_base port unconnected (unused at SEG 0; Verilator PINMISSING is a style warning)",
+  "head SU ops still go out as broadcast SU commands (no DV slice lowering of the head: norm apply / AMAX command fields / argmax tree = G-C4)",
+  "c_ctl die-netlist slice re-run with the --lm-head image not done"
+ ]
+}

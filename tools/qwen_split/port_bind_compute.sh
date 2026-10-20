@@ -11,6 +11,10 @@ D=$(readlink -f "$1"); O=$(mkdir -p "$2" && readlink -f "$2")
 R=$(cd "$(dirname "$0")/../.." && pwd)
 python3 $R/tools/qwen_split/gen_relay_rtl.py $D $O/die_glue.sv > $O/die_glue.json || exit 3
 # the re-packed 45-entry tile (OT_SPLIT_TILE_GRANT) binds through its die-name wrappers (Q-NETLIST 10-16)
+# MU-DIE-QW 10-19: the child closure (S81-LBGAP G6/G7 binder) found 6 modules defined with different interfaces in frozen
+# kit copies (physical/ref_tile/*/src/rtl/...) and twice in rtl/ (ot_hdc_qadd): resolve a closed tile's modules from its spec
+# sources (the RTL of record of the closed view) -- OT_PORT_BIND_REF_TILE_PREFER=0 restores the plain index.
+RTP=; [ "${OT_PORT_BIND_REF_TILE_PREFER:-1}" = 1 ] && RTP=--ref-tile-prefer
 T45=; grep -q 'ck_fa0' $D && T45="--rtl-file $R/rtl/physical/qfd_tile_rp2_45_slots.sv --rtl-file $R/rtl/physical/qfd_tile_nk_rp2_45.sv --rtl-file $R/rtl/physical/qfd_tile_nl_rp2_45.sv"
 python3 $R/tools/die_port_bind.py $D $T45 --rtl-file $O/die_glue.sv --rtl-file $R/rtl/qwen_split/qfd_link_slots.sv --rtl-file $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv \
   --rtl-file $R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
@@ -19,7 +23,7 @@ python3 $R/tools/die_port_bind.py $D $T45 --rtl-file $O/die_glue.sv --rtl-file $
   --allow-model qfd_ckbump --allow-model qfd_sigbump --allow-model ot_qkvd_ucie_x64_phy --allow-model ot_qkvd_ucie_x64_phy_model \
   --allow-model ot_qfd_ucie_x64_phy --allow-model ot_qfd_serdes_112g_x12_phy_s597 \
   --lib-root $R/physical/asap7_memory_macros \
-  --define OT_QFD_UP4_CK_ENTRIES --strap-file ${OT_PORT_BIND_STRAPS:-$R/results/arch/qwen_split_compute_1014/straps.json} --out $O/port_bind.json > $O/port_bind.txt 2>&1
+  --define OT_QFD_UP4_CK_ENTRIES $RTP --strap-file ${OT_PORT_BIND_STRAPS:-$R/results/arch/qwen_split_compute_1014/straps.json} --out $O/port_bind.json > $O/port_bind.txt 2>&1
 rc=$?
 tail -1 $O/port_bind.txt
 # Q-COLLCAL 10-18: lane audit (one stage count per bus group; landing K straps = the GEN's total E; io_collective LX0..2

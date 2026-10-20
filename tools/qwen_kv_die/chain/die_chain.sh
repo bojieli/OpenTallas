@@ -120,6 +120,16 @@ else say "PDN FAIL rc=$pdn_rc ($C/run_pdn.log)"; exit 1; fi
 fi
 fi
 mkdir -p $G; cp $H/grt.tcl $G/; place $C/floorplan_pdn.odb $G/floorplan_pdn.odb || { say "GRT: cannot place floorplan_pdn.odb in $G"; exit 1; }
+# GEN16 item 6 (10-19, OT_DIE_CLOCK_PHYS=1, Qwen compute): the PHYSICAL die clock (regional entries + forwarded spine,
+# tools/qwen_split/chain_dieclk.sh) is built on the PDN floorplan BEFORE GRT; GRT routes its nets, STA takes the measured
+# arrivals as source latency (dieclk_lat_<c>.tcl).  Fail closed: no complete die clock, no GRT.
+if [ "${OT_DIE_CLOCK_PHYS:-0}" = 1 ]; then
+  say "DIE CLOCK PHYS start (chain_dieclk.sh ${OT_DIE_CLOCK_VARIANT:-spine}: on case_${DIE}/floorplan_pdn.odb, before GRT)"
+  bash $SRC/tools/qwen_split/chain_dieclk.sh $R $SRC > $R/dieclk.log 2>&1 || { say "DIE CLOCK PHYS FAIL ($R/dieclk.log, $R/dieclk/STATUS.log): $(tail -1 $R/dieclk.log | cut -c1-300)"; exit 1; }
+  # QW-GEN2 10-19: dv2f18dh2 died here (ORD-0007: ln of the root-owned docker output -> Permission denied): copy, never link
+  rm -f $G/floorplan_pdn.odb; cp $R/dieclk/${OT_DIE_CLOCK_VARIANT:-spine}/tt/clock.odb $G/floorplan_pdn.odb || { say "DIE CLOCK PHYS: clock.odb copy FAIL"; exit 1; }
+  say "DIE CLOCK PHYS: $(grep -h -E 'CHECK TT\+FF|QCLK_SPINE_NEIGHBOUR|QCLK_SPINE_MANIFEST|QCLK_REGIONAL|DIECLK_STA_LAT' $R/dieclk/STATUS.log | tr '\n' ' ' | cut -c1-900)"
+fi
 # DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 = shared die-net repeater step before GRT (tools/die_repeaters); the
 # element / ETM / PHY TT libs of this run are what the resizer sees (a master with signal pins and no liberty FAILS it)
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
@@ -135,6 +145,11 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
   python3 $SRC/tools/die_repeaters/step.py copy $G > /dev/null && \
   python3 $SRC/tools/die_repeaters/step.py tcl --design $RD --report /work/die_repeaters.json --libs-file /work/libs_tt.txt \
     --std-corner TT --legalize snap "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
+  # Q-RLYFCLK 10-19: forwarded-lane capture payload contract (a[] + ea; landing K straps from own ties are not payload)
+  if [ "${RD%_fwd}" != "$RD" ] && [ -f $SRC/tools/qwen_split/fclk_data_ports.py ]; then
+    { python3 $SRC/tools/qwen_split/fclk_data_ports.py $C/die.v && cat $G/die_rep_call.tcl; } > $G/die_rep_call.tcl.new && \
+      mv $G/die_rep_call.tcl.new $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: fclk data-port contract"; exit 1; }
+  fi
 fi
 $ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0}
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
@@ -163,6 +178,13 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   CP=; [ -s $R/clock/plan.json ] && CP=$R/clock/plan.json
   python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl $CP || { say "STA $c Tcl generation FAIL"; sta_failed=1; continue; }
   say "STA $c clock: ${OT_STA_CLOCKS:-${CP:-ideal (no clock plan)}}"
+  if [ "${OT_DIE_CLOCK_PHYS:-0}" = 1 ]; then
+    # GEN16 item 6: measured die-clock arrivals as source latency after the compensated clocks (SS: no measured corner)
+    if [ -s $R/dieclk/dieclk_lat_$c.tcl ] && grep -q OT_COMPENSATED_CLOCK $D/grt_$c.tcl; then
+      sed -i "/OT_COMPENSATED_CLOCK/r $R/dieclk/dieclk_lat_$c.tcl" $D/grt_$c.tcl; say "STA $c: physical die clock arrivals ($(head -2 $R/dieclk/dieclk_lat_$c.tcl | tail -1 | cut -c1-160))"
+    elif [ "$c" = ss ]; then say "STA ss: die clock NOT measured at SS (sensitivity corner; ideal die clock)"
+    else say "STA $c: DIE CLOCK PHYS latency file missing or no compensated clock block"; sta_failed=1; continue; fi
+  fi
   # ROOT 2026-10-16 (coordinator, owner-approved): shared die clock check on every die trial (tools/die_clock_check.*);
   # dumped inside the STA session after the reports, corners in OT_DCC_CORNERS (default tt)
   DCC=0; case " ${OT_DCC_CORNERS:-tt} " in *" $c "*) DCC=1;; esac

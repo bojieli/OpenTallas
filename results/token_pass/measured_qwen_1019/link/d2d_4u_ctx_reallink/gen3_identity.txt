@@ -1,0 +1,15 @@
+GEN3_IDENTICAL rtl/lib/ot_rst_pipe.sv
+GEN3_IDENTICAL rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
+GEN3_IDENTICAL rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv
+GEN3_IDENTICAL rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
+GEN3_IDENTICAL rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+GEN3_IDENTICAL rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv
+GEN3_IDENTICAL rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv
+GEN3_IDENTICAL rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
+GEN3_IDENTICAL rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv
+GEN3_IDENTICAL rtl/qwen_sys/mu_qwen_20261018/qkd_host_record_port_mu.sv
+GEN3_IDENTICAL rtl/qwen_split/mu/qfd_mu_ctx_rx.sv
+GEN3_IDENTICAL physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv
+GEN3_IDENTICAL physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
+NOT_IN_GEN3 rtl/test/qwen_split/tb_mu_context_real_link.sv
+GEN3_IDENTICAL rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh

@@ -1,0 +1,7 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2948734-1792457503 after 1 s
+FAULT_SOURCE edge5010 mono in_bad1 fp_bad0 cfg_sched0
+[50426000] %Fatal: tb_station_regional.sv:116: Assertion failed in tb_station_regional: REGIONAL_FAULT_LATE edge5042 (> 32 edges)
+%Error: rtl/test/qwen_dv/safe_storage/tb_station_regional.sv:116: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2948734-1792457503): exit 1

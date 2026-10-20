@@ -1,0 +1,346 @@
+{
+ "mu1_l4_g2": {
+  "verdict": "PASS",
+  "exact": "64/64",
+  "ops": {
+   "qkv": {
+    "first_rs": 181,
+    "first_final": 237,
+    "last_final": 244,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "8/8",
+    "rounds": [
+     [
+      237,
+      244,
+      8
+     ]
+    ]
+   },
+   "o": {
+    "first_rs": 181,
+    "first_final": 189,
+    "last_final": 228,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "24/24",
+    "rounds": [
+     [
+      189,
+      196,
+      8
+     ],
+     [
+      205,
+      212,
+      8
+     ],
+     [
+      221,
+      228,
+      8
+     ]
+    ]
+   },
+   "gu": {
+    "first_rs": 181,
+    "first_final": 429,
+    "last_final": 436,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "8/8",
+    "rounds": [
+     [
+      429,
+      436,
+      8
+     ]
+    ]
+   },
+   "down": {
+    "first_rs": 181,
+    "first_final": 221,
+    "last_final": 324,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "24/24",
+    "rounds": [
+     [
+      221,
+      228,
+      8
+     ],
+     [
+      269,
+      276,
+      8
+     ],
+     [
+      317,
+      324,
+      8
+     ]
+    ]
+   }
+  }
+ },
+ "mu1_l8_g4": {
+  "verdict": "PASS",
+  "exact": "64/64",
+  "ops": {
+   "qkv": {
+    "first_rs": 181,
+    "first_final": 237,
+    "last_final": 244,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "8/8",
+    "rounds": [
+     [
+      237,
+      244,
+      8
+     ]
+    ]
+   },
+   "o": {
+    "first_rs": 181,
+    "first_final": 189,
+    "last_final": 228,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "24/24",
+    "rounds": [
+     [
+      189,
+      196,
+      8
+     ],
+     [
+      205,
+      212,
+      8
+     ],
+     [
+      221,
+      228,
+      8
+     ]
+    ]
+   },
+   "gu": {
+    "first_rs": 181,
+    "first_final": 429,
+    "last_final": 436,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "8/8",
+    "rounds": [
+     [
+      429,
+      436,
+      8
+     ]
+    ]
+   },
+   "down": {
+    "first_rs": 181,
+    "first_final": 221,
+    "last_final": 324,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "24/24",
+    "rounds": [
+     [
+      221,
+      228,
+      8
+     ],
+     [
+      269,
+      276,
+      8
+     ],
+     [
+      317,
+      324,
+      8
+     ]
+    ]
+   }
+  }
+ },
+ "mu4_l4_g2": {
+  "verdict": "PASS",
+  "exact": "64/64",
+  "ops": {
+   "qkv": {
+    "first_rs": 181,
+    "first_final": 237,
+    "last_final": 244,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "8/8",
+    "rounds": [
+     [
+      237,
+      244,
+      8
+     ]
+    ]
+   },
+   "o": {
+    "first_rs": 181,
+    "first_final": 189,
+    "last_final": 228,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "24/24",
+    "rounds": [
+     [
+      189,
+      196,
+      8
+     ],
+     [
+      205,
+      212,
+      8
+     ],
+     [
+      221,
+      228,
+      8
+     ]
+    ]
+   },
+   "gu": {
+    "first_rs": 181,
+    "first_final": 429,
+    "last_final": 436,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "8/8",
+    "rounds": [
+     [
+      429,
+      436,
+      8
+     ]
+    ]
+   },
+   "down": {
+    "first_rs": 181,
+    "first_final": 221,
+    "last_final": 324,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "24/24",
+    "rounds": [
+     [
+      221,
+      228,
+      8
+     ],
+     [
+      269,
+      276,
+      8
+     ],
+     [
+      317,
+      324,
+      8
+     ]
+    ]
+   }
+  }
+ },
+ "mu4_l8_g4": {
+  "verdict": "PASS",
+  "exact": "64/64",
+  "ops": {
+   "qkv": {
+    "first_rs": 181,
+    "first_final": 237,
+    "last_final": 244,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "8/8",
+    "rounds": [
+     [
+      237,
+      244,
+      8
+     ]
+    ]
+   },
+   "o": {
+    "first_rs": 181,
+    "first_final": 189,
+    "last_final": 228,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "24/24",
+    "rounds": [
+     [
+      189,
+      196,
+      8
+     ],
+     [
+      205,
+      212,
+      8
+     ],
+     [
+      221,
+      228,
+      8
+     ]
+    ]
+   },
+   "gu": {
+    "first_rs": 181,
+    "first_final": 429,
+    "last_final": 436,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "8/8",
+    "rounds": [
+     [
+      429,
+      436,
+      8
+     ]
+    ]
+   },
+   "down": {
+    "first_rs": 181,
+    "first_final": 221,
+    "last_final": 324,
+    "d_clu": 165,
+    "d_head": 16,
+    "exact": "24/24",
+    "rounds": [
+     [
+      221,
+      228,
+      8
+     ],
+     [
+      269,
+      276,
+      8
+     ],
+     [
+      317,
+      324,
+      8
+     ]
+    ]
+   }
+  }
+ }
+}

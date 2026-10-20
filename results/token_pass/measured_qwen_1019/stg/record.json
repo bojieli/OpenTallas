@@ -1,0 +1,115 @@
+{
+ "schema": "opentallas.toksim-qw.stg.v1",
+ "lane": "TOKSIM-QW/STG",
+ "date": "2026-10-19",
+ "position": 8191,
+ "layers": [
+  0,
+  1
+ ],
+ "grade": "PENDING (stage runs executing on ot-epyc5; fold with collect.py)",
+ "rtl_source": "origin/claude/qw-gen3-1019 @221cf90b7; all 31 build sources byte-identical (build_sources.sha256)",
+ "bench_tools": "dv_lower_vec_bench.py / dv_lower_mat_bench.py / dv_lower_vec.py / dv_lower_mat.py / dv_layer_fixture.py from origin/claude/qw-realstg-1019 @2cdba303d (not on gen3); dv_bench.py / dv_bench2.py / dv_lower.py = gen3 (supersets of realstg). Bench change: dv_lower_bench.build reads DV_LOWER_VFLAGS (extra -G flags; -GSU_LT=1 adds dv_bench2.XSRCS); unset = original build. gen3 tb_qfd_dv2.sv wraps the slice in tb_dv2_slice (FACE 0 = master qfd_dv_slice2), ports unchanged for the benches.",
+ "configs": {
+  "base": "tb_qfd_dv2 N12 default params (MU_NU 1, SU_LT 0) = QW-REALSTG configuration on gen3 RTL",
+  "rel": "release slice kit params (physical/ref_tile/qfd_dv_slice2_{w,e} kit.env: SU_LT 1, MU_NU 4), master core FACE 0 (the lpf_lp landed-parent wrapper is not simulated here)"
+ },
+ "verilator": "5.050 (~/.local/opentallas-tools/verilator-5.050)",
+ "host": "ot-epyc5 units oth-ubuntu-854610-1792459793 (base), oth-ubuntu-854746-1792459793 (rel); run root /srv/opentallas-scratch/claude/toksim-qw-stg/{base,rel}",
+ "calibration": "run.sh re-derives slice_ages (dv_lower_bench --calibrate), vec_ages (vec --mode calibrate), stn_ages (mat --calibrate) on gen3 RTL and runs every stage with the re-derived vec/stn ages; compare to committed realstg ages (vec 067ae936.., stn 5d5601f3..)",
+ "prior_realstg_spans": {
+  "resid": 1044,
+  "qk": 926,
+  "silu": 814,
+  "qkv": 407,
+  "gu": 407,
+  "od": 1555
+ },
+ "xt1_dh2": {
+  "grade": "REL (qw-tok 865028dcf; 70 sources, only 3 TB files differ from gen3)",
+  "source": "origin/claude/qw-tok-1019 results/rtl/qw_tok_1019/xt1dh2/{mu1,mu4}/log_nominal_{l4_g2,l8_g4}.txt.result.json",
+  "units": "cycles after hr_go (ME go at the XT1 column slice); first_rs = first rs (level-6 cluster) word, first/last_final = final words of the op on rs",
+  "per_op": {
+   "qkv": {
+    "first_rs": 181,
+    "first_final": 237,
+    "last_final": 244,
+    "rounds": [
+     [
+      237,
+      244,
+      8
+     ]
+    ],
+    "exact": "8/8"
+   },
+   "o": {
+    "first_rs": 181,
+    "first_final": 189,
+    "last_final": 228,
+    "rounds": [
+     [
+      189,
+      196,
+      8
+     ],
+     [
+      205,
+      212,
+      8
+     ],
+     [
+      221,
+      228,
+      8
+     ]
+    ],
+    "exact": "24/24"
+   },
+   "gu": {
+    "first_rs": 181,
+    "first_final": 429,
+    "last_final": 436,
+    "rounds": [
+     [
+      429,
+      436,
+      8
+     ]
+    ],
+    "exact": "8/8"
+   },
+   "down": {
+    "first_rs": 181,
+    "first_final": 221,
+    "last_final": 324,
+    "rounds": [
+     [
+      221,
+      228,
+      8
+     ],
+     [
+      269,
+      276,
+      8
+     ],
+     [
+      317,
+      324,
+      8
+     ]
+    ],
+    "exact": "24/24"
+   }
+  },
+  "identical_across": [
+   "mu1_l4_g2",
+   "mu1_l8_g4",
+   "mu4_l4_g2",
+   "mu4_l8_g4"
+  ],
+  "all_pass": true,
+  "consistency": "XT1 numbers are identical for MU_NU 1 and 4 and both lead/gap variants. The DV mat spans start at the first lowered DV edge with tile words driven by the bench at the TILE-DELIVERY CONTRACT edges, so they exclude tile compute: per op total = XT1 hr_go->last_final (qkv 244, o 228, gu 436, down 324) + DV-side span after the first far word. dv_lower_mat.splice uses tile_first=40 (placeholder, \"not compiled by any tool\") for ME issue -> first far word; the measured XT1 value is 181 (first_rs) / per-op first_final 189..429, so the spliced calendar must move by +141 or more cycles (not a contradiction of the DV spans, an unmeasured constant in the lowering)."
+ }
+}

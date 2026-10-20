@@ -6,14 +6,20 @@ set -eu
 OUT=$(mkdir -p "$1" && readlink -f "$1"); shift
 MUTS=${*:-1 2 3 4 5}
 R=$(cd "$(dirname "$0")/../../.." && pwd)
+# MU-DQ-SYSFACE 10-19: D2D_MU=1 = the MU release build (qfd_sys_face MU kit): the D2D sequencer source is
+# ot_qwen_d2d_cal_seq_dies_mu.sv with the MU image d2d_cal_image_mu.svh (+ the token-run MU context slot), the face and the
+# bench #(MU 1) (filler head contexts, check 7; mutants 6 / 7 must FAIL); default = MU 0.
+DIMG=d2d_cal_image.svh; DSEQ=ot_qwen_d2d_cal_seq_dies.sv
+if [ "${D2D_MU:-0}" = 1 ]; then DIMG=d2d_cal_image_mu.svh; DSEQ=ot_qwen_d2d_cal_seq_dies_mu.sv; fi
+export DIMG
 # production token timeline: the D2D sequencer's compiled starts (d2d_cal_image.svh) + the bench layer / row events
 python3 - $R $OUT <<'PY'
 import json, re, sys
 R, OUT = sys.argv[1], sys.argv[2]
 b = json.load(open(f'{R}/rtl/test/qwen_split/sys_face_bench_events.json'))
-v = int(re.search(r"D2D_CAL_START = 720'h([0-9a-f]+)", open(f'{R}/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh').read()).group(1), 16)
+v = int(re.search(r"D2D_CAL_START = 720'h([0-9a-f]+)", open(f'{R}/rtl/qwen_sys/d2d_static_20261015/'+__import__('os').environ['DIMG']).read()).group(1), 16)
 st = [(v >> (20 * l)) & ((1 << 20) - 1) for l in range(36)]
-img = open(f'{R}/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh').read()
+img = open(f'{R}/rtl/qwen_sys/d2d_static_20261015/'+__import__('os').environ['DIMG']).read()
 iv = lambda n: int(re.search(rf'{n} = (\d+)', img).group(1))
 PERIOD, FIRST = iv('D2D_TOKEN_PERIOD'), iv('D2D_FIRST_TOKEN')
 C0, L0, EMB = b['go_ofs'], b['l0_start'], b['emb_stage']
@@ -25,7 +31,7 @@ ev = dict(first_token=FIRST - C0,  # t_go edges after the strobe: the token cal_
           d2d_first_token=FIRST, d2d_adm_ofs=iv('D2D_ADM_OFS'), T=T, L=b['L'], E=b['E'], go_ofs=C0, cal=[(C0, 1)] + [(C0 + st[l], 0) for l in range(1, 36)])
 json.dump(ev, open(f'{OUT}/events.json', 'w'))
 PY
-python3 $R/tools/qwen_split/sys_face_image.py --events $OUT/events.json --bench-program --d2d-image $R/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh --out $OUT/img > $OUT/img.json
+python3 $R/tools/qwen_split/sys_face_image.py --events $OUT/events.json --bench-program --d2d-image $R/rtl/qwen_sys/d2d_static_20261015/$DIMG --out $OUT/img > $OUT/img.json
 python3 - $OUT/events.json $OUT/tb_qfd_sys_face_events.svh <<'PY'
 import json, sys
 ev = json.load(open(sys.argv[1]))
@@ -55,7 +61,7 @@ PY
 sed 's/parameter string /parameter /g' $R/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v > $OUT/ot_rom_4096x72_m8.v
 F="$R/rtl/qwen_split/qfd_sys_face.sv $R/rtl/qwen_split/qfd_embedding_word_provider.sv
    $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
-   $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv
+   $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv $R/rtl/qwen_sys/d2d_static_20261015/$DSEQ
    $R/rtl/qwen_split/qfd_sys_face_record_port.sv
    $R/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
    $R/rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv
@@ -66,7 +72,7 @@ F="$R/rtl/qwen_split/qfd_sys_face.sv $R/rtl/qwen_split/qfd_embedding_word_provid
    $R/rtl/test/qwen_split/tb_qfd_sys_face.sv"
 rc=0
 for M in 0 $MUTS; do
-    iverilog -g2012 -s tb_qfd_sys_face -I $OUT -I $R/rtl/qwen_sys/d2d_static_20261015 -Ptb_qfd_sys_face.MUT=$M -Ptb_qfd_sys_face.IMG=\"$OUT/img\" -o $OUT/sim_$M $F
+    iverilog -g2012 -s tb_qfd_sys_face -I $OUT -I $R/rtl/qwen_sys/d2d_static_20261015 -Ptb_qfd_sys_face.MUT=$M -Ptb_qfd_sys_face.MU=${D2D_MU:-0} -Ptb_qfd_sys_face.IMG=\"$OUT/img\" -o $OUT/sim_$M $F
     (cd $OUT && vvp -n sim_$M > run_$M.log 2>&1) || true
     L=$(grep -E "SYS_FACE_(PASS|FAIL)" $OUT/run_$M.log | tail -1); echo "$L"
     if [ $M = 0 ]; then case "$L" in SYS_FACE_PASS*) ;; *) rc=1;; esac
