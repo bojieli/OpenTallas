@@ -10,6 +10,6 @@ Bench: rtl/hbm_accel/die_glue/test/bench_rly_rfc.sh (Verilator 5.050): 6 instanc
 - 3 fanout: PASS: rfi drives 2 flops, land[1] drives q + the AND, rfo drives one forest stage or leaf
 - 4 depth: PASS: rfi -> async clear; flop -> AND -> rfo; no combinational data in->out path
 - 5 storage: PASS: 3 flops; no delay line >= 3 (the 3-edge age is 2 landing + 1 carrier flop, not a shift chain)
-- 6 floorplan: PASS: same outline as the closed station kit (+3 flops on a >= 21.6 x 21.6 um strip: util rise < 1%); rfi on the i face, rfo on the o face
+- 6 floorplan: PASS: same outline as the closed station kit (+3 flops on a >= 21.6 x 21.6 um strip: util rise < 1%); rfi on the i face, rfo on the o face (1136 _rrfc: both on the ck/rs face, the o face is pin-full)
 - 7 clock: PASS: the station clock ck (planner hosts only on stations of the forest domain); hold_margin / io_hold_margin 0.03; pin-flop spread judged by the gate --cts
 - 8 schedule: PASS: static; data stage unchanged (0 data cycles); reset release age 3 edges per hosted stage, charged by reset_forest_layer --host-form rfc in every leaf / pad age (equal-age leaves)
