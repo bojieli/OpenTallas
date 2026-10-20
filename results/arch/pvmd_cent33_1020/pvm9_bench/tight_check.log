@@ -1,0 +1,6 @@
+PVM PASS checked=192 (8 runs of 1..8 chunks, tight fold calendar, 4 publications; {'pv': '8', 'pub': '64', 'fault': '0', 'fault_cyc': '-1', 'cycles': '532', 'cmp_edges': '533', 'reassert': '0', 'xrand': '0', 'lane_edges': '529'})
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/pvm9-1020/bench/tight/native_cells.v
+Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: $finish at 535ns; walltime 0.029 s; speed 18.439 us/s
+- Verilator: cpu 0.029 s on 1 threads; allocated 10 MB
+PVM PASS checked=192 (8 runs of 1..8 chunks, tight fold calendar, 4 publications; {'pv': '8', 'pub': '64', 'fault': '0', 'fault_cyc': '-1', 'cycles': '532', 'cmp_edges': '533', 'reassert': '0', 'xrand': '0', 'lane_edges': '529'})
