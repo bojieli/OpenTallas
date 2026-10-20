@@ -2,12 +2,12 @@
  "name": "hnx_rp3lp3_xs3n-xs3n-COMMIT",
  "block": "hnx_xs3",
  "ref_tile": true,
- "owner": "Claude HBM-NEXT-P3-SM",
+ "owner": "Claude HNX-SM4",
  "purpose": "NEXT-release HBM die (OWNER 10-19 P3+(a), not a release gate): the SHARED 3-lane x store of the SM P = 3 leaf (hnx_xs4's generator at P = 3); hnx_rp3* is NOT in critical_tiles.txt (LEAD2-HBM D1: normal Claude flow, checklist in README)",
  "threads": 16,
  "peak_ram_gb": 96,
  "source": {
-  "branch": "claude/lh-p3die-1019",
+  "branch": "claude/hnx-sm4-1020",
   "commit": "COMMIT"
  },
  "stages": {
