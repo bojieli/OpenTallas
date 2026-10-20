@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       admits   832 GB (avail 696, growth 113, headroom 0, waiters 0/0 GB) load 61/128 running 34 disk 55 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-e86-5-1020/a8fa
+ot-run: ot-epyc7       admits   642 GB (avail 545, growth 95, headroom 0, waiters 0/0 GB) load 41/96 running 21 disk 5664 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/hbm-e86-5-1020/a8fa
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-e86-5-1020/a8fa
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-e86-5-1020/a8fa
+ot-run: -> ot-epyc7
+ot-heavy: request 96G is charged 63G (class 'run_tile_rg_crep.sh' measured peak 42.0G, n=4+0 proved); the cap stays 96G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3847327-1792488345 after 0 s
+TKM_RG_CREP MUT2 cycles4000 ins2139 ovf2034 up173 tau1995 errors2835 FAIL
+MISMATCH t=270000 ovf 0/0 busy 1/1 tau 0000000000000000000000/120bba282abf743756cadf up_eq 1 ovfb_eq 1
+MISMATCH t=290000 ovf 0/0 busy 1/1 tau 0000000000000000000000/1fe73eb65f45e5a8780ca9 up_eq 1 ovfb_eq 1
+MISMATCH t=320000 ovf 0/1 busy 1/1 tau 1fe73eb65f45e5a8780ca9/1fe73eb65f45e5a8780ca9 up_eq 1 ovfb_eq 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3847327-1792488345): exit 1

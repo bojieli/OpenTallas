@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "status": "PASS",
+  "max_dynamic_loads": 31,
+  "roots_examined": 131019,
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_ot_hbm_idx_topk_link_static_p_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "ff0b71d8f74d6e09e0ae8a991de6dcba4e9076fac4db916802c339b296b55fda"
+  },
+  "role_errors": [],
+  "violations": [],
+  "source_start_commit": "770a7d4c4b6a09e42f6c9291d82358c11025f8fa",
+  "qualification": "Native census only; CTS/GRT/physical/reset/storage obligations remain open"
+}

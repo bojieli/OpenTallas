@@ -1,0 +1,67 @@
+[
+  {
+    "candidate": "v3",
+    "status": "PASS",
+    "roots_examined": 285208,
+    "max_dynamic_loads": 32,
+    "violations": 0,
+    "role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hgi_coll_tkm_tile_e86_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "d935f2b9c50f6670271b5ddf4d31c0277109adbbdd92176e123812b8bffb5862"
+    },
+    "raw_receipt": "/home/ubuntu/scratch/hbm-e86-5-1020/v3_census.json"
+  },
+  {
+    "candidate": "v3f",
+    "status": "FAIL",
+    "roots_examined": 296868,
+    "max_dynamic_loads": 47,
+    "violations": 7,
+    "role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hgi_coll_tkm_tile_e86_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "5e95b26f8008a8f6f96f8ad8f4ae6da739a584dce9aa9a25420c12df85ce707c"
+    },
+    "raw_receipt": "/home/ubuntu/scratch/hbm-e86-5-1020/v3f_census.json"
+  },
+  {
+    "candidate": "r5s",
+    "status": "FAIL",
+    "roots_examined": 116809,
+    "max_dynamic_loads": 80,
+    "violations": 1127,
+    "role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hbm_idx_topk_link_static_p_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "3e7b693d1b613b28fc6c124b0c67cb397ac290a80ace46703bc7f98735a22163"
+    },
+    "raw_receipt": "/home/ubuntu/scratch/hbm-e86-5-1020/r5s_census.json"
+  },
+  {
+    "candidate": "r5t",
+    "status": "FAIL",
+    "roots_examined": 128713,
+    "max_dynamic_loads": 137,
+    "violations": 48,
+    "role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hbm_idx_topk_link_static_p_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "1823501fe9df82f15011b086e3e459fd10a6005eace0c9d94c8ff103279eb59d"
+    },
+    "raw_receipt": "/home/ubuntu/scratch/hbm-e86-5-1020/r5t_census.json"
+  },
+  {
+    "candidate": "r5u",
+    "status": "FAIL",
+    "roots_examined": 130521,
+    "max_dynamic_loads": 36,
+    "violations": 18,
+    "role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hbm_idx_topk_link_static_p_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "de92d505083f606d7396c5206c307cc31f59b2aa554a9c5b758879bc64bd2644"
+    },
+    "raw_receipt": "/home/ubuntu/scratch/hbm-e86-5-1020/r5u_census.json"
+  }
+]

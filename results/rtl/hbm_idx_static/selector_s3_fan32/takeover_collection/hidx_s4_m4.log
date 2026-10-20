@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       admits   318 GB (avail 336, growth 113, headroom 0, waiters 0/0 GB) load 102/128 running 30 disk 652 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-e86-5-1020/hidx4
+ot-run: ot-epyc7       admits   729 GB (avail 611, growth 101, headroom 0, waiters 0/0 GB) load 163/96 running 36 disk 5591 GB 
+ot-run: ot-epyc9       admits   849 GB (avail 777, growth 182, headroom 0, waiters 0/0 GB) load 153/128 running 53 disk 113 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-e86-5-1020/hidx4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-e86-5-1020/hidx4
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3835274-1792492755 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PIPE_MITER cycle191 dut vf f0 c512 | ref@-5 v0 f0 c512
+PIPE_MITER cycle192 dut v0 f0 c512 | ref@-5 vf f0 c512
+PIPE_MITER cycle199 dut vf f0 c512 | ref@-5 v0 f0 c512
+PIPE_MITER cycle200 dut v0 f0 c512 | ref@-5 vf f0 c512
+PIPE_MITER cycle207 dut vf f0 c512 | ref@-5 v0 f0 c512
+IDX_LINK_PIPE frame0 MUT4 records512 flits64 errors32 fault0/0
+IDX_LINK_PIPE frame1 MUT4 records512 flits64 errors64 fault0/0
+IDX_LINK_PIPE frame2 MUT4 records512 flits64 errors96 fault0/0
+IDX_LINK_PIPE frame3 MUT4 records512 flits64 errors128 fault0/0
+IDX_LINK_PIPE frame4 MUT4 records512 flits64 errors160 fault0/0
+IDX_LINK_PIPE frame5 MUT4 records512 flits64 errors192 fault0/0
+IDX_LINK_PIPE frame6 MUT4 records0 flits0 errors192 fault1/1
+IDX_LINK_PIPE_TOTAL MUT4 records3072 miter1954 errors193 fillsff maxpack71 first_tx ref187 dut191 fault ref1954 dut1959
+[19670000] %Fatal: tb_idx_link_pipe.sv:82: Assertion failed in tb_idx_link_pipe: pipelined link exact/miter/latency mismatch
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3835274-1792492755): exit 1
