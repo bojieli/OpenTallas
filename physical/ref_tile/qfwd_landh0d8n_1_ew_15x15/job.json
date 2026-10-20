@@ -1,0 +1,187 @@
+{
+ "name": "qfwd_landh0d8n_1_ew_15x15-l8a-COMMIT",
+ "block": "qfd_landh0d8n_1_EW_15x15",
+ "ref_tile": true,
+ "owner": "Claude:QW-LAND8",
+ "purpose": "Qwen compute die D8 hop-0 landing qfd_landh0d8n_1_EW_15x15 (1 b, no hop-0 clock gate (fallback))",
+ "threads": 2,
+ "peak_ram_gb": 6,
+ "source": {
+  "branch": "claude/qw-land8-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/qwen_fwd_lane",
+   "rtl/qwen_split/qfd_land8.sv",
+   "rtl/hdc",
+   "tools/qwen_split",
+   "results/arch/qw_land8_1019/bench"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_landh0d8n_1_EW_15x15 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_land8.sv rtl/hdc/ot_hdc_cg.sv physical/qwen_fwd_lane/qfd_land8_masters.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "land8_exact",
+    "cmd": "bash tools/qwen_split/bench_land8.sh pass {RUN}/b_pass qfd_landh0d8n_1_EW_15x15 1",
+    "expect": "pass",
+    "pass_regex": "LAND8_BENCH_ALL PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/arch/qw_land8_1019/bench/qfd_landh0d8n_1_EW_15x15_pass.log"
+   },
+   {
+    "name": "sel_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8.sh sel {RUN}/b_sel qfd_landh0d8n_1_EW_15x15 1",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_land8_1019/bench/qfd_landh0d8n_1_EW_15x15_sel.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "naive_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8.sh naive {RUN}/b_naive qfd_landh0d8n_1_EW_15x15 1",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_land8_1019/bench/qfd_landh0d8n_1_EW_15x15_naive.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vld_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8.sh vld {RUN}/b_vld qfd_landh0d8n_1_EW_15x15 1",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_land8_1019/bench/qfd_landh0d8n_1_EW_15x15_vld.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "encomb_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8.sh encomb {RUN}/b_encomb qfd_landh0d8n_1_EW_15x15 1",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_land8_1019/bench/qfd_landh0d8n_1_EW_15x15_encomb.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "k3_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8.sh k3 {RUN}/b_k3 qfd_landh0d8n_1_EW_15x15 1",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_land8_1019/bench/qfd_landh0d8n_1_EW_15x15_k3.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8.sh wsel {RUN}/b_wsel qfd_landh0d8n_1_EW_15x15 1",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_land8_1019/bench/qfd_landh0d8n_1_EW_15x15_wsel.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8.sh rsel {RUN}/b_rsel qfd_landh0d8n_1_EW_15x15 1",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_land8_1019/bench/qfd_landh0d8n_1_EW_15x15_rsel.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfwd_landh0d8n_1_ew_15x15/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfwd_landh0d8n_1_ew_15x15/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 2,
+   "peak_ram_gb": 6
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfwd_landh0d8n_1_ew_15x15 --out {RUN}/record/views/qfd_landh0d8n_1_EW_15x15  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfwd_landh0d8n_1_ew_15x15/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfwd_landh0d8n_1_ew_15x15/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfwd_landh0d8n_1_ew_15x15/qfwd_landh0d8n_1_ew_15x15-l8a-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "QW-LAND8 10-19 (LEAD-QW 12:15: Q.STA.LAND600.3 = 8-slot D8 landing, contract 5a266752c; hybrid MODEL dee8d6b3a FF-ring class): new 1-b hop-0 landing master qfd_landh0d8n_1_EW_15x15, no hop-0 clock gate (fallback). D8 ring (8 slots, wc/rc mod 16, four K straps), en -> 2 registered stages before the ICG enable (no combinational enable into the gate), kept 16-bit regions, registered one-hot read selects. New master, no closed view. SAFE checklist (owner 10-19): 1 pins registered by construction (a -> bank flops, en -> en_s0, rs -> rs0, k -> k_q, b / fault = flops; reset 2 stages per side) | 2 reach: tile < 30 um | 3 fanout: selects <= 16 data loads, en_s0 / rs0 drive <= 2 + regions copies | 4 depth: ring -> o = 8:1 AND-OR, no in->out path | 5 storage: D8 direct FF ring <= 32 b (< 2 kb, hybrid MODEL dee8d6b3a FF class); wider lanes = SRAM record (INF.SRAM) | 6 floorplan: no macros, outline from the estimated synthesis area at ~45-55 % util, aspect <= 1.1 | 7 clock: two roots (ck, ck_s), ICG enable = en_icg.Q only (main) / no ICG (fallback n), ring -> o directly timed with the D8 envelope (land8_clocks.tcl), io_hold_margin 0.03 | 8 schedule: static, D8 K mod 16 four pins, en +2 / rs +2 release edges priced in K = (L + G - R0 - 1) mod 16 (QW-GEN3 notice)"
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_landh0d8n_3_EW_15x15",
+ "enable": false,
+ "reason": "registered by construction: every input pin lands on one flop stage (a -> the 8 ring bank flops, en -> en_s0, rs -> rs0, k -> k_q) and every output is a flop (o, fault); a flow pin register would add a stage the die calendar does not price (the landh0 opt-out, OWNER RULE 19:50)"
+}
