@@ -162,7 +162,7 @@
  "structural_change": "Native32 source e6846a038: kept16-bit assembly enables, onehot drain readers, local loaded-bit banks/address copies, metadata landing and separate descriptor capture cones; all output edges exact. Literal43.2-grid macro R0(43.2,43.2), N face completely pin-free/bare, all HOST+issuer on S; full-width S standard-cell band, >=20um W/E pin escape, 2um PG-only bare-N halo. Proposed source only; coordinator pre-gate geometry review required.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "source": "results/rtl/hbm_coll_fj_1019/README.md",
-  "fix": "Unsafe r128w rst_q drives about 300 loads. SAFE s128 replaces flow flop table with SRAM and registered decode, plus twelve kept reset copies with at most 27 loads; parent EQ proves unchanged cycle behavior. r128w CLOSED is not bindable by LEAD3-HBM decision."
+  "source": "results/rtl/hbm_coll_fj_1019/codex_native_1020/e6846a038/README.md",
+  "fix": "Unsafe r128w reset fanout about300 cannot bind. Actual source e6846a038 partitions reset/data/control into kept bounded cones, SRAM table and onehot readers: exact mapped q2/q3 all-driver maximum32, directRTL miter and parent EQ preserve output edges. New literal R0(43.2,43.2) stock macro geometry, complete W/E20um escapes and full S stdcell band replace off-lattice predecessor. Parent PRE-GATE GO only; no physical qualification inferred."
  }
 }

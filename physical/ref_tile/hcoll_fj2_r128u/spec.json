@@ -205,8 +205,8 @@
  "floorplan_note": "Macro W/E signal-face clearances41.04/20.52um; bare N core gap2.136um>=2um macro PG halo. No pin of any use within200nm of master N face; no tile N pins. Stock R0, no MX translation or custom LEF. S band99.36x38.88um from2.16..101.52 by2.16..41.04, std area~1574 gives40.7% band density. Pin/hold/reset hooks preserved via entry wrappers.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "source": "results/rtl/hbm_coll_fj_1019/README.md",
-  "fix": "Unsafe r128w rst_q drives about 300 loads. SAFE s128 replaces flow flop table with SRAM and registered decode, plus twelve kept reset copies with at most 27 loads; parent EQ proves unchanged cycle behavior. r128w CLOSED is not bindable by LEAD3-HBM decision."
+  "source": "results/rtl/hbm_coll_fj_1019/codex_native_1020/e6846a038/README.md",
+  "fix": "Unsafe r128w reset fanout about300 cannot bind. Actual source e6846a038 partitions reset/data/control into kept bounded cones, SRAM table and onehot readers: exact mapped q2/q3 all-driver maximum32, directRTL miter and parent EQ preserve output edges. New literal R0(43.2,43.2) stock macro geometry, complete W/E20um escapes and full S stdcell band replace off-lattice predecessor. Parent PRE-GATE GO only; no physical qualification inferred."
  },
  "pin_ranges": {
   "clk": [
@@ -222,5 +222,6 @@
   "PRE_GLOBAL_PLACE_TCL": "physical/hbm_coll_fj_native_1020/fj2_gpl_entry.tcl",
   "PRE_DETAIL_PLACE_TCL": "physical/hbm_coll_fj_native_1020/fj2_dpl_entry.tcl",
   "OT_FJ_BAND": "2.16,2.16,101.52,41.04"
- }
+ },
+ "fill_reason": "Pin/lattice-bound outline: 432 S pins require82.944um at0.192um pitch; literal stock R0 SRAM origin43.2um +37.8um width +20um E escape +2.16um margin impose width>=103.16um, chosen103.68um. Full-width S band99.36x38.88um carries measured~1574um2 stdcells (40.7% band density); global fill37.2%. Bare N2.136um includes unchanged stock2um PG halo and has no macro/tile N pins; actual PG continuity remains required."
 }
