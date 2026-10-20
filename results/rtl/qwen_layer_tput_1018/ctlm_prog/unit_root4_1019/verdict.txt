@@ -1,0 +1,5 @@
+ROOT4-QWPOST 10-19: tt_ctlm_prog unit bench on the REGENERATED ctlm image (main 0408184bd, image digest c36fbf0c46078f2b,
+period 6583; ctlm_image.py recompile reproduces program.memh byte-exact, image_cmp.txt). Verilator 5.050, ot-epyc5. run.sh.
+HARD_HR 0 (inline head)   : MUT0 PASS 123/123; bmut1 FAIL (head fault); bmut2 FAIL 60/123; mut1 FAIL 58/123   (summary.txt)
+HARD_HR 1 (h16c hard leaf, die default): MUT0 PASS 123/123; bmut1 FAIL; bmut2 FAIL 60/123; mut1 FAIL 58/123 (summary_hard.txt)
+fail_regex 'CTLM_PROG .*: FAIL'.  log_*.txt = HARD_HR 0 per-variant logs.
