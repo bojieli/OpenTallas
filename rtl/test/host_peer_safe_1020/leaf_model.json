@@ -1,0 +1,651 @@
+{
+  "source": "3707551fc",
+  "vehicle": "a7b57f71f/r6",
+  "data_boundary": {
+    "recipe": 4,
+    "original_input_edges": 1,
+    "original_output_edges": 1,
+    "new_station_edges": 0,
+    "link_payload_edge_delta": 0,
+    "peer_rr_reset_release_edges": 3,
+    "outer_reset_assert_release_edges": 2,
+    "reset_delta": 0,
+    "input_data_bits": 2798,
+    "output_data_bits": 3500,
+    "pin_station_flops": 6298,
+    "peer_rx_receiver": "root__u_root_mux.u_m.rq_d/rq_v existing capture",
+    "H_delta": 0
+  },
+  "ports": {
+    "ck_core": {
+      "direction": "input",
+      "width": 1
+    },
+    "program_epoch": {
+      "direction": "input",
+      "width": 16
+    },
+    "program_digest": {
+      "direction": "input",
+      "width": 64
+    },
+    "package_abort": {
+      "direction": "input",
+      "width": 1
+    },
+    "abort_drained": {
+      "direction": "input",
+      "width": 4
+    },
+    "token_epoch_valid": {
+      "direction": "output",
+      "width": 1
+    },
+    "token_epoch": {
+      "direction": "output",
+      "width": 16
+    },
+    "native_kv_drained": {
+      "direction": "input",
+      "width": 1
+    },
+    "native_vm_drained": {
+      "direction": "input",
+      "width": 1
+    },
+    "native_collective_drained": {
+      "direction": "input",
+      "width": 1
+    },
+    "native_host_drained": {
+      "direction": "input",
+      "width": 1
+    },
+    "service_ready": {
+      "direction": "input",
+      "width": 1
+    },
+    "ingest_permission": {
+      "direction": "output",
+      "width": 1
+    },
+    "local_service_epoch": {
+      "direction": "input",
+      "width": 16
+    },
+    "die_id": {
+      "direction": "input",
+      "width": 3
+    },
+    "por_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "pll_locked": {
+      "direction": "input",
+      "width": 1
+    },
+    "local_kst": {
+      "direction": "input",
+      "width": 10
+    },
+    "program_ready": {
+      "direction": "input",
+      "width": 1
+    },
+    "hc": {
+      "direction": "output",
+      "width": 39
+    },
+    "seen": {
+      "direction": "output",
+      "width": 8
+    },
+    "host_rst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "slice_boot_done": {
+      "direction": "input",
+      "width": 128
+    },
+    "slice_boot_ok": {
+      "direction": "input",
+      "width": 128
+    },
+    "service_faults": {
+      "direction": "output",
+      "width": 1
+    },
+    "native_admit_ready": {
+      "direction": "input",
+      "width": 1
+    },
+    "native_links_drained": {
+      "direction": "input",
+      "width": 1
+    },
+    "native_link_reset_seen": {
+      "direction": "input",
+      "width": 1
+    },
+    "native_retrained": {
+      "direction": "input",
+      "width": 1
+    },
+    "peer_protocol_fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "dispatch_valid": {
+      "direction": "output",
+      "width": 1
+    },
+    "dispatched": {
+      "direction": "output",
+      "width": 1
+    },
+    "cohort_tag": {
+      "direction": "output",
+      "width": 59
+    },
+    "cohort_gen": {
+      "direction": "output",
+      "width": 2
+    },
+    "accepted_ranks": {
+      "direction": "output",
+      "width": 8
+    },
+    "participant_trace": {
+      "direction": "output",
+      "width": 256
+    },
+    "participant_token": {
+      "direction": "output",
+      "width": 144
+    },
+    "participant_pos": {
+      "direction": "output",
+      "width": 144
+    },
+    "engine_result_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "engine_result_tag": {
+      "direction": "input",
+      "width": 59
+    },
+    "engine_result_gen": {
+      "direction": "input",
+      "width": 2
+    },
+    "engine_result_done": {
+      "direction": "input",
+      "width": 1
+    },
+    "engine_result_fault": {
+      "direction": "input",
+      "width": 1
+    },
+    "engine_result_cause": {
+      "direction": "input",
+      "width": 4
+    },
+    "engine_result_token": {
+      "direction": "input",
+      "width": 18
+    },
+    "engine_result_value": {
+      "direction": "input",
+      "width": 32
+    },
+    "engine_result_cycles": {
+      "direction": "input",
+      "width": 32
+    },
+    "engine_result_cr": {
+      "direction": "output",
+      "width": 1
+    },
+    "program_consensus": {
+      "direction": "output",
+      "width": 1
+    },
+    "coordinator_fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "recovery_complete": {
+      "direction": "output",
+      "width": 1
+    },
+    "host_link_reset_req": {
+      "direction": "output",
+      "width": 1
+    },
+    "host_recovery_clear": {
+      "direction": "output",
+      "width": 1
+    },
+    "root_mux_fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "allocated_valid": {
+      "direction": "output",
+      "width": 1
+    },
+    "native_context_owned": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__u_control__por_n": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__u_control__service_ready": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__peer_link_fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "cancel_release_gen": {
+      "direction": "output",
+      "width": 2
+    },
+    "cancel_release_tag": {
+      "direction": "output",
+      "width": 59
+    },
+    "cancel_release_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "cancel_released": {
+      "direction": "input",
+      "width": 1
+    },
+    "certificate": {
+      "direction": "input",
+      "width": 66
+    },
+    "certificate_prefix": {
+      "direction": "input",
+      "width": 32
+    },
+    "certificate_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "cq_client_tag": {
+      "direction": "input",
+      "width": 16
+    },
+    "cq_commit_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "cq_pos": {
+      "direction": "input",
+      "width": 18
+    },
+    "cq_slot": {
+      "direction": "input",
+      "width": 8
+    },
+    "cq_token": {
+      "direction": "input",
+      "width": 18
+    },
+    "native_request_cr": {
+      "direction": "output",
+      "width": 1
+    },
+    "native_request_gen": {
+      "direction": "input",
+      "width": 2
+    },
+    "native_request_pos": {
+      "direction": "input",
+      "width": 18
+    },
+    "native_request_tag": {
+      "direction": "input",
+      "width": 59
+    },
+    "native_request_token": {
+      "direction": "input",
+      "width": 18
+    },
+    "native_request_trace": {
+      "direction": "input",
+      "width": 32
+    },
+    "native_request_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "native_result_cause": {
+      "direction": "output",
+      "width": 4
+    },
+    "native_result_cr": {
+      "direction": "input",
+      "width": 1
+    },
+    "native_result_cycles": {
+      "direction": "output",
+      "width": 32
+    },
+    "native_result_done": {
+      "direction": "output",
+      "width": 1
+    },
+    "native_result_fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "native_result_gen": {
+      "direction": "output",
+      "width": 2
+    },
+    "native_result_tag": {
+      "direction": "output",
+      "width": 59
+    },
+    "native_result_token": {
+      "direction": "output",
+      "width": 18
+    },
+    "native_result_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "native_result_value": {
+      "direction": "output",
+      "width": 32
+    },
+    "step_client_tag": {
+      "direction": "input",
+      "width": 16
+    },
+    "step_issue_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "step_pos": {
+      "direction": "input",
+      "width": 18
+    },
+    "step_retire_client_tag": {
+      "direction": "input",
+      "width": 16
+    },
+    "step_retire_cq": {
+      "direction": "input",
+      "width": 1
+    },
+    "step_retire_pos": {
+      "direction": "input",
+      "width": 18
+    },
+    "step_retire_slot": {
+      "direction": "input",
+      "width": 8
+    },
+    "step_retire_token": {
+      "direction": "input",
+      "width": 18
+    },
+    "step_retire_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "step_slot": {
+      "direction": "input",
+      "width": 8
+    },
+    "u_rank__u_control__begin_epoch": {
+      "direction": "input",
+      "width": 16
+    },
+    "u_rank__u_control__ctrl_begin_available": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__u_control__begin_cr": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__u_control__begin_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__u_control__boot8": {
+      "direction": "output",
+      "width": 16
+    },
+    "u_rank__u_control__kst8": {
+      "direction": "output",
+      "width": 80
+    },
+    "u_rank__peer_pending_ack": {
+      "direction": "output",
+      "width": 8
+    },
+    "u_rank__peer_service_epoch": {
+      "direction": "output",
+      "width": 128
+    },
+    "u_rank__peer_service_ready": {
+      "direction": "output",
+      "width": 8
+    },
+    "u_rank__u_control__startup_allowed": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__u_control__tk8": {
+      "direction": "output",
+      "width": 744
+    },
+    "u_rank__u_control__cmd_cr": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__u_control__cmd_hc": {
+      "direction": "input",
+      "width": 182
+    },
+    "u_rank__u_control__cmd_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__guarded_tk": {
+      "direction": "input",
+      "width": 93
+    },
+    "u_rank__pending_advertised": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__pending_epoch": {
+      "direction": "output",
+      "width": 16
+    },
+    "u_rank__u_control__u_packet__cr": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__u_control__u_packet__cd": {
+      "direction": "input",
+      "width": 512
+    },
+    "u_rank__u_control__u_packet__cv": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__service_begin_epoch": {
+      "direction": "output",
+      "width": 16
+    },
+    "u_rank__service_begin_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__u_control__u_packet__ctc": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__u_control__u_packet__ctd": {
+      "direction": "output",
+      "width": 512
+    },
+    "u_rank__u_control__u_packet__ct": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__tx_cr": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__tx_d": {
+      "direction": "input",
+      "width": 528
+    },
+    "u_rank__tx_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__program_rx_cr": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__program_rx_d": {
+      "direction": "output",
+      "width": 528
+    },
+    "u_rank__program_rx_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__raw_rx_cr": {
+      "direction": "output",
+      "width": 1
+    },
+    "u_rank__raw_rx_d": {
+      "direction": "input",
+      "width": 528
+    },
+    "u_rank__raw_rx_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__physical_tx_cr": {
+      "direction": "input",
+      "width": 1
+    },
+    "u_rank__physical_tx_d": {
+      "direction": "output",
+      "width": 528
+    },
+    "u_rank__physical_tx_v": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "face_pin_counts": {
+    "N": 1551,
+    "S": 1638,
+    "E": 1557,
+    "W": 1555
+  },
+  "packing_proposal": {
+    "status": "PRELIMINARY_NOT_A_GATE; mapped full-leaf area/native still pending",
+    "outline_um": [
+      432.0,
+      388.8
+    ],
+    "macro_original_size_um": [
+      177.768,
+      160.392
+    ],
+    "macro_orientation": "R90 (LEF SYMMETRY X Y R90)",
+    "macro_oriented_size_um": [
+      160.392,
+      177.768
+    ],
+    "origins_um": [
+      [
+        43.2,
+        43.2
+      ],
+      [
+        259.2,
+        43.2
+      ]
+    ],
+    "lattice_um": 43.2,
+    "macro_gap_um": 55.608,
+    "edge_clearance_min_um": 12.408,
+    "macro_halo_um": 10.8,
+    "full_width_stdcell_band_um": [
+      10.8,
+      231.768,
+      421.2,
+      378.0
+    ],
+    "face_lengths_um": {
+      "N": 432,
+      "S": 432,
+      "E": 388.8,
+      "W": 388.8
+    },
+    "face_density": {
+      "N": 3.5902777777777777,
+      "S": 3.7916666666666665,
+      "E": 4.00462962962963,
+      "W": 3.9994855967078187
+    },
+    "macro_area_um2": 57025.130112,
+    "outline_area_um2": 167961.6,
+    "area_utilization": "pending full mapped area",
+    "reach": "pin placement/clock location exact data reach audit pending, no >405 waiver",
+    "global_data_wire_span_limit_um": 405
+  },
+  "do_not_promote": "No layout gate without complete native32, ROOT helper acceptance and physical slot approval.",
+  "legacy_reset_prep_failures": [
+    {
+      "family": "coordinator",
+      "loads": 5464,
+      "copies": 28,
+      "max": 196,
+      "minimum_copies": 171
+    },
+    {
+      "family": "rankcodec",
+      "loads": 967,
+      "copies": 16,
+      "max": 61,
+      "minimum_copies": 31
+    },
+    {
+      "family": "rootmux",
+      "loads": 536,
+      "copies": 3,
+      "max": 179,
+      "minimum_copies": 17
+    },
+    {
+      "family": "tokenctrl",
+      "loads": 2619,
+      "copies": 12,
+      "max": 219,
+      "minimum_copies": 82
+    }
+  ]
+}
