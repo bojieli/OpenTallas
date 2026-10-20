@@ -30,7 +30,29 @@ Busiest-SM cycles per layer at the SM face (bench lines at req_lead 8; HBM first
   x landing is staggered, columns 6/7 = the last beats of each q word). `c34aee688/sweep.json`.
 - Deep request lead (req_lead 300 = HBM loaded latency, prefetch window 380): DS PASS 673 / 728 (unchanged: fully hidden);
   Qwen PASS but PV 2124 (block period 544): block k+1's descriptor is issued only after block k's last request, so the request lead
-  re-appears at each block boundary. Next compiler step (no RTL): issue block k+1's descriptor/requests one request-lead earlier.
+  re-appears at each block boundary. FIXED by the MB2 early-request rule below (run e3bce5d40).
+
+## MB2 (10-19, run e3bce5d40, ot-epyc9 unpinned ot-run, Verilator 5.050): early-request rule -- verdict PASS
+
+Rule (compiler only, `att_mb.py` engine step (5)): block k+1's KV descriptor is loaded in REQUEST time, one cycle after block k's
+LAST line request (= its last packet - req_lead), instead of after block k's last packet; block k+1's requests then follow back to back.
+Legal by the `ot_hbm_sm_kv_desc_static` law (load only when the run has no line left, never in a request slot; else sticky fault).
+At req_lead 8 the calendar only moves the descriptor slots (cycles unchanged). `--late-req` reproduces the c34aee688 rule.
+
+| run (all SMs) | QK from first x | PV from first x | Qwen block periods | bit-exact |
+|---|---|---|---|---|
+| DS L02 mb, lead 8 | 677 | 724 | - (one op/SM) | 20/20, merge == fixture |
+| DS L02 mb, lead 300 | 673 | 728 | - | 20/20, merge == fixture |
+| Qwen L0 mb, lead 8 | 1196 | 1640 | 280/384/384 | 32/32, 64-block merge == fixture |
+| Qwen L0 mb, lead 300, late rule (old) | 1192 | 2124 | 544/544/544 | 32/32 |
+| **Qwen L0 mb, lead 300, early rule** | **1192** | **1644** | **280/384/384** | 32/32, 64-block merge == fixture |
+
+- Qwen layer at lead 300: 2836 from first x (= lead 8); the request lead is paid once per SM programme (prefetch 381 cyc, hidden in the
+  gap before the op as at lead 8 with 49). PV -480 cyc/layer vs the late rule. Serial base unchanged: DS 2312, Qwen 4185.
+- New negative control `mut_qw_descearly` (descriptor in block k's last request slot) FAILS: `FAULT schedule cycle 326` (descriptor
+  sticky fault); witness `e3bce5d40/mut_qw_descearly.log`, fail regex `FAULT schedule`. The 7 earlier mutants FAIL again (same witnesses
+  regenerated under `e3bce5d40/`).
+
 
 ## Negative controls (each must FAIL; committed fail witnesses = the `mut_*.log` files)
 

@@ -1,0 +1,132 @@
+{
+ "summary": {
+  "lane": "HBM-ATTN-MB",
+  "design": "Qwen",
+  "stage": "L0",
+  "L": 0,
+  "mode": "mb",
+  "lat": {
+   "req_lead": 8,
+   "q_pub_margin": 8,
+   "pv_node": 120,
+   "fold_step": 2,
+   "fold_l2": 20,
+   "fold_pub": 40,
+   "out": 40,
+   "x_lead": 8,
+   "pre": 48,
+   "chain_gap": 40,
+   "p_war": 2,
+   "q_land_min": 54,
+   "q_land_max": 54
+  },
+  "dmut": 0,
+  "smut": "",
+  "early_req": true,
+  "sms": [
+   "sm_SW0"
+  ],
+  "busiest_span": {
+   "pv": 525
+  },
+  "cross_block_merge": null,
+  "passed": 0,
+  "runs": 1,
+  "source": {
+   "att_kv_json": "/srv/opentallas-scratch/claude/hbm-attn-mb/kv/qwen/L0/att_kv.json",
+   "npz_sha256": "ecf6522ddfc6040f651ad79fba64cfe5bfafbaa7e90fab0f6379a25a7f88a81e",
+   "stage": "L0",
+   "L": 0,
+   "rank": 0,
+   "qk_priced": [
+    {
+     "i": 14,
+     "start": 4484.4,
+     "end": 5465.2,
+     "cost": 980.8,
+     "base_cost": 980.8
+    }
+   ],
+   "pv_priced": [
+    {
+     "i": 18,
+     "start": 6295.6,
+     "end": 7276.4,
+     "cost": 980.8,
+     "base_cost": 980.8
+    }
+   ],
+   "P": 8192
+  },
+  "kv_heads_per_die": 1,
+  "q_heads_per_die": 4,
+  "rtl": "ot_hbm_accel_smh_attn (bundle master_files.json, defines OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY,OT_SMH_ATTN_INT8)",
+  "verdict": "FAIL"
+ },
+ "runs": [
+  {
+   "sm": "sm_SW0",
+   "kind": "pv",
+   "mode": "mb",
+   "pass_": false,
+   "rc": 1,
+   "fault": true,
+   "fault_line": "FAULT arithmetic cycle 582",
+   "span": 525,
+   "span_first_word": 574,
+   "prefetch": 49,
+   "words_resident": 1776,
+   "nblocks": 4,
+   "per_block": [
+    {
+     "block": 0,
+     "results": 488,
+     "expected": 512,
+     "mismatches": 24,
+     "result_rows": 61,
+     "first_result": 522,
+     "last_result": 582
+    },
+    {
+     "block": 1,
+     "results": 0,
+     "expected": 512,
+     "mismatches": 512,
+     "result_rows": 0,
+     "first_result": null,
+     "last_result": null
+    },
+    {
+     "block": 2,
+     "results": 0,
+     "expected": 512,
+     "mismatches": 512,
+     "result_rows": 0,
+     "first_result": null,
+     "last_result": null
+    },
+    {
+     "block": 3,
+     "results": 0,
+     "expected": 512,
+     "mismatches": 512,
+     "result_rows": 0,
+     "first_result": null,
+     "last_result": null
+    }
+   ],
+   "early_req": true,
+   "desc_loads": [
+    8,
+    280,
+    680,
+    1080
+   ],
+   "block_periods": [
+    280,
+    400,
+    400
+   ]
+  }
+ ]
+}
