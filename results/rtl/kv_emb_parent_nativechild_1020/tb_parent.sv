@@ -11,7 +11,9 @@ module tb_parent;
   if(!rst_n)warm=0;else warm=warm+1;
   if(warm>20)begin
    checks++;
-   if({nv,np,ns,nt,ne,nf}!=={ov,op,os,ot,oe,of})begin errors++;if(errors<8)$display("DIFF parent t=%0t n=%b/%b o=%b/%b",$time,nv,nf,ov,of);end
+   // Identity and payload fields are meaningful on their registered valid.
+   if({nv,ns,nf}!=={ov,os,of} || ((nv||ov) && np!==op) ||
+      ((ns||os) && {nt,ne}!=={ot,oe}))begin errors++;if(errors<8)$display("DIFF parent t=%0t n=%b/%b o=%b/%b",$time,nv,nf,ov,of);end
    if(nv)beats++;if(ns)starts++;if(dut.w_v)words++;
    if(dut.u_ctx.pending_valid[4] !== dut.u_ctx.pending_valid[0])
     $fatal(1,"FAIL parent selector copy not mature before use");
