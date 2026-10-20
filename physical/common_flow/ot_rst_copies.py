@@ -31,6 +31,14 @@ OT_RST_COPIES_MAX is set) on the FLATTENED coarse netlist and re-points the load
     cells; the flow maps them the same way later), so a register copy that selects a wide mux / memory read word is
     split per gate (a 288-bit $mux on one select bit is otherwise one indivisible load).  Function unchanged.
 
+  * KV-PC6 2026-10-20 (leaf-equivalent controls): an input bit of a copy may differ from copy 0's if both are driven by
+    the same output of KEPT-HIERARCHY leaf cells (a user module that `flatten` left as a cell because of keep_hierarchy)
+    of one type and parameters whose module is PURELY COMBINATIONAL (no flop / latch / memory / blackbox, recursively)
+    and whose inputs are themselves equivalent (recursively, depth <= LEAF_DEPTH).  Such leaves compute the same
+    function of the same nets, so the copies are still identical registers; this is what lets N > 32 copies take their
+    set / enable from per-group kept decision leaves (each leaf <= 32 loads) instead of one N-load net.  Primitive
+    ($-type) cells are never looked through (opt_merge would fold them back into one net later).
+
   python3 ot_rst_copies.py --json in.json --max 256 --ys out.ys --tsv out.tsv [--re REGEX] [--top NAME]
 exit 0 always when the JSON parses (groups over --max are reported as OVER lines and in the table: the gate judges them);
 exit 2 on unusable input.
@@ -130,40 +138,105 @@ def analyse(nl, max_loads, rx, top=None):
             continue
         fams.append((wn, bits))
     out = []
+    canon = leaf_canon(nl, cells, drv)
     for wn, bits in fams:
-        out.append(split_family(wn, bits, cells, drv, loads, max_loads, m))
+        out.append(split_family(wn, bits, cells, drv, loads, max_loads, m, canon))
     return tname, out
 
 
-def bit_signature(cells, d):
-    """identity of the flop that drives one bit: type, params (minus WIDTH), and per-bit view of its input ports"""
+LEAF_DEPTH = 4
+COMB_PRIM = re.compile(r"^\$(_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_|buf|pos|neg|not|"
+                       r"and|or|xor|xnor|reduce_and|reduce_or|reduce_xor|reduce_xnor|reduce_bool|logic_not|logic_and|"
+                       r"logic_or|eq|ne|eqx|nex|lt|le|gt|ge|add|sub|mux|pmux|bmux|shl|shr|sshl|sshr|shift|shiftx)$")
+
+
+def comb_module_test(nl):
+    """name -> True when the module is defined in the netlist and purely combinational (recursively)"""
+    memo = {}
+
+    def ok(name, stack=()):
+        if name in memo:
+            return memo[name]
+        mod = (nl.get("modules") or {}).get(name)
+        res = mod is not None and name not in stack
+        if res:
+            a = mod.get("attributes") or {}
+            if any(k in a for k in ("blackbox", "whitebox", "lib_whitebox")):
+                res = False
+            elif any(p.get("direction") not in ("input", "output") for p in (mod.get("ports") or {}).values()):
+                res = False
+            else:
+                for c in (mod.get("cells") or {}).values():
+                    t = c.get("type", "")
+                    if not (COMB_PRIM.match(t) if t.startswith("$") else ok(t, stack + (name,))):
+                        res = False
+                        break
+        memo[name] = res
+        return res
+    return ok
+
+
+def leaf_canon(nl, cells, drv):
+    """bit -> canonical identity: the bit itself, or (leaf type, params, output port/index, canonical inputs) when the
+    bit is an output of a kept-hierarchy purely combinational leaf (see the module docstring)"""
+    ok = comb_module_test(nl)
+    memo = {}
+
+    def canon(b, depth=0):
+        if not isinstance(b, int):
+            return b
+        if b in memo:
+            return memo[b]
+        r = b
+        d = drv.get(b)
+        if d is not None and depth < LEAF_DEPTH:
+            cn, p, i = d
+            c = cells[cn]
+            t = c.get("type", "")
+            if not t.startswith("$") and ok(t):
+                dirs = c.get("port_directions") or {}
+                ins = tuple((pn, tuple(canon(x, depth + 1) for x in pb))
+                            for pn, pb in sorted((c.get("connections") or {}).items()) if dirs.get(pn) == "input")
+                r = ("leaf", t, tuple(sorted((k, str(v)) for k, v in (c.get("parameters") or {}).items())), p, i, ins)
+        memo[b] = r
+        return r
+    return canon
+
+
+def bit_signature(cells, d, canon=None):
+    """identity of the flop that drives one bit: type, params (minus WIDTH), and per-bit view of its input ports
+    (input bits through canon(): leaf-equivalent nets compare equal)"""
     cn, p, i = d
     c = cells[cn]
     if not FLOP_RE.match(c["type"]) or p != "Q":
         return None
+    cf = canon or (lambda x: x)
     w = len(c["connections"]["Q"])
     sig = [c["type"], tuple(sorted((k, str(v)) for k, v in (c.get("parameters") or {}).items() if k != "WIDTH"))]
     for pn in sorted(c["connections"]):
         if pn == "Q":
             continue
         pb = c["connections"][pn]
-        sig.append((pn, pb[i] if len(pb) == w and w > 1 else tuple(pb)))
+        sig.append((pn, cf(pb[i]) if len(pb) == w and w > 1 else tuple(cf(x) for x in pb)))
     return tuple(sig)
 
 
-def split_family(wn, bits, cells, drv, loads, max_loads, m):
-    rec = {"family": wn, "copies": len(bits), "status": "", "groups": [], "total": 0, "fixed": 0, "moves": 0, "cmds": []}
-    sigs = []
+def split_family(wn, bits, cells, drv, loads, max_loads, m, canon=None):
+    rec = {"family": wn, "copies": len(bits), "status": "", "groups": [], "total": 0, "fixed": 0, "moves": 0, "cmds": [],
+           "leaf_equiv": False}
+    sigs, raw = [], []
     for b in bits:
         d = drv.get(b)
         if d is None:
             rec["status"] = f"REFUSED bit {b} undriven"
             return rec
-        s = bit_signature(cells, d)
+        s = bit_signature(cells, d, canon)
         if s is None:
             rec["status"] = f"REFUSED bit {b} not a flop Q ({cells[d[0]]['type']}.{d[1]})"
             return rec
         sigs.append(s)
+        raw.append(bit_signature(cells, d))
+    rec["leaf_equiv"] = any(s != raw[0] for s in raw[1:])
     if any(s != sigs[0] for s in sigs[1:]):
         rec["status"] = "REFUSED copies are not identical registers (D / clock / reset / type differ)"
         return rec
@@ -328,7 +401,8 @@ def main(argv=None):
         tsv.append(f"{r['family']}\t{r['copies']}\t{r['total']}\t{r['fixed']}\t{r['moves']}\t"
                    f"{','.join(map(str, r['groups']))}\t{r['status']}")
         print(f"OT_RST_COPIES {r['family']}: {r['copies']} copies, {r['total']} loads -> "
-              f"[{','.join(map(str, r['groups']))}] ({r['moves']} ports moved) {r['status']}")
+              f"[{','.join(map(str, r['groups']))}] ({r['moves']} ports moved) {r['status']}"
+              f"{' (controls proven through kept combinational leaves)' if r.get('leaf_equiv') else ''}")
     lines.append("cd ..")
     open(a.ys, "w").write("\n".join(lines) + "\n")
     open(a.tsv, "w").write("\n".join(tsv) + "\n")
