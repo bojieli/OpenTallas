@@ -1000,5 +1000,37 @@
     }
   ],
   "proposed_code_boundary": "Ownfuturekit orchestration only AFTERROOTreviews sourceplan; no globalhelperdefaultchange or newgate implemented",
-  "open": "regionalassignment/nativephasecompensation/actualODBclockownership stillmustbeimplemented+verified; this isnotclockclosure"
+  "open": "regionalassignment/nativephasecompensation/actualODBclockownership stillmustbeimplemented+verified; this isnotclockclosure",
+  "hist32_native_both_edge_tables": {
+    "tt": {
+      "source": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+      "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+      "native_tables_ps": {
+        "min_clock_tree_path": {
+          "rise": 89.54014,
+          "fall": 94.79392
+        },
+        "max_clock_tree_path": {
+          "rise": 121.2262,
+          "fall": 128.04022
+        }
+      },
+      "meaning": "unchanged nativeearly/late rise/fall clocktables; different from measured boundary-mean insertion; no max(rise,fall) replacement for both-edge rule"
+    },
+    "ff": {
+      "source": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+      "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+      "native_tables_ps": {
+        "min_clock_tree_path": {
+          "rise": 71.08253,
+          "fall": 73.79366
+        },
+        "max_clock_tree_path": {
+          "rise": 101.52225,
+          "fall": 106.43261
+        }
+      },
+      "meaning": "unchanged nativeearly/late rise/fall clocktables; different from measured boundary-mean insertion; no max(rise,fall) replacement for both-edge rule"
+    }
+  }
 }
