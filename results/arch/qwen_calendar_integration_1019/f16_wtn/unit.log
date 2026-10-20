@@ -1,7 +1,7 @@
-ot-run: ot-epyc5       admits  1159 GB (avail 925, growth 113, headroom 0, waiters 0/0 GB) load 93/128 running 35 disk 776 GB 
-ot-run: ot-epyc8       admits   855 GB (avail 712, growth 113, headroom 0, waiters 0/0 GB) load 160/128 running 29 disk 1 GB disk 1 GB < 20
+ot-run: ot-epyc5       admits  1071 GB (avail 863, growth 113, headroom 0, waiters 0/0 GB) load 141/128 running 35 disk 772 GB 
+ot-run: ot-epyc8       admits   898 GB (avail 742, growth 113, headroom 0, waiters 0/0 GB) load 108/128 running 28 disk 1 GB disk 1 GB < 20
 ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-419541-1792454344 after 0 s
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-456253-1792454556 after 0 s
 FACE stim_auth_drop_active EXACT TWC_RESULT_FAULT
 FACE stim_auth_drop_idle EXACT TWC_RESULT_FAULT
 FACE stim_bad_stage EXACT TWC_RESULT_FAULT
@@ -37,4 +37,4 @@ FMUT 3 FAIL_AS_EXPECTED
 CTLM_F16_CALR_ELAB_PASS
 CTLM_DEFAULT_ELAB_PASS
 F16_CTLM_FACE_PASS
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-419541-1792454344): exit 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-456253-1792454556): exit 0

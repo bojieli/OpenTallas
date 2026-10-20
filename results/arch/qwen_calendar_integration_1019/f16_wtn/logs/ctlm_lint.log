@@ -186,40 +186,6 @@
                                                                                                        : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head'
   402 |         .t_lvl('0),
       |                ^~
-%Warning-LATCH: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:243:4: Latch inferred for signal 'qfd_tt_ctlm_dv_lpf.u_gi.g_wtn.u_wtn.u_ctl.gp.bk[0].cy' (not all control paths of combinational always assign a value)
-                                                                     : ... Suggest use of always_latch for intentional latches
-  243 |    always@*begin
-      |    ^~~~~~
-                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
-                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
-%Warning-LATCH: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:243:4: Latch inferred for signal 'qfd_tt_ctlm_dv_lpf.u_gi.g_wtn.u_wtn.u_ctl.gp.bk[1].cy' (not all control paths of combinational always assign a value)
-                                                                     : ... Suggest use of always_latch for intentional latches
-  243 |    always@*begin
-      |    ^~~~~~
-%Warning-LATCH: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:243:4: Latch inferred for signal 'qfd_tt_ctlm_dv_lpf.u_gi.g_wtn.u_wtn.u_ctl.gp.bk[2].cy' (not all control paths of combinational always assign a value)
-                                                                     : ... Suggest use of always_latch for intentional latches
-  243 |    always@*begin
-      |    ^~~~~~
-%Warning-LATCH: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:243:4: Latch inferred for signal 'qfd_tt_ctlm_dv_lpf.u_gi.g_wtn.u_wtn.u_ctl.gp.bk[3].cy' (not all control paths of combinational always assign a value)
-                                                                     : ... Suggest use of always_latch for intentional latches
-  243 |    always@*begin
-      |    ^~~~~~
-%Warning-LATCH: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:243:4: Latch inferred for signal 'qfd_tt_ctlm_dv_lpf.u_gi.g_wtn.u_wtn.u_ctl.gp.bk[4].cy' (not all control paths of combinational always assign a value)
-                                                                     : ... Suggest use of always_latch for intentional latches
-  243 |    always@*begin
-      |    ^~~~~~
-%Warning-LATCH: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:243:4: Latch inferred for signal 'qfd_tt_ctlm_dv_lpf.u_gi.g_wtn.u_wtn.u_ctl.gp.bk[5].cy' (not all control paths of combinational always assign a value)
-                                                                     : ... Suggest use of always_latch for intentional latches
-  243 |    always@*begin
-      |    ^~~~~~
-%Warning-LATCH: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:243:4: Latch inferred for signal 'qfd_tt_ctlm_dv_lpf.u_gi.g_wtn.u_wtn.u_ctl.gp.bk[6].cy' (not all control paths of combinational always assign a value)
-                                                                     : ... Suggest use of always_latch for intentional latches
-  243 |    always@*begin
-      |    ^~~~~~
-%Warning-LATCH: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:243:4: Latch inferred for signal 'qfd_tt_ctlm_dv_lpf.u_gi.g_wtn.u_wtn.u_ctl.gp.bk[7].cy' (not all control paths of combinational always assign a value)
-                                                                     : ... Suggest use of always_latch for intentional latches
-  243 |    always@*begin
-      |    ^~~~~~
 %Warning-MULTIDRIVEN: src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:119:19: Signal has multiple driving blocks with different clocking: 'qfd_tt_ctlm_dv_lpf.u_hr.g_cmdreg.rom_cmd_q'
                       src/rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:121:55: ... Location of first driving block
   121 |         if (!rsl_c0) rom_cmd_q[189:0] <= 190'd0; else rom_cmd_q[189:0] <= rom_cmd_c[189:0];
@@ -230,5 +196,5 @@
                       ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
                       ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 11.143 MB sources in 87 modules, into 7.287 MB in 11 C++ files needing 0.000 MB
-- Verilator: Walltime 2.517 s (elab=0.297, cvt=2.026, bld=0.000); cpu 2.506 s on 1 threads; allocated 154.387 MB
+- Verilator: Built from 11.143 MB sources in 87 modules, into 7.285 MB in 11 C++ files needing 0.000 MB
+- Verilator: Walltime 2.764 s (elab=0.368, cvt=2.167, bld=0.000); cpu 2.721 s on 1 threads; allocated 154.383 MB

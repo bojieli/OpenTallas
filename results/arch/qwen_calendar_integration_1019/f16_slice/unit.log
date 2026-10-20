@@ -1,0 +1,9 @@
+ot-run: ot-epyc5       admits  1071 GB (avail 863, growth 113, headroom 0, waiters 0/0 GB) load 141/128 running 35 disk 772 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-456255-1792454556 after 0 s
+ELAB_PASS qfd_dv_slice2_wc
+ELAB_PASS qfd_dv_slice2_ec
+ELAB_PASS qfd_dv_slice2_w
+ELAB_PASS qfd_dv_slice2_e
+F16_SLICE_CALR_ELAB_PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-456255-1792454556): exit 0

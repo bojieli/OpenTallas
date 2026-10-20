@@ -1,0 +1,47 @@
+%Warning-PINMISSING: src/rtl/qwen_dv/qfd_dv_slice2_faces.sv:91:107: Instance has missing pin: 'treq_i'
+   91 |     qfd_dv_slice2 #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .DIR(0)) u_core (
+      |                                                                                                           ^~~~~~
+                     src/rtl/qwen_dv/qfd_dv_slice2.sv:83:27: ... Location of port declaration
+   83 |     input  wire [8:0]     treq_i,
+      |                           ^~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: src/rtl/qwen_dv/qfd_dv_slice2_faces.sv:91:107: Instance has missing pin: 'treq_o'
+   91 |     qfd_dv_slice2 #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .DIR(0)) u_core (
+      |                                                                                                           ^~~~~~
+                     src/rtl/qwen_dv/qfd_dv_slice2.sv:84:27: ... Location of port declaration
+   84 |     output wire [8:0]     treq_o
+      |                           ^~~~~~
+%Warning-PINMISSING: src/rtl/qwen_dv/qfd_dv_slice2_faces.sv:218:107: Instance has missing pin: 'treq_i'
+  218 |     qfd_dv_slice2 #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .DIR(1)) u_core (
+      |                                                                                                           ^~~~~~
+                     src/rtl/qwen_dv/qfd_dv_slice2.sv:83:27: ... Location of port declaration
+   83 |     input  wire [8:0]     treq_i,
+      |                           ^~~~~~
+%Warning-PINMISSING: src/rtl/qwen_dv/qfd_dv_slice2_faces.sv:218:107: Instance has missing pin: 'treq_o'
+  218 |     qfd_dv_slice2 #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .DIR(1)) u_core (
+      |                                                                                                           ^~~~~~
+                     src/rtl/qwen_dv/qfd_dv_slice2.sv:84:27: ... Location of port declaration
+   84 |     output wire [8:0]     treq_o
+      |                           ^~~~~~
+%Warning-LATCH: src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1020:5: Latch inferred for signal 'qfd_dv_slice2_e.u_core.g_hd0.u_hd.g_col[3].u_head.ab' (not all control paths of combinational always assign a value)
+                                                                     : ... Suggest use of always_latch for intentional latches
+ 1020 |     always @* begin
+      |     ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-LATCH: src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1020:5: Latch inferred for signal 'qfd_dv_slice2_e.u_core.g_hd0.u_hd.g_col[2].u_head.ab' (not all control paths of combinational always assign a value)
+                                                                     : ... Suggest use of always_latch for intentional latches
+ 1020 |     always @* begin
+      |     ^~~~~~
+%Warning-LATCH: src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1020:5: Latch inferred for signal 'qfd_dv_slice2_e.u_core.g_hd0.u_hd.g_col[1].u_head.ab' (not all control paths of combinational always assign a value)
+                                                                     : ... Suggest use of always_latch for intentional latches
+ 1020 |     always @* begin
+      |     ^~~~~~
+%Warning-LATCH: src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1020:5: Latch inferred for signal 'qfd_dv_slice2_e.u_core.g_hd0.u_hd.g_col[0].u_head.ab' (not all control paths of combinational always assign a value)
+                                                                     : ... Suggest use of always_latch for intentional latches
+ 1020 |     always @* begin
+      |     ^~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 5.916 MB sources in 89 modules, into 171.014 MB in 187 C++ files needing 0.000 MB
+- Verilator: Walltime 52.117 s (elab=0.581, cvt=47.575, bld=0.000); cpu 52.011 s on 1 threads; allocated 4917.680 MB

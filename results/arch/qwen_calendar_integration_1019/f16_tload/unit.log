@@ -1,12 +1,6 @@
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-f16prog4-1019/f16_tload
-ot-run: ot-epyc5       admits  1248 GB (avail 987, growth 113, headroom 0, waiters 0/0 GB) load 64/128 running 25 disk 790 GB 
-ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-f16prog4-1019/f16_tload
-ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-f16prog4-1019/f16_tload
-ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-f16prog4-1019/f16_tload
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-f16prog4-1019/f16_tload
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-f16prog4-1019/f16_tload
+ot-run: ot-epyc5       admits  1100 GB (avail 884, growth 113, headroom 0, waiters 0/0 GB) load 128/128 running 33 disk 746 GB 
 ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-302089-1792454017 after 0 s
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-501822-1792454861 after 0 s
 PASS s0 edge_checks=12672 reads=149640 cycles=462663 first_age=5 all36 all4 retention head_guard=1
 PASS collision
 MUT 1 FAIL_AS_EXPECTED TLOAD_COLLISION_WRITE_NOT_SUPPRESSED
@@ -15,4 +9,4 @@ MUT 3 FAIL_AS_EXPECTED TLOAD_COLLISION_FAULT_AGE
 MUT 4 FAIL_AS_EXPECTED TLOAD_EDGE_MISMATCH
 MUT 5 FAIL_AS_EXPECTED TLOAD_UNEXPECTED_FAULT join=0 vm=1
 F16_TLOAD_JOIN_FUNCTIONAL_PASS
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-302089-1792454017): exit 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-501822-1792454861): exit 0
