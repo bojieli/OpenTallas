@@ -869,6 +869,17 @@ SLICE_GAP = 21.6
 # subsystem (kv_static_boot_join.HOST_DIE_JOINS) when kv_die --split instantiates it (item 10); until then they are open.
 HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv'
 HOST_RT_MODULE = 'qkd_host_root_admission'
+# KV-BIND4-GUARD 10-19 (OT_KV_MU=1, OT_KV_HOST_MU default 1 under MU): the frame binds the MU 1 release HOST root
+# qkd_host_root_admission_mu (tools/qwen_kv_die/mu_peer/gen_host_root_mu.py; same ports + parameters, MU default 1):
+# the RTL of the CLOSED guard core qkd_hr_core_guard-mu1s-d222ef261 (u_rank.u_native = endpoint_cancel_mu, guard
+# marker FIFO on one ot_sram_1r1w_128x64_m1_p192) + the MU 1 peer core (tp8_coordinator_mu POST_UID_SLOT 1,
+# ctrl_token_service_packet_collected_mu).  0 added edges (same 4-edge FIFO prefetch; private POST decode).  The guard
+# VIEW has no die instance until the host cluster parent (qkd_hr_cluster) replaces the qkd_host_rt frame.
+HOST_RT_MU = (os.environ.get('OT_KV_MU', '0') == '1'
+              and os.environ.get('OT_KV_HOST_MU', '1') == '1')
+if HOST_RT_MU:
+    HOST_RT_FILE = 'rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_mu'
 HOST_RT_PT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'     # qkd_host_ingest_chain_pt (child of the admission root)
 HOST_RT_RENAMED = dict(host_drained_local='host_interface_idle')          # die port -> admission RTL port
 SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
