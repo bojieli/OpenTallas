@@ -45,7 +45,17 @@ module ot_qfd_xpf_static_schedule_p #(
  wire cfg_any=cfg_v||cfg_clear||cfg_seal;
  wire [31:0] w_arm=cfg_data[123:92],w_iss=cfg_data[155:124],w_fw=cfg_data[187:156];
  wire [31:0] w_al=w_arm+LATE;
- wire w_ok=!(w_fw<w_arm+TEDGE);
+ // CTLM8: w_fw < (w_arm + TEDGE mod 2^32) without two serial carry chains: X0 = fw - arm - T and
+ // X1 = X0 + 2^32 (34-b, one 3:2 + one carry tree each, in parallel); arm + T overflows 32 b <=> arm > 2^32-1-T
+ localparam [33:0] NT0=34'h0-{2'b00,TEDGE}, NT1=NT0+34'h1_0000_0000;
+ wire [33:0] xa={2'b00,w_fw}, xb=~{2'b00,w_arm};
+ wire [33:0] xs0=xa^xb^NT0, xk0={((xa[32:0]&xb[32:0])|(xa[32:0]&NT0[32:0])|(xb[32:0]&NT0[32:0])),1'b1};
+ wire [33:0] xs1=xa^xb^NT1, xk1={((xa[32:0]&xb[32:0])|(xa[32:0]&NT1[32:0])|(xb[32:0]&NT1[32:0])),1'b1};
+ wire [33:0] x0,x1;
+ ot_ks_add #(.W(34)) u_x0(.a(xs0),.b(xk0),.cin(1'b0),.s(x0));
+ ot_ks_add #(.W(34)) u_x1(.a(xs1),.b(xk1),.cin(1'b0),.s(x1));
+ wire w_ovf=w_arm>(32'hFFFF_FFFF-TEDGE);
+ wire w_ok=!(w_ovf?x1[33]:x0[33]);   // == !(w_fw<w_arm+TEDGE)
  wire wr_ok=cfg_v&&!cfg_clear&&!active&&!sealed&&cfg_index<N&&cfg_data[0]&&cfg_data[85:84]!=0;
  // pair conflicts (record i vs any earlier j), registered from the exact next-state of the
  // records (they change only on an accepted write), so the seal check is a flat AND

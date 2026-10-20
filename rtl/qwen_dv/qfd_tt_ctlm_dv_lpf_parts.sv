@@ -16,7 +16,7 @@
 // MU-QW-DIE 10-19: u_gi takes qfd_tt_ctlm_dv's OPSEG (MU-QW-B1 op-granular filler starts from the op-start leaf, explicit
 //   calendar ranges, per-user stage bank on leaf starts, filler result -> its tok / pos bank, dc user-0 gate) and the boot
 //   context record (coordinator 0ka: CTX_DW, image DW5 / DW6 -> filler banks on the seal edge).  The leaf
-//   qfd_sys_face_mu_dhuser #(OPSEG 1) is g_op.u_leaf in here (its own hard tile, MU-LEAF-KIT), observing dh_q[43:0];
+//   qfd_sys_face_mu_dhuser_p #(OPSEG 1) is g_op.u_leaf in here (its own hard tile, MU-LEAF-KIT), observing dh_q[43:0];
 //   op_fault (leaf fault | start collision | bad context record) rides the dcs start_fault bit (both OR into core_fault,
 //   as in qfd_tt_ctlm_dv).  OPSEG 0: the leaf inputs are tied 0 and every edge is the previous u_gi.
 // =====================================================================================================================
@@ -96,7 +96,7 @@ module qfd_tt_ctlm_dv_gi #(
     wire [UB-1:0] s_user = (OPS != 0) ? {UB{1'b0}} : dhu_q[UB-1:0];
     wire        op_v, op_lfault; wire [1:0] op_user; wire [5:0] op_stage; wire [9:0] op_first, op_cnt;
     generate if (OPS != 0) begin : g_op
-        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .EXPANDED(OPSEG_EXPANDED), .PINREG(OPSEG_PINREG), .VIAMAP1(OPSEG_VIAMAP1), .VIAMAP2(OPSEG_VIAMAP2), .INSTANCE1(OPSEG_INST1), .INSTANCE2(OPSEG_INST2), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP), .INSTANCE(OPSEG_INST))
+        qfd_sys_face_mu_dhuser_p #(.NU(NU), .OPSEG(1), .EXPANDED(OPSEG_EXPANDED), .PINREG(OPSEG_PINREG), .VIAMAP1(OPSEG_VIAMAP1), .VIAMAP2(OPSEG_VIAMAP2), .INSTANCE1(OPSEG_INST1), .INSTANCE2(OPSEG_INST2), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP), .INSTANCE(OPSEG_INST))
             u_leaf (.ck(ck), .rst_n(rst_n), .dh_run(dh_q[43:0]), .dh_user(), .res_user(), .mu_fault(op_lfault), .op_v(op_v),
             .op_user(op_user), .op_stage(op_stage), .op_first(op_first), .op_cnt(op_cnt), .op_ff(), .op_fcode());
     end else begin : g_no_op
@@ -365,7 +365,11 @@ module qfd_tt_ctlm_dv_go #(
             if (c_xc) xc_busy <= 1'b1; else if (coll_done) xc_busy <= 1'b0;
             dc <= {ag_vm, !ag_su_busy, xc_busy, core_fault, c_fault | ag_any | fab_q, tok_seen, ntok, nval};
         end
-    assign cf = core_fault | c_fault;
+    // CTLM8 (checklist 1, textbook boundary reg->out 5 lv): cf leaves a pin register (+1 edge, priced: fault visibility
+    // C_cf + 1; faults are sticky, the die monitor reads cf one edge later)
+    reg cf_q;
+    always @(posedge ck or negedge rst_n) if (!rst_n) cf_q <= 1'b0; else cf_q <= core_fault | c_fault;
+    assign cf = cf_q;
     wire unused = &{1'b0, arl_d, cfg_index[2], cfg_count[3]};
 endmodule
 

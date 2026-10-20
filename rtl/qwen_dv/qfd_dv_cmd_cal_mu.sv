@@ -331,6 +331,10 @@ module qfd_dv_cmd_cal_mu #(
     reg [127:0] fq_bd [0:NU-1];
     wire [2:0] fq_next [0:NU-1], fq_ahead [0:NU-1];
     wire [NU-1:0] fq_ra;
+    // CTLM8 (FIREDQ head candidates): chunk-3 sources of dsel = fq_word[127:116] and its select flags, exported so
+    // dq_n / fire_n / nh_t are computed per source in parallel and the late select only picks (exact, 0 edges)
+    wire [11:0] dsw [0:NU-1], dsb [0:NU-1], dsr [0:NU-1];
+    wire [NU-1:0] selw3, bp3, nx2;
     generate for (g = 0; g < NU; g = g + 1) begin : g_fifo
         reg [2:0] rp_bin;
         integer b;
@@ -340,6 +344,8 @@ module qfd_dv_cmd_cal_mu #(
             rp_bin = {|(rp_oh[g] & 8'hf0), |(rp_oh[g] & 8'hcc), |(rp_oh[g] & 8'haa)};
         end
         assign fq_next[g] = rp_bin + ((MUT == 33) ? 3'd0 : 3'd1);
+        // CTLM8: bit 2 of rp + 1 straight from the one-hot pointer (rp in 3..6), no encoder + incrementer in the select
+        assign nx2[g] = (MUT == 33) ? |(rp_oh[g] & 8'hf0) : |(rp_oh[g] & 8'h78);
         assign fq_ahead[g] = rp_bin + ((fire_q[g] && !frz_u[g] && !go_u[g]) ? 3'd2 : 3'd1);
         assign fq_ra[g] = fq_ahead[g][2];
         ot_sram_1r1w_64x512_m1_r2c2 u_fifo (
@@ -380,8 +386,12 @@ module qfd_dv_cmd_cal_mu #(
                            ({32{ba[1]}} & fq_wd[g][128+q*32 +: 32]) |
                            ({32{ba[2]}} & fq_wd[g][256+q*32 +: 32]) |
                            ({32{ba[3]}} & fq_wd[g][384+q*32 +: 32]);
-            assign fq_word[g][32*q +: 32] = (pend && fq_wa[g] == fq_next[g][2]) ? wword :
+            assign fq_word[g][32*q +: 32] = (pend && fq_wa[g] == nx2[g]) ? wword :
                                             bp ? fq_bd[g][32*q +: 32] : rword;
+            if (q == 3) begin : g_src3
+                assign dsw[g] = wword[31:20]; assign dsr[g] = rword[31:20]; assign dsb[g] = fq_bd[g][127:116];
+                assign selw3[g] = pend && fq_wa[g] == nx2[g]; assign bp3[g] = bp;
+            end
             always @(posedge ck)
                 if (fq_we[g] && fq_wa[g] == fq_ra[g]) fq_bd[g][32*q +: 32] <= bword;
         end
@@ -458,9 +468,42 @@ module qfd_dv_cmd_cal_mu #(
     reg  [7:0]     rpa_oh [0:NU-1];
     reg  [TW-1:0]  tdif, ht_m;
     reg  [TW-1:0]  dq_x, dq_s; reg [TW:0] dq_c;   // CTLM7 dq_n compressor
+    reg            c_pop, c_emp, s_w, s_b, s_r, s_l, s_z;   // CTLM8 candidate selects
     reg  [TW-1:0]  dq_sa [0:NU-1], dq_ca [0:NU-1]; wire [TW-1:0] dq_ks [0:NU-1];
     wire [4:0]     occ [0:NU-1];
     wire [3:0]     infl_g [0:NU-1], infl_ng [0:NU-1];
+    // CTLM8 FIREDQ candidates per playhead and source s in {w, b, r, l = dlt[0]} (z = no dd: D = dq + run, T = ht_q):
+    //   D_s = dq + run - X_s  = {dq_hi + k, (dq_lo + run) - X_s},  k in {-1, 0} from the 14-b low result
+    //   T_s = ht_q + X_s      = {ht_hi + c, ht_lo + X_s},          c in {0, 1}
+    //   E_s = (dq == X_s)     = (dq_hi == 0) && (dq_lo == X_s)
+    // dq_hi +- 1 / ht_hi + 1 / dq_lo + run are register-only (off the late path); after X_s: one 14-b KS + 2:1 + select.
+    wire [TW-1:0] cd_d [0:4*NU-1], cd_t [0:4*NU-1];   // index 4 * playhead + source
+    wire [3:0]    cd_e [0:NU-1];
+    wire [TW-1:0] cd_dz [0:NU-1];
+    wire          cd_ez [0:NU-1];
+    genvar gcd, gcs;
+    generate for (gcd = 0; gcd < NU; gcd = gcd + 1) begin : g_cand
+        wire [12:0]    plo;
+        wire [TW-13:0] dhm, dhi, thp;
+        ot_ks_add #(.W(13)) u_plo (.a({1'b0, dq[gcd][11:0]}), .b(13'd0), .cin(run_q[gcd]), .s(plo));
+        ot_ks_add #(.W(TW-12)) u_dhm (.a(dq[gcd][TW-1:12]), .b({(TW-12){1'b1}}), .cin(1'b0), .s(dhm));
+        ot_ks_add #(.W(TW-12)) u_dhp (.a(dq[gcd][TW-1:12]), .b({(TW-12){1'b0}}), .cin(1'b1), .s(dhi));
+        ot_ks_add #(.W(TW-12)) u_thp (.a(ht_q[gcd][TW-1:12]), .b({(TW-12){1'b0}}), .cin(1'b1), .s(thp));
+        // z: dq + run (plo carries into the high part when dq_lo = 4095 and run)
+        assign cd_dz[gcd] = {plo[12] ? dhi : dq[gcd][TW-1:12], plo[11:0]};
+        assign cd_ez[gcd] = (dq[gcd] == {TW{1'b0}});
+        for (gcs = 0; gcs < 4; gcs = gcs + 1) begin : g_src
+            wire [11:0] x = (gcs == 0) ? dsw[gcd] : (gcs == 1) ? dsb[gcd] : (gcs == 2) ? dsr[gcd] : dlt[0];
+            wire [13:0] lo;   // {0, plo} - {00, x}: signed, -4095 .. 4096
+            ot_ks_add #(.W(14)) u_lo (.a({1'b0, plo}), .b({2'b11, ~x}), .cin(1'b1), .s(lo));
+            wire [12:0] tl;
+            ot_ks_add #(.W(13)) u_tl (.a({1'b0, ht_q[gcd][11:0]}), .b({1'b0, x}), .cin(1'b0), .s(tl));
+            // lo[13:12]: 11 = -1, 00 = 0, 01 = +1 (only with plo = 4096, x = 0)
+            assign cd_d[4*gcd+gcs] = {lo[13] ? dhm : lo[12] ? dhi : dq[gcd][TW-1:12], lo[11:0]};
+            assign cd_t[4*gcd+gcs] = {tl[12] ? thp : ht_q[gcd][TW-1:12], tl[11:0]};
+            assign cd_e[gcd][gcs] = (dq[gcd][TW-1:12] == {(TW-12){1'b0}}) && (dq[gcd][11:0] == x);
+        end
+    end endgenerate
     genvar gks;
     generate for (gks = 0; gks < NU; gks = gks + 1) begin : g_dqks
         ot_ks_add #(.W(TW)) u_dqks (.a(dq_sa[gks]), .b(dq_ca[gks]), .cin(1'b0), .s(dq_ks[gks]));
@@ -518,6 +561,21 @@ module qfd_dv_cmd_cal_mu #(
             dq_c = {((dq[u] & {{(TW-1){1'b0}}, run_q[u]}) | (dq[u] & ~dq_x) | ({{(TW-1){1'b0}}, run_q[u]} & ~dq_x)), 1'b1};
             dq_sa[u] = dq_s; dq_ca[u] = dq_c[TW-1:0];
             dq_n[u] = dq_ks[u];
+            if (MUT != 2) begin
+                // CTLM8: identical values, the late conditions only select among precomputed candidates
+                c_pop = (fn_ap != 4'd0) && fire_q[u];
+                c_emp = (fn_ap == 4'd0);
+                s_w = c_pop && selw3[u]; s_b = c_pop && !selw3[u] && bp3[u]; s_r = c_pop && !selw3[u] && !bp3[u];
+                s_l = c_emp && rd_v[u];
+                s_z = !c_pop && !s_l;                       // fn_ap != 0 && !fire_q (dd = 0), or empty && !rd_v (dq_x = 0)
+                dq_n[u] = ({TW{s_w}} & cd_d[4*u+0]) | ({TW{s_b}} & cd_d[4*u+1]) | ({TW{s_r}} & cd_d[4*u+2]) |
+                          ({TW{s_l}} & cd_d[4*u+3]) | ({TW{s_z}} & cd_dz[u]);
+                nh_t[u] = ({TW{s_w}} & cd_t[4*u+0]) | ({TW{s_b}} & cd_t[4*u+1]) | ({TW{s_r}} & cd_t[4*u+2]) |
+                          ({TW{s_l}} & cd_t[4*u+3]) | ({TW{s_z}} & ht_q[u]);
+                fire_n[u] = run_n[u] && !(c_emp && !rd_v[u]) &&
+                            ((s_w && cd_e[u][0]) || (s_b && cd_e[u][1]) || (s_r && cd_e[u][2]) || (s_l && cd_e[u][3]) ||
+                             (s_z && cd_ez[u]));
+            end
         end
     end
     // CALENDAR_ROM: the granted playhead's 4-entry request goes to the two-ROM calendar (pin register inside); the
@@ -631,6 +689,7 @@ module qfd_dv_cmd_cal_mu #(
     integer k, kk;
     reg     d_any, d_col; reg [UB-1:0] d_u;
     reg [NU-1:0] dn;
+    reg [NU-1:0] dr; reg sd, dr_any, dr_col, g_any, g_top; reg [UB-1:0] dr_hi, g_idx;   // CTLM8 completion select
     reg f_g; reg [5:0] fc_g;   // CTLM7 fault = |registered site flags | f_g
     reg [6:0] r4; reg [NU-1:0] r4g, r4h, r2, r0; reg [1:0] r3; reg r1, r5;
     wire f_p = |{r4, r4g, r4h, r3, r2, r1, r0, r5};
@@ -640,6 +699,7 @@ module qfd_dv_cmd_cal_mu #(
         // CTLM7: defined on the reset branch too (was a literal-X mux arm per d_u bit)
         d_any = 1'b0; d_col = 1'b0; d_u = {UB{1'b0}};
         dn = {NU{1'b0}};
+        dr = {NU{1'b0}}; sd = 1'b0; dr_any = 1'b0; dr_col = 1'b0; g_any = 1'b0; g_top = 1'b0; dr_hi = {UB{1'b0}}; g_idx = {UB{1'b0}};
         fx4 = 7'd0; fx4g = {NU{1'b0}}; fx4h = {NU{1'b0}}; fx0 = {NU{1'b0}}; fx2 = {NU{1'b0}}; fx3 = 2'd0; fx1 = 1'b0; fx5 = 1'b0;
         if (!rst_n) begin
             loading <= 1'b0; sealed <= 1'b0; sealed_d <= 1'b0; pw_cnt <= 11'd0; dw_cnt <= 4'd0; meta_rows <= 10'd0;
@@ -736,6 +796,21 @@ module qfd_dv_cmd_cal_mu #(
             // in parallel (was a serial chain through all NU playheads)
             d_any = |dn; d_col = |(dn & (dn - {{(NU-1){1'b0}}, 1'b1}));
             for (k = 0; k < NU; k = k + 1) if (dn[k]) d_u = k[UB-1:0];
+            // CTLM8 (same values): run completions dr come from registers only; the start's late refusal
+            // (start_bad: pin decode -> range adder) only selects -- no dn - 1 / last-index chain after it.
+            // dn = dr | (go_u & sd): a started playhead never also completes by run on the same edge.
+            sd = !start_bad && !g_cnt_nz;
+            dr_any = 1'b0; dr_hi = {UB{1'b0}}; g_any = 1'b0; g_idx = {UB{1'b0}};
+            for (k = 0; k < NU; k = k + 1) begin
+                dr[k] = !go_u[k] && !frz_u[k] && fire_q[k] && i_rem[k] == 10'd1;
+                if (dr[k]) begin dr_any = 1'b1; dr_hi = k[UB-1:0]; end
+                if (go_u[k]) begin g_any = 1'b1; g_idx = k[UB-1:0]; end
+            end
+            dr_col = |(dr & (dr - {{(NU-1){1'b0}}, 1'b1}));
+            g_top = !dr_any || (g_idx > dr_hi);
+            d_any = dr_any || (g_any && sd);
+            d_col = dr_col || (g_any && sd && dr_any);
+            d_u = (g_any && sd && g_top) ? g_idx : dr_any ? dr_hi : {UB{1'b0}};
             if (d_any) begin done <= 1'b1; done_user <= d_u; end
             if (NU > 1 && d_col) begin fx3[0] = 1'b1; end
             // ---------------- issue register (one word an edge, all playheads)
