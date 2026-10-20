@@ -191,8 +191,16 @@ class Zones:
                 return f'gap{k}'
         return None
 
-    def target(self, x, y):
-        """a field target moves to the middle of the nearest row gap (same x)."""
+    def target(self, x, y, owner=None):
+        """a field target (or any target of a block that sits in the field: its landings may stand outside it) moves
+        to the middle of the nearest row gap, x clamped into the owner's field rectangle."""
+        if self.on and owner is not None and self.gaps:
+            ox, oy = owner.x + owner.w / 2, owner.y + owner.h / 2
+            f = next((r for r in self.fields if r[0] - 1 <= ox <= r[2] + self.corr + 1 and r[1] - 1 <= oy <= r[3] + 1), None)
+            if f is not None:
+                x = min(max(x, f[0] + 2 * W), f[2] - 2 * W)
+                a, b = min(self.gaps, key=lambda g: abs((g[0] + g[1]) / 2 - y))
+                return x, (a + b) / 2
         if not self.on or not self.in_field(x, y) or not self.gaps:
             return x, y
         if self.seam and self.seam[0] <= x <= self.seam[1]:
@@ -245,6 +253,8 @@ def pre(v, m, G):
         raise ValueError(f'fault emit: plan owners not on this GEN: {missing[:10]}')
     ckx, rsx = _bus_index(m, 'clock_trunk'), _reset_index(m)
     occ = Occ(m)
+    for r_ in plan.get('reserved', ()):
+        occ.add(tuple(r_))      # the relay / landing sites the same GEN used without the tree: roots keep off them
     zn = Zones(v, m)
     q = make_master(v, FANIN)
     M[q.name] = q
@@ -259,7 +269,7 @@ def pre(v, m, G):
             rec.setdefault('borrowed_reset', {})[o] = m['buses'][rj][0] if rj is not None else None
         if cj is None or rj is None:
             raise ValueError(f'fault emit: owner {o} without clock ({cj}) / reset ({rj}) bus')
-        tx, ty = zn.target(*r['xy'])
+        tx, ty = zn.target(*r['xy'], owner=by[o])
         okz = lambda b: zn.of_box(b) is not None
         s = occ.site(v, tx, ty, ok=okz) or occ.site(v, tx, ty, rmax=2000.0, step=17.28, ok=okz)
         if s is None:
