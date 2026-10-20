@@ -69,8 +69,8 @@ module tb_hgi_coll_tkm_static_fan32_protocol;
   if(active&&(t<16||dut.clr||t+4>=int'(dut.clear2)&&t<=int'(dut.clear2)+14||wv||dut.cap_tap))
    $display("PARENT_PROTOCOL_PRE time=%0t tick=%0d clr=%b ins=%b read=%b bufv=%b clearX0=%b clearX63=%b cap=%b wv=%b first=%0d clear2=%0d read2=%0d second=%0d",$time,t,dut.clr,dut.entry_v,dut.read_v,dut.buf_valid,c0,c63,dut.cap_tap,wv,dut.first,dut.clear2,dut.read2,dut.second);
   #0.001;
-  if(active&&c0&&dut.g_tiles[0].e86.u_tile.u.X[0]!==0)$fatal(1,"PROTOCOL_CLEAR_X0");
-  if(active&&c63&&dut.g_tiles[0].e86.u_tile.u.X[63]!==0)$fatal(1,"PROTOCOL_CLEAR_X63");
+  if(active&&(t==4||t==int'(dut.clear2)+3)&&(!c0||dut.g_tiles[0].e86.u_tile.u.X[0]!==0))$fatal(1,"PROTOCOL_CLEAR_X0");
+  if(active&&(t==4||t==int'(dut.clear2)+3)&&(!c63||dut.g_tiles[0].e86.u_tile.u.X[63]!==0))$fatal(1,"PROTOCOL_CLEAR_X63");
   if(active&&(c0||c63))$display("PARENT_PROTOCOL_CAPTURE time=%0t oldtick=%0d X0=%h X63=%h",$time,t,dut.g_tiles[0].e86.u_tile.u.X[0],dut.g_tiles[0].e86.u_tile.u.X[63]);
  end
 endmodule
