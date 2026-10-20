@@ -1,8 +1,37 @@
 import unittest
+import copy
 from relay_row_model import layout, evaluate, Reservations, exact_contract_cost
 
 
 class RowModel(unittest.TestCase):
+    def test_nonfinite_and_malformed_geometry_fail_closed(self):
+        v = dict(w=10, h=10, pins={'p': (1, 2)}, directions={'p': 'OUTPUT'})
+        views = {'S': v, 'T': dict(v, directions={'p': 'INPUT'})}
+        masters = {'s': 'S', 't': 'T'}
+        pl = {n: dict(x=0, y=0, orient='R0') for n in masters}
+        widths = {(n, 'p'): 1 for n in masters}
+        edges = [dict(source=['s','p',0,1], sink=['t','p',0,1], bits=1)]
+        for bad in (float('nan'), float('inf'), -float('inf')):
+            for target in ('pin', 'placement', 'dimension', 'reach', 'escape'):
+                vs, ps = copy.deepcopy(views), copy.deepcopy(pl)
+                kw = {}
+                if target == 'pin': vs['S']['pins']['p'] = (bad, 2)
+                if target == 'placement': ps['s']['x'] = bad
+                if target == 'dimension': vs['S']['w'] = bad
+                if target == 'reach': kw['reach'] = bad
+                if target == 'escape': kw['escape_um'] = {('s','p'): bad}
+                with self.subTest(bad=bad, target=target), self.assertRaises(ValueError):
+                    exact_contract_cost(edges, ps, masters, vs, widths, **kw)
+        for bad in (0.5, -1, True):
+            es = copy.deepcopy(edges); es[0]['source'][2] = bad
+            with self.assertRaises(ValueError):
+                exact_contract_cost(es, pl, masters, views, widths)
+        with self.assertRaises(ValueError): layout(['x'], (0, 10), 1)
+        with self.assertRaises(ValueError): Reservations((float('nan'), 10))
+        with self.assertRaises(ValueError):
+            evaluate(layout(['x'], (10,10), 1), (0,0), {('x','p'):(0,0)},
+                     [(('x','p'), (float('nan'), 0))])
+
     def test_exact_bit_mapping_orientations_reset_clock_and_escape(self):
         v = dict(w=64.8, h=23.76, pins={'a[0]': (0, 1), 'a[1]': (0, 20),
                                       'ck': (32, 0), 'rst_n': (63, 0)})
