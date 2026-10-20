@@ -1,0 +1,25 @@
+{
+ "lane": "HBM-H9BIND", "date": "2026-10-20", "status": "STRICT_BIND_PASS_DIGEST_ADMISSION_OWED",
+ "controller": {"closed_view": "hdie_pc_ctrl_cfg_h9c-h9c-cts-155-1aa2ec44b", "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "params": {"OREG": 1, "KREG": 1, "KRREG": 1, "RREG": 1, "WPAY": 1, "QREG": 1}, "instances": 64, "outline_um": [155.52, 155.52],
+   "closed_source_commit": "1aa2ec44b82793ae124d56b985643dc42a61f1c4", "closed_record_commit": "2ab20b6001e2f7014e68020a5c7e5b542519ff3e",
+   "archive": "/home/ubuntu/closed_archive/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/hdie_pc_ctrl_cfg_h9c-h9c-cts-155-1aa2ec44b",
+   "source_identity": "../fallback_source_identity.json (7/7 sources + 6 view files byte-identical)"},
+ "bind_manifest": {
+   "contract": {"path": "ep6:/srv/opentallas-scratch/claude/codex-hbm-die11-1020/fallback_contract.json", "sha256": "5c3c35c31622b74e972d55ed86fc5c94590e80617e9c21923c95f3e0f96a13b4", "built_by": "../prepare_fallback.py from planA/a/views/contract.json (r10), edges/ports unchanged"},
+   "die_v_sha256": "3e932fc645191a6bb8116e5b82465de61159da838bee0c86d98f70cda059c227",
+   "unread_review": {"file": "review_h9bind.json", "sha256": "543ecfcbcd7a1ccdbbdd45cf58d24efb600b3c6a58c0108c0632f4f481146d5c", "predecessor_sha256": "16864de5245441196c1bb84b0160d970b16b80757aa3ce13e036e3b2eed1d51a"},
+   "unread_manifest": {"file": "manifest_proposal_h9bind.json", "sha256": "ea87fbac3af9bb682d93d98d14fcbdd8588275708461d4dac91f26caa65aad4e"},
+   "source_commit": "59576ab0f72bd2dce1e013061181d2291391ac75 (ancestor of codex/hbm-die11-portage-1020@20200bdc2; RTL identical to 20200bdc2)",
+   "strict_port_bind_sha256": "234b61852aed4f078359a5c1eeceb39676af516dc53a222b29231076e5be06f8",
+   "strict_result": "DIE_PORT_BIND PASS masters=104 instances=1228 all structural 0, input_tied=0, unread_net_bits=0 (strict_replay.log)"},
+ "lookup_fix": "ep6 src/ is a plain snapshot without .git, so die_bind_unread_manifest.propose `git show <source_commit>:<path>` failed on every selected source (obs_leaf was the first). Fixed by GIT_DIR=<bare depth-3 snapshot of the pushed branch holding 59576ab0f> in run_fallback_strict_h9bind.sh; no tool change, no waiver.",
+ "renewed_review": "After the lookup fix the proposal refused 'reviewed source differs' on 4 files changed by a6572c814 (HBM-DIE10 r10 l24 XSLOT/OPEN_IL + QINT8 checker view + INT8 hard tile). Delta review in review_h9bind.json delta_review_h9bind: 0 entries changed, 4 pins re-pinned with per-file reasons; all other 70 pins equal the die src. CANDIDATE: LEAD admission of manifest digest ea87fbac... owed (same procedure as DIE6/DIE7 proposals).",
+ "abi_calendar_oldrate": {
+   "ports": "64 instances: port set/directions/widths equal the h9b RTL header (prepare_fallback asserts); edges unchanged",
+   "kr_ready_latency": "h9b kr_rdy ready-latency 1: all 16 ot_hbm_svc_vm_kshare_splitstrap consumers carry KRL1=1 in the contract",
+   "k_request_edge": "h9b = H9 + 1 K request edge (H9B_TXN PASS reqs=6000 beats=12944 wcols=759 edges_h9 85966 vs h9b 88750, same transactions); RMUT=1 rejected",
+   "refresh_cfg": "PC_REFCFG PASS 32 PCs checks=123424 refreshes=1013, mutants 1-4 rejected",
+   "rate_scope": "OLD pre-BW-safe rate, accepted as measured (owner 10-20, no tuning): released H9b 45.03 B/edge/SM as-built (45.89 DS / 59.08 packed); token price at 45.03 = DS 1276.6 / Qwen 408.4 tok/s (TOKSIM-HBM); BW-safe 90.67 successor (MC3c) deferred to next release",
+   "not_granted": "no T242/MC3c eligibility; no physical/native/die-timing qualification; l24 XSLOT/OPEN_IL/INT8W params are at defaults in this r10-based contract (die chain decides)"}
+}

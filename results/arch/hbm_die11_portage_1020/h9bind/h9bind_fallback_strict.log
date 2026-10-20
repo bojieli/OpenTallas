@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   383 GB (avail 382, growth 113, headroom 0, waiters 0/0 GB) load 34/128 running 33 disk 3338 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1402279-1792528830 after 0 s
+HISTORICAL_SOURCE_COMMIT 59576ab0f72bd2dce1e013061181d2291391ac75
+FALLBACK_UNREAD_PROPOSAL_SHA ea87fbac3af9bb682d93d98d14fcbdd8588275708461d4dac91f26caa65aad4e
+DIE_PORT_BIND PASS masters=104 instances=1228 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=47 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+FALLBACK_STRICT_REPLAY_PASS_PROPOSAL_DIGEST_ADMISSION_OWED
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1402279-1792528830): exit 0
