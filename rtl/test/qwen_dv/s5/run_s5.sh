@@ -32,7 +32,9 @@ case $KIND in
     case $M in 0) ;; d10) G="-GDMUT=10";; d12) G="-GDMUT=12";; d9) G="-GDMUT=9";; loff) D="+define+OT_S5_LOFF_MUT";;
       lrly) D="+define+OT_S5_LRLY_MUT";; red) D="+define+OT_S5_RED_MUT";; sc) D="+define+OT_S5_SC_MUT";;
       xh) D="+define+OT_S5_XH_MUT";; btab) D="+define+OT_S5_BTAB_MUT";; *) echo "unknown M $M"; exit 2;; esac
-    "$V" $VF $D $G --top-module tb_qfd_dv_s5_flat0 $COMMON rtl/qwen_dv/qfd_dv_slice2.sv rtl/qwen_dv/s5/qfd_dv_s5_flat0.sv \
+    # random stimulus collides SRAM read/write by design: the bench links non-fatal copies of the three model files
+    CE=$(echo $COMMON | tr ' ' '\n' | grep -v -e full_sm_service/sram_models.sv -e hbm_rf_visibility/scale_sram_model.sv -e safe_storage/sram_model.sv | tr '\n' ' ')
+    "$V" $VF $D $G --top-module tb_qfd_dv_s5_flat0 $CE rtl/test/qwen_dv/s5/sram_models_nofatal.sv rtl/qwen_dv/qfd_dv_slice2.sv rtl/qwen_dv/s5/qfd_dv_s5_flat0.sv \
       rtl/test/qwen_dv/s5/tb_qfd_dv_s5_flat0.sv -Mdir "$OUT/obj_eq$M" > "$OUT/build_eq$M.log" 2>&1 || { echo "BUILD FAIL"; tail -30 "$OUT/build_eq$M.log"; }
     rs=""
     for mode in rand quiet hronly legal; do
