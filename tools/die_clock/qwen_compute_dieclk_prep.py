@@ -69,6 +69,8 @@ def receiver_target(path):
     if not outputs or len(set(outputs)) != len(outputs) or re.sub(r'\s+', '', body) != re.sub(r'\s+', '', expected):
         raise ValueError('receiver proof is not an exact combinational identity')
     return dict(view='MODEL_PASS_THROUGH_R0', source='emitted RTL identity proof; no native physical receiver',
+                physical_qualification_eligible=False,
+                qualification_reason='MODELED_RECEIVER_WITHOUT_NATIVE_PHYSICAL_VIEW',
                 rtl_sha256=hashlib.sha256(raw).hexdigest(), rtl=str(path),
                 insertion_per_clock_pin_ps={'pll_fwd': [0.0, 0.0, 0.0]})
 

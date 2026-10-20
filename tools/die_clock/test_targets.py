@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import subprocess
+import sys
 from build import load_targets
 from qwen_compute_dieclk_prep import receiver_target
 
@@ -33,6 +35,7 @@ class ReceiverTargets(unittest.TestCase):
             rtl.write_text('module qfd_clkrx(input wire pll_fwd, output wire pll_r0, output wire pll_r1); assign pll_r0=pll_fwd; assign pll_r1=pll_fwd; endmodule')
             record = receiver_target(rtl)
             self.assertEqual(record['view'], 'MODEL_PASS_THROUGH_R0')
+            self.assertIs(record['physical_qualification_eligible'], False)
             target_file = Path(td) / 'targets.json'
             target_file.write_text(json.dumps({'masters': {'qfd_clkrx': record}}))
             target = load_targets(target_file)
@@ -44,6 +47,27 @@ class ReceiverTargets(unittest.TestCase):
                 rtl.write_text('module qfd_clkrx(input wire pll_fwd, output wire pll_r0);' + mutation + 'endmodule')
                 with self.assertRaisesRegex(ValueError, 'exact combinational identity'):
                     receiver_target(rtl)
+
+class ReceiverQualification(unittest.TestCase):
+    def test_report_and_regional_pass_cannot_qualify_model(self):
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+        import die_clock_check as checker
+        with tempfile.TemporaryDirectory() as td:
+            d = Path(td)
+            (d/'dump.tsv').write_text('R\tpll/ck\t0\t0\t0\t0\n')
+            (d/'targets.json').write_text(json.dumps({'masters': {'qfd_clkrx': {'view': 'MODEL_PASS_THROUGH_R0', 'physical_qualification_eligible': False}}}))
+            report = checker.report(str(d/'dump.tsv'), targets=str(d/'targets.json'))
+            self.assertIs(report['physical_qualification_eligible'], False)
+            self.assertIn('MODEL_ONLY', checker.table(report))
+            (d/'check.json').write_text(json.dumps({'neighbour_check': {'ff_measured': True, 'classes': {'intra:r0': {'judged': True, 'over': 0}}}}))
+            (d/'pairs.json').write_text(json.dumps({'summary': {'pairs': {}}, 'lanes': [{'bid':'a','drift':0}]}))
+            (d/'manifest.json').write_text(json.dumps({'physical_qualification_eligible': False, 'qualification': report['qualification']}))
+            r = subprocess.run([sys.executable, str(Path(__file__).with_name('regional_verdict.py')), str(d/'check.json'), str(d/'pairs.json'), str(d/'manifest.json'), '--out', str(d/'verdict.json')], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            verdict = json.loads((d/'verdict.json').read_text())
+            self.assertTrue(all(verdict['ok'].values()))
+            self.assertEqual(verdict['verdict'], 'MODEL_ONLY')
+            self.assertIs(verdict['physical_qualification_eligible'], False)
 
 if __name__ == '__main__':
     unittest.main()

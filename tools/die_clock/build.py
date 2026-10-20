@@ -283,6 +283,12 @@ def build(a):
         trees = [t for t in trees if t['name'] in keep or t['name'].split('_')[0] in keep]
     rec = dict(schema='opentallas.die_clock.manifest.v1', odb=a.odb, spec=spec, trees={}, cells=[], parent={}, cell_tree={},
                leaves={}, iterations=[])
+    if a.targets:
+        modeled = {k: v for k, v in json.loads(Path(a.targets).read_text())['masters'].items()
+                   if v.get('physical_qualification_eligible') is False or v.get('view') == 'MODEL_PASS_THROUGH_R0'}
+        if modeled:
+            rec['physical_qualification_eligible'] = False
+            rec['qualification'] = dict(scope='MODEL_ONLY', modeled_masters=modeled)
     clocks, sink_pins, builders = [], {}, {}
     tree_group = {t['name']: t['balance_group'] for t in trees if t.get('balance_group')}
     by_root = defaultdict(list)
