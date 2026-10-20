@@ -8,6 +8,8 @@ run() { n=$1; want=$2; shift 2; ( env "$@" bash tools/qwen_kv_die/pv_trunk_ba_be
 CT="1 100 300 1000 4097 8192"
 run pos_p0_rl19 PASS RL=19 PAIR=0 & run pos_p0_rl95 PASS RL=95 PAIR=0 & run pos_p1_rl95 PASS RL=95 PAIR=1 & wait
 CT="1 100"
-run mut_age_m1 FAIL RL=95 AGE_ADJ=-1 & run mut_cfg_swap FAIL RL=95 CFG_SWAP=1 & run mut_cfg_swap_p1 FAIL RL=95 PAIR=1 CFG_SWAP=1 & wait
+run mut_age_m1 FAIL RL=95 AGE_ADJ=-1 & run mut_cfg_swap FAIL RL=95 CFG_SWAP=1 &
+# pair 1 owns no rows at T <= 256 (rows=0 at T=1/100, verdict vacuous): its byte-select control runs at T 300 / 1000
+CT="300 1000" run mut_cfg_swap_p1 FAIL RL=95 PAIR=1 CFG_SWAP=1 & wait
 CT="1 100" M_TM=1 run mut_trunk FAIL RL=95 & CT="1 100" M_FA=1 run mut_flag FAIL RL=95 & wait
 cat "$O/summary.txt"; ! grep -q UNEXPECTED "$O/summary.txt"
