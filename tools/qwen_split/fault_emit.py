@@ -510,7 +510,7 @@ def post(v, m, G):
                 if s_ is None:
                     continue
                 cc = (s_[0] + W / 2, s_[1] + H / 2)
-                if _man(p_, cc) > REACH_UM:
+                if _man(p_, cc) > REACH_UM or _man(p_, cc) < 60.0:   # >= 60 um per hop: route boxes never touch
                     continue
                 k2 = (round(cc[0] / q), round(cc[1] / q))
                 if k2 in seen:
@@ -547,7 +547,21 @@ def post(v, m, G):
                         raise ValueError(f'fault emit: no hop route from {cur} {c0} to any of {len(okp)} attached nodes, nearest {tgt} {t} '
                                          f'(A* {st1} / wide {st2}; free boxes within 340 um of the leaf: '
                                          f'{sum(1 for gx in range(-8, 9) for gy in range(-8, 9) if abs(gx) + abs(gy) <= 8 and occ.free((c0[0] - W / 2 + 40 * gx, c0[1] - H / 2 + 40 * gy, c0[0] + W / 2 + 40 * gx, c0[1] + H / 2 + 40 * gy)))}/145 sampled)')
-                    for ll in route:
+                    for k_, ll in enumerate(route):
+                        if not occ.free((ll[0], ll[1], ll[0] + W, ll[1] + H)):
+                            # an earlier box of this same route took it: re-snap within reach of both neighbours
+                            pc = _ctr(nodes[cur]['it'])
+                            nx = (route[k_ + 1][0] + W / 2, route[k_ + 1][1] + H / 2) if k_ + 1 < len(route) else _ctr(by[tgt2])
+                            ll2 = None
+                            for sl in (26.0, 60.0, 120.0):
+                                q_ = _free_near(ll[0] + W / 2, ll[1] + H / 2, slack=sl, step=4.32)
+                                if q_ and _man(pc, (q_[0] + W / 2, q_[1] + H / 2)) <= REACH_UM and \
+                                        _man(nx, (q_[0] + W / 2, q_[1] + H / 2)) <= REACH_UM:
+                                    ll2 = q_
+                                    break
+                            if ll2 is None:
+                                raise ValueError(f'fault emit: routed hop box {ll} taken, no re-snap within reach')
+                            ll = ll2
                         hop = new_node('hop', 0, 0, cj, nodes[cur]['rs'], nodes[cur]['owner'], at=ll)
                         if _man(_ctr(nodes[cur]['it']), _ctr(nodes[hop]['it'])) > REACH_UM:
                             raise ValueError(f'fault emit: A* hop for {cur} too far')
