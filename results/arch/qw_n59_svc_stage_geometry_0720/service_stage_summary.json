@@ -1,0 +1,26 @@
+{
+  "edges": 307493,
+  "role_errors": [],
+  "odb_sha256": "e952fe8c93284c4e89523720d2cf282024e791e7fb63ac3f1ecd1e1a2b3ed570",
+  "by_role": {
+    "data_control": {
+      "edges": 290314,
+      "gt405": 246,
+      "max": [
+        496.17100000000005,
+        "u_ot_pr_core.dvf\\[0\\]$_DFFE_PN0P_/QN",
+        "fault$_DFF_PN0_/D"
+      ]
+    },
+    "reset_input": {
+      "edges": 17179,
+      "gt405": 37,
+      "max": [
+        517.863,
+        "ot_rrs__rst_n__ot_rlv__c25$_DFF_P_/QN",
+        "ot_rrs__u_ot_pr_core_rst_cp_pin__c53$_DFF_PN0_/RESETN"
+      ]
+    }
+  },
+  "scope": "All actual combinational function dependencies collapsed from FF/macro/input to FF/macro/output. Clock pins excluded by native/Lib clock role; async data reset pins retained. Endpoint span is a necessary stage constraint, not detailed-route wirelength or timing."
+}
