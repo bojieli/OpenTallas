@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_capc5c",
+ "enable": false,
+ "reason": "lp RTL registers every data input at the face (u_fw / u_fe / u_fcv / u_fcd) and every output in its face region (N: u_onv/u_ona/u_ond, S: u_osv/u_osa/u_osd/u_osf children, all landed from u_rt); do not double the stages"
+}
