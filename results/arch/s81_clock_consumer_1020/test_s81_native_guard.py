@@ -24,6 +24,11 @@ def phase(f,s):
  r=json.loads(f['forwarded_clock.json']);r['corners']['tt']['output_rise_input_edge']='rise';f['forwarded_clock.json']=json.dumps(r);a=json.loads(f['abstract.json']);a['forwarded_clock']=r['corners'];f['abstract.json']=json.dumps(a);return s
 reject('phase_metadata_changed',phase)
 reject('source_tcl_changed',lambda f,s:(f.__setitem__('export_tt.tcl',f['export_tt.tcl']+' '),s)[1])
+def nonfinite_receipt(f,s):
+ r=json.loads(f['forwarded_clock.json']);r['corners']['tt']['output_absolute_ps']['arrival_max_rise']=float('nan');f['forwarded_clock.json']=json.dumps(r)
+ a=json.loads(f['abstract.json']);a['forwarded_clock']=r['corners'];f['abstract.json']=json.dumps(a)
+ return s
+reject('nonfinite_absolute_consistent_receipts',nonfinite_receipt)
 # Historical actual bound SELF view has no native receipts: must fail before admission.
 s=(D/'legacy/dsfd_dvrlyh_276_EW.lib').read_text()
 try:validate_native_forwarding('dsfd_dvrlyh_276_EW','tt',s,lambda _:None)

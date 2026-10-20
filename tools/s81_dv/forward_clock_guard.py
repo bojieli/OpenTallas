@@ -88,7 +88,13 @@ def validate_native_forwarding(master, corner, lib, read):
         if fc[f'output_{out_edge}_input_edge'] != input_edge:
             raise ValueError('native phase/polarity provenance inconsistent')
         for bound in ('max', 'min'):
-            observed = fc['output_absolute_ps'][f'arrival_{bound}_{out_edge}'] - fc['input_absolute_ps'][f'arrival_{bound}_{input_edge}']
+            output_absolute = fc['output_absolute_ps'][f'arrival_{bound}_{out_edge}']
+            input_absolute = fc['input_absolute_ps'][f'arrival_{bound}_{input_edge}']
+            if not math.isfinite(output_absolute) or not math.isfinite(input_absolute):
+                raise ValueError('nonfinite native absolute arrival')
+            observed = output_absolute - input_absolute
+            if not math.isfinite(observed):
+                raise ValueError('nonfinite native observed transfer')
             local = fc['clk_in_to_clk_out_ps'][f'arrival_{bound}_{out_edge}']
             if not math.isfinite(local) or local < 0 or abs(observed-local) > 0.001:
                 raise ValueError('native local transfer/input phase mismatch')
