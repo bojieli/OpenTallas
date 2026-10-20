@@ -55,7 +55,7 @@ W=$W A=$L/forest P0=$B/${V}_real RH=$RH LEFS=relay_views_hard HS=$HSRC bash $S/r
 P2=$!
 echo "$P1 $P2" > $L/forest/wrappers.pid
 note "real forests launched: $L/forest/real_cplanR.otrun ($P1), real_hhKR.otrun ($P2), src $HSRC"
-( $OTRUN --mem 64 --threads 1 --disk 5 --priority die --dir $F/loc_hops -- bash -c "python3 $F/src/tools/hbm_die_v16/d4g_fp_hops.py $B/fpgen/case_orig $F/case_a $F/views/contract.json --out $F/fp_hops.json" > $L/fp_hops.otrun 2>&1
+( $OTRUN --mem 64 --threads 1 --disk 5 --priority die --dir $F/loc_hops -- bash -c "python3 $F/src/tools/hbm_die_v16/d4g_fp_hops.py $F/case_orig $F/case_a $F/views/contract.json --out $F/fp_hops.json" > $L/fp_hops.otrun 2>&1
   scp -q -o ControlPath=none $RH:$F/fp_hops.json $L/fp_hops.json && note "lane hop check: $(grep '^FP_HOPS' $L/fp_hops.otrun | cut -c1-600)" ) &
 echo "STEP S2 chain_d4g2d_post_fp2 $(date -Is)"
 ( cd $A && TAG=$V W=$W RSV=$RSV RH=$RH PRH=$RH PRIOR=$F/case_a/run.tcl COUTS="real_cplanR=8.64x2.16 real_hhKR=12.96x6.48" HSRC=$HSRC \
