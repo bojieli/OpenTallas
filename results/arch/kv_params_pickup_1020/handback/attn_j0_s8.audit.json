@@ -1,0 +1,4732 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/kv-bind4-1019/attn/arch/qkd_kvs_attn_rv3-rv3-6fdacf98c",
+ "closed": {
+  "commit": "6fdacf98c671b3039b809e4d6686348f26f00f0b",
+  "final_v_sha256": "9861b27b73c2b8941203e9cdc87354acc56734cebf0a3ef98865570cd8552886",
+  "job": "qkd_kvs_attn_rv3-rv3-6fdacf98c",
+  "lef_sha256": "cfa776977649d05e8c98426d9e74ee773b8d773de9d91b1eed05cb77fd2b644c",
+  "physical_json_sha256": "8a81813cab7398478f726b8a1cb25dc52400bd7be48e69d4b48169b07c69069a",
+  "spec_params": {
+   "RETIRE_STATIC": 1,
+   "STATUS_DELAY": 213
+  },
+  "synth_sources": {
+   "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32",
+   "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+   "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv": "7f5753645aa0129d8c696804d3ad49378fe7224fcd69c41624f673f3e077c5bf",
+   "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+   "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0"
+  },
+  "top": "qkd_kvs_attn_fl",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {},
+ "dup_witness": {
+  "constant": 877,
+  "count": 913,
+  "gold2_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "gold_only": 1473,
+  "joint": true,
+  "list": [
+   {
+    "gold": "prg[14]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "prg[15]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "prg[16]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "prg[17]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "prg[18]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.calendar_q[140]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.calendar_q[141]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.calendar_q[142]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.calendar_q[143]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.calendar_q[156]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.calendar_q[157]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.calendar_q[158]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.calendar_q[159]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[176]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[180]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[181]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[187]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[188]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[189]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[190]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[191]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[195]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[197]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[200]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[203]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[204]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[205]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[206]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[207]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[208]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[209]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'1"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[210]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[211]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[212]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[213]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[214]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[215]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[216]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[217]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[218]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[219]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[220]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[221]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[222]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_q[223]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "attn__tx_payload[543]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "attn__tx_payload[544]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "attn__tx_payload[545]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "attn__tx_payload[546]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "attn__tx_payload[547]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.ls_ekb[6]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.ctl.ls_ekb[5] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.ctl.ls_ekb[5]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.ls_ekb[8]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.cal[140]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.cal[141]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.cal[142]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.cal[143]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.cal[156]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.cal[157]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.cal[158]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.cal[159]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[0]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[2]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[3]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[7]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[8]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[9]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[10]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[11]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[12]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[13]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[14]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.rx_cmd[15]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.tx_first[3]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.tx_first[5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.tx_first[8]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.tx_first[11]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.tx_first[12]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.tx_first[13]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.tx_first[14]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.tx_first[15]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.last[0]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.last[4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.last[5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.last[11]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.last[12]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.last[13]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.last[14]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.last[15]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.codec.tx_payload[543]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.codec.tx_payload[544]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.codec.tx_payload[545]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.codec.tx_payload[546]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.codec.tx_payload[547]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.codec.l_ek[2]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.codec.l_ek[3]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.at[0]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.at[1]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.at[2]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.at[3]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.at[4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.at[5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.valid_q",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.ctl.guard.valid_c[0] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.ctl.guard.valid_c[0]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[1]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[2]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[3]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[7]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[8]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[9]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[11]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[12]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[13]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[14]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[15]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[16]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[17]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[18]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[20]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[21]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[22]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[23]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[24]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[25]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[26]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[27]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[28]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[29]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[30]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[31]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[32]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[33]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[34]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[35]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[36]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[37]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[38]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[39]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[40]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[41]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[42]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[43]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[45]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[46]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[47]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[48]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[49]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[50]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[51]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[52]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[53]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[54]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[56]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[57]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[58]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[59]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[60]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[61]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[62]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[63]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[64]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[65]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[66]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[67]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[68]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[69]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[70]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[71]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[72]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[73]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[74]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[75]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[76]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[77]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[78]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[79]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[80]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[81]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[82]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[83]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[84]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[85]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[86]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[87]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[88]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[89]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[90]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[91]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[92]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[93]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[94]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[95]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[96]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[97]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[98]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[99]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[100]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[101]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[102]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[103]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[104]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[105]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[106]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[107]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[108]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[109]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[110]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[111]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[112]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[113]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[114]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[115]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[116]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[117]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[118]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[119]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[120]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[121]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[122]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[123]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[124]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[125]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[126]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[127]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[128]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[129]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[130]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[131]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[132]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[133]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[134]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[135]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[136]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[137]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[138]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[139]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[140]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[141]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[142]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[143]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[144]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[145]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[146]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[147]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[148]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[149]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[150]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[151]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[152]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[153]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[154]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[155]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[156]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[157]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[158]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[161]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[163]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[166]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[167]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[168]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[169]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[170]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[171]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[172]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[173]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[174]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[175]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[177]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[178]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[179]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[180]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[181]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[182]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[183]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[184]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[185]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[186]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[187]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[188]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[189]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[190]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[191]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[192]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[193]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[194]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[195]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[196]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[197]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[198]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[199]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[200]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[201]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[202]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[203]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[204]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[205]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[206]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[207]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[208]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[209]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[210]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[211]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[212]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[213]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[214]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[215]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[216]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[217]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[218]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[219]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[220]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[221]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[222]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[223]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[224]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[225]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[226]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[227]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[228]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[229]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[230]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[231]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[232]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[233]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[234]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[235]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[236]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[237]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[238]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[239]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[240]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[241]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[242]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[243]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[244]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[245]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[246]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[247]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[248]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[249]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[250]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[251]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[252]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[253]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[254]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[255]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[256]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[257]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[258]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[259]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[260]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[261]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[262]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[263]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[264]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[265]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[266]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[267]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[268]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[269]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[270]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[271]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[272]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[273]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[274]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[275]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[276]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[277]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[278]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[279]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[285]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[287]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[288]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[289]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[292]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[293]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[294]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[295]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[296]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[297]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[298]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[299]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[300]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[301]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[302]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[303]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[305]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[306]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[307]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[308]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[309]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[310]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[311]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[312]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[313]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[314]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[315]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[316]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[317]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[318]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[319]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[320]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[321]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[322]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[323]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[324]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[325]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[326]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[327]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[329]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[330]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[331]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[332]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[333]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[334]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[335]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[336]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[337]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[338]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[339]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[340]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[341]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[342]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[343]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[344]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[345]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[346]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[347]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[348]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[349]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[350]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[351]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[354]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[355]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[356]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[357]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[358]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[359]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[360]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[361]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[362]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[363]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[364]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[365]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[366]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[367]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[368]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[369]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[370]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[371]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[372]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[373]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[374]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[375]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[376]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[377]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[378]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_q[379]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q[0]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q[1]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q[2]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q[3]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q[4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.guard.tag_q[5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[0]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[1]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[2]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[3]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[7]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[8]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[9]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[11]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[12]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[13]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[14]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[15]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[16]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[17]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[18]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[19]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[20]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[21]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[22]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[23]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[24]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[25]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[26]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[27]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[28]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[29]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[30]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[31]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[32]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[33]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[34]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[35]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[36]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[37]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[38]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[39]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[40]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[41]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[42]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[43]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[45]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[46]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[47]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[48]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[49]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[50]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[51]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[52]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[53]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[54]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[56]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[57]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[58]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[59]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[60]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[61]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[62]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[63]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[64]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[65]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[66]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[67]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[68]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[69]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[70]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[71]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[72]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[73]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[74]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[75]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[76]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[77]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[78]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[79]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[80]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[81]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[82]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[83]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[84]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[85]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[86]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[87]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[88]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[89]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[90]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[91]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[92]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[93]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[94]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[95]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[96]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[97]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[98]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[99]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[100]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[101]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[102]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[103]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[104]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[105]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[106]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[107]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[108]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[109]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[110]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[111]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[112]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[113]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[114]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[115]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[116]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[117]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[118]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[119]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[120]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[121]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[122]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[123]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[124]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[125]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[126]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[127]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[128]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[129]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[130]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[131]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[132]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[133]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[134]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[135]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[136]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[137]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[138]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[139]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[140]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[141]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[142]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[143]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[144]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[145]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[146]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[147]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[148]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[149]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[150]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[151]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[152]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[153]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[154]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[155]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[156]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[157]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[158]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[159]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[160]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[161]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[162]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[163]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[164]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[166]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[167]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[168]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[169]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[170]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[171]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[172]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[173]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[174]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[175]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[177]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[178]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[179]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[180]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[181]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[182]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[183]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[184]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[185]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[186]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[187]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[188]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[189]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[190]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[191]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[192]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[193]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[194]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[195]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[196]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[197]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[198]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[199]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[200]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[201]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[202]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[203]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[204]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[205]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[206]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[207]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[208]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[209]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[210]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[211]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[212]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[213]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[214]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[215]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[216]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[217]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[218]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[219]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[220]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[221]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[222]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[223]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[224]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[225]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[226]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[227]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[228]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[229]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[230]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[231]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[232]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[233]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[234]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[235]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[236]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[237]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[238]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[239]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[240]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[241]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[242]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[243]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[244]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[245]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[246]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[247]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[248]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[249]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[250]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[251]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[252]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[253]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[254]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[255]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[256]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[257]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[258]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[259]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[260]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[261]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[262]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[263]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[264]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[265]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[266]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[267]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[268]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[269]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[270]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[271]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[272]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[273]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[274]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[275]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[276]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[277]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[278]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[279]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[280]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[281]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[282]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[283]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[284]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[285]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[287]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[288]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[289]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[290]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[291]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[292]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[293]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[294]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[295]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[296]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[297]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[298]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[299]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[300]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[301]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[302]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[303]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[304]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[305]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[306]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[307]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[308]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[309]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[310]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[311]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[312]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[313]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[314]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[315]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[316]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[317]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[318]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[319]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[320]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[321]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[322]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[323]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[324]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[325]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[326]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[327]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[329]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[330]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[331]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[332]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[333]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[334]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[335]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[336]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[337]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[338]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[339]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[340]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[341]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[342]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[343]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[344]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[345]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[346]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[347]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[348]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[349]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[350]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[351]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[353]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.command[10] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.command[10]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[354]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[355]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[356]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[357]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[358]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[359]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[360]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[361]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[362]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[363]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[364]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[365]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[366]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[367]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[368]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[369]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[370]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[371]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[372]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[373]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[374]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[375]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[376]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[377]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[378]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command[379]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command_tag[0]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command_tag[1]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command_tag[2]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command_tag[3]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command_tag[4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.command_tag[5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.ctl.load[15]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.ctl.guard.command_valid (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.ctl.guard.command_valid"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[140]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[141]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[142]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[143]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[156]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[157]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[158]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[159]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[208]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[209]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'1"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[210]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[211]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[212]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[213]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[214]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[215]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[216]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[217]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[218]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[219]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[220]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[221]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[222]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[223]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[193]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[194]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[195]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[196]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[197]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[198]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[199]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[200]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[201]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[202]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[203]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[204]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[205]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[206]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[207]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[176]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[178]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[179]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[180]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[181]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[182]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[183]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[184]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[185]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[186]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn.cap_d[192] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn.cap_d[192]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[187]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[188]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[189]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[190]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn.cap_d[191]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.cal9[140]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.cal9[141]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.cal9[142]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.cal9[143]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.cal9[156]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.cal9[157]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.cal9[158]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.cal9[159]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.v9c[0]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn_cal.v9c[1] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn_cal.v9c[1]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.v9c[3]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn_cal.v9c[1] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn_cal.v9c[1]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_cal.v9c[15]",
+    "why": "merged into u_ot_pr_core.u_core.u_attn_cal.v9c[1] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn_cal.v9c[1]"
+   },
+   {
+    "gold": "u_ot_pr_core.u_core.u_attn_face.cp_sq",
+    "why": "merged into u_ot_pr_core.u_core.u_attn_face.cp_sq_c[0] (opt_merge -share_all)",
+    "witness": "u_ot_pr_core.u_core.u_attn_face.cp_sq_c[0]"
+   }
+  ],
+  "merged": 36,
+  "unwitnessed": 560
+ },
+ "equiv": {
+  "cells": 9353,
+  "log_sha256": "b1f168c715aea2da3c28aa242c0051b4876c32cf41e210cef2dc5de0ab377b1e",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct -seq 8",
+  "proven_cells": 8264,
+  "rc": 1,
+  "seconds": [
+   0.5,
+   1855.4
+  ],
+  "unproven_cells": 1089,
+  "unproven_sample": [
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236808: \\pvst_gold [30] \\pvst_gate [30]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236807: \\pvst_gold [29] \\pvst_gate [29]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236806: \\pvst_gold [28] \\pvst_gate [28]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236805: \\pvst_gold [27] \\pvst_gate [27]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236804: \\pvst_gold [26] \\pvst_gate [26]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236803: \\pvst_gold [25] \\pvst_gate [25]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236802: \\pvst_gold [24] \\pvst_gate [24]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236801: \\pvst_gold [23] \\pvst_gate [23]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236800: \\pvst_gold [22] \\pvst_gate [22]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236799: \\pvst_gold [21] \\pvst_gate [21]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236798: \\pvst_gold [20] \\pvst_gate [20]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236797: \\pvst_gold [19] \\pvst_gate [19]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236796: \\pvst_gold [18] \\pvst_gate [18]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236795: \\pvst_gold [17] \\pvst_gate [17]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236794: \\pvst_gold [16] \\pvst_gate [16]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236793: \\pvst_gold [15] \\pvst_gate [15]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236792: \\pvst_gold [14] \\pvst_gate [14]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236791: \\pvst_gold [13] \\pvst_gate [13]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236790: \\pvst_gold [12] \\pvst_gate [12]",
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236789: \\pvst_gold [11] \\pvst_gate [11]"
+  ]
+ },
+ "expect": "pass",
+ "gate": {
+  "flops": 6893,
+  "macros": {},
+  "replicas": 365
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "d50980c5a7fbd86623fb4c8929c67b9fd0be1c05b66231218cfd2d453f289dc8",
+   "child_lint.json": "e6b5d0fceb0eb8da5cc37c005c10b175ef2fece608d7c055940288cebf0168ad",
+   "export_exact_abstract.log": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+   "export_exact_abstract.tcl": "7d35cc5538eb637699dfb6216f741ca25713fda2af5b5917390d7025cc3c370f",
+   "export_ff.log": "4ca1a777e01a3c1cae4d30c1eb542ba0ec036071fdd8ff70c41b885a5983d237",
+   "export_ff.tcl": "5db16b0a72288a7f1432339ec13a4640aca2196a5c9c0661c6e1123a92dedf5e",
+   "export_ss.log": "3fc140834e3dd3dc55a1462cbf4a67e55e7aba2af7a3b5cea45d07d26a10ab21",
+   "export_ss.tcl": "32057d0c50ca6e11a53474d6554974569e7d06a6042e2b23dfb2fe4290e97263",
+   "export_tt.log": "053415f580322eed9a32369ab168c3414d9eb5ebf31a8ad0fee8288786f2f95e",
+   "export_tt.tcl": "faf0ef2975f38a197df14ea9258a4568a7ce3e561052f98a1ddbb5649c9987c0",
+   "insertion.json": "f651b522d1f6f4963f5074416a2254903c67e257054610e82686b81dcf626819",
+   "provenance/abstract_pin_stub.json": "91081ada2ae63533d30bbbe1983376492d0c6a2407fb383f1902fd5842783720",
+   "provenance/raw/qkd_kvs_attn_fl.lef": "cfa776977649d05e8c98426d9e74ee773b8d773de9d91b1eed05cb77fd2b644c",
+   "provenance/view_export.abstract.json": "0d58e87f6cb3ddd33cae6f15f51442c7f83c4fc2a59bd86477f43189a630df6b",
+   "qkd_kvs_attn_fl.lef": "0d08f38db39d5ce89f03c6658963c4f058254e29ad517cc4d49603e7dc04cd45",
+   "qkd_kvs_attn_fl_ff.lib": "1ad5ecef7dd70c3cbb23d2eafb75fe48dd3a083e5312e86a9ccf80e37830bc88",
+   "qkd_kvs_attn_fl_ss.lib": "7bbf47057f5fed23a418bff350c94b47dad6616502783e64e0f61039302738ed",
+   "qkd_kvs_attn_fl_tt.lib": "5292762b1ecd2a934343881de2e59c659072f6e22dacf99a96b98f0788c1c88f"
+  },
+  "rtl": {
+   "path": "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv",
+   "sha256": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32"
+  },
+  "view": "physical/ref_tile/qkd_kvs_attn_rv3/views/qkd_kvs_attn_fl"
+ },
+ "module": "qkd_kvs_attn_fl",
+ "observe_zero": null,
+ "parameters": {
+  "MUT": 0,
+  "RETIRE_STATIC": 1,
+  "STATUS_DELAY": 213
+ },
+ "proven": false,
+ "rtl": "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32",
+  "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv": "7f5753645aa0129d8c696804d3ad49378fe7224fcd69c41624f673f3e077c5bf",
+  "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 0,
+  "gate_only_sample": [],
+  "gold_only": 1473,
+  "gold_only_sample": [
+   "acal_EN[10]",
+   "acal_EN[11]",
+   "acal_EN[12]",
+   "acal_EN[13]",
+   "acal_EN[14]",
+   "acal_EN[15]",
+   "acal_EN[28]",
+   "acal_EN[29]",
+   "acal_EN[30]",
+   "acal_EN[31]",
+   "acal_EN[43]",
+   "acal_EN[44]",
+   "acal_EN[45]",
+   "acal_EN[46]",
+   "acal_EN[47]",
+   "ahs[100]",
+   "ahs[114]",
+   "ahs[115]",
+   "ahs[116]",
+   "ahs[130]"
+  ],
+  "gold_regs": 8001,
+  "paired": 6893,
+  "rst_copy_alias_pairs": 42
+ },
+ "view": "physical/ref_tile/qkd_kvs_attn_rv3/views/qkd_kvs_attn_fl",
+ "wrapper": {
+  "clock": "ck",
+  "copies": {
+   "rst_n": 48
+  },
+  "first_copies": {
+   "rst_n": 2
+  },
+  "flow_script_blob": "243c7bfa44fb4a0e157f5fc64b79d3fd2d79d079",
+  "kind": "reset_landing_balanced",
+  "reset_landing_sha256": "debb212f56b4c028557b763a6a9ca8d7f917834abc08db1178f64b2b6bb53815",
+  "reset_ports": [
+   "rst_n"
+  ],
+  "stages": 2
+ }
+}

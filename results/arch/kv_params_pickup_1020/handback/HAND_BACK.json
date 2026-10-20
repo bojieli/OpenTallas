@@ -1,0 +1,73 @@
+{
+  "stopped": true,
+  "trigger": "CLAUDE IS BACK",
+  "time_local": "2026-10-20T04:50:44.035271",
+  "no_new_launches_after_stop": true,
+  "audit_branch_before_preservation": "6036b1818 codex/kv-params-audit-pickup-1020",
+  "p216_branch": "a55e98668 codex/kv-pvj-gate-packet-1020",
+  "p216_live": {
+    "session": 49902,
+    "local_gate_pid": 2166495,
+    "local_otrun_pid": 2174032,
+    "log": "/home/ubuntu/scratch/codex-pvj-p216/gate_p216.log",
+    "remote": "ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053",
+    "state": "native32PASS;4621placedpinsgeometryPASS;CTSfinalreports live",
+    "manual_coordinate_difference": "2189M4pins canonicaltrackSNAP+0.024um vsrequestedphase; actualmapcommittedhere, no requestedcenteridentityclaim",
+    "rule": "CRITICAL PNG/checklistonly; no child REVIEW/submit; parent405hop/staticagesstillOPEN"
+  },
+  "attn_original_stronger8": {
+    "session": 11914,
+    "status": "TERMINAL_NOT_PROVEN1089unproven (baseline1100)",
+    "result": "handback/attn_j0_s8.audit.json",
+    "receipt": false
+  },
+  "attn_original_base_diagnostic": {
+    "session": 70935,
+    "status": "TERMINAL_SAT_CEX_rc1",
+    "checked_steps": [
+      7,
+      14
+    ],
+    "reset_edges": 6,
+    "paired_initial": 6528,
+    "witnesses": 913,
+    "free_replicas": 365,
+    "cex_raw": "handback/base_cex.json",
+    "cex_valid_names_derivative": "handback/base_cex_valid_names.json (repairs Yosys invalid escapes only in name fields; RAW retained)",
+    "complete_log_remote": "ot-epyc5:/srv/opentallas-scratch2/claude/codex-kv-params-audit-1020/attn_base_diagnostic/base.log",
+    "complete_log_sha256": "25450dcd14cec0a7e985da437ad18c3fd81f980cf88c309f4247ea49ce220b01",
+    "size_note": "130MiB remote complete immutable log; no functional-port CEX diagnosis completed"
+  },
+  "attn_private_fullopt_live": {
+    "tool_sha256": "d533c199b61d8d364455fdb353e73cdf440eb26d130d21554a662415475b392d",
+    "source_commit": "6036b1818",
+    "positive": {
+      "session": 56532,
+      "unit": "oth-ubuntu-144543-1792496336",
+      "python_pid": 144581,
+      "yosys_pid": 145711,
+      "status_delay": 213
+    },
+    "negative": {
+      "session": 5170,
+      "unit": "oth-ubuntu-144793-1792496337",
+      "python_pid": 144838,
+      "yosys_pid": 145835,
+      "status_delay": 212
+    },
+    "remote_root": "ot-epyc5:/srv/opentallas-scratch2/claude/codex-kv-params-audit-1020",
+    "outputs": "out/{full_pos,full_sd212}.audit.json/.log/.rc; full_*/dup_witness_refinement.json/equiv.log",
+    "proof_constraints": "preserves every original witness observation and original ports/pairedstates; adds unique gold-only Q predicates from fullopt/wreduce; induction8/reset6/base required",
+    "qualification": "PRIVATE TOOL PROTOTYPE; no receipt until actualpositivePROVEN+negativeNOTPROVEN AND ROOT review/source/profile qualification"
+  },
+  "pv_slice_existing_live": {
+    "remote": "ot-epyc6:/srv/opentallas-scratch/claude/kv-params4-audit-1020",
+    "positive_python_pid": 2505600,
+    "negative_python_pid": 2505859,
+    "positive_yosys_pid": 2600703,
+    "negative_yosys_pid": 2598052,
+    "outputs": "audits/pvslice_dw_{pos,rp0}.audit.json; .rc03:09 STALE, runs03:12live",
+    "qualification": "no new receipt; needposPROVEN+rp0NOTPROVEN with actualbase"
+  },
+  "children": "qkh_gates and pvfin_source STOP sent; their own refs/jobs handed back separately; no root merges by this lane"
+}

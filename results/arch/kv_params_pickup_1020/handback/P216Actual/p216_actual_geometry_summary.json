@@ -1,0 +1,83 @@
+{
+  "status": "ACTUAL_GEOMETRY_DENSITY_PASS_EXPLICIT_REQUESTED_COORDINATE_SNAP",
+  "raw_pin_geometry_report": {
+    "schema": "opentallas.fp_pin_geometry.v1",
+    "verdict": "PASS",
+    "fails": [],
+    "metrics": {
+      "signal_clock_pins": 4621,
+      "pin_rectangles": 4621,
+      "pin_track_checked": 4621,
+      "pin_track_inaccessible": 0,
+      "pin_rectangles_outside": 0,
+      "missing_geometry": 0
+    },
+    "dump": "/srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053/routes/gate/work/orfs/gate_dump.json",
+    "dump_sha256": "2159eb1091454573212d62cdcbda231b0781707dd58b9914e6dfde2369fb428b",
+    "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+  },
+  "faces": {
+    "W": {
+      "pins": 1031,
+      "min": 4.332000000000001,
+      "max": 211.692,
+      "total_density_per_um": 4.972029320987654,
+      "max_pins_in_1um_window": 6
+    },
+    "E": {
+      "pins": 1158,
+      "min": 4.332000000000001,
+      "max": 211.692,
+      "total_density_per_um": 5.5844907407407405,
+      "max_pins_in_1um_window": 6
+    },
+    "S": {
+      "pins": 1216,
+      "min": 4.329000000000001,
+      "max": 211.692,
+      "total_density_per_um": 5.864112691270863,
+      "max_pins_in_1um_window": 6
+    },
+    "N": {
+      "pins": 1216,
+      "min": 4.329000000000001,
+      "max": 211.692,
+      "total_density_per_um": 5.864112691270863,
+      "max_pins_in_1um_window": 6
+    }
+  },
+  "face_layer_name_mismatch": [],
+  "actual_signalpins": 4621,
+  "power_bterms_separate": [
+    {
+      "name": "VSS",
+      "signal_type": "GROUND",
+      "shapes": 40
+    },
+    {
+      "name": "VDD",
+      "signal_type": "POWER",
+      "shapes": 40
+    }
+  ],
+  "requested_tangential_coordinate_deltas": [
+    {
+      "layer": "M3",
+      "actual_minus_requested_um": 0.0,
+      "pins": 1216
+    },
+    {
+      "layer": "M4",
+      "actual_minus_requested_um": 0.024,
+      "pins": 2189
+    },
+    {
+      "layer": "M5",
+      "actual_minus_requested_um": 0.0,
+      "pins": 1216
+    }
+  ],
+  "strict_requested_center_equality": "FAIL2189M4snap+0.024um; preservedp216_actual_pin_map_audit.json (also2PGoutsidefunctionalpincontract); no exactrequestedcentersclaim",
+  "source": "a55e98668; actualrawDEF/LEFcoordinatesmustdriveparentbinding",
+  "map_sha256": "0a61be216677d28bf0163cf91b3aca69c8cdff1a1e8fe57cd930f5ce420eb5d8"
+}
