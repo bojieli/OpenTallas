@@ -1,0 +1,17 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfwd_landh0d8_3_ew_17x17-l8a-5e33c95b8 bench bench_k3_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfwd_landh0d8_3_ew_17x17-l8a-5e33c95b8 log cl/bench_k3_mutant.a1b1.log captured 2026-10-19T18:18:43-07:00
+# fail_regex 'LAND8_BENCH_ALL FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+seed 11: LAND8_BENCH FAIL 12795 errors in 28884 checks (72 lanes, K 0..15)
+LAND8_MISMATCH tb.l11 t=31 o=0 exp=6
+LAND8_MISMATCH tb.l8 t=32 o=0 exp=7
+LAND8_MISMATCH tb.l11 t=32 o=0 exp=5
+seed 2026: LAND8_BENCH FAIL 12797 errors in 28892 checks (72 lanes, K 0..15)
+LAND8_MISMATCH tb.l11 t=31 o=0 exp=6
+LAND8_MISMATCH tb.l8 t=32 o=0 exp=7
+LAND8_MISMATCH tb.l11 t=32 o=0 exp=5
+seed 777: LAND8_BENCH FAIL 12795 errors in 28884 checks (72 lanes, K 0..15)
+LAND8_MISMATCH tb.l11 t=31 o=0 exp=6
+LAND8_MISMATCH tb.l8 t=32 o=0 exp=7
+LAND8_MISMATCH tb.l11 t=32 o=0 exp=5
+LAND8_BENCH_ALL FAIL (k3 qfd_landh0d8_3_EW_17x17)
