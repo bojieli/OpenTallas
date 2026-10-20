@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "empty_pg": 0,
+  "odb_sha256": "d3598873698d09c796c9aec1290b8dda59c4bef827add5afc0cc96fffe3fe566",
+  "PG_counts": {
+    "ordinary_bound_role": 51872,
+    "kernel_cells": 56000,
+    "kernel_dnt": 56000,
+    "protected_bound_role": 112000,
+    "kernel_bound_role": 112000,
+    "fixed_bound_role": 17064
+  },
+  "tap_cohort": {
+    "instances": 8531,
+    "protected": 0,
+    "fixed": 8531,
+    "PG_bound_role": 17062
+  },
+  "wrong_role_terms": [],
+  "empty_examples": [],
+  "global_rules": [
+    {
+      "inst": ".*",
+      "pin": "^VDD$",
+      "net": "VDD"
+    },
+    {
+      "inst": ".*",
+      "pin": "^VDDPE$",
+      "net": "VDD"
+    },
+    {
+      "inst": ".*",
+      "pin": "^VDDCE$",
+      "net": "VDD"
+    },
+    {
+      "inst": ".*",
+      "pin": "^VSS$",
+      "net": "VSS"
+    },
+    {
+      "inst": ".*",
+      "pin": "^VSSE$",
+      "net": "VSS"
+    }
+  ]
+}
