@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/mu-dq-sysface-1019",
+  "branch": "claude/root4-sysface-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/qwen_split",
@@ -41,7 +41,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sys_face #(.MU(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/qwen_sys/d2d_static_20261015 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_sys_face.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv rtl/qwen_split/qfd_sys_face_record_port.sv rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sys_face #(.MU(1), .MU_HEAD(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/qwen_sys/d2d_static_20261015 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_sys_face.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv rtl/qwen_split/qfd_sys_face_record_port.sv rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -51,7 +51,7 @@
    },
    {
     "name": "sys_face_mu_events_exact",
-    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_events_exact 0",
+    "cmd": "SF_MU_HEAD=1 D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_events_exact 0",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -64,7 +64,7 @@
    },
    {
     "name": "sys_face_mu_t_late_mutant",
-    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_t_late_mutant 1",
+    "cmd": "SF_MU_HEAD=1 D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_t_late_mutant 1",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -76,7 +76,7 @@
    },
    {
     "name": "sys_face_mu_emb_index_mutant",
-    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_emb_index_mutant 2",
+    "cmd": "SF_MU_HEAD=1 D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_emb_index_mutant 2",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -88,7 +88,7 @@
    },
    {
     "name": "sys_face_mu_filler_ctx_hosttag_mutant",
-    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_filler_ctx_hosttag_mutant 6",
+    "cmd": "SF_MU_HEAD=0 D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_filler_ctx_hosttag_mutant 6",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -97,11 +97,11 @@
     ],
     "fail_regex": "^SYS_FACE_FAIL MUT=6",
     "fail_witness": "results/rtl/mu_qwen_1018/sysface/witness/face_mu_m6.log",
-    "note": "MU 1 face checking filler head contexts against the HOST tag (the closed MU 0 behaviour)"
+    "note": "MU 1 face checking filler head contexts against the HOST tag (the closed MU 0 behaviour) | ROOT4-SYSFACE 10-19: run at MU_HEAD 0. At MU_HEAD 1 (the kit) MUT 6 is an EQUIVALENT mutant: the HOST context RX (qfd_host_native_context_rx MU_HEAD 1) also drops filler positions, so two independent user-0 filters each suffice (fleet ot-epyc9 root4-sysface-1019: MUT 6 PASS at MU_HEAD 1). MU_HEAD 0 isolates the face filter (mu_hc / hc_user0)."
    },
    {
     "name": "sys_face_mu_filler_ctx_pos_mutant",
-    "cmd": "D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_filler_ctx_pos_mutant 7",
+    "cmd": "SF_MU_HEAD=1 D2D_MU=1 bash rtl/test/qwen_split/run_sys_face_bench.sh {RUN}/bench/sys_face_mu_filler_ctx_pos_mutant 7",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -143,7 +143,7 @@
    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
   "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_sys_face/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_sys_face/kit.env {LABEL} {RUN}/routes",
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_sys_face/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_sys_face/kit.env {LABEL} {RUN}/routes",
    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"
@@ -197,5 +197,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "MU re-close (MU-DQ-SYSFACE 10-19, coordinator 0kg; reroute_reason rtl_change, COORD pre-accepted): Qwen ROM 4-user release. (1) D2D sequencer source-select ot_qwen_d2d_cal_seq_dies.sv -> ot_qwen_d2d_cal_seq_dies_mu.sv = the MU image d2d_cal_image_mu.svh (regenerated on the current die stages: D2D_MU=1 d2d_cal_image_production.sh; C RX + K TX +1 entry = the token-run MU context slot S->C kind 12 beat 1, C RX arrival 18; SEG2 8 -> 9; START / FIRST_TOKEN / PERIOD / TXDP unchanged); constants only. (2) #(MU 1): filler (user 1..3 on tt_native_pos[17:16], MU-DQ-D2DUSER) head contexts are no longer checked against the user-0 HOST tag (the closed face faulted on every filler context); they are checked for a valid installed host epoch + fused cap, position < 8192, token < 151936 (mu_hc_fault, sticky, joins face_fault). User 0 / MU 0 logic unchanged. Same outline, macro, pins and faces as rs3. rs3 text follows: SUCCESSOR rs3 (Q-SYSFACE3 10-18, coordinator 0ea CHANGES REQUESTED on rs2: ROM x 190.08 off the 43.2-um lattice, all-sink spread 94.5 TT / 96.2 FF > 80, util 12%): same RTL as rs2 (emb_prov_fault port + G8 re-port kept), same face assignment (S-face emb_* pins kept); outline 302.4x216 -> 259.2x129.6 (pin-limited by the N face: 1,322 bits now at uniform ~5.5 b/um end to end, every face spread by bit count), ROM on the 43.2 lattice at (172.8, 43.2) R0, a shorter clock tree over half the area for the pin-flop spread. rs2 text follows: SUCCESSOR rs2 (Q-STUB 10-17) = rs1 + the Q-CTLM G8 DV re-port (crom_fault_code / res_issue_fault inputs dropped: their producers left the die) + emb_prov_fault input (qfd_embedding_word_provider.fault was an open output on dv2f11; registered, sticky, joins face_fault in the rst_emb region). pin_reg_split off (current ref_tile gen rejects it without the recipe-2 pin hook; rs1's kit.env never carried it). Re-close needed because the bound view @4458091af carries the 2 dropped pins. rs1 text follows: SUCCESSOR rs1 of qfd_sys_face rr1 (7473dff29, EARLY_FAIL_HOLD at 4_1_cts: FF hold -40.35 -> -28.5 after 10.5k hold buffers, every worst endpoint an N-face input pin flop rx_payload__ot_q[*] behind the recipe-3 input hold pad; CTS 8 bufs / 10 levels, pin-flop arrival 313-404 ps) and of rq1 (CLOSED, native pin audit FAIL rst_n capture 461.9 > 190). STRUCTURAL: (1) recipe 4 / hold_budget die (owner-approved FLOW-HOLD 10-16): flop-first pins, NO input/output hold pads, boundary hold is the die budget at the relay stations; every data pin lands in / launches from a pin register (recipe-3 pin_regs). (2) RTL regional reset rs1: 14 relay flops, each <= 256 loads (rr1 lint: rst_rec 1,153 / rst_out 303 / rst_boot 278); record port reset per sub-block (rtl/qwen_split/qfd_sys_face_record_port.sv, logic identical to qfd_program_record_port), boot control vs PW/DW payload, outputs split events / emb RX / STATUS; same release edge, bench bit-exact (MUT0 1,512 events, MUT1-4 FAIL). (3) Pins re-faced to the die neighbours of Qwen dv2r8f7 (sys_face x 1101.6-1404.0, y 22496.0-22712.0): N = D2D (d2d_rom NW, rs_bump/fwd_epoch bumps N), W = native59 (directly W, full height) + tt_ctlm (SW): host context / native slots / TT faces, S = embed_prov (directly S) + io_collective (far S): embedding provider + io faults, E (was empty) = SU / sequencer observer faces seq_* (no dv2r8f7 bus; E is the compute columns and DV lane relays). Each face spread end to end by bit count. (4) ck at the N-face centre between the two 548-bit record buses (prog_tx_record W of it, rx_payload E of it) = the register mass (~1,300 N pin flops + the record port they feed)."
+ "structural_change": "ROOT4-SYSFACE re-close 10-19 (main c165d6ab2): re-harden on main's current d2d_cal_image_mu.svh (the closed rs3 view's image is stale: yosys equiv results/arch/root4_qwpost_equiv_1019 FAIL 26/13570 in the d2d calendar config path) with MU 1 + MU_HEAD 1 = the die's params (tools/qwen_split/die_params.py MU-DQ-BOOTCTX); route.io_hold_margin_ns 0.0 -> 0.03 (SAFE item 7, SAFE-AUDIT-QW). Same RTL structure, outline, macro, pins and faces as rs3/mu1. MU re-close (MU-DQ-SYSFACE 10-19, coordinator 0kg; reroute_reason rtl_change, COORD pre-accepted): Qwen ROM 4-user release. (1) D2D sequencer source-select ot_qwen_d2d_cal_seq_dies.sv -> ot_qwen_d2d_cal_seq_dies_mu.sv = the MU image d2d_cal_image_mu.svh (regenerated on the current die stages: D2D_MU=1 d2d_cal_image_production.sh; C RX + K TX +1 entry = the token-run MU context slot S->C kind 12 beat 1, C RX arrival 18; SEG2 8 -> 9; START / FIRST_TOKEN / PERIOD / TXDP unchanged); constants only. (2) #(MU 1): filler (user 1..3 on tt_native_pos[17:16], MU-DQ-D2DUSER) head contexts are no longer checked against the user-0 HOST tag (the closed face faulted on every filler context); they are checked for a valid installed host epoch + fused cap, position < 8192, token < 151936 (mu_hc_fault, sticky, joins face_fault). User 0 / MU 0 logic unchanged. Same outline, macro, pins and faces as rs3. rs3 text follows: SUCCESSOR rs3 (Q-SYSFACE3 10-18, coordinator 0ea CHANGES REQUESTED on rs2: ROM x 190.08 off the 43.2-um lattice, all-sink spread 94.5 TT / 96.2 FF > 80, util 12%): same RTL as rs2 (emb_prov_fault port + G8 re-port kept), same face assignment (S-face emb_* pins kept); outline 302.4x216 -> 259.2x129.6 (pin-limited by the N face: 1,322 bits now at uniform ~5.5 b/um end to end, every face spread by bit count), ROM on the 43.2 lattice at (172.8, 43.2) R0, a shorter clock tree over half the area for the pin-flop spread. rs2 text follows: SUCCESSOR rs2 (Q-STUB 10-17) = rs1 + the Q-CTLM G8 DV re-port (crom_fault_code / res_issue_fault inputs dropped: their producers left the die) + emb_prov_fault input (qfd_embedding_word_provider.fault was an open output on dv2f11; registered, sticky, joins face_fault in the rst_emb region). pin_reg_split off (current ref_tile gen rejects it without the recipe-2 pin hook; rs1's kit.env never carried it). Re-close needed because the bound view @4458091af carries the 2 dropped pins. rs1 text follows: SUCCESSOR rs1 of qfd_sys_face rr1 (7473dff29, EARLY_FAIL_HOLD at 4_1_cts: FF hold -40.35 -> -28.5 after 10.5k hold buffers, every worst endpoint an N-face input pin flop rx_payload__ot_q[*] behind the recipe-3 input hold pad; CTS 8 bufs / 10 levels, pin-flop arrival 313-404 ps) and of rq1 (CLOSED, native pin audit FAIL rst_n capture 461.9 > 190). STRUCTURAL: (1) recipe 4 / hold_budget die (owner-approved FLOW-HOLD 10-16): flop-first pins, NO input/output hold pads, boundary hold is the die budget at the relay stations; every data pin lands in / launches from a pin register (recipe-3 pin_regs). (2) RTL regional reset rs1: 14 relay flops, each <= 256 loads (rr1 lint: rst_rec 1,153 / rst_out 303 / rst_boot 278); record port reset per sub-block (rtl/qwen_split/qfd_sys_face_record_port.sv, logic identical to qfd_program_record_port), boot control vs PW/DW payload, outputs split events / emb RX / STATUS; same release edge, bench bit-exact (MUT0 1,512 events, MUT1-4 FAIL). (3) Pins re-faced to the die neighbours of Qwen dv2r8f7 (sys_face x 1101.6-1404.0, y 22496.0-22712.0): N = D2D (d2d_rom NW, rs_bump/fwd_epoch bumps N), W = native59 (directly W, full height) + tt_ctlm (SW): host context / native slots / TT faces, S = embed_prov (directly S) + io_collective (far S): embedding provider + io faults, E (was empty) = SU / sequencer observer faces seq_* (no dv2r8f7 bus; E is the compute columns and DV lane relays). Each face spread end to end by bit count. (4) ck at the N-face centre between the two 548-bit record buses (prog_tx_record W of it, rx_payload E of it) = the register mass (~1,300 N pin flops + the record port they feed)."
 }
