@@ -1,0 +1,8 @@
+MISMATCH edge=51
+MISMATCH edge=52
+MISMATCH edge=53
+HROOT_RESET_CONTRACT short_pulses=104 held_assertions=41 pulse_changes=0 core_assertion=posedge_sampled reference=old_landed_plus_one
+SAFE32 FAIL errors=506 checked=2091 mut=3
+[21006000] %Fatal: tb_offphase.sv:34: Assertion failed in tb
+%Error: results/rtl/kv_hroot_safe32_1020/tb_offphase.sv:34: Verilog $stop
+Aborting...

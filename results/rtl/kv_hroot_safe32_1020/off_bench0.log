@@ -1,0 +1,6 @@
+HROOT_RESET_CONTRACT short_pulses=104 held_assertions=41 pulse_changes=0 core_assertion=posedge_sampled reference=old_landed_plus_one
+SAFE32 PASS checked=2091 mut=0
+- results/rtl/kv_hroot_safe32_1020/tb_offphase.sv:35: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.022 s; speed 947.466 us/s
+- Verilator: cpu 0.022 s on 1 threads; allocated 8 MB

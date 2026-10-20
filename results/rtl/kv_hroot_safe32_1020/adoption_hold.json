@@ -1,0 +1,30 @@
+{
+  "status": "ADOPTION_HOLD",
+  "supersedes": "gate_visual_review.json lane approval is insufficient; no coordinator approval receipt exists",
+  "job": "qkd_kvs_hroot_safe32-s32v3-e52c7bca5",
+  "source_commit": "e52c7bca5",
+  "route_instruction": "Preserve submitted route as diagnostic; no duplicate or cancellation",
+  "reach": {
+    "status": "FAIL",
+    "limit_um": 405,
+    "actual_max_um": 517.212,
+    "roots_over_limit": 417,
+    "report": "placed_reach_union.json",
+    "method": "Truth-functional unary BUF/INV traversal using ten actual loaded TT/FF Liberty files; source driver to distinct nontransparent/nonclock endpoint Manhattan distance. Instance-centre/BPin-centre coordinate proxy.",
+    "clock_exclusion": "Declared spec clock port ck plus ODB CLOCK nets; Liberty clock pins excluded at terminals.",
+    "odb_sha256": "a9d3b41971c7ef8092256e32f3e2c7c81e1fbf16c7da51fde0af9da1ab17fbe7",
+    "limitation": "Instance-centre/BPin-centre proxy, not exact terminal coordinates; violation margin 112.212 um"
+  },
+  "reset": {
+    "status": "PRODUCTION_CONTRACT_UNRESOLVED",
+    "core_assertion": "posedge sampled, inherited old core",
+    "short_offphase_pulses_ignored_both": 104,
+    "held_assertions_compared": 41,
+    "checks": 2091,
+    "m0": "PASS",
+    "reset_bypass_mutant_errors": 506,
+    "scope": "Core before external face reset landing; not an asynchronous assertion qualification",
+    "required": "Root actual production reset protocol before semantic source change"
+  },
+  "successor": "Model all stage endpoint groups/fences and actual reach, prepare PNG/checklist before gate. No reset semantic change yet."
+}
