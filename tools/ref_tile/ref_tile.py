@@ -2312,7 +2312,6 @@ def referenced_paths(s: dict, kd: str) -> list:
     if pg_strict:
         out += ["physical/common_flow/native_pg_binding.tcl",
                 "physical/common_flow/native_pg_bootstrap.tcl",
-                "physical/common_flow/native_pg_final_entry.tcl",
                 "physical/common_flow/audit_native_pg.tcl", "tools/closure_loop/pg_receipt.py"]
     return out
 
