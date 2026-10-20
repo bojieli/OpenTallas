@@ -15,6 +15,15 @@
 //   ({xb7, ctx46}, from ot_hbm_svc_sm_issuer_rel XSLOT 1); every valid issue word's xaddr [6:0] += xb (mod 128, in the
 //   same R-stage add as the looped + iteration term: no added edge).  The die's SM op_xb comes from the static programme.
 // Everything else (four-PC producer, landing/cache SRAMs, packed136 rows, S1 consumer copy, faults) is the _id feed.
+// HBM-QINT8 2026-10-19: INT8 packed-line view of the S1 consumer copy.  The SM (ot_hbm_accel_smh_attn ENABLE_INT8)
+//   turns a packed 128-code line marked by xc command[116] into two BF16 lines 2 and 3 edges later (ot_smh_static_int8),
+//   and the compiler's command [29]/[39:30]/[25] describe THAT stream; the copy here saw the raw packet, so every INT8
+//   calendar faulted at its first high-half issue edge (command[25] with no raw packet).  PREL programme word bit [118]
+//   (unused in PREL: retire bank/epoch come from the go context) now carries the same packed-line mark; the copy checks
+//   the SM-front view {conv ? {1, tag of the packet 2/3 edges ago} : mark ? 0 : raw} and the converter calendar rules of
+//   ot_hbm_accel_smh_attn g_int8 (mark without a packet, mark on the converter's busy edge, raw packet on a converted
+//   edge = i8_fault).  Valid/tag only (the copy's lt/lb/fm data outputs are unread on the die).  No mark = the raw packet
+//   exactly (bit-identical behaviour for every non-INT8 stream).  No stall, no backpressure: faults are sticky.
 module ot_hbm_svc_sm_feed_programmed_rel_id #(
  parameter integer PAW=11,PREL=1,
  parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
@@ -107,6 +116,9 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
  reg[51:0]rd_r;reg rd_v_r;           // {read_v, bank, epoch16, row6, tag10, retire-free} of the R stage -> bits [116:83]
  reg[82:0]cmd_r,cmd_c;reg ret_r,ret_c;reg[16:0]retf_r,retf_c;reg inj_f;
  reg[134:0]programme;reg programme_v_q;
+ reg i8_r,i8_c,i8_p1,i8_p2,i8_p3,i8_f;reg[9:0]i8_t1,i8_t2,i8_t3;   // HBM-QINT8 mark (R, C) + converter view
+ wire raw_v=packet_observe[1098];wire[9:0]raw_tag=packet_observe[1097:1088];
+ wire i8_conv=i8_p2||i8_p3;wire[9:0]i8_ctag=i8_p2?i8_t2:i8_t3;
  always @(posedge stream_clk)begin
   // R stage
   rd_r<=0;cmd_r<=0;ret_r<=0;retf_r<=0;
@@ -129,10 +141,15 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   if(PREL!=0&&word_v&&ordinal==0&&c_fl)begin cmd_c[28]<=1'b1;cmd_c[27:26]<=c_fmt;end
  end
  always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)begin programme_v_q<=0;inj_f<=0;end
+  if(!stream_rst_n)begin programme_v_q<=0;inj_f<=0;i8_r<=0;i8_c<=0;i8_p1<=0;i8_p2<=0;i8_p3<=0;i8_f<=0;i8_t1<=0;i8_t2<=0;i8_t3<=0;end
   else begin
    programme_v_q<=word_v;
    if(PREL!=0&&word_v&&ordinal==0&&c_fl&&(cmd_r!=0||ret_r))inj_f<=1;     // format launch slot not idle
+   // HBM-QINT8: mark with its word's read (R) and command/packet (C) edges; converter halves at C+2 / C+3
+   i8_r<=(PREL!=0)&&word_v&&word[118];i8_c<=i8_r;
+   i8_p1<=i8_c&&raw_v;i8_p2<=i8_p1;i8_p3<=i8_p2;
+   i8_t1<=raw_tag;i8_t2<=i8_t1;i8_t3<=i8_t2;
+   if((i8_c&&(!raw_v||i8_p1))||(!i8_c&&raw_v&&i8_conv))i8_f<=1;
   end
  always @* begin
   programme=0;
@@ -149,9 +166,11 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
+ // HBM-QINT8: the packet the SM front sees (the raw packet when no INT8 mark is in flight)
+ wire[1098:0]s1_packet={i8_conv||(raw_v&&!i8_c),i8_conv?i8_ctag:raw_tag,packet_observe[1087:0]};
  ot_smh_static_feed consumer(
-  .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(packet_observe),
+  .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(s1_packet),
   .expected_request(expected_request),.fault(feed_fault),.lt0(lt0),.lt1(lt1),.lb0(lb0),.lb1(lb1),.fm(fm));
- assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f;
+ assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f||i8_f;
 endmodule
 `default_nettype wire
