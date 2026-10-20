@@ -1,0 +1,7 @@
+read_json /out/namespace_macro_cut.json
+hierarchy -check -top equiv
+async2sync
+opt_clean
+equiv_simple -seq 4
+equiv_induct -seq 8
+equiv_status -assert

@@ -982,9 +982,9 @@ localparam integer W_ME_AMC = 1;
         genvar ac;
         for (ac = 0; ac < 3; ac = ac + 1) begin : g_c
 `ifdef OT_AMWC_MUT
-            ot_qhs_amwin u_w (.am_val(am_val), .run_key(run_key), .am_any(am_any), .run_any((ac == 2) ? 1'b0 : run_any), .win(am_wins_c[ac]));
+            ot_qhs_amwin_safe32 u_w (.am_val(am_val), .run_key(run_key), .am_any(am_any), .run_any((ac == 2) ? 1'b0 : run_any), .win(am_wins_c[ac]));
 `else
-            ot_qhs_amwin u_w (.am_val(am_val), .run_key(run_key), .am_any(am_any), .run_any(run_any), .win(am_wins_c[ac]));
+            ot_qhs_amwin_safe32 u_w (.am_val(am_val), .run_key(run_key), .am_any(am_any), .run_any(run_any), .win(am_wins_c[ac]));
 `endif
         end
     end else begin : g_amw1
@@ -1379,7 +1379,7 @@ endmodule
 // (keep_hierarchy stops opt_merge / ABC folding the copies into one; fixed width: Yosys asserts on parameterised
 // keep_hierarchy modules).  a > b = carry out of a + ~b (Kogge-Stone).
 (* keep_hierarchy *)
-module ot_qhs_amwin (input wire [31:0] am_val, input wire [31:0] run_key, input wire am_any, input wire run_any, output wire win);
+module ot_qhs_amwin_safe32 (input wire [31:0] am_val, input wire [31:0] run_key, input wire am_any, input wire run_any, output wire win);
     wire [31:0] k = am_val[31] ? ~am_val : {1'b1, am_val[30:0]};
     wire [31:0] s; wire gt;
     ot_hdc_ksadd_k #(.W(32)) u_gt (.a(k), .b(~run_key), .cin(1'b0), .s(s), .cout(gt));

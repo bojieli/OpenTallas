@@ -1,0 +1,512 @@
+{
+  "original_miter_sha256": "f394e8a45163500ffeae8703b1abc8e0c9174705042f71b7596374c7c516ba9e",
+  "transformation": "names only: exact SEG0 eliminated-generate namespace genblk1.g_dense -> g_dense",
+  "changed_names": 101,
+  "ledger": [
+    {
+      "bucket": "cells",
+      "old": "u_head.g_psram.g_m[0].u_pm",
+      "new": "u_head.g_psram.g_m[0].u_pm_proof_unique"
+    },
+    {
+      "bucket": "cells",
+      "old": "u_head.g_psram.g_m[1].u_pm",
+      "new": "u_head.g_psram.g_m[1].u_pm_proof_unique"
+    },
+    {
+      "bucket": "cells",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store",
+      "new": "u_head.u_fixed_issue.g_dense.u_store"
+    },
+    {
+      "bucket": "cells",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.active",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.active"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.available",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.available"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.candidate_pc",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.candidate_pc"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.candidate_unit",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.candidate_unit"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.candidate_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.candidate_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cfg_fault",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cfg_fault"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.clk",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.clk"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.copies",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.copies"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.core_fault",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.core_fault"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.count",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.count"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cp_cmd"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_index",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cp_index"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_row",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cp_row"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_rows[0]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cp_rows[0]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_rows[1]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cp_rows[1]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_rows[2]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cp_rows[2]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cp_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_valid",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cp_valid"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.cycle",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.cycle"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.end_ok",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.end_ok"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.end_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.end_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.fault",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.fault"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.image_ready",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.image_ready"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.issue_pc",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.issue_pc"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.issue_unit",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.issue_unit"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.issue_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.issue_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.k",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.k"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.loading",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.loading"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.meta_q",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.meta_q"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.meta_seen",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.meta_seen"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.own_row",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.own_row"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.pw_addr",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.pw_addr"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.pw_data",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.pw_data"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.pw_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.pw_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.q",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.q"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.read_addr",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.read_addr"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.read_en",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.read_en"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.read_fault",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.read_fault"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rows[0]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rows[0]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rows[1]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rows[1]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rows[2]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rows[2]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rows[3]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rows[3]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rows[4]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rows[4]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rows[5]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rows[5]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rows[6]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rows[6]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rows[7]",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rows[7]"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.rst_n",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.rst_n"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.seal_bad",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.seal_bad"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.sealed",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.sealed"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.stage",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.stage"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.start",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.start"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.stop_q",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.stop_q"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.stop_seen",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.stop_seen"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.active",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.active"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.active_a",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.active_a"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.active_n",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.active_n"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.available",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.available"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.candidate_pc",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.candidate_pc"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.candidate_unit",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.candidate_unit"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.candidate_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.candidate_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.clk",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.clk"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.cp_index",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.cp_index"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.cp_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.cp_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.cycle",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.cycle"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.cycle_a",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.cycle_a"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.end_ok",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.end_ok"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.end_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.end_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.fault",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.fault"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.head",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.head"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.head_lo_a",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.head_lo_a"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.head_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.head_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.head_v_a",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.head_v_a"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.index",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.index"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.issue_pc",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.issue_pc"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.issue_unit",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.issue_unit"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.issue_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.issue_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.next_from_rom",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.next_from_rom"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.next_present",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.next_present"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.next_row",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.next_row"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.pending",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.pending"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.pending_index",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.pending_index"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.rst_n",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.rst_n"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.s_run",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.s_run"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.s_start",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.s_start"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.sched_late",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.sched_late"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.sched_q",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.sched_q"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.scheduled",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.scheduled"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.second_read",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.second_read"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.slot_addr",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.slot_addr"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.slot_q",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.slot_q"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.slot_re",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.slot_re"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.start",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.start"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.stop_cycle",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.stop_cycle"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.stop_q",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.stop_q"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.tail",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.tail"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.tail_v",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.u_issue.tail_v"
+    },
+    {
+      "bucket": "netnames",
+      "old": "u_head.u_fixed_issue.genblk1.g_dense.u_store.valid",
+      "new": "u_head.u_fixed_issue.g_dense.u_store.valid"
+    }
+  ]
+}

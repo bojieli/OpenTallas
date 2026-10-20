@@ -1,0 +1,73 @@
+  Trying to prove $equiv for \native_tok [0]: success!
+  Trying to prove $equiv for \me_image_ready: failed.
+Proved 7668 previously unproven $equiv cells.
+
+7. Executing EQUIV_STATUS pass.
+ERROR: Found 64 unproven $equiv cells in 'equiv_status -assert'.
+Found 18181 $equiv cells in equiv:
+  Of those cells 18117 are proven and 64 are unproven.
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$236349: \u_head.u_fixed_issue.g_dense.u_store.u_issue.end_v_gold \u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.end_v_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$237284: \u_head.u_shell_me.me_go_gold \u_head.u_shell_me.me_go_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285216: \u_head.u_fixed_issue.issue_v_gold \u_head.u_fixed_issue.issue_v_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285214: \u_head.u_fixed_issue.g_dense.u_store.fault_gold \u_head.u_fixed_issue.genblk1.g_dense.u_store.fault_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285210: \u_head.u_fixed_issue.g_dense.u_store.u_issue.cp_v_gold \u_head.u_fixed_issue.genblk1.g_dense.u_store.u_issue.cp_v_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285124: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [55] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [55]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285123: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [54] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [54]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285122: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [53] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [53]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285121: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [52] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [52]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285120: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [51] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [51]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285119: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [50] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [50]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285118: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [49] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [49]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285117: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [48] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [48]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285116: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [47] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [47]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285115: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [46] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [46]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285114: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [45] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [45]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285113: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [44] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [44]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285112: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [43] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [43]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285111: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [42] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [42]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285110: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [41] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [41]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285109: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [40] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [40]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285108: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [39] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [39]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285107: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [38] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [38]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285106: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [37] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [37]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285105: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [36] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [36]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285104: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [35] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [35]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285103: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [34] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [34]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285102: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [33] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [33]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285101: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [32] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [32]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285100: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [31] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [31]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285099: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [30] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [30]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285098: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [29] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [29]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285097: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [28] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [28]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285096: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [27] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [27]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285095: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [26] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [26]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285094: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [25] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [25]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285093: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [24] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [24]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285092: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [23] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [23]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285091: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [22] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [22]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285090: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [21] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [21]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285089: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [20] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [20]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285088: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [19] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [19]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285087: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [18] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [18]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285086: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [17] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [17]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285085: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [16] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [16]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285084: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [15] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [15]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285083: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [14] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [14]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285082: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [13] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [13]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285081: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [12] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [12]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285080: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [11] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [11]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285079: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [10] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [10]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285078: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [9] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [9]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285077: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [8] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [8]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285076: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [7] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [7]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285075: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [6] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [6]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285074: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [5] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [5]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285073: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [4] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [4]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285072: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [3] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [3]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285071: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [2] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [2]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285070: \u_head.u_fixed_issue.g_dense.u_store.cp_cmd_gold [1] \u_head.u_fixed_issue.genblk1.g_dense.u_store.cp_cmd_gate [1]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$1285039: \u_head.program_load_fault_gold \u_head.program_load_fault_gate
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$1295708: \u_head.me_observe_gold [13] \u_head.me_observe_gate [13]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$1295707: \u_head.me_observe_gold [12] \u_head.me_observe_gate [12]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$1294815: \u_head.u_fixed_issue.image_ready_gold \u_head.u_fixed_issue.image_ready_gate
+Found a total of 64 unproven $equiv cells.
