@@ -994,5 +994,11 @@
   "receipt": "results/arch/s81_hwin22l_1020/coarse_plan_w46_legal.json",
   "scope": "planning budget includes actual observed clock/repair cells; not claimed as synthesis-only area"
  },
- "planning_std_area_um2": 11063.90178
+ "planning_std_area_um2": 11063.90178,
+ "planning_birth_budget": {
+  "path": "results/arch/s81_hwin_birthbudget_1020/proof/receipt.json",
+  "sha256": "3799dd402d3f47293551fa12c03d55a52c0cf0ea3ba8d036ba4618b65a877158",
+  "approved_by": "ROOT",
+  "why": "ROOT authorized narrowly source-bound HWIN22l actual measured CTS birth population for PLANNING ONLY; new actual placed40..60 proof remains mandatory (10-20 takeover)."
+ }
 }

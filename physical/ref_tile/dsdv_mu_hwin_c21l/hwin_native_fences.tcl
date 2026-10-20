@@ -1,4 +1,3 @@
-error "HWIN22L preflight incomplete: no gate authorized"
 # Exact mapped-cell fences; no core, clock, PDN or latency edits.
 source /src/physical/ref_tile/dsdv_mu_hwin_c21l/native_cell_fence.tcl
 set ::ot_hj_boxes [dict create]
