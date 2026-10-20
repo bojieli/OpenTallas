@@ -21,6 +21,10 @@
     29,
     53
   ],
-  "new_causal_controls": "RUNNING ep7 unit2115040-1792507725/session51550",
+  "new_causal_controls": {
+    "stale_age_image": "DETECTED",
+    "shifted_add_date": "DETECTED",
+    "max_preadded_overflow": "DETECTED component source identical to R11"
+  },
   "calendar_reset_component_evidence": "same exact component source bytes as R11 proofs"
 }
