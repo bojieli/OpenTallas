@@ -4,7 +4,7 @@ cascade-shift small lane relays (<=64.8 um) that the moved blocks then overlap (
 Big blocks hit by the cascade are reported (probe fails). Usage: probe_shift.py in.json out.json"""
 import json, sys
 m = json.load(open(sys.argv[1])); pl = m['placement']
-D = 43.2
+D = float(__import__("os").environ.get("FP_D", "43.2"))
 seed = {'hb_dbk_NW': D, 'hc_NW': D, 'hb_dbk_SW': D, 'hc_SW': D, 'hc_NE': -D, 'hc_SE': -D}
 BIN = 200.0
 bins = {}
