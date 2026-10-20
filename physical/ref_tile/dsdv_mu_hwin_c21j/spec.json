@@ -67,7 +67,9 @@
    "dsdv_mu_hwin_capture_1019_decode24",
    "dsdv_mu_hwin_capture_1019_fire_flag",
    "dsdv_mu_hwin_capture_1019_cfg_bad",
-   "dsdv_mu_hwin_capture_1019_phase_action"
+   "dsdv_mu_hwin_capture_1019_phase_action",
+   "dsdv_mu_hwin_capture_1019_early_current_hit",
+   "dsdv_mu_hwin_capture_1019_cfg_accept"
   ]
  },
  "structural_change": "HWIN21j native-safe domains: kept local write data/current-hit hierarchy, 12-pointer and 4-event gn/lw state copies, four due copies; +0 edges; r2 bounded cfg accept and per-event lower decoder pointer",
@@ -134,7 +136,7 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "fail_regex": "EARLY_MITER|CBREF_MITER",
-    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/mut2.log"
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/r2_mut2.log"
    },
    {
     "name": "c21j_mut_due_domain",
@@ -143,7 +145,7 @@
     "threads": 4,
     "peak_ram_gb": 16,
     "fail_regex": "event boot count differs",
-    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/eastdue.log"
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/r2_eastdue.log"
    }
   ],
   "views_to": "physical/ref_tile/dsdv_mu_hwin_c21j/views",
