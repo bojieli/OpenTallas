@@ -1,0 +1,63 @@
+{
+ "name": "standin_ot_s81sl_slice",
+ "top": "ot_s81sl_slice",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 1252.8,
+  "h": 5702.4
+ },
+ "pins": {
+  "E": [
+   "ri_e",
+   "ro_e",
+   "fault"
+  ],
+  "W": [
+   "ri_w",
+   "ro_w"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "sid",
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "bi",
+   "bo",
+   "xc",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt"
+  ]
+ },
+ "pin_ranges": {
+  "ri_e": [
+   2160.0,
+   2851.2
+  ],
+  "ro_e": [
+   2851.2,
+   3542.4
+  ],
+  "fault": [
+   3542.4,
+   3560.0
+  ],
+  "ri_w": [
+   2160.0,
+   2851.2
+  ],
+  "ro_w": [
+   2851.2,
+   3542.4
+  ]
+ },
+ "_note": "DIAGNOSTIC stand-in input (S81-SLICE3-LEPENH 10-19): ot_s81sl_slice has no hardened view (PL-SLICE kit draft, 31/46 children open). Line ports on the centre band (ring stop region C). Pin plan provisional: the die tool assigns."
+}

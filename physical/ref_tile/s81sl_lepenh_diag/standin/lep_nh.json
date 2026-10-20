@@ -1,0 +1,43 @@
+{
+ "name": "standin_ot_s81sl_lep_nh",
+ "top": "ot_s81sl_lep_nh",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 475.2,
+  "h": 475.2
+ },
+ "pins": {
+  "W": [
+   "ro",
+   "ri"
+  ],
+  "E": [
+   "lo0_v",
+   "lo0_r",
+   "lo0_d",
+   "li0_v",
+   "li0_r",
+   "li0_d",
+   "lo1_v",
+   "lo1_r",
+   "lo1_d",
+   "li1_v",
+   "li1_r",
+   "li1_d",
+   "rxv",
+   "l0_f",
+   "l1_f"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "sl_f",
+   "fault"
+  ]
+ },
+ "pin_ranges": {},
+ "_note": "DIAGNOSTIC stand-in: the s81sl_lepnh kit pin plan (475.2 sq) with W/E swapped for the E end (ro/ri face W toward the slice, lanes E) -- MY placement of the stand-in put a pin off the track grid; the real shared lep_nh view must be MY-legal or get an E-end pin variant."
+}

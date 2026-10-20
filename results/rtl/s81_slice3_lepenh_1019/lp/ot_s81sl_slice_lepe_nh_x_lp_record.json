@@ -1,0 +1,193 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "ot_s81sl_slice_lepe_nh_x",
+ "top": "ot_s81sl_slice_lepe_nh_x_lp",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "S": {
+   "clock_port": "ck_S",
+   "children": [
+    "u_sl"
+   ]
+  },
+  "K": {
+   "clock_port": "ck_K",
+   "children": [
+    "u_lep",
+    "u_ln0",
+    "u_ln1"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "lri",
+   "src_region": "K",
+   "dst_region": "S",
+   "src_nodes": [
+    "u_lep"
+   ],
+   "width": 1104,
+   "readers": [
+    "u_sl.ri_e"
+   ],
+   "ring": "u_lpl_0_w (ck_K)",
+   "read": "u_lpl_0_r (ck_S)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "lro",
+   "src_region": "S",
+   "dst_region": "K",
+   "src_nodes": [
+    "u_sl"
+   ],
+   "width": 1104,
+   "readers": [
+    "u_lep.ro"
+   ],
+   "ring": "u_lpl_1_w (ck_S)",
+   "read": "u_lpl_1_r (ck_K)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "sf",
+   "src_region": "S",
+   "dst_region": "K",
+   "src_nodes": [
+    "u_sl"
+   ],
+   "width": 1,
+   "readers": [
+    "u_lep.sl_f"
+   ],
+   "ring": "u_lpl_2_w (ck_S)",
+   "read": "u_lpl_2_r (ck_K)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  }
+ ],
+ "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
+ "reset": {
+  "port": "rst_n",
+  "root_region": "S",
+  "depth": 4,
+  "hops": {
+   "S": 0,
+   "K": 3
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 11084,
+  "pads": 0,
+  "reset": 7
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "K-S"
+  ],
+  "reset_hops": [
+   "K-S"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_sl": 0,
+   "u_ln0": 0,
+   "u_ln1": 0,
+   "u_lep": 0
+  },
+  "input_port_offset_edges": {
+   "ri_w": 0,
+   "vi": 0,
+   "bi": 0,
+   "rt": 0,
+   "rx0": 0,
+   "rx1": 0
+  },
+  "output_port_offset_edges": {
+   "ro_w": 0,
+   "vo": 0,
+   "bo": 0,
+   "xc": 0,
+   "ck_line": 0,
+   "ck_v": 0,
+   "ck_xc": 0,
+   "ck_rt": 0,
+   "tx0": 0,
+   "tx1": 0,
+   "tf": 0,
+   "fault": 0
+  },
+  "reset_release_added_edges": 4,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
+  "rescheduled_nets": [
+   {
+    "net": "lri",
+    "src_region": "K",
+    "dst_region": "S",
+    "readers": [
+     "u_sl.ri_e"
+    ],
+    "width": 1104,
+    "added_edges": 3
+   },
+   {
+    "net": "lro",
+    "src_region": "S",
+    "dst_region": "K",
+    "readers": [
+     "u_lep.ro"
+    ],
+    "width": 1104,
+    "added_edges": 3
+   },
+   {
+    "net": "sf",
+    "src_region": "S",
+    "dst_region": "K",
+    "readers": [
+     "u_lep.sl_f"
+    ],
+    "width": 1,
+    "added_edges": 3
+   }
+  ],
+  "reschedule_note": "RESCHEDULE mode: cross-region loops; every child keeps its flat calendar (t = 0) and each landed net above arrives +3 edges later than in the flat parent: the compiler / the children's static calendars must absorb these",
+  "max_added_edges": 0
+ },
+ "warnings": [],
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['K-S']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 3,
+  "reset_hops": 1,
+  "fails": []
+ }
+}
