@@ -1,0 +1,40 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: ot-epyc7       admits   353 GB (avail 348, growth 101, headroom 0, waiters 0/0 GB) load 69/96 running 30 disk 5681 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2439893-1792484898 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "odb": "/work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/1_synth.odb",
+  "odb_sha256": "7c11664de0992d8213929e16c0ca553cf0dc4dfd350e4748a70a79330f9ebd64",
+  "roots": 49340,
+  "roles": {
+    "comb": 34874,
+    "ff": 12951,
+    "macro": 1344,
+    "input": 171
+  },
+  "max_count_by_role": {
+    "macro": 1,
+    "comb": 31,
+    "ff": 32,
+    "input": 13035
+  },
+  "over405_nonclock": 0,
+  "macros": 84,
+  "macro_masters": {
+    "ot_sram_1r1w_64x16_m1": 84
+  },
+  "scope": "Exact native synthesis ODB, uncapped logical sink pins through BUF/INV, reset included, clock/constant roots excluded; coordinates UNPLACED and not a reach qualification"
+}
+OVER32 0
+BOUNDARY {"schema": "opentallas.native_pin_boundary_inventory.v1", "odb_sha256": "7c11664de0992d8213929e16c0ca553cf0dc4dfd350e4748a70a79330f9ebd64", "scope": "native synthesis ODB actual first nonBUF/INV sink/root; reset included, clock excluded; no functional tied-input intent inferred", "input_bits": 170, "input_bits_with_nonflop_first_sinks": 0, "input_violations": [], "outputs_without_flop_root": 0, "output_violations": []}
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2439893-1792484898): exit 0

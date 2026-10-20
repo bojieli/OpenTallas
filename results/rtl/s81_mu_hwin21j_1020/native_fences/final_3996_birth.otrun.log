@@ -1,0 +1,46 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: ot-epyc7       admits   349 GB (avail 345, growth 101, headroom 0, waiters 0/0 GB) load 69/96 running 35 disk 5675 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hwin-native-1020/fence_assign
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2498991-1792485170 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+NATIVE_FENCE_CREATED name=ot_hj_GLOBAL box=155.8 163.89 405.8 203.85 cells=38384
+NATIVE_FENCE_CREATED name=ot_hj_E1 box=61.96666666666667 163.89 80.73333333333335 203.85 cells=1806
+NATIVE_FENCE_CREATED name=ot_hj_E2 box=80.73333333333335 163.89 99.5 203.85 cells=1757
+NATIVE_FENCE_CREATED name=ot_hj_E14 box=480.8666666666667 163.89 499.6333333333333 203.85 cells=1758
+NATIVE_FENCE_CREATED name=ot_hj_E0 box=43.2 163.89 61.96666666666667 203.85 cells=1781
+NATIVE_FENCE_CREATED name=ot_hj_E4 box=118.26666666666668 163.89 137.03333333333333 203.85 cells=1746
+NATIVE_FENCE_CREATED name=ot_hj_E3 box=99.5 163.89 118.26666666666668 203.85 cells=1753
+NATIVE_FENCE_CREATED name=ot_hj_E15 box=499.6333333333333 163.89 518.4 203.85 cells=1762
+NATIVE_FENCE_CREATED name=ot_hj_E11 box=424.56666666666666 163.89 443.3333333333333 203.85 cells=1761
+NATIVE_FENCE_CREATED name=ot_hj_E5 box=137.03333333333333 163.89 155.8 203.85 cells=1755
+NATIVE_FENCE_CREATED name=ot_hj_E10 box=405.8 163.89 424.56666666666666 203.85 cells=1776
+NATIVE_FENCE_CREATED name=ot_hj_E12 box=443.3333333333333 163.89 462.1 203.85 cells=1792
+NATIVE_FENCE_CREATED name=ot_hj_E13 box=462.1 163.89 480.8666666666667 203.85 cells=1749
+HWIN_NATIVE_MANIFEST cells=59580 inherited=0
+HWIN_ASSIGN_PASS exact_mapped_cells=59580 groups=13
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+HWIN_NATIVE_MANIFEST cells=59580 inherited=1
+NATIVE_FENCE_ADDED name=ot_hj_GLOBAL cells=2
+NATIVE_FENCE_SEED name=ot_hj_GLOBAL new_cells=2 max_move_um=319.69
+HWIN_BIRTH_ASSIGNED owner=GLOBAL cells=2 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E1 cells=1
+NATIVE_FENCE_SEED name=ot_hj_E1 new_cells=1 max_move_um=225.857
+HWIN_BIRTH_ASSIGNED owner=E1 cells=1 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E0 cells=41
+NATIVE_FENCE_SEED name=ot_hj_E0 new_cells=41 max_move_um=207.09
+HWIN_BIRTH_ASSIGNED owner=E0 cells=41 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E15 cells=1
+NATIVE_FENCE_SEED name=ot_hj_E15 new_cells=1 max_move_um=663.523
+HWIN_BIRTH_ASSIGNED owner=E15 cells=1 seeded=1
+HWIN_BIRTH_FIXTURE_PASS cells45 chain40 macroE1/retireGLOBAL singletonE0/E15 mixedGLOBAL old_cells_unchanged repeated_empty
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2498991-1792485170): exit 0
