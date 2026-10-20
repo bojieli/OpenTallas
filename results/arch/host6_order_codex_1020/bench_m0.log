@@ -1,0 +1,5 @@
+HOST_ORDER_COPY PASS m0 cycles=12000 compares=11984
+- bench_m0/tb.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 120us; walltime 1.719 s; speed 69.828 us/s
+- Verilator: cpu 1.719 s on 1 threads; allocated 16 MB
