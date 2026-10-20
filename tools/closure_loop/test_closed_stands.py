@@ -81,7 +81,8 @@ class Gate(unittest.TestCase):
     def test_constants(self):
         self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap",
                                                   "pin_register", "native_launch", "native_capture",
-                                                  "native_spread", "flow_failure", "pin_order"))
+                                                  "native_spread", "flow_failure", "pin_order",
+                                                  "pg_binding"))
         self.assertEqual(TL.DIE_WINDOW_CUT_MIN, 0.6)
 
     def test_new_block_and_unclosed_history_pass(self):
@@ -445,6 +446,43 @@ class Gate(unittest.TestCase):
         r = self.run_(spec(commit="ccccccccc", reroute_reason=ok))          # RTL changed: rtl_change
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("rtl_change", r["message"])
+
+    def test_pg_binding(self):
+        # (ROOT3 10-19, KV-CLOSED-PG-AUDIT) a closed view with NULL-net native PG terminals is re-closed, same RTL /
+        # outline, with the ECO global_connect fix, citing the COMMITTED audit summary + its committed_verdict.json
+        d = "results/arch/kv_closed_pg_audit_1019/t"
+        summ = json.dumps({"verdict": "PG_HOLD", "statuses": {"PASS": 10, "WRONG_OR_MISSING_NET": 6}})
+        self.r.c["bbbbbbbbb"][f"{d}/summary.json"] = summ
+        self.r.c["bbbbbbbbb"][f"{d}/committed_verdict.json"] = json.dumps({"job": "t-v1-aaaaaaaaa", "block": "ot_t"})
+        ok = {"kind": "pg_binding", "source": f"{d}/summary.json",
+              "fix": "hold/vtswap ECO global_connect before the final artifacts (b670c1b4f)"}
+        r = self.run_(spec(reroute_reason=ok))
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "pg_binding"), r["message"])
+        self.assertIn("6 unbound", r["message"])
+        for k in ("source", "fix"):
+            self.assertEqual(self.run_(spec(reroute_reason={a: b for a, b in ok.items() if a != k}))["verdict"],
+                             "REFUSE", k)
+        self.assertEqual(self.run_(spec(reroute_reason=dict(ok, source="/tmp/summary.json")))["verdict"], "REFUSE")
+        self.assertEqual(self.run_(spec(reroute_reason=dict(ok, source=f"{d}/missing.json")))["verdict"], "REFUSE")
+        self.r.c["bbbbbbbbb"][f"{d}/summary.json"] = json.dumps({"verdict": "PASS", "statuses": {"PASS": 16}})
+        r = self.run_(spec(reroute_reason=ok))                              # all bound: the closed view stands
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("no unbound", r["message"])
+        self.r.c["bbbbbbbbb"][f"{d}/summary.json"] = summ
+        self.r.c["bbbbbbbbb"][f"{d}/committed_verdict.json"] = json.dumps({"job": "u-v1", "block": "ot_u"})
+        r = self.run_(spec(reroute_reason=ok))                              # the audit is of another view
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("names neither", r["message"])
+        self.r.c["ccccccccc"][f"{d}/summary.json"] = summ
+        self.r.c["ccccccccc"][f"{d}/committed_verdict.json"] = json.dumps({"job": "t-v1-aaaaaaaaa"})
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok))          # RTL changed: rtl_change
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("rtl_change", r["message"])
+        self.r.c["eeeeeeeee"][f"{d}/summary.json"] = summ
+        self.r.c["eeeeeeeee"][f"{d}/committed_verdict.json"] = json.dumps({"job": "t-v1-aaaaaaaaa"})
+        r = self.run_(spec(commit="eeeeeeeee", reroute_reason=ok))          # outline moved: slot_change
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("FW", r["message"])
 
     def test_param_change(self):
         rr = {"kind": "param_change", "params": {"W": "512 -> 1024"}}
