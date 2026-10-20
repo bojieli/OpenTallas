@@ -6,7 +6,8 @@
 #   3 retain : re-synthesise bounded.v through the same mandatory flow -> retained/mapped.v, native_census.py
 # usage (repo root): svc8_hgrp_native.sh OUT [STAGES]   STAGES default "map bound retain"
 set -euo pipefail
-ROOT=$PWD; OUT=$(mkdir -p "${1:?out}" && cd "$1" && pwd); STAGES=${2:-"map bound retain"}
+ROOT=$PWD; export PYTHONPATH="$ROOT/tools${PYTHONPATH:+:$PYTHONPATH}"
+OUT=$(mkdir -p "${1:?out}" && cd "$1" && pwd); STAGES=${2:-"map bound retain"}
 TOP=ot_s81svc8_hgrp_s81
 V=rtl/hdc/v41x; H=rtl/hdc
 RTL="/src/$V/ot_s81svc8_hgrp_s81.sv /src/$V/ot_s81svc8_ring.sv /src/$V/ot_hdc_v41x_attn_tile_s.sv /src/$V/ot_hdc_v41x_attn_tile_lat.sv /src/$V/ot_hdc_v41x_attn_tile.sv /src/$V/ot_hdc_v41x_kreg.sv /src/$H/ot_hdc_fastfp.sv /src/$H/ot_hdc_fp32_add_lat.sv /src/$H/ot_hdc_prefix.sv /src/$H/ot_hdc_fp32_f12.sv /src/$V/ot_dsrom_su_add6.sv"
@@ -47,6 +48,7 @@ YS
   ' > "$O/synth.stdout" 2>&1
   local args=(); for f in "$O"/lib/*.lib; do args+=(--liberty "$f"); done
   python3 tools/ref_tile/native_census.py --netlist "$O/mapped.v" --top "$3" --out "$O/census.json" "${args[@]}" > "$O/census.log" 2>&1 || true
+  test -s "$O/census.json" || { cat "$O/census.log"; echo "SVC8_NATIVE census infrastructure FAIL"; return 1; }
   echo "SVC8_NATIVE stage=$(basename $O) $(tail -2 $O/census.log | tr '\n' ' ')"; grep -A40 'Number of cells' "$O/stat.txt" | grep -E 'cells|DFF|sram|Chip area' | head -12
 }
 sha256sum $(for f in $RTL $BB; do echo ${f#/src/}; done) tools/s81_dv/svc_rs/svc7_bound_graph.py physical/common_flow/ot_keep_regs.tcl > "$OUT/source_identity.sha256"
