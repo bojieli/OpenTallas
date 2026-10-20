@@ -9,4 +9,10 @@ Causal mutants (local_dv, fail regex 'N59(DV|MU)_FAIL' in out/wrapper.log), all 
  qvpub_zero   (Q-valid copy 0 held 0: data bytes 0-3 + tag byte 0 never captured)  239/360 edges differ
  kreqpub_zero (request copy 0 held 0: tx_data segment 0 = Q data on the CMD beat)      4/360 edges differ
  vmwpub_zero  (VM-write copy 0 held 0: dr_o / VM data segment 0 dropped)              32/360 edges differ
-Receipts receipts/<leg>/{DONE,wrapper.log,bench.log,mutant_source.sha256}. Strict mapped native census: synth_recv (pending).
+Receipts receipts/<leg>/{DONE,wrapper.log,bench.log,mutant_source.sha256}. Strict mapped native census (ep9 synth_recv, receipts/synth_recv): still REFUSE high_fanout, but max 1202 -> 528 and every
+R3 named cone is gone (q capture NOR2 1059, kernel_request_v 638, fs 634, NAND2 614, vm_write_v 597, p_qb_v 567).
+Remaining top (all combinational except request_slot): AND5 _090440_ 528 / AND5 _092852_ 525 / NAND2 _092853_ 514 (a deep
+formatter acceptance predicate incl. u_formatter.seen[*] gating a 512-bit capture), OR2 281 (18 FF), OR2 223,
+g_ctxmu.u_context.request_slot 208, NAND2 192, AND3 157. KVN target audit 1523 nets max 29, 0 offenders.
+NEXT R3d: register the formatter acceptance predicate as kept same-edge per-byte copies (pipelined compare, priced edge only
+if unavoidable) and replicate request_slot per consumer; then re-census.
