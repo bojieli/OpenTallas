@@ -1,0 +1,12 @@
+rtl/lib/ot_rst_relay.sv
+rtl/hdc/ot_hdc_delay.sv
+rtl/hdc/ot_hdc_delay_rf.sv
+rtl/proto/ot_fp32_add_rne_pipe.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
+rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_phase.sv
+rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_cap_phase.sv

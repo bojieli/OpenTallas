@@ -1,0 +1,6 @@
+FIRST_N4_F1 observed_edge=1798 left_tag=0b004223 right_tag=0b206223 left_norm_row=22530 right_norm_row=22787
+PHASE_RESULT mode=1 errors=0 writes=251 fault=1
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_cap_phase.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 119us; walltime 0.461 s; speed 258.195 us/s
+- Verilator: cpu 0.461 s on 1 threads; allocated 9 MB

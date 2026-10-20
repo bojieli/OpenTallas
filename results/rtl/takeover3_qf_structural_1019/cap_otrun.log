@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-qf-phase-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qf-phase-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qf-phase-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qf-phase-1019
+ot-run: ot-epyc8       admits  1170 GB (avail 902, growth 84, headroom 0, waiters 0/0 GB) load 30/128 running 15 disk 34 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qf-phase-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qf-phase-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-306667-1792456902 after 0 s
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-306667-1792456902): exit 0

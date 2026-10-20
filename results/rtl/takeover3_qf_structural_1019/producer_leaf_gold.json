@@ -1,0 +1,13 @@
+{
+  "actual_leaf_events": 1536,
+  "unique_leaf_identities": 1536,
+  "duplicate_leaf_identities": 0,
+  "leaf_nseg_hist": {
+    "3": 1536
+  },
+  "leaf_errors": 0,
+  "partial_nodes_checked": 652,
+  "partial_gold_mismatches": [],
+  "upstream_FP8_matmul_checkpoint_numeric_PASS": null,
+  "scope": "Independent golden FP32 tree over ACTUAL genuine producer per-pair segment values; no injected data or rounded/shifted golden"
+}

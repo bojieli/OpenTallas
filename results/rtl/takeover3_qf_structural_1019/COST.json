@@ -1,0 +1,48 @@
+{
+  "six_active_lanes": {
+    "fixed_delays": [
+      0,
+      64,
+      128,
+      192,
+      256,
+      320
+    ],
+    "ring_count": 5,
+    "logical_live_record_bits": 67200,
+    "macro_count": 5,
+    "macro_master": "ot_sram_1r1w_512x128_m4_r2c2",
+    "physical_storage_bits": 327680,
+    "macro_area_um2": 25888.1616,
+    "declared_soft_FF_upper_bound": 856,
+    "added_clock_sinks_upper_bound": 861,
+    "added_max_latency_edges": 320,
+    "added_max_latency_ns_at834ps": 266.88,
+    "extra_CFG_commands": 15,
+    "old_commands": 387,
+    "prospective_max_commands": 402,
+    "parent_raw_reset_source_loads_including_existing_CAP": 54
+  },
+  "eight_lane_wrapper": {
+    "rings": 7,
+    "physical_storage_bits": 458752,
+    "max_latency_edges": 448,
+    "macro_area_um2": 36243.42624000001,
+    "declared_soft_FF_upper_bound": 1200,
+    "parent_raw_reset_source_loads_including_existing_CAP": 62
+  },
+  "macro_pin_pitch_qualified": false,
+  "native_all_driver_fanout_qualified": false,
+  "native_clock_phase_qualified": false,
+  "PG_bindings_qualified": false,
+  "full_floorplan_slot_fit": null,
+  "all_added_CTS_buffers_ties_hold_reset_cost": null,
+  "source_raw_reset_loads_per_ring": 4,
+  "source_local_reset_loads_max_per_ring": 19,
+  "source_input_record_width": 70,
+  "metadata_record_fields": "rst1/valid1/ri_v1/tag32/data32/err1/busy1/fault1 preserved unchanged",
+  "same_row_read_write": "Forbidden by registered independent pointers separated D-3 modulo512; assertion included",
+  "cold_priming": "input valid async-cleared; prior SRAM overwritten before first eligible output; dedicated phase-ring reassert test pending",
+  "status": "PRIVATE MODEL AND MECHANISM; no physical/whole-token adoption",
+  "parent_raw_reset_distribution_status": "FAIL source fanout >32; original CAP34 +4 per ring; new regional parent reset distribution not implemented"
+}

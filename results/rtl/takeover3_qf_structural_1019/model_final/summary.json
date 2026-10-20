@@ -1,0 +1,32 @@
+{
+  "words": 652,
+  "rows": 512,
+  "genuine_leaves": 1536,
+  "intervals_exactly_once": true,
+  "row_partial_count_hist": {
+    "2": 84,
+    "3": 28,
+    "1": 400
+  },
+  "actual_six_lane_max_added_edges": 320,
+  "delta_vs_ED23": 297,
+  "period": 600,
+  "phase64_writes": 512,
+  "phase64_faults": [],
+  "original_tree_fault_hist": {
+    "n4": 113,
+    "n6": 184,
+    "F6": 18,
+    "F11": 14,
+    "OPEN_AT_END": 1
+  },
+  "cap_arithmetic_matches_independent_actual_partial_tree": true,
+  "producer_segment_events": 1536,
+  "all652_actual_partials_match_producer_segment_golden": true,
+  "all512_CW_reference_is_producer_segment_golden": true,
+  "upstream_checkpoint_numeric_PASS": null,
+  "prospective_cap_cfg": "15 new real commands at modeled1700+600e; not installed original programme",
+  "actual_return_payload_scope": true,
+  "production_deadline_fit": null,
+  "VP_drain_PASS": null
+}

@@ -1,0 +1,31 @@
+RING_MISMATCH D=64 MUT=2 n=72 got=08810204080502000b want=0770e1c3878461c005
+RING_MISMATCH D=64 MUT=2 n=73 got=099122448985a2400b want=08810204080502000b
+RING_MISMATCH D=64 MUT=2 n=74 got=0aa142850a0642800b want=099122448985a2400b
+RING_MISMATCH D=64 MUT=2 n=75 got=0bb162c58b86e2c00b want=0aa142850a0642800b
+RING_MISMATCH D=128 MUT=2 n=237 got=2dddbb76edc43b406f want=2ccd9b366c439b006d
+RING_MISMATCH D=128 MUT=2 n=238 got=2eeddbb76e44db806f want=2dddbb76edc43b406f
+RING_MISMATCH D=128 MUT=2 n=239 got=2ffdfbf7efc57bc06f want=2eeddbb76e44db806f
+RING_MISMATCH D=128 MUT=2 n=240 got=300e1c3870461c0071 want=2ffdfbf7efc57bc06f
+RING_MISMATCH D=192 MUT=2 n=301 got=2dddbb76edc43b406f want=2ccd9b366c439b006d
+RING_MISMATCH D=192 MUT=2 n=302 got=2eeddbb76e44db806f want=2dddbb76edc43b406f
+RING_MISMATCH D=192 MUT=2 n=303 got=2ffdfbf7efc57bc06f want=2eeddbb76e44db806f
+RING_MISMATCH D=192 MUT=2 n=304 got=300e1c3870461c0071 want=2ffdfbf7efc57bc06f
+RING_MISMATCH D=256 MUT=2 n=365 got=2dddbb76edc43b406f want=2ccd9b366c439b006d
+RING_MISMATCH D=256 MUT=2 n=366 got=2eeddbb76e44db806f want=2dddbb76edc43b406f
+RING_MISMATCH D=256 MUT=2 n=367 got=2ffdfbf7efc57bc06f want=2eeddbb76e44db806f
+RING_MISMATCH D=256 MUT=2 n=368 got=300e1c3870461c0071 want=2ffdfbf7efc57bc06f
+RING_MISMATCH D=320 MUT=2 n=429 got=2dddbb76edc43b406f want=2ccd9b366c439b006d
+RING_MISMATCH D=320 MUT=2 n=430 got=2eeddbb76e44db806f want=2dddbb76edc43b406f
+RING_MISMATCH D=320 MUT=2 n=431 got=2ffdfbf7efc57bc06f want=2eeddbb76e44db806f
+RING_MISMATCH D=320 MUT=2 n=432 got=300e1c3870461c0071 want=2ffdfbf7efc57bc06f
+RING_MISMATCH D=384 MUT=2 n=493 got=2dddbb76edc43b406f want=2ccd9b366c439b006d
+RING_MISMATCH D=384 MUT=2 n=494 got=2eeddbb76e44db806f want=2dddbb76edc43b406f
+RING_MISMATCH D=384 MUT=2 n=495 got=2ffdfbf7efc57bc06f want=2eeddbb76e44db806f
+RING_MISMATCH D=384 MUT=2 n=496 got=300e1c3870461c0071 want=2ffdfbf7efc57bc06f
+RING_MISMATCH D=448 MUT=2 n=557 got=2dddbb76edc43b406f want=2ccd9b366c439b006d
+RING_MISMATCH D=448 MUT=2 n=558 got=2eeddbb76e44db806f want=2dddbb76edc43b406f
+RING_MISMATCH D=448 MUT=2 n=559 got=2ffdfbf7efc57bc06f want=2eeddbb76e44db806f
+RING_MISMATCH D=448 MUT=2 n=560 got=300e1c3870461c0071 want=2ffdfbf7efc57bc06f
+[22010000] %Fatal: tb_s81sl_cap_phase_ring.sv:30: Assertion failed in tb_s81sl_cap_phase_ring.unnamedblk1: RING_FAIL MUT=2 D=64 errors=1983
+%Error: rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_cap_phase_ring.sv:30: Verilog $stop
+Aborting...
