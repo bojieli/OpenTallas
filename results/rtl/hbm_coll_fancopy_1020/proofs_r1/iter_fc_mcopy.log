@@ -1,0 +1,3 @@
+[66000] %Fatal: tb_hgi_coll_iter_safephys.sv:31: Assertion failed in tb_hgi_coll_iter_safephys.unnamedblk1: COLL_ITER_SAFE_FAIL PIPE1 j=5 old=ffffffffffffffffffffffffffffffff0000000000000000ff0000ff new=ffffffffffffffffffffffff0000feff0000000000000000ff0000ff expected=ffffffffffffffffffffffffffffffff0000000000000000ff0000ff
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_iter_safephys.sv:31: Verilog $stop
+Aborting...
