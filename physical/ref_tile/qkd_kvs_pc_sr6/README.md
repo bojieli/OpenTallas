@@ -27,3 +27,8 @@ KV-PC3 sr6 fixes from gate pc_h_sr3 164813 (CTS stage reproduced in a scratch co
 ## Gate
 pre_route_gate --remote auto --cts --mem 32 (log /home/ubuntu/scratch/kv-pc3/gate_qkd_kvs_pc_sr6.log).
 CRITICAL family (qkd_static_kv_return_slots_mc successor): NO REVIEW.json / submit; review packet in lanes/KV-PC3.md.
+
+GATE 10-19 ot-epyc8 qkd_kvs_pc_sr6-20261019-180008: FAIL (cancelled by KV-PC4 21:45 after GRT ended): GRT overflow
+1028 (974 congested gcells, all over / beside bank column A; wirelength 2.23 Mm vs 1.49 Mm in pc_h_sr6); CTS sync
+SS -300 / after repair -253, FF hold +28; spread ck 69.7 TT / 67.9 FF, hck 55.3 / 51.8.  gate_layout/*.png rendered by
+KV-PC4 from the gate's layout dumps + congestion.rpt.  Redesign: qkd_kvs_pc_sr7 / sr7b (column A mirrored MY).
