@@ -1,5 +1,6 @@
 """Mapped admission tests; real Liberty directions/functions, no cell-name waiver."""
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -115,13 +116,43 @@ def test_missing_cell_pin_and_lib_fail_closed(tmp_path):
 
 
 def test_gate_requires_pinned_receipt_and_no_legacy_threshold_escape():
-    assert 'export OT_GATE_NATIVE_CENSUS=1' in P.REMOTE_SH
+    assert 'floorplan --native-census; FRC=$?' in P.REMOTE_SH
     g=P.Gate();assert not P.check_native_census(g,'')
     report=dict(schema='opentallas.pre_gate_native_census.v1',status='PASS',limit=32,
                 liberty=[{'sha256':'a'*64}],netlist={'sha256':'b'*64},role_errors=[],violations=[],max_dynamic_loads=32)
     assert P.check_native_census(P.Gate(),'GATE_NATIVE_CENSUS_RESULT '+json.dumps(report))
     report['limit']=256
     assert not P.check_native_census(P.Gate(),'GATE_NATIVE_CENSUS_RESULT '+json.dumps(report))
+
+
+def test_route_gate_argument_survives_kit_environment_override(tmp_path):
+    (tmp_path/'tools').mkdir()
+    (tmp_path/'tools/run_abi3_physical.py').write_text('import os,sys,json; open(os.environ["ARGS_OUT"],"w").write(json.dumps(sys.argv))')
+    kit=tmp_path/'kit.env'
+    kit.write_text('''REF_GATE_NATIVE_CENSUS=disabled
+OT_GATE_NATIVE_CENSUS=0
+KIT=kit
+SRCS=t.v
+TOP=t
+FW=43.2
+FH=43.2
+MACROS=()
+PARAMS=()
+PINS=()
+EXTRA=()
+RLAYERS='M1 M5'
+CLKPORT=ck
+PIN_H=M4
+PIN_V=M5
+REFGLOB=''
+INTER=''
+''')
+    out=tmp_path/'args.json'
+    env={**os.environ,'SRC':str(tmp_path),'ARGS_OUT':str(out)}
+    r=subprocess.run(['bash',str(Path(P.__file__).with_name('ref_route.sh')),str(kit),'gate',str(tmp_path/'out'),'floorplan','--native-census'],env=env,capture_output=True,text=True)
+    assert r.returncode==0,r.stdout+r.stderr
+    args=json.loads(out.read_text())
+    assert 'PRE_FLOORPLAN=tools/ref_tile/native_census.tcl' in args
 
 
 def test_cli_outputs_hashed_provenance(tmp_path):

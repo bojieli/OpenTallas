@@ -979,9 +979,8 @@ T0=$(date +%s)
 # the gate builds the tree at the ROUTE's corner (ref_tile.py ROUTE_PREFIX: setup at TT, owner option B): a cluster spine
 # balanced at SS against the children's TT insertion targets measured a mixed-corner spread (dsfd_sp_pq_c, dscoll_ces0_sp)
 export OT_ORFS_CORNER_OVERRIDE=TC
-export OT_GATE_NATIVE_CENSUS=1
 # pin groups exactly as the job's route command sets them (ref_tile.gen_job; the kit.env's own export wins in both)
-SRC=$R/src SYNTH_TIMEOUT={CAP} OT_PIN_GROUP_MAX={PGM} bash tools/ref_tile/ref_route.sh {KIT}/kit.env gate $R/routes floorplan; FRC=$?
+SRC=$R/src SYNTH_TIMEOUT={CAP} OT_PIN_GROUP_MAX={PGM} bash tools/ref_tile/ref_route.sh {KIT}/kit.env gate $R/routes floorplan --native-census; FRC=$?
 echo "GATE_FLOW_RC=$FRC GATE_FLOW_S=$(( $(date +%s) - T0 ))"
 C=$R/routes/gate/work/orfs; B=$(ls -d $C/results/asap7/*/base 2>/dev/null | head -1)
 [ -s $C/native_census.json ] && python3 -c 'import json,sys;print("GATE_NATIVE_CENSUS_RESULT "+json.dumps(json.load(open(sys.argv[1])),separators=(",",":")))' $C/native_census.json
