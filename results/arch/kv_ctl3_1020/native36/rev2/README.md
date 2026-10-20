@@ -1,0 +1,2 @@
+Rev2 source87def4e47 (priority boundary plus kept boot /6 remainder stages).
+V5.050 boot dispatcher lockstep two seeds PASS798490/788246cycles, 340794words each, zero mismatches. Wrong subtract threshold mutant FAIL2700 mismatches. Real boot4 cases PASS (CTLSRAM1/2 and random-first-use two seeds, unchanged POR/open-input handling). Exhaustive divider verification all1024 unsigned inputs PASS, expected low5(floor(addr/6)). Zero added clock edges. Exact gate-map census pending; no waiver.
