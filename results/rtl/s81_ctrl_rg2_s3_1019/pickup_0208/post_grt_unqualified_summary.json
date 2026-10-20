@@ -1,0 +1,177 @@
+{
+  "status": "UNQUALIFIED_PARTIAL_READ_ONLY_POST_GRT_AUDIT",
+  "native": {
+    "roots_examined": 8125,
+    "max_dynamic_loads": 146,
+    "status": "FAIL"
+  },
+  "native_role_errors_count": 13699,
+  "native_role_errors_first2": [
+    "missing Liberty cell TAPCELL_ASAP7_75t_R instance PHY_EDGE_ROW_0_Left_1184",
+    "missing Liberty cell TAPCELL_ASAP7_75t_R instance PHY_EDGE_ROW_0_Right_0"
+  ],
+  "native_violations": [
+    {
+      "driver": "ckh",
+      "loads": 96
+    },
+    {
+      "driver": "clk",
+      "loads": 146
+    }
+  ],
+  "reach": {
+    "terms": 58090,
+    "sources": 4851,
+    "pairs": 9723,
+    "max_um": 411.439,
+    "over405": 7
+  },
+  "reach_role_errors_count": 4112,
+  "reach_role_errors_first2": [
+    "missing actual Liberty role u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/r_addr_in[0] ot_sram_1r1w2c_16x340_p192",
+    "missing actual Liberty role u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/r_addr_in[1] ot_sram_1r1w2c_16x340_p192"
+  ],
+  "reach_worst_first10": [
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sgray[0]$_DFF_PN0_/RESETN",
+      "um": 411.439,
+      "kind": "ff->ff",
+      "source_xy": [
+        285.622,
+        17.415
+      ],
+      "endpoint_xy": [
+        469.451,
+        245.025
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sgray[2]$_DFF_PN0_/RESETN",
+      "um": 410.79,
+      "kind": "ff->ff",
+      "source_xy": [
+        285.622,
+        17.415
+      ],
+      "endpoint_xy": [
+        467.453,
+        246.374
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sgray[1]$_DFF_PN0_/RESETN",
+      "um": 410.628,
+      "kind": "ff->ff",
+      "source_xy": [
+        285.622,
+        17.415
+      ],
+      "endpoint_xy": [
+        468.371,
+        245.294
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sbin[0]$_DFF_PN0_/RESETN",
+      "um": 409.872,
+      "kind": "ff->ff",
+      "source_xy": [
+        285.622,
+        17.415
+      ],
+      "endpoint_xy": [
+        468.695,
+        244.214
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sbin[3]$_DFF_PN0_/RESETN",
+      "um": 408.577,
+      "kind": "ff->ff",
+      "source_xy": [
+        285.622,
+        17.415
+      ],
+      "endpoint_xy": [
+        465.509,
+        246.105
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sbin[2]$_DFF_PN0_/RESETN",
+      "um": 407.982,
+      "kind": "ff->ff",
+      "source_xy": [
+        285.622,
+        17.415
+      ],
+      "endpoint_xy": [
+        465.725,
+        245.294
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sbin[1]$_DFF_PN0_/RESETN",
+      "um": 407.712,
+      "kind": "ff->ff",
+      "source_xy": [
+        285.622,
+        17.415
+      ],
+      "endpoint_xy": [
+        467.075,
+        243.674
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sgray[2]$_DFF_PN0_/D",
+      "um": 359.822,
+      "kind": "ff->ff",
+      "source_xy": [
+        149.434,
+        3.645
+      ],
+      "endpoint_xy": [
+        265.716,
+        247.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sbin[3]$_DFF_PN0_/D",
+      "um": 358.85,
+      "kind": "ff->ff",
+      "source_xy": [
+        149.434,
+        3.645
+      ],
+      "endpoint_xy": [
+        265.284,
+        246.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sgray[1]$_DFF_PN0_/D",
+      "um": 357.284,
+      "kind": "ff->ff",
+      "source_xy": [
+        149.434,
+        3.645
+      ],
+      "endpoint_xy": [
+        263.448,
+        246.915
+      ]
+    }
+  ]
+}
