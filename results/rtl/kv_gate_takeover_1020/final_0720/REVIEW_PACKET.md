@@ -1,0 +1,11 @@
+FINAL HROOT v4a295 evidence for ROOT review; ADOPTION HOLD REMAINS.
+
+Actual held route qkd_kvs_hroot_s32v4-v4a-295504c93 completed flow_rc0/corner_rc0 at05:31PT. Exact final6ODB SHA1a870796af134276fc70bc3a0ec8dea5352bef4a8d5ef5616f9b81d611bf8ac6, SPEFdb3bf0b1..., SDC33df27db..., all sources/artifacts in final_provenance.json. Source exact2RTL hashes agree with prior295504c93 proof. No P&R/newsubmit bypickup. v4b295 stillrouting and not covered by this final packet.
+
+Independent actual final native all-driver v5 audit (private classified_v2 source retained closed_predecessor/, actualOpenROADimage and14Lib hashes in summary) PASS:329845nativecells,32708drivers,maxfanout30,unknown0/missing0; centerL1max339.5595um, transformedpinbboxupper339.847um,0reach>405. NativePG659690ITerms,0unbound/allPGmasters; previous candidateCTS4510unbound no longer finalfailure. This is nativePGnetbinding metadata, not new conductor/via/short/connectivity proof. Input ODB identical before/after.241intentionalopenclockoutputs classified only by actualLib unary function plus proven clock tree, no instance-name exemption; graph-onlycausal scope and prioractualrewirecrash preserved in closed_predecessor/HAND_BACK.md.
+
+Exact final corner_sta TTsetup+255.79ps/FFhold+16.62ps,0violatingDpins,SSsensitivity+77.24ps. ActualdetailedrouteDRC0/antenna0 from5_2json. Same ODB/SPEF/SDC hashes allcorners. Signoff60/25psuncertainty andactualpropagatedboundary refs retained corner_sta.extra_sdc. No exported nativepin view/completeparentclock-compensation qualification claimed by this packet.
+
+Personally viewed finalfloorplan/density/congestionPNG.300.24square/nohardmacro, fullN/Sdensefaces+E/Wports, centralstandardcellcluster retained and thinboundarybands; no visiblecongestionhotspot. Original source-bound CTSregister/hookmembership5890seq/3128boundary/2762central in1c5b28d9e interlude_0454; finalall-driver/nativePG audit is separate, no strict80boxclaim afterfencerelease.
+
+Both recognized ROOTadoption_holds MUSTREMAIN until exactROOTsource/admission/finalreview. Unsupportedstructural_reach kind was not rewritten. Predecessor revoked actual04:53:17 beforeinterludesubmits54/55, canonicalNA notcodebypass. Parentreset+3once vs k1/HROOT_LAND_EDGES2fourchains remain bind/calendar obligations; no promotion/CLOSED/viewbind bypickup.

@@ -1,0 +1,82 @@
+{
+ "src/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv": {
+  "bytes": 26861,
+  "sha256": "7d1d2095c023cfcc08eaf8867d2fd350b1d4007409d01491b91b1303f52cf4cb"
+ },
+ "src/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_hroot_safe32.sv": {
+  "bytes": 3655,
+  "sha256": "62e822d6a958c9eb6ba2153d18ffa6fb41c4959a96204399c49b93da838aa399"
+ },
+ "routes/qkd_kvs_hroot_s32v4_v4a_295504c93/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_s32v4_v4a_295504c93/base/6_final.odb": {
+  "bytes": 129675519,
+  "sha256": "1a870796af134276fc70bc3a0ec8dea5352bef4a8d5ef5616f9b81d611bf8ac6"
+ },
+ "routes/qkd_kvs_hroot_s32v4_v4a_295504c93/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_s32v4_v4a_295504c93/base/6_final.gds": {
+  "bytes": 68012370,
+  "sha256": "09147560383457f73e1b1fc96056c3a0fc46b4017f1690b6f1fca333fc177343"
+ },
+ "routes/qkd_kvs_hroot_s32v4_v4a_295504c93/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_s32v4_v4a_295504c93/base/6_final.spef": {
+  "bytes": 51311462,
+  "sha256": "db3bf0b1e73e86735d1815095224f6518423b0e00d4a5a09e514f2757784b1f8"
+ },
+ "routes/qkd_kvs_hroot_s32v4_v4a_295504c93/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_s32v4_v4a_295504c93/base/6_final.sdc": {
+  "bytes": 646362,
+  "sha256": "33df27db085ef2ba922cc2fff3e7d5ec2a8c4d9f1630e604af9d75e5ec1cc1c2"
+ },
+ "routes/qkd_kvs_hroot_s32v4_v4a_295504c93/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_s32v4_v4a_295504c93/base/6_final.v": {
+  "bytes": 3568045,
+  "sha256": "1f78ca541572d74c4e486c11bdb580a0c1a62c4fb3c0a9021d47382453e8da6a"
+ },
+ "routes/qkd_kvs_hroot_s32v4_v4a_295504c93/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_s32v4_v4a_295504c93/base/6_final.def": {
+  "bytes": 70351965,
+  "sha256": "86de6adfdfe01f252a1dbd128f8db53fd593843d5e9c723dbac4af3e3318c955"
+ },
+ "cl/helper_overlay_plan.json": {
+  "bytes": 15505,
+  "sha256": "f3734b2d81a716b207c6514535ebd67f098cfcd2bf064f3f1b2db35b59c69203"
+ },
+ "routes/qkd_kvs_hroot_s32v4_v4a_295504c93/work/orfs/logs/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_s32v4_v4a_295504c93/base/5_2_route.json": {
+  "bytes": 2584,
+  "sha256": "3814385531f463ac7ff0acd1387a8261a54d7766b6ec8c6ae408cb5836c1cc1f"
+ },
+ "route_metrics": {
+  "detailedroute__route__drc_errors__iter:0": 8539,
+  "detailedroute__route__wirelength__iter:0": 890762,
+  "detailedroute__route__drc_errors__iter:1": 2049,
+  "detailedroute__route__wirelength__iter:1": 890173,
+  "detailedroute__route__drc_errors__iter:2": 1597,
+  "detailedroute__route__wirelength__iter:2": 890138,
+  "detailedroute__route__drc_errors__iter:3": 518,
+  "detailedroute__route__wirelength__iter:3": 890264,
+  "detailedroute__route__drc_errors__iter:4": 386,
+  "detailedroute__route__wirelength__iter:4": 890288,
+  "detailedroute__route__drc_errors__iter:5": 323,
+  "detailedroute__route__wirelength__iter:5": 890299,
+  "detailedroute__route__drc_errors__iter:6": 286,
+  "detailedroute__route__wirelength__iter:6": 890306,
+  "detailedroute__route__drc_errors__iter:7": 283,
+  "detailedroute__route__wirelength__iter:7": 890307,
+  "detailedroute__route__drc_errors__iter:8": 174,
+  "detailedroute__route__wirelength__iter:8": 890329,
+  "detailedroute__route__drc_errors__iter:9": 156,
+  "detailedroute__route__wirelength__iter:9": 890338,
+  "detailedroute__route__drc_errors__iter:10": 53,
+  "detailedroute__route__wirelength__iter:10": 890375,
+  "detailedroute__route__drc_errors__iter:11": 13,
+  "detailedroute__route__wirelength__iter:11": 890381,
+  "detailedroute__route__drc_errors__iter:12": 7,
+  "detailedroute__route__wirelength__iter:12": 890382,
+  "detailedroute__route__drc_errors__iter:13": 7,
+  "detailedroute__route__wirelength__iter:13": 890382,
+  "detailedroute__route__drc_errors__iter:14": 2,
+  "detailedroute__route__wirelength__iter:14": 890386,
+  "detailedroute__route__drc_errors__iter:15": 2,
+  "detailedroute__route__wirelength__iter:15": 890386,
+  "detailedroute__route__drc_errors__iter:16": 0,
+  "detailedroute__route__wirelength__iter:16": 890386,
+  "detailedroute__route__drc_errors": 0,
+  "detailedroute__route__wirelength": 890386,
+  "detailedroute__antenna__violating__nets": 0,
+  "detailedroute__antenna__violating__pins": 0
+ }
+}
