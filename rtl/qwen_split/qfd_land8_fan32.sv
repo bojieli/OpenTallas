@@ -29,9 +29,42 @@ module ot_qfd_land8_ctrl_copy #(parameter integer ID=0)(
  assign nxt_o=nxt[2:0];assign seed_o=seed[2:0];
 endmodule
 
+// RSL=1 calendar copy (QW-LANDW3 10-20): first reset stage comes from the parent's kept face copy rs0c (ONE face flop
+// per <=8 copies), only the second stage rs1 is local.  rs -> rs0c -> rs1 -> rc releases on the same edges as the RSL=0
+// copy (rs -> rs0 -> rs1 -> rc): no reset edge, K or calendar change; assert stays asynchronous through the chain.
+(* keep_hierarchy = "yes" *)
+module ot_qfd_land8_ctrl_copy1 #(parameter integer ID=0)(
+ input wire ck, input wire rs0, input wire [3:0] k,
+ output wire [2:0] nxt_o, output wire [2:0] seed_o
+);
+ (* keep="true", dont_touch="true" *) reg rs1;
+ always @(posedge ck or negedge rs0) if (!rs0) rs1<=1'b0;else rs1<=1'b1;
+ (* keep="true", dont_touch="true" *) reg [3:0] k_q,rc;
+`ifdef OT_QFD_LAND8_MUT_K3
+ always @(posedge ck) k_q<={1'b0,k[2:0]};
+`else
+ always @(posedge ck) k_q<=k;
+`endif
+`ifdef OT_QFD_LAND8_MUT_RSL
+ // mutant: the copy lands rs0c once more (one extra release edge vs the meta/region calendar)
+ (* keep="true" *) reg rs2;
+ always @(posedge ck or negedge rs1) if (!rs1) rs2<=1'b0;else rs2<=1'b1;
+ always @(posedge ck or negedge rs2) if (!rs2) rc<=4'b0;else rc<=rc+1'b1;
+`else
+ always @(posedge ck or negedge rs1) if (!rs1) rc<=4'b0;else rc<=rc+1'b1;
+`endif
+`ifdef OT_QFD_LAND8_MUT_SEL
+ wire [3:0] nxt=rc+4'd2-k_q;wire [3:0] seed=4'd1-k_q;
+`else
+ wire [3:0] nxt=rc+4'd1-k_q;wire [3:0] seed=4'd0-k_q;
+`endif
+ assign nxt_o=nxt[2:0];assign seed_o=seed[2:0];
+endmodule
+
 module ot_qfd_land8_fan32 #(
     parameter integer W    = 32,
-    parameter integer ICG  = 1       // 1: hop-0 clock gate on ck_s (registered enable); 0: no gate (fallback)
+    parameter integer ICG  = 1,      // 1: hop-0 clock gate on ck_s (registered enable); 0: no gate (fallback)
+    parameter integer RSL  = 0       // 1: rs reaches exactly 2 face flops (rs0 + kept rs0c); calendar copies take rs0c
 ) (
     input  wire         ck_s,        // source block root (ring write side)
     input  wire         en,          // source released reset (active high)
@@ -106,9 +139,20 @@ module ot_qfd_land8_fan32 #(
     localparam integer NC=(NR+3)/4;
     wire [NC*3-1:0] local_nxt,local_seed;
     genvar c;
-    generate for(c=0;c<NC;c=c+1)begin:g_ctrl
-      ot_qfd_land8_ctrl_copy #(.ID(c)) u_ctrl(
-        .ck(ck),.rs(rs),.k(k),.nxt_o(local_nxt[c*3+:3]),.seed_o(local_seed[c*3+:3]));
+    generate if (RSL != 0) begin : g_rsl
+      // second face copy of the first reset stage (same D/clear as rs0): the rs port net has 2 flop sinks
+      (* keep = "true", dont_touch = "true" *) reg rs0c;
+      always @(posedge ck or negedge rs)
+          if (!rs) rs0c <= 1'b0; else rs0c <= 1'b1;
+      for(c=0;c<NC;c=c+1)begin:g_ctrl
+        ot_qfd_land8_ctrl_copy1 #(.ID(c)) u_ctrl(
+          .ck(ck),.rs0(rs0c),.k(k),.nxt_o(local_nxt[c*3+:3]),.seed_o(local_seed[c*3+:3]));
+      end
+    end else begin : g_rsl0
+      for(c=0;c<NC;c=c+1)begin:g_ctrl
+        ot_qfd_land8_ctrl_copy #(.ID(c)) u_ctrl(
+          .ck(ck),.rs(rs),.k(k),.nxt_o(local_nxt[c*3+:3]),.seed_o(local_seed[c*3+:3]));
+      end
     end endgenerate
     genvar r;
     generate for (r = 0; r < NR; r = r + 1) begin : g_region

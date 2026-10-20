@@ -1,7 +1,7 @@
 #!/bin/bash
 # QW-LANDW 10-19: behavioural bench of the WIDE D8 hop-0 landings through one class master of
 # physical/qwen_fwd_lane/qfd_land8w_masters.sv -- Verilator 5.050 (the closure daemon's version).
-# usage: bench_land8w.sh <pass|sel|naive|vld|encomb|k3|wsel|rsel> <work dir> <master module> <W> [sram]
+# usage: bench_land8w.sh <pass|sel|naive|vld|encomb|k3|wsel|rsel|rsl (RSL=1 masters)> <work dir> <master module> <W> [sram]
 #   flop masters (ot_qfd_land8): the bench_land8.sh lanes with full-width words.
 #   sram masters (ot_qfd_land8s, 5th arg "sram"): K = (L + G - R0 - 2) mod 16, macro model ot_sram_1r1w2c_32x64_m1.v
 #   with OT_MEM_NO_INIT (array power-up = --x-initial unique random, not zero).
@@ -16,7 +16,7 @@ DEF=
 case $mode in
   pass) ;; sel) DEF=+define+OT_QFD_LAND8_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND8_MUT_NAIVE ;;
   vld) DEF=+define+OT_QFD_LAND8_MUT_VLD ;; encomb) DEF=+define+OT_QFD_LAND8_MUT_ENCOMB ;;
-  k3) DEF=+define+OT_QFD_LAND8_MUT_K3 ;; wsel) DEF=+define+OT_QFD_LAND8_MUT_WSEL ;; rsel) DEF=+define+OT_QFD_LAND8_MUT_RSEL ;;
+  k3) DEF=+define+OT_QFD_LAND8_MUT_K3 ;; wsel) DEF=+define+OT_QFD_LAND8_MUT_WSEL ;; rsel) DEF=+define+OT_QFD_LAND8_MUT_RSEL ;; rsl) DEF=+define+OT_QFD_LAND8_MUT_RSL ;;
   *) echo "bad mode $mode"; exit 2 ;;
 esac
 SR=; SRC="physical/qwen_fwd_lane/qfd_land8f_masters.sv rtl/qwen_split/qfd_land8_fan32.sv physical/qwen_fwd_lane/qfd_land8w_masters.sv rtl/qwen_split/qfd_land8.sv rtl/hdc/ot_hdc_cg.sv"
