@@ -1,0 +1,169 @@
+# Exact mapped-cell fences; no core, clock, PDN or latency edits.
+source /src/physical/ref_tile/dsdv_mu_hwin_c21j/native_cell_fence.tcl
+set ::ot_hj_boxes [dict create]
+dict set ::ot_hj_boxes GLOBAL {155.8 163.89 405.8 203.85}
+dict set ::ot_hj_boxes E1 {61.96666666666667 163.89 80.73333333333335 203.85}
+dict set ::ot_hj_boxes E2 {80.73333333333335 163.89 99.5 203.85}
+dict set ::ot_hj_boxes E14 {480.8666666666667 163.89 499.6333333333333 203.85}
+dict set ::ot_hj_boxes E0 {43.2 163.89 61.96666666666667 203.85}
+dict set ::ot_hj_boxes E4 {118.26666666666668 163.89 137.03333333333333 203.85}
+dict set ::ot_hj_boxes E3 {99.5 163.89 118.26666666666668 203.85}
+dict set ::ot_hj_boxes E15 {499.6333333333333 163.89 518.4 203.85}
+dict set ::ot_hj_boxes E11 {424.56666666666666 163.89 443.3333333333333 203.85}
+dict set ::ot_hj_boxes E5 {137.03333333333333 163.89 155.8 203.85}
+dict set ::ot_hj_boxes E10 {405.8 163.89 424.56666666666666 203.85}
+dict set ::ot_hj_boxes E12 {443.3333333333333 163.89 462.1 203.85}
+dict set ::ot_hj_boxes E13 {462.1 163.89 480.8666666666667 203.85}
+
+
+# Follow every output edge, without a visit/depth cap, to first real FF/macro
+# sinks. Existing combinational-cell owners are deliberately NOT terminal seeds.
+proc ot_hj_leaf_groups {start} {
+ set todo [list $start]; set seen [dict create]; set owners [dict create]
+ while {[llength $todo]} {
+  set i [lindex $todo end]; set todo [lrange $todo 0 end-1]
+  set nm [$i getName]
+  if {[dict exists $seen $nm]} {continue}
+  dict set seen $nm 1
+  if {$i ne $start && [[$i getMaster] isBlock]} {
+   set key [string map [list [format %c 92] "" / .] $nm]
+   if {![dict exists $::ot_hj_macro_owner $key]} {error "HWIN_BIRTH unknown macro owner $nm"}
+   set group [dict get $::ot_hj_macro_owner $key]
+   dict set owners $group 1; continue
+  }
+  if {$i ne $start && [regexp {^DFF} [[$i getMaster] getName]]} {
+   set g [$i getGroup]
+   if {$g eq "NULL" || ![string match ot_hj_* [$g getName]]} {error "HWIN_BIRTH unknown first FF owner $nm"}
+   dict set owners [string range [$g getName] 6 end] 1; continue
+  }
+  foreach pin [$i getITerms] {
+   if {[$pin getIoType] ne "OUTPUT"} {continue}
+   set net [$pin getNet]
+   if {$net eq "NULL"} {continue}
+   foreach bp [$net getBTerms] {if {[$bp getIoType] eq "OUTPUT"} {dict set owners GLOBAL 1}}
+   foreach sink [$net getITerms] {
+    if {[$sink getIoType] eq "INPUT"} {lappend todo [$sink getInst]}
+   }
+  }
+ }
+ if {[dict size $owners] == 1} {return [lindex [dict keys $owners] 0]}
+ return GLOBAL
+}
+set ::ot_hj_macro_owner [dict create]
+set ot_hj_mf [open /src/physical/ref_tile/dsdv_mu_hwin_c21j/native_macro_manifest.tsv r]
+while {[gets $ot_hj_mf line]>=0} {
+ lassign [split $line "\t"] group key
+ if {[dict exists $::ot_hj_macro_owner $key]} {error "HWIN_NATIVE duplicate macro owner $key"}
+ dict set ::ot_hj_macro_owner $key $group
+}
+close $ot_hj_mf
+proc ot_hj_fences_install {} {
+ if {[info exists ::ot_hj_installed]} {return}
+ set b [ord::get_db_block]; set native [dict create]
+ foreach i [$b getInsts] {
+  if {[[$i getMaster] isBlock]} {continue}
+  set key [string map [list [format %c 92] "" / .] [$i getName]]
+  if {[dict exists $native $key]} {error "HWIN_NATIVE ambiguous escaped native name $key"}
+  dict set native $key [$i getName]
+ }
+ set groups [dict create];set matched [dict create]
+ set inherited [expr {[$b findGroup ot_hj_GLOBAL] ne "NULL"}]
+ set f [open /src/physical/ref_tile/dsdv_mu_hwin_c21j/native_cell_manifest.tsv r]
+ while {[gets $f line]>=0} {
+  lassign [split $line "\t"] group key
+  if {![dict exists $native $key]} {
+   if {$inherited} {continue}
+   error "HWIN_NATIVE missing mapped cell $key"
+  }
+  set name [dict get $native $key]
+  if {[dict exists $matched $name]} {error "HWIN_NATIVE duplicate manifest cell $name"}
+  dict set matched $name $group;dict lappend groups $group $name
+ }
+ close $f
+ dict for {group names} $groups {
+  if {![dict exists $::ot_hj_boxes $group]} {error "HWIN_NATIVE unknown box $group"}
+  if {$inherited} {
+   foreach nm $names {
+    set old [[$b findInst $nm] getGroup]
+    if {$old eq "NULL" || [$old getName] ne "ot_hj_$group"} {error "HWIN_NATIVE inherited ownership mismatch $nm"}
+   }
+  } else {ot_native_cell_fence ot_hj_$group [dict get $::ot_hj_boxes $group] $names}
+ }
+ set ::ot_hj_installed 1
+ puts "HWIN_NATIVE_MANIFEST cells=[dict size $matched] inherited=$inherited"
+}
+proc ot_hj_assign_births {seed} {
+ set b [ord::get_db_block];set births [dict create]
+ foreach i [$b getInsts] {
+  if {[[$i getMaster] isBlock]} {continue}
+  set old [$i getGroup]
+  if {$old ne "NULL"} {
+   if {![string match ot_hj_* [$old getName]]} {error "HWIN_BIRTH conflicting owner [$i getName]"}
+   continue
+  }
+  set master [[$i getMaster] getName]
+  if {[regexp {TAPCELL|FILL|DECAP|ENDCAP|tapcell} $master]} {continue}
+  # Physical synthesis may resize/delete old logic or insert buffers/ties.
+  # A newly inserted state element or arbitrary gate needs an explicit new model.
+  if {![regexp {^(BUF|INV|TIE)} $master]} {error "HWIN_BIRTH unmodelled functional cell [$i getName] $master"}
+  set owner [ot_hj_leaf_groups $i]
+  if {![dict exists $::ot_hj_boxes $owner]} {error "HWIN_BIRTH bad owner $owner"}
+  dict lappend births $owner [$i getName]
+ }
+ dict for {owner names} $births {
+  ot_native_cell_fence_add ot_hj_$owner $names
+  if {$seed} {ot_native_cell_fence_seed_new ot_hj_$owner [dict get $::ot_hj_boxes $owner] $names}
+  puts "HWIN_BIRTH_ASSIGNED owner=$owner cells=[llength $names] seeded=$seed"
+ }
+ return $births
+}
+proc ot_hj_fences_check {stage} {
+ set b [ord::get_db_block];set u [[ord::get_db_tech] getDbUnitsPerMicron]
+ set total 0.0
+ dict for {group box} $::ot_hj_boxes {
+  ot_native_cell_fence_check ot_hj_$group $box $stage
+  set area 0.0
+  foreach i [[$b findGroup ot_hj_$group] getInsts] {
+   set m [$i getMaster]
+   set area [expr {$area+double([$m getWidth])*[$m getHeight]/$u/$u}]
+  }
+  lassign $box x0 y0 x1 y1
+  set density [expr {$area/(($x1-$x0)*($y1-$y0))}]
+  if {$density>0.60} {error "HWIN_NATIVE_DENSITY above60pct owner=$group density=$density stage=$stage"}
+  puts "HWIN_NATIVE_DENSITY owner=$group area_um2=$area density=$density stage=$stage"
+ }
+ foreach i [$b getInsts] {
+  set m [$i getMaster]
+  if {[$m isBlock] || [regexp {TAPCELL|FILL|DECAP|ENDCAP|tapcell} [$m getName]]} {continue}
+  set total [expr {$total+double([$m getWidth])*[$m getHeight]/$u/$u}]
+ }
+ set legal 0.0
+ foreach row [$b getRows] {
+  set r [$row getBBox]
+  set legal [expr {$legal+double([$r xMax]-[$r xMin])*([$r yMax]-[$r yMin])/$u/$u}]
+ }
+ if {$legal<=0} {error "HWIN_NATIVE_DENSITY no legal rows"}
+ set density [expr {$total/$legal}]
+ if {$density<0.40 || $density>0.60} {error "HWIN_NATIVE_DENSITY legal_band_outside40to60pct density=$density stage=$stage"}
+ puts "HWIN_NATIVE_DENSITY band_std_area_um2=$total legal_row_area_um2=$legal density=$density stage=$stage"
+ ot_native_cell_band_check {2.16 163.89 559.44 203.85} $stage
+}
+
+if {![llength [info commands ::ot_hj_global_placement_orig]]} {
+ rename global_placement ::ot_hj_global_placement_orig
+ proc global_placement {args} {
+  ot_hj_fences_install
+  ot_hj_assign_births 0
+  set result [uplevel 1 [list ::ot_hj_global_placement_orig {*}$args]]
+  ot_hj_fences_check GPL
+  return $result
+ }
+ rename detailed_placement ::ot_hj_detailed_placement_orig
+ proc detailed_placement {args} {
+  ot_hj_fences_install
+  ot_hj_assign_births 1
+  set result [uplevel 1 [list ::ot_hj_detailed_placement_orig {*}$args]]
+  ot_hj_fences_check DP
+  return $result
+ }
+}

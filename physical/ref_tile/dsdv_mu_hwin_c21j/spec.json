@@ -29,19 +29,19 @@
  "reset_ports": [
   "rst_n"
  ],
- "std_area_um2": 8650.0,
+ "std_area_um2": 8964.76086,
  "pins": {
-  "W": [
+  "S": [
    "f_ks",
-   "mu_c",
-   "mu_rc",
+   "f_mc",
+   "f_mw",
    "mu_rt",
    "ck",
    "rst_n"
   ],
-  "E": [
-   "f_mc",
-   "f_mw",
+  "N": [
+   "mu_c",
+   "mu_rc",
    "t_wf"
   ]
  },
@@ -118,7 +118,7 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "fail_regex": "EARLY_MITER|CBREF_MITER",
-    "fail_witness": "results/rtl/s81_mu_hwin21g_1019/witness_norelay.log"
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/r2_norelay.log"
    },
    {
     "name": "c21j_mut_east_copy",
@@ -127,7 +127,7 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "fail_regex": "EARLY_MITER|CBREF_MITER",
-    "fail_witness": "results/rtl/s81_mu_hwin21g_1019/witness_east_copy.log"
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/r2_eastcopy.log"
    },
    {
     "name": "c21j_mut_early_mech2",
@@ -923,30 +923,59 @@
  },
  "fill_reason": {
   "lattice_channel_bound": {
-   "why": "S81-HWIN21g: same lattice/channel exception as c21d (COORD 19:05 HANDOFF: 'RATIFIED: the lattice fill exception (approved_by ROOT) on S81 hwin c21d/c21e/c21f is approved by the coordinator; the macro pitch is set by the R0 pin-track constraint, not by area'; c21g = c21d geometry). S81-HWIN21d (COORD 10-19 restart-brief decision: re-pack so SRAM pins sit <=150 um from the band; same HWIN lattice/channel exception class ROOT approved for c21, model 21cbb79ac; ROOT ratification requested in HANDOFF). RTL byte-identical to HWIN21cb 072dd6141. 84 ot_sram_1r1w_64x16 on the 43.2 lattice, 10.8 halo, 12 columns x 7 rows (3 below / 4 above, all R0: pins on the macro's bottom 3.8 um), outline 561.6x388.8; one full-width std band y169.02..204.12 (130 rows); max SRAM-pin to band 145.2 um (c21b 370). Std 8600 um2 (c21 measured 8352 + read-address copies) = 44.0% of band; the gate re-measures placed occupancy.",
+   "why": "Codex S81 coordinator approved 10-20 original561.6x388.8outline/native250x39.96global-region plan (supersedes +43.2height). Same84R0 SRAM lattice positions and10.8halos; one fullwidth39.96band163.89..203.85, nativepostlinkstd8964.76086um2 (fullmappedconservative9100.42776) gives fullband40.26%actual/40.87%conservative; exact disjoint sourcebound global5730.71um2/9990um2=57.36%conservative/56.06%actual (exact ratio in proofJSON), periphery37..38%. ALL122693 nonclock native endpoint-box bounds<=402.56um under exactmanifest/fences+registered inputS/outputNcentre84.8um. No extra edge/area or ruleexception; nativepostGPL/DP/birth/TTFFclock/PG and parent nativepin contract still owed.",
    "lattice_um": 43.2,
    "min_channel_um": 22.41,
-   "std_band_util": 0.4396609334880941,
-   "approved_by": "ROOT",
+   "std_band_util": 0.40591800634722447,
+   "approved_by": "codex coordinator",
    "std_band_y_um": [
-    169.02,
-    204.12
+    163.89,
+    203.85
    ]
   }
  },
  "pin_ranges": {
+  "f_ks": [
+   238.4,
+   323.2
+  ],
+  "f_mc": [
+   238.4,
+   323.2
+  ],
+  "f_mw": [
+   238.4,
+   323.2
+  ],
+  "mu_rt": [
+   238.4,
+   323.2
+  ],
+  "mu_c": [
+   238.4,
+   323.2
+  ],
+  "mu_rc": [
+   238.4,
+   323.2
+  ],
+  "t_wf": [
+   238.4,
+   323.2
+  ],
   "ck": [
-   200.0,
-   202.0
+   278.0,
+   280.0
   ],
   "rst_n": [
-   202.0,
-   204.0
+   280.0,
+   282.0
   ]
  },
  "orfs_vars": {
-  "PRE_GLOBAL_PLACE_TCL": "physical/ref_tile/dsdv_mu_hwin_c21j/hwin_gpl_row_envelope.tcl",
-  "PRE_GLOBAL_PLACE_SKIP_IO_TCL": "physical/ref_tile/dsdv_mu_hwin_c21j/hwin_gpl_row_envelope.tcl"
+  "PRE_GLOBAL_PLACE_TCL": "physical/ref_tile/dsdv_mu_hwin_c21j/hwin_native_fences.tcl",
+  "PRE_GLOBAL_PLACE_SKIP_IO_TCL": "physical/ref_tile/dsdv_mu_hwin_c21j/hwin_native_fences.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/ref_tile/dsdv_mu_hwin_c21j/hwin_native_fences.tcl"
  },
  "reroute_reason": {
   "kind": "rtl_change",
