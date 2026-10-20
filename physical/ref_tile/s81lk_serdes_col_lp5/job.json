@@ -1,5 +1,5 @@
 {
- "name": "s81lk_serdes_col_lp5-lpk5b-ccec836bc",
+ "name": "s81lk_serdes_col_lp5-lpk5b-d9b4335dd",
  "block": "ot_pdie_serdes_col_lp5",
  "ref_tile": true,
  "owner": "Claude:S81-SERDES5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/s81-serdes5-1020",
-  "commit": "ccec836bc",
+  "commit": "d9b4335dd",
   "extra_paths": [
    "rtl/dsrom_sys/s81_link/col/lp5/ot_pdie_serdes_col_lp5_record.json",
    "rtl/dsrom_sys/s81_link/col/lp5/tb_ot_pdie_serdes_col_lp5.sv",
@@ -144,7 +144,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81lk_serdes_col_lp5/s81lk_serdes_col_lp5-lpk5b-ccec836bc"
+   "to": "results/rtl/ref_tile/s81lk_serdes_col_lp5/s81lk_serdes_col_lp5-lpk5b-d9b4335dd"
   }
  ],
  "cycles_added": 0,
