@@ -1,0 +1,7 @@
+ot-run: ot-epyc6       admits   774 GB (avail 655, growth 113, headroom 0, waiters 0/0 GB) load 35/128 running 19 disk 5330 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2844273-1792470694 after 0 s
+STRICT_BIND_EXIT=1
+RELAY_SPLICE PASS tiles 53641 buses 2144 edges 12553 -> 119274
+DIE_PORT_BIND FAIL masters=197 instances=54864 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=70320 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=124 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=8
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2844273-1792470694): exit 0

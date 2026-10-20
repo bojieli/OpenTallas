@@ -1,0 +1,37 @@
+{
+ "layer": "l22_e4_compose",
+ "successful_data_added_edges": 0,
+ "edges_changed": 0,
+ "col_idx": {
+  "params": {
+   "PAGE_W": 1,
+   "NS": 1,
+   "NPR": 6,
+   "NREC": 8,
+   "NGO": 2,
+   "NB": 2,
+   "NF": 5,
+   "XSER": 0,
+   "FAN32": 1
+  },
+  "source_sha256": "26d34bece786413235c5c0484be10cded7d6e53ae5820c1df2ec97b01b135426"
+ },
+ "pc_controllers": {
+  "count": 64,
+  "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face",
+  "params": {
+   "OREG": 1,
+   "KREG": 1,
+   "KRREG": 1,
+   "RREG": 1,
+   "WPAY": 1,
+   "RESET_LANDING": 2,
+   "SRAM_P192": 1,
+   "PURE_FACE": 1,
+   "RST_FOREST": 1,
+   "PCID_LOCAL": 1
+  },
+  "stand_in": true,
+  "source_sha256": "56b7dab4a9205effafa08469b03e7a4eb464cfacae4dbf3b74dc4b87c67e965c"
+ }
+}

@@ -1,0 +1,5 @@
+ot-run: ot-epyc6       admits   790 GB (avail 667, growth 113, headroom 0, waiters 0/0 GB) load 141/128 running 33 disk 5269 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3014821-1792471508 after 1 s
+EXACT_TAIL_MAP_PASS {"buses": 2144, "real_edge_bits": 9917643, "map_sha256": "5dd5b6bc6bd64c9af838cbdf228f69d95ac824da167ec3b889e1e6d379c4d314", "clock_reset_epoch_edges_unchanged": true}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3014821-1792471508): exit 0

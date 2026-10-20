@@ -80,7 +80,12 @@ def main():
         total += sum(actual.values())
         digest.update(repr(sorted(actual.items())).encode())
     assert old['clocks'] == new['clocks'] and old['edges'] == new['edges']
-    assert old.get('straps') == new.get('straps') and old.get('die_pins') == new.get('die_pins')
+    # --classes re-masters the landing K straps onto the class master: identical apart from that master name
+    newmaster = {x['name']: x['master'] for x in new['instances']}
+    def strip(straps):
+        return [{k: v for k, v in s.items() if k != 'master'} for s in straps or []]
+    assert strip(old.get('straps')) == strip(new.get('straps')) and old.get('die_pins') == new.get('die_pins')
+    assert all(s.get('master') in (None, newmaster.get(s['inst'])) for s in new.get('straps') or [])
     print('EXACT_TAIL_MAP_PASS', json.dumps(dict(buses=len(old['relay_splice_v2']), real_edge_bits=total, map_sha256=digest.hexdigest(), clock_reset_epoch_edges_unchanged=True)))
 
 

@@ -107,6 +107,7 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--source', required=True, help='repository-relative generated RTL path')
     ap.add_argument('--report', required=True)
+    ap.add_argument('--check', action='store_true', help='do not write the source; fail unless it is byte-identical')
     ap.add_argument('--classes', action='store_true', help='one parameterised class master per base (TW = real width)')
     args = ap.parse_args()
     path = Path(args.source)
@@ -114,7 +115,11 @@ def main():
         ap.error('source must be a repository-owned die_glue RTL path')
     layer = json.loads(gzip.open(args.layer, 'rt').read() if args.layer.endswith('.gz') else Path(args.layer).read_text())
     result, source, report = transform(layer, args.source, args.classes)
-    (ROOT / path).write_text(source)
+    if args.check:   # chain mode: the class source is committed; a layer needing a different source must stop, not drift
+        if (ROOT / path).read_text() != source:
+            raise SystemExit(f'CLASS_SOURCE_DRIFT {path}: regenerate + commit, then restart the step')
+    else:
+        (ROOT / path).write_text(source)
     with gzip.open(args.out, 'wt') as stream:
         json.dump(result, stream)
     Path(args.report).write_text(json.dumps(report, indent=2) + '\n')
