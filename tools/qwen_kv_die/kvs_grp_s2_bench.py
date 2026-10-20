@@ -3,7 +3,7 @@
 
 Oracle = the UNCHANGED sha-pinned DOMSPLIT MU/BOOT_AGES tiles (tb/qkd_kvs_grp_s2_ref.sv: renamed only) on the unchanged
 leaves and the unchanged 128x256 macro model.  The bench applies the documented safe2 ages to the oracle's INPUTS only:
-i_ctl, i_up, x__est one core edge later (tb flops), rst_n / hrst_n through the same two-stage landing as the tile (tb
+i_ctl, i_up, x__est one core edge later (tb flops), o_ctl / o_dn one core edge later (KV-GRP3 exit face flops), rst_n / hrst_n through the same two-stage landing as the tile (tb
 model), the four deleted pins (x__tok / x__tep, x__est[12:1]) driven randomly into the oracle and absent from the DUT.
 Every retained DUT output is then compared bit-exact with the oracle output at every core AND every HBM falling edge
 (independent clocks 834 / 1024 ps, three reset pulses, random two-state stimulus, 6000 core edges, both tiles).
@@ -42,6 +42,7 @@ LEAVES = [
 ]
 SOURCES = [S2.OUT, S2.REF] + LEAVES
 DELAYED = ('i_ctl', 'i_up', 'x__est')
+OUT_DELAYED = ('o_ctl', 'o_dn')         # KV-GRP3 exit face flops: the oracle's outputs one core edge later (tb flops)
 
 
 def ports(text, name):
@@ -86,8 +87,13 @@ def tb(edges):
                 else:
                     ref_c.append(f'.{n}({k}_{n})')
             else:
-                L.append(f'wire [{w - 1}:0] {k}_r_{n};')
-                ref_c.append(f'.{n}({k}_r_{n})')
+                if n in OUT_DELAYED:
+                    L.append(f'wire [{w - 1}:0] {k}_r_{n}_raw; reg [{w - 1}:0] {k}_r_{n} = 0; '
+                             f'always @(posedge ck) {k}_r_{n} <= {k}_r_{n}_raw;')
+                    ref_c.append(f'.{n}({k}_r_{n}_raw)')
+                else:
+                    L.append(f'wire [{w - 1}:0] {k}_r_{n};')
+                    ref_c.append(f'.{n}({k}_r_{n})')
         for d, w, n in dp:
             if n in ('ck', 'hck', 'rst_n', 'hrst_n'):
                 dut_c.append(f'.{n}({n})')

@@ -1,0 +1,4 @@
+S2_FAIL tile=g output=o_dn edge=4 side=1 mut=7 dut=000fb11dd067e998c2e3f99136f08f6f5fa54606c50e470f92d13eb2b632ca2e3642 ref=000fb11dd067e998c2e3f99136f08f6f5fa54606c50e470f92d13eb2b632ca2e3641
+[4096000] %Fatal: tb_m7.sv:202: Assertion failed in tb.compare
+%Error: /srv/opentallas-scratch/claude/kv-grp3/b1/out/m7/tb_m7.sv:202: Verilog $stop
+Aborting...
