@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits   930 GB (avail 765, growth 113, headroom 0, waiters 0/0 GB) load 55/128 running 32 disk 68 GB 
+ot-run: ot-epyc6       admits   210 GB (avail 260, growth 113, headroom 0, waiters 0/0 GB) load 131/128 running 42 disk 4739 GB 
+ot-run: ot-epyc7       admits   401 GB (avail 381, growth 101, headroom 0, waiters 0/0 GB) load 66/96 running 32 disk 5684 GB 
+ot-run: ot-epyc9       admits   152 GB (avail 313, growth 207, headroom 0, waiters 0/0 GB) load 61/128 running 35 disk 157 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-e86-native32-v2b-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-e86-native32-v2b-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2587357-1792485891 after 0 s
+TKM_RG_CREP MUT1 cycles4000 ins2139 ovf2034 up173 tau1995 errors132 FAIL
+MISMATCH t=5120000 ovf 0/0 busy 1/1 tau 1e42859f789c4af6212925/1e42859f789c427f412925 up_eq 1 ovfb_eq 1
+MISMATCH t=5480000 ovf 1/1 busy 1/1 tau 1e1d84f57223c8c8114eb7/1e1d84f57223cc4c994eb7 up_eq 1 ovfb_eq 1
+MISMATCH t=5580000 ovf 0/0 busy 0/0 tau 1e42859f789c4af6212925/1e42859f789c427f412925 up_eq 1 ovfb_eq 1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2587357-1792485891): exit 1

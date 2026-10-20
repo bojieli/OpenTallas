@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits  1069 GB (avail 862, growth 113, headroom 0, waiters 0/0 GB) load 49/128 running 27 disk 61 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hbm-e86-native32-v2b-1020/out_corrected_m0
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-e86-native32-v2b-1020/out_corrected_m0
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-e86-native32-v2b-1020/out_corrected_m0
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-e86-native32-v2b-1020/out_corrected_m0
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-e86-native32-v2b-1020/out_corrected_m0
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2684605-1792487090 after 0 s
+Referenced but unset environment variable evaluates to an empty string: seed
+RANDINIT_SEED_17
+[5000] %Error: ot_hgi_coll_tkm.sv:1011: Assertion failed in tb_hgi_coll_tkm_tile_rg_crep.u_ref.cor: ot_hgi_coll_tkm_tile_rg: a block entered stage C while the tile conveys
+%Error: rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv:1011: Verilog $stop
+Aborting...
+RANDINIT_SEED_1020
+[5000] %Error: ot_hgi_coll_tkm.sv:1011: Assertion failed in tb_hgi_coll_tkm_tile_rg_crep.u_dut.cor: ot_hgi_coll_tkm_tile_rg: a block entered stage C while the tile conveys
+%Error: rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv:1011: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2684605-1792487090): exit 0

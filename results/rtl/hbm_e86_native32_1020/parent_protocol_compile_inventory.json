@@ -1,0 +1,155 @@
+{
+  "flags": [
+    "OT_TKM_EXTERNAL_EPOCH_ASSERT",
+    "OT_MEM_NO_INIT"
+  ],
+  "global_SYNTHESIS": false,
+  "files": [
+    {
+      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+      "sha256": "bf0ffbcf006c8103eac374131423d86fbdd6e772a30149ab3f545e03124f7d37",
+      "directives": [
+        {
+          "line": 583,
+          "text": "`ifndef SYNTHESIS"
+        },
+        {
+          "line": 585,
+          "text": "`endif"
+        },
+        {
+          "line": 804,
+          "text": "`ifndef SYNTHESIS"
+        },
+        {
+          "line": 806,
+          "text": "`endif"
+        },
+        {
+          "line": 1010,
+          "text": "`ifndef SYNTHESIS"
+        },
+        {
+          "line": 1014,
+          "text": "`ifndef OT_TKM_EXTERNAL_EPOCH_ASSERT"
+        },
+        {
+          "line": 1016,
+          "text": "`endif"
+        },
+        {
+          "line": 1017,
+          "text": "`endif"
+        }
+      ]
+    },
+    {
+      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+      "sha256": "5410bf64976b773a8b5e78f9d934fb4ecb159276e6d40d1d3f6499c21c2ff54a",
+      "directives": []
+    },
+    {
+      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+      "sha256": "840e9aee1bed44f95ed672727fedc18e7ff38e9dde569582806dcf264d884646",
+      "directives": []
+    },
+    {
+      "path": "rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm_static_fan32_protocol.sv",
+      "sha256": "01dc669b7252f28aedfbf6bcc3f4116987e55da5541c59a438409d5c9032cb9f",
+      "directives": []
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "directives": [
+        {
+          "line": 53,
+          "text": "`ifndef SYNTHESIS"
+        },
+        {
+          "line": 59,
+          "text": "`endif"
+        }
+      ]
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "directives": [
+        {
+          "line": 38,
+          "text": "`ifndef OT_MEM_NO_INIT"
+        },
+        {
+          "line": 40,
+          "text": "`endif"
+        },
+        {
+          "line": 43,
+          "text": "`ifdef OT_MEM_FAULTS"
+        },
+        {
+          "line": 55,
+          "text": "`endif"
+        },
+        {
+          "line": 82,
+          "text": "`ifdef OT_MEM_FAULTS"
+        },
+        {
+          "line": 84,
+          "text": "`endif"
+        },
+        {
+          "line": 87,
+          "text": "`ifdef OT_MEM_FAULTS"
+        },
+        {
+          "line": 94,
+          "text": "`endif"
+        },
+        {
+          "line": 101,
+          "text": "`ifdef OT_MEM_FAULTS"
+        },
+        {
+          "line": 103,
+          "text": "`endif"
+        },
+        {
+          "line": 107,
+          "text": "`ifdef OT_MEM_FAULTS"
+        },
+        {
+          "line": 112,
+          "text": "`endif"
+        },
+        {
+          "line": 114,
+          "text": "`ifdef OT_MEM_FAULTS"
+        },
+        {
+          "line": 121,
+          "text": "`endif"
+        },
+        {
+          "line": 131,
+          "text": "`ifdef OT_MEM_FAULTS"
+        },
+        {
+          "line": 133,
+          "text": "`endif"
+        },
+        {
+          "line": 138,
+          "text": "`ifdef OT_MEM_FAULTS"
+        },
+        {
+          "line": 145,
+          "text": "`endif"
+        }
+      ]
+    }
+  ],
+  "scope": "all compiled Verilog sources; functional SRAM model stays active; parameter checks retained; overlap legality reasserted by actual observed-clear bench epoch"
+}
