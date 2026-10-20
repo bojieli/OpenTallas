@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eu
-ROOT=$PWD;OUT=$ROOT/out;mkdir -p "$OUT"
+ROOT=$PWD;OUT=$ROOT/out_safe2;mkdir -p "$OUT"
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 for case_name in exact mutant_addr mutant_bypass;do
  defs=();[ "$case_name" != mutant_addr ] || defs+=(-DOT_MUT_MEMM)

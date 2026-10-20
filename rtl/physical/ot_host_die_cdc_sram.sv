@@ -56,7 +56,9 @@ module ot_host_die_cdc_sram #(
     localparam integer IA = (IBUF <= 2) ? 1 : $clog2(IBUF);
     localparam integer CB = $clog2(OCRED + 1) + 1;
     wire wr_n, rr_n;
-    ot_reset_sync u_wrs (.clk(wclk), .async_rst_n(wrst_n), .sync_rst_n(wr_n));
+    wire [2:0] wr_reg_n;
+    ot_host_reset_bank #(.N(3)) u_wrs (.clk(wclk),.async_rst_n(wrst_n),.sync_rst_n(wr_reg_n));
+    assign wr_n=wr_reg_n[0];
     ot_reset_sync u_rrs (.clk(rclk), .async_rst_n(rrst_n), .sync_rst_n(rr_n));
     // ---- write face ------------------------------------------------------------------------------------------------
     reg         iv_q;
@@ -94,9 +96,17 @@ module ot_host_die_cdc_sram #(
         localparam integer NSEL=(W+15)/16;
         (* keep *) reg [NSEL-1:0] bypass;
         reg [W-1:0] bypass_data;
-        always @(posedge wclk or negedge wr_n)
-            if (!wr_n) bypass <= 0;
-            else bypass <= {NSEL{x_wr && (iw[IA-1:0] == next_head)}};
+        // Replicated state (same edge as iw), rather than a late relay: no transfer latency change.
+        (* keep *) reg [IA:0] iw_bypass [0:1];
+        for(genvar bp=0;bp<2;bp=bp+1)begin:g_bp
+          always @(posedge wclk or negedge wr_n)
+            if(!wr_n)iw_bypass[bp]<=0;else if(x_wr)iw_bypass[bp]<=iw_bypass[bp]+1'b1;
+        end
+        for(genvar bc=0;bc<NSEL;bc=bc+1)begin:g_bc
+          always @(posedge wclk or negedge wr_reg_n[1+bc/18])
+            if(!wr_reg_n[1+bc/18])bypass[bc]<=0;
+            else bypass[bc]<=x_wr && (iw_bypass[bc/18][IA-1:0]==next_head);
+        end
         always @(posedge wclk) bypass_data <= id_q; // selected only when same-edge write bypass is valid
         if (IBMEM == 1 || IBMEM == 3) begin : g_32
             ot_sram_1r1w_32x546_m1 u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(5'(next_head)),.rd_out(mq),
@@ -261,4 +271,14 @@ module ot_host_die_cdc_sram #(
         assign o_v = ov_q; assign o_d = od_q;
     end endgenerate
     assign r_fault = rf_q;
+endmodule
+
+// Two-edge landing with physically kept equivalent last-stage leaves, <=32 downstream loads per leaf.
+// Duplicating the final synchronizer stage preserves the original release edge.
+module ot_host_reset_bank #(parameter integer N=2)(input wire clk,async_rst_n,output wire[N-1:0]sync_rst_n);
+ (* async_reg="true" *) reg first;
+ (* async_reg="true",keep="true",dont_touch="true" *) reg[N-1:0] last;
+ always @(posedge clk or negedge async_rst_n)
+ if(!async_rst_n)begin first<=0;last<=0;end else begin first<=1;last<={N{first}};end
+ assign sync_rst_n=last;
 endmodule

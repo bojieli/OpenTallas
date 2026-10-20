@@ -58,9 +58,9 @@ module ot_host_async_fifo_sram #(
     ot_reset_sync wr_reset_conditioner (
         .clk(wr_clk), .async_rst_n(fifo_async_rst_n),
         .sync_rst_n(wr_domain_rst_n));
-    ot_reset_sync rd_reset_conditioner (
-        .clk(rd_clk), .async_rst_n(fifo_async_rst_n),
-        .sync_rst_n(rd_domain_rst_n));
+    wire[1:0]rd_reg_n;
+    ot_host_reset_bank #(.N(2)) rd_reset_conditioner (.clk(rd_clk),.async_rst_n(fifo_async_rst_n),.sync_rst_n(rd_reg_n));
+    assign rd_domain_rst_n=rd_reg_n[0];
 
     reg [WIDTH-1:0] mem [0:DEPTH-1];
     reg [PTR_W-1:0] wr_bin, wr_gray;
@@ -106,8 +106,8 @@ module ot_host_async_fifo_sram #(
     generate for (gs = 0; gs < NSL; gs = gs + 1) begin : g_rs
         localparam integer LO = gs * RSL;
         localparam integer SW = (WIDTH - LO < RSL) ? (WIDTH - LO) : RSL;
-        always @(posedge rd_clk or negedge rd_domain_rst_n)
-            if (!rd_domain_rst_n) rd_bc[gs] <= {ADDR_W{1'b0}};
+        always @(posedge rd_clk or negedge rd_reg_n[1])
+            if (!rd_reg_n[1]) rd_bc[gs] <= {ADDR_W{1'b0}};
             else rd_bc[gs] <= rd_bin_next[ADDR_W-1:0];
         if (MEMM != 0) begin : g_sm
             // macro body: data path below (g_mm); only the kept pointer copies live here
