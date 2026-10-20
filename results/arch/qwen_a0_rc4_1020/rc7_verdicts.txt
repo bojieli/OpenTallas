@@ -1,0 +1,16 @@
+# rc7 verdict collection (QW-A0-RC4 10-20)
+NL rc7b (ep5 230024, client 210932 ended): PRE_ROUTE_GATE FAIL (7 fail, 11 warn); DPL/CTS/GRT ok (GRT overflow 0, M3 9.9%); clock_rule ck TT/FF pin-flop spread 0/0 (insertion 615.9 guidance)
+GATE FAIL cross_clock: 4 undeclared ot_entry_0->ot_entry_7 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -37.3 ps u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.s2_x[10]$_DFF_P_/QN -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx/q[16]$_DFF_P_/D 
+GATE FAIL cross_clock: 9 undeclared ot_entry_0->ot_entry_10 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -68.8 ps u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.s2_x[117]$_DFF_P_/QN -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.g_tx.g_r[0].u_tx/q[121]$_DFF_P_
+GATE FAIL cross_clock: 1 undeclared ot_entry_0->ot_entry_11 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -11.4 ps u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.s2_x[10]$_DFF_P_/QN -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.g_tx.g_r[0].u_tx/q[23]$_DFF_P_/D
+GATE FAIL cross_clock: 6 undeclared ot_entry_0->ot_entry_14 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -88.1 ps u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.s2_x[117]$_DFF_P_/QN -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.g_tx.g_r[0].u_tx/q[121]$_DFF_P_
+GATE FAIL cross_clock: 56 undeclared ot_entry_26->ot_entry_0 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -99.7 ps u_ot_pr_core.u_g.tap_q[294]$_DFF_P_/QN -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.ib_i[293]$_DFF_P_/D  -> FIX: a direct cross-clock crossing with logic does not cl
+GATE FAIL cross_clock: 2 undeclared ot_entry_30->ot_entry_0 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -59.9 ps u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh/tfault -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.fault_q[4]$_DFF_PN0_/D  -> FIX: a direct
+GATE FAIL cross_clock: 4 undeclared ot_entry_34->ot_entry_0 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 210.0 ps): worst -103.2 ps u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh/lfault[3] -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.fault_q[1]$_DFF_PN0_/D  -> FIX: a di
+
+NK rc7 / NK rc7b / NL rc7: clients 210927/210931/210930 still live at 02:40; pc.log XCLK (pre-verdict) shows the same classes:
+ ck->ck_tx rung0 (s2_x/round_q/s2_gm through s3x_d round+mask) worst -58..-203 ps; tap_q(ck_fa4)->ib_q/xl_q(ck) 177-207 endpoints worst -85..-155; leaf lfault/tfault->fault_q worst -33..-300
+
+Native census (origin/main tools/ref_tile/native_census.py on the gates' 1_2_yosys.v, actual RVT TT Liberty): NK rc7 FAIL 103 drivers >32 max 262 (50217 roots, 0 role errors); NL rc7 FAIL 104 max 291
+
+NL rc7 (agidock 230000, client 210930 ended 02:48): PRE_ROUTE_GATE FAIL (10 fail, 11 warn), all cross_clock (s2_gm/s2_x->rung0 -24..-115; tap_q->ib_i 188 ep -85.3; leaf fault->fault_q -1.7..-114.5); GRT overflow 0, M3 10.2%

@@ -1,0 +1,22 @@
+ot-run: ot-epyc5       admits   384 GB (avail 382, growth 113, headroom 0, waiters 0/0 GB) load 80/128 running 35 disk 9 GB disk 9 GB < 20
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-a0-rc4-1020/src_rr8
+ot-run: ot-epyc7       admits   609 GB (avail 527, growth 101, headroom 0, waiters 0/0 GB) load 94/96 running 39 disk 5616 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw-a0-rc4-1020/src_rr8
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-a0-rc4-1020/src_rr8
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-a0-rc4-1020/src_rr8
+ot-run: -> ot-epyc7
+ot-heavy: request 24G is charged 15G (class 'bench_rr#_all.sh:bench_rr#r#' measured peak 6.1G, n=1+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2220370-1792491673 after 0 s
+A0_RR8_PROOF_PASS MUT0 checks29899 valids10536 nonzero10264 gos71 kvops20 leaves'{'h292b, 'h292b, 'h292b, 'h292b, 'h292b, 'h292b, 'h292b, 'h292b}
+- rtl/test/tb_qwen_a0_rr8.sv:121: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 30us; walltime 15.694 s; speed 1.912 us/s
+- Verilator: cpu 15.218 s on 1 threads; allocated 31 MB
+RR8_MUT0_RC=0
+RR8_MUT50=KILLED rc=1
+RR8_MUT51=KILLED rc=1
+RR8_MUT52=KILLED rc=1
+RR8_MUT53=KILLED rc=1
+RR8_MUT54=KILLED rc=1
+RR8_MUT55=KILLED rc=1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2220370-1792491673): exit 0
