@@ -4,12 +4,16 @@
 Run in the fleet lane directory, inside the pinned ORFS image. Correspondence
 is a separate proof; this checks only the additional register-copy obligation.
 """
+import argparse
 import importlib.util
 import json
 from pathlib import Path
 import subprocess
 import sys
 
+ap=argparse.ArgumentParser()
+ap.add_argument('--proof-only-arbitrary-sram-reads',action='store_true')
+args=ap.parse_args()
 sp = importlib.util.spec_from_file_location('tl', 'textbook_lint.py')
 m = importlib.util.module_from_spec(sp)
 sys.modules['tl'] = m
@@ -44,9 +48,19 @@ for name in ports.ports:
 source+='\nmodule proof('+','.join(declarations+['output wire copies_equal'])+');\n'+top+' u('+','.join(connections)+');\nendmodule\n'
 Path('cold.sv').write_text(source)
 cmd = ['read_liberty -ignore_miss_func '+str(p) for p in sorted(Path('libs').glob('*.lib'))]
+memory_read='read_verilog -lib macro_bb.v'
+if args.proof_only_arbitrary_sram_reads:
+    # A fresh unconstrained value every SAT step broadens real SRAM behavior.
+    # Each original SRAM remains a singleton, so all its consumer copies see
+    # the SAME unconstrained stream; no duplicated memory or independent reads.
+    # This model NEVER goes into behavioral benches or a functional gate kit.
+    text=Path('macro_bb.v').read_text().replace('(* blackbox *)','')
+    text=text.replace('endmodule','(* anyseq *) reg [127:0] proof_only_read;\nassign rd_out=proof_only_read;\nendmodule')
+    Path('macro_anyread_proof_only.sv').write_text(text)
+    memory_read='read_verilog -formal macro_anyread_proof_only.sv'
 cmd += ['read_verilog -overwrite canonical_ASR_normalized.v',
         'read_verilog -overwrite canonical_DFF_normalized.v',
-        'read_verilog -lib macro_bb.v', 'read_verilog cold.sv',
+        memory_read, 'read_verilog cold.sv',
         'hierarchy -check -top proof', 'setattr -mod -unset keep_hierarchy',
         'setattr -unset keep', 'flatten', 'proc', 'opt_expr', 'opt_clean',
         'write_json cold_pre.json', 'async2sync', 'clk2fflogic', 'opt_clean']
@@ -64,6 +78,7 @@ inits = {n:d['attributes']['init'] for n,d in state['netnames'].items() if 'init
 assert not inits, 'Unexpected fixed initial state in independent-state proof'
 result = dict(passed=rc==0, independent_initial_state=True, opt_merge=False,
               ignore_unknown_cells=False, copied_output_pairs=len(eq),
+              memory_model=('PROOF ONLY: one unconstrained read stream per singleton SRAM' if args.proof_only_arbitrary_sram_reads else 'unmodeled blackboxes must refuse SAT'),
               reset_assert_steps=12, reset_release_steps=12,
               checked_steps='12..24', source_sha256=record['source_sha256'])
 Path('cold_result.json').write_text(json.dumps(result,indent=2)+'\n')

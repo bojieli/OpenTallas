@@ -1,0 +1,12 @@
+read_verilog canonical_DFF_normalized.v
+read_verilog shared_d_proof.v
+hierarchy -check -top shared_d_proof
+flatten
+proc
+opt_expr
+opt_clean
+write_json shared_d_pre.json
+clk2fflogic
+opt_clean
+write_json shared_d_post.json
+sat -seq 8 -prove equal 1 -prove-skip 1 -verify -set-at 1 ck 0 -set-at 2 ck 1 -set-at 3 ck 0 -set-at 4 ck 1 -set-at 5 ck 0 -set-at 6 ck 1 -set-at 7 ck 0 -set-at 8 ck 1

@@ -1,0 +1,191 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `shared_d_proof.ys' --
+
+1. Executing Verilog-2005 frontend: canonical_DFF_normalized.v
+Parsing Verilog input from `canonical_DFF_normalized.v' to AST representation.
+Generating RTLIL representation for module `\DFFHQNx1_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: shared_d_proof.v
+Parsing Verilog input from `shared_d_proof.v' to AST representation.
+Generating RTLIL representation for module `\shared_d_proof'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \shared_d_proof
+Used module:     \DFFHQNx1_ASAP7_75t_R
+
+3.2. Analyzing design hierarchy..
+Top module:  \shared_d_proof
+Used module:     \DFFHQNx1_ASAP7_75t_R
+Removed 0 unused modules.
+
+4. Executing FLATTEN pass (flatten design).
+Deleting now unused module DFFHQNx1_ASAP7_75t_R.
+<suppressed ~4 debug messages>
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 4 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\shared_d_proof.$flatten\ff1_1.$proc$canonical_DFF_normalized.v:35$1'.
+Creating decoders for process `\shared_d_proof.$flatten\ff1_0.$proc$canonical_DFF_normalized.v:35$1'.
+Creating decoders for process `\shared_d_proof.$flatten\ff0_1.$proc$canonical_DFF_normalized.v:35$1'.
+Creating decoders for process `\shared_d_proof.$flatten\ff0_0.$proc$canonical_DFF_normalized.v:35$1'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\shared_d_proof.\ff1_1.QN' using process `\shared_d_proof.$flatten\ff1_1.$proc$canonical_DFF_normalized.v:35$1'.
+  created $dff cell `$procdff$10' with positive edge clock.
+Creating register for signal `\shared_d_proof.\ff1_0.QN' using process `\shared_d_proof.$flatten\ff1_0.$proc$canonical_DFF_normalized.v:35$1'.
+  created $dff cell `$procdff$11' with positive edge clock.
+Creating register for signal `\shared_d_proof.\ff0_1.QN' using process `\shared_d_proof.$flatten\ff0_1.$proc$canonical_DFF_normalized.v:35$1'.
+  created $dff cell `$procdff$12' with positive edge clock.
+Creating register for signal `\shared_d_proof.\ff0_0.QN' using process `\shared_d_proof.$flatten\ff0_0.$proc$canonical_DFF_normalized.v:35$1'.
+  created $dff cell `$procdff$13' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `shared_d_proof.$flatten\ff1_1.$proc$canonical_DFF_normalized.v:35$1'.
+Removing empty process `shared_d_proof.$flatten\ff1_0.$proc$canonical_DFF_normalized.v:35$1'.
+Removing empty process `shared_d_proof.$flatten\ff0_1.$proc$canonical_DFF_normalized.v:35$1'.
+Removing empty process `shared_d_proof.$flatten\ff0_0.$proc$canonical_DFF_normalized.v:35$1'.
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module shared_d_proof.
+
+6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module shared_d_proof.
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \shared_d_proof..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+8. Executing JSON backend.
+
+9. Executing CLK2FFLOGIC pass (convert clocked FFs to generic $ff cells).
+
+9.1. Executing PEEPOPT pass (run peephole optimizers).
+Replacing shared_d_proof.$procdff$10 ($dff): CLK=\ck, D=$flatten\ff1_1.$0\QN[0:0], Q=\ff1_1.QN
+Replacing shared_d_proof.$procdff$11 ($dff): CLK=\ck, D=$flatten\ff1_0.$0\QN[0:0], Q=\ff1_0.QN
+Replacing shared_d_proof.$procdff$12 ($dff): CLK=\ck, D=$flatten\ff0_1.$0\QN[0:0], Q=\ff0_1.QN
+Replacing shared_d_proof.$procdff$13 ($dff): CLK=\ck, D=$flatten\ff0_0.$0\QN[0:0], Q=\ff0_0.QN
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \shared_d_proof..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+11. Executing JSON backend.
+
+12. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \ck = 1'0
+Final constraint equation: \ck = 1'0
+Imported 31 cells to SAT database.
+Import set-constraint from init attribute: $auto$clk2fflogic.cc:101:sample_data$$flatten\ff0_0.$0\QN[0:0]#sampled$46 = 1'0
+Import set-constraint from init attribute: $auto$clk2fflogic.cc:101:sample_data$$flatten\ff0_1.$0\QN[0:0]#sampled$36 = 1'0
+Import set-constraint from init attribute: $auto$clk2fflogic.cc:101:sample_data$$flatten\ff1_0.$0\QN[0:0]#sampled$26 = 1'0
+Import set-constraint from init attribute: $auto$clk2fflogic.cc:101:sample_data$$flatten\ff1_1.$0\QN[0:0]#sampled$16 = 1'0
+Import set-constraint from init attribute: $auto$clk2fflogic.cc:87:sample_control_edge$\ck#sampled$18 = 1'1
+Import set-constraint from init attribute: $auto$clk2fflogic.cc:87:sample_control_edge$\ck#sampled$28 = 1'1
+Import set-constraint from init attribute: $auto$clk2fflogic.cc:87:sample_control_edge$\ck#sampled$38 = 1'1
+Import set-constraint from init attribute: $auto$clk2fflogic.cc:87:sample_control_edge$\ck#sampled$48 = 1'1
+Final init constraint equation: { $auto$clk2fflogic.cc:87:sample_control_edge$\ck#sampled$48 $auto$clk2fflogic.cc:87:sample_control_edge$\ck#sampled$38 $auto$clk2fflogic.cc:87:sample_control_edge$\ck#sampled$28 $auto$clk2fflogic.cc:87:sample_control_edge$\ck#sampled$18 $auto$clk2fflogic.cc:101:sample_data$$flatten\ff1_1.$0\QN[0:0]#sampled$16 $auto$clk2fflogic.cc:101:sample_data$$flatten\ff1_0.$0\QN[0:0]#sampled$26 $auto$clk2fflogic.cc:101:sample_data$$flatten\ff0_1.$0\QN[0:0]#sampled$36 $auto$clk2fflogic.cc:101:sample_data$$flatten\ff0_0.$0\QN[0:0]#sampled$46 } = 8'11110000
+
+Setting up time step 2:
+Import set-constraint for this timestep: \ck = 1'1
+Final constraint equation: \ck = 1'1
+Imported 31 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+
+Setting up time step 3:
+Import set-constraint for this timestep: \ck = 1'0
+Final constraint equation: \ck = 1'0
+Imported 31 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+
+Setting up time step 4:
+Import set-constraint for this timestep: \ck = 1'1
+Final constraint equation: \ck = 1'1
+Imported 31 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+
+Setting up time step 5:
+Import set-constraint for this timestep: \ck = 1'0
+Final constraint equation: \ck = 1'0
+Imported 31 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+
+Setting up time step 6:
+Import set-constraint for this timestep: \ck = 1'1
+Final constraint equation: \ck = 1'1
+Imported 31 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+
+Setting up time step 7:
+Import set-constraint for this timestep: \ck = 1'0
+Final constraint equation: \ck = 1'0
+Imported 31 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+
+Setting up time step 8:
+Import set-constraint for this timestep: \ck = 1'1
+Final constraint equation: \ck = 1'1
+Imported 31 cells to SAT database.
+Import proof-constraint: \equal = 1'1
+Final proof equation: \equal = 1'1
+
+Solving problem with 1157 variables and 2973 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: f1f97cd93d, time: 0.01s, user: 0.01s, system: 0.01s, MEM: 219.39 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 63% 1x sat (0 sec), 12% 4x read_verilog (0 sec), ...

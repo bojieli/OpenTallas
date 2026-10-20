@@ -56,11 +56,23 @@ remain the source mechanism evidence; this packet specifically measures the
 primitive-copy change. The existing S2 analytical model and schedule remain
 the starting budget; a changed physical outline still needs measured admission.
 
-Qualification remains OPEN. The independent copied-state cold-reset SAT proof
-is running. Its first attempt correctly refused unknown SRAM cells because
-all original outputs were exposed; the second exposes only the copied-state
-obligation, with no `opt_merge`, fixed initial state or `ignore_unknown_cells`.
-No layout gate, REVIEW, submit, release binding or closure claim is made.
+The additional copied-state obligation is now proven by `shared_d_result.json`.
+Only two original FFs are duplicated. Actual source inspection proves each pair
+has the same literal D wire, same literal clock and same canonical HQN type,
+with no reset or initialization on those FFs. A source-fingerprinted four-FF
+coupon proves equality after the first real clock edge for arbitrary shared
+D streams. All four physical state bits remain distinct and unconstrained;
+post-transform initialization is audited separately from previous-D/edge-history
+auxiliaries. This proof needs **no async2sync and no SRAM abstraction**. It
+establishes the extra-state obligation required by complete primitive/pin
+correspondence, independently of all SRAM/ASR state. See the committed
+pre/post JSON, exact source coupon, command file and proof log.
+
+The earlier whole-source proofs are preserved as diagnostics: two correctly
+refused unknown SRAMs, and a third with explicitly shared arbitrary read streams
+is still running. Their verdicts are not used to replace the narrower proven
+obligation. No layout gate, REVIEW, submit, release binding or closure claim is
+made. ROOT's exact source-native reset registry remains pending review.
 
 The gate runtime needs an exact source-bound native reset-profile interface:
 the source already contains the two reset edges. `reset_landing:true` would
@@ -74,3 +86,15 @@ band, or regional hardened children with landed crossings. Actual spread must
 be <=80 ps TT/FF. Sink count 18,235 and insertion alone are guidance, not failure.
 Two independently named structural kits will be gated only after source proof,
 source-bound native profile support, measured reach and checklist qualification.
+
+Concrete geometric candidates are in `geometry_plan.json` and the unrendered
+`qkd_hr_core_order_n32a/n32b` specs. Synthesis area is 11773.81656 um2. One full
+north band y216..300.24 gives 46.89% density at 302.4 square and 40.95% at
+345.6x302.4. Face counts N1561/E330/W389 require at most 5.24 pins/um. The
+pairwise distance bound on **all band/macro terminals** is 369.36/395.24 um.
+`physical/qkd_host_order_codex_1020/std_band.tcl` was exercised with real OpenDB
+rows: 312 retained, 792 removed, legal row area 25110.2592/28749.4272 um2.
+The probe uses a historical pre-placement database only as a technology carrier;
+it is not a new-source floorplan/CTS proof. The first-width run passed the row
+probe then refused loading a second DB; the separate second-width run passed.
+The source-native registry and final source-bound layout gates remain required.
