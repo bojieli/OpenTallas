@@ -30,11 +30,15 @@
 // leaf > 4, a CTL target > 5, two relayed SC beats in a cycle, a lo beat in the send-config cycle (it would be dropped), the ENG faults above.
 // Bench: rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv (tools/s81_slice/xr_bench.sh); mutants OT_S81SL_XR_MUT_*.
 // Every input lands in a flop; every output leaves a flop.  HB = 1 builds the C3 variant (band port B, attention).
+// Band port B (BIND mu4 10-19): B is point-to-point to the svc_rs ENTRY q port, which consumes {pk[511:0], valid} only, so
+// bo is 513 b = {pk[511:0], 1'b1} (no header, no upper pack words: they had no consumer anywhere).  A send config with
+// dir B and pairs > 2 (body[42] = 1) cannot be carried and is a sticky fault (the compiler must never emit one).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_xr #(
     parameter integer HB = 0,
     parameter integer W  = 1104,
-    parameter integer V  = 276
+    parameter integer V  = 276,
+    parameter integer BW = 513           // band port B word (BIND mu4 10-19): {pk[511:0], valid}, point-to-point to the entry q
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -47,7 +51,7 @@ module ot_s81sl_xr #(
     output wire [W-1:0]    ci_b,
     // band port (C3 only; HB = 0 leaves it out of the netlist -- see the C1 wrapper)
     input  wire [W-1:0]    bi,
-    output wire [W-1:0]    bo,
+    output wire [BW-1:0]   bo,
     // beat leaves
     output reg  [4:0]      c_v,
     (* keep *) output reg [159:0] c_d,       // XR3 (10-18): one copy; the slice glue fans it to the 5 leaves
@@ -201,11 +205,11 @@ module ot_s81sl_xr #(
     assign ci_b = {ci_r, ci_v};
     always @(posedge clk) ci_r <= (pk_go && !vct) ? snd[W-1:1] : {{(W - V){1'b0}}, cix};
     generate if (HB != 0) begin : g_bo
-        reg [W-1:0] bo_r;
-        always @(posedge clk or negedge rs_s) if (!rs_s) bo_r <= {W{1'b0}}; else bo_r <= (pk_go && s_dir[3]) ? snd : {W{1'b0}};
+        reg [BW-1:0] bo_r;
+        always @(posedge clk or negedge rs_s) if (!rs_s) bo_r <= {BW{1'b0}}; else bo_r <= (pk_go && s_dir[3]) ? {pk[BW-2:0], 1'b1} : {BW{1'b0}};
         assign bo = bo_r;
     end else begin : g_nobo
-        assign bo = {W{1'b0}};                      // C1: no band port (the C1 wrapper does not expose it)
+        assign bo = {BW{1'b0}};                     // C1: no band port (the C1 wrapper does not expose it)
     end endgenerate
 
     // ---------------------------------------------------------------- RD receive: per-leaf unpackers
@@ -306,11 +310,17 @@ module ot_s81sl_xr #(
         g_c <= egc_c; g_d <= egd_c;
     end
     // ---------------------------------------------------------------- faults
+    // B-wide (BIND mu4): a dir-B send config with pairs > 2 (body[42]) on C3 -- the 513-b B word carries 2 pairs only.
+`ifdef OT_S81SL_XR_MUT_BWIDE
+    wire f_bw = 1'b0;                                              // mutant: the over-wide B send is silently truncated
+`else
+    wire f_bw = (HB != 0) && tg[4] && body[3] && body[42];
+`endif
     always @(posedge clk or negedge rs_o)
         if (!rs_o) fault <= 1'b0;
         else fault <= fault | f1 | ucol | ((|pv) && pv != 5'b11111) | ((|pv) && prun) | (vct && (pk_go || sc_rel)) |
                       (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1)) |
-                      ebad | ((|ev_c) && (erun || prun || (|pv))) | ((|pv) && erun);
+                      ebad | ((|ev_c) && (erun || prun || (|pv))) | ((|pv) && erun) | f_bw;
 endmodule
 
 // C1 (14 slices): ring E/W + V.  C3 (s_1S, s_6S): + band port B (attention q / P.V).  Hardened masters, no parameters.
@@ -327,7 +337,7 @@ module ot_s81sl_xr1 (
     output wire [7:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
-    wire [1103:0] bo_unused;
+    wire [512:0] bo_unused;
     ot_s81sl_xr #(.HB(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi({1104{1'b0}}), .bo(bo_unused), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
@@ -340,7 +350,7 @@ module ot_s81sl_xr3 (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire dl_ev, input wire [1103:0] dl_e, input wire dl_wv, input wire [1103:0] dl_w,
     input  wire dl_vv, input wire [275:0] dl_vb, output wire [2:0] ci_dir, output wire [1103:0] ci_b,
-    input  wire [1103:0] bi, output wire [1103:0] bo,
+    input  wire [1103:0] bi, output wire [512:0] bo,
     output wire [4:0] c_v, output wire [159:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
     output wire [1279:0] sw_d, input wire [4:0] lo_v, input wire [1279:0] lo_d, input wire [4:0] p_v, input wire [159:0] p_d,
     output wire rb_v, output wire [31:0] rb_d,

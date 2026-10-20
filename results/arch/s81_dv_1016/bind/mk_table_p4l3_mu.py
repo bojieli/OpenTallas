@@ -143,7 +143,24 @@ def build(ab):
     T['land_views'] = {m: dict(ref=r, commit=c, kit=f"physical/ref_tile/s81dv_land_{m[len('dsfd_dvland_'):]}",
                                job=r.split('closure-record-', 1)[1]) for m, (r, c, _) in LAND_VIEWS.items()}
     T['landing_reset_stages'] = {m: rl for m, (_, _, rl) in LAND_VIEWS.items() if rl}
+    band_b_513(T)
     return T
+
+
+# BIND mu4 (10-19): the C3 band port B is 513 b = {pk[511:0], valid} at the source (ot_s81sl_xr BW 513; a B send with
+# pairs > 2 is a sticky xr fault, refused by dv_layer_compile.send_cfg).  bo maps contiguously onto the two q lanes:
+# bo[275:0] -> lane 0 bits 0..275, bo[512:276] -> lane 1 bits 0..236 (lane 1 bits 237..275 stay the lane-quantisation pad).
+BO_W = 513
+Q_O_513 = {'hb': 1, 'lanes': [{'split': [['bo', 0, 0, 276]]}, {'split': [['bo', 276, 0, BO_W - 276]]}]}
+
+
+def band_b_513(T):
+    for m in T['masters'].values():
+        if 'q.o' in m.get('ports', {}):
+            m['ports']['q.o'] = copy.deepcopy(Q_O_513)
+    for w in T['rtl_widths'].values():
+        if 'bo' in w:
+            w['bo'] = BO_W
 
 
 for ab, nm in ((False, 'bind_table_p4l3_mu.json'), (True, 'bind_table_p4l3_mab.json')):

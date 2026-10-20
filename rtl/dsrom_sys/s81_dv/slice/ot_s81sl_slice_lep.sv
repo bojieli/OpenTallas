@@ -776,7 +776,7 @@ module ot_s81sl_slice_lep #(
     input  wire [1103:0]   ri_n,         // inward line port (from / to the inward neighbour)
     output wire [1103:0]   ro_n,
     input  wire [275:0]    vi,   output wire [275:0] vo,
-    input  wire [1103:0]   bi,   output wire [1103:0] bo,
+    input  wire [1103:0]   bi,   output wire [512:0] bo,
     output wire [4*1104-1:0] xc,
     input  wire [8*70-1:0] rt,
     output wire [15:0]     ck_line,
@@ -869,7 +869,7 @@ endmodule
 module ot_s81sl_slice_lepw (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire [1103:0] ri_e, output wire [1103:0] ro_e,
-    input  wire [275:0] vi, output wire [275:0] vo, input wire [1103:0] bi, output wire [1103:0] bo,
+    input  wire [275:0] vi, output wire [275:0] vo, input wire [1103:0] bi, output wire [512:0] bo,
     output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
@@ -885,7 +885,7 @@ endmodule
 module ot_s81sl_slice_lepe (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire [1103:0] ri_w, output wire [1103:0] ro_w,
-    input  wire [275:0] vi, output wire [275:0] vo, input wire [1103:0] bi, output wire [1103:0] bo,
+    input  wire [275:0] vi, output wire [275:0] vo, input wire [1103:0] bi, output wire [512:0] bo,
     output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
@@ -902,7 +902,7 @@ endmodule
 module ot_s81sl_slice_lepe_nh (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire [1103:0] ri_w, output wire [1103:0] ro_w,
-    input  wire [275:0] vi, output wire [275:0] vo, input wire [1103:0] bi, output wire [1103:0] bo,
+    input  wire [275:0] vi, output wire [275:0] vo, input wire [1103:0] bi, output wire [512:0] bo,
     output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,

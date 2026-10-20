@@ -72,7 +72,7 @@ def gen(hb: int) -> str:
     w("    input  wire [3:0]      sid,")
     w("    input  wire [1103:0]   ri_w, input wire [1103:0] ri_e, output wire [1103:0] ro_e, output wire [1103:0] ro_w,")
     w("    input  wire [275:0]    vi,   output wire [275:0] vo,")
-    w("    input  wire [1103:0]   bi,   output wire [1103:0] bo,")
+    w("    input  wire [1103:0]   bi,   output wire [512:0] bo,")
     w("    output wire [4415:0]   xc,")
     w("    input  wire [559:0]    rt,")
     w("    output wire [15:0]     ck_line,")
@@ -135,7 +135,7 @@ def gen(hb: int) -> str:
     w("        .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),")
     w("        .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));")
     if not hb:
-        w("    assign bo = 1104'd0;     // C1 has no band port")
+        w("    assign bo = 513'd0;      // C1 has no band port")
     w("    ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv),")
     w("        .s_i(x_si), .s(x_s),")
     w("        .wi_v(nx_wi[172]), .wi_h(nx_wi[171:168]), .wi_b(nx_wi[167:160]), .wi_d(nx_wi[159:0]),")
