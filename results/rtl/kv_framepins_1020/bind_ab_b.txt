@@ -1,0 +1,4 @@
+b qkd_d2d_cal_seq_pin_bc4 FAIL open ['fault'] unconn [] w [] notinrtl []
+b qkd_d2d_static FAIL open ['att_rx_slot', 'kvn_word_index', 'kvn_word_slot'] unconn [] w [] notinrtl []
+b qkd_host_root_admission_obsx PASS open [] unconn [] w [] notinrtl []
+b OBSX-target opens 0 [] | total OUTPUT_OPEN ports 21 | verdict FAIL | unread nets 200 undriven 0
