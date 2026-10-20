@@ -43,14 +43,21 @@ module ot_v41_chain4_rp #(
     wire rst_n, rst_f;
     ot_v41_rst_copy u_rb (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_n));
     ot_v41_rst_copy u_rf (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_f));
+`ifndef OT_BF_ACC_SRAM
     reg [31:0] acc [0:NCH-1];
+`endif
     reg [NCH-1:0] accf;
     // input register: the chain slot's stored sum is read one cycle before the term meets the adder, so the
     // adder's operand is a 4-way choice (+0, the sum leaving the adder now, the one that left a cycle ago, the
     // stored sum) rather than a slot-wide read in front of the adder's first stage
     reg          v_r, first_r, last_r, termf_r, accf_r;
     reg [SW-1:0] slot_r;
-    reg [31:0]   term_r, acc_r;
+    reg [31:0] term_r;
+`ifdef OT_BF_ACC_SRAM
+    wire [31:0] acc_r;
+`else
+    reg [31:0] acc_r;
+`endif
     reg [TW-1:0] tag_r;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) v_r <= 1'b0; else v_r <= v;
@@ -61,10 +68,12 @@ module ot_v41_chain4_rp #(
     integer oj, oe;
     always @* begin
         acc_rd = 32'd0;
+`ifndef OT_BF_ACC_SRAM
         for (oj = 0; oj < OHK; oj = oj + 1)
             for (oe = 0; oe < NCH; oe = oe + 1)
                 if (slot_oh[oj*NCH + oe]) acc_rd = acc_rd | (acc[oe] & (((33'd1 << ((32 * (oj + 1)) / OHK)) - 33'd1) ^
                                                                         ((33'd1 << ((32 * oj) / OHK)) - 33'd1)));
+`endif
         accf_rd = |(slot_oh[NCH-1:0] & accf);
     end
 `ifndef SYNTHESIS
@@ -76,13 +85,19 @@ module ot_v41_chain4_rp #(
     (* keep *) reg [2*ND-1:0] first_e;    // PD step-0 bundle slice
     always @(posedge clk) begin
         slot_r <= slot; first_r <= first; last_r <= last; term_r <= term; termf_r <= term_f; tag_r <= tag;
-        acc_r <= acc_rd; accf_r <= accf_rd;
+`ifndef OT_BF_ACC_SRAM
+        acc_r <= acc_rd;
+`endif
+        accf_r <= accf_rd;
         first_a <= {ND{first}}; first_e <= {(2*ND){first}};
     end
 `else
     always @(posedge clk) begin
         slot_r <= slot; first_r <= first; last_r <= last; term_r <= term; termf_r <= term_f; tag_r <= tag;
-        acc_r <= acc[slot]; accf_r <= accf[slot];
+`ifndef OT_BF_ACC_SRAM
+        acc_r <= acc[slot];
+`endif
+        accf_r <= accf[slot];
     end
 `endif
     reg [LAT-1:0] pv;
@@ -180,9 +195,23 @@ module ot_v41_chain4_rp #(
     always @(posedge clk) begin
         ps[0] <= slot_r;
         for (k = 1; k < LAT; k = k + 1) ps[k] <= ps[k-1];
+`ifndef OT_BF_ACC_SRAM
         if (sv && !d_last) acc[ps[LAT-1]] <= sum;
+`endif
         sp_slot <= ps[LAT-1]; sp_val <= sum; sp_f <= d_f;
     end
+`ifdef OT_BF_ACC_SRAM
+    // Exact old acc_r read edge; old-read SRAM semantics and the existing
+    // fwd5/fwd6 paths preserve same-slot collisions. No array reset was present.
+    initial if(NCH>128) $fatal(1,"BF chain accumulator SRAM capacity exceeded");
+`ifdef OT_BF_ACC_SRAM_MUT_ADDR
+    wire[6:0] acc_ra=7'(slot)^7'd1;
+`else
+    wire[6:0] acc_ra=7'(slot);
+`endif
+    ot_v41_bf_held128x32 u_acc_mem (.clk(clk),.ren(1'b1),.ra(acc_ra),.rd(acc_r),
+        .wen(sv && !d_last),.wa(7'(ps[LAT-1])),.wd(sum));
+`endif
     assign ov = sv && d_last;
     assign osum = sum;
     assign of = d_f;
