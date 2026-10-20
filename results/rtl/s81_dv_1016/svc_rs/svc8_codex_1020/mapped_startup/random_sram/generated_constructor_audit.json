@@ -1,0 +1,227 @@
+{
+  "status": "PASS_GENERATED_RANDOM_ARRAY_CONSTRUCTORS",
+  "scope": "actual Verilator5.050 --x-initial unique constructor; OT_MEM_NO_INIT build; runtime rand+reset2 per launch",
+  "files": [
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "sha256": "c005af94948ed3d193e0623feea34cee1a5d188c757d3dd0f1f12ad693664cd9",
+      "bytes": 633787
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "sha256": "7a1400042586bcec30514c3fe78b1dc33fea1f96742f5e371ddf450f6b07e421",
+      "bytes": 633984
+    }
+  ],
+  "gold_arrays": 17,
+  "candidate_arrays": 17,
+  "distinct_scoped_random_identifiers": 34,
+  "array_words": 32,
+  "word_bits": 64,
+  "rows": [
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2270,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__u_dfring__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 6057977876955828276ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2273,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b7__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 3895736929664231142ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2276,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b7__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 9035357460357304930ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2279,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b6__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 12703383663357456021ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2282,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b6__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 2177070127077612131ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2285,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b5__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 2783749397728601242ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2288,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b5__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 6594273487723350807ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2291,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b4__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 8513573671602632973ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2294,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b4__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 18014439147693653348ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2297,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b3__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 15517153795320268190ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2300,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b3__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 13590387424865206387ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2303,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b2__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 14079388167416903344ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2306,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_sk__05b2__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 4039577607981643490ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2309,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_h__05b3__05d__02eg_rn__02eu_fring__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 15539937654629005972ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2312,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_h__05b2__05d__02eg_rn__02eu_fring__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 3319329923538391182ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2315,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_h__05b1__05d__02eg_rn__02eu_fring__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 6679409471353074101ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "line": 2318,
+      "code": "vlSelf->tb_svc8_mapped__DOT__gold__DOT__g_h__05b0__05d__02eg_rv__02eu_fring__02eg_m64__02eu_mem__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 6584921530387069927ull);",
+      "kind": "gold"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4727,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508230__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 13593108759569749161ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4730,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508229__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 15906350511138036050ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4733,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508228__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 3887031708696470081ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4736,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508227__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 6383593858671109343ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4739,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508226__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 16833577561085477981ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4742,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508225__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 17549274229552597551ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4745,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508224__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 17795036981646297082ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4748,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508223__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 14257090305745069540ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4751,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508222__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 4082000669298520713ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4754,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508221__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 13010535428793001140ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4757,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508220__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 3169545891502601444ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4760,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508219__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 12150432380869903407ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4763,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508218__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 13629474293195681487ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4766,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508217__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 11241016768715822168ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4769,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508216__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 4360066896715967031ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4772,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508215__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 17090535029372776745ull);",
+      "kind": "cand"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/obj/Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "line": 4775,
+      "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508214__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 2301162133140465979ull);",
+      "kind": "cand"
+    }
+  ]
+}
