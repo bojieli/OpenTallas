@@ -8,12 +8,13 @@ the AQ one edge later; wr_v = 9 kept copies (wr_v_regions); posting is no longer
 read-reservation check covers every entry); wr_r2 guards the in-flight entry (redundant with the K credit count<=QD).
 ACT_HEAD: with the shifted timing the fixed bank-0-first ACT order starved a closed bank-31 head for ever (REFpb re-closed
 low banks every 118 cycles): face_txn stalled at 7909/12944 beats (mut_noacthead witness). ACT candidates now start at the
-v2 fix: head-bank ACT override -- when the head entry's bank is closed and not refresh-blocked, the row command issues
-ACT(head bank, head row) ahead of the per-group candidate (one 32:1 select on the registered head; head row = look_row[hb]).
-(v1 6005d1419 rotated the candidate order from the head bank: gate WARN/GRT 0 but native census OVER32 123/136 from the
-rotation selects -- ac_hg_local 228 loads -- so it was replaced.)
-- face_txn_mc3c_pos.log  PASS reqs=6000 beats=12944 wcols=759 wdone=759 edges_h9b=88783 edges_safe=107782
-  (MC3b 166921: the random-address stream is 35% faster -- the old ACT order also starved heads there).
+v3 fix (ACT_HEAD): the head entry's bank wins the registered ACT candidate stage (ac2_oh/ac2_v/ac2_b/ac2_row) when it
+is closed, not refresh-blocked and past tRP/tRFC; four KEPT head-bank copies each decide one destination group.
+History: v1 6005d1419 rotated the candidate order (census OVER32 123/136: rotation selects, ac_hg_local 228 loads);
+v2 e6b5df442 added an ACT(head) branch to the row-command mux (census OVER32 7/8: head_bank_local 58 loads, priority
+chain node 39); both gated WARN/GRT 0 with macro->reg gone (v2 worst reg->reg p540 -22.7 / q648 -30.6 ps).
+- face_txn_mc3c_pos.log  PASS reqs=6000 beats=12944 wcols=759 wdone=759 edges_h9b=88783 edges_safe=100230
+  (MC3b 166921: the random-address stream is 40% faster -- the old ACT order also starved heads there).
 - face_txn_mc3c_mut_idtag.log  MUT_ID_TAG=1 FAIL errors=12944 (witness).
 - face_txn_mc3c_mut_noacthead.log  -DBW_AQ_MUT_NO_ACT_HEAD FAIL errors=3 (stall 7909/12944 beats; witness).
 - bank/  tb_hbm_bw_pc4 EXPOSE census, rotated ds layout, --mc3c: steady 91.68 / 92.76 / 91.70 B/edge/SM (MC3b 91.62 /
