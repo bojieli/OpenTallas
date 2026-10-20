@@ -1,0 +1,29 @@
+ot-run: ot-epyc4       admits   999 GB (avail 813, growth 113, headroom 0, waiters 0/0 GB) load 94/128 running 48 disk 326 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc3-1019
+ot-run: ot-epyc6       admits  1153 GB (avail 921, growth 113, headroom 0, waiters 0/0 GB) load 70/128 running 30 disk 5470 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-svc3-1019
+ot-run: ot-epyc8       admits  1145 GB (avail 866, growth 64, headroom 0, waiters 0/0 GB) load 55/128 running 12 disk 38 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc3-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc3-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1885922-1792455774 after 1 s
+HOST ot-epyc6 mut=0 Mon Oct 19 17:22:55 PDT 2026
+Verilator 5.050 2026-07-01 rev v5.050
+    parameter integer H = 16;
+    parameter integer TD = 32;
+    parameter integer NBANK = 5;
+    parameter integer BW = 3;
+    parameter integer PWORDS = 2;
+    parameter integer FPL = 4;
+    parameter integer FML = 6;
+    parameter integer HG = 4;
+    parameter integer F12 = 1;
+    parameter integer PCOLP = 0;            // tile_s: pre-selected p-mode columns (wiring) instead of the group AND-OR              // tile_s with the f12 adds (tile_l keeps ot_hdc_fp32_add_lat, same function)
+    parameter integer NCYC = 20000;
+TILESLOCK cycles=20000 mismatches=0 ov=15016
+- /srv/opentallas-scratch/claude/s81-svc3-1019/out/m0/tb_s81.sv:86: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 28.863 s; speed 1.386 us/s
+- Verilator: cpu 28.855 s on 1 threads; allocated 51 MB
+HGRP_BENCH PASS mut=0 TILESLOCK cycles=20000 mismatches=0 ov=15016
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1885922-1792455774): exit 0
