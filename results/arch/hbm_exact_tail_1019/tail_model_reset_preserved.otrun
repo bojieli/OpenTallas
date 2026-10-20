@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/takeover3-hbm-die-reset-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/takeover3-hbm-die-reset-1019
+ot-run: ot-epyc6       admits  1137 GB (avail 909, growth 113, headroom 0, waiters 0/0 GB) load 80/128 running 35 disk 5505 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/takeover3-hbm-die-reset-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/codex/takeover3-hbm-die-reset-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/takeover3-hbm-die-reset-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/takeover3-hbm-die-reset-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1569499-1792456940 after 1 s
+EXACT_TAIL_MODEL {"data_positions": 6437831, "instances": 39269, "variants": 981, "buses": 2144}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1569499-1792456940): exit 0

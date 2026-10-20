@@ -304,13 +304,17 @@ def apply_relay_splice_v2(buses, edges, ports, problems):
         bas = f"d4f F1 relay tree {tag} ({b['cls']}, {b['driver']}) -- relay_layer_d4f.py"
         def E(src, dst, bits, nm):
             out.append(dict(name=f'{tag}__{nm}', src=src, dst=dst, bits=bits, clock=ck, basis=bas, region='relays_d4f'))
-        def oref(name, o):   # node / stage output: port name, or [port, lo, hi] (fork branch of a lane station, HBM-LANDING)
-            return [name, o] if isinstance(o, str) else [name, o[0], o[1], o[2]]
+        widths = b.get('lane_widths', [W] * T)
+        if (len(widths) != T or any(w < 1 or w > W for w in widths)
+                or ('lane_widths' in b and widths != [min(W, n - t * W) for t in range(T)])):
+            raise ValueError(f'{tag}: invalid real lane widths {widths}')
+        def oref(name, o, t):   # node / stage output: port name, or [port, lo, hi] (fork branch of a lane station, HBM-LANDING)
+            return [name, o] if isinstance(o, str) else [name, o[0], o[1] // W * widths[t], o[2] // W * widths[t]]
 
         def from_driver(names, ip='i'):
             for t in range(T):
                 run = None
-                for L in range(W):
+                for L in range(widths[t]):
                     j = t * W + L
                     p, k = b['driver_bits'][j if j < n else j % n]
                     if run and run[0] == p and run[2] + 1 == k and run[4] + 1 == L:
@@ -327,7 +331,7 @@ def apply_relay_splice_v2(buses, edges, ports, problems):
             else:
                 pn = nodes[nd['parent']]
                 for t in range(T):
-                    E(oref(pn['names'][t], pn['outs'][nd['pbranch']]), [nd['names'][t], nd.get('iport', 'i')], W, f"t_{nd['names'][t]}")
+                    E(oref(pn['names'][t], pn['outs'][nd['pbranch']], t), [nd['names'][t], nd.get('iport', 'i')], widths[t], f"t_{nd['names'][t]}")
         for snk, sk in b['sinks'].items():
             src_node, br = sk['src']
             prev = None if src_node is None else (nodes[src_node]['names'], nodes[src_node]['outs'][br])
@@ -337,7 +341,7 @@ def apply_relay_splice_v2(buses, edges, ports, problems):
                     from_driver(stage, ip)
                 else:
                     for t in range(T):
-                        E(oref(prev[0][t], prev[1]), [stage[t], ip], W, f't_{stage[t]}')
+                        E(oref(prev[0][t], prev[1], t), [stage[t], ip], widths[t], f't_{stage[t]}')
                 prev = (stage, op)
             sk['_last'] = prev
         seq = collections.defaultdict(list)
@@ -360,10 +364,10 @@ def apply_relay_splice_v2(buses, edges, ports, problems):
                     cur[3] = L; cur[5] = sb
                 else:
                     if cur:
-                        E([names[cur[0]], port, po + cur[2], po + cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+                        E([names[cur[0]], port, po // W * widths[cur[0]] + cur[2], po // W * widths[cur[0]] + cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
                     cur = [t, sp, L, L, sb, sb]
             if cur:
-                E([names[cur[0]], port, po + cur[2], po + cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
+                E([names[cur[0]], port, po // W * widths[cur[0]] + cur[2], po // W * widths[cur[0]] + cur[3] + 1], [si, cur[1], cur[4], cur[5] + 1], cur[3] - cur[2] + 1, f'ld_{si}_{cur[1]}_{cur[4]}')
     return out
 
 
