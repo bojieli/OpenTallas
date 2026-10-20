@@ -13,6 +13,8 @@ def main():
     a.add_argument('case');a.add_argument('contract');a.add_argument('row');a.add_argument('out')
     args=a.parse_args();case=Path(args.case)
     m=json.loads((case/'manifest.json').read_text());c=json.loads(Path(args.contract).read_text())
+    meta_path=Path(args.contract).parent/'views.json'
+    viewmeta=json.loads(meta_path.read_text())
     names=sorted([n for n in m['placement'] if n.startswith(args.row+'_l')],key=lambda n:int(n.rsplit('_l',1)[1]))
     if not names: raise ValueError('missing landing row')
     nameset=set(names)
@@ -51,7 +53,7 @@ def main():
                 pair[role+'_detail']=dict(instance=n,master=masters[n],pin=pin,LEFdirection=v['directions'][pin],
                     LEFuse=v['uses'][pin],placement=placements[n],LEFwh=[v['w'],v['h']],
                     local_pin=v['pins'][pin],die_pin=xf(placements[n],v['w'],v['h'],*v['pins'][pin]),
-                    qualification=m['routed_view_qualification'].get(masters[n],'unknown'))
+                    qualification=viewmeta[masters[n]]['kind'])
         typed[typ]=dict(bit_edges=cost['bits_checked'],max_um=cost['max_span_um'],over405=len(cost['over_reach']),worst=worst,
                        port_edges=[dict(source=e['source'],sink=e['sink'],bits=e['bits'])for e in selected])
     root_types={}
@@ -79,7 +81,7 @@ def main():
                     nonoverlap=ok,conflict=conflict,max_um=cost['max_span_um'],over405=len(cost['over_reach']),
                     all_data_forward_edges_fit=cost['feasible']and ok))
     result=dict(status='MODEL ONLY / rawclock-reset qualification OPEN / no GEN or binding',row=args.row,
-        inputs={str(p):hashlib.sha256(p.read_bytes()).hexdigest()for p in [case/'manifest.json',Path(args.contract)]},
+        inputs={str(p):hashlib.sha256(p.read_bytes()).hexdigest()for p in [case/'manifest.json',Path(args.contract),meta_path]},
         actual_generated_master=masters[names[0]],tile_wh=wh,tiles=len(names),bit_edges=baseline['bits_checked'],
         baseline_max_um=baseline['max_span_um'],baseline_over405=len(baseline['over_reach']),
         clock_reset_ports=cr,raw_clock_reset_max_um=clock_reset['max_span_um'],raw_clock_reset_over405=len(clock_reset['over_reach']),
