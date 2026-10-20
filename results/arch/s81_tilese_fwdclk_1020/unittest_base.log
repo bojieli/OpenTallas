@@ -1,0 +1,55 @@
+ot-run: ot-epyc5       admits  1142 GB (avail 913, growth 113, headroom 0, waiters 0/0 GB) load 38/128 running 32 disk 245 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/base
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/base
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/base
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/base
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/base
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-755307-1792528366 after 0 s
+test_check_only_and_multi_clock_child (tests.test_landed_cluster_kit.LandedClusterOpenroad.test_check_only_and_multi_clock_child) ... ok
+test_check_only_pin_reached_in_multi_mode_pre_cts (tests.test_landed_cluster_kit.LandedClusterOpenroad.test_check_only_pin_reached_in_multi_mode_pre_cts) ... ok
+test_child_on_region_root_measured_at_its_flops (tests.test_landed_cluster_kit.LandedClusterOpenroad.test_child_on_region_root_measured_at_its_flops) ... ok
+test_mutants_fail_closed (tests.test_landed_cluster_kit.LandedClusterOpenroad.test_mutants_fail_closed) ... ok
+test_accepted_and_generates_landed_body_and_multicycles (tests.test_landed_cluster_kit.LandedClusterSpec.test_accepted_and_generates_landed_body_and_multicycles) ... ok
+test_leaf_tile_and_hybrid_paths_unchanged (tests.test_landed_cluster_kit.LandedClusterSpec.test_leaf_tile_and_hybrid_paths_unchanged) ... ok
+test_refusals (tests.test_landed_cluster_kit.LandedClusterSpec.test_refusals) ... ok
+test_landed_raw_child_pins (unittest.loader._FailedTest.test_landed_raw_child_pins) ... ERROR
+test_landed_multi_root_record (unittest.loader._FailedTest.test_landed_multi_root_record) ... ERROR
+test_boundary_80_exact_passes (tests.test_hybrid_clock_rule_0dq.ClockRuleProc.test_boundary_80_exact_passes) ... ok
+test_insertion_alone_warns (tests.test_hybrid_clock_rule_0dq.ClockRuleProc.test_insertion_alone_warns) ... ok
+test_large_deep_tree_with_tight_pin_spread_passes_with_warn (tests.test_hybrid_clock_rule_0dq.ClockRuleProc.test_large_deep_tree_with_tight_pin_spread_passes_with_warn) ... ok
+test_pin_spread_over_80_fails_at_tt_and_ff_only (tests.test_hybrid_clock_rule_0dq.ClockRuleProc.test_pin_spread_over_80_fails_at_tt_and_ff_only) ... ok
+test_every_body_judges_spread_not_sinks (tests.test_hybrid_clock_rule_0dq.NoSinkOrInsertionHardFail.test_every_body_judges_spread_not_sinks) ... ok
+test_landed_child_flop_extent_is_judged (tests.test_hybrid_clock_rule_0dq.NoSinkOrInsertionHardFail.test_landed_child_flop_extent_is_judged) ... ok
+
+======================================================================
+ERROR: test_landed_raw_child_pins (unittest.loader._FailedTest.test_landed_raw_child_pins)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_landed_raw_child_pins
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+  File "/srv/opentallas-scratch/claude/s81-tilese-fwdclk/base/tools/ref_tile/tests/test_landed_raw_child_pins.py", line 28, in <module>
+    import test_landed_cluster_kit as K  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'test_landed_cluster_kit'
+
+
+======================================================================
+ERROR: test_landed_multi_root_record (unittest.loader._FailedTest.test_landed_multi_root_record)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_landed_multi_root_record
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+  File "/srv/opentallas-scratch/claude/s81-tilese-fwdclk/base/tools/ref_tile/tests/test_landed_multi_root_record.py", line 26, in <module>
+    import test_landed_cluster_kit as K  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'test_landed_cluster_kit'
+
+
+----------------------------------------------------------------------
+Ran 15 tests in 8.722s
+
+FAILED (errors=2)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-755307-1792528366): exit 0
