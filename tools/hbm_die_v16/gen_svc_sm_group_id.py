@@ -136,6 +136,17 @@ def group(s):
             ' input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,\n')
     s = sub(s, ' ot_hbm_svc_sm_feed_programmed #(.STACK(STACK),.SM(SM),.LBANKS(LBANKS)) feed(\n',
             ' ot_hbm_svc_sm_feed_programmed_id #(.LBANKS(LBANKS)) feed(\n  .id_stack(id_stack),.id_sm(id_sm),\n')
+    # L2H-IDXSCORE/SVG 2026-10-19 (SAFE-DESIGN item 1, textbook reset_landing): each reset input lands at the face in
+    # its OWN family, a 2-stage ot_reset_sync (port -> 2 reset pins), then fans out; release +2 edges per family
+    # (a scheduled constant before any programme / run; data latency unchanged).
+    s = sub(s, ' assign fault=feed_fault||issuer_fault;\n',
+            ' wire stream_rst_l,hbm_rst_l;\n'
+            ' ot_reset_sync u_srst_land(.clk(stream_clk),.async_rst_n(stream_rst_n),.sync_rst_n(stream_rst_l));\n'
+            ' ot_reset_sync u_hrst_land(.clk(hbm_clk),.async_rst_n(hbm_rst_n),.sync_rst_n(hbm_rst_l));\n'
+            ' assign fault=feed_fault||issuer_fault;\n')
+    s = sub(s, '.clk(stream_clk),.rst_n(stream_rst_n),.desc_we(', '.clk(stream_clk),.rst_n(stream_rst_l),.desc_we(')
+    s = sub(s, '.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),',
+            '.stream_rst_n(stream_rst_l),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_l),')
     return s
 
 

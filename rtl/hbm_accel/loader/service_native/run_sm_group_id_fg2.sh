@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # L2H-IDXSCORE/SVG 2026-10-19 fg2 = fg1 bench with the response/descriptor FIFOs in dual-clock SRAM macros (id side
 # only; the parameterised reference keeps the flop FIFO, so REPORT_IDENTICAL is the old-vs-new check). Extra mutants
-# fraddr (macro reads the current fetch slot) and fpub (capture before the Gray publish).
+# fwaddr (macro write one slot ahead of its pointer) and fpub (capture before the Gray publish).
 # ELEM-GAPS/HBMB 2026-10-18: ot_hbm_svc_sm_group_id at the d4g die binding #(.LBANKS(4),.FIXED_GO(1)) -- one stack's
 # eight groups + 32 controller leaves + DRAM fixture, hardware-issued, go on compiler slots (tb_hbm_svc_sm_group_id_fg1).
 #   run_sm_group_id_fg2.sh <out> [stack] [rows] [epochs]
@@ -35,7 +35,7 @@ if [ -n "${ONLY:-}" ]; then
  g=${GOGAP:-100}; extra=(); re='SM_STACK (actualPC mapping|DUT fault|timeout|counts)'
  case "$ONLY" in msm1) def=-DOT_SVG_ID_MUT_SM=1;; msm4) def=-DOT_SVG_ID_MUT_SM=4;; mst) def=-DOT_SVG_ID_MUT_STACK=1;;
   skew) def=-DOT_SVG_FG_MUT_SKEW=1; re='SM_STACK go skew';;
-  fraddr) def=-DOT_SVG_FIFO_MUT_RADDR; re='SM_STACK (packet mismatch|DUT fault|timeout|counts|actual)';;
+  fwaddr) def=-DOT_SVG_FIFO_MUT_WADDR; re='SM_STACK (packet mismatch|DUT fault|timeout|counts|actual)';;
   fpub) def=-DOT_SVG_FIFO_MUT_PUBLISH; re='SM_STACK (packet mismatch|DUT fault|timeout|counts|actual)';; earlygo) def=; extra=(+EARLYGO); re='SM_STACK DUT fault';;
   *) echo "SVG_FG2 unknown ONLY=$ONLY"; exit 2;; esac
  build obj_$ONLY id $def

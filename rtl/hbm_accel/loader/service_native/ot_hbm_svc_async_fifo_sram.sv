@@ -80,19 +80,24 @@ module ot_hbm_svc_async_fifo_sram #(parameter integer WIDTH=32,DEPTH=8)(
    default:;
   endcase
  end
-`ifdef OT_SVG_FIFO_MUT_RADDR
- wire [AW-1:0] r_addr=f_bin[AW-1:0];                // mutant: macro reads the current, not the next fetch slot
+`ifdef OT_SVG_FIFO_MUT_WADDR
+ wire [AW-1:0] w_addr=wr_next[AW-1:0];              // mutant: the macro write lands one slot ahead of its pointer
 `else
- wire [AW-1:0] r_addr=f_next[AW-1:0];
+ wire [AW-1:0] w_addr=wr_bin[AW-1:0];
 `endif
+ wire [AW-1:0] r_addr=f_next[AW-1:0];
  generate if(WIDTH==285&&DEPTH==8)begin:g_m8x285
   ot_sram_1r1w2c_8x285_m1 u_mem(.wclk(wr_clk),.rclk(rd_clk),.r_ce_in(1'b1),.r_addr_in(r_addr),.rd_out(mem_q),
-   .w_ce_in(wr_fire),.w_addr_in(wr_bin[AW-1:0]),.wd_in(wr_data),.w_mask_in({WIDTH{1'b1}}));
- end else if(WIDTH==97&&DEPTH==4)begin:g_m4x97
+   .w_ce_in(wr_fire),.w_addr_in(w_addr),.wd_in(wr_data),.w_mask_in({WIDTH{1'b1}}));
+ end endgenerate
+ generate if(WIDTH==97&&DEPTH==4)begin:g_m4x97
   ot_sram_1r1w2c_4x97_m1 u_mem(.wclk(wr_clk),.rclk(rd_clk),.r_ce_in(1'b1),.r_addr_in(r_addr),.rd_out(mem_q),
-   .w_ce_in(wr_fire),.w_addr_in(wr_bin[AW-1:0]),.wd_in(wr_data),.w_mask_in({WIDTH{1'b1}}));
- end else begin:g_none
-  initial $error("ot_hbm_svc_async_fifo_sram: no SRAM macro for WIDTH %0d DEPTH %0d", WIDTH, DEPTH);
+   .w_ce_in(wr_fire),.w_addr_in(w_addr),.wd_in(wr_data),.w_mask_in({WIDTH{1'b1}}));
+ end endgenerate
+ generate if(!(WIDTH==285&&DEPTH==8)&&!(WIDTH==97&&DEPTH==4))begin:g_none
+`ifndef SYNTHESIS
+  initial $error("ot_hbm_svc_async_fifo_sram: no SRAM macro for this WIDTH / DEPTH");
+`endif
   assign mem_q='0;
  end endgenerate
 endmodule

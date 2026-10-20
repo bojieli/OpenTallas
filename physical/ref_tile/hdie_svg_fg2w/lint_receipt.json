@@ -1,0 +1,3578 @@
+{
+ "lints": {
+  "reviewed_gray_fifos": {
+   "components": {
+    "inputs": {
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1/ot_sram_1r1w2c_4x97_m1_bb.v": "83b46970e4add54839b843eb3036135be88173a47439c109851bf753ddb9c53e",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1/ot_sram_1r1w2c_4x97_m1_ff.lib": "bf3a73dc4a522fb54eb06aef0a83b00b1a5cfe85aa2b0cc2b41499a46e56d24e",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1/ot_sram_1r1w2c_4x97_m1_ss.lib": "2133e99dfb525d777306d8888e638e1a9d29c04f62225480346a4b2344c70928",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1/ot_sram_1r1w2c_4x97_m1_tt.lib": "a7788f582a2a638bbaea48f6f07a48d805a2108d893f1415fca02ab7bb5331c6",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v": "a77f1b0cd17e7b6eb2c0b1764792158512f6684ed630ebe050f4e6575902287f",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_ff.lib": "d58c96d48d72abffd895084ef36c893e18bbad6b21c26fe8c709e15217be4fa2",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_ss.lib": "9f55af4ec29420f26473a629bde5a53020bae5355535eabdbbca81ca9b72a0ec",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_tt.lib": "f4d53680daafa2e86b651e7eebe65421dd17fe109c8680be72e9e0ffcc0d3464",
+     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib": "b61a1754a9745d3a2039fcc7417f63f72082f4767028fdd4686b0ef18a075b1f",
+     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib": "a2dc21cb376ff58354fd4fe666ab6b4616336ae911ff252766408d3dc4a09a39",
+     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib": "fd9e01f8ca926e05bf417b3219e9c2cb5659e8a072ec1d18017d3053b2f280a4",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94",
+     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib": "592e1919daaac25556526000751db205eab1515a53fc0dc05ab3daae2958a12c",
+     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib": "f08869109c2b5657c81d86d6fec22f4e5c8ce0811db8b551872fa85362e79258",
+     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib": "267e994041e8d97e6ff1a470e618058a8c790b7e71be52d9ba83e94be9f5816a",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv": "3d3e7a5be43931bdb6cd70f10f167bc804037ff8dfb7cb74e0c2d613e61c99a7",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_fault_cdc_rs.sv": "f7b445d2837f947a7748e7863ea7c411bef770cb9fab00a60a00b51d1b7d5a08",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_id.sv": "fff083411f4a7082f0afd2120afffaf28d04ff8ae39f79c5b63e0da4a14414bb",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_id.sv": "e48d73a4026bf73d68f843b8cf87d87ca181534a706825d5d9251915ac345ac5",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv": "5edee1830e304a6f2c83919921b9fd6fa7ad7bd1a3d3aae9cad2ad85a188899c",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_id.sv": "bb40f32ae5f6ec6649570ad7bb0a22073d920811fce8e89aaaf14eaeb180aec4",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_id.sv": "9f3b6cc309862558e78e0911cdc4f443d85484316e3e12f2f92d8efbf5b56752",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv": "0a67c36a409a6bbe849024c502f59f377abd8bb812655b5e9752fc1ce4e52697",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+     "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv": "4ecc595f2a0eb3fbc3c433f807013626abbafaba4aa0629b81b7e5faf582ba85",
+     "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84",
+     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    "policy": "reviewed_gray_fifos",
+    "spec": {
+     "children": [],
+     "clock": "multiple_cts_roots",
+     "clock_data_paths": "reviewed_gray_fifos",
+     "clock_entry_domains": {
+      "core": {
+       "inputs": [
+        "stream_rst_n",
+        "id_stack",
+        "id_sm",
+        "program_cfg_we",
+        "program_cfg_addr",
+        "program_cfg_data",
+        "desc_we",
+        "desc_addr",
+        "desc_data",
+        "run_v",
+        "run_base",
+        "run_count"
+       ],
+       "outputs": [
+        "running",
+        "run_done",
+        "program_active",
+        "fault",
+        "sm_packet",
+        "sm_command",
+        "expected_request",
+        "lt0",
+        "lt1",
+        "lb0",
+        "lb1",
+        "fm"
+       ],
+       "ports": [
+        "stream_clk",
+        "stream_bank_clk[0]",
+        "stream_bank_clk[1]"
+       ],
+       "ratio": [
+        1,
+        1
+       ]
+      },
+      "hbm": {
+       "inputs": [
+        "hbm_rst_n",
+        "k_rdy",
+        "k_wr_done",
+        "kr_v",
+        "kr_tag",
+        "kr_beat",
+        "kr_data"
+       ],
+       "outputs": [
+        "k_v",
+        "k_addr",
+        "k_len",
+        "k_tag",
+        "k_we",
+        "k_wdata",
+        "k_wstrb",
+        "kr_rdy"
+       ],
+       "ports": [
+        "hbm_clk",
+        "hbm_fifo_clk[0]",
+        "hbm_fifo_clk[1]",
+        "hbm_pc_clk[0]",
+        "hbm_pc_clk[1]",
+        "hbm_pc_clk[2]",
+        "hbm_pc_clk[3]"
+       ],
+       "ratio": [
+        1024000,
+        833333
+       ]
+      }
+     },
+     "clock_relationship": {
+      "kind": "independent_clock_families",
+      "periods_ps": {
+       "core": 833.333,
+       "hbm": 1024.0
+      }
+     },
+     "kind": "tile",
+     "macros": [
+      {
+       "count": 6,
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      {
+       "count": 8,
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+       "count": 1,
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+      },
+      {
+       "count": 8,
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
+      },
+      {
+       "count": 1,
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1"
+      }
+     ],
+     "name": "hdie_svg_fg2w",
+     "params": {
+      "FIXED_GO": 1,
+      "LBANKS": 4
+     },
+     "reviewed_gray_fifo_extensions": {
+      "die_constant_inputs": [
+       "id_stack",
+       "id_sm"
+      ],
+      "why": "id_stack / id_sm are the die strap identity (2'd/3'd constants per instance); gen_svc_sm_group_id.py registers them in each using family (stack_s/sm_s stream, stack_h hbm, pc_q per hbm_pc_clk owner)"
+     },
+     "route": {
+      "period_ps": 833.333
+     },
+     "sources": [
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_fault_cdc_rs.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_id.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_id.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_id.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_id.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1/ot_sram_1r1w2c_4x97_m1_bb.v"
+     ],
+     "top": "ot_hbm_svc_sm_group_id"
+    },
+    "tool": {
+     "cdc_sync_constraints.py": "dbad0153f6038fb22766740110007f16e781ff3b5b7fe206ec59a4173da51506",
+     "clock_entry_constraints.py": "7e184cb89837c924bbef6db763866e8dfb2c5a26b619ccd4847797bb9eb32351",
+     "gray_fifo_cdc_constraints.py": "eb6ec1fc198f97fcbdee44b83b8d40646f822f11289174e92d4160fc4fa64b1a",
+     "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
+    },
+    "tool_data": {
+     "physical/common_flow/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78"
+    },
+    "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+   },
+   "created": "2026-10-19T18:15:58-0700",
+   "host": "ot-epyc8",
+   "key": "b7fafeb9780efc92b36c452afab1281d20432fa660d4abfaf23f2614a7c0cfa0",
+   "record": {
+    "counts": {
+     "consumer": 0,
+     "gated": 0,
+     "lsrc": 0,
+     "macro": 24,
+     "mem": 0,
+     "rst": 60,
+     "rstage": 0,
+     "src": 104,
+     "stage": 104,
+     "sync1": 104
+    },
+    "fifos": {
+     "f0": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     },
+     "f1": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     },
+     "f10": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 3,
+       "wonl": 1,
+       "wptr": 3
+      },
+      "module": "ot_hbm_svc_async_fifo",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "hbm",
+      "scope": "feed.producer.u_stream_fault_cdc.u_status",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 964.0,
+      "storage_read": false,
+      "writer": "core"
+     },
+     "f2": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     },
+     "f3": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     },
+     "f4": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     },
+     "f5": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     },
+     "f6": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     },
+     "f7": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     },
+     "f8": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 3,
+       "wonl": 1,
+       "wptr": 3
+      },
+      "module": "ot_hbm_svc_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "hbm",
+      "scope": "feed.producer.u_descriptor",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 964.0,
+      "storage_read": false,
+      "writer": "core"
+     },
+     "f9": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 3,
+       "wonl": 1,
+       "wptr": 3
+      },
+      "module": "ot_hbm_svc_async_fifo",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "feed.producer.u_hbm_fault_cdc.u_status",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "hbm"
+     }
+    },
+    "gated": {},
+    "levels": {},
+    "macros": {
+     "feed.producer.ordinal_bank[0].u_bank.g_four.u_payload": "core",
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.g_m8x285.u_mem": "core",
+     "feed.producer.ordinal_bank[1].u_bank.g_four.u_payload": "core",
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.g_m8x285.u_mem": "core",
+     "feed.producer.ordinal_bank[2].u_bank.g_four.u_payload": "core",
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.g_m8x285.u_mem": "core",
+     "feed.producer.ordinal_bank[3].u_bank.g_four.u_payload": "core",
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.g_m8x285.u_mem": "core",
+     "feed.producer.ordinal_bank[4].u_bank.g_four.u_payload": "core",
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.g_m8x285.u_mem": "core",
+     "feed.producer.ordinal_bank[5].u_bank.g_four.u_payload": "core",
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.g_m8x285.u_mem": "core",
+     "feed.producer.ordinal_bank[6].u_bank.g_four.u_payload": "core",
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.g_m8x285.u_mem": "core",
+     "feed.producer.ordinal_bank[7].u_bank.g_four.u_payload": "core",
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.g_m8x285.u_mem": "core",
+     "feed.producer.u_descriptor.g_m4x97.u_mem": "hbm",
+     "feed.programme_leaf.u_program": "core",
+     "feed.rows.g_on.g_cache[0].u_payload": "core",
+     "feed.rows.g_on.g_cache[1].u_payload": "core",
+     "feed.rows.g_on.g_cache[2].u_payload": "core",
+     "feed.rows.g_on.g_cache[3].u_payload": "core",
+     "feed.rows.g_on.g_cache[4].u_payload": "core",
+     "issuer.u_desc": "core"
+    },
+    "periods_ps": {
+     "core": 833.333,
+     "hbm": 1024.0
+    },
+    "resets": [
+     {
+      "domain": "core",
+      "scope": "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.u_descriptor.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.u_descriptor.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.u_hbm_fault_cdc.u_dst_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.u_hbm_fault_cdc.u_src_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.u_hbm_fault_cdc.u_status.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.u_hbm_fault_cdc.u_status.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.u_hbm_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.u_stream_fault_cdc.u_dst_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.u_stream_fault_cdc.u_src_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "feed.producer.u_stream_fault_cdc.u_status.u_rd_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.u_stream_fault_cdc.u_status.u_wr_reset",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "feed.producer.u_stream_reset",
+      "stages": 2
+     },
+     {
+      "domain": "hbm",
+      "scope": "u_hrst_land",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "scope": "u_srst_land",
+      "stages": 2
+     }
+    ],
+    "roles": {
+     "feed.consumer.rst_n": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ],
+     "feed.hbm_rst_n": [
+      "rst",
+      "r28",
+      "pipe",
+      1
+     ],
+     "feed.producer.hbm_rst_n": [
+      "rst",
+      "r28",
+      "pipe",
+      1
+     ],
+     "feed.producer.hrst": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[0]": [
+      "src",
+      "f0",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[1]": [
+      "src",
+      "f0",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[2]": [
+      "src",
+      "f0",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[3]": [
+      "src",
+      "f0",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w1[0]": [
+      "sync1",
+      "f0",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w1[1]": [
+      "sync1",
+      "f0",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w1[2]": [
+      "sync1",
+      "f0",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w1[3]": [
+      "sync1",
+      "f0",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w2[0]": [
+      "stage",
+      "f0",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w2[1]": [
+      "stage",
+      "f0",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w2[2]": [
+      "stage",
+      "f0",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w2[3]": [
+      "stage",
+      "f0",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_online": [
+      "src",
+      "f0",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_online_w1": [
+      "sync1",
+      "f0",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_online_w2": [
+      "stage",
+      "f0",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_reset": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r0",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r1",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[0]": [
+      "src",
+      "f0",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[1]": [
+      "src",
+      "f0",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[2]": [
+      "src",
+      "f0",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[3]": [
+      "src",
+      "f0",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r1[0]": [
+      "sync1",
+      "f0",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r1[1]": [
+      "sync1",
+      "f0",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r1[2]": [
+      "sync1",
+      "f0",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r1[3]": [
+      "sync1",
+      "f0",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r2[0]": [
+      "stage",
+      "f0",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r2[1]": [
+      "stage",
+      "f0",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r2[2]": [
+      "stage",
+      "f0",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r2[3]": [
+      "stage",
+      "f0",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_online": [
+      "src",
+      "f0",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_online_r1": [
+      "sync1",
+      "f0",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_online_r2": [
+      "stage",
+      "f0",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_reset": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.hbm_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[0].u_bank.stream_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[0]": [
+      "src",
+      "f1",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[1]": [
+      "src",
+      "f1",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[2]": [
+      "src",
+      "f1",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[3]": [
+      "src",
+      "f1",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w1[0]": [
+      "sync1",
+      "f1",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w1[1]": [
+      "sync1",
+      "f1",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w1[2]": [
+      "sync1",
+      "f1",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w1[3]": [
+      "sync1",
+      "f1",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w2[0]": [
+      "stage",
+      "f1",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w2[1]": [
+      "stage",
+      "f1",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w2[2]": [
+      "stage",
+      "f1",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w2[3]": [
+      "stage",
+      "f1",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_online": [
+      "src",
+      "f1",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_online_w1": [
+      "sync1",
+      "f1",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_online_w2": [
+      "stage",
+      "f1",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_reset": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r2",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r3",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[0]": [
+      "src",
+      "f1",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[1]": [
+      "src",
+      "f1",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[2]": [
+      "src",
+      "f1",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[3]": [
+      "src",
+      "f1",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r1[0]": [
+      "sync1",
+      "f1",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r1[1]": [
+      "sync1",
+      "f1",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r1[2]": [
+      "sync1",
+      "f1",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r1[3]": [
+      "sync1",
+      "f1",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r2[0]": [
+      "stage",
+      "f1",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r2[1]": [
+      "stage",
+      "f1",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r2[2]": [
+      "stage",
+      "f1",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r2[3]": [
+      "stage",
+      "f1",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_online": [
+      "src",
+      "f1",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_online_r1": [
+      "sync1",
+      "f1",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_online_r2": [
+      "stage",
+      "f1",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_reset": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.hbm_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.stream_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[0]": [
+      "src",
+      "f2",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[1]": [
+      "src",
+      "f2",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[2]": [
+      "src",
+      "f2",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[3]": [
+      "src",
+      "f2",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w1[0]": [
+      "sync1",
+      "f2",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w1[1]": [
+      "sync1",
+      "f2",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w1[2]": [
+      "sync1",
+      "f2",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w1[3]": [
+      "sync1",
+      "f2",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w2[0]": [
+      "stage",
+      "f2",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w2[1]": [
+      "stage",
+      "f2",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w2[2]": [
+      "stage",
+      "f2",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w2[3]": [
+      "stage",
+      "f2",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_online": [
+      "src",
+      "f2",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_online_w1": [
+      "sync1",
+      "f2",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_online_w2": [
+      "stage",
+      "f2",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_reset": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r4",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r5",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[0]": [
+      "src",
+      "f2",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[1]": [
+      "src",
+      "f2",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[2]": [
+      "src",
+      "f2",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[3]": [
+      "src",
+      "f2",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r1[0]": [
+      "sync1",
+      "f2",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r1[1]": [
+      "sync1",
+      "f2",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r1[2]": [
+      "sync1",
+      "f2",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r1[3]": [
+      "sync1",
+      "f2",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r2[0]": [
+      "stage",
+      "f2",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r2[1]": [
+      "stage",
+      "f2",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r2[2]": [
+      "stage",
+      "f2",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r2[3]": [
+      "stage",
+      "f2",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_online": [
+      "src",
+      "f2",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_online_r1": [
+      "sync1",
+      "f2",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_online_r2": [
+      "stage",
+      "f2",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_reset": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.hbm_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.stream_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[0]": [
+      "src",
+      "f3",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[1]": [
+      "src",
+      "f3",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[2]": [
+      "src",
+      "f3",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[3]": [
+      "src",
+      "f3",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w1[0]": [
+      "sync1",
+      "f3",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w1[1]": [
+      "sync1",
+      "f3",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w1[2]": [
+      "sync1",
+      "f3",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w1[3]": [
+      "sync1",
+      "f3",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w2[0]": [
+      "stage",
+      "f3",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w2[1]": [
+      "stage",
+      "f3",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w2[2]": [
+      "stage",
+      "f3",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w2[3]": [
+      "stage",
+      "f3",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_online": [
+      "src",
+      "f3",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_online_w1": [
+      "sync1",
+      "f3",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_online_w2": [
+      "stage",
+      "f3",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_reset": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r6",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r7",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[0]": [
+      "src",
+      "f3",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[1]": [
+      "src",
+      "f3",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[2]": [
+      "src",
+      "f3",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[3]": [
+      "src",
+      "f3",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r1[0]": [
+      "sync1",
+      "f3",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r1[1]": [
+      "sync1",
+      "f3",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r1[2]": [
+      "sync1",
+      "f3",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r1[3]": [
+      "sync1",
+      "f3",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r2[0]": [
+      "stage",
+      "f3",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r2[1]": [
+      "stage",
+      "f3",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r2[2]": [
+      "stage",
+      "f3",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r2[3]": [
+      "stage",
+      "f3",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_online": [
+      "src",
+      "f3",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_online_r1": [
+      "sync1",
+      "f3",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_online_r2": [
+      "stage",
+      "f3",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_reset": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.hbm_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.stream_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[0]": [
+      "src",
+      "f4",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[1]": [
+      "src",
+      "f4",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[2]": [
+      "src",
+      "f4",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[3]": [
+      "src",
+      "f4",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w1[0]": [
+      "sync1",
+      "f4",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w1[1]": [
+      "sync1",
+      "f4",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w1[2]": [
+      "sync1",
+      "f4",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w1[3]": [
+      "sync1",
+      "f4",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w2[0]": [
+      "stage",
+      "f4",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w2[1]": [
+      "stage",
+      "f4",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w2[2]": [
+      "stage",
+      "f4",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w2[3]": [
+      "stage",
+      "f4",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_online": [
+      "src",
+      "f4",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_online_w1": [
+      "sync1",
+      "f4",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_online_w2": [
+      "stage",
+      "f4",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_reset": [
+      "rst",
+      "r8",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r8",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r8",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r8",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r9",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[0]": [
+      "src",
+      "f4",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[1]": [
+      "src",
+      "f4",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[2]": [
+      "src",
+      "f4",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[3]": [
+      "src",
+      "f4",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r1[0]": [
+      "sync1",
+      "f4",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r1[1]": [
+      "sync1",
+      "f4",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r1[2]": [
+      "sync1",
+      "f4",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r1[3]": [
+      "sync1",
+      "f4",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r2[0]": [
+      "stage",
+      "f4",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r2[1]": [
+      "stage",
+      "f4",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r2[2]": [
+      "stage",
+      "f4",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r2[3]": [
+      "stage",
+      "f4",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_online": [
+      "src",
+      "f4",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_online_r1": [
+      "sync1",
+      "f4",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_online_r2": [
+      "stage",
+      "f4",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_reset": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.hbm_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.stream_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[0]": [
+      "src",
+      "f5",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[1]": [
+      "src",
+      "f5",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[2]": [
+      "src",
+      "f5",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[3]": [
+      "src",
+      "f5",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w1[0]": [
+      "sync1",
+      "f5",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w1[1]": [
+      "sync1",
+      "f5",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w1[2]": [
+      "sync1",
+      "f5",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w1[3]": [
+      "sync1",
+      "f5",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w2[0]": [
+      "stage",
+      "f5",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w2[1]": [
+      "stage",
+      "f5",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w2[2]": [
+      "stage",
+      "f5",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w2[3]": [
+      "stage",
+      "f5",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_online": [
+      "src",
+      "f5",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_online_w1": [
+      "sync1",
+      "f5",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_online_w2": [
+      "stage",
+      "f5",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_reset": [
+      "rst",
+      "r10",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r10",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r10",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r10",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r11",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r11",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r11",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[0]": [
+      "src",
+      "f5",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[1]": [
+      "src",
+      "f5",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[2]": [
+      "src",
+      "f5",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[3]": [
+      "src",
+      "f5",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r1[0]": [
+      "sync1",
+      "f5",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r1[1]": [
+      "sync1",
+      "f5",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r1[2]": [
+      "sync1",
+      "f5",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r1[3]": [
+      "sync1",
+      "f5",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r2[0]": [
+      "stage",
+      "f5",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r2[1]": [
+      "stage",
+      "f5",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r2[2]": [
+      "stage",
+      "f5",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r2[3]": [
+      "stage",
+      "f5",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_online": [
+      "src",
+      "f5",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_online_r1": [
+      "sync1",
+      "f5",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_online_r2": [
+      "stage",
+      "f5",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_reset": [
+      "rst",
+      "r11",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.hbm_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.stream_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[0]": [
+      "src",
+      "f6",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[1]": [
+      "src",
+      "f6",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[2]": [
+      "src",
+      "f6",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[3]": [
+      "src",
+      "f6",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w1[0]": [
+      "sync1",
+      "f6",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w1[1]": [
+      "sync1",
+      "f6",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w1[2]": [
+      "sync1",
+      "f6",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w1[3]": [
+      "sync1",
+      "f6",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w2[0]": [
+      "stage",
+      "f6",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w2[1]": [
+      "stage",
+      "f6",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w2[2]": [
+      "stage",
+      "f6",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w2[3]": [
+      "stage",
+      "f6",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_online": [
+      "src",
+      "f6",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_online_w1": [
+      "sync1",
+      "f6",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_online_w2": [
+      "stage",
+      "f6",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_reset": [
+      "rst",
+      "r12",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r12",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r12",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r12",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r13",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r13",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r13",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[0]": [
+      "src",
+      "f6",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[1]": [
+      "src",
+      "f6",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[2]": [
+      "src",
+      "f6",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[3]": [
+      "src",
+      "f6",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r1[0]": [
+      "sync1",
+      "f6",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r1[1]": [
+      "sync1",
+      "f6",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r1[2]": [
+      "sync1",
+      "f6",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r1[3]": [
+      "sync1",
+      "f6",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r2[0]": [
+      "stage",
+      "f6",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r2[1]": [
+      "stage",
+      "f6",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r2[2]": [
+      "stage",
+      "f6",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r2[3]": [
+      "stage",
+      "f6",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_online": [
+      "src",
+      "f6",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_online_r1": [
+      "sync1",
+      "f6",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_online_r2": [
+      "stage",
+      "f6",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_reset": [
+      "rst",
+      "r13",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.hbm_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.stream_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[0]": [
+      "src",
+      "f7",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[1]": [
+      "src",
+      "f7",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[2]": [
+      "src",
+      "f7",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[3]": [
+      "src",
+      "f7",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w1[0]": [
+      "sync1",
+      "f7",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w1[1]": [
+      "sync1",
+      "f7",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w1[2]": [
+      "sync1",
+      "f7",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w1[3]": [
+      "sync1",
+      "f7",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w2[0]": [
+      "stage",
+      "f7",
+      "rptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w2[1]": [
+      "stage",
+      "f7",
+      "rptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w2[2]": [
+      "stage",
+      "f7",
+      "rptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w2[3]": [
+      "stage",
+      "f7",
+      "rptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_online": [
+      "src",
+      "f7",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_online_w1": [
+      "sync1",
+      "f7",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_online_w2": [
+      "stage",
+      "f7",
+      "ronl",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_reset": [
+      "rst",
+      "r14",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r14",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r14",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r14",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r15",
+      "pipe",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r15",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r15",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[0]": [
+      "src",
+      "f7",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[1]": [
+      "src",
+      "f7",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[2]": [
+      "src",
+      "f7",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[3]": [
+      "src",
+      "f7",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r1[0]": [
+      "sync1",
+      "f7",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r1[1]": [
+      "sync1",
+      "f7",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r1[2]": [
+      "sync1",
+      "f7",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r1[3]": [
+      "sync1",
+      "f7",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r2[0]": [
+      "stage",
+      "f7",
+      "wptr",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r2[1]": [
+      "stage",
+      "f7",
+      "wptr",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r2[2]": [
+      "stage",
+      "f7",
+      "wptr",
+      2
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r2[3]": [
+      "stage",
+      "f7",
+      "wptr",
+      3
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_online": [
+      "src",
+      "f7",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_online_r1": [
+      "sync1",
+      "f7",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_online_r2": [
+      "stage",
+      "f7",
+      "wonl",
+      0
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_reset": [
+      "rst",
+      "r15",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.hbm_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.stream_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[0].ov.u_owner.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[0].u_kq.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[0].u_kr.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[1].ov.u_owner.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[1].u_kq.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[1].u_kr.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[2].ov.u_owner.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[2].u_kq.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[2].u_kr.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[3].ov.u_owner.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[3].u_kq.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.pc_owner[3].u_kr.rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.srst": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.stream_rst_n": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_descriptor.rd_gray[0]": [
+      "src",
+      "f8",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_descriptor.rd_gray[1]": [
+      "src",
+      "f8",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_descriptor.rd_gray[2]": [
+      "src",
+      "f8",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_descriptor.rd_gray_w1[0]": [
+      "sync1",
+      "f8",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_descriptor.rd_gray_w1[1]": [
+      "sync1",
+      "f8",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_descriptor.rd_gray_w1[2]": [
+      "sync1",
+      "f8",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_descriptor.rd_gray_w2[0]": [
+      "stage",
+      "f8",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_descriptor.rd_gray_w2[1]": [
+      "stage",
+      "f8",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_descriptor.rd_gray_w2[2]": [
+      "stage",
+      "f8",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_descriptor.rd_online": [
+      "src",
+      "f8",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_descriptor.rd_online_w1": [
+      "sync1",
+      "f8",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_descriptor.rd_online_w2": [
+      "stage",
+      "f8",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_descriptor.rd_reset": [
+      "rst",
+      "r16",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_descriptor.rd_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_descriptor.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r16",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_descriptor.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r16",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_descriptor.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r16",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_descriptor.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r17",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_descriptor.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r17",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_descriptor.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r17",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_descriptor.wr_gray[0]": [
+      "src",
+      "f8",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_descriptor.wr_gray[1]": [
+      "src",
+      "f8",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_descriptor.wr_gray[2]": [
+      "src",
+      "f8",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_descriptor.wr_gray_r1[0]": [
+      "sync1",
+      "f8",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_descriptor.wr_gray_r1[1]": [
+      "sync1",
+      "f8",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_descriptor.wr_gray_r1[2]": [
+      "sync1",
+      "f8",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_descriptor.wr_gray_r2[0]": [
+      "stage",
+      "f8",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_descriptor.wr_gray_r2[1]": [
+      "stage",
+      "f8",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_descriptor.wr_gray_r2[2]": [
+      "stage",
+      "f8",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_descriptor.wr_online": [
+      "src",
+      "f8",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_descriptor.wr_online_r1": [
+      "sync1",
+      "f8",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_descriptor.wr_online_r2": [
+      "stage",
+      "f8",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_descriptor.wr_reset": [
+      "rst",
+      "r17",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_descriptor.wr_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.dst_reset": [
+      "rst",
+      "r18",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.src_reset": [
+      "rst",
+      "r19",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_dst_reset.reset_pipe[0]": [
+      "rst",
+      "r18",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_dst_reset.reset_pipe[1]": [
+      "rst",
+      "r18",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_dst_reset.sync_rst_n": [
+      "rst",
+      "r18",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_src_reset.reset_pipe[0]": [
+      "rst",
+      "r19",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_src_reset.reset_pipe[1]": [
+      "rst",
+      "r19",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_src_reset.sync_rst_n": [
+      "rst",
+      "r19",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray[0]": [
+      "src",
+      "f9",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray[1]": [
+      "src",
+      "f9",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray[2]": [
+      "src",
+      "f9",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w1[0]": [
+      "sync1",
+      "f9",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w1[1]": [
+      "sync1",
+      "f9",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w1[2]": [
+      "sync1",
+      "f9",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w2[0]": [
+      "stage",
+      "f9",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w2[1]": [
+      "stage",
+      "f9",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w2[2]": [
+      "stage",
+      "f9",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_online": [
+      "src",
+      "f9",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_online_w1": [
+      "sync1",
+      "f9",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_online_w2": [
+      "stage",
+      "f9",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_reset": [
+      "rst",
+      "r20",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r20",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r20",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r20",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r21",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r21",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r21",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray[0]": [
+      "src",
+      "f9",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray[1]": [
+      "src",
+      "f9",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray[2]": [
+      "src",
+      "f9",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r1[0]": [
+      "sync1",
+      "f9",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r1[1]": [
+      "sync1",
+      "f9",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r1[2]": [
+      "sync1",
+      "f9",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r2[0]": [
+      "stage",
+      "f9",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r2[1]": [
+      "stage",
+      "f9",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r2[2]": [
+      "stage",
+      "f9",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_online": [
+      "src",
+      "f9",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_online_r1": [
+      "sync1",
+      "f9",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_online_r2": [
+      "stage",
+      "f9",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_reset": [
+      "rst",
+      "r21",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_fault_cdc.wr_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_reset.reset_pipe[0]": [
+      "rst",
+      "r22",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_hbm_reset.reset_pipe[1]": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_hbm_reset.sync_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.dst_reset": [
+      "rst",
+      "r23",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.rd_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.src_reset": [
+      "rst",
+      "r24",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_dst_reset.reset_pipe[0]": [
+      "rst",
+      "r23",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_dst_reset.reset_pipe[1]": [
+      "rst",
+      "r23",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_dst_reset.sync_rst_n": [
+      "rst",
+      "r23",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_src_reset.reset_pipe[0]": [
+      "rst",
+      "r24",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_src_reset.reset_pipe[1]": [
+      "rst",
+      "r24",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_src_reset.sync_rst_n": [
+      "rst",
+      "r24",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray[0]": [
+      "src",
+      "f10",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray[1]": [
+      "src",
+      "f10",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray[2]": [
+      "src",
+      "f10",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray_w1[0]": [
+      "sync1",
+      "f10",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray_w1[1]": [
+      "sync1",
+      "f10",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray_w1[2]": [
+      "sync1",
+      "f10",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray_w2[0]": [
+      "stage",
+      "f10",
+      "rptr",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray_w2[1]": [
+      "stage",
+      "f10",
+      "rptr",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_gray_w2[2]": [
+      "stage",
+      "f10",
+      "rptr",
+      2
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_online": [
+      "src",
+      "f10",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_online_w1": [
+      "sync1",
+      "f10",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_online_w2": [
+      "stage",
+      "f10",
+      "ronl",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_reset": [
+      "rst",
+      "r25",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_rst_n": [
+      "rst",
+      "r22",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.u_rd_reset.reset_pipe[0]": [
+      "rst",
+      "r25",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.u_rd_reset.reset_pipe[1]": [
+      "rst",
+      "r25",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.u_rd_reset.sync_rst_n": [
+      "rst",
+      "r25",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.u_wr_reset.reset_pipe[0]": [
+      "rst",
+      "r26",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.u_wr_reset.reset_pipe[1]": [
+      "rst",
+      "r26",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.u_wr_reset.sync_rst_n": [
+      "rst",
+      "r26",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray[0]": [
+      "src",
+      "f10",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray[1]": [
+      "src",
+      "f10",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray[2]": [
+      "src",
+      "f10",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray_r1[0]": [
+      "sync1",
+      "f10",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray_r1[1]": [
+      "sync1",
+      "f10",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray_r1[2]": [
+      "sync1",
+      "f10",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray_r2[0]": [
+      "stage",
+      "f10",
+      "wptr",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray_r2[1]": [
+      "stage",
+      "f10",
+      "wptr",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_gray_r2[2]": [
+      "stage",
+      "f10",
+      "wptr",
+      2
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_online": [
+      "src",
+      "f10",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_online_r1": [
+      "sync1",
+      "f10",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_online_r2": [
+      "stage",
+      "f10",
+      "wonl",
+      0
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_reset": [
+      "rst",
+      "r26",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_fault_cdc.wr_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_reset.reset_pipe[0]": [
+      "rst",
+      "r27",
+      "pipe",
+      0
+     ],
+     "feed.producer.u_stream_reset.reset_pipe[1]": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.producer.u_stream_reset.sync_rst_n": [
+      "rst",
+      "r27",
+      "pipe",
+      1
+     ],
+     "feed.programme_leaf.rst_n": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ],
+     "feed.rows.rst_n": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ],
+     "feed.stream_rst_n": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ],
+     "hbm_rst_l": [
+      "rst",
+      "r28",
+      "pipe",
+      1
+     ],
+     "issuer.rst_n": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ],
+     "stream_rst_l": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ],
+     "u_hrst_land.reset_pipe[0]": [
+      "rst",
+      "r28",
+      "pipe",
+      0
+     ],
+     "u_hrst_land.reset_pipe[1]": [
+      "rst",
+      "r28",
+      "pipe",
+      1
+     ],
+     "u_hrst_land.sync_rst_n": [
+      "rst",
+      "r28",
+      "pipe",
+      1
+     ],
+     "u_srst_land.reset_pipe[0]": [
+      "rst",
+      "r29",
+      "pipe",
+      0
+     ],
+     "u_srst_land.reset_pipe[1]": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ],
+     "u_srst_land.sync_rst_n": [
+      "rst",
+      "r29",
+      "pipe",
+      1
+     ]
+    },
+    "source_sha256": {
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1/ot_sram_1r1w2c_4x97_m1_bb.v": "83b46970e4add54839b843eb3036135be88173a47439c109851bf753ddb9c53e",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v": "a77f1b0cd17e7b6eb2c0b1764792158512f6684ed630ebe050f4e6575902287f",
+     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv": "3d3e7a5be43931bdb6cd70f10f167bc804037ff8dfb7cb74e0c2d613e61c99a7",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_fault_cdc_rs.sv": "f7b445d2837f947a7748e7863ea7c411bef770cb9fab00a60a00b51d1b7d5a08",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_id.sv": "fff083411f4a7082f0afd2120afffaf28d04ff8ae39f79c5b63e0da4a14414bb",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_id.sv": "e48d73a4026bf73d68f843b8cf87d87ca181534a706825d5d9251915ac345ac5",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv": "5edee1830e304a6f2c83919921b9fd6fa7ad7bd1a3d3aae9cad2ad85a188899c",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_id.sv": "bb40f32ae5f6ec6649570ad7bb0a22073d920811fce8e89aaaf14eaeb180aec4",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_id.sv": "9f3b6cc309862558e78e0911cdc4f443d85484316e3e12f2f92d8efbf5b56752",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv": "0a67c36a409a6bbe849024c502f59f377abd8bb812655b5e9752fc1ce4e52697",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+     "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv": "4ecc595f2a0eb3fbc3c433f807013626abbafaba4aa0629b81b7e5faf582ba85",
+     "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84",
+     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    "strap_crossings": [
+     "id_sm->hbm",
+     "id_stack->hbm"
+    ],
+    "straps": [
+     "id_sm",
+     "id_stack"
+    ]
+   },
+   "seconds": 88
+  }
+ },
+ "schema": "opentallas.ref_tile.lint_receipt.v1"
+}

@@ -1,0 +1,199 @@
+{
+ "name": "hdie_svg_fg2w-svg_fg2w-COMMIT",
+ "block": "ot_hbm_svc_sm_group_id",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-IDXSCORE/SVG",
+ "purpose": "HBM d4g SM service group ot_hbm_svc_sm_group_id #(LBANKS 4, FIXED_GO 1) x16 (svg_SW0..7, svg_NW0..7). Two families (stream 833.333 / hbm 1024) via reviewed ot_hbm_svc_async_fifo; 15 SRAMs + 9 dual-clock FIFO SRAMs (8 response 8x285, 1 descriptor 4x97; L2H-IDXSCORE/SVG fg2: checklist item 5); landing SRAM write port stream-registered (WREG=1).",
+ "threads": 8,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/l2h-svg-fg2-1019",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_sm_group_id #(.LBANKS(4), .FIXED_GO(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_reset_sync.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_fault_cdc_rs.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv rtl/hbm_accel/sm/static/ot_smh_static_feed.sv rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_id.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_id.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_id.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_id.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1/ot_sram_1r1w2c_4x97_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "svg_fg2_exact",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "threads": 24,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_GATE PASS",
+    "pass_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/gate_wreg.log"
+   },
+   {
+    "name": "svg_fg2_mut_msm1",
+    "cmd": "ONLY=msm1 bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/msm1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT msm1 PASS",
+    "fail_regex": "^SVG_FG2_MUT msm1 FAIL",
+    "note": "id_sm strap xor 1 -> wrong PC group (actualPC mapping)",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_msm1.log"
+   },
+   {
+    "name": "svg_fg2_mut_msm4",
+    "cmd": "ONLY=msm4 bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/msm4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT msm4 PASS",
+    "fail_regex": "^SVG_FG2_MUT msm4 FAIL",
+    "note": "id_sm xor 4",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_msm4.log"
+   },
+   {
+    "name": "svg_fg2_mut_mst",
+    "cmd": "ONLY=mst bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/mst",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT mst PASS",
+    "fail_regex": "^SVG_FG2_MUT mst FAIL",
+    "note": "id_stack xor 1 -> descriptor refused (DUT fault)",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_mst.log"
+   },
+   {
+    "name": "svg_fg2_mut_skew",
+    "cmd": "ONLY=skew bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/skew",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT skew PASS",
+    "fail_regex": "^SVG_FG2_MUT skew FAIL",
+    "note": "group 3 go slot +1 -> the 8 groups lose cycle alignment",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_skew.log"
+   },
+   {
+    "name": "svg_fg2_mut_earlygo",
+    "cmd": "ONLY=earlygo bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/earlygo",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT earlygo PASS",
+    "fail_regex": "^SVG_FG2_MUT earlygo FAIL",
+    "note": "go slot 20 before the blocks are resident -> issuer missed-slot fault",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_earlygo.log"
+   },
+   {
+    "name": "svg_fg2_mut_fwaddr",
+    "cmd": "ONLY=fwaddr bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/fwaddr",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT fwaddr PASS",
+    "fail_regex": "^SVG_FG2_MUT fwaddr FAIL",
+    "note": "SRAM FIFO macro write lands one slot ahead of its write pointer",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_fwaddr.log"
+   },
+   {
+    "name": "svg_fg2_mut_fpub",
+    "cmd": "ONLY=fpub bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/fpub",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT fpub PASS",
+    "fail_regex": "^SVG_FG2_MUT fpub FAIL",
+    "note": "SRAM FIFO captures on the unsynchronised write Gray pointer (before publish)",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_fpub.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hdie_svg_fg2w/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hdie_svg_fg2w/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hdie_svg_fg2w --out {RUN}/record/views/ot_hbm_svc_sm_group_id --macro-view physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1 --macro-view physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hdie_svg_fg2w/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hdie_svg_fg2w/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hdie_svg_fg2w/hdie_svg_fg2w-svg_fg2w-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

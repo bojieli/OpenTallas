@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_svc_sm_group_id",
+ "enable": false,
+ "reason": "the RTL lands it: ot_hbm_svc_sm_group_id lands stream_rst_n / hbm_rst_n each in its OWN clock family in a 2-stage ot_reset_sync (u_srst_land on stream_clk, u_hrst_land on hbm_clk; port -> 2 reset pins), then fans out; a kit landing has one clock and would cross the hbm reset into the stream family"
+}

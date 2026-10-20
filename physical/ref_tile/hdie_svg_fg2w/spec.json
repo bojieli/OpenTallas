@@ -1,0 +1,370 @@
+{
+ "top": "ot_hbm_svc_sm_group_id",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_fault_cdc_rs.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_id.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_id.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_id.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_id.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1/ot_sram_1r1w2c_8x285_m1_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1/ot_sram_1r1w2c_4x97_m1_bb.v"
+ ],
+ "params": {
+  "LBANKS": 4,
+  "FIXED_GO": 1
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "stream_clk",
+ "clock_ports": [
+  "stream_clk",
+  "stream_bank_clk[0]",
+  "stream_bank_clk[1]",
+  "hbm_clk",
+  "hbm_fifo_clk[0]",
+  "hbm_fifo_clk[1]",
+  "hbm_pc_clk[0]",
+  "hbm_pc_clk[1]",
+  "hbm_pc_clk[2]",
+  "hbm_pc_clk[3]"
+ ],
+ "reset_ports": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "clock_data_paths": "reviewed_gray_fifos",
+ "clock_relationship": {
+  "kind": "independent_clock_families",
+  "periods_ps": {
+   "core": 833.333,
+   "hbm": 1024.0
+  }
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "stream_clk",
+    "stream_bank_clk[0]",
+    "stream_bank_clk[1]"
+   ],
+   "inputs": [
+    "stream_rst_n",
+    "id_stack",
+    "id_sm",
+    "program_cfg_we",
+    "program_cfg_addr",
+    "program_cfg_data",
+    "desc_we",
+    "desc_addr",
+    "desc_data",
+    "run_v",
+    "run_base",
+    "run_count"
+   ],
+   "outputs": [
+    "running",
+    "run_done",
+    "program_active",
+    "fault",
+    "sm_packet",
+    "sm_command",
+    "expected_request",
+    "lt0",
+    "lt1",
+    "lb0",
+    "lb1",
+    "fm"
+   ]
+  },
+  "hbm": {
+   "ratio": [
+    1024000,
+    833333
+   ],
+   "ports": [
+    "hbm_clk",
+    "hbm_fifo_clk[0]",
+    "hbm_fifo_clk[1]",
+    "hbm_pc_clk[0]",
+    "hbm_pc_clk[1]",
+    "hbm_pc_clk[2]",
+    "hbm_pc_clk[3]"
+   ],
+   "inputs": [
+    "hbm_rst_n",
+    "k_rdy",
+    "k_wr_done",
+    "kr_v",
+    "kr_tag",
+    "kr_beat",
+    "kr_data"
+   ],
+   "outputs": [
+    "k_v",
+    "k_addr",
+    "k_len",
+    "k_tag",
+    "k_we",
+    "k_wdata",
+    "k_wstrb",
+    "kr_rdy"
+   ]
+  }
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 6
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 8
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "count": 8
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1",
+   "count": 1
+  }
+ ],
+ "reviewed_gray_fifo_extensions": {
+  "die_constant_inputs": [
+   "id_stack",
+   "id_sm"
+  ],
+  "why": "id_stack / id_sm are the die strap identity (2'd/3'd constants per instance); gen_svc_sm_group_id.py registers them in each using family (stack_s/sm_s stream, stack_h hbm, pc_q per hbm_pc_clk owner)"
+ },
+ "name": "hdie_svg_fg2w",
+ "outline": {
+  "w": 691.2,
+  "h": 648.0
+ },
+ "pins": {
+  "W": [
+   "stream_clk",
+   "stream_bank_clk",
+   "stream_rst_n",
+   "hbm_clk",
+   "hbm_fifo_clk",
+   "hbm_pc_clk",
+   "hbm_rst_n",
+   "id_stack",
+   "id_sm",
+   "program_cfg_we",
+   "program_cfg_addr",
+   "program_cfg_data",
+   "desc_we",
+   "desc_addr",
+   "desc_data",
+   "run_v",
+   "run_base",
+   "run_count",
+   "running",
+   "run_done",
+   "program_active",
+   "fault"
+  ],
+  "N": [
+   "sm_packet",
+   "sm_command"
+  ],
+  "E": [
+   "k_v",
+   "k_rdy",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_we",
+   "k_wdata",
+   "k_wstrb",
+   "k_wr_done",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data"
+  ],
+  "S": [
+   "expected_request",
+   "lt0",
+   "lt1",
+   "lb0",
+   "lb1",
+   "fm"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf (stream/hbm reviewed_gray_fifos: 8 landing response FIFOs + descriptor FIFO + fault_cdc, ot_hbm_svc_async_fifo_sram SRAM storage + ot_hbm_svc_async_fifo 1-bit status)",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "a kit pin stage cannot span the two clock families and would break the elastic K-port ready/valid handshake (HBM boundary); pin registration of the K and SM command ports is an RTL item (ELEM-GAPS/HBMB-SVG log)"
+ },
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-IDXSCORE/SVG",
+  "branch": "claude/l2h-svg-fg2-1019",
+  "tag": "svg_fg2w",
+  "purpose": "HBM d4g SM service group ot_hbm_svc_sm_group_id #(LBANKS 4, FIXED_GO 1) x16 (svg_SW0..7, svg_NW0..7). Two families (stream 833.333 / hbm 1024) via reviewed ot_hbm_svc_async_fifo; 15 SRAMs + 9 dual-clock FIFO SRAMs (8 response 8x285, 1 descriptor 4x97; L2H-IDXSCORE/SVG fg2: checklist item 5); landing SRAM write port stream-registered (WREG=1).",
+  "record_to": "results/rtl/ref_tile/hdie_svg_fg2w",
+  "benches": [
+   {
+    "name": "svg_fg2_exact",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "threads": 24,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_GATE PASS",
+    "pass_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/gate_wreg.log"
+   },
+   {
+    "name": "svg_fg2_mut_msm1",
+    "cmd": "ONLY=msm1 bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/msm1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT msm1 PASS",
+    "fail_regex": "^SVG_FG2_MUT msm1 FAIL",
+    "note": "id_sm strap xor 1 -> wrong PC group (actualPC mapping)",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_msm1.log"
+   },
+   {
+    "name": "svg_fg2_mut_msm4",
+    "cmd": "ONLY=msm4 bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/msm4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT msm4 PASS",
+    "fail_regex": "^SVG_FG2_MUT msm4 FAIL",
+    "note": "id_sm xor 4",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_msm4.log"
+   },
+   {
+    "name": "svg_fg2_mut_mst",
+    "cmd": "ONLY=mst bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/mst",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT mst PASS",
+    "fail_regex": "^SVG_FG2_MUT mst FAIL",
+    "note": "id_stack xor 1 -> descriptor refused (DUT fault)",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_mst.log"
+   },
+   {
+    "name": "svg_fg2_mut_skew",
+    "cmd": "ONLY=skew bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/skew",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT skew PASS",
+    "fail_regex": "^SVG_FG2_MUT skew FAIL",
+    "note": "group 3 go slot +1 -> the 8 groups lose cycle alignment",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_skew.log"
+   },
+   {
+    "name": "svg_fg2_mut_earlygo",
+    "cmd": "ONLY=earlygo bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/earlygo",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT earlygo PASS",
+    "fail_regex": "^SVG_FG2_MUT earlygo FAIL",
+    "note": "go slot 20 before the blocks are resident -> issuer missed-slot fault",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_earlygo.log"
+   },
+   {
+    "name": "svg_fg2_mut_fwaddr",
+    "cmd": "ONLY=fwaddr bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/fwaddr",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT fwaddr PASS",
+    "fail_regex": "^SVG_FG2_MUT fwaddr FAIL",
+    "note": "SRAM FIFO macro write lands one slot ahead of its write pointer",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_fwaddr.log"
+   },
+   {
+    "name": "svg_fg2_mut_fpub",
+    "cmd": "ONLY=fpub bash rtl/hbm_accel/loader/service_native/run_sm_group_id_fg2.sh {RUN}/bench/fpub",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SVG_FG2_MUT fpub PASS",
+    "fail_regex": "^SVG_FG2_MUT fpub FAIL",
+    "note": "SRAM FIFO captures on the unsynchronised write Gray pointer (before publish)",
+    "fail_witness": "results/rtl/hbm_svc_sm_group_id_fg2_1019/wit_fpub.log"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: ot_hbm_svc_sm_group_id lands stream_rst_n / hbm_rst_n each in its OWN clock family in a 2-stage ot_reset_sync (u_srst_land on stream_clk, u_hrst_land on hbm_clk; port -> 2 reset pins), then fans out; a kit landing has one clock and would cross the hbm reset into the stream family"
+ }
+}

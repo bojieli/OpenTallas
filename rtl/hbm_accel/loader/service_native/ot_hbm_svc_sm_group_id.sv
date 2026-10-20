@@ -30,9 +30,12 @@ module ot_hbm_svc_sm_group_id #(parameter integer LBANKS=4,parameter integer LB=
  wire[31:0]reserve_base;wire[14:0]reserve_row_base;wire[11:0]reserve_total;wire[LB-1:0]reserve_bank,start_bank;
  wire[15:0]reserve_epoch,start_epoch,program_start_loops;wire[6:0]reserve_rows;wire[9:0]reserve_tag_base,program_start_base;
  wire[10:0]program_start_limit;wire[LBANKS-1:0]block_ready;wire[1:0]cache_ready,cache_owned;
+ wire stream_rst_l,hbm_rst_l;
+ ot_reset_sync u_srst_land(.clk(stream_clk),.async_rst_n(stream_rst_n),.sync_rst_n(stream_rst_l));
+ ot_reset_sync u_hrst_land(.clk(hbm_clk),.async_rst_n(hbm_rst_n),.sync_rst_n(hbm_rst_l));
  assign fault=feed_fault||issuer_fault;
  ot_hbm_svc_sm_issuer #(.LBANKS(LBANKS),.FIXED_GO(FIXED_GO)) issuer(
-  .clk(stream_clk),.rst_n(stream_rst_n),.desc_we(desc_we),.desc_addr(desc_addr),.desc_data(desc_data),
+  .clk(stream_clk),.rst_n(stream_rst_l),.desc_we(desc_we),.desc_addr(desc_addr),.desc_data(desc_data),
   .run_v(run_v),.run_base(run_base),.run_count(run_count),.running(running),.run_done(run_done),.fault(issuer_fault),
   .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),
   .reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_rows(reserve_rows),
@@ -42,7 +45,7 @@ module ot_hbm_svc_sm_group_id #(parameter integer LBANKS=4,parameter integer LB=
   .program_done(program_done));
  ot_hbm_svc_sm_feed_programmed_id #(.LBANKS(LBANKS)) feed(
   .id_stack(id_stack),.id_sm(id_sm),
-  .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),
+  .stream_clk(stream_clk),.stream_rst_n(stream_rst_l),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_l),
   .stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
   .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),
   .reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_rows(reserve_rows),

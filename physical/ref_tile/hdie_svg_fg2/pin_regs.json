@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_sm_group_id",
+ "enable": false,
+ "reason": "a kit pin stage cannot span the two clock families and would break the elastic K-port ready/valid handshake (HBM boundary); pin registration of the K and SM command ports is an RTL item (ELEM-GAPS/HBMB-SVG log)"
+}

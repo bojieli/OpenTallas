@@ -1,0 +1,1057 @@
+set ::ot_ce_require_wire 1
+# OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
+# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
+set ::ot_ce_leaf_roots 1
+set ::ot_ce_related_data 0
+set ::ot_ce_refs [dict create ]
+set ::ot_ce_counts [dict create ]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{stream_rst_n} {id_stack} {id_sm} {program_cfg_we} {program_cfg_addr} {program_cfg_data} {desc_we} {desc_addr} {desc_data} {run_v} {run_base} {run_count}} outputs {{running} {run_done} {program_active} {fault} {sm_packet} {sm_command} {expected_request} {lt0} {lt1} {lb0} {lb1} {fm}}} {hbm} {clock ot_io_hbm io_budget_ps 204.8 inputs {{hbm_rst_n} {k_rdy} {k_wr_done} {kr_v} {kr_tag} {kr_beat} {kr_data}} outputs {{k_v} {k_addr} {k_len} {k_tag} {k_we} {k_wdata} {k_wstrb} {kr_rdy}}}]
+set ::ot_ce_source_domains [dict create {stream_clk} {core} {stream_bank_clk[0]} {core} {stream_bank_clk[1]} {core} {hbm_clk} {hbm} {hbm_fifo_clk[0]} {hbm} {hbm_fifo_clk[1]} {hbm} {hbm_pc_clk[0]} {hbm} {hbm_pc_clk[1]} {hbm} {hbm_pc_clk[2]} {hbm} {hbm_pc_clk[3]} {hbm}]
+set ::ot_ce_explicit_domains 1
+set ::ot_ce_cts_roots {{stream_clk} {stream_bank_clk[0]} {stream_bank_clk[1]} {hbm_clk} {hbm_fifo_clk[0]} {hbm_fifo_clk[1]} {hbm_pc_clk[0]} {hbm_pc_clk[1]} {hbm_pc_clk[2]} {hbm_pc_clk[3]}}
+set ::ot_ce_ports {{stream_clk} {stream_bank_clk[0]} {stream_bank_clk[1]} {hbm_clk} {hbm_fifo_clk[0]} {hbm_fifo_clk[1]} {hbm_pc_clk[0]} {hbm_pc_clk[1]} {hbm_pc_clk[2]} {hbm_pc_clk[3]}}
+set ::ot_gf_roles [dict create {feed.consumer.rst_n} {rst r29 pipe 1} {feed.hbm_rst_n} {rst r28 pipe 1} {feed.producer.hbm_rst_n} {rst r28 pipe 1} {feed.producer.hrst} {rst r22 pipe 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[0]} {src f0 rptr 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[1]} {src f0 rptr 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[2]} {src f0 rptr 2} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[3]} {src f0 rptr 3} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w1[0]} {sync1 f0 rptr 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w1[1]} {sync1 f0 rptr 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w1[2]} {sync1 f0 rptr 2} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w1[3]} {sync1 f0 rptr 3} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w2[0]} {stage f0 rptr 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w2[1]} {stage f0 rptr 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w2[2]} {stage f0 rptr 2} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray_w2[3]} {stage f0 rptr 3} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_online} {src f0 ronl 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_online_w1} {sync1 f0 ronl 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_online_w2} {stage f0 ronl 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_reset} {rst r0 pipe 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]} {rst r0 pipe 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]} {rst r0 pipe 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n} {rst r0 pipe 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]} {rst r1 pipe 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]} {rst r1 pipe 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n} {rst r1 pipe 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[0]} {src f0 wptr 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[1]} {src f0 wptr 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[2]} {src f0 wptr 2} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[3]} {src f0 wptr 3} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r1[0]} {sync1 f0 wptr 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r1[1]} {sync1 f0 wptr 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r1[2]} {sync1 f0 wptr 2} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r1[3]} {sync1 f0 wptr 3} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r2[0]} {stage f0 wptr 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r2[1]} {stage f0 wptr 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r2[2]} {stage f0 wptr 2} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray_r2[3]} {stage f0 wptr 3} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_online} {src f0 wonl 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_online_r1} {sync1 f0 wonl 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_online_r2} {stage f0 wonl 0} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_reset} {rst r1 pipe 1} {feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[0].u_bank.hbm_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[0].u_bank.stream_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[0]} {src f1 rptr 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[1]} {src f1 rptr 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[2]} {src f1 rptr 2} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[3]} {src f1 rptr 3} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w1[0]} {sync1 f1 rptr 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w1[1]} {sync1 f1 rptr 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w1[2]} {sync1 f1 rptr 2} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w1[3]} {sync1 f1 rptr 3} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w2[0]} {stage f1 rptr 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w2[1]} {stage f1 rptr 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w2[2]} {stage f1 rptr 2} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray_w2[3]} {stage f1 rptr 3} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_online} {src f1 ronl 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_online_w1} {sync1 f1 ronl 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_online_w2} {stage f1 ronl 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_reset} {rst r2 pipe 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]} {rst r2 pipe 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]} {rst r2 pipe 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n} {rst r2 pipe 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]} {rst r3 pipe 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]} {rst r3 pipe 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n} {rst r3 pipe 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[0]} {src f1 wptr 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[1]} {src f1 wptr 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[2]} {src f1 wptr 2} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[3]} {src f1 wptr 3} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r1[0]} {sync1 f1 wptr 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r1[1]} {sync1 f1 wptr 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r1[2]} {sync1 f1 wptr 2} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r1[3]} {sync1 f1 wptr 3} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r2[0]} {stage f1 wptr 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r2[1]} {stage f1 wptr 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r2[2]} {stage f1 wptr 2} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray_r2[3]} {stage f1 wptr 3} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_online} {src f1 wonl 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_online_r1} {sync1 f1 wonl 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_online_r2} {stage f1 wonl 0} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_reset} {rst r3 pipe 1} {feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[1].u_bank.hbm_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[1].u_bank.stream_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[0]} {src f2 rptr 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[1]} {src f2 rptr 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[2]} {src f2 rptr 2} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[3]} {src f2 rptr 3} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w1[0]} {sync1 f2 rptr 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w1[1]} {sync1 f2 rptr 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w1[2]} {sync1 f2 rptr 2} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w1[3]} {sync1 f2 rptr 3} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w2[0]} {stage f2 rptr 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w2[1]} {stage f2 rptr 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w2[2]} {stage f2 rptr 2} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray_w2[3]} {stage f2 rptr 3} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_online} {src f2 ronl 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_online_w1} {sync1 f2 ronl 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_online_w2} {stage f2 ronl 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_reset} {rst r4 pipe 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]} {rst r4 pipe 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]} {rst r4 pipe 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n} {rst r4 pipe 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]} {rst r5 pipe 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]} {rst r5 pipe 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n} {rst r5 pipe 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[0]} {src f2 wptr 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[1]} {src f2 wptr 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[2]} {src f2 wptr 2} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[3]} {src f2 wptr 3} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r1[0]} {sync1 f2 wptr 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r1[1]} {sync1 f2 wptr 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r1[2]} {sync1 f2 wptr 2} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r1[3]} {sync1 f2 wptr 3} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r2[0]} {stage f2 wptr 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r2[1]} {stage f2 wptr 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r2[2]} {stage f2 wptr 2} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray_r2[3]} {stage f2 wptr 3} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_online} {src f2 wonl 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_online_r1} {sync1 f2 wonl 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_online_r2} {stage f2 wonl 0} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_reset} {rst r5 pipe 1} {feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[2].u_bank.hbm_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[2].u_bank.stream_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[0]} {src f3 rptr 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[1]} {src f3 rptr 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[2]} {src f3 rptr 2} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[3]} {src f3 rptr 3} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w1[0]} {sync1 f3 rptr 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w1[1]} {sync1 f3 rptr 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w1[2]} {sync1 f3 rptr 2} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w1[3]} {sync1 f3 rptr 3} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w2[0]} {stage f3 rptr 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w2[1]} {stage f3 rptr 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w2[2]} {stage f3 rptr 2} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray_w2[3]} {stage f3 rptr 3} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_online} {src f3 ronl 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_online_w1} {sync1 f3 ronl 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_online_w2} {stage f3 ronl 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_reset} {rst r6 pipe 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]} {rst r6 pipe 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]} {rst r6 pipe 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n} {rst r6 pipe 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]} {rst r7 pipe 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]} {rst r7 pipe 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n} {rst r7 pipe 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[0]} {src f3 wptr 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[1]} {src f3 wptr 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[2]} {src f3 wptr 2} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[3]} {src f3 wptr 3} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r1[0]} {sync1 f3 wptr 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r1[1]} {sync1 f3 wptr 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r1[2]} {sync1 f3 wptr 2} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r1[3]} {sync1 f3 wptr 3} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r2[0]} {stage f3 wptr 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r2[1]} {stage f3 wptr 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r2[2]} {stage f3 wptr 2} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray_r2[3]} {stage f3 wptr 3} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_online} {src f3 wonl 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_online_r1} {sync1 f3 wonl 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_online_r2} {stage f3 wonl 0} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_reset} {rst r7 pipe 1} {feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[3].u_bank.hbm_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[3].u_bank.stream_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[0]} {src f4 rptr 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[1]} {src f4 rptr 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[2]} {src f4 rptr 2} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[3]} {src f4 rptr 3} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w1[0]} {sync1 f4 rptr 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w1[1]} {sync1 f4 rptr 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w1[2]} {sync1 f4 rptr 2} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w1[3]} {sync1 f4 rptr 3} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w2[0]} {stage f4 rptr 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w2[1]} {stage f4 rptr 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w2[2]} {stage f4 rptr 2} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray_w2[3]} {stage f4 rptr 3} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_online} {src f4 ronl 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_online_w1} {sync1 f4 ronl 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_online_w2} {stage f4 ronl 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_reset} {rst r8 pipe 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]} {rst r8 pipe 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]} {rst r8 pipe 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n} {rst r8 pipe 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]} {rst r9 pipe 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]} {rst r9 pipe 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n} {rst r9 pipe 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[0]} {src f4 wptr 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[1]} {src f4 wptr 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[2]} {src f4 wptr 2} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[3]} {src f4 wptr 3} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r1[0]} {sync1 f4 wptr 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r1[1]} {sync1 f4 wptr 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r1[2]} {sync1 f4 wptr 2} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r1[3]} {sync1 f4 wptr 3} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r2[0]} {stage f4 wptr 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r2[1]} {stage f4 wptr 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r2[2]} {stage f4 wptr 2} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray_r2[3]} {stage f4 wptr 3} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_online} {src f4 wonl 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_online_r1} {sync1 f4 wonl 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_online_r2} {stage f4 wonl 0} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_reset} {rst r9 pipe 1} {feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[4].u_bank.hbm_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[4].u_bank.stream_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[0]} {src f5 rptr 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[1]} {src f5 rptr 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[2]} {src f5 rptr 2} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[3]} {src f5 rptr 3} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w1[0]} {sync1 f5 rptr 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w1[1]} {sync1 f5 rptr 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w1[2]} {sync1 f5 rptr 2} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w1[3]} {sync1 f5 rptr 3} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w2[0]} {stage f5 rptr 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w2[1]} {stage f5 rptr 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w2[2]} {stage f5 rptr 2} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray_w2[3]} {stage f5 rptr 3} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_online} {src f5 ronl 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_online_w1} {sync1 f5 ronl 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_online_w2} {stage f5 ronl 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_reset} {rst r10 pipe 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]} {rst r10 pipe 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]} {rst r10 pipe 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n} {rst r10 pipe 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]} {rst r11 pipe 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]} {rst r11 pipe 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n} {rst r11 pipe 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[0]} {src f5 wptr 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[1]} {src f5 wptr 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[2]} {src f5 wptr 2} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[3]} {src f5 wptr 3} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r1[0]} {sync1 f5 wptr 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r1[1]} {sync1 f5 wptr 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r1[2]} {sync1 f5 wptr 2} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r1[3]} {sync1 f5 wptr 3} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r2[0]} {stage f5 wptr 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r2[1]} {stage f5 wptr 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r2[2]} {stage f5 wptr 2} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray_r2[3]} {stage f5 wptr 3} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_online} {src f5 wonl 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_online_r1} {sync1 f5 wonl 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_online_r2} {stage f5 wonl 0} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_reset} {rst r11 pipe 1} {feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[5].u_bank.hbm_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[5].u_bank.stream_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[0]} {src f6 rptr 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[1]} {src f6 rptr 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[2]} {src f6 rptr 2} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[3]} {src f6 rptr 3} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w1[0]} {sync1 f6 rptr 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w1[1]} {sync1 f6 rptr 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w1[2]} {sync1 f6 rptr 2} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w1[3]} {sync1 f6 rptr 3} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w2[0]} {stage f6 rptr 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w2[1]} {stage f6 rptr 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w2[2]} {stage f6 rptr 2} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray_w2[3]} {stage f6 rptr 3} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_online} {src f6 ronl 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_online_w1} {sync1 f6 ronl 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_online_w2} {stage f6 ronl 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_reset} {rst r12 pipe 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]} {rst r12 pipe 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]} {rst r12 pipe 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n} {rst r12 pipe 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]} {rst r13 pipe 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]} {rst r13 pipe 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n} {rst r13 pipe 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[0]} {src f6 wptr 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[1]} {src f6 wptr 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[2]} {src f6 wptr 2} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[3]} {src f6 wptr 3} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r1[0]} {sync1 f6 wptr 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r1[1]} {sync1 f6 wptr 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r1[2]} {sync1 f6 wptr 2} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r1[3]} {sync1 f6 wptr 3} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r2[0]} {stage f6 wptr 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r2[1]} {stage f6 wptr 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r2[2]} {stage f6 wptr 2} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray_r2[3]} {stage f6 wptr 3} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_online} {src f6 wonl 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_online_r1} {sync1 f6 wonl 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_online_r2} {stage f6 wonl 0} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_reset} {rst r13 pipe 1} {feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[6].u_bank.hbm_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[6].u_bank.stream_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[0]} {src f7 rptr 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[1]} {src f7 rptr 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[2]} {src f7 rptr 2} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[3]} {src f7 rptr 3} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w1[0]} {sync1 f7 rptr 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w1[1]} {sync1 f7 rptr 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w1[2]} {sync1 f7 rptr 2} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w1[3]} {sync1 f7 rptr 3} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w2[0]} {stage f7 rptr 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w2[1]} {stage f7 rptr 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w2[2]} {stage f7 rptr 2} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray_w2[3]} {stage f7 rptr 3} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_online} {src f7 ronl 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_online_w1} {sync1 f7 ronl 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_online_w2} {stage f7 ronl 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_reset} {rst r14 pipe 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_rst_n} {rst r27 pipe 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[0]} {rst r14 pipe 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_rd_reset.reset_pipe[1]} {rst r14 pipe 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_rd_reset.sync_rst_n} {rst r14 pipe 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[0]} {rst r15 pipe 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_wr_reset.reset_pipe[1]} {rst r15 pipe 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.u_wr_reset.sync_rst_n} {rst r15 pipe 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[0]} {src f7 wptr 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[1]} {src f7 wptr 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[2]} {src f7 wptr 2} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[3]} {src f7 wptr 3} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r1[0]} {sync1 f7 wptr 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r1[1]} {sync1 f7 wptr 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r1[2]} {sync1 f7 wptr 2} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r1[3]} {sync1 f7 wptr 3} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r2[0]} {stage f7 wptr 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r2[1]} {stage f7 wptr 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r2[2]} {stage f7 wptr 2} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray_r2[3]} {stage f7 wptr 3} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_online} {src f7 wonl 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_online_r1} {sync1 f7 wonl 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_online_r2} {stage f7 wonl 0} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_reset} {rst r15 pipe 1} {feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[7].u_bank.hbm_rst_n} {rst r22 pipe 1} {feed.producer.ordinal_bank[7].u_bank.stream_rst_n} {rst r27 pipe 1} {feed.producer.pc_owner[0].ov.u_owner.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[0].u_kq.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[0].u_kr.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[1].ov.u_owner.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[1].u_kq.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[1].u_kr.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[2].ov.u_owner.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[2].u_kq.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[2].u_kr.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[3].ov.u_owner.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[3].u_kq.rst_n} {rst r22 pipe 1} {feed.producer.pc_owner[3].u_kr.rst_n} {rst r22 pipe 1} {feed.producer.srst} {rst r27 pipe 1} {feed.producer.stream_rst_n} {rst r29 pipe 1} {feed.producer.u_descriptor.rd_gray[0]} {src f8 rptr 0} {feed.producer.u_descriptor.rd_gray[1]} {src f8 rptr 1} {feed.producer.u_descriptor.rd_gray[2]} {src f8 rptr 2} {feed.producer.u_descriptor.rd_gray_w1[0]} {sync1 f8 rptr 0} {feed.producer.u_descriptor.rd_gray_w1[1]} {sync1 f8 rptr 1} {feed.producer.u_descriptor.rd_gray_w1[2]} {sync1 f8 rptr 2} {feed.producer.u_descriptor.rd_gray_w2[0]} {stage f8 rptr 0} {feed.producer.u_descriptor.rd_gray_w2[1]} {stage f8 rptr 1} {feed.producer.u_descriptor.rd_gray_w2[2]} {stage f8 rptr 2} {feed.producer.u_descriptor.rd_online} {src f8 ronl 0} {feed.producer.u_descriptor.rd_online_w1} {sync1 f8 ronl 0} {feed.producer.u_descriptor.rd_online_w2} {stage f8 ronl 0} {feed.producer.u_descriptor.rd_reset} {rst r16 pipe 1} {feed.producer.u_descriptor.rd_rst_n} {rst r22 pipe 1} {feed.producer.u_descriptor.u_rd_reset.reset_pipe[0]} {rst r16 pipe 0} {feed.producer.u_descriptor.u_rd_reset.reset_pipe[1]} {rst r16 pipe 1} {feed.producer.u_descriptor.u_rd_reset.sync_rst_n} {rst r16 pipe 1} {feed.producer.u_descriptor.u_wr_reset.reset_pipe[0]} {rst r17 pipe 0} {feed.producer.u_descriptor.u_wr_reset.reset_pipe[1]} {rst r17 pipe 1} {feed.producer.u_descriptor.u_wr_reset.sync_rst_n} {rst r17 pipe 1} {feed.producer.u_descriptor.wr_gray[0]} {src f8 wptr 0} {feed.producer.u_descriptor.wr_gray[1]} {src f8 wptr 1} {feed.producer.u_descriptor.wr_gray[2]} {src f8 wptr 2} {feed.producer.u_descriptor.wr_gray_r1[0]} {sync1 f8 wptr 0} {feed.producer.u_descriptor.wr_gray_r1[1]} {sync1 f8 wptr 1} {feed.producer.u_descriptor.wr_gray_r1[2]} {sync1 f8 wptr 2} {feed.producer.u_descriptor.wr_gray_r2[0]} {stage f8 wptr 0} {feed.producer.u_descriptor.wr_gray_r2[1]} {stage f8 wptr 1} {feed.producer.u_descriptor.wr_gray_r2[2]} {stage f8 wptr 2} {feed.producer.u_descriptor.wr_online} {src f8 wonl 0} {feed.producer.u_descriptor.wr_online_r1} {sync1 f8 wonl 0} {feed.producer.u_descriptor.wr_online_r2} {stage f8 wonl 0} {feed.producer.u_descriptor.wr_reset} {rst r17 pipe 1} {feed.producer.u_descriptor.wr_rst_n} {rst r27 pipe 1} {feed.producer.u_hbm_fault_cdc.dst_reset} {rst r18 pipe 1} {feed.producer.u_hbm_fault_cdc.rd_rst_n} {rst r27 pipe 1} {feed.producer.u_hbm_fault_cdc.src_reset} {rst r19 pipe 1} {feed.producer.u_hbm_fault_cdc.u_dst_reset.reset_pipe[0]} {rst r18 pipe 0} {feed.producer.u_hbm_fault_cdc.u_dst_reset.reset_pipe[1]} {rst r18 pipe 1} {feed.producer.u_hbm_fault_cdc.u_dst_reset.sync_rst_n} {rst r18 pipe 1} {feed.producer.u_hbm_fault_cdc.u_src_reset.reset_pipe[0]} {rst r19 pipe 0} {feed.producer.u_hbm_fault_cdc.u_src_reset.reset_pipe[1]} {rst r19 pipe 1} {feed.producer.u_hbm_fault_cdc.u_src_reset.sync_rst_n} {rst r19 pipe 1} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray[0]} {src f9 rptr 0} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray[1]} {src f9 rptr 1} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray[2]} {src f9 rptr 2} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w1[0]} {sync1 f9 rptr 0} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w1[1]} {sync1 f9 rptr 1} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w1[2]} {sync1 f9 rptr 2} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w2[0]} {stage f9 rptr 0} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w2[1]} {stage f9 rptr 1} {feed.producer.u_hbm_fault_cdc.u_status.rd_gray_w2[2]} {stage f9 rptr 2} {feed.producer.u_hbm_fault_cdc.u_status.rd_online} {src f9 ronl 0} {feed.producer.u_hbm_fault_cdc.u_status.rd_online_w1} {sync1 f9 ronl 0} {feed.producer.u_hbm_fault_cdc.u_status.rd_online_w2} {stage f9 ronl 0} {feed.producer.u_hbm_fault_cdc.u_status.rd_reset} {rst r20 pipe 1} {feed.producer.u_hbm_fault_cdc.u_status.rd_rst_n} {rst r27 pipe 1} {feed.producer.u_hbm_fault_cdc.u_status.u_rd_reset.reset_pipe[0]} {rst r20 pipe 0} {feed.producer.u_hbm_fault_cdc.u_status.u_rd_reset.reset_pipe[1]} {rst r20 pipe 1} {feed.producer.u_hbm_fault_cdc.u_status.u_rd_reset.sync_rst_n} {rst r20 pipe 1} {feed.producer.u_hbm_fault_cdc.u_status.u_wr_reset.reset_pipe[0]} {rst r21 pipe 0} {feed.producer.u_hbm_fault_cdc.u_status.u_wr_reset.reset_pipe[1]} {rst r21 pipe 1} {feed.producer.u_hbm_fault_cdc.u_status.u_wr_reset.sync_rst_n} {rst r21 pipe 1} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray[0]} {src f9 wptr 0} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray[1]} {src f9 wptr 1} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray[2]} {src f9 wptr 2} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r1[0]} {sync1 f9 wptr 0} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r1[1]} {sync1 f9 wptr 1} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r1[2]} {sync1 f9 wptr 2} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r2[0]} {stage f9 wptr 0} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r2[1]} {stage f9 wptr 1} {feed.producer.u_hbm_fault_cdc.u_status.wr_gray_r2[2]} {stage f9 wptr 2} {feed.producer.u_hbm_fault_cdc.u_status.wr_online} {src f9 wonl 0} {feed.producer.u_hbm_fault_cdc.u_status.wr_online_r1} {sync1 f9 wonl 0} {feed.producer.u_hbm_fault_cdc.u_status.wr_online_r2} {stage f9 wonl 0} {feed.producer.u_hbm_fault_cdc.u_status.wr_reset} {rst r21 pipe 1} {feed.producer.u_hbm_fault_cdc.u_status.wr_rst_n} {rst r22 pipe 1} {feed.producer.u_hbm_fault_cdc.wr_rst_n} {rst r22 pipe 1} {feed.producer.u_hbm_reset.reset_pipe[0]} {rst r22 pipe 0} {feed.producer.u_hbm_reset.reset_pipe[1]} {rst r22 pipe 1} {feed.producer.u_hbm_reset.sync_rst_n} {rst r22 pipe 1} {feed.producer.u_stream_fault_cdc.dst_reset} {rst r23 pipe 1} {feed.producer.u_stream_fault_cdc.rd_rst_n} {rst r22 pipe 1} {feed.producer.u_stream_fault_cdc.src_reset} {rst r24 pipe 1} {feed.producer.u_stream_fault_cdc.u_dst_reset.reset_pipe[0]} {rst r23 pipe 0} {feed.producer.u_stream_fault_cdc.u_dst_reset.reset_pipe[1]} {rst r23 pipe 1} {feed.producer.u_stream_fault_cdc.u_dst_reset.sync_rst_n} {rst r23 pipe 1} {feed.producer.u_stream_fault_cdc.u_src_reset.reset_pipe[0]} {rst r24 pipe 0} {feed.producer.u_stream_fault_cdc.u_src_reset.reset_pipe[1]} {rst r24 pipe 1} {feed.producer.u_stream_fault_cdc.u_src_reset.sync_rst_n} {rst r24 pipe 1} {feed.producer.u_stream_fault_cdc.u_status.rd_gray[0]} {src f10 rptr 0} {feed.producer.u_stream_fault_cdc.u_status.rd_gray[1]} {src f10 rptr 1} {feed.producer.u_stream_fault_cdc.u_status.rd_gray[2]} {src f10 rptr 2} {feed.producer.u_stream_fault_cdc.u_status.rd_gray_w1[0]} {sync1 f10 rptr 0} {feed.producer.u_stream_fault_cdc.u_status.rd_gray_w1[1]} {sync1 f10 rptr 1} {feed.producer.u_stream_fault_cdc.u_status.rd_gray_w1[2]} {sync1 f10 rptr 2} {feed.producer.u_stream_fault_cdc.u_status.rd_gray_w2[0]} {stage f10 rptr 0} {feed.producer.u_stream_fault_cdc.u_status.rd_gray_w2[1]} {stage f10 rptr 1} {feed.producer.u_stream_fault_cdc.u_status.rd_gray_w2[2]} {stage f10 rptr 2} {feed.producer.u_stream_fault_cdc.u_status.rd_online} {src f10 ronl 0} {feed.producer.u_stream_fault_cdc.u_status.rd_online_w1} {sync1 f10 ronl 0} {feed.producer.u_stream_fault_cdc.u_status.rd_online_w2} {stage f10 ronl 0} {feed.producer.u_stream_fault_cdc.u_status.rd_reset} {rst r25 pipe 1} {feed.producer.u_stream_fault_cdc.u_status.rd_rst_n} {rst r22 pipe 1} {feed.producer.u_stream_fault_cdc.u_status.u_rd_reset.reset_pipe[0]} {rst r25 pipe 0} {feed.producer.u_stream_fault_cdc.u_status.u_rd_reset.reset_pipe[1]} {rst r25 pipe 1} {feed.producer.u_stream_fault_cdc.u_status.u_rd_reset.sync_rst_n} {rst r25 pipe 1} {feed.producer.u_stream_fault_cdc.u_status.u_wr_reset.reset_pipe[0]} {rst r26 pipe 0} {feed.producer.u_stream_fault_cdc.u_status.u_wr_reset.reset_pipe[1]} {rst r26 pipe 1} {feed.producer.u_stream_fault_cdc.u_status.u_wr_reset.sync_rst_n} {rst r26 pipe 1} {feed.producer.u_stream_fault_cdc.u_status.wr_gray[0]} {src f10 wptr 0} {feed.producer.u_stream_fault_cdc.u_status.wr_gray[1]} {src f10 wptr 1} {feed.producer.u_stream_fault_cdc.u_status.wr_gray[2]} {src f10 wptr 2} {feed.producer.u_stream_fault_cdc.u_status.wr_gray_r1[0]} {sync1 f10 wptr 0} {feed.producer.u_stream_fault_cdc.u_status.wr_gray_r1[1]} {sync1 f10 wptr 1} {feed.producer.u_stream_fault_cdc.u_status.wr_gray_r1[2]} {sync1 f10 wptr 2} {feed.producer.u_stream_fault_cdc.u_status.wr_gray_r2[0]} {stage f10 wptr 0} {feed.producer.u_stream_fault_cdc.u_status.wr_gray_r2[1]} {stage f10 wptr 1} {feed.producer.u_stream_fault_cdc.u_status.wr_gray_r2[2]} {stage f10 wptr 2} {feed.producer.u_stream_fault_cdc.u_status.wr_online} {src f10 wonl 0} {feed.producer.u_stream_fault_cdc.u_status.wr_online_r1} {sync1 f10 wonl 0} {feed.producer.u_stream_fault_cdc.u_status.wr_online_r2} {stage f10 wonl 0} {feed.producer.u_stream_fault_cdc.u_status.wr_reset} {rst r26 pipe 1} {feed.producer.u_stream_fault_cdc.u_status.wr_rst_n} {rst r27 pipe 1} {feed.producer.u_stream_fault_cdc.wr_rst_n} {rst r27 pipe 1} {feed.producer.u_stream_reset.reset_pipe[0]} {rst r27 pipe 0} {feed.producer.u_stream_reset.reset_pipe[1]} {rst r27 pipe 1} {feed.producer.u_stream_reset.sync_rst_n} {rst r27 pipe 1} {feed.programme_leaf.rst_n} {rst r29 pipe 1} {feed.rows.rst_n} {rst r29 pipe 1} {feed.stream_rst_n} {rst r29 pipe 1} {hbm_rst_l} {rst r28 pipe 1} {issuer.rst_n} {rst r29 pipe 1} {stream_rst_l} {rst r29 pipe 1} {u_hrst_land.reset_pipe[0]} {rst r28 pipe 0} {u_hrst_land.reset_pipe[1]} {rst r28 pipe 1} {u_hrst_land.sync_rst_n} {rst r28 pipe 1} {u_srst_land.reset_pipe[0]} {rst r29 pipe 0} {u_srst_land.reset_pipe[1]} {rst r29 pipe 1} {u_srst_land.sync_rst_n} {rst r29 pipe 1}]
+set ::ot_gf_fifos [dict create {f0} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f1} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f10} {writer core reader hbm ptr 773.333 store 964.0 store_read 0 chains {ronl 1 rptr 3 wonl 1 wptr 3}} {f2} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f3} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f4} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f5} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f6} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f7} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 4 wonl 1 wptr 4}} {f8} {writer core reader hbm ptr 773.333 store 964.0 store_read 0 chains {ronl 1 rptr 3 wonl 1 wptr 3}} {f9} {writer hbm reader core ptr 773.333 store 773.333 store_read 0 chains {ronl 1 rptr 3 wonl 1 wptr 3}}]
+set ::ot_gf_periods [dict create core 833.333 hbm 1024.0]
+set ::ot_gf_uncertainty 60.0
+set ::ot_gf_levels [dict create ]
+set ::ot_gf_gated [dict create ]
+set ::ot_gf_straps [dict create {id_sm} 1 {id_stack} 1]
+
+
+# OT_FSM_CDC (cdc_fsm_guard.py): a CDC register re-encoded by yosys fsm_extract loses its RTL name; fail clearly.
+proc ot_fsm_cdc_guard {tag vars} {
+  if {![info exists ::env(LOG_DIR)]} return
+  set log [file join $::env(LOG_DIR) 1_2_yosys.log]
+  if {![file readable $log]} return
+  set fh [open $log r]; set text [read $fh]; close $fh
+  set found [regexp -all -inline -line {^Found FSM state register (\S+)\.$} $text]
+  if {![llength $found]} return
+  set regs [dict create]
+  foreach v $vars {
+    if {![info exists $v]} continue
+    foreach k [dict keys [set $v]] {
+      dict set regs $k 1
+      regsub {\[[0-9]+\]$} $k {} k1
+      dict set regs $k1 1
+    }
+  }
+  set hit {}
+  foreach {_ f} $found {
+    set f [string map {\\ {}} $f]
+    set i [string first . $f]
+    if {$i >= 0} {set f [string range $f [expr {$i + 1}] end]}
+    if {[dict exists $regs $f]} {lappend hit $f}
+  }
+  if {[llength $hit]} {
+    error "$tag: CDC register [join [lsort -unique $hit] {, }] was re-encoded by fsm_extract (yosys 1_2_yosys.log 'Found FSM state register'); the CDC check binds RTL register names, so its crossings would be misreported. Keep the ot_keep_regs.tcl synthesis hook with OT_FSM_NONE_WIRES (ref_tile.py gen emits it) or put (* fsm_encoding = \"none\" *) on the register"
+  }
+}
+ot_fsm_cdc_guard OT_GF {::ot_gf_roles ::ot_gf_gated}
+# OT_GF (gray_fifo_cdc_constraints.py): reviewed Gray-pointer FIFO crossings between asynchronous clock families.
+# The generator elaborated the fingerprinted sources and proved every cross-family dependence is a reviewed pointer
+# synchroniser, a FIFO-valid-gated storage read or an ot_reset_sync input. Each actual mapped crossing must match a
+# tagged pair; no other path receives an exception and no false path or clock group exists.
+set ::ot_gf_seen {}
+proc ot_gf_names {names} {
+  # Recipe-3 pin registers (physical/common_flow/ot_pin_regs.tcl, OT_PIN_REGS=1) wrap the elaborated top as instance
+  # u_ot_pr_core (a reserved name); the generator tagged the unwrapped names, so a wrapped name is also looked up without
+  # that prefix (a name matching two roles is still refused as ambiguous).
+  set out $names
+  foreach n $names {if {[regexp {^u_ot_pr_core[./](.+)$} $n -> inner]} {lappend out $inner}}
+  return $out
+}
+proc ot_gf_role {cell} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set names [list $full]
+  if {[regexp {^([^$]+)\$} $full -> base]} {lappend names $base}
+  set roles {}
+  foreach n [ot_gf_names $names] {if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}}
+  if {![dict size $roles]} {
+    foreach p [get_pins -quiet -of_objects [get_cells $cell]] {
+      if {[get_property $p direction] ne "output"} continue
+      foreach net [get_nets -quiet -of_objects $p] {
+        foreach n [ot_gf_names [list [string map {\\ {}} [get_full_name $net]]]] {
+          if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}
+        }
+      }
+    }
+  }
+  if {[dict size $roles] > 1} {error "OT_GF: ambiguous FIFO role for $cell: [dict keys $roles]"}
+  if {![dict size $roles]} {return {}}
+  return [lindex [dict keys $roles] 0]
+}
+proc ot_gf_launch {start} {
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    return [get_ports [get_full_name $start]]
+  }
+  set launch [get_cells -quiet -of_objects $start]
+  if {[llength $launch] != 1} {error "OT_GF: missing unique launch register"}
+  return $launch
+}
+set ::ot_gf_pending {}
+proc ot_gf_bound {start target bound} {
+  # Constraints are applied here; the finite-path proof runs once all are applied (ot_gf_verify). Interleaving
+  # set_*_delay with find_timing_paths re-searched the whole design per crossing (O(N^2): ~13-50 crossings/min, a
+  # 12.8k-bit storage FIFO leaf ~15 h in synth_odb, HKV-HRADM 10-19).
+  set launch [ot_gf_launch $start]
+  set_max_delay -ignore_clock_latency $bound -from $launch -to $target
+  set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
+  lappend ::ot_gf_pending [list $launch $target [get_full_name $start] [get_full_name $target]]
+}
+proc ot_gf_verify {} {
+  foreach item $::ot_gf_pending {
+    lassign $item launch target sname tname
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        puts "OT_GF PATH_DEFERRED $sname -> $tname $kind (strict at sign-off)"
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_GF: missing finite bounded $kind path $sname -> $tname"
+      }
+    }
+  }
+  set ::ot_gf_pending {}
+}
+proc ot_gf_crossing {start pin source target source_domain target_domain} {
+  if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
+    error "OT_GF: cross-family control pin [get_full_name $pin]"
+  }
+  lassign [ot_gf_role $source] sk sf sc si
+  lassign [ot_gf_role $target] tk tf tc ti
+  if {[ot_gf_ext_crossing $start $pin $source $target $source_domain $target_domain $sk $sf $tk $tf]} return
+  if {$sk eq "" || $sf ne $tf || ![dict exists $::ot_gf_fifos $sf]} {
+    error "OT_GF: unapproved actual crossing $source -> $target ($sk $sf $sc -> $tk $tf $tc)"
+  }
+  set f [dict get $::ot_gf_fifos $sf]
+  set writer [dict get $f writer]; set reader [dict get $f reader]
+  if {$sk eq "src" && $tk eq "sync1" && $sc eq $tc && $si == $ti} {
+    set side [expr {[lsearch -exact {wptr wonl} $sc] >= 0 ? [list $writer $reader] : [list $reader $writer]}]
+    if {[list $source_domain $target_domain] ne $side} {
+      error "OT_GF: pointer crossing $source -> $target is $source_domain -> $target_domain, reviewed $side"
+    }
+    ot_gf_bound $start $pin [dict get $f ptr]
+  } elseif {$sk eq "mem" && $tk in {rstage consumer}} {
+    if {$source_domain ne $writer || $target_domain ne $reader} {
+      error "OT_GF: storage crossing $source -> $target is $source_domain -> $target_domain, reviewed $writer -> $reader"
+    }
+    ot_gf_bound $start $pin [dict get $f store]
+  } else {
+    error "OT_GF: unapproved actual crossing $source -> $target ($sk $sf $sc $si -> $tk $tc $ti)"
+  }
+  dict incr ::ot_gf_seen [list $sf $sk $sc $si]
+  puts "OT_GF BOUNDED $sf $sk $sc -> $tk $source -> $target"
+}
+proc ot_gf_async {pin cells inputs} {
+  # Recovery/removal stays timed. A cross-family asynchronous control is admitted only into an ot_reset_sync pipe.
+  set cell [get_full_name [get_cells -of_objects $pin]]
+  set domain [dict get $cells $cell]
+  foreach start [get_fanin -flat -startpoints_only -to $pin] {
+    set name [get_full_name $start]
+    if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+      if {![dict exists $inputs $name]} {error "OT_GF: undeclared input $name drives asynchronous control [get_full_name $pin]"}
+      set source_domain [dict get $inputs $name]
+    } else {
+      set source [get_full_name [get_cells -quiet -of_objects $start]]
+      if {![dict exists $cells $source]} {
+        if {[ot_ce_constant_cone $start]} continue
+        error "OT_GF: unowned asynchronous control $source -> [get_full_name $pin]"
+      }
+      set source_domain [dict get $cells $source]
+    }
+    if {$source_domain eq $domain} continue
+    lassign [ot_gf_role $cell] tk
+    if {$tk ne "rst"} {error "OT_GF: cross-family asynchronous control $name ($source_domain) -> [get_full_name $pin] ($domain)"}
+    set bound [expr {[dict get $::ot_gf_periods $domain] - $::ot_gf_uncertainty}]
+    ot_gf_bound $start $pin $bound
+    dict incr ::ot_gf_seen [list rst $cell]
+    puts "OT_GF BOUNDED reset $name -> [get_full_name $pin]"
+  }
+}
+proc ot_gf_chain_dir {info c} {
+  # (source family, destination family) of chain c: wptr/wonl publish writer -> reader, rptr/ronl reader -> writer.
+  if {[lsearch -exact {wptr wonl} $c] >= 0} {return [list [dict get $info writer] [dict get $info reader]]}
+  return [list [dict get $info reader] [dict get $info writer]]
+}
+proc ot_gf_online_merged {f c live} {
+  # HKV-HRADM3 10-19 (qkd_hr_cdc_host/pc r5, as OT_ASYNC_GRAY's ot_ag_online_merged, HBMA-SVC 10-17): an online flag
+  # chain is constant 1 after its domain reset, then a two-flop synchroniser.  Two FIFOs whose online chains have the
+  # same launch family, capture family and conditioned reset (u_done host->core ronl == u_ing core->host wonl: core
+  # launch, host stages) are bit-identical, and synthesis' opt_merge keeps ONE chain under one FIFO's names.  A missing
+  # online crossing is admitted only when (a) no mapped register of this FIFO's chain is left (src, stage 1 or stage 2:
+  # merged away, not left unaudited) and (b) another FIFO's online chain in the same direction is live and its crossing
+  # was bounded here.  Gray pointers and storage are never admitted this way.
+  if {$c ni {wonl ronl} || [dict exists $live [list $f $c]]} {return 0}
+  set dir [ot_gf_chain_dir [dict get $::ot_gf_fifos $f] $c]
+  dict for {g ginfo} $::ot_gf_fifos {
+    if {$g eq $f} continue
+    foreach gc {wonl ronl} {
+      if {![dict exists [dict get $ginfo chains] $gc] || [ot_gf_chain_dir $ginfo $gc] ne $dir} continue
+      if {[dict exists $live [list $g $gc]] && [dict exists $::ot_gf_seen [list $g src $gc 0]]} {
+        puts "OT_GF MERGED_ONLINE $f $c -> $g $gc ([join $dir { -> }])"
+        return 1
+      }
+    }
+  }
+  return 0
+}
+proc ot_gf_complete {cells} {
+  ot_gf_verify
+  set live {}
+  # Every tagged register sits in its tagged family (a tag on a same-family path is refused here).
+  dict for {cell domain} $cells {
+    lassign [ot_gf_role $cell] k f c i
+    if {[ot_gf_ext_complete $cell $domain $k $f]} continue
+    if {$k eq "" || $k eq "rst"} continue
+    if {$k in {src sync1 stage}} {dict set live [list $f $c] 1}
+    set info [dict get $::ot_gf_fifos $f]
+    set w [dict get $info writer]; set r [dict get $info reader]
+    set wside [expr {[lsearch -exact {wptr wonl} $c] >= 0}]
+    switch -- $k {
+      src {set want [expr {$wside ? $w : $r}]}
+      sync1 - stage {set want [expr {$wside ? $r : $w}]}
+      mem {set want $w}
+      default {set want $r}
+    }
+    if {$domain ne $want} {error "OT_GF: FIFO register $cell ($f $k $c) is in $domain, reviewed $want; no exception on a same-family path"}
+  }
+  dict for {f info} $::ot_gf_fifos {
+    dict for {c width} [dict get $info chains] {
+      for {set i 0} {$i < $width} {incr i} {
+        if {![dict exists $::ot_gf_seen [list $f src $c $i]] && !($i == 0 && $width == 1 && [ot_gf_online_merged $f $c $live])} {
+          error "OT_GF: missing actual synchronised pointer crossing $f $c bit $i"
+        }
+      }
+    }
+    if {[dict get $info store_read] && ![dict exists $::ot_gf_seen [list $f mem mem 0]]} {error "OT_GF: missing actual storage crossing $f"}
+  }
+  ot_gf_ext_final
+  puts "OT_GF STRUCTURAL_PASS [dict size $::ot_gf_seen] crossing classes (bounded reviewed FIFO crossings only; no physical closure claim)"
+}
+
+# OT_GF extension mode (ROOT-0330-CDC 2026-10-18): declared 1-bit level synchronisers, storage consumers proved gated by
+# each storage bit's own FIFO read-valid (several FIFOs, or a register with another role), die-constant strap inputs.
+proc ot_gf_gated_fifos {cell} {
+  set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set names [list $full]
+  if {[regexp {^([^$]+)\$} $full -> base]} {lappend names $base}
+  foreach p [get_pins -quiet -of_objects [get_cells $cell]] {
+    if {[get_property $p direction] ne "output"} continue
+    foreach net [get_nets -quiet -of_objects $p] {lappend names [string map {\\ {}} [get_full_name $net]]}
+  }
+  set out {}
+  foreach n [ot_gf_names $names] {if {[dict exists $::ot_gf_gated $n]} {foreach f [dict get $::ot_gf_gated $n] {dict set out $f 1}}}
+  return [dict keys $out]
+}
+proc ot_gf_ext_crossing {start pin source target source_domain target_domain sk sf tk tf} {
+  if {$sk eq "lsrc" && $tk eq "lsync1" && $sf eq $tf && [dict exists $::ot_gf_levels $sf]} {
+    set l [dict get $::ot_gf_levels $sf]
+    if {[list $source_domain $target_domain] ne [list [dict get $l src] [dict get $l dst]]} {
+      error "OT_GF: level crossing $source -> $target is $source_domain -> $target_domain, reviewed [dict get $l src] -> [dict get $l dst]"
+    }
+    ot_gf_bound $start $pin [dict get $l bound]
+    dict incr ::ot_gf_seen [list $sf lsrc lvl 0]
+    puts "OT_GF BOUNDED level $sf $source -> $target"
+    return 1
+  }
+  if {$sk eq "mem" && [dict exists $::ot_gf_fifos $sf] && $sf in [ot_gf_gated_fifos $target]} {
+    set f [dict get $::ot_gf_fifos $sf]
+    if {$source_domain ne [dict get $f writer] || $target_domain ne [dict get $f reader]} {
+      error "OT_GF: storage crossing $source -> $target is $source_domain -> $target_domain, reviewed [dict get $f writer] -> [dict get $f reader]"
+    }
+    ot_gf_bound $start $pin [dict get $f store]
+    dict incr ::ot_gf_seen [list $sf mem mem 0]
+    puts "OT_GF BOUNDED $sf mem mem -> gated $source -> $target"
+    return 1
+  }
+  return 0
+}
+proc ot_gf_ext_complete {cell domain k f} {
+  if {$k ni {lsrc lsync1 lstage}} {return 0}
+  set l [dict get $::ot_gf_levels $f]
+  set want [expr {$k eq "lsrc" ? [dict get $l src] : [dict get $l dst]}]
+  if {$domain ne $want} {error "OT_GF: level synchroniser register $cell ($f $k) is in $domain, reviewed $want"}
+  return 1
+}
+proc ot_gf_strap {start pin name expected inputs} {
+  set base $name
+  regexp {^([^\[]+)\[} $name -> base
+  if {![dict exists $::ot_gf_straps $base]} {return 0}
+  if {![dict exists $inputs $name]} {error "OT_GF: die-constant input $name has no declared IO family"}
+  if {[dict get $inputs $name] eq $expected} {return 0}
+  # (OpenSTA re-parses the calling command as a list: keep the bound a plain variable)
+  set bound [expr {[dict get $::ot_gf_periods $expected] - $::ot_gf_uncertainty}]
+  ot_gf_bound $start $pin $bound
+  dict incr ::ot_gf_seen [list strap $name $expected]
+  puts "OT_GF BOUNDED strap $name -> [get_full_name $pin] ($expected)"
+  return 1
+}
+proc ot_gf_ext_final {} {
+  dict for {l info} $::ot_gf_levels {
+    if {![dict exists $::ot_gf_seen [list $l lsrc lvl 0]]} {error "OT_GF: missing actual level synchroniser crossing $l"}
+  }
+}
+
+# Actual OpenSTA clock ancestry and physical propagated-clock measurements.
+# OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
+# resolves inferred masters; evaluate only its generated-clock declarations in
+# an isolated safe interpreter, never replay constraints in the live session.
+proc ot_cf_record {args} {
+  set ni [lsearch -exact $args -name]; set mi [lsearch -exact $args -master_clock]
+  set si [lsearch -exact $args -source]
+  if {$ni < 0 || $mi < 0 || $si < 0} {error "OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source"}
+  set name [lindex $args [expr {$ni+1}]]
+  set master [lindex $args [expr {$mi+1}]]; set source [lindex $args [expr {$si+1}]]
+  if {[llength $master] != 1 || [llength $source] != 1 || [dict exists $::ot_cf_master $name]} {
+    error "OT_CLOCK_FAMILY: ambiguous generated clock $name"
+  }
+  set parent [get_full_name $master]
+  if {[sta::object_type $source] eq "Port"} {set source [sta::get_port_pin $source]}
+  set owners {}; foreach c [get_property $source clocks] {lappend owners [get_full_name $c]}
+  if {[lsort -unique $owners] ne [list $parent]} {
+    error "OT_CLOCK_FAMILY: generated source of $name has owners $owners, expected $parent"
+  }
+  dict set ::ot_cf_master $name $parent
+}
+proc ot_cf_refresh {} {
+  set ::ot_cf_master {}; set ::ot_cf_active_cache {}; set generated {}
+  foreach c [all_clocks] {if {[$c is_generated]} {lappend generated [get_full_name $c]}}
+  if {![llength $generated]} {return}
+  sta::update_generated_clks
+  # Iterating paths alone does not initialize generated source insertion.
+  # A native timing search fills the complete root-to-bank physical arrivals.
+  find_timing_paths -group_path_count 1
+  set fd [file tempfile path ot-clock-family-]; close $fd
+  set ip [interp create -safe]
+  try {
+    write_sdc $path
+    foreach cmd {get_ports get_pins get_clocks} {interp alias $ip $cmd {} $cmd}
+    interp alias $ip create_generated_clock {} ot_cf_record
+    set fd [open $path r]; set text [read $fd]; close $fd
+    set command {}
+    foreach line [split $text \n] {
+      append command $line \n
+      if {![info complete $command]} continue
+      if {[regexp {^\s*create_generated_clock\s} $command]} {interp eval $ip $command}
+      set command {}
+    }
+    if {[string trim $command] ne ""} {error "OT_CLOCK_FAMILY: incomplete canonical SDC"}
+    if {[lsort [dict keys $::ot_cf_master]] ne [lsort $generated]} {error "OT_CLOCK_FAMILY: incomplete generated-clock ancestry"}
+    foreach c $generated {ot_cf_root $c}
+  } finally {interp delete $ip; file delete -force $path}
+}
+proc ot_cf_root {name} {
+  set seen {}
+  while {[dict exists $::ot_cf_master $name]} {
+    if {$name in $seen} {error "OT_CLOCK_FAMILY: ancestry cycle $name"}
+    lappend seen $name; set name [dict get $::ot_cf_master $name]
+  }
+  set c [get_clocks -quiet $name]
+  if {[llength $c] != 1 || [$c is_generated]} {error "OT_CLOCK_FAMILY: unresolved root $name"}
+  return $name
+}
+proc ot_cf_pins {root} {
+  set name [get_full_name $root]
+  if {[ot_cf_root $name] ne $name} {error "OT_CLOCK_FAMILY: requested root $name is generated"}
+  # Ordinary roots retain the existing all_registers ownership query. In
+  # pre-CTS ideal sessions get_property(pin, clocks) can be empty on check-only
+  # macro entries; all_registers -clock still proves actual graph membership.
+  if {![dict size $::ot_cf_master]} {
+    set pins [all_registers -clock_pins -clock $root]; set owners {}
+    foreach p $pins {dict set owners [get_full_name $p] $root}
+    return [list $pins $owners]
+  }
+  set pins {}; set owners {}
+  foreach c [all_clocks] {
+    if {[ot_cf_root [get_full_name $c]] ne $name} continue
+    foreach p [all_registers -clock_pins -clock $c] {
+      set pn [get_full_name $p]
+      set actual {}; foreach owner [get_property $p clocks] {lappend actual [get_full_name $owner]}
+      if {[llength [lsort -unique $actual]] != 1} {
+        error "OT_CLOCK_FAMILY: ambiguous clock sink $pn ($actual)"
+      }
+      if {[ot_cf_root [lindex $actual 0]] ne $name} {error "OT_CLOCK_FAMILY: foreign sink $pn"}
+      if {[lindex $actual 0] ne [get_full_name $c]} continue
+      if {[dict exists $owners $pn]} {error "OT_CLOCK_FAMILY: duplicate sink $pn"}
+      dict set owners $pn $c; lappend pins $p
+    }
+  }
+  return [list $pins $owners]
+}
+proc ot_cf_active {p} {
+  set cell [get_cells -of_objects $p]
+  set key [list [get_property $cell ref_name] [get_property $p lib_pin_name]]
+  if {[dict exists $::ot_cf_active_cache $key]} {return [dict get $::ot_cf_active_cache $key]}
+  sta::redirect_string_begin
+  set failed [catch {report_edges -from $p} message]
+  set report [sta::redirect_string_end]; set on 0; set edges {}
+  if {$failed} {error "OT_CLOCK_FAMILY: active-edge query failed [get_full_name $p]: $message"}
+  foreach line [split $report \n] {
+    if {[regexp {^\S} $line]} {set on [regexp {(Clk|En) to Q} $line]; continue}
+    if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
+  }
+  if {![llength $edges] && [llength [info commands ord::get_db]]} {
+    # Check-only hard entries (notably SRAM write clocks) have no clock-to-Q
+    # arc. Only an actual physical BLOCK with unique loaded Liberty clock
+    # timing-check edges is supported; missing soft-register arcs still fail.
+    set master [[ord::get_db] findMaster [get_property $cell ref_name]]
+    if {$master ne "NULL" && [$master isBlock]} {
+      set on 0
+      foreach line [split $report \n] {
+        if {[regexp {^\S} $line]} {set on [regexp { (setup|hold|recovery|removal)$} $line]; continue}
+        if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
+      }
+    }
+  }
+  if {[llength $edges] != 1} {error "OT_CLOCK_FAMILY: missing unique active clock edge [get_full_name $p] ($edges)"}
+  set active [expr {[lindex $edges 0] eq "^" ? "rise" : "fall"}]
+  dict set ::ot_cf_active_cache $key $active
+  return $active
+}
+proc ot_cf_wire {pin clock {scene {}}} {
+  if {$scene eq ""} {set scene [get_property [sta::cmd_scene] name]}
+  set cn [get_full_name $clock]; set waveform {}
+  foreach time [$clock waveform] {lappend waveform [sta::time_sta_ui $time]}
+  if {[llength $waveform] != 2} {error "OT_CLOCK_FAMILY: invalid waveform $cn"}
+  foreach time $waveform {if {![string is double -strict $time] || [regexp -nocase {inf|nan} $time]} {error "OT_CLOCK_FAMILY: nonfinite waveform $cn"}}
+  set transition [ot_cf_active $pin]; set marker [expr {$transition eq "rise" ? "^max" : "vmax"}]
+  set values {}
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    set paths [$vertex path_iterator $transition max]
+    while {[$paths has_next]} {
+      set path [$paths next]; set tag [$path tag]; set edge [lindex $tag 4]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne $marker || [lindex $tag 3] ne $cn || $edge ni {^ v} || [string first "(clock prop)" $tag] < 0} continue
+      set arrival [sta::time_sta_ui [$path arrival]]
+      if {![string is double -strict $arrival] || [regexp -nocase {inf|nan} $arrival]} {$paths finish; error "OT_CLOCK_FAMILY: nonfinite clock arrival [get_full_name $pin]"}
+      lappend values [expr {$arrival-[lindex $waveform [expr {$edge eq "^" ? 0 : 1}]]}]
+    }
+    $paths finish
+  }
+  if {[llength $values] != 1} {error "OT_CLOCK_FAMILY: missing unique physical clock arrival [get_full_name $pin] clock=$cn scene=$scene"}
+  return [lindex $values 0]
+}
+
+proc ot_ce_clock_wire {pin clock} {
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {
+    set owners [get_property $pin clocks]
+    if {[llength $owners] != 1 || [ot_cf_root [get_full_name $owners]] ne [ot_cf_root [get_full_name $clock]]} {
+      error "OT_CLOCK_FAMILY: wrong/ambiguous source ownership [get_full_name $pin]"
+    }
+    return [ot_cf_wire $pin $owners]
+  }
+  return [ot_ce_legacy_clock_wire $pin $clock]
+}
+
+# Constants are proved from actual OpenDB connectivity and the loaded Liberty
+# output functions. Cell/port names, case analysis and timing-graph constant
+# pruning are never proofs. A cell output is constant when every loaded corner
+# gives its master the same Liberty function and that function is a literal, or a
+# combinational expression whose every variable is an input pin of the same
+# instance on a net with no input port and exactly one driver that is itself
+# constant (TIEHI/TIELO prove themselves through their literal function; a
+# synthesis buffer/inverter or any gate of constants follows). Registers never
+# qualify; unknown or unparsable functions fail closed.
+proc ot_ce_constant_net {net seen remaining} {
+  if {$remaining <= 0 || $net in {"" NULL}} {return 0}
+  foreach port [$net getBTerms] {if {[$port getIoType] ne "OUTPUT"} {return 0}}
+  set drivers {}
+  foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}
+  if {[llength $drivers] != 1} {return 0}
+  return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]
+}
+proc ot_ce_constant_iterm {pin seen remaining} {
+  if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}
+  set inst [$pin getInst];set name "[$inst getName]/[[$pin getMTerm] getName]"
+  if {[dict exists $seen $name]} {return 0}
+  if {[info exists ::ot_ce_const_memo] && [dict exists $::ot_ce_const_memo $name]} {return [dict get $::ot_ce_const_memo $name]}
+  dict set seen $name 1
+  set result [ot_ce_constant_iterm_eval $inst $pin $seen $remaining]
+  dict set ::ot_ce_const_memo $name $result
+  return $result
+}
+proc ot_ce_constant_iterm_eval {inst pin seen remaining} {
+  if {[info exists ::ot_ce_register_cells] && [dict exists $::ot_ce_register_cells [$inst getName]]} {return 0}
+  set master [[$inst getMaster] getName];set output [[$pin getMTerm] getName]
+  set functions {};set matched 0
+  foreach library [get_libs -quiet *] {
+    set cell [$library find_liberty_cell $master]
+    if {$cell in {"" NULL}} continue
+    set lp [$cell find_liberty_port $output]
+    if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {return 0}
+    dict set functions [string map {" " "" "\t" "" "\n" ""} [$lp function]] 1
+    incr matched
+  }
+  if {!$matched || [dict size $functions] != 1} {return 0}
+  set function [lindex [dict keys $functions] 0]
+  if {$function in {0 1}} {return 1}
+  if {$function eq "" || ![regexp {^[A-Za-z0-9_!'*&+|^()]+$} $function]} {return 0}
+  set inputs [lsort -unique [regexp -all -inline {[A-Za-z_][A-Za-z0-9_]*} $function]]
+  if {![llength $inputs]} {return 0}
+  foreach input $inputs {
+    set in [$inst findITerm $input]
+    if {$in in {"" NULL} || ![$in isInputSignal]} {return 0}
+    if {![ot_ce_constant_net [$in getNet] $seen [expr {$remaining-1}]]} {return 0}
+  }
+  return 1
+}
+# Timing startpoint -> constant proof. An output-port startpoint is followed to
+# its net driver; an input port is never constant.
+proc ot_ce_constant_cone {start} {
+  set block [ord::get_db_block]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set port [$block findBTerm [get_full_name $start]]
+    if {$port in {"" NULL} || [$port getIoType] ne "OUTPUT"} {return 0}
+    return [ot_ce_constant_net [$port getNet] {} 64]
+  }
+  if {[sta::object_type $start] ne "Pin"} {return 0}
+  set inst [$block findInst [get_full_name [$start instance]]]
+  if {$inst in {"" NULL}} {return 0}
+  set pin [$inst findITerm [get_property $start lib_pin_name]]
+  if {$pin in {"" NULL}} {return 0}
+  return [ot_ce_constant_iterm $pin {} 64]
+}
+# Classification is immutable during one ownership validation. Memoize only
+# in the caller's local dictionary; no STA object/classification survives it.
+proc ot_ce_startpoint_class {start purpose memo_name} {
+  upvar 1 $memo_name memo
+  set name [get_full_name $start]
+  set key [list $purpose [sta::object_type $start] $name]
+  if {[dict exists $memo $key]} {return [dict get $memo $key]}
+  if {$purpose eq "input" && [llength [get_ports -quiet $name]]} {
+    set result [list port $name]
+  } elseif {$purpose eq "output" && [sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+    set result [list top_pin $name]
+  } else {
+    set result [list cell [get_full_name [get_cells -quiet -of_objects $start]]]
+  }
+  dict set memo $key $result
+  return $result
+}
+# A multi-root leaf contains independent synchronous datapaths. Domain declarations
+# are checked against the real synthesized timing graph, not trusted as metadata.
+proc ot_ce_leaf_ownership {inputs outputs} {
+  ot_cf_refresh
+  set expected {}
+  dict for {domain info} $::ot_ce_domains {lappend expected [dict get $info clock]}
+  for {set i 0} {$i < [llength $::ot_ce_ports]} {incr i} {lappend expected ot_entry_$i}
+  set actual {}
+  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}
+  if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
+  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
+  foreach root $::ot_ce_ports {
+    set domain [dict get $::ot_ce_source_domains $root]
+    dict set domain_roots $domain $root
+    set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
+    lassign [ot_cf_pins $clock] ot_ce_family_pins ot_ce_family_owners
+    foreach pin $ot_ce_family_pins {
+      set cell [get_full_name [get_cells -of_objects $pin]]
+      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }
+      dict set cells $cell $domain
+    }
+  }
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_full_name [get_cells -of_objects $pin]]
+    if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }
+  }
+  set ::ot_ce_register_cells {}
+  foreach r [all_registers -cells] {dict set ::ot_ce_register_cells [get_full_name $r] 1}
+  set ::ot_ce_const_memo {}
+  set startpoint_classes {}
+  # OpenSTA's -data_pins population includes asynchronous clear/preset
+  # controls. Classify these from the actual loaded Liberty sequential arcs,
+  # never from port names or reset_ports. They retain recovery/removal timing;
+  # only ordinary synchronous D/control paths require data-domain ownership.
+  set async_pins {}
+  foreach pin [all_registers -async_pins] {dict set async_pins [get_full_name $pin] 1}
+  foreach pin [all_registers -data_pins] {
+    if {[dict exists $async_pins [get_full_name $pin]]} {ot_gf_async $pin $cells $inputs; continue}
+    set cell [get_full_name [get_cells -of_objects $pin]]
+    set expected [dict get $cells $cell]
+    foreach start [get_fanin -flat -startpoints_only -to $pin] {
+      lassign [ot_ce_startpoint_class $start input startpoint_classes] source_kind source
+      if {$source_kind eq "port"} {
+        set name [get_full_name $start]
+        if {[ot_gf_strap $start $pin $name $expected $inputs]} continue
+        if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {
+          error "OT_MULTI_ROOT: input $name has wrong domain for $cell"
+        }
+      } else {
+        if {![dict exists $cells $source]} {
+          if {[ot_ce_constant_cone $start]} {
+            puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
+            continue
+          }
+          error "OT_MULTI_ROOT: unowned data path $source -> $cell"
+        }
+        set source_domain [dict get $cells $source]
+        if {$source_domain ne $expected} {
+          ot_gf_crossing $start $pin $source $cell $source_domain $expected
+          continue
+        }
+      }
+    }
+  }
+  dict for {name domain} $outputs {
+    foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
+      # A die-strap tie output (contract v1.2 tie_hi/tie_lo), possibly
+      # synthesis-buffered, has no clock and no data domain to own; it must be
+      # proved constant above. Registers and ports keep their domain checks.
+      lassign [ot_ce_startpoint_class $start output startpoint_classes] source_kind source
+      if {$source_kind eq "top_pin"} {
+        if {[ot_ce_constant_cone $start]} {
+          puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+          continue
+        }
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
+      }
+      if {![dict exists $cells $source] && [ot_ce_constant_cone $start]} {
+        puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+        continue
+      }
+      if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
+      }
+    }
+  }
+  dict for {pair unused} $crossing_pairs {
+    lassign $pair source_domain target_domain
+    set source_root [dict get $domain_roots $source_domain]
+    set target_root [dict get $domain_roots $target_domain]
+    set from [all_registers -clock ot_entry_[lsearch -exact $::ot_ce_ports $source_root] -clock_pins]
+    set to {}
+    foreach pin [all_registers -clock ot_entry_[lsearch -exact $::ot_ce_ports $target_root] -data_pins] {
+      if {![dict exists $async_pins [get_full_name $pin]]} {lappend to $pin}
+    }
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" &&
+          ![info exists ::ot_mm_active]} {
+        # Multi-mode route/gate (tools/orfs_hold_mm.tcl): this SDC is being read into mode ss BEFORE any scene is
+        # defined, so the unscened default scene has no clocks and no path can be found yet.  The crossing population
+        # above is structural (actual fanin) and unchanged; the finite-path proof runs strictly in every single-scene
+        # read (non-MM stages, corner_sta / sign-off), which carries the timing claim.
+        puts "OT_MULTI_ROOT RELATED_PATH_DEFERRED $source_domain -> $target_domain $kind (multi-mode read before scene definition; strict at sign-off)"
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain"
+      }
+      puts "OT_MULTI_ROOT RELATED_PATH $source_domain -> $target_domain $kind slack=[get_property [lindex $paths 0] slack] (ordinary synchronous timing retained)"
+    }
+  }
+  ot_gf_complete $cells
+  puts "OT_MULTI_ROOT OWNERSHIP PASS roots=[llength $::ot_ce_cts_roots] registers=[dict size $cells] inputs=[dict size $inputs] outputs=[dict size $outputs] async_control_pins=[dict size $async_pins]"
+}
+
+proc ot_ce_corner {} {
+  if {[info exists ::ot_ioref_scene] && $::ot_ioref_scene eq "BC"} { return ff }
+  if {[info exists ::ot_ce_corner]} { return $::ot_ce_corner }
+  # WC is a scene label, not an actual library corner: option-B overlays WC
+  # with TT. Bind the reference to actual loaded child Liberty objects.
+  set found {}; set clock_cells {}
+  # Physical-only taps/endcaps have no Liberty association. The clock corner
+  # belongs to actual sequential clock sinks, not every physical instance.
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_cells -quiet -of_objects $pin]
+    if {[llength $cell] != 1 || $cell eq "NULL"} {error "OT_MULTI_ROOT: clock sink lacks one actual sequential cell"}
+    dict set clock_cells [get_full_name $cell] $cell
+  }
+  if {![dict size $clock_cells]} {error "OT_MULTI_ROOT: no actual sequential cells for corner inference"}
+  foreach cell [dict values $clock_cells] {
+    set master [get_property $cell ref_name]
+    set libcells [get_lib_cells -quiet -of_objects $cell]
+    if {![llength $libcells] || "NULL" in $libcells} { error "OT_MULTI_ROOT: actual sequential cell $master has no loaded Liberty association" }
+    foreach lc $libcells {
+      set full [get_full_name $lc]
+      if {![regexp -nocase {_(tt|ff|ss)/|_(tt|ff|ss)_} $full -> corner alt]} { error "OT_ENTRIES: unknown actual Liberty corner $full" }
+      if {$corner eq ""} {set corner $alt}
+      dict set found [string tolower $corner] 1
+    }
+  }
+  if {[dict size $found] == 1} { return [lindex [dict keys $found] 0] }
+  # A multi-mode database needs its actual setup corner or BC scene shim.
+  if {[info exists ::env(OT_MM_SETUP_CORNER)]} {
+    switch -nocase -- $::env(OT_MM_SETUP_CORNER) {
+      TC - tt {set corner tt} BC - ff {set corner ff} WC - ss {set corner ss}
+      default { error "OT_ENTRIES: unknown actual setup corner" }
+    }
+    if {[dict exists $found $corner]} { return $corner }
+  }
+  error "OT_ENTRIES: ambiguous actual loaded child corners [dict keys $found]"
+}
+# get_property pin arrival_max_rise is a DATA arrival query. On a clock-only
+# macro pin it returns an infinity sentinel even with a finite propagated clock
+# path. Read propagated clock tags in the current scene and remove the
+# source waveform edge time; falling-edge-only registers include that phase.
+proc ot_ce_finite {value} {
+  return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
+}
+proc ot_ce_legacy_clock_wire {pin clock} {
+  set scene [get_property [sta::cmd_scene] name]
+  set clock_name [get_full_name $clock]
+  set by_transition [dict create rise {} fall {}]
+  set waveform {}
+  foreach time [$clock waveform] {lappend waveform [sta::time_sta_ui $time]}
+  if {[llength $waveform] != 2 || ![ot_ce_finite [lindex $waveform 0]] ||
+      ![ot_ce_finite [lindex $waveform 1]]} {
+    error "OT_ENTRIES: invalid source clock waveform $clock_name"
+  }
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    foreach transition {rise fall} marker {^ v} {
+      set paths [$vertex path_iterator $transition max]
+      while {[$paths has_next]} {
+        set path [$paths next]
+        # Sink transition and source clock edge are distinct (inverting trees).
+        # Exclude data, ideal, other-scene and other-clock paths as before.
+        set tag [$path tag]
+        set edge [lindex $tag 4]
+        if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "${marker}max" ||
+            [lindex $tag 3] ne $clock_name || $edge ni {^ v} ||
+            [string first "(clock prop)" $tag] < 0} continue
+        set arrival [sta::time_sta_ui [$path arrival]]
+        if {![ot_ce_finite $arrival]} {
+          $paths finish
+          error "OT_ENTRIES: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+        }
+        set phase [lindex $waveform [expr {$edge eq "^" ? 0 : 1}]]
+        dict lappend by_transition $transition [expr {$arrival - $phase}]
+      }
+      $paths finish
+    }
+  }
+  # Preserve the rising pin-transition reference. An inverted/negedge clock
+  # may associate it with the falling source edge; remove that actual phase.
+  # Fall-only pins remain measurable. Multiple same-transition tags fail.
+  set values [dict get $by_transition rise]
+  if {![llength $values]} {set values [dict get $by_transition fall]}
+  if {[llength $values] != 1} {
+    # Synthesis/floorplan have no extracted entry wire. This is solely a finite
+    # pre-CTS diagnostic reference; routed gates must measure a clock path.
+    if {![llength $values] && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+        (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+      puts "OT_ENTRIES PRE_CTS_ZERO_WIRE [get_full_name $pin] scene=$scene"
+      return 0.0
+    }
+    error "OT_ENTRIES: missing unique finite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+  }
+  return [lindex $values 0]
+}
+# Match the structural IO boundary population in ck_insertion.py and io_ref_routed.sdc.
+proc ot_ce_boundary_cells {} {
+  set regs {}
+  foreach p [all_registers -clock_pins] {
+    set n [get_full_name $p]
+    dict set regs [regsub {/[^/]+$} $n {}] $n
+  }
+
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
+}
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+
+  return $bnd
+}
+# Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
+# (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
+# TT or FF; SS is sensitivity only.  > 15k sinks and > 300 ps insertion only WARN.
+proc ot_ce_clock_rule {corner name sinks all_mean pin_mean pin_lo pin_hi scope} {
+  set spread [expr {$pin_hi - $pin_lo}]
+  set warn {}
+  if {$sinks > 15000} { lappend warn "sinks $sinks > 15000 (guidance)" }
+  if {$all_mean > 300 || $pin_mean > 300} {
+    lappend warn "insertion all_mean [format %.1f $all_mean] / pin_mean [format %.1f $pin_mean] ps > 300 (guidance)"
+  }
+  if {[string tolower $corner] in {tt ff} && $spread > 80} {
+    set level FAIL
+  } elseif {[llength $warn]} {
+    set level WARN
+  } else {
+    set level PASS
+  }
+  puts "OT_HYBRID CLOCK_RULE $corner $name $level pin_spread=[format %.1f $spread] scope=$scope sinks=$sinks[expr {[llength $warn] ? " WARN: [join $warn {; }]" : ""}]"
+  return $level
+}
+
+proc ot_ce_boundary_pins {pins boundary_cells} {
+  set regs {}; set boundary {}
+  foreach pin $pins {dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin}
+  dict for {name unused} $boundary_cells {
+    if {[dict exists $regs $name]} {dict set boundary $name [dict get $regs $name]}
+  }
+  return [dict values $boundary]
+}
+
+proc ot_ce_apply {} {
+  set corner [ot_ce_corner]
+  set clk [get_clocks core_clk]
+  if {[llength $clk] != 1} { error "OT_ENTRIES: core_clk missing" }
+  # Wires-only parents have no CTS tree to set this flag for us.
+  # Ideal clocks silently report zero network arrival despite real entry wires.
+  set_propagated_clock [get_clocks ot_entry_*]
+  # Before CTS, a standard-cell root is still one unbuffered high-fanout
+  # net. Propagating that net invents multi-ns skew and clock-pin slew;
+  # its delay is not the tree that CTS will build. Keep only these declared
+  # CTS roots ideal during the explicit pre-CTS diagnostic. Raw macro and
+  # hardened-child entries retain actual entry-wire propagation. Routed
+  # require-wire checks always propagate and measure every physical root.
+  if {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+      (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+    foreach name $::ot_ce_cts_roots {
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      unset_propagated_clock $clock
+      puts "OT_ENTRIES PRE_CTS_IDEAL_CTS_ROOT $name"
+    }
+  }
+  set sources {}; set names {}
+  foreach c [get_clocks ot_entry_*] {
+    foreach p [get_property $c sources] { lappend sources $p; lappend names [get_full_name $p] }
+  }
+  if {[lsort $names] ne [lsort $::ot_ce_ports]} { error "OT_ENTRIES: source clock coverage differs from spec" }
+  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }
+  ot_cf_refresh
+  sta::worst_slack_cmd max
+  set rows {}; set seen {}; set counts {}
+  foreach cell [get_cells -quiet -hierarchical *] {
+    set master [get_property $cell ref_name]
+    if {![dict exists $::ot_ce_counts $master]} continue
+    dict incr counts $master
+    foreach pin [get_pins -quiet -of_objects $cell] {
+      set key "$master/[get_property $pin lib_pin_name]"
+      if {![dict exists $::ot_ce_refs $key]} continue
+      set ports [get_ports -quiet -of_objects [get_nets -quiet -of_objects $pin]]
+      if {[llength $ports] != 1} { error "OT_ENTRIES: [get_full_name $pin] lacks one direct top clock port" }
+      set port [lindex $ports 0]; set name [get_full_name $port]
+      if {$name ni $::ot_ce_ports || $name in $::ot_ce_cts_roots || [dict exists $seen $name]} { error "OT_ENTRIES: duplicate or undeclared source $name" }
+      dict set seen $name 1
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      if {[llength $clock] != 1} { error "OT_ENTRIES: $name has no unique related clock" }
+      set wire [ot_ce_clock_wire $pin $clock]
+      if {![ot_ce_finite $wire]} { error "OT_ENTRIES: nonfinite entry wire clock arrival on [get_full_name $pin]" }
+      if {abs($wire) < 1.0e-9 && [info exists ::ot_ce_require_wire] && $::ot_ce_require_wire} {
+        # A zero arrival is admissible only if actual source and child pin are
+        # physically coincident. Missing parasitics/ideal clocks cannot qualify.
+        if {![llength [info commands ord::get_db_block]]} { error "OT_ENTRIES: zero wire lacks physical source/pin proof" }
+        set block [ord::get_db_block]
+        set bt [$block findBTerm $name]
+        set it [$block findITerm [get_full_name $pin]]
+        if {$bt eq "NULL" || $it eq "NULL"} { error "OT_ENTRIES: missing physical source/child clock pin" }
+        set pb [$bt getBBox]; set ib [$it getBBox]
+        set distance [expr {(abs(([$pb xMin]+[$pb xMax])-([$ib xMin]+[$ib xMax])) + abs(([$pb yMin]+[$pb yMax])-([$ib yMin]+[$ib yMax]))) / 2.0 / [$block getDbUnitsPerMicron]}]
+        if {$distance > 0.001} { error "OT_ENTRIES: zero clock wire arrival despite $distance um source/pin separation on $name" }
+        puts "OT_ENTRIES ZERO_WIRE_PROVEN $name [get_full_name $pin] distance=$distance"
+      }
+      lassign [dict get $::ot_ce_refs $key $corner] lo mean hi
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      if {[llength $clock] != 1} { error "OT_ENTRIES: $name has no unique related clock" }
+      set ttmean [lindex [dict get $::ot_ce_refs $key tt] 1]
+      set domain [dict get $::ot_ce_source_domains $name]
+      set vc [get_clocks [dict get $::ot_ce_domains $domain clock]]
+      if {abs([get_property $vc period]-[get_property $clock period])>0.001} { error "OT_ENTRIES: domain/source period mismatch $name" }
+      lappend rows [list $port $pin $wire $lo $mean $hi $clock $ttmean $domain]
+    }
+  }
+  dict for {m n} $::ot_ce_counts {
+    if {![dict exists $counts $m] || [dict get $counts $m] != $n} { error "OT_ENTRIES: bound child count mismatch $m" }
+  }
+  # Source latencies are zero for this whole measurement loop, and no STA
+  # constraints/netlist change until rows are complete. Query the same bounded
+  # boundary population once per apply/current corner, never across calls.
+  set boundary_cells {}; set boundary_cells_ready 0
+  # Each glue root owns a real CTS tree. Measure every propagated standard-cell
+  # clock sink in the current scene; never substitute a declared/common phase.
+  foreach name $::ot_ce_cts_roots {
+    set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+    lassign [ot_cf_pins $clock] pins ot_ce_family_owners
+    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }
+    set arrivals {}; set measured {}; set total 0.0
+    foreach pin $pins {
+      set cell [get_cells -of_objects $pin]
+      set master [get_property $cell ref_name]
+      if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root $name reaches a hard child" }
+      set arrival [ot_ce_clock_wire $pin $clock]
+      lappend arrivals $arrival
+      dict set measured [get_full_name $pin] $arrival
+      set total [expr {$total + $arrival}]
+    }
+    set arrivals [lsort -real $arrivals]
+    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
+    set tree_mean [expr {$total / [llength $arrivals]}]
+    set mean $tree_mean
+    if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $mean <= 0} {
+      error "OT_HYBRID: glue root $name lacks a positive actual propagated CTS insertion"
+    }
+    if {!$boundary_cells_ready} {
+      set boundary_cells [ot_ce_boundary_cells]; set boundary_cells_ready 1
+    }
+    set boundary [ot_ce_boundary_pins $pins $boundary_cells]
+    set scope boundary
+    if {![llength $boundary]} { set boundary $pins; set scope all_internal_only }
+    set arrivals {}; set total 0.0
+    foreach pin $boundary {
+      set arrival [dict get $measured [get_full_name $pin]]
+      lappend arrivals $arrival; set total [expr {$total + $arrival}]
+    }
+    set arrivals [lsort -real $arrivals]
+    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
+    set mean [expr {$total / [llength $arrivals]}]
+    # Clock rule (owner 2026-10-17 0dq, textbook_lint.clock_rule_eval): FAIL only on the pin-flop (boundary
+    # register; child-flop on a region-rooted parent) spread > 80 ps at TT or FF.  > 15k sinks on one root and
+    # insertion > 300 ps are guidance (WARN): the neighbour boundary is matched by the source-latency
+    # compensation below / a ring crossing and judged by native_pin_audit --relative-to.
+    if {[ot_ce_clock_rule $corner $name [llength $pins] $tree_mean $mean $lo $hi $scope] eq "FAIL"} {
+      error "OT_HYBRID: glue root $name pin-flop spread [format %.1f [expr {$hi-$lo}]] ps > 80 at $corner ($scope, [llength $boundary] of [llength $pins] sinks)"
+    }
+    set domain [dict get $::ot_ce_source_domains $name]
+    lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]
+    dict set seen $name 1
+    puts "OT_HYBRID CTS_MEASURE $corner $name sinks=[llength $pins] reference_scope=$scope boundary_sinks=[llength $boundary] min=$lo mean=$mean max=$hi all_mean=$tree_mean"
+  }
+  if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }
+  set ref 0
+  foreach row $rows { lassign $row p pin wire lo mean hi; set ref [expr {max($ref, $wire + $mean)}] }
+  set low {}; set high {}; set lowclocks {}; set highclocks {}; set domain_low {}; set domain_high {}
+  foreach row $rows {
+    lassign $row p pin wire lo mean hi clock ttmean domain
+    # Physical source level includes the entry wire, not just the hard
+    # child's internal insertion. Only a TT scene measures the TT wire.
+    # Other physical scenes conservatively reserve the deep pair budget;
+    # they must not guess TT wire delay from FF/SS or an ideal zero arrival.
+    set deep [expr {$ttmean > 300}]
+    set level_basis "zero-wire diagnostic"
+    if {$corner eq "tt"} {
+      set deep [expr {$ttmean + $wire > 300}]
+      set level_basis "TT timing-graph entry arrival + child R (physical proof required for route/signoff)"
+    } elseif {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire} {
+      set deep 1
+      set level_basis "TT wire level not measured in this scene; conservative210ps setup"
+    }
+    if {$deep} { lappend highclocks $clock } else { lappend lowclocks $clock }
+    puts "OT_ENTRIES LEVEL [get_full_name $p] deep=$deep basis=$level_basis"
+    set latency [expr {$ref - $wire - $mean}]
+    if {![ot_ce_finite $ref] || ![ot_ce_finite $latency]} { error "OT_ENTRIES: nonfinite reference/source latency on [get_full_name $p]" }
+    set_clock_latency -source $latency $clock
+    lappend low [expr {$ref + $lo - $mean}]; lappend high [expr {$ref + $hi - $mean}]
+    dict lappend domain_low $domain [expr {$ref + $lo - $mean}]
+    dict lappend domain_high $domain [expr {$ref + $hi - $mean}]
+    puts "OT_ENTRIES COMP $corner [get_full_name $p] -> [get_full_name $pin] wire=$wire R=$mean latency=$latency phi=$ref"
+  }
+  # Every entry is synchronous and related. Reserve die skew on internal hops;
+  # no asynchronous groups, false paths or ETM insertion add-back.
+  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew (hold 100, setup 150).
+  # Each deep tile has its own earlier trunk tap. The authoritative TREE
+  # pair budget uses150ps die skew when either reference exceeds300ps,
+  # including deep-to-deep pairs (pair_check.SKEW_DEEP) (setup 210).
+  # S-ELEM-PQ 2026-10-15: a register pair on ONE glue CTS root of this tile shares one die tap and one
+  # propagated standard-cell tree whose real skew STA already sees, so it is timed like every single-root
+  # tile (base uncertainty); the die-skew reserve applies to every pair of DIFFERENT entries and to hard-
+  # child entries (dsfd_bf_front_static: the uniform rule put hold 100 / setup 210 on all 12,276 core-root
+  # paths -> 15,826 hold endpoints, 119k buffers).
+  set ot_ce_glue {}
+  foreach name $::ot_ce_cts_roots { lappend ot_ce_glue [get_full_name [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]] }
+  set ot_ce_high {}
+  foreach c $highclocks { lappend ot_ce_high [get_full_name $c] }
+  set ot_ce_family_clocks {}
+  foreach c [all_clocks] {
+    if {[ot_cf_root [get_full_name $c]] in [lmap x [get_clocks ot_entry_*] {get_full_name $x}]} {lappend ot_ce_family_clocks $c}
+  }
+  foreach a $ot_ce_family_clocks {
+    foreach b $ot_ce_family_clocks {
+      set an [ot_cf_root [get_full_name $a]]; set bn [ot_cf_root [get_full_name $b]]
+      if {$an eq $bn && $an in $ot_ce_glue} { continue }
+      set_clock_uncertainty -setup [expr {($an in $ot_ce_high || $bn in $ot_ce_high) ? 210 : 150}] -from $a -to $b
+      set_clock_uncertainty -hold 100 -from $a -to $b
+    }
+  }
+  # Preserve measured boundary spread: balancing the mean does not erase the
+  # earliest/latest physical boundary arrivals or change ETM setup/hold arcs.
+  set lmin [lindex [lsort -real $low] 0]; set lmax [lindex [lsort -real $high] end]
+  unset_input_delay [all_inputs]; unset_output_delay [all_outputs]
+  set sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]
+  set hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
+  set hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]
+  set covered_in {}; set covered_out {}
+  dict for {domain info} $::ot_ce_domains {
+    if {![dict exists $domain_low $domain]} { error "OT_ENTRIES: domain $domain has no actual child clock pins" }
+    set dlmin [lindex [lsort -real [dict get $domain_low $domain]] 0]
+    set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
+    set vc [get_clocks [dict get $info clock]]
+    set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
+    set inputs {}; set outputs {}
+    foreach pattern [dict get $info inputs] {
+      set match [get_ports -quiet $pattern -filter "direction == input"]
+      if {$::ot_ce_leaf_roots && ![llength $match]} {set match [get_ports -quiet [format {%s\[*\]} $pattern] -filter "direction == input"]}
+      if {$::ot_ce_leaf_roots && ![llength $match]} {error "OT_MULTI_ROOT: unknown input $pattern"}
+      foreach p $match {
+        set n [get_full_name $p]
+        if {$n in $::ot_ce_ports} continue
+        if {[dict exists $covered_in $n]} { error "OT_ENTRIES: input $n has duplicate IO domains" }
+        dict set covered_in $n $domain; lappend inputs $p
+      }
+    }
+    foreach pattern [dict get $info outputs] {
+      set match [get_ports -quiet $pattern -filter "direction == output"]
+      if {$::ot_ce_leaf_roots && ![llength $match]} {set match [get_ports -quiet [format {%s\[*\]} $pattern] -filter "direction == output"]}
+      if {$::ot_ce_leaf_roots && ![llength $match]} {error "OT_MULTI_ROOT: unknown output $pattern"}
+      foreach p $match {
+        set n [get_full_name $p]
+        if {[dict exists $covered_out $n]} { error "OT_ENTRIES: output $n has duplicate IO domains" }
+        dict set covered_out $n $domain; lappend outputs $p
+      }
+    }
+    if {[llength $inputs]} {
+      set_input_delay [expr {$budget+$dlmax+$sk}] -max -clock $vc $inputs
+      set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
+    }
+    if {[llength $outputs]} {
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
+    }
+    if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
+      foreach pattern [split $::env(OT_IO_INTER) ","] {
+        foreach p [get_ports -quiet $pattern] {
+          set n [get_full_name $p]
+          if {[dict exists $covered_in $n] && [dict get $covered_in $n] eq $domain} {
+            set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
+          }
+          if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
+          }
+        }
+      }
+    }
+    puts "OT_ENTRIES DOMAIN $domain [get_property $vc period]ps IO[llength $inputs]/[llength $outputs] boundary=$dlmin..$dlmax"
+  }
+  if {[dict size $covered_in] != [llength [all_inputs -no_clocks]] || [dict size $covered_out] != [llength [all_outputs]]} {
+    error "OT_ENTRIES: incomplete actual IO domain coverage (resets must also have a domain)"
+  }
+  if {$::ot_ce_leaf_roots} { ot_ce_leaf_ownership $covered_in $covered_out }
+  puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
+}
+ot_ce_apply
