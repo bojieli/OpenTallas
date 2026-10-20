@@ -1,13 +1,13 @@
 {
- "name": "s81frame_col_h9_sr-fg1-COMMIT",
+ "name": "s81frame_col_h9_sr-fg4-COMMIT",
  "block": "col_h9_l4_lp",
  "ref_tile": true,
- "owner": "Claude:TW3-S81-FRAMEGATE",
+ "owner": "Claude:S81-FRAME4",
  "purpose": "S81 col_h9 landed frame cluster (COORD 0jy, landed-regions standard) -- physical gate",
  "threads": 32,
  "peak_ram_gb": 192,
  "source": {
-  "branch": "claude/tw3-framegate-1019",
+  "branch": "claude/s81-frame4-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "results/arch/s81_dv_1016/frame_l4_cluster/compiler"
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81frame_col_h9_sr/s81frame_col_h9_sr-fg1-COMMIT"
+   "to": "results/rtl/ref_tile/s81frame_col_h9_sr/s81frame_col_h9_sr-fg4-COMMIT"
   }
  ],
  "cycles_added": 0,
