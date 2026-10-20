@@ -1,0 +1,18 @@
+{
+  "base": "1b69058edc36e5a6ac77292f53b67ae629891944",
+  "old_rtl": "rtl/qwen_sys/static_kv_20261014/qkd_ectl_c_st.sv",
+  "old_sha256": "673d15ba39f68c557ba6fde08c9624470fa6a3d46a0b53d65739b9358aadad1f",
+  "candidate_rtl": "rtl/qwen_sys/static_kv_20261014/qkd_ectl_c_st_h15.sv",
+  "candidate_sha256": "f9e189c6b368e6f6f3e157b5008058e4790b643ea5cabe1c84b17c1b888c9971",
+  "change": "sole module identity and parameter defaults91/87/15; body unchanged",
+  "params": {
+    "QK_ISSUE_AGE": 91,
+    "ROW_RETURN_LAT": 87,
+    "HXK": 15
+  },
+  "outline": {
+    "w": 138.24,
+    "h": 129.6
+  },
+  "shipping_kit_generated": false
+}

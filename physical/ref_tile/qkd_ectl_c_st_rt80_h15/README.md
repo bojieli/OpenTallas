@@ -1,0 +1,1 @@
+SOURCE/PROOF SPEC ONLY; NOT GATE ADMITTED. No job/kit generated. Params91/87/15,138.24x129.6, original pin plan and boundary stages. Native32/reset/complete registered boundary, actual SRAM/cold/score-tag proof, face/timing/full405/PG and exact parent child-binding reclosure remain mandatory. No old H13 relabel.
