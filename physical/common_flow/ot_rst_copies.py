@@ -31,6 +31,14 @@ OT_RST_COPIES_MAX is set) on the FLATTENED coarse netlist and re-points the load
     cells; the flow maps them the same way later), so a register copy that selects a wide mux / memory read word is
     split per gate (a 288-bit $mux on one select bit is otherwise one indivisible load).  Function unchanged.
 
+  * KV-PC6 2026-10-20 (leaf-equivalent controls): an input bit of a copy may differ from copy 0's if both are driven by
+    the same output of KEPT-HIERARCHY leaf cells (a user module that `flatten` left as a cell because of keep_hierarchy)
+    of one type and parameters whose module is PURELY COMBINATIONAL (no flop / latch / memory / blackbox, recursively)
+    and whose inputs are themselves equivalent (recursively, depth <= LEAF_DEPTH).  Such leaves compute the same
+    function of the same nets, so the copies are still identical registers; this is what lets N > 32 copies take their
+    set / enable from per-group kept decision leaves (each leaf <= 32 loads) instead of one N-load net.  Primitive
+    ($-type) cells are never looked through (opt_merge would fold them back into one net later).
+
   python3 ot_rst_copies.py --json in.json --max 256 --ys out.ys --tsv out.tsv [--re REGEX] [--top NAME]
 exit 0 always when the JSON parses (groups over --max are reported as OVER lines and in the table: the gate judges them);
 exit 2 on unusable input.
@@ -130,40 +138,229 @@ def analyse(nl, max_loads, rx, top=None):
             continue
         fams.append((wn, bits))
     out = []
+    canon = leaf_canon(nl, cells, drv)
     for wn, bits in fams:
-        out.append(split_family(wn, bits, cells, drv, loads, max_loads, m))
+        out.append(split_family(wn, bits, cells, drv, loads, max_loads, m, canon))
     return tname, out
 
 
-def bit_signature(cells, d):
-    """identity of the flop that drives one bit: type, params (minus WIDTH), and per-bit view of its input ports"""
+LEAF_DEPTH = 4
+COMB_PRIM = re.compile(r"^\$(_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_|buf|pos|neg|not|"
+                       r"and|or|xor|xnor|reduce_and|reduce_or|reduce_xor|reduce_xnor|reduce_bool|logic_not|logic_and|"
+                       r"logic_or|eq|ne|eqx|nex|lt|le|gt|ge|add|sub|mux|pmux|bmux|shl|shr|sshl|sshr|shift|shiftx)$")
+
+
+def comb_module_test(nl):
+    """Prove a defined, total combinational DAG, not merely absence of flop cells.
+
+    Every internal/output bit must have exactly one input/cell driver and every
+    cell input must reach a known constant or a formal input without a cycle.
+    Partial mux/shift operators need a separate selection/width proof; none is
+    inferred here. This proves leaf functions only, never equality of flop Qs
+    before their caller's common reset/update obligation has been established.
+    """
+    memo = {}
+
+    def parameters(c, expected):
+        actual = c.get("parameters") or {}
+        return (isinstance(actual, dict) and isinstance(expected, dict)
+                and {k: (type(v), v) for k, v in actual.items()} ==
+                    {k: (type(v), v) for k, v in expected.items()})
+
+    def ports(c, mod):
+        ps = mod.get("ports") or {}
+        con = c.get("connections") or {}
+        dirs = {p: v.get("direction") for p, v in ps.items()}
+        return (isinstance(con, dict) and set(con) == set(ps)
+                and all(isinstance(con[p], list) and len(con[p]) == len(ps[p].get("bits", [])) for p in ps)
+                and (not c.get("port_directions") or c["port_directions"] == dirs))
+
+    def primitive(c):
+        t = c.get("type", "")
+        if not COMB_PRIM.fullmatch(t) or t in {
+                "$pmux", "$bmux", "$shiftx", "$shift", "$shl", "$shr", "$sshl", "$sshr"}:
+            return None
+        if t.startswith("$_"):
+            op = t[2:-1]
+            ins = ("A",) if op in {"BUF", "NOT"} else (
+                ("A", "B", "S") if op in {"MUX", "NMUX"} else
+                ("A", "B", "C", "D") if op in {"AOI4", "OAI4"} else
+                ("A", "B", "C") if op in {"AOI3", "OAI3"} else ("A", "B"))
+        else:
+            ins = (("A", "B", "S") if t == "$mux" else ("A",) if
+                   t in {"$buf", "$pos", "$neg", "$not", "$logic_not"} or t.startswith("$reduce_")
+                   else ("A", "B"))
+        con = c.get("connections") or {}
+        dirs = {p: "input" for p in ins}; dirs["Y"] = "output"
+        if set(con) != set(dirs) or (c.get("port_directions") and c["port_directions"] != dirs):
+            return None
+        if any(not isinstance(v, list) or not v for v in con.values()):
+            return None
+        if t.startswith("$_") and (any(len(v) != 1 for v in con.values()) or c.get("parameters")):
+            return None
+        if t == "$mux" and (len(con["S"]) != 1 or len(con["A"]) != len(con["B"]) or len(con["A"]) != len(con["Y"])):
+            return None
+        allowed = {"WIDTH"} if t == "$mux" else {"A_WIDTH", "B_WIDTH", "Y_WIDTH", "A_SIGNED", "B_SIGNED"}
+        for p, v in (c.get("parameters") or {}).items():
+            if p not in allowed or isinstance(v, bool):
+                return None
+            if isinstance(v, str) and v and set(v) <= {"0", "1"}:
+                value = int(v, 2)
+            elif type(v) is int:
+                value = v
+            else:
+                return None
+            if p.endswith("SIGNED"):
+                if value not in (0, 1): return None
+            elif value != len(con["Y"] if p == "WIDTH" else con.get(p[0], [])):
+                return None
+        return ins, ("Y",)
+
+    def ok(name, stack=()):
+        if name in memo:
+            return memo[name]
+        mod = (nl.get("modules") or {}).get(name)
+        res = mod is not None and name not in stack
+        if res:
+            a = mod.get("attributes") or {}
+            if any(k in a for k in ("blackbox", "whitebox", "lib_whitebox")) or mod.get("memories") or mod.get("processes"):
+                res = False
+            elif any(p.get("direction") not in ("input", "output") for p in (mod.get("ports") or {}).values()):
+                res = False
+            else:
+                drivers, deps, outputs = {}, {}, []
+                def bit(b): return type(b) is int or b in ("0", "1")
+                def drive(b, origin):
+                    if type(b) is not int: return False
+                    drivers.setdefault(b, []).append(origin)
+                    return True
+                for pn, port in (mod.get("ports") or {}).items():
+                    bs = port.get("bits") or []
+                    if not bs or not all(bit(b) for b in bs): res = False; break
+                    if port["direction"] == "input":
+                        for i, b in enumerate(bs):
+                            if not drive(b, ("input", pn, i)): res = False
+                    else: outputs.extend(bs)
+                for cn, c in (mod.get("cells") or {}).items():
+                    t = c.get("type", "")
+                    if t.startswith("$"):
+                        io = primitive(c)
+                    else:
+                        sub = (nl.get("modules") or {}).get(t)
+                        io = None
+                        if sub is not None and ok(t, stack + (name,)) and ports(c, sub) and parameters(c, sub.get("parameter_default_values") or {}):
+                            ps = sub.get("ports") or {}
+                            io = (tuple(p for p in ps if ps[p]["direction"] == "input"),
+                                  tuple(p for p in ps if ps[p]["direction"] == "output"))
+                    if io is None:
+                        res = False
+                        break
+                    ins, outs = io
+                    con = c["connections"]
+                    deps[cn] = tuple(b for p in ins for b in con[p])
+                    if not all(bit(b) for b in deps[cn]): res = False; break
+                    for pn in outs:
+                        for b in con[pn]:
+                            if not drive(b, ("cell", cn)): res = False
+                seen, active = {}, set()
+                def defined(b):
+                    if b in ("0", "1"): return True
+                    if b in seen: return seen[b]
+                    ds = drivers.get(b, [])
+                    if b in active or len(ds) != 1: return False
+                    if ds[0][0] == "input": return True
+                    active.add(b)
+                    value = all(defined(x) for x in deps[ds[0][1]])
+                    active.remove(b); seen[b] = value
+                    return value
+                if res:
+                    res = bool(outputs) and all(defined(b) for b in outputs + list(drivers))
+        memo[name] = res
+        return res
+    return ok
+
+
+def leaf_canon(nl, cells, drv):
+    """bit -> canonical identity: the bit itself, or (leaf type, params, output port/index, canonical inputs) when the
+    bit is an output of a kept-hierarchy purely combinational leaf (see the module docstring)"""
+    ok = comb_module_test(nl)
+    memo = {}
+    counts = {}
+    for c in cells.values():
+        for p, bs in (c.get("connections") or {}).items():
+            if (c.get("port_directions") or {}).get(p) == "output":
+                for b in bs: counts[b] = counts.get(b, 0) + 1
+
+    def canon(b, depth=0):
+        if not isinstance(b, int):
+            return b
+        key = (b, depth)
+        if key in memo:
+            return memo[key]
+        r = b
+        d = drv.get(b)
+        if d is not None and depth < LEAF_DEPTH:
+            cn, p, i = d
+            c = cells[cn]
+            t = c.get("type", "")
+            mod = (nl.get("modules") or {}).get(t) or {}
+            kept = (mod.get("attributes") or {}).get("keep_hierarchy")
+            if isinstance(kept, str):
+                kept = kept in {"yes", "true"} or bool(kept and set(kept) <= {"0", "1"} and int(kept, 2))
+            ps = mod.get("ports") or {}
+            con = c.get("connections") or {}
+            expected = {pn: v.get("direction") for pn, v in ps.items()}
+            params = c.get("parameters") or {}
+            defaults = mod.get("parameter_default_values") or {}
+            same_params = ({k: (type(v), v) for k, v in params.items()} ==
+                           {k: (type(v), v) for k, v in defaults.items()})
+            if (not t.startswith("$") and kept and counts.get(b) == 1 and ok(t)
+                    and same_params and set(con) == set(ps) and c.get("port_directions") == expected
+                    and all(len(con[pn]) == len(ps[pn].get("bits", [])) for pn in ps)
+                    and p in ps and ps[p]["direction"] == "output"):
+                dirs = c.get("port_directions") or {}
+                ins = tuple((pn, tuple(canon(x, depth + 1) for x in pb))
+                            for pn, pb in sorted((c.get("connections") or {}).items()) if dirs.get(pn) == "input")
+                r = ("leaf", t, tuple(sorted((k, str(v)) for k, v in (c.get("parameters") or {}).items())), p, i, ins)
+        memo[key] = r
+        return r
+    return canon
+
+
+def bit_signature(cells, d, canon=None):
+    """identity of the flop that drives one bit: type, params (minus WIDTH), and per-bit view of its input ports
+    (input bits through canon(): leaf-equivalent nets compare equal)"""
     cn, p, i = d
     c = cells[cn]
     if not FLOP_RE.match(c["type"]) or p != "Q":
         return None
+    cf = canon or (lambda x: x)
     w = len(c["connections"]["Q"])
     sig = [c["type"], tuple(sorted((k, str(v)) for k, v in (c.get("parameters") or {}).items() if k != "WIDTH"))]
     for pn in sorted(c["connections"]):
         if pn == "Q":
             continue
         pb = c["connections"][pn]
-        sig.append((pn, pb[i] if len(pb) == w and w > 1 else tuple(pb)))
+        sig.append((pn, cf(pb[i]) if len(pb) == w and w > 1 else tuple(cf(x) for x in pb)))
     return tuple(sig)
 
 
-def split_family(wn, bits, cells, drv, loads, max_loads, m):
-    rec = {"family": wn, "copies": len(bits), "status": "", "groups": [], "total": 0, "fixed": 0, "moves": 0, "cmds": []}
-    sigs = []
+def split_family(wn, bits, cells, drv, loads, max_loads, m, canon=None):
+    rec = {"family": wn, "copies": len(bits), "status": "", "groups": [], "total": 0, "fixed": 0, "moves": 0, "cmds": [],
+           "leaf_equiv": False}
+    sigs, raw = [], []
     for b in bits:
         d = drv.get(b)
         if d is None:
             rec["status"] = f"REFUSED bit {b} undriven"
             return rec
-        s = bit_signature(cells, d)
+        s = bit_signature(cells, d, canon)
         if s is None:
             rec["status"] = f"REFUSED bit {b} not a flop Q ({cells[d[0]]['type']}.{d[1]})"
             return rec
         sigs.append(s)
+        raw.append(bit_signature(cells, d))
+    rec["leaf_equiv"] = any(s != raw[0] for s in raw[1:])
     if any(s != sigs[0] for s in sigs[1:]):
         rec["status"] = "REFUSED copies are not identical registers (D / clock / reset / type differ)"
         return rec
@@ -328,7 +525,8 @@ def main(argv=None):
         tsv.append(f"{r['family']}\t{r['copies']}\t{r['total']}\t{r['fixed']}\t{r['moves']}\t"
                    f"{','.join(map(str, r['groups']))}\t{r['status']}")
         print(f"OT_RST_COPIES {r['family']}: {r['copies']} copies, {r['total']} loads -> "
-              f"[{','.join(map(str, r['groups']))}] ({r['moves']} ports moved) {r['status']}")
+              f"[{','.join(map(str, r['groups']))}] ({r['moves']} ports moved) {r['status']}"
+              f"{' (controls proven through kept combinational leaves)' if r.get('leaf_equiv') else ''}")
     lines.append("cd ..")
     open(a.ys, "w").write("\n".join(lines) + "\n")
     open(a.tsv, "w").write("\n".join(tsv) + "\n")
