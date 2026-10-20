@@ -1,0 +1,41 @@
+Verilator 5.050 2026-07-01 rev v5.050
+N59QAGE r1 QSHIFT 0 QLATE 0 last_q_dd 107 q_committed 109 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 16 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 0 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 4 QLATE 0 last_q_dd 111 q_committed 113 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 12 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 4 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 8 QLATE 0 last_q_dd 115 q_committed 117 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 8 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 8 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 10 QLATE 0 last_q_dd 117 q_committed 119 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 6 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 10 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 11 QLATE 0 last_q_dd 118 q_committed 120 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 5 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 11 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 12 QLATE 0 last_q_dd 119 q_committed 121 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 4 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 12 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 13 QLATE 0 last_q_dd 120 q_committed 122 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 3 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 13 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 14 QLATE 0 last_q_dd 121 q_committed 123 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 2 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 14 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 15 QLATE 0 last_q_dd 122 q_committed 124 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq 1 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 15 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 16 QLATE 0 last_q_dd 123 q_committed 125 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq 0 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 16 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 17 QLATE 0 last_q_dd 124 q_committed 126 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq -1 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 17 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 18 QLATE 0 last_q_dd 125 q_committed 127 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq -2 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 18 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 19 QLATE 0 last_q_dd 126 q_committed 128 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq -3 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 19 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 20 QLATE 0 last_q_dd 127 q_committed 129 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq -4 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 20 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 22 QLATE 0 last_q_dd 129 q_committed 131 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq -6 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 22 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 26 QLATE 0 last_q_dd 133 q_committed 135 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq -10 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 26 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 QSHIFT 30 QLATE 0 last_q_dd 137 q_committed 139 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq -14 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 30 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE r1 boundary: largest fault-free Q shift 14 (faults at 15); minimal internal age request - last Q dd word = 2 edges
+N59QAGE r1 QSHIFT 14 QLATE 1 last_q_dd 121 q_committed 123 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 2 split_mism 243 compared 360
+N59QAGE_LOCKSTEP_FAIL QSHIFT 14 QLATE 1: 243 of 360 edges differ
+N59QAGE r1 QSHIFT 0 QLATE 1 last_q_dd 107 q_committed 109 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 16 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 0 QLATE 1: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+N59QAGE_CERT_PASS split keeps the r1 Q write->request/read age: boundary shift 14, internal age 2 edges, every shift lockstep PASS (SOFF 3 BOFF 0 ROFF 4); QLATE (+1 edge Q path) rejected at the boundary

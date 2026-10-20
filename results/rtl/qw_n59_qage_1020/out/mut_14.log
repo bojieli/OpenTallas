@@ -1,0 +1,13 @@
+N59SPLIT_ERR cycle 129: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 130: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 131: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 132: split output != reference 4 edge(s) earlier (x3 0 tx 0 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 133: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 134: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 135: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 1 fault 1)
+N59SPLIT_ERR cycle 136: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 1 fault 1)
+N59QAGE r1 QSHIFT 14 QLATE 1 last_q_dd 121 q_committed 123 request 123 qtag_fault -1 fault -1 done 215 age_req_minus_lastq 2 split_mism 243 compared 360
+N59QAGE_LOCKSTEP_FAIL QSHIFT 14 QLATE 1: 243 of 360 edges differ
+[0] %Fatal: tb_n59_qage.sv:164: Assertion failed in TOP.tb_n59_qage
+%Error: /srv/opentallas-scratch/claude/qw-n59-5-qage/nominal/src/rtl/test/qwen_split/tb_n59_qage.sv:164: Verilog $stop
+Aborting...

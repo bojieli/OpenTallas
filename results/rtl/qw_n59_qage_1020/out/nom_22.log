@@ -1,0 +1,3 @@
+N59QAGE r1 QSHIFT 22 QLATE 0 last_q_dd 129 q_committed 131 request 123 qtag_fault 124 fault 125 done -1 age_req_minus_lastq -6 split_mism 0 compared 360
+N59QAGE_LOCKSTEP_PASS QSHIFT 22 QLATE 0: 360 edges, split == r1 (SOFF 3 BOFF 0 ROFF 4) incl. fault
+- /srv/opentallas-scratch/claude/qw-n59-5-qage/nominal/src/rtl/test/qwen_split/tb_n59_qage.sv:166: Verilog $finish

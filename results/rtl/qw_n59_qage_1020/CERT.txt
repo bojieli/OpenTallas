@@ -1,0 +1,13 @@
+Q.STA.N59.1 Q-ready age certificate (QW-N59-5, 10-20 02:40) -- N59QAGE_CERT_PASS (ot-epyc9, Verilator 5.050).
+Vehicle: split qfd_native59_split_flat with qbank v5 eab8ff8d2 (QB_LOCAL32=1 QB_ALIGN=1) + service SVC_RECV=1; reference
+qfd_native59_dv_service_r1 SAFE 2 EMB_RELAY 1; offsets SOFF 3 / BOFF 0 / ROFF 4.  Bench rtl/test/qwen_split/tb_n59_qage.sv,
+driver run_n59_qage.sh (source c183e4620; source.sha256 here).
+Sweep: the 64-word Q burst shifted 0..30 edges toward the CMD (17 shifts).  r1 boundary: shift 14 fault-free (last Q dd
+word edge 121, q_committed 123 = request edge 123: internal Q-ready age request - last Q word = 2 edges); shift 15+ ->
+qtag_fault 124 / sticky fault 125, no completion.  The split is lockstep-identical (all outputs incl. fault, 360 edges) at
+EVERY shift, on both sides of the boundary => the split keeps r1's exact Q write -> request / read relation in the bank
+(dd_i and q_slot both bank ports at BOFF 0), so the die schedule's W5.dd_wo -> native59.dd_i age 20 and sysface q_slot
+age 2 remain valid unchanged.
+Mutant QLATE=1 (Q-kind dd words one edge late at the split = 21-edge Q path): shift 14 -> N59QAGE_LOCKSTEP_FAIL 243/360
+edges differ (witness mut_14.log); at shift 0 it survives (16 edges of slack), which is why the certificate sweeps to the
+exact boundary.
