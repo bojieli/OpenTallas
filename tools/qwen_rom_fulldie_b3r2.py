@@ -4018,8 +4018,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         _lcr = m.setdefault('land_cross', dict(insts=[], buses=0, bits=0, rows=[]))
         _have = {r_['bid'] for r_ in _lcr['rows']}
         _bad, _framed, _same, _added = [], [], [], 0
+        # OT_SPLIT_LAND_LIST_IN_FACE=<master prefix>: rows whose src AND dst are such masters (abutted dv_slice2 pairs,
+        # 0-um gap: no die site within reach, dv2f19g3 try 1 'tree pads: no free spot for dv_ch_E3_dd_dd') are owed to the
+        # RECEIVER's face landing inside that parent (QW-DIECLK2 R5 / NB2), recorded, not built at die level
+        _inf = _os.environ.get('OT_SPLIT_LAND_LIST_IN_FACE', '')
+        _owed = []
         for r_ in _ll['links']:
             bid = r_['bus'][2:] if r_['bus'].startswith('n_') else r_['bus']
+            if _inf and r_['src_master'].startswith(_inf) and r_['dst_master'].startswith(_inf):
+                _owed.append(bid); continue
             if bid not in _bix_l:
                 _bad.append(f'{bid}: not a bus of this GEN'); continue
             idx, cl, bits, eps = _bix_l[bid]
@@ -4061,9 +4068,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         _lcr['bits'] = sum(r_['bits'] for r_ in _lcr['rows'])
         m['land_list'] = dict(source=_os.environ['OT_SPLIT_LAND_LIST'], listed=len(_ll['links']), added=_added,
                               already_framed=sorted(_framed), same_gen_root=sorted(_same), not_on_gen=_bad,
-                              auto_hard=sorted(_auto))
+                              auto_hard=sorted(_auto), owed_in_face=sorted(_owed), in_face_prefix=_inf)
         print(f'LAND_LIST {len(_ll["links"])} listed: {_added} landing stations added (+{len(_auto)} hard<->hard auto), {len(_framed)} already framed, '
-              f'{len(_same)} on one GEN trunk root (regional die clock splits them), {len(_bad)} not on this GEN', flush=True)
+              f'{len(_same)} on one GEN trunk root (regional die clock splits them), {len(_bad)} not on this GEN, {len(_owed)} owed in-face ({_inf})', flush=True)
     # QXF-SEAMC 10-18 (TOKEN-XDIE-QWEN F5 + LAYERBENCH-QWEN G-C2): LAND_CROSS and the lane pass worked BUS by bus, so a
     # record crossed the seam torn: dv2f14bn d2d_rom -> native59 rx_payload a 1-frame landing (K 2, +3 edges) beside
     # direct native_rx_v / slot / kind / beat (+0) -> rx_record fault at the first RESULT; d2d_rom -> sys_face
