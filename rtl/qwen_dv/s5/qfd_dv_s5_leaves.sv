@@ -721,7 +721,11 @@ module qfd_dv_s5_red (
         else rd_v <= l_ov[0] && l_red0 != 2'd0;
     end
     always @(posedge ck) begin
+`ifdef OT_S5_RED_MUT
+        rd_mx <= (l_red0 == 2'd1); rd_sq <= l_redsq0; rd_last <= l_last0; rd_addr <= l_raddr0;   // bench mutant: SUM taken as MAX (must FAIL)
+`else
         rd_mx <= (l_red0 == 2'd2); rd_sq <= l_redsq0; rd_last <= l_last0; rd_addr <= l_raddr0;
+`endif
         for (li = 0; li < SW; li = li + 1)
             rd_x[32*li +: 32] <= l_ov[li] ? l_out[32*li +: 32] : (l_red0 == 2'd2) ? l_out[31:0] : 32'd0;
     end
@@ -765,7 +769,11 @@ module qfd_dv_s5_sc #(parameter integer MUT = 0, parameter integer MU_NU = 4) (
     wire rst;
     qfd_dv_s5_rst2 u_rl (.ck(ck), .rst_n(rst_n), .rst(rst));
     wire red_ps = red_we && red_addr[23:22] == 2'b11;
+`ifdef OT_S5_SC_MUT
+    wire su_rb = (|vm_we) && vm_win0 == 2'b10;     // bench mutant: the broadcast scalar tap reads window 10 (must FAIL)
+`else
     wire su_rb = (|vm_we) && vm_win0 == 2'b11;
+`endif
     wire c_root = sc_cfg[100];
     qfd_dv_scalar2 #(.MUT(MUT), .MU_NU(MU_NU), .MU_MUT(0)) u_sc (.ck(ck), .rst_n(rst),
         .cfg_v(c_root), .cfg_root(sc_cfg[99]), .cfg_rdir(sc_cfg[98]), .cfg_nb(sc_cfg[97:92]), .cfg_ss(sc_cfg[91:68]),
@@ -866,7 +874,11 @@ module qfd_dv_s5_btab (
     reg [1:0] t1_bank, t2_bank;
     reg [1023:0] btcap;
     always @(posedge ck) begin t1_bank <= bt_word[1:0]; btcap <= bt_rd; t2_bank <= t1_bank; end
+`ifdef OT_S5_BTAB_MUT
+    assign bt_q = btcap[256*(t2_bank ^ 2'd1) +: 256];   // bench mutant: the answer from the neighbour bank (must FAIL)
+`else
     assign bt_q = btcap[256*t2_bank +: 256];
+`endif
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------- tap
@@ -975,7 +987,11 @@ module qfd_dv_s5_xhead #(parameter integer HEAD_MUT = 0) (
         end
     endfunction
     wire [CW-1:0] n_raw, s_raw;
+`ifdef OT_S5_XH_MUT
+    assign n_d = {retag(n_raw[1 + IBW + 128 +: 8], 1), n_raw[0 +: 1 + IBW + 128]};   // bench mutant: N retag as S (must FAIL)
+`else
     assign n_d = {retag(n_raw[1 + IBW + 128 +: 8], 0), n_raw[0 +: 1 + IBW + 128]};
+`endif
     assign s_d = {retag(s_raw[1 + IBW + 128 +: 8], 1), s_raw[0 +: 1 + IBW + 128]};
     ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(NH), .NATIVE_AFFINE(1), .MUT(HEAD_MUT),
         .LEAF_READ_PIN_PIPE(1), .FILL_LEAD(5), .DX(14)) u_head (

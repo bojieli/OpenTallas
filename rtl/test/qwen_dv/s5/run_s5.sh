@@ -4,7 +4,7 @@
 #           +define+OT_STATION_REGIONAL, the stnrgc source) vs qfd_dv_s5_flat0 at offset 0, four stimulus modes
 #           (random / +quiet / +hronly / +legal).  M = 0 must print S5_EQ PASS; M = d10 (SETID unincremented),
 #           loff (lane offset twice), lrly (lane answers one relay stage short) must print S5_EQ FAIL.
-#   b2      dv_bench2 f j k q m n o on FACE 3 (qfd_dv_s5_flat0: programme benches vs the golden)
+#   b2 [M]  dv_bench2 f j k q m n o (B2=...) on FACE 3 (qfd_dv_s5_flat0: programme benches vs the golden); M as eq
 #   lint    Verilator lint of qfd_dv_s5_flat (the HARDENED composition, closed lane head safe2 RTL)
 #   bash rtl/test/qwen_dv/s5/run_s5.sh OUTDIR eq|b2|lint [M]
 set -u
@@ -28,7 +28,9 @@ VF="--binary --timing -O2 -j ${VJOBS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-T
 case $KIND in
   eq)
     D=""; G=""
-    case $M in 0) ;; d10) G="-GDMUT=10";; loff) D="+define+OT_S5_LOFF_MUT";; lrly) D="+define+OT_S5_LRLY_MUT";; *) echo "unknown M $M"; exit 2;; esac
+    case $M in 0) ;; d10) G="-GDMUT=10";; d12) G="-GDMUT=12";; d9) G="-GDMUT=9";; loff) D="+define+OT_S5_LOFF_MUT";;
+      lrly) D="+define+OT_S5_LRLY_MUT";; red) D="+define+OT_S5_RED_MUT";; sc) D="+define+OT_S5_SC_MUT";;
+      xh) D="+define+OT_S5_XH_MUT";; btab) D="+define+OT_S5_BTAB_MUT";; *) echo "unknown M $M"; exit 2;; esac
     "$V" $VF $D $G --top-module tb_qfd_dv_s5_flat0 $COMMON rtl/qwen_dv/qfd_dv_slice2.sv rtl/qwen_dv/s5/qfd_dv_s5_flat0.sv \
       rtl/test/qwen_dv/s5/tb_qfd_dv_s5_flat0.sv -Mdir "$OUT/obj_eq$M" > "$OUT/build_eq$M.log" 2>&1 || { echo "BUILD FAIL"; tail -30 "$OUT/build_eq$M.log"; }
     rs=""
@@ -42,8 +44,11 @@ case $KIND in
     if [ "$(echo $rs | tr ' ' '\n' | grep -c ':PASS$')" = 4 ]; then echo "EQ M=$M: S5_EQ PASS ($rs)";
     elif echo "$rs" | grep -q ':FAIL'; then echo "EQ M=$M: S5_EQ FAIL ($rs)"; else echo "EQ M=$M: NO_RESULT ($rs)"; fi;;
   b2)
-    python3 rtl/test/qwen_dv/dv_bench2.py f j k q m n o --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=3" --work "$OUT/b2";;
+    D=""; case $M in 0) ;; loff) D="+define+OT_S5_LOFF_MUT";; lrly) D="+define+OT_S5_LRLY_MUT";; red) D="+define+OT_S5_RED_MUT";;
+      sc) D="+define+OT_S5_SC_MUT";; xh) D="+define+OT_S5_XH_MUT";; btab) D="+define+OT_S5_BTAB_MUT";; esac
+    MU=""; case $M in d*) MU="--mut ${M#d}";; esac
+    python3 rtl/test/qwen_dv/dv_bench2.py ${B2:-f j k q m n o} $MU --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=3 $D" --work "$OUT/b2";;
   lint)
     "$V" --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD +define+OT_STATION_REGIONAL --top-module qfd_dv_s5_flat \
-      $COMMON rtl/qwen_dv/qfd_dv_head_safe1.sv rtl/qwen_dv/s5/qfd_dv_s5_flat.sv > "$OUT/lint.log" 2>&1; echo "LINT rc=$?"; grep -m20 "%Error" "$OUT/lint.log";;
+      $COMMON rtl/qwen_dv/qfd_dv_head_safe1.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v rtl/qwen_dv/s5/qfd_dv_s5_flat.sv > "$OUT/lint.log" 2>&1; echo "LINT rc=$?"; grep -m20 "%Error" "$OUT/lint.log";;
 esac
