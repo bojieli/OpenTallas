@@ -22,8 +22,8 @@ def signal_table(js, top='gold'):
             idx=off+(len(bits)-1-i if upto else i)
             scalar=len(bits)==1 and off==0 and not upto
             logical=wire if scalar else f'{wire}[{idx}]'
-            candidate=dict(wire=wire,index=None if scalar else idx,bit=bit,
-                           spelling='\\'+wire+('' if scalar else f' [{idx}]'))
+            candidate=dict(wire=wire,index=None if scalar else idx,rtlil_bitindex=i,bit=bit,
+                           spelling='\\'+wire+('' if scalar else f'[{i}]'))
             if logical in table and table[logical]['bit']!=bit:
                 raise ValueError('ambiguous logical alias '+logical)
             table.setdefault(logical,candidate)
@@ -66,7 +66,7 @@ def main():
                 original_path=script.with_suffix(script.suffix+'.original')
                 if original_path.exists():raise ValueError('fresh private proof directory required')
                 original_path.write_text(raw);script.write_text(repaired)
-                packet=dict(scope='PRIVATE_EXACT_JSON_RESOLVED_SIGSPEC_SPELLING_ONLY',
+                packet=dict(scope='PRIVATE_EXACT_JSON_RESOLVED_RTLIL_BITINDEX_ONLY',
                     original_tool_sha256=hashlib.sha256(tool.read_bytes()).hexdigest(),
                     gold_json_sha256=hashlib.sha256(js_path.read_bytes()).hexdigest(),
                     original_sha256=hashlib.sha256(raw.encode()).hexdigest(),
