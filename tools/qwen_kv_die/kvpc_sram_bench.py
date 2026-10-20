@@ -326,7 +326,7 @@ def main():
         '  final $display("HFX active_edges=%0d final=%b", hfx_act, hfx_m);'])
     xin = {'pc__front_hbm_data': '{4{hck}}', 'pc__return_hbm_data': '{4{hck}}'}
     tb = lockstep_tb('tb_kvpc_tile', P, 'ref_tile', 'dut_tile', {'ck': 417, 'hck': 512}, {'rst_n': 'ck', 'hrst_n': 'hck'},
-                     edges, a.mut, extra_in=xin, tag='TILE', extra=hfx, ref_delay={'pc__fi': 'hck', 'pc__ki': 'hck', 'x__est__0_1': 'ck'})
+                     edges, a.mut, extra_in=xin, tag='TILE', extra=hfx, qual={'pc__er': (0, 258, 1), 'pc__her': (0, 258, 1)}, ref_delay={'pc__fi': 'hck', 'pc__ki': 'hck', 'x__est__0_1': 'ck'})
     (out / 'tb.sv').write_text(tb)
     files = [str(out / 'tb.sv'), str(out / 'tiles.sv')] + base
     defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_FRONT_MUT4'], 3: ['OT_KVPC_CDC_UP_MUT'],

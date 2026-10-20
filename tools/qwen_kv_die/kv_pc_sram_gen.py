@@ -21,8 +21,8 @@ FAN = 'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv'
 PATH = 'rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv'
 CTRL = 'rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv'
 CORE = 'rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv'
-NHGO = 128      # u_ctl strap-release (hgo) copies: 1994 async-reset loads -> <= 32 each
-NHR = 16       # sched hclk reset capture (hr_q) copies: 414 loads -> <= 32 each
+NHGO = 192      # u_ctl strap-release (hgo) copies: 1994 async-reset loads -> <= 32 each
+NHR = 32       # sched hclk reset capture (hr_q) copies: 414 loads -> <= 32 each
 
 TQ_DECL = '''    reg  [33:0] tq [0:TQD-1];'''
 TQ_DECL_NEW = '''    // KV-PC SAFE: tq (64 x 34) is two native 32 x 64 banks (qkd_kvpc_s_tq): h0 = tq[tr], h1 = tq[tr + 1] (== tq[tr1])
@@ -55,8 +55,18 @@ SCHED = [
     wire      hgo = hgo_qv[0];'''),
     ('''        if (!h_rn) begin dcnt <= 7'd0; hgo <= 1'b0; end
         else if (dcnt == dsel) hgo <= 1'b1;''',
-     f'''        if (!h_rn) begin dcnt <= 7'd0; hgo_qv <= {{{NHGO}{{1'b0}}}}; end
-        else if (dcnt == dsel) hgo_qv <= {{{NHGO}{{1'b1}}}};'''),
+     f'''        if (!h_rn) begin dcnt <= 7'd0; end
+        else if (dcnt == dsel) begin end'''),
+    ('''    reg [6:0] dsel, dcnt;''', f'''    reg [6:0] dsel, dcnt;
+    // Same-edge sticky release, with one kept decision leaf per eight copies.
+    for (genvar hg = 0; hg < {NHGO // 8}; hg = hg + 1) begin : g_hgo_native
+        wire set_group;
+        ot_kvpc5_and2 u_go (.a(dcnt == dsel), .b(h_rn), .y(set_group));
+        always @(posedge hclk) begin
+            if (!h_rn) hgo_qv[hg*8 +: 8] <= 8'd0;
+            else if (set_group) hgo_qv[hg*8 +: 8] <= 8'hff;
+        end
+    end'''),
     (TQ_DECL, TQ_DECL_NEW),
     # KV-PC3 sr6 (gate pc_h_sr3 164813: SS setup -437.5 ps at ot_prs_00560_ff/D): the S-face fault-chain input fi fed the
     # sticky OR of fo, an N-face output register that pin_reg_split clones at the pin -> one cycle from the S face
@@ -1415,10 +1425,10 @@ def clone(path, name, new=None, subs=(), fams=()):
 # generator reproduces the committed output again).  Exact-once substitutions on the rendered text, after the copy
 # families are expanded (the streaming master + identical-D restructure reads the expanded streaming__qv names).
 POST = [
-    ("    (* keep, ot_rst_split *) reg [127:0] hgo_qv;",
+    ("    (* keep, ot_rst_split *) reg [191:0] hgo_qv;",
      "    // (KV-PC2: 64 -> 72: gate 164813 measured 2178 loads = 35 / copy at 64; KV-PC5: 72 -> 128 for the static-queue\n"
      "    // lookahead / freeze registers)\n"
-     "    (* keep, ot_rst_split *) reg [127:0] hgo_qv;"),
+     "    (* keep, ot_rst_split *) reg [191:0] hgo_qv;"),
     ("// KV-PC SAFE: 10 kept copies of streaming\n",
      "// KV-PC SAFE: 10 kept copies of streaming (KV-PC2: 7 -> 10, 264 loads = 38 / copy at 7)\n"),
     ("""    assign busy = streaming; assign ref_fault = fault_r;
@@ -1516,7 +1526,7 @@ def sr_tile():
     # registered stages (ot_reset_sync ASYNC_STAGES 2: async assert, synchronous release), the second stage as kept
     # identical copies (family ot_rst_split: ot_rst_copies spreads the D / reset pins, each a 1-pin load) -- release edge
     # unchanged.
-    for clk, n, w, k in (('ck', 'rst_n', 'w_rland__rst_n', 3), ('hck', 'hrst_n', 'w_rland__hrst_n', 4)):
+    for clk, n, w, k in (('ck', 'rst_n', 'w_rland__rst_n', 8), ('hck', 'hrst_n', 'w_rland__hrst_n', 8)):
         old = f'    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_{clk} (.clk({clk}), .async_rst_n({n}), .sync_rst_n({w}));\n'
         if t.count(old) != 2:
             raise SystemExit(f'kv_pc_sram_gen: rland {clk} site found {t.count(old)} times')
