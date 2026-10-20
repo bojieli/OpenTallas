@@ -55,7 +55,11 @@ module qfd_dv_s5_red_ring32_slice #(parameter integer W=8,N=5,ID=0)(
   end
   if((P>>l)<P) assign selected[l][P*W-1:(P>>l)*W]=0;
  end
+`ifdef OT_RED_RING32_AGE_MUT
+ always @(posedge ck) q<=captured[0+:W]; // mutant: bypass circular age
+`else
  always @(posedge ck) q<=selected[L][0+:W];
+`endif
 endmodule
 
 (* keep_hierarchy="yes" *)
