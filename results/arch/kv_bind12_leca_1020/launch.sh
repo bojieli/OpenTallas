@@ -22,3 +22,14 @@ for x in "$@"; do case "$x" in
 lane8h)  go lane8h_pos  $L8H --params '{"ADD_LAT":7,"LTW":12}' ;;
 lane8hc) go lane8h_al6  --expect fail $L8H --params '{"ADD_LAT":6,"LTW":12}' ;;
 esac; done
+# ktree_lk fallback engine (dprove default >40 min): partitioned &scorr + scorr + CEC (the engine that closed KV-LEC8 lane8 nc32c)
+KTP="$KT --timeout 43200 --abc-script"
+for x in "$@"; do case "$x" in
+ktreep)  go ktreelk_part $KTP 'read_aiger lec.aig; print_stats; strash; &get; &scorr -F 4 -C 1000 -p -S 2000 -v; &put; dc2; scorr -F 2; dc2; print_stats; pdr -v -T 36000' --params '{"ADD_LAT":7,"MUL_LAT":6,"MUT":0,"SCALE":1035273459}' ;;
+esac; done
+for x in "$@"; do case "$x" in
+ktreep2) go ktreelk_part2 $KTP 'read_aiger lec.aig; print_stats; strash; &get; &scorr -F 4 -C 1000 -p -S 2000 -v; &put; dc2; scorr -F 2; dc2; print_stats; dprove -v -T 3600' --params '{"ADD_LAT":7,"MUL_LAT":6,"MUT":0,"SCALE":1035273459}' ;;
+esac; done
+for x in "$@"; do case "$x" in
+ktreep2c) go ktreelk_sc1_part2 --expect fail $KTP 'read_aiger lec.aig; print_stats; strash; &get; &scorr -F 4 -C 1000 -p -S 2000 -v; &put; dc2; scorr -F 2; dc2; print_stats; dprove -v -T 3600' --params '{"ADD_LAT":7,"MUL_LAT":6,"MUT":0,"SCALE":1035273458}' ;;
+esac; done
