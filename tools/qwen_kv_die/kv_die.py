@@ -108,6 +108,10 @@ CDC_VIEW_LEF = 'physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf/qkd_cdc_
 # KVPLAN 1815 (Q-KV 10-16, kvs13c2 TT: every top class a 528-b replica hop at the 445 plan limit): planned hop limit per
 # relay WIDTH class -- a wide word's bits spread over the replica row (<= 82 um) and the far frame face, so its plan hop
 # is shorter.  OT_KV_REACH_W = 'maxbits:um,...' (ascending); unset = no width class (legacy plans unchanged)
+# KV-BIND12 10-20 (OT_KV_RLY_FINE=1, default off): a relay chain that finds no spot on the G-lattice offsets retries the same
+# path points with sub-cell y / x offsets (RLY_FINE_STEPS) before refusing (kv_die._relays chain_)
+RLY_FINE = __import__('os').environ.get('OT_KV_RLY_FINE', '0') == '1'
+RLY_FINE_STEPS = (10.8, -10.8, 21.6, -21.6, 32.4, -32.4)
 REACH_W = sorted((int(k), float(v)) for k, v in (t.split(':') for t in
                  __import__('os').environ.get('OT_KV_REACH_W', '').split(',') if t))
 
@@ -3556,6 +3560,36 @@ def _relays(m):
                 return FIRST_REACH.get(bid.rsplit('_', 2)[0], PIN_REACH)
             return PIN_REACH
 
+        def _spot(idxs, offl_, prev_pt_, rch, pad_, at_end):
+            got = None
+            path_ = st_['path']
+            for idx in idxs:
+                px, py = path_[idx]
+                best_ = None
+                for dx_, dy_ in offl_:
+                    if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
+                        continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
+                    qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
+                    pin_a = (qx, qy + fh / 2)
+                    dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
+                    if dd <= rch and free(qx, qy, fw, fh, *TG):
+                        if pad_ and (d_ep((qx + fw, qy + fh / 2), b, pb) > rch or (qx, qy) == tuple(st_.get('last_xy', ()))):
+                            continue
+                        if not at_end:
+                            got = (qx, qy, idx)
+                            break
+                        # a tree hop: of the free spots at this path point, the one nearest the leader (progress)
+                        r_ = d_ep((qx + fw, qy + fh / 2), b, pb)
+                        if at_end and prev_pt_ is not None and r_ >= remaining_() - 1.0:
+                            continue
+                        if best_ is None or r_ < best_[0]:
+                            best_ = (r_, qx, qy, idx)
+                if best_ is not None:
+                    got = best_[1:]
+                if got:
+                    break
+            return got
+
         def chain_():
             path_ = st_['path']
             while remaining_() > end_reach_() or st_['k'] < st_.get('min_k', 0):
@@ -3574,31 +3608,19 @@ def _relays(m):
                     idxs = [len(path_) - 1]          # at the path end: spots around the leader itself
                 elif not idxs and PV_T and bid.startswith(('pvta_', 'pvtb_', 'pvc_')):
                     idxs = [len(path_) - 1]          # KVPLAN2 2215: a stage that sat off the path end -- spots at the end
-                for idx in idxs:
-                    px, py = path_[idx]
-                    best_ = None
-                    for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
-                        if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
-                            continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
-                        qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
-                        pin_a = (qx, qy + fh / 2)
-                        dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
-                        if dd <= rch and free(qx, qy, fw, fh, *TG):
-                            if pad_ and (d_ep((qx + fw, qy + fh / 2), b, pb) > rch or (qx, qy) == tuple(st_.get('last_xy', ()))):
-                                continue
-                            if not at_end:
-                                got = (qx, qy, idx)
-                                break
-                            # a tree hop: of the free spots at this path point, the one nearest the leader (progress)
-                            r_ = d_ep((qx + fw, qy + fh / 2), b, pb)
-                            if at_end and prev_pt_ is not None and r_ >= remaining_() - 1.0:
-                                continue
-                            if best_ is None or r_ < best_[0]:
-                                best_ = (r_, qx, qy, idx)
-                    if best_ is not None:
-                        got = best_[1:]
-                    if got:
-                        break
+                offl_ = offs_wide if st_.get('wide') else offs
+                got = _spot(idxs, offl_, prev_pt_, rch, pad_, at_end)
+                if got is None and RLY_FINE:
+                    # KV-BIND12 10-20 (OT_KV_RLY_FINE=1): before refusing, the same path points with sub-cell offsets.  The
+                    # G-lattice offsets from a path row land a relay only at py + k G - fh / 2: an 82.08-um 548-b relay in the
+                    # 131.8-um HOST-top / D2D-bottom channel is legal only for y in [27021.6, 27028.08], which that lattice
+                    # (26969.76, 27012.96, 27056.16) never hits (d16 ks_kvs_attn__attn__tx_payload stage 9 refused although
+                    # a 0-overlap spot 259-321 um from every D2D pin exists).  Only chains that would raise reach here, so
+                    # every plan that built is unchanged.
+                    fine_ = [(dx_, dy_ + f_) for dx_, dy_ in offl_ for f_ in RLY_FINE_STEPS]
+                    got = _spot(idxs, fine_, prev_pt_, rch, pad_, at_end)
+                    if got is not None:
+                        m.setdefault('rly_fine', []).append((bid, st_['k'], round(got[0], 3), round(got[1], 3)))
                 if got is None and phy_b and bid not in tree_meta and remaining_() <= reach_():
                     m.setdefault('phy_short', []).append((bid, round(remaining_(), 1)))   # no free spot nearer the PHY
                     break
