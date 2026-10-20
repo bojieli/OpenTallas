@@ -173,7 +173,12 @@ module dsdv_svc_rs_c #(
     // tile bundle landed both ways, engine re-schedule TLX 6); its own role ROM / 2-stage reset (dsdv_svc_rs_attw) +
     // the lp regional reset runs.  Bench-only single clock: every region root = ck.
     assign a_fc = 32'd0;
-    dsdv_svc_attw_f_lp #(.AMUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .ROOT(ENTRY), .PMEM(PMEM),
+    // SVC5: -DOT_SVC_ATTW_LP_MUT=<1|2|4> selects the lp landing / reset mutant (bench only; random lockstep stimulus
+    // leaves the tiles idle, so landing-0 mutants are witnessed here on the real-vector 16-slice bench).
+`ifndef OT_SVC_ATTW_LP_MUT
+`define OT_SVC_ATTW_LP_MUT 0
+`endif
+    dsdv_svc_attw_f_lp #(.MUT(`OT_SVC_ATTW_LP_MUT), .AMUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .ROOT(ENTRY), .PMEM(PMEM),
                          .TLX(6), .TXD(0)) u_att (
         .ck_c(ck), .ck_t0(ck), .ck_t1(ck), .ck_t2(ck), .ck_t3(ck), .rst(rst), .sid(sid), .cs(cs[804:0]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
