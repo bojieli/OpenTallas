@@ -92,6 +92,21 @@
 // register per RX lane (head row from flops), a land bit pre-decoded per FIFO row, rid = one AO222 per bit with the
 // selects duplicated per column group.  Same cycles and bits; MU_EN 0 logic untouched.  Mutant
 // OT_S81SL_LEP_MUT_STALEHD (head register loads the old pointer's row: stale head after a pop / write).
+// S81-SLICE3-LEP (10-19, routes s81sl_lep-90fc20580 TT -44.76 and s81sl_lepnh-90fc20580 TT -55.92 failed; regates FAIL:
+// lep real reg->reg -58.97 ps g_rx[0].g_c[0].g_on.rpc[0] -> 8:1 head-row mux -> h0[3:1] decode -> 514-bit enable of
+// g_hrx.fh_d (the same cone selects the 1,103 rid bits)): structural successor, both opt-in parameters (default 0 =
+// the logic above, bit-identical; MU_EN 1 unaffected), ON in the plain leaf tops ot_s81sl_lep / ot_s81sl_lep_nh:
+//   TXRP = 1: S81-FIX3 TX read pipeline register (odr / inr, no reset on data) beside each TX SRAM column: the macro read
+//     word (clk->q 421 ps TT) crosses the tile in its own cycle.  lo_v / lo_d +1 edge (issue -> lo_v 3 edges), TX credit
+//     round trip ~8 <= CRED 8: full beat rate.  Mutant OT_S81SL_LEP_MUT_TXRPV (lo_v skips inr: valid one edge early).
+//   RXSA = 1 (MU_EN 0, AB_EN 0 only): RX landing FIFO as RXG column groups of <= 31 bits, each with its OWN row storage,
+//     registered one-hot slot enables, registered one-hot head pointer and pop copy (kept); the head row is a SHOW-AHEAD
+//     register (hd = mem[rp] every cycle, bypassing the landing word on a same-edge write), so h0 / h1 leave flops.
+//     The lane-0 frame kind {ks, host, ring} is pre-decoded per row at write, and every consumer select is a REGISTERED
+//     one-hot copy loaded from the NEXT state (rel_nx && kind_nx): rid 35 copies (<= 32 bits each), fh_d 17, fk_d 2.
+//     rid / fh_d / fk_d are then one AND / enable mux from flops.  Same cycles, same bits, same faults: 0 added edges.
+//     Mutants OT_S81SL_LEP_MUT_RXSEL (rid group 0 select from the current, not the next, state: one cycle late) and
+//     OT_S81SL_LEP_MUT_RXBYP (show-ahead head misses the same-edge landing word).
 module ot_s81sl_lep_core #(
     parameter integer DT = 512,        // TX landing FIFO depth per lane (flits; SRAM macro depth)
     parameter integer DR = 8,          // RX landing FIFO depth per lane (flits, flops) = the lane sender's CRED 8
@@ -100,7 +115,9 @@ module ot_s81sl_lep_core #(
     parameter integer HOST_EN = 1,     // 1: host plane (THOST / TKD out, HOST / KS in, f_lf); 0: ring beats only
     parameter integer MU_EN = 0,       // 1: user-tag windows (TX stamp, RX strip / land / replay merge)
     parameter integer AB_EN = 0,       // 1: second lane pair (copy B static circuit)
-    parameter integer NB = 80          // ring beats per h message per endpoint (40,960 B / 4 end slices / 128 B)
+    parameter integer NB = 80,         // ring beats per h message per endpoint (40,960 B / 4 end slices / 128 B)
+    parameter integer TXRP = 0,        // 1: TX read pipeline register beside the SRAM column (+1 lo edge; S81-SLICE3-LEP)
+    parameter integer RXSA = 0         // 1: grouped show-ahead RX head + registered one-hot selects (0 edges; MU_EN 0 only)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -261,6 +278,7 @@ module ot_s81sl_lep_core #(
         wire rt = rr[t % 2];
         reg [AT-1:0] wp, rp; reg [AT:0] n; reg [CW-1:0] cnt;
         reg inf, of, ov; reg [H:0] od;
+        wire inq; wire [H:0] qd;                      // read word / valid one stage before the lo pin flops
         (* keep = "true" *) reg cr_q;                  // lo_r pin flop
         wire [H:0] q;
         wire iss = n != 0 && cnt != 0;
@@ -277,12 +295,25 @@ module ot_s81sl_lep_core #(
                 if (iss) rp <= (rp == DT - 1) ? 0 : rp + 1'b1;
                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
                 inf <= iss;
-                ov <= inf;
+                ov <= inq;
 `ifndef OT_S81SL_LEP_MUT_NOOVF
                 if (psh && n == DT && !iss) of <= 1'b1;
 `endif
             end
-        always @(posedge clk) od <= q;
+        if (TXRP != 0) begin : g_rp                   // read pipeline register beside the SRAM column
+            reg inr; reg [H:0] odr;
+            always @(posedge clk or negedge rt) if (!rt) inr <= 1'b0; else inr <= inf;
+            always @(posedge clk) odr <= q;
+`ifdef OT_S81SL_LEP_MUT_TXRPV
+            assign inq = inf;                         // MUTANT: lo_v skips the read pipeline stage (valid 1 edge early)
+`else
+            assign inq = inr;
+`endif
+            assign qd = odr;
+        end else begin : g_nrp
+            assign inq = inf; assign qd = q;
+        end
+        always @(posedge clk) od <= qd;
         assign lo_v[t] = ov; assign lo_d[t * (H + 1) +: H + 1] = od; assign ovf[t] = of;
     end
     if (NL == 2) begin : g_txnb                         // AB_EN 0: no pair-B lanes (lo2 / lo3 unread outputs = 0)
@@ -302,6 +333,16 @@ module ot_s81sl_lep_core #(
     wire [3:0] li_v = {li3_v, li2_v, li1_v, li0_v}; wire [4*(H+1)-1:0] li_d = {li3_d, li2_d, li1_d, li0_d};
     wire [NL-1:0] rne, rxf; wire [NL*(H+1)-1:0] rhd; wire [NL-1:0] lir;
     wire [NL-1:0] rhk;                                 // MU_EN 1: pre-decoded land bit of each lane's head row
+    // RXSA (MU_EN 0, 2 lanes): grouped show-ahead RX + registered one-hot selects
+    localparam integer RXS = (RXSA != 0 && MU_EN == 0 && NL == 2) ? 1 : 0;
+    localparam integer RXG = 18, RSW = (H + 1 + RXG - 1) / RXG;      // 18 column groups of <= 31 bits
+    wire [NL-1:0] rnz_nx;                              // next-cycle non-empty flag per lane (= nz after this edge)
+    wire [2:0] rk_nx;                                  // next-cycle lane-0 head kind {ks, host, ring}
+`ifdef OT_S81SL_LEP_MUT_NOPAIR
+    wire rel_nx = rnz_nx[0];
+`else
+    wire rel_nx = rnz_nx[0] && rnz_nx[1];
+`endif
     wire [1:0] relp;                                   // pair releases (pair B only at AB_EN 1)
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
     assign relp[0] = rne[0];
@@ -338,10 +379,55 @@ module ot_s81sl_lep_core #(
         integer j;
         always @(posedge clk) begin
             dq <= li_d[t * (H + 1) +: H + 1];
-            for (j = 0; j < DR; j = j + 1) if (we[j]) mem[j] <= dq;
+            if (RXS == 0) for (j = 0; j < DR; j = j + 1) if (we[j]) mem[j] <= dq;
         end
         // MU_EN 0: the head is read combinationally from mem[rpc] (pre-MU structure, unchanged; loop empty at MU_EN 1)
-        for (c = 0; c < ((MU_EN != 0) ? 0 : RREP); c = c + 1) begin : g_c
+        assign rnz_nx[t] = n_nx != 0;
+        if (RXS != 0) begin : g_s
+            // lane-0 frame kind pre-decoded per row at write: {ks, host, ring}; next head kind like the g_sa land bit
+            if (t == 0) begin : g_k
+                wire [2:0] kd = {!dq[0] && dq[3:1] == 3'd2, !dq[0] && dq[3:1] == 3'd1, dq[0]};
+                reg [2:0] mk [0:DR-1];
+                integer jk;
+                always @(posedge clk) for (jk = 0; jk < DR; jk = jk + 1) if (we[jk]) mk[jk] <= kd;
+                assign rk_nx = we[rp_nx] ? kd : mk[rp_nx];
+            end
+            for (c = 0; c < RXG; c = c + 1) begin : g_g
+                localparam integer LO = c * RSW, HI = ((c + 1) * RSW > H + 1) ? H + 1 : (c + 1) * RSW;
+                if (LO < H + 1) begin : g_on
+                    // kept per-group copies: slot enables, one-hot head pointer, pop
+                    (* keep = "true" *) reg [DR-1:0] wg;
+                    (* keep = "true" *) reg [DR-1:0] oh;
+                    (* keep = "true" *) reg pc;
+                    reg [HI-LO-1:0] mg [0:DR-1];
+                    reg [HI-LO-1:0] hd;
+                    wire [DR-1:0] ohn = pc ? {oh[DR-2:0], oh[DR-1]} : oh;      // one-hot of rp_nx
+                    integer kk, jg;
+                    reg [HI-LO-1:0] row;
+                    always @(*) begin
+                        row = '0;
+                        for (kk = 0; kk < DR; kk = kk + 1) row = row | ({(HI - LO){ohn[kk]}} & mg[kk]);
+                    end
+                    always @(posedge clk or negedge rnx)
+                        if (!rnx) begin wg <= DR'(1); oh <= DR'(1); pc <= 1'b0; end
+                        else begin
+                            for (kk = 0; kk < DR; kk = kk + 1) wg[kk] <= (wp_nx == AR'(kk)) && (n_nx != (AR+1)'(DR));
+                            oh <= ohn;
+                            pc <= rel_nx && (n_nx != 0);           // = next cycle's pop of this lane
+                        end
+                    always @(posedge clk) begin
+                        for (jg = 0; jg < DR; jg = jg + 1) if (wg[jg]) mg[jg] <= dq[HI-1:LO];
+`ifdef OT_S81SL_LEP_MUT_RXBYP
+                        hd <= row;                                 // MUTANT: same-edge landing word not bypassed
+`else
+                        hd <= (|(wg & ohn)) ? dq[HI-1:LO] : row;
+`endif
+                    end
+                    assign rhd[t * (H + 1) + LO +: HI - LO] = hd;
+                end
+            end
+        end
+        for (c = 0; c < ((MU_EN != 0 || RXS != 0) ? 0 : RREP); c = c + 1) begin : g_c
             localparam integer LO = c * SW, HI = ((c + 1) * SW > H + 1) ? H + 1 : (c + 1) * SW;
             if (LO < H + 1) begin : g_on
                 (* keep = "true" *) reg [AR-1:0] rpc;
@@ -414,7 +500,28 @@ module ot_s81sl_lep_core #(
     wire mcol_w;                                       // MU: replay collided with a cut-through beat
     wire [1103:0] rb = {h1[H-1:0], h0[H-1:0]};          // the released frame (ring beat when bit 0)
     generate if (MU_EN == 0) begin : g_rxr
+    if (RXS == 0) begin : g_rid0
     always @(posedge clk) rid <= (rel && h0[0]) ? {h1[H-1:0], h0[H-1:1]} : 1103'd0;   // data: no reset
+    end else begin : g_rid1                            // RXSA: 35 registered select copies (<= 32 rid bits each)
+    localparam integer SG = 35, SGW = (1103 + SG - 1) / SG;
+    wire [1103:1] rfr = {h1[H-1:0], h0[H-1:1]};
+    for (c = 0; c < SG; c = c + 1) begin : g_sr
+        localparam integer LO = 1 + c * SGW, HI = (1 + (c + 1) * SGW > 1104) ? 1104 : 1 + (c + 1) * SGW;
+        if (LO < 1104) begin : g_on
+            (* keep = "true" *) reg sr;
+`ifdef OT_S81SL_LEP_MUT_RXSEL
+            if (c == 0) begin : g_m
+                always @(posedge clk or negedge rnx) if (!rnx) sr <= 1'b0; else sr <= rel && h0[0];   // MUTANT: late
+            end else begin : g_n
+                always @(posedge clk or negedge rnx) if (!rnx) sr <= 1'b0; else sr <= rel_nx && rk_nx[0];
+            end
+`else
+            always @(posedge clk or negedge rnx) if (!rnx) sr <= 1'b0; else sr <= rel_nx && rk_nx[0];
+`endif
+            always @(posedge clk) rid[HI-1:LO] <= sr ? rfr[HI-1:LO] : '0;
+        end
+    end
+    end
     always @(posedge clk or negedge rnx)
         if (!rnx) riv <= 1'b0;
         else riv <= rel && h0[0];
@@ -502,10 +609,25 @@ module ot_s81sl_lep_core #(
             fh_v <= rel && hacc && h0[3:1] == 3'd1;
             fk_s <= rel && hacc && h0[3:1] == 3'd2 && ksp[52];
         end
-    always @(posedge clk) begin
-        if (rel && hacc && h0[3:1] == 3'd1) fh_d <= h0[4 +: 514];
-        if (rel && hacc && h0[3:1] == 3'd2) fk_d <= ksp[51:0];
-        lf <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
+    always @(posedge clk) lf <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
+    if (RXS == 0) begin : g_hs0
+        always @(posedge clk) begin
+            if (rel && hacc && h0[3:1] == 3'd1) fh_d <= h0[4 +: 514];
+            if (rel && hacc && h0[3:1] == 3'd2) fk_d <= ksp[51:0];
+        end
+    end
+    if (RXS != 0) begin : g_hs                         // RXSA: registered one-hot select copies (<= 32 bits each)
+        for (c = 0; c < 17; c = c + 1) begin : g_h       // fh_d 514 = 16 x 31 + 18
+            localparam integer LO = c * 31, HI = (c == 16) ? 514 : (c + 1) * 31;
+            (* keep = "true" *) reg sh;
+            always @(posedge clk or negedge rnx) if (!rnx) sh <= 1'b0; else sh <= rel_nx && rk_nx[1];
+            always @(posedge clk) if (sh) fh_d[HI-1:LO] <= h0[4 + LO +: HI - LO];
+        end
+        for (c = 0; c < 2; c = c + 1) begin : g_k        // fk_d 52 = 2 x 26
+            (* keep = "true" *) reg sk;
+            always @(posedge clk or negedge rnx) if (!rnx) sk <= 1'b0; else sk <= rel_nx && rk_nx[2];
+            always @(posedge clk) if (sk) fk_d[c * 26 +: 26] <= ksp[c * 26 +: 26];
+        end
     end
     assign f_host = {fh_d, fh_v};
     assign f_ks = {fk_s, fk_d};
@@ -542,7 +664,7 @@ endmodule
 // the MU ports of the core are unread / undriven there).  ot_s81sl_lep_mu: the multi-user endpoint (MU_EN 1).
 module ot_s81sl_lep #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer HOST_EN = 1
+    parameter integer HOST_EN = 1, parameter integer TXRP = 1, parameter integer RXSA = 1
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -565,7 +687,8 @@ module ot_s81sl_lep #(
     output wire [52:0]     f_ks,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(HOST_EN), .MU_EN(0), .AB_EN(0)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(HOST_EN), .MU_EN(0), .AB_EN(0),
+        .TXRP(TXRP), .RXSA(RXSA)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -580,7 +703,8 @@ endmodule
 
 // HOST_EN = 0 leaf top (hardened master of the three host-less endpoints s_0S / s_0N / s_7S): no host ports
 module ot_s81sl_lep_nh #(
-    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
+    parameter integer TXRP = 1, parameter integer RXSA = 1
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -599,7 +723,8 @@ module ot_s81sl_lep_nh #(
     // no l0_st / l1_st: the PHY lane status feeds only f_lf (host plane) at HOST_EN 1 (the lane tiles still take it in
     // their rx word, and lane faults reach the fault collector through l0_f / l1_f).  The core reads none of t_host / t_kd /
     // l*_st at HOST_EN 0 (generate), so these constants are not logic: synthesis of this top keeps no host pin or flop.
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(0), .AB_EN(0)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(0), .AB_EN(0),
+        .TXRP(TXRP), .RXSA(RXSA)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
