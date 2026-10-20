@@ -80,11 +80,23 @@ if [ "$MODE" = regional ]; then
   # spine (DC_REGIONAL_IDEAL=1: ideal entries, control); every region its own family; cross-region crossings LANDED
   python3 $D/$TL/die_clock/qwen_landed_pairs.py --geom $D/geom --lanes $D/fwd_lanes.json --out $D/landed_pairs_pre.json \
     | tee -a $D/STATUS.log || exit 1
+  # QW-DIECLK4 10-20: the clock FEED (bump qfd_ckbump pll_ck -> qfd_clkrx pll_fwd; rN 2735 um unrepeated, die_repeaters skips
+  # clock nets) is a buffered safe tree of its own (DC_FEED=0: off)
+  FEED=$(python3 - $D/die.v <<'PY'
+import re, sys
+v = open(sys.argv[1]).read()
+rx = re.search(r'qfd_clkrx\s+\S+\s*\(\s*\.pll_fwd\((\w+)\)', v)
+bp = rx and re.search(r'qfd_ckbump\s+(\S+)\s*\(\s*\.pll_ck\(' + rx.group(1) + r'\)', v)
+print(f'{bp.group(1)}/pll_ck[0]' if bp else '')
+PY
+)
+  say "feed root: ${FEED:-none}"
   python3 $D/$TL/die_clock/qwen_regional_spec.py --spec $D/spec.json --pairs $D/landed_pairs_pre.json --out-spec $D/spec_$3.json \
     --out-families $D/families_$3.json --out-owed $D/land_owed_$3.json ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} \
     $([ "${DC_REGIONAL_IDEAL:-0}" = 1 ] && echo --ideal) $([ "${DC_GRID_CENTER:-0}" = 1 ] && echo --grid-center) \
     $([ "${DC_SAFE_TREE:-1}" = 1 ] && echo --safe-tree) $([ "${DC_NEIGHBOUR_TRIM:-0}" = 1 ] && echo --neighbours) \
-    $([ "${DC_SPINE_BALANCE:-0}" = 1 ] && echo --balance-spine) \
+    $([ "${DC_SPINE_BALANCE:-0}" = 1 ] && echo --balance-spine) $([ "${DC_SPINE_GEOM:-0}" = 1 ] && echo --spine-geometric) \
+    $([ "${DC_FEED:-1}" = 1 ] && [ -n "$FEED" ] && echo --feed $FEED) \
     | tee -a $D/STATUS.log || exit 1
   # QW-DIECLK3 10-19: the per-region families stay (intra judged per region); neighbour pairs are trimmed in the build
   # and judged by the landed/unlanded verdict downstream
