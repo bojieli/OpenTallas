@@ -21,7 +21,7 @@ for category,expected in [('vec_pt',12),('vec_ptreg',4)]:
 for kind in ['data','m1024','pt0']:
     for record in ['qw_softmax_exp_sum_r1','ds_q_norm_ss']:
         d=root/'mutw'/f'{kind}_{record}'; logs=list(d.glob('sim_mr10*.log'));t='\n'.join(p.read_text() for p in logs)
-        ok=bool(re.search(r'^SU_TOP FAIL\b',t,re.M)) and bool(re.search(r'^SU_TOP ERROR\b',t,re.M)) and not re.search(r'^SU_TOP PASS\b',t,re.M)
+        ok=bool(re.search(r'SU_TOP FAIL errors=[1-9][0-9]*',t)) and bool(re.search(r'^SU_TOP ERROR\b',t,re.M)) and not re.search(r'^SU_TOP PASS\b',t,re.M)
         rows.append({'record':str(d.relative_to(root)),'expected':'causal FAIL','ok':ok})
         if not ok:failures.append(f'{d.name}: causal rejection not established')
 (root/'codex_acceptance.json').write_text(json.dumps({'accepted':not failures,'failures':failures,'records':rows},indent=2)+'\n')

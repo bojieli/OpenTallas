@@ -1,0 +1,17 @@
+{
+  "record": "qw_softmax_exp_sum_r4_phased",
+  "verdict": "PASS",
+  "actual_last_lg_write": 1412,
+  "actual_last_scalar": 1373,
+  "write_return_edges": 10,
+  "charged_dispatch_edge": 0,
+  "actual_serial_edges": 1422,
+  "compiled_serial_edges": 1422,
+  "VM_reads": 4098,
+  "VM_writes": 4098,
+  "scalars": 16,
+  "no_reset_between_phases": true,
+  "scope": "direct RTL component exactness, causal phase witnesses pending; not die-bound or physically timed; no token-rate adoption",
+  "binary_build": "existing a5cc6f083 PRETREE1 Verilator5.050 mr10_pt",
+  "runtime_log_sha256": "368eebf4a9f5d16d35142eb882bb043ee41f5e986079a4e2ece812b249848ec7"
+}
