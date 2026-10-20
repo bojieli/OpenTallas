@@ -1,0 +1,16 @@
+{
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_static_kv_boot_dispatch_age.sv": {
+    "predecessor": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+    "source_commit": "04b625135",
+    "predecessor_sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+    "candidate_sha256": "65ed0024ba5c44c4ac7e9f5f43dfbff26fa3dcc2da272e58c33903bc962c6761",
+    "scope": "SOURCE_ONLY UNQUALIFIED; boot-age decoder family/native/wholeparent proofs separate"
+  },
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_static_kv_boot_dispatch_mu_age.sv": {
+    "predecessor": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv",
+    "source_commit": "04b625135",
+    "predecessor_sha256": "3c73919c5e52ed017dda4ef93dd42e83b9f9429de1dde58137fa7bcd61cb9b33",
+    "candidate_sha256": "1110034e2425edece43c620be2caf57ed1ae5db72b2d29a3b5b963d662344111",
+    "scope": "SOURCE_ONLY UNQUALIFIED; boot-age decoder family/native/wholeparent proofs separate"
+  }
+}
