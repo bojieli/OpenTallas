@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+OK   landed_l0: LANDED_LOCKSTEP PASS lmut 0 runs=2: red_mu: LANDED_LOCKSTEP PASS LMUT=0 compared=845539 mismatches=0 active=9199 tl_words=0 op_starts=952 | full_mu: LANDED_LOCKSTEP PASS LMUT=0 compared=4057891 mismat
+OK   landed_l0_mu: MU_OPSEG_PASS mut 0_l0
+OK   landed_l1: LANDED_LOCKSTEP FAIL lmut 1 runs=1: red_mu: LANDED_LOCKSTEP FAIL LMUT=1 compared=845539 mismatches=845539 active=9199 tl_words=0 op_starts=952
+OK   landed_l2: LANDED_LOCKSTEP FAIL lmut 2 runs=1: red_mu: LANDED_LOCKSTEP FAIL LMUT=2 compared=845539 mismatches=9199 active=9199 tl_words=0 op_starts=952
+MU_OPSEG BENCHES: PASS
+# exit 0
