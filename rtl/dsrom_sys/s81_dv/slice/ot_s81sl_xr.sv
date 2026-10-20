@@ -517,23 +517,20 @@ module ot_s81sl_xr #(
     // XR5: un_c[32 k + 2 g +: 2] = un[k] per 16-bit half-word g of leaf k's sw_d read (the 4:1 row-pair select drove ~512
     // mux loads per bit; now <= 32); KEPT copies registered from un's next state.
     // XR7: one copy per 8 bits (was 16: 70 pins), reset-free (un_nx is a function of reset state).
-    (* keep *) reg [5*32*2-1:0] un_c; reg [1:0] un_nx [0:4];
+    (* keep *) reg [5*32*2-1:0] un_c; reg [1:0] un_nx [0:4]; reg [1:0] un_na [0:4];
     always @(*)
         for (k = 0; k < 5; k = k + 1) begin
             un_nx[k] = un[k];
             if (ub[k]) un_nx[k] = un[k] + 2'd1;
             if (rwe[k]) un_nx[k] = 2'd0;
+            // XR3-CLS census (C3): un_nx drove 32 copies + the master = 33 pins.  Copies 0..15 take the same next state
+            // computed from copy 0's own value (un_c[64 k] == un[k] every cycle): two distinct cones of 16 / 17 pins.
+            un_na[k] = (CLS != 0) ? un_c[64 * k +: 2] : un[k];
+            if (ub[k]) un_na[k] = un_na[k] + 2'd1;
+            if (rwe[k]) un_na[k] = 2'd0;
         end
-    always @(posedge clk) for (k = 0; k < 160; k = k + 1) if (CLS == 0 || k % 32 != 31) un_c[2 * k +: 2] <= un_nx[k / 32];
-    // XR3-CLS census (C3): un_nx drove 32 copies + the master = 33 pins -> the master un[k] serves the last 8-bit word.
-    wire [5*32*2-1:0] un_r;
-    genvar gu, gi;
-    generate for (gu = 0; gu < 5; gu = gu + 1) begin : g_unr
-        for (gi = 0; gi < 32; gi = gi + 1) begin : g_w
-            if (CLS != 0 && gi == 31) begin : g_m assign un_r[64 * gu + 2 * gi +: 2] = un[gu]; end
-            else begin : g_c assign un_r[64 * gu + 2 * gi +: 2] = un_c[64 * gu + 2 * gi +: 2]; end
-        end
-    end endgenerate
+    always @(posedge clk) for (k = 0; k < 160; k = k + 1)
+        un_c[2 * k +: 2] <= (CLS != 0 && k % 32 < 16) ? un_na[k / 32] : un_nx[k / 32];
     always @(posedge clk or negedge rs_r)
         if (!rs_r) begin ub <= 5'd0; sw_v <= 5'd0; ucol <= 1'b0; for (k = 0; k < 5; k = k + 1) un[k] <= 2'd0; end
         else begin
@@ -564,7 +561,7 @@ module ot_s81sl_xr #(
             for (i = 0; i < 128; i = i + 1) if (rwe_c[128 * k + i]) ud[k][8 * i +: 8] <= rdat[8 * i +: 8];
             for (i = 0; i < 32; i = i + 1)
                 sw_d[256 * k + 8 * i +: 8] <= rwr_c[32 * k + i] ? rwb[8 * i +: 8]
-                                                              : ud[k][256 * un_r[64 * k + 2 * i +: 2] + 8 * i +: 8];
+                                                              : ud[k][256 * un_c[64 * k + 2 * i +: 2] + 8 * i +: 8];
             if (rwr[k]) begin
                 sw_a[10 * k +: 10] <= body[9:0]; sw_m[8 * k +: 8] <= {4'd0, body[13:10]};
             end else begin
