@@ -1,7 +1,7 @@
 {
  "cls": "GATH",
  "written": "2026-10-20 PT",
- "agent_branch": "claude/toksim-s81c-gath-1019@cf69c2a03",
+ "agent_branch": "codex/token-compose-source-ages-1020",
  "ops": [
   {
    "op": "attn.gather",
@@ -14,15 +14,15 @@
    ],
    "by_old": {
     "808.0": 577,
-    "819.0": 618
+    "819.0": 624
    },
    "per_layer": {
-    "L20": 618,
+    "L20": 624,
     "L2": 577
    },
    "grade": "measured-release-RTL",
    "definition": "SEL_IDS frame header driven on both entries' q pins (tb cycle t_sel, compiled static issue, +static_io=1) -> last beat of the last OWNED selected-row HBM read driven on the slice r_data (all 16 slices), +1 (GATH_T gather_span = own_done_last - t_sel + 1). On p4l-MU the die gathers only the rows its stacks own (id[5:4] die, id[7:6] stack; ~1/16 of 512); the other rows arrive on ROWS frames = attn.rows_allgather (separate DAG node). SEL_IDS is issued 1 cycle after WIN_LOAD (both DAG nodes start together); isolated (sel_gap 800, window load done) the span is identical (L2 view 0,0: 577) -> the span is the slice SEL scanner (one rank a cycle over 512 ranks) + the last fetch, not HBM queueing",
-   "shape": "production: 512 real selected compressed positions (attn.idx.topk_final) of the L2 (ratio 2, 524,287 rows) / L20 (ratio 1, 1,048,575 rows + this position's new row) fixtures, T 640 (128 window + 512), 16 heads (TP4 rank 0), the stored 288-B FP4 rows from the fixture state (+ real +-1/+-256 neighbours in HBM), 16 real dsdv_svc_rs slices (DIE 0, ST 0); owner views (die,stack) by id relabelling: measured {'L20': 2, 'L2': 2} of 16 per layer; per instance = the worst view",
+   "shape": "production: 512 real selected compressed positions (attn.idx.topk_final) of the L2 (ratio 2, 524,287 rows) / L20 (ratio 1, 1,048,575 rows + this position's new row) fixtures, T 640 (128 window + 512), 16 heads (TP4 rank 0), the stored 288-B FP4 rows from the fixture state (+ real +-1/+-256 neighbours in HBM), 16 real dsdv_svc_rs slices (DIE 0, ST 0); owner views (die,stack) by id relabelling: measured {'L20': 16, 'L2': 16} of 16 per layer; per instance = the worst view",
    "views": {
     "L20": {
      "0,0": {
@@ -32,12 +32,110 @@
       "sc_checked": 2560,
       "log": "gather/runs/run_L20_v00_g0.log"
      },
+     "0,1": {
+      "span": 561,
+      "own_reads": 448,
+      "se_checked": 2528,
+      "sc_checked": 2528,
+      "log": "gather/runs/run_L20_v01_g0.log"
+     },
+     "0,2": {
+      "span": 574,
+      "own_reads": 304,
+      "se_checked": 2320,
+      "sc_checked": 2320,
+      "log": "gather/runs/run_L20_v02_g0.log"
+     },
+     "0,3": {
+      "span": 565,
+      "own_reads": 528,
+      "se_checked": 2832,
+      "sc_checked": 2832,
+      "log": "gather/runs/run_L20_v03_g0.log"
+     },
+     "1,0": {
+      "span": 624,
+      "own_reads": 656,
+      "se_checked": 2560,
+      "sc_checked": 2560,
+      "log": "gather/runs/run_L20_v10_g0.log"
+     },
+     "1,1": {
+      "span": 575,
+      "own_reads": 496,
+      "se_checked": 2528,
+      "sc_checked": 2528,
+      "log": "gather/runs/run_L20_v11_g0.log"
+     },
+     "1,2": {
+      "span": 573,
+      "own_reads": 368,
+      "se_checked": 2320,
+      "sc_checked": 2320,
+      "log": "gather/runs/run_L20_v12_g0.log"
+     },
      "1,3": {
       "span": 618,
       "own_reads": 688,
       "se_checked": 2832,
       "sc_checked": 2832,
       "log": "gather/runs/run_L20_v13_g0.log"
+     },
+     "2,0": {
+      "span": 574,
+      "own_reads": 624,
+      "se_checked": 2560,
+      "sc_checked": 2560,
+      "log": "gather/runs/run_L20_v20_g0.log"
+     },
+     "2,1": {
+      "span": 567,
+      "own_reads": 528,
+      "se_checked": 2528,
+      "sc_checked": 2528,
+      "log": "gather/runs/run_L20_v21_g0.log"
+     },
+     "2,2": {
+      "span": 552,
+      "own_reads": 560,
+      "se_checked": 2320,
+      "sc_checked": 2320,
+      "log": "gather/runs/run_L20_v22_g0.log"
+     },
+     "2,3": {
+      "span": 554,
+      "own_reads": 544,
+      "se_checked": 2832,
+      "sc_checked": 2832,
+      "log": "gather/runs/run_L20_v23_g0.log"
+     },
+     "3,0": {
+      "span": 544,
+      "own_reads": 368,
+      "se_checked": 2560,
+      "sc_checked": 2560,
+      "log": "gather/runs/run_L20_v30_g0.log"
+     },
+     "3,1": {
+      "span": 522,
+      "own_reads": 544,
+      "se_checked": 2528,
+      "sc_checked": 2528,
+      "log": "gather/runs/run_L20_v31_g0.log"
+     },
+     "3,2": {
+      "span": 560,
+      "own_reads": 576,
+      "se_checked": 2320,
+      "sc_checked": 2320,
+      "log": "gather/runs/run_L20_v32_g0.log"
+     },
+     "3,3": {
+      "span": 576,
+      "own_reads": 560,
+      "se_checked": 2832,
+      "sc_checked": 2832,
+      "log": "gather/runs/run_L20_v33_g0.log"
      }
     },
     "L2": {
@@ -48,12 +146,110 @@
       "sc_checked": 2656,
       "log": "gather/runs/run_L2_v00_g0.log"
      },
+     "0,1": {
+      "span": 545,
+      "own_reads": 464,
+      "se_checked": 2704,
+      "sc_checked": 2704,
+      "log": "gather/runs/run_L2_v01_g0.log"
+     },
+     "0,2": {
+      "span": 550,
+      "own_reads": 288,
+      "se_checked": 2304,
+      "sc_checked": 2304,
+      "log": "gather/runs/run_L2_v02_g0.log"
+     },
+     "0,3": {
+      "span": 575,
+      "own_reads": 336,
+      "se_checked": 2576,
+      "sc_checked": 2576,
+      "log": "gather/runs/run_L2_v03_g0.log"
+     },
+     "1,0": {
+      "span": 571,
+      "own_reads": 592,
+      "se_checked": 2656,
+      "sc_checked": 2656,
+      "log": "gather/runs/run_L2_v10_g0.log"
+     },
      "1,1": {
       "span": 568,
       "own_reads": 688,
       "se_checked": 2704,
       "sc_checked": 2704,
       "log": "gather/runs/run_L2_v11_g0.log"
+     },
+     "1,2": {
+      "span": 565,
+      "own_reads": 384,
+      "se_checked": 2304,
+      "sc_checked": 2304,
+      "log": "gather/runs/run_L2_v12_g0.log"
+     },
+     "1,3": {
+      "span": 573,
+      "own_reads": 528,
+      "se_checked": 2576,
+      "sc_checked": 2576,
+      "log": "gather/runs/run_L2_v13_g0.log"
+     },
+     "2,0": {
+      "span": 538,
+      "own_reads": 592,
+      "se_checked": 2656,
+      "sc_checked": 2656,
+      "log": "gather/runs/run_L2_v20_g0.log"
+     },
+     "2,1": {
+      "span": 552,
+      "own_reads": 560,
+      "se_checked": 2704,
+      "sc_checked": 2704,
+      "log": "gather/runs/run_L2_v21_g0.log"
+     },
+     "2,2": {
+      "span": 555,
+      "own_reads": 528,
+      "se_checked": 2304,
+      "sc_checked": 2304,
+      "log": "gather/runs/run_L2_v22_g0.log"
+     },
+     "2,3": {
+      "span": 573,
+      "own_reads": 576,
+      "se_checked": 2576,
+      "sc_checked": 2576,
+      "log": "gather/runs/run_L2_v23_g0.log"
+     },
+     "3,0": {
+      "span": 566,
+      "own_reads": 496,
+      "se_checked": 2656,
+      "sc_checked": 2656,
+      "log": "gather/runs/run_L2_v30_g0.log"
+     },
+     "3,1": {
+      "span": 571,
+      "own_reads": 480,
+      "se_checked": 2704,
+      "sc_checked": 2704,
+      "log": "gather/runs/run_L2_v31_g0.log"
+     },
+     "3,2": {
+      "span": 567,
+      "own_reads": 592,
+      "se_checked": 2304,
+      "sc_checked": 2304,
+      "log": "gather/runs/run_L2_v32_g0.log"
+     },
+     "3,3": {
+      "span": 560,
+      "own_reads": 624,
+      "se_checked": 2576,
+      "sc_checked": 2576,
+      "log": "gather/runs/run_L2_v33_g0.log"
      }
     }
    },
@@ -65,7 +261,7 @@
     "blob": "dsdv_svc_rs 2906d36c92, dsdv_svc_att 44a0ee844c, dsfd_svc_pc 9f119b7f67",
     "in_release_source": true
    },
-   "bench": "rtl/dsrom_sys/s81_dv/svc_rs/test/tb_toksim_gath.sv (observation copy of tb_dsdv_svc_rs ec50132: +sel_gap, GATH_T line; checks unchanged) + tools/s81_dv/layer_prog/toksim_gath_vectors.py @claude/toksim-s81c-gath-1019@cf69c2a03",
+   "bench": "rtl/dsrom_sys/s81_dv/svc_rs/test/tb_toksim_gath.sv (observation copy of tb_dsdv_svc_rs ec50132: +sel_gap, GATH_T line; checks unchanged) + tools/s81_dv/layer_prog/toksim_gath_vectors.py @codex/token-compose-source-ages-1020",
    "evidence": "results/rtl/toksim_s81c_gath_1019/gather/runs/*.log (GATH_T + SVCRS lines); cases/*.case.json",
    "job": "ot-run ot-epyc7 oth-ubuntu-408318-1792477093 (6 runs); 16-view sweep ot-epyc6 oth-ubuntu-447079-1792480437",
    "edges_owed": "+2 (L20 B1 svc splice: +1 station edge each way on svc_rs<->rg2 rq/rd when dsdv_idx_rg binds; not in mu4c); HBM boundary = bench model latency 40 (static) -- a real HBM latency adds (lat - 40) once (one fetch at the tail)",

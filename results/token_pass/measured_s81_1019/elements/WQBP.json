@@ -1,0 +1,40 @@
+{
+ "cls": "WQBP",
+ "written": "2026-10-20 01:00 PT",
+ "agent_branch": "codex/token-compose-source-ages-1020 (pending commit)",
+ "ops": [
+  {
+   "op": "attn.wq_b",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 1299.8,
+   "old_per_instance_values": [
+    1039.9,
+    1559.6
+   ],
+   "grade": "proposed-component-RTL",
+   "bit_exact": true,
+   "golden": "cap_model.golden_sub/golden_row over frame_return_plan.golden_vals (hdc_golden_v41 csum chunk8, 3 K segments, ot_v41_ret_pkg tree order, IEEE fp32 RNE) on the released-checkpoint L0 rank-0 fixture sid6 (DeepSeek-V4.1-Flash dba1be0a), rows 3072..3583 K 1280; every frame-root word (tag node lo/k/n, data w[66:35]) == golden node value, row recombination == golden_row and BF16 RNE == fixture released-shard ops/attn.wq_b; golden self-check == retained_sid6_fixture_contract (512/512)",
+   "rtl": {
+    "module": "ot_v41_rom_elem_q_qxpq_w10 + col_h9_l4/col_h9_MX_l4/col_h10_l4 + dsfd_bf_col + ot_s81sl_xs/vp/vq/rstop/cap_rt/cap_tr",
+    "source": "claude/tok2-capld-1019@e9ed82c83 (TOK2 fullsix exe sha256 63eccd91)",
+    "blob": "123/126 RTL files byte-identical to release 19bf4121e; differ ot_s81sl_cap, ot_s81sl_slice, ot_s81sl_xr (capture/source side); every field element/frame blob = release",
+    "in_release_source": false
+   },
+   "tail_priced": 195,
+   "cycles": null,
+   "by_old": {
+    "1039.9": 1987,
+    "1559.6": 1987
+   },
+   "definition": "first actual element capture1573 -> last frame-root return3560 =1987 edge difference; same625 returned reduction words and512 complete rows, compiler-emitted pipelineP126/cfg52 over15phases, +195 priced CAP/VP/wire tail separately",
+   "shape": "one slice sid6: 6 real frames, 72 q pairs, real ROM images, 512 rank-local rows 3072..3583, K 1280, 15 epochs (14x36+8)",
+   "bench": "results/rtl/toksim_s81d_wqbp_1020/run_wqbp.sh + wqbp_golden_check.py (collected CODEX)",
+   "evidence": "results/rtl/toksim_s81d_wqbp_1020/runs/{l0_p126,l2_p126,l14_p126}/golden.json (625/625 words,512/512 rows, bit_exact true); ratefix_result first_capture1573 last_return3560",
+   "job": "ot-epyc9 oth-ubuntu-3758120-1792481339 L0 /3757604 L2 /3757606 L14, same existing TOK2 fullsix binary; no rebuild",
+   "edges_owed": "CAP_EDLD24 is already in priced tail195; CAPC2_PINPIPE2 remains owed; this measures frame-root boundary only",
+   "note": "Production component numerical evidence only. All three legs golden625/625 and512rows. Legacy ana_pipe compares L0P600 baseline, so L2/L14 falsely report PASSfalse despite their independent per-layergoldenPASS. All runs retain expected CAPfault0100 and3 old fullsix monitor errors (2 attribution,1 single-epoch control); scope ends at frame-root returns, no CAP/whole-die qualification is asserted. P124 negative changes581words and476rows,17460elementfaults. Compiler now emits samecalendar and refusesP124 absentnegativeopt-in; no RTL change. ROOT directive: do not adopt into release or MU headline until actual CAP/deadline/programme contract repaired and full-stage bit-exactPASS. Exposed only via --scenario wqbp-p126.",
+   "adoption": "PROPOSED only: P126 numerical component PASS, CAPfault0100/tb3 and prototype compiler unresolved; baseline must retain qualified3359"
+  }
+ ]
+}

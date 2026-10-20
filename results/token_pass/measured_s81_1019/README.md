@@ -171,3 +171,12 @@ MTP adds wave.busy 161.5k, mc.* 28.9k, draft-block layers.
 ## MTPW source-pinned wave update (CODEX 2026-10-20)
 
 Five wave.busy positions now derive dynamically from V.S029 components and retain their individual grades (47136.2 cycles/position; handoff0). MTP V.L-prefixed index-projection insertions previously skipped are included. MTP adds80191cycles total ->1881238.4stepcycles,2652.9acceptedtok/s; AR fixed848.1tok/s unchanged. mc.* old charges remain. Fleet4tests+selftest+--checkPASS; evidence results/rtl/codex_token_compose_1020. MU numbers remain partial composition estimates pending strict XDIE qualification.
+
+
+## Conservative source-age update (CODEX 2026-10-20)
+
+Current partial baseline: AR833.6tok/s on1439541.6conservativecycles (fixed1417878.1),80.03% measured on that same path; MTP2648.1acceptedtok/s on1884677.8stepcycles,71.47% measured. Rate and grade accounting use max(fixed,re-solved), while fixed-path diagnostics remain separate. MU estimates38346AR/26481MTPaggregate are composition estimates; release qualification remainsOPEN.
+
+APSP adds source-pinned L2/L20/L24 field measurements at1677/1670/1670, GATH includes all16 owner views for L2/L20 (worst577/624). CAL1 avoids source-age double counting via included_by_record and retains every added budget edge as priced-edge. Unselected newLEP/SVC/rstop obligations are metadata only.
+
+P126 WQBP1987+priced195 is explicitly PROPOSED ONLY until its CAP/deadline/programme contract is repaired and full-stage bit-exactPASS. Baseline remains3359+195. `--scenario wqbp-p126` writes scenarios/wqbp-p126.json, labels its eligibility and proposed component grade, and cannot overwrite this baseline. No prototype gain enters the release or MU headline. See results/rtl/codex_token_compose_1020 for9tests+selftest/check and complete immutable component receipts.
