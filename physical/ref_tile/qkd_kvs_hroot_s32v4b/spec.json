@@ -1,0 +1,197 @@
+{
+ "name": "qkd_kvs_hroot_s32v4b",
+ "top": "qkd_kvs_hroot_safe32",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_hroot_safe32.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 300.24,
+  "h": 300.24,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "N": [
+   "i_ctl",
+   "o_ctl",
+   "o_emb"
+  ],
+  "S": [
+   "i_g",
+   "i_r",
+   "o_ch0",
+   "o_pc"
+  ],
+  "E": [
+   "o_c0",
+   "o_c1",
+   "o_c2",
+   "o_c3",
+   "o_c4",
+   "o_c5",
+   "o_c6",
+   "o_c7",
+   "o_kg"
+  ],
+  "W": [
+   "ck",
+   "esh__stack",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "i_ctl": [
+   2.5,
+   213.67
+  ],
+  "o_ctl": [
+   214.67,
+   241.0
+  ],
+  "o_emb": [
+   242.0,
+   297.74
+  ],
+  "i_g": [
+   2.5,
+   30.05
+  ],
+  "i_r": [
+   31.05,
+   89.34
+  ],
+  "o_ch0": [
+   90.34,
+   143.08
+  ],
+  "o_pc": [
+   144.08,
+   297.74
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false
+  }
+ },
+ "recipe": 3,
+ "purpose": "SAFE32 hroot s32v4: s32v3 RTL/pins/outline unchanged + hard central 90x90 (parallel fallback of s32v4) fence for every non-boundary cell (stage reach face->centre->face <=390.24 um); HROOT_LAND_EDGES=2 (+1 vs old landed) on each of four words.",
+ "job": {
+  "owner": "Claude:KV-RST3",
+  "branch": "claude/kv-rst3-s32v4-1020",
+  "tag": "v4b",
+  "purpose": "SAFE32 hroot s32v4: s32v3 RTL/pins/outline unchanged + hard central 90x90 (parallel fallback of s32v4) fence for every non-boundary cell (stage reach face->centre->face <=390.24 um); HROOT_LAND_EDGES=2 (+1 vs old landed) on each of four words.",
+  "benches": [
+   {
+    "name": "safe32_exact",
+    "cmd": "bash results/rtl/kv_hroot_safe32_1020/bench.sh {RUN}/safe32_m0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SAFE32 PASS checked=2091 mut=0"
+   },
+   {
+    "name": "safe32_mut1",
+    "cmd": "bash results/rtl/kv_hroot_safe32_1020/bench.sh {RUN}/safe32_m1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SAFE32 FAIL errors=[1-9][0-9]* checked=2091 mut=1",
+    "fail_witness": "results/rtl/kv_hroot_safe32_1020/v3_bench1.log"
+   },
+   {
+    "name": "safe32_mut2",
+    "cmd": "bash results/rtl/kv_hroot_safe32_1020/bench.sh {RUN}/safe32_m2 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SAFE32 FAIL errors=[1-9][0-9]* checked=2091 mut=2",
+    "fail_witness": "results/rtl/kv_hroot_safe32_1020/v3_bench2.log"
+   },
+   {
+    "name": "safe32_mut3",
+    "cmd": "bash results/rtl/kv_hroot_safe32_1020/bench.sh {RUN}/safe32_m3 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SAFE32 FAIL errors=[1-9][0-9]* checked=2091 mut=3",
+    "fail_witness": "results/rtl/kv_hroot_safe32_1020/v3_bench3.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_hroot_safe32.sv",
+   "results/rtl/kv_hroot_safe32_1020",
+   "physical/qwen_kv_hroot_safe32_1020"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_hroot_s32v4b/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_hroot_s32v4b",
+  "cycles_added": 1
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every data pin registered in standalone SAFE32 RTL: input root captures, distributed second captures, output launch flops; relay words have capture/mid/launch. +1 edge vs old landed, HROOT_LAND_EDGES=2. Pin anchor flow retained; no hidden flow-added data stage."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "s32v3 placed the intermediate stage freely: N-face captures drove BUF/INV endpoints 517.2 um away (417 roots >405). s32v4 fences every non-boundary standard cell (intermediate captures, region ctl/sid/rn copies, relay mids, head decode) into an INCLUSIVE 90x90 um centre region after the pin flops are fixed, so every stage is face->centre or centre->face (<=390.24 um L1). Same RTL, pins, outline, cycles.",
+ "reroute_reason": {
+  "kind": "structural_reach",
+  "source": "qkd_kvs_hroot_safe32-s32v3-e52c7bca5",
+  "fix": "placed BUF/INV endpoint reach 517.212 um (417 roots >405, placed_reach_union.json): hard central fence bounds every stage at 380.24 um"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "orfs_vars": {
+  "POST_SYNTH_TCL": "physical/qwen_kv_hroot_safe32_1020/post_synth_tie32.tcl",
+  "OT_HROOT_FENCE_HALF_UM": "45"
+ },
+ "pin_hook_after_flops": [
+  "physical/qwen_kv_hroot_safe32_1020/central_fence_s32v4.tcl"
+ ]
+}
