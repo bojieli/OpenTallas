@@ -1992,6 +1992,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         reg  [531:0]  fn [0:XF-1];
         reg  [531:0]  fr;
         wire [531:0]  fw_d = {fw_q0, fw_e0, fw_q1, fw_e1};
+        // q4_w10: the per-entry write-enable next states as two kept AND copies (each feeds 17 enable registers)
+        wire [XF-1:0] wen_a, wen_b;
+        ot_v41_kand #(.W(XF)) u_ka (.a(wr_nx), .b({XF{fv_nx}}), .y(wen_a));
+        ot_v41_kand #(.W(XF)) u_kb (.a(wr_nx), .b({XF{fv_nx}}), .y(wen_b));
         for (genvar g = 0; g < FNS; g = g + 1) begin : g_s
             localparam integer LO = 32 * g, HI = (32 * (g + 1) < 532) ? 32 * (g + 1) : 532;
             // TILES-C q4_w8: the slice write enable is ONE kept register per entry (= fw_v && wr[e], loaded from the
@@ -1999,8 +2003,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             // q4_w9: two copies per entry, each enabling 16 bits (an enable mux is 2 pins/flop: 32 bits -> 64 loads)
             localparam integer MD = (LO + 16 < HI) ? LO + 16 : HI;
             wire [XF-1:0] wek, wek2, rk_;
-            ot_v41_kreg #(.W(XF)) u_we (.clk(wclk), .arst_n(1'b1), .d(wr_nx & {XF{fv_nx}}), .q(wek));
-            ot_v41_kreg #(.W(XF)) u_wf (.clk(wclk), .arst_n(1'b1), .d(wr_nx & {XF{fv_nx}}), .q(wek2));
+            ot_v41_kreg #(.W(XF)) u_we (.clk(wclk), .arst_n(1'b1), .d(wen_a), .q(wek));
+            ot_v41_kreg #(.W(XF)) u_wf (.clk(wclk), .arst_n(1'b1), .d(wen_b), .q(wek2));
             ot_v41_kreg #(.W(XF)) u_r (.clk(wclk), .arst_n(1'b1), .d(rd_nx), .q(rk_));
             always @(posedge wclk) for (int e = 0; e < XF; e++) begin
                 if (wek[e]) fn[e][MD-1:LO] <= fw_d[MD-1:LO];
@@ -2199,8 +2203,14 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             ot_v41_kreg #(.W(2)) u_s (.clk(gclk_ma), .arst_n(1'b1), .d({mi2x_bk, z2x_t[0]}), .q({mz_bk[zk], mz_fp4[zk]}));
 `endif
         end
+        // q4_w10: the two capture-enable next states as kept AND copies, one per 16 enable registers (was 40 loads)
+        localparam integer NEG = (ZNE + 15) / 16;
+        wire [1:0] ne_d [0:NEG-1];
+        for (zk = 0; zk < NEG; zk = zk + 1) begin : g_ned
+            ot_v41_kand #(.W(2)) u_k (.a({i1_v, i1_v}), .b({i1_bk, !i1_bk}), .y(ne_d[zk]));
+        end
         for (zk = 0; zk < ZNE; zk = zk + 1) begin : g_ne     // capture enables (= mi2x_v && !mi2x_bk, && mi2x_bk)
-            ot_v41_kreg #(.W(2), .AR(1), .RV(2'b00)) u_e (.clk(gclk_ma), .arst_n(NP != 0 ? rst_ml[2] : rst_m), .d({i1_v && i1_bk, i1_v && !i1_bk}),
+            ot_v41_kreg #(.W(2), .AR(1), .RV(2'b00)) u_e (.clk(gclk_ma), .arst_n(NP != 0 ? rst_ml[2] : rst_m), .d(ne_d[zk / 16]),
                                                           .q({mz_c1[zk], mz_c0[zk]}));
         end
     end else if (QPIPE != 0) begin : g_mi
