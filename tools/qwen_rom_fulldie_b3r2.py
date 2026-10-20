@@ -4177,7 +4177,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     pad_hop_centre = {}
     if tpads:
         bidx = {bid: idx for idx, (bid, cl, bits, eps) in buses}
-        for bid, npad in sorted(tpads.items()):
+        # QW-G5STA (OT_SPLIT_FWD_LAND_EW_MASTERS): the side-by-side slice landings go first, widest first, so the
+        # 1088-b st stations take the channel spots at their pin window (dv2f20g5l try 2: alphabetical order placed
+        # st_u last, 400 um off its pins: 779 / 838-um hops); every other pad keeps the alphabetical order after them
+        _bits_of = {b_[0]: b_[2] for b_ in m['buses']}
+        for bid, npad in sorted(tpads.items(), key=lambda t: ((-_bits_of.get(t[0], 0) if t[0] in _ew_bids else 1), t[0])):
             if bid not in bidx:
                 raise ValueError(f'tree pads: no bus {bid}')
             idx = bidx[bid]
