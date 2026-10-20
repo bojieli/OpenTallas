@@ -1,0 +1,7 @@
+# Actual n32s final-route evidence, handback 2026-10-20 05:10 PDT
+
+Read-only exact6_final.odb bdf95529d1547006b5ff150e1d6594e4f727aa00a14f6353a7d64bf57c3504bd. Complete12937 conservative pin endpoint pairs max329.595um, zero>405,0Libroleerrors. NativePG563894bound/0unbound. Rawpre-gate census FINALdump FAIL is preserved compressed: physical-only filler/tap/decap have noLiblogic roles, and CTS clockdummy loads yield2clock-only roots>32.
+
+Separate actualDB classification PASS: excluded masters have native CORE_SPACER/CORE_WELLTAP type and every complete native MTerm POWER/GROUND; no SIGNAL MTerms. ExactactualTTLib clockgraph: ckh2228realclock endpoints+74unconnectedunary clockloads; clk1389realclock/declaredforwarded endpoints+66unconnectedunary clockloads. Every dummy has realLib unaryfunction and all output ITerms nativeNULL, no functionaldata/reset endpoint. Max remaining nonclock dynamic loads31,0violations/0roles. This is a scoped evidence classification, no nativehelperwaiver or defaulttoolchange. Initial classification failure (omittedextra hclk, unloadedclock pins) remains in classification.log.
+
+Route returned0, DRC0; corner_sta reports TTsetup206.01ps/SS6.4ps/FFhold5.25ps. Finaldaemon verdict remainsREADY/verdict at05:09:22; parallelmutationbench/export/nativepin/neighbour compensation still pending. No CLOSED/adoptionclaim. Original route files unchanged; no submit after handbackSTOP.

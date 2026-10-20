@@ -1,0 +1,73 @@
+ot-run: ot-epyc5       admits   624 GB (avail 550, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 30 disk 508 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3870380-1792497922 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1140] /src/physical/asap7_memory_macros/ot_rom_4096x266_m8_skew250/ot_rom_4096x266_m8_tt.lib line 1, library ot_rom_4096x266_m8_tt already exists.
+[WARNING STA-1140] /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib line 1, library ot_rom_4096x266_m8_tt already exists.
+[WARNING STA-1111] cell ot_rom_4096x266_m8_tt/ot_rom_4096x266_m8  -> clk timing group max clock tree path not found in cell ot_rom_4096x266_m8_tt/ot_rom_4096x266_m8.
+[WARNING STA-1111] cell ot_rom_4096x266_m8_tt/ot_rom_4096x266_m8  -> clk timing group min clock tree path not found in cell ot_rom_4096x266_m8_tt/ot_rom_4096x266_m8.
+[WARNING ORD-2056] The following 44 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  ot_hbm3e_phy_v41x_aw30
+  ot_sram_1r1w_64x512_m1_r2c2
+  ot_rom_8192x274_m8
+  ot_sram_1rw_64x128_m1
+  ot_rom_2048x266_m8
+  ot_sram_1r1w_256x256_m2_r2c2
+  ot_sram_1r1w_32x546_m1
+  ot_sram_1r1w2c_16x546_m1
+  ot_rom_4096x266_m8
+  ot_rom_4096x266_m8
+  ot_sram_1r1w_128x256_m1_r2c2
+  ot_rom_4096x274_m8
+  ot_rom_8192x266_m8
+  ot_sram_1r1w2c_32x546_m1
+  ot_sram_1r1w_32x128_m1
+  ot_sram_1r1w2c_64x546_m1
+  ot_rom_4096x72_m8
+  ot_sram_1r1w_64x16_m1
+  ot_hbm3e_phy_v41x
+  ot_hbm3e_phy_v41x_aw30_e8p5
+  ot_hbm3e_phy_rc_e8p5
+  ot_sram_1rw_256x64_m4_r2c2
+  ot_sram_1r1w2c_256x517_m1
+  ot_rom_1024x72_m8
+  ot_sram_1r1w2c_64x516_m1
+  ot_sram_2rw_512x64_m4_r2c2
+  ot_sram_1rw_2048x128_m4_r2c2
+  ot_rom_8192x104_m8
+  ot_rom_16384x266_m16
+  ot_sram_1rw_2048x128_m4
+  ot_sram_1r1w_1024x256_m2_r2c2
+  ot_sram_1r1w_512x128_m4_r2c2
+  ot_sram_1r1w2c_128x516_m1
+  ot_rom_4096x266_m8
+  ot_hbm3e_phy
+MASTER_PIN_TYPES_DUMP_PASS 71
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3870380-1792497922): exit 0

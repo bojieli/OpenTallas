@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   706 GB (avail 607, growth 113, headroom 0, waiters 0/0 GB) load 61/128 running 28 disk 508 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-n32s-final-audit-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3877348-1792497989 after 0 s
+{'status': 'FAIL', 'physical_only_excluded_instances': {'FILLERxp5_ASAP7_75t_R': 9862, 'FILLER_ASAP7_75t_R': 8308, 'DECAPx1_ASAP7_75t_R': 3154, 'DECAPx2_ASAP7_75t_R': 6943, 'DECAPx4_ASAP7_75t_R': 2780, 'DECAPx6_ASAP7_75t_R': 6283, 'DECAPx10_ASAP7_75t_R': 208671, 'TAPCELL_ASAP7_75t_R': 10517}, 'max_nonclock_dynamic_loads': 74}
+remaining roleerrors 0 violations 2
+[('clk', 1389, 66, 0)]
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3877348-1792497989): exit 0
