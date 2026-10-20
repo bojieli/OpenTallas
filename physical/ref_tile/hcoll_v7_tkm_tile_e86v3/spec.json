@@ -1,0 +1,253 @@
+{
+ "name": "hcoll_v7_tkm_tile_e86v3",
+ "top": "ot_hgi_coll_tkm_tile_e86",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv"
+ ],
+ "params": {
+  "FAN32": 2
+ },
+ "clock_port": "clk",
+ "clock": "multiple_cts_roots",
+ "reset_ports": [],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "B2 SPEC D-B2-7 TKM kept inside hb_coll; hardened chain children use M6 beneath M7 parent straps",
+ "pins": {
+  "N": [
+   "ins_v",
+   "ins_b",
+   "clk",
+   "clk_r0",
+   "clk_r1",
+   "clk_r2",
+   "clk_r3",
+   "up_out"
+  ],
+  "S": [
+   "ovf_v",
+   "ovf_b",
+   "up_in"
+  ],
+  "W": [
+   "clr",
+   "conv",
+   "busy"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.025,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:HBM-E86-5",
+  "branch": "claude/hbm-e86-5-1020",
+  "tag": "v3",
+  "purpose": "TKM tile e86 (TP=192, EW 86, PT 64) FAN32 V3 (keep_hierarchy GN leaf): native32 successor of V2b 4aa724d4e; PRE 1, CREP 1, five related roots, 259.2 sq",
+  "benches": [
+   {
+    "name": "tkm_e86v3_lockstep",
+    "cmd": "FAN32=2 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/v3m0 4000 0",
+    "expect": "pass",
+    "pass_regex": "^TKM_RG_CREP MUT0 cycles4000 .*errors0 PASS$",
+    "pass_witness": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86v3/bench/v3_m0.log",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tkm_e86v3_ctlmut",
+    "cmd": "FAN32=2 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/v3m1 4000 1",
+    "expect": "fail",
+    "fail_regex": "^TKM_RG_CREP MUT1 cycles4000 .*errors[1-9][0-9]* FAIL$",
+    "fail_witness": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86v3/bench/v3_m1.log",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tkm_e86v3_gnmut",
+    "cmd": "FAN32=2 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/v3m3 4000 3",
+    "expect": "fail",
+    "fail_regex": "^TKM_RG_CREP MUT3 cycles4000 .*errors[1-9][0-9]* FAIL$",
+    "fail_witness": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86v3/bench/v3_m3.log",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tkm_tp192_static_gate",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_static.sh {RUN}/bench/tp192",
+    "expect": "pass",
+    "pass_regex": "TKM_TP192_STATIC_GATE_PASS",
+    "min_count_regex": "TKM_STATIC PASS words=([0-9]+) cycles=",
+    "threads": 8,
+    "peak_ram_gb": 160,
+    "timeout_s": 21600,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/tkm3_1018/witness/tp192_static_gate_pass.log"
+   },
+   {
+    "name": "tkm_tp192_tie_mut",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_tile_mut.sh {RUN}/bench/mut",
+    "expect": "fail",
+    "fail_regex": "TKM_STATIC FAIL",
+    "threads": 8,
+    "peak_ram_gb": 160,
+    "timeout_s": 21600,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/tkm3_1018/witness/tp192_tie_mut_fail.log"
+   },
+   {
+    "name": "tkm_tp192_cal_mut",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_tp192_cal_mut.sh {RUN}/bench/calmut",
+    "expect": "fail",
+    "fail_regex": "TKM_STATIC FAIL",
+    "threads": 8,
+    "peak_ram_gb": 160,
+    "timeout_s": 21600,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_coll_tkm_tp192_vectors.py",
+   "tools/hgi_coll_tkm_vectors.py"
+  ],
+  "cycles_added": 0,
+  "views_to": "physical/ref_tile/hcoll_v7_tkm_tile_e86v3/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86v3"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_reg_split": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hgi_coll_tkm_tile registers its inputs (p_* stage) and every output is a flop (ovf_v/ovf_b/up_out/tau_o/busy reg): the TKM chain timing is fixed by tkm_static SETTLE"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "clock_ports": [
+  "clk",
+  "clk_r0",
+  "clk_r1",
+  "clk_r2",
+  "clk_r3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "clr",
+    "conv",
+    "ins_v",
+    "ins_b"
+   ],
+   "outputs": [
+    "busy"
+   ]
+  },
+  "r0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r0"
+   ],
+   "inputs": [],
+   "outputs": [
+    "up_out"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r3"
+   ],
+   "inputs": [
+    "up_in"
+   ],
+   "outputs": [
+    "ovf_v",
+    "ovf_b"
+   ]
+  }
+ },
+ "io_tcl": "physical/ref_tile/hcoll_v7_tkm_tile_e86v3/io_spread.tcl",
+ "structural_change": "HBM-E86-5 10-20: FAN32 V3 = 2 (keep_hierarchy GN leaf) on ot_hgi_coll_tkm_tile_e86 (successor of CODEX V2b 4aa724d4e, FAN32 1: mandatory 042 actual-Liberty census FAIL 21 dynamic >32 / max 65 = 20 GN-OR / compare nodes that ABC pushed into the 30 same-edge gc copy muxes of one position (6 words x 5 k) + g_pre.s_v 38). V3: GN computed NV=3 times from independent kept count-copy words (ot_tkm_gn_leaf, keep_hierarchy at FAN32 2), variant v feeding only its own copies (<=15 per GN bit); per-variant p-stage clear/valid/flags copies (<=15); pin-stage copies per 9 positions (<=27); a second kept pin-stage clr/conv/v copy feeds the CREP select copies (s_v 38 -> 21/18). Same edges/function: lockstep vs CREP 0 every output every edge (MUT0 PASS; CMUT1 control and CMUT3 GN-variant mutants FAIL). Prior e86s/e86 history: L2H-IDX e86s 10-19 (SAFE successor of hcoll_v7_tkm_tile_e86, AGENT-QUEUE HBM-TKM-E86-SAFE; terminal packet a9a97c79b: mapped census q_conv_g[1..7] 2,064 loads each, q_conv_g[0] 1,378 = one control flop per row group steering 8 x 86 X bits through a 3-level priority mux). RTL ot_hgi_coll_tkm_tile_rg CREP 1 on ot_hgi_coll_tkm_tile_e86: per row group a kept copy of the pin-stage p_clr/p_conv/p_v (clk root, same D), decoded once, registered on the group's root as a kept one-hot select {hold, ins, shift, clr} per 29-bit slice of each position (3 per position) and of up_out / ovf_b (12 each); X / up"
+}
