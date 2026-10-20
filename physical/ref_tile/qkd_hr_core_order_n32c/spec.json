@@ -1,0 +1,374 @@
+{
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "host_rst_n"
+ ],
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "name": "qkd_hr_core_order_n32c",
+ "top": "qkd_hr_core_order_n32",
+ "sources": [
+  "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v"
+ ],
+ "params": {},
+ "defines": [],
+ "children": [],
+ "inter": [],
+ "outline": {
+  "w": 302.4,
+  "h": 302.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "ck_core",
+   "chain_f",
+   "u_rank__od",
+   "u_rank__local_marker",
+   "landed",
+   "u_rank__oa",
+   "host_upstream_quiet",
+   "u_rank__dispatch_fault",
+   "u_rank__local_marker_cr",
+   "u_rank__local_marker_v",
+   "u_rank__image_check",
+   "u_rank__ov",
+   "u_rank__owe",
+   "u_rank__ocr",
+   "u_rank__global_prefix_v"
+  ],
+  "E": [
+   "hb",
+   "issued",
+   "physical_ack_n",
+   "service_faults",
+   "host_rst_n"
+  ],
+  "W": [
+   "chain_c",
+   "chain_a",
+   "slice_ack",
+   "chain_fault_i",
+   "hb_cr"
+  ],
+  "S": []
+ },
+ "std_area_um2": 11773.81656,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Exact selected source already contains all input/output pin registers; adding a flow wrapper changes the boundary latency."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck_core",
+  "first_copies": {
+   "host_rst_n": 12
+  },
+  "copies": {
+   "host_rst_n": 288
+  },
+  "source_native": "host_order_n32_1020"
+ },
+ "structural_change": "Mandatory SRAM successor of r4 plus all-driver retained native32 copies; all face/core registers in one full-width north band beside the clock, pins balanced across N/E/W; no south pin tail. Source-bound native reset forest is already exactly two edges. No added functional cycles. | n32c (KV-HOST7): the approved north band realised as a hard placement fence (pin_hook_after_flops) because ORFS ignores POST_FLOORPLAN_TCL (n32a/b band not realised).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "Closed r4 violates mandatory SRAM storage rule; S2 gates violate native all-driver32 and clock spread80. This source repairs all drivers and structurally rebuilds the band and pin faces."
+ },
+ "slot_change_request": "UNGRANTED until physical closure: outline [302.4, 302.4] and all N/E/W faces differ; parent needs measured repack.",
+ "qualification_hold": "UNRENDERED: ROOT source_native registry adoption/current helper merge required before gate; shared-D copied-state proof PASS.",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "inst": "u70841_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "at_exact": true,
+   "inst": "u70842_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216,
+    43.2
+   ],
+   "at_exact": true,
+   "inst": "u70843_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "at_exact": true,
+   "inst": "u77050_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "at_exact": true,
+   "inst": "u77051_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216,
+    129.6
+   ],
+   "at_exact": true,
+   "inst": "u77052_c0/u_cell"
+  }
+ ],
+ "pin_ranges": {
+  "ck_core": [
+   151.2,
+   151.6
+  ],
+  "chain_f": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__od": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__local_marker": [
+   2.16,
+   300.23999999999995
+  ],
+  "landed": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__oa": [
+   2.16,
+   300.23999999999995
+  ],
+  "host_upstream_quiet": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__dispatch_fault": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__local_marker_cr": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__local_marker_v": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__image_check": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__ov": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__owe": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__ocr": [
+   2.16,
+   300.23999999999995
+  ],
+  "u_rank__global_prefix_v": [
+   2.16,
+   300.23999999999995
+  ],
+  "hb": [
+   216.0,
+   300.24
+  ],
+  "issued": [
+   216.0,
+   300.24
+  ],
+  "physical_ack_n": [
+   216.0,
+   300.24
+  ],
+  "service_faults": [
+   216.0,
+   300.24
+  ],
+  "host_rst_n": [
+   216.0,
+   300.24
+  ],
+  "chain_c": [
+   216.0,
+   300.24
+  ],
+  "chain_a": [
+   216.0,
+   300.24
+  ],
+  "slice_ack": [
+   216.0,
+   300.24
+  ],
+  "chain_fault_i": [
+   216.0,
+   300.24
+  ],
+  "hb_cr": [
+   216.0,
+   300.24
+  ]
+ },
+ "job": {
+  "owner": "KV-HOST7",
+  "branch": "claude/kv-host7-1020",
+  "tag": "n32c",
+  "benches": [
+   {
+    "name": "order_n32_m0",
+    "cmd": "python3 tools/qwen_kv_die/host_order_qualify.py --out {RUN}/bench/order_n32_m0 --mutant 0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator",
+     "orfs"
+    ],
+    "expect": "pass",
+    "sources": [
+     "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v",
+     "results/arch/host6_order_codex_1020/original.v.gz",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+     "tools/textbook_lint.py",
+     "tools/qwen_kv_die/host_order_qualify.py",
+     "tools/qwen_kv_die/host_order_bench.py",
+     "tools/qwen_kv_die/host_order_models.py",
+     "tools/qwen_kv_die/host_order_prepare_models.sh",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_ASR_normalized.v",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_DFF_normalized.v"
+    ],
+    "pass_regex": "HOST_ORDER_COPY PASS m0 cycles=12000 compares=11984",
+    "min_count_regex": "compares=(\\d+)"
+   },
+   {
+    "name": "order_n32_m1",
+    "cmd": "python3 tools/qwen_kv_die/host_order_qualify.py --out {RUN}/bench/order_n32_m1 --mutant 1",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator",
+     "orfs"
+    ],
+    "expect": "fail",
+    "sources": [
+     "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v",
+     "results/arch/host6_order_codex_1020/original.v.gz",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+     "tools/textbook_lint.py",
+     "tools/qwen_kv_die/host_order_qualify.py",
+     "tools/qwen_kv_die/host_order_bench.py",
+     "tools/qwen_kv_die/host_order_models.py",
+     "tools/qwen_kv_die/host_order_prepare_models.sh",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_ASR_normalized.v",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_DFF_normalized.v"
+    ],
+    "fail_regex": "HOST_ORDER_COPY FAIL m1",
+    "fail_witness": "results/arch/host6_order_codex_1020/bench_m1.log"
+   },
+   {
+    "name": "order_n32_m2",
+    "cmd": "python3 tools/qwen_kv_die/host_order_qualify.py --out {RUN}/bench/order_n32_m2 --mutant 2",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator",
+     "orfs"
+    ],
+    "expect": "fail",
+    "sources": [
+     "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v",
+     "results/arch/host6_order_codex_1020/original.v.gz",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+     "tools/textbook_lint.py",
+     "tools/qwen_kv_die/host_order_qualify.py",
+     "tools/qwen_kv_die/host_order_bench.py",
+     "tools/qwen_kv_die/host_order_models.py",
+     "tools/qwen_kv_die/host_order_prepare_models.sh",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_ASR_normalized.v",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_DFF_normalized.v"
+    ],
+    "fail_regex": "HOST_ORDER_COPY FAIL m2",
+    "fail_witness": "results/arch/host6_order_codex_1020/bench_m2.log"
+   }
+  ]
+ },
+ "safe_design_checklist": {
+  "1_pins": "SOURCE PASS: inherited registered boundary and exact two-edge reset forest; actual balanced12/288 proof PASS. ROOT source_native interface not yet adopted.",
+  "2_reach": "PLAN PASS: pairwise bound on all macro/band terminals 369.359um<405; actual placed/net reach OPEN.",
+  "3_fanout": "MEASURED PASS: all69134 drivers maximum32, zero violations, resets included; no SRAM duplicated.",
+  "4_depth": "S2 historical native575.1ps/14levels; copy transformation adds no levels, actual gate setup/hold OPEN.",
+  "5_storage": "PASS: six real32x128 SRAMs for two >2kb runtime-indexed FIFO payloads; remaining runtime arrays below2kb.",
+  "6_floorplan": "PLAN:43.2lattice six macros; full-width std band y216..300.24; measured source area11773.81656um2, modeled density0.469; physical row hook probe PASS; final placement/PG/pin escape OPEN.",
+  "7_clock": "STRUCTURAL REDESIGN: all core and boundary registers in north band, no south pins; north centre clock; TT/FFspread<=80 required, not yet measured; io_hold0.03.",
+  "8_schedule": "No added edge; SRAM capacity/II1 preserved; V5.05012000cycles PASS/2source mutantsFAIL; all extraFFcopies share literalDandclock, independent4state canonicalcoupon PASS afterfirstrealclock withoutasync2sync/memoryabstraction."
+ },
+ "fill_reason": {
+  "lattice_channel_bound": {
+   "approved_by": "codex coordinator",
+   "why": "Six real p192 SRAMs occupy a 43.2 um lattice with >=34.992 um channels. A single full-width north standard-cell band at y216..300.24 is sized from measured11773.81656 um2 standard area: primary25110.2592 um2/46.89%, backup28749.4272 um2/40.95%. Actual row-hook carrier probes retain312 rows and remove792; they prove hook geometry only, not new-source placement. Planned pin densities are <=5.237/um and terminal-pair upper bounds369.359/395.239 um. The additional outline area is accepted for truthful lattice/channel/band geometry; actual placed occupancy/reach/clock/native checks remain mandatory.",
+   "std_band_y_um": [
+    216,
+    300.24
+   ]
+  }
+ },
+ "pin_hook_before_flops": [
+  "physical/qkd_host_order_fence_1020/before_flops.tcl"
+ ],
+ "pin_hook_after_flops": [
+  "physical/qkd_host_order_fence_1020/band_n32c.tcl"
+ ]
+}

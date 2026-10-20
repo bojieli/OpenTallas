@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_hr_core_order_n32",
+ "enable": true,
+ "stages": 2,
+ "clock": "ck_core",
+ "reset_ports": [
+  "host_rst_n"
+ ],
+ "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+ "reset_release_cycles": 2,
+ "source_native": {
+  "id": "host_order_n32_1020",
+  "source": "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+  "sha256": "c3de9cf6aeab78cbf4a01c9b6dd6b6cbf15f8f9f0839cf7f3f18bf47616a8b75",
+  "source_closure": {
+   "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv": "c3de9cf6aeab78cbf4a01c9b6dd6b6cbf15f8f9f0839cf7f3f18bf47616a8b75",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v": "abcda04ef59dc8c8056b48e3d1b1aab255d4d3713d658644e57a6638974799ba"
+  }
+ },
+ "first_copies": {
+  "host_rst_n": 12
+ },
+ "copies": {
+  "host_rst_n": 288
+ }
+}

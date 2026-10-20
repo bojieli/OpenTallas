@@ -1,0 +1,168 @@
+{
+ "name": "qkd_hr_core_order_n32c-n32c-COMMIT",
+ "block": "qkd_hr_core_order_n32",
+ "ref_tile": true,
+ "owner": "KV-HOST7",
+ "purpose": "reference tile flow (tile) kit physical/ref_tile/qkd_hr_core_order_n32c",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-host7-1020",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_hr_core_order_n32 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "order_n32_m0",
+    "cmd": "python3 tools/qwen_kv_die/host_order_qualify.py --out {RUN}/bench/order_n32_m0 --mutant 0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator",
+     "orfs"
+    ],
+    "expect": "pass",
+    "sources": [
+     "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v",
+     "results/arch/host6_order_codex_1020/original.v.gz",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+     "tools/textbook_lint.py",
+     "tools/qwen_kv_die/host_order_qualify.py",
+     "tools/qwen_kv_die/host_order_bench.py",
+     "tools/qwen_kv_die/host_order_models.py",
+     "tools/qwen_kv_die/host_order_prepare_models.sh",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_ASR_normalized.v",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_DFF_normalized.v"
+    ],
+    "pass_regex": "HOST_ORDER_COPY PASS m0 cycles=12000 compares=11984",
+    "min_count_regex": "compares=(\\d+)"
+   },
+   {
+    "name": "order_n32_m1",
+    "cmd": "python3 tools/qwen_kv_die/host_order_qualify.py --out {RUN}/bench/order_n32_m1 --mutant 1",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator",
+     "orfs"
+    ],
+    "expect": "fail",
+    "sources": [
+     "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v",
+     "results/arch/host6_order_codex_1020/original.v.gz",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+     "tools/textbook_lint.py",
+     "tools/qwen_kv_die/host_order_qualify.py",
+     "tools/qwen_kv_die/host_order_bench.py",
+     "tools/qwen_kv_die/host_order_models.py",
+     "tools/qwen_kv_die/host_order_prepare_models.sh",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_ASR_normalized.v",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_DFF_normalized.v"
+    ],
+    "fail_regex": "HOST_ORDER_COPY FAIL m1",
+    "fail_witness": "results/arch/host6_order_codex_1020/bench_m1.log"
+   },
+   {
+    "name": "order_n32_m2",
+    "cmd": "python3 tools/qwen_kv_die/host_order_qualify.py --out {RUN}/bench/order_n32_m2 --mutant 2",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator",
+     "orfs"
+    ],
+    "expect": "fail",
+    "sources": [
+     "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v",
+     "results/arch/host6_order_codex_1020/original.v.gz",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+     "tools/textbook_lint.py",
+     "tools/qwen_kv_die/host_order_qualify.py",
+     "tools/qwen_kv_die/host_order_bench.py",
+     "tools/qwen_kv_die/host_order_models.py",
+     "tools/qwen_kv_die/host_order_prepare_models.sh",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_ASR_normalized.v",
+     "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/canonical_DFF_normalized.v"
+    ],
+    "fail_regex": "HOST_ORDER_COPY FAIL m2",
+    "fail_witness": "results/arch/host6_order_codex_1020/bench_m2.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_hr_core_order_n32c/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_hr_core_order_n32c/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_hr_core_order_n32c --out {RUN}/record/views/qkd_hr_core_order_n32 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_hr_core_order_n32c/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_hr_core_order_n32c/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_hr_core_order_n32c/qkd_hr_core_order_n32c-n32c-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Mandatory SRAM successor of r4 plus all-driver retained native32 copies; all face/core registers in one full-width north band beside the clock, pins balanced across N/E/W; no south pin tail. Source-bound native reset forest is already exactly two edges. No added functional cycles. | n32c (KV-HOST7): the approved north band realised as a hard placement fence (pin_hook_after_flops) because ORFS ignores POST_FLOORPLAN_TCL (n32a/b band not realised).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "Closed r4 violates mandatory SRAM storage rule; S2 gates violate native all-driver32 and clock spread80. This source repairs all drivers and structurally rebuilds the band and pin faces."
+ }
+}
