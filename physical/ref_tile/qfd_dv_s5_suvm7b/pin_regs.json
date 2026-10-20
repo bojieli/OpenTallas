@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_suvm7",
+ "enable": false,
+ "reason": "qfd_dv_s5_suvm7 lands the VM write bundle in RTL (+1 priced edge) and keeps reads edge-for-edge: lane read requests drive the SRAM macro address/enable pins (the macro is the input register) and the stage-1 select flops; answers leave the macro capture flops through the 2:1 x 8:1 extraction mux (macro clk->q ~550 ps of 770 ps leaves no room before capture); a flow pin register would add an unpriced edge inside the lane read round trip (ML 1 / RD 2)"
+}

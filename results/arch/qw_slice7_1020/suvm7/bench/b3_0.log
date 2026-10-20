@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-slice7-suvm/src
+ot-run: ot-epyc6       admits   328 GB (avail 343, growth 113, headroom 0, waiters 0/0 GB) load 300/128 running 61 disk 4362 GB 
+ot-run: ot-epyc7       admits   598 GB (avail 519, growth 101, headroom 0, waiters 0/0 GB) load 89/96 running 45 disk 5616 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw-slice7-suvm/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-slice7-suvm/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-slice7-suvm/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2415363-1792491738 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+SUVM7_STATS compares=39929 mismatches=0 fault_cycles=25953 emit_cycles=7048
+SUVM7_EQ PASS
+- rtl/test/qwen_dv/s5/suvm7/tb_suvm7.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 80us; walltime 0.516 s; speed 154.927 us/s
+- Verilator: cpu 0.516 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2415363-1792491738): exit 0

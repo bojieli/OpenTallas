@@ -1,0 +1,356 @@
+{
+ "name": "qfd_dv_s5_suvm7b",
+ "top": "qfd_dv_s5_suvm7",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_suvm7.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 691.2,
+  "h": 561.6
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_rep?0?*g_bank?0?*u_m",
+   "at": [
+    43.2,
+    151.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_rep?0?*g_bank?1?*u_m",
+   "at": [
+    43.2,
+    221.712
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_rep?1?*g_bank?0?*u_m",
+   "at": [
+    43.2,
+    292.224
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_rep?1?*g_bank?1?*u_m",
+   "at": [
+    43.2,
+    362.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_rep?2?*g_bank?0?*u_m",
+   "at": [
+    43.2,
+    433.248
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_rep?2?*g_bank?1?*u_m",
+   "at": [
+    261.36,
+    151.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_crom?0?*u_lo",
+   "at": [
+    261.36,
+    221.712
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_crom?0?*u_hi",
+   "at": [
+    261.36,
+    292.224
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_crom?1?*u_lo",
+   "at": [
+    261.36,
+    362.736
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_crom?1?*u_hi",
+   "at": [
+    261.36,
+    433.248
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_prog?0?*u_lo",
+   "at": [
+    479.52,
+    151.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_prog?0?*u_hi",
+   "at": [
+    479.52,
+    192.288
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_prog?1?*u_lo",
+   "at": [
+    479.52,
+    233.376
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_prog?1?*u_hi",
+   "at": [
+    479.52,
+    274.464
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_btb?0?*u_m",
+   "at": [
+    479.52,
+    315.552
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_btb?1?*u_m",
+   "at": [
+    479.52,
+    356.64
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_btb?2?*u_m",
+   "at": [
+    479.52,
+    397.728
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_vm*g_btb?3?*u_m",
+   "at": [
+    479.52,
+    438.816
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "va_q",
+   "vb_q",
+   "vc_q",
+   "cr_q",
+   "lv1",
+   "pd1"
+  ],
+  "E": [
+   "va_re",
+   "vb_re",
+   "vc_re",
+   "cr_re",
+   "vm_we",
+   "kv_we",
+   "l_retire",
+   "l_last",
+   "l_fault",
+   "l_wrom_re",
+   "va_addr",
+   "vb_addr",
+   "vc_addr",
+   "cr_addr",
+   "vm_waddr",
+   "l_wrom_addr",
+   "vm_wdata"
+  ],
+  "N": [
+   "gb",
+   "gv"
+  ],
+  "S": [
+   "su_cmd",
+   "w16_we",
+   "w16_addr",
+   "w16_data",
+   "w1_we",
+   "w1_addr",
+   "w1_data",
+   "ck",
+   "rst_n",
+   "rd_v",
+   "red_busy",
+   "red_fault",
+   "su_nr",
+   "su_idle",
+   "su_fault",
+   "su_prog",
+   "su_rows",
+   "vm_fault",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_data"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "qfd_dv_s5_suvm7 lands the VM write bundle in RTL (+1 priced edge) and keeps reads edge-for-edge: lane read requests drive the SRAM macro address/enable pins (the macro is the input register) and the stage-1 select flops; answers leave the macro capture flops through the 2:1 x 8:1 extraction mux (macro clk->q ~550 ps of 770 ps leaves no room before capture); a flow pin register would add an unpriced edge inside the lane read round trip (ML 1 / RD 2)"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in two registered stages (rs1 -> 6 kept rs2 replicas) then 10 kept rc replicas, each <= 32 async-reset pins"
+ },
+ "safe_design_checklist": {},
+ "structural_change": "QW-SLICE7 safe successor of qfd_dv_s5_suvm (native census 211 > 32 -> kept replicas, landed VM writes): 3 abutted columns (5 big | 5 big | 4 PROG + 4 BTAB), channels 43.2 / 43.4 / 43.4 / E 38.9, S band 151.2",
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:QW-SLICE7-LEAVES/SUVM",
+  "branch": "claude/qw-slice6-suvm-1019",
+  "tag": "s7b",
+  "purpose": "QW-SLICE7 qfd_dv_slice2 one-level slice: SU issue control + VM leaf (18 SRAM), parallel fallback (3-column floorplan)",
+  "extra_paths": [
+   "rtl",
+   "tools/hdc_golden.py",
+   "tools/hdc_program.py",
+   "rtl/test/qwen_dv",
+   "rtl/test/full_sm_service",
+   "rtl/test/hbm_rf_visibility",
+   "physical/asap7_memory_macros",
+   "physical/asap7_memory_macros_v2",
+   "results/arch/qw_slice7_1020"
+  ],
+  "benches": [
+   {
+    "name": "suvm7_eq",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/suvm7/bench.sh {RUN}/eq 0",
+    "expect": "pass",
+    "pass_regex": "SUVM7_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "suvm7_mut_loff",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/suvm7/bench.sh {RUN}/m1 loff",
+    "expect": "fail",
+    "fail_regex": "SUVM7_EQ FAIL",
+    "fail_witness": "results/arch/qw_slice7_1020/suvm7/bench/run_loff.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "suvm7_mut_wpri",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/suvm7/bench.sh {RUN}/m2 wpri",
+    "expect": "fail",
+    "fail_regex": "SUVM7_EQ FAIL",
+    "fail_witness": "results/arch/qw_slice7_1020/suvm7/bench/run_wpri.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_s5_suvm7b/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s5_suvm7b"
+ }
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_dv_s5_suvm7",
+ "enable": false,
+ "reason": "the RTL lands rst_n in two registered stages (rs1 -> 6 kept rs2 replicas) then 10 kept rc replicas, each <= 32 async-reset pins"
+}
