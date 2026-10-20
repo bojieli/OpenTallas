@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "max_dynamic_loads": 32,
+  "roots_examined": 174632,
+  "netlist": {
+    "path": "/work/native_qkd_pv_fin_s32/results/asap7/qkd_pv_fin_s32/base/1_2_yosys.v",
+    "sha256": "3da5208aeaee09c87aec856640fb2ece5bede60a2a71b8bac7da6bbf9e64a361"
+  },
+  "violations": 0,
+  "role_errors": 0,
+  "source_sha256": "ae596c951ff714725e4bac8357611cde4cbbd90b37f78e4d84cdbc9016e3a77b",
+  "proof_terminal": {
+    "cold1.rc": "0",
+    "cold29.rc": "0",
+    "cold53.rc": "0",
+    "m0.rc": "0",
+    "m1.rc": "1",
+    "m2.rc": "1",
+    "m3.rc": "1",
+    "m4.rc": "1",
+    "m5.rc": "1"
+  }
+}

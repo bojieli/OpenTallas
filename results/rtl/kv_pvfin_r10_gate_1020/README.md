@@ -1,0 +1,9 @@
+# PVFIN R10 actual shipping gate failure
+
+Source R10 0ae0a0d9c, proofs dac96d369, generated kit3979c4080. Gate052451 on EPYC7 stopped before floorplan: native max49,9violations,0roles. No PNG/CTS/GRT result exists; no REVIEW or submit authorized.
+
+Standalone source SHA ae596c951ff714725e4bac8357611cde4cbbd90b37f78e4d84cdbc9016e3a77b equals gate shipped core. Both elaborate ADD7/MUL6/SKEW1/MUT0. Standalone netlist3da5208a passes32; actual wrapper netlist33235931 fails49. Actual gate adds two synchronous reset landing stages, wrapperSHA138da4e5fdc24d40409e1efa52d14c497f71e5c143858c37ad99e23a9bdd1232. Regional farm release is three more edges: actual total5 edges, +4 versus legacy, +2 versus unwrappedR10. Command ages after release unchanged. Other synthesis differences include TT-mapped gate WC override, empty ADDER_MAP_FILE, repeatable build and no standalone ot_keep_regs canonicalizer. No single difference is proven causal.
+
+First three49/49/43 roots derive runtime P0/P1 max into shared add/sum age arithmetic. MUL_AGE bits0/5/6 (34/34/33) and age bits0/1/2 (43/45/46) drive header/prefetch/product/control windows. Full original endpoint census remains immutable at remote path in gate_census_summary.json; its SHA is recorded. Trace is graph exploration with capped discovered sequential endpoints, not a complete sequential cone census.
+
+New structural source work is separate codex/kv-pvfin-shipping-native-1020 based on3979c4080. Prior2d565a820 remains parked/unrun. All failures retained.

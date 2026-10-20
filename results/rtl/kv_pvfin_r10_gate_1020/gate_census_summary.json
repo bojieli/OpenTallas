@@ -1,0 +1,77 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 180247,
+  "max_dynamic_loads": 49,
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qkd_pv_fin_s32_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "33235931d86ae5298d34fe7df3ae9c5d980953daebdfc87c81bb8e6a5a4d2695"
+  },
+  "role_errors": [],
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "violations": [
+    {
+      "driver": "_185203_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_050228_",
+      "loads": 49
+    },
+    {
+      "driver": "_185217_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_050242_",
+      "loads": 49
+    },
+    {
+      "driver": "_185280_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_050305_",
+      "loads": 43
+    },
+    {
+      "driver": "u_ot_pr_core.MUL_AGE[0]$_DFFE_PN1P_/QN",
+      "driver_role": "sequential",
+      "net": "_000188_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.MUL_AGE[5]$_DFFE_PN1P_/QN",
+      "driver_role": "sequential",
+      "net": "_000355_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.MUL_AGE[6]$_DFFE_PN1P_/QN",
+      "driver_role": "sequential",
+      "net": "_000362_",
+      "loads": 33
+    },
+    {
+      "driver": "u_ot_pr_core.age[0]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "u_ot_pr_core.n[0]",
+      "loads": 43
+    },
+    {
+      "driver": "u_ot_pr_core.age[1]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_002915_",
+      "loads": 45
+    },
+    {
+      "driver": "u_ot_pr_core.age[2]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_002916_",
+      "loads": 46
+    }
+  ],
+  "census_path": "/srv/opentallas-scratch/claude/ref_gate/qkd_pv_fin_s32-20261020-052451/routes/gate/work/orfs/native_census.json",
+  "census_sha256": "6c5514ca4c1eb75ebfcf984ef4b7ecae21af400cbb3b283cc2bd5ef2a6d0d917",
+  "source_hashes": {
+    "rtl/qwen_sys/split_20261014/qkd_pv_fin_s32.sv": "ae596c951ff714725e4bac8357611cde4cbbd90b37f78e4d84cdbc9016e3a77b",
+    "physical/ref_tile/qkd_pv_fin_s32/spec.json": "2e6fc23fcd2d7f35e7d3b2fc3a0debae617f0929405172138a8fce3a3940f4b5"
+  }
+}
