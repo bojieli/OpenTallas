@@ -2,5 +2,5 @@ ABORT RESET PASS: SRAM partially written, command interrupted before result
 PASS STRETCH=1 40 commands, 1280 beats timed, 80 blocks bit-exact vs the reference slices, beat b = ref + 1 + b
 - results/rtl/kv_pvfin_shipping_1020/tb_shipping.sv:137: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 22us; walltime 2.422 s; speed 8.934 us/s
-- Verilator: cpu 2.421 s on 1 threads; allocated 18 MB
+- Verilator: $finish at 22us; walltime 1.190 s; speed 18.180 us/s
+- Verilator: cpu 1.190 s on 1 threads; allocated 18 MB

@@ -125,12 +125,12 @@
   }
  },
  "recipe": 3,
- "purpose": "PVFIN safe32 R15a: mul stage-2 zero-logic copy hops removed (masks decoded in S2b from a registered clamped shift, fl47 incremented in S2b; MUL_LAT 6, token-age delta 0) + balanced register-sink CTS clustering against the R14 CTS hold-repair stall; boot +5 command edges vs legacy.",
+ "purpose": "PVFIN safe32 R15c: R15a mul (no zero-logic copy hops; MUL_LAT 6, token-age delta 0) + registered two-stage mismatch check (R14 TT -148.9 ps tile-wide bad->fault gather; fault latency +1 edge, diagnostic only) + balanced register-sink CTS clustering; boot +5 command edges vs legacy.",
  "job": {
   "owner": "Claude:KV-PVFIN15",
   "branch": "claude/kv-pvfin15-1020",
-  "tag": "s32r15a",
-  "purpose": "PVFIN safe32 R15a: mul stage-2 zero-logic copy hops removed (masks decoded in S2b from a registered clamped shift, fl47 incremented in S2b; MUL_LAT 6, token-age delta 0) + balanced register-sink CTS clustering against the R14 CTS hold-repair stall; boot +5 command edges vs legacy.",
+  "tag": "s32r15c",
+  "purpose": "PVFIN safe32 R15c: R15a mul (no zero-logic copy hops; MUL_LAT 6, token-age delta 0) + registered two-stage mismatch check (R14 TT -148.9 ps tile-wide bad->fault gather; fault latency +1 edge, diagnostic only) + balanced register-sink CTS clustering; boot +5 command edges vs legacy.",
   "benches": [
    {
     "name": "pv_fin_s32_m0",
@@ -434,5 +434,5 @@
   "enable": true,
   "stages": 2
  },
- "std_area_um2": 32074.0
+ "std_area_um2": 32049.0
 }

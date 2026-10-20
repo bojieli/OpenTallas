@@ -78,3 +78,17 @@ removed (masks/fl now have logic on both hops); arithmetic cuts unchanged (LAT-7
 SRAM 6 Floorplan PASS (lattice macros, central band, 54.4% synthesis util, square) 7 Clock FIXED: single centre root,
 balanced 20-sink / 40 um leaves; spread measured by --cts gate (<=80 within the region); io_hold_margin 0.03
 8 Schedule static, token delta 0 (MUL_LAT 6 unchanged), boot +5 command edges (KV-BIND8 die boot calendar).
+
+## R15c status (KV-PVFIN15 10-20 ~14:20) -- supersedes R15a (R15a gate 135200 cancelled before synthesis)
+The R14 gate's post-CTS TT check (signoff.sdc, placement RC) also failed SETUP: reg->reg -148.9 ps at the `fault` output
+register (ot_prs_00000_ff/D) from u_ot_pr_core.p1b_q[2]: the tile-wide one-cycle mismatch gather `bad` (p1 top face ->
+beat/epoch compare -> 19-term OR incl. 16 lanes' valid/err -> fault_d -> fault at the left face: 11 levels + 6
+repeaters, ~900 ps). R14 clock: TT insertion 318.1..406.1 ps (spread 88.0), FF 255.6..340.8 (85.2) -> both > 80.
+R15c fix (qkd_pv_fin_s32.sv): the check is two registered stages: per-source terms (p0 / p1 / rz face, one per lane)
+with the cycle's check condition are registered beside their sources (rr[491] leaf, 20 flops), the next cycle ORs the
+registered terms into fault_d / active_d. Fault-detection latency +1 edge (diagnostic only; token ages, data beats and
+the static schedule are unchanged); the bad cycle's beat is not suppressed any more (fault is sticky and stops the command).
+R15c proof (ep5): V5.050 shipping m0 PASS (40 + 48 stretched bit-exact, NEG1-3 fault), MUT1-5 detected, cold 1/29/53 PASS;
+native census PASS max 32 / 0 violations / 180,586 roots; area 40,265.7 um2 incl. 8,217 SRAM -> 32,049 um2 cells = 54.3%.
+Checklist R15c = R15a checklist, plus 4 Depth FIXED (tile-wide fault gather split into two registered stages) and
+8 Schedule: fault latency +1 edge (diagnostic), no token-age change.

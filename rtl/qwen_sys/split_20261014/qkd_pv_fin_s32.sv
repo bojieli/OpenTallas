@@ -206,9 +206,26 @@ module qkd_pv_fin_s32 #(
   ot_hdc_fp32_mul_lat_pvfin #(.LAT(MUL_LAT)) u_mul(.clk(ck),.rst_v(rr[28*l+2+:26]),.a_nrm({operand_sum[2][32*l+:32],operand_sum[1][32*l+:32]}),.valid_in(mul_land&&lane_active),
    .a(saved_sum[32*l+:32]),.b(reciprocal_lane[l][0]),.b_nrm({reciprocal_lane[l][2],reciprocal_lane[l][1]}),.y(product[32*l+:32]),.err(me[2*l+:2]),.valid_out(mv[l]));
  end endgenerate
- wire bad=(p0v_q!=p0_slot)||(p1v_q!=p1_slot)||(rzv_q!=r_slot)||
-          (p0_slot&&(p0b_q!=b_p0||p0e_q!=ep))||(p1_slot&&(p1b_q!=b_p1||p1e_q!=ep))||(r_slot&&rze_q!=ep)||
-          (av!={16{sum_slot}})||(mv!={16{product_slot}})||(sum_slot&&|ae)||(product_slot&&|me);
+ // R15c (KV-PVFIN15 10-20): the R14 gate's TT setup worst path (-148.9 ps) was this one-cycle tile-wide gather
+ // (p1b_q at the top face -> compare -> 19-term OR -> fault_d -> fault at the left face, 11 levels + 6 repeaters).
+ // The mismatch check is now two registered stages: per-source terms (p0 / p1 / rz face, one per lane) are captured
+ // beside their sources together with the cycle's check condition, and the next cycle ORs the registered terms.
+ // Fault-detection latency +1 edge (a diagnostic, not a token age: data ages and the static schedule are unchanged);
+ // the beat of the bad cycle is no longer suppressed (fault is sticky and stops the command one edge later).
+ (* keep="true",dont_touch="true" *) reg bad_p0_q,bad_p1_q,bad_r_q,bad_cond_q;
+ (* keep="true",dont_touch="true" *) reg [15:0] bad_l_q;
+ always @(posedge ck or negedge rr[491]) if(!rr[491]) begin bad_p0_q<=0;bad_p1_q<=0;bad_r_q<=0;bad_cond_q<=0;bad_l_q<=0; end
+ else begin
+  bad_p0_q<=(p0v_q!=p0_slot)||(p0_slot&&(p0b_q!=b_p0||p0e_q!=ep));
+  bad_p1_q<=(p1v_q!=p1_slot)||(p1_slot&&(p1b_q!=b_p1||p1e_q!=ep));
+  bad_r_q<=(rzv_q!=r_slot)||(r_slot&&rze_q!=ep);
+  bad_l_q<=(av^{16{sum_slot}})|(mv^{16{product_slot}})|({16{sum_slot}}&{ae[30],ae[28],ae[26],ae[24],ae[22],ae[20],ae[18],ae[16],ae[14],ae[12],ae[10],ae[8],ae[6],ae[4],ae[2],ae[0]})
+          |({16{sum_slot}}&{ae[31],ae[29],ae[27],ae[25],ae[23],ae[21],ae[19],ae[17],ae[15],ae[13],ae[11],ae[9],ae[7],ae[5],ae[3],ae[1]})
+          |({16{product_slot}}&{me[30],me[28],me[26],me[24],me[22],me[20],me[18],me[16],me[14],me[12],me[10],me[8],me[6],me[4],me[2],me[0]})
+          |({16{product_slot}}&{me[31],me[29],me[27],me[25],me[23],me[21],me[19],me[17],me[15],me[13],me[11],me[9],me[7],me[5],me[3],me[1]});
+  bad_cond_q<=!start_q&&active&&!fault;
+ end
+ wire bad=bad_cond_q&&(bad_p0_q||bad_p1_q||bad_r_q||(|bad_l_q));
  // Independent command pin images bound the 80-bit command-capture
  // enable. Each local acceptance result controls only eight payload flops.
  (* keep="true",dont_touch="true" *) reg [47:0] command_cal[0:9];
@@ -299,13 +316,13 @@ module qkd_pv_fin_s32 #(
     else begin active_d=1;age_d=0;ep_d=epoch_q;P0_d=c0;P1_d=c1;RA_d=cr;MUL_AGE_d=c_last+16'(ADD_LAT+2);wptr_d=0;rptr_d=0;end
    end else if(active&&!fault)begin
     age_d=n;
-    if(bad)begin fault_d=1;active_d=0;end
-    else begin
+    begin
      if(sum_slot)wptr_d=wptr+5'd1;
      if(mul_slot)rptr_d=rptr+5'd1;
      if(np==PRODUCT_AGE+16'd31)active_d=0;
     end
    end else if(!active&&(p0v_q||p1v_q||rzv_q))fault_d=1;
+   if(bad)begin fault_d=1;active_d=0;end
  end
  always @(posedge ck or negedge rr[449]) if(!rr[449]) active<=0;else active<=active_d;
  always @(posedge ck or negedge rr[450]) if(!rr[450]) age<=0;else age<=age_d;
@@ -323,12 +340,12 @@ module qkd_pv_fin_s32 #(
  // R9 (KV-PARAMS5): the output update (valid / beat / epoch) uses three kept copies of `active`
  // (same D, reset leaves of the same farm -> equal to `active` after reset), so no single take node
  // drives all 22 output enables (R8 native census: 34 loads). Same edge, same values as the R8 else-if:
- // take = !start_q && active && !fault && !bad && product_slot.
+ // take = !start_q && active && !fault && product_slot (R15c: the registered mismatch stops the command via fault).
  (* keep="true",dont_touch="true" *) reg [2:0] out_active;
  wire [2:0] out_take;
  generate for(genvar oa=0;oa<3;oa=oa+1)begin:g_out_active
   always @(posedge ck or negedge rr[457+oa]) if(!rr[457+oa]) out_active[oa]<=0;else out_active[oa]<=active_d;
-  assign out_take[oa]=out_active[oa]&&!start_q&&!fault&&!bad&&win(np,PRODUCT_AGE);
+  assign out_take[oa]=out_active[oa]&&!start_q&&!fault&&win(np,PRODUCT_AGE);
  end endgenerate
  always @(posedge ck or negedge rr[457]) if(!rr[457]) out_valid<=0;else out_valid<=out_take[0];
  always @(posedge ck or negedge rr[458]) if(!rr[458]) out_beat<=0;else if(out_take[1]) out_beat<=b_prod;

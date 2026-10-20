@@ -1,9 +1,9 @@
 {
- "name": "qkd_pv_fin_s32-s32r15a-COMMIT",
+ "name": "qkd_pv_fin_s32-s32r15c-COMMIT",
  "block": "qkd_pv_fin_s32",
  "ref_tile": true,
  "owner": "Claude:KV-PVFIN15",
- "purpose": "PVFIN safe32 R15a: mul stage-2 zero-logic copy hops removed (masks decoded in S2b from a registered clamped shift, fl47 incremented in S2b; MUL_LAT 6, token-age delta 0) + balanced register-sink CTS clustering against the R14 CTS hold-repair stall; boot +5 command edges vs legacy.",
+ "purpose": "PVFIN safe32 R15c: R15a mul (no zero-logic copy hops; MUL_LAT 6, token-age delta 0) + registered two-stage mismatch check (R14 TT -148.9 ps tile-wide bad->fault gather; fault latency +1 edge, diagnostic only) + balanced register-sink CTS clustering; boot +5 command edges vs legacy.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
@@ -263,7 +263,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_pv_fin_s32/qkd_pv_fin_s32-s32r15a-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_pv_fin_s32/qkd_pv_fin_s32-s32r15c-COMMIT"
   }
  ],
  "cycles_added": 0,
