@@ -165,7 +165,7 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  parameter integer VM_RT=0,SAFE_DELAY=0,
  // HBM-COLL6 10-20 FANCOPY=1: cycles[31:16] clears on hgi_start_h (a second KEPT copy of the core's hs flop) and
  // cycles[15:0] on hgi_start, so neither copy drives more than ~17 loads (v74p census: hs_q 33). Same counter value.
- parameter integer FANCOPY=0
+ parameter integer FANCOPY=0,FAST16=0
 )(
  input wire clk_control,
  // LH-SMATT 10-19 SAFE item 1/3: eight KEPT same-age reset copies (core u_rst*), each <=32 loads:
@@ -346,6 +346,24 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
   ot_hdc_ksadd_k #(.W(40)) u_de(.a(p_del_obase[j*40+:40]),.b(off_del),.cin(1'b0),.s(ks_del[j*40+:40]),.cout());
   ot_hdc_ksadd_k #(.W(40)) u_rg(.a(p_rgx_addr[j*40+:40]),.b(off_rgx),.cin(1'b0),.s(ks_rgx[j*40+:40]),.cout());
  end
+ wire [31:0] fast_inj_idx;
+ wire [127:0] fast_vm_sector;
+ generate if(FAST16)begin:g_fast16
+  for(genvar j=0;j<2;j=j+1)begin:g_inj
+   ot_hdc_ksadd_k #(.W(16))u_add(.a(p_inj_idx[j*16+:16]),.b(m_idx),.cin(1'b0),.s(fast_inj_idx[j*16+:16]),.cout());
+  end
+  for(genvar b=0;b<8;b=b+1)begin:g_vm
+   wire[15:0]sum;
+`ifdef OT_COLL_FAST_MUT_ADD
+   assign fast_vm_sector[b*16+:16]=sum^16'h0001;
+`else
+   assign fast_vm_sector[b*16+:16]=sum;
+`endif
+   ot_hdc_ksadd_k #(.W(16))u_add(.a(p_vm_rq[b*17+:16]),.b((FANCOPY>=2 && b>=4)?m_vm_c:m_vm),.cin(1'b0),.s(sum),.cout());
+  end
+ end else begin:g_orig16
+  assign fast_inj_idx='0;assign fast_vm_sector='0;
+ end endgenerate
  // Registered requests and metadata have one real, explicit protocol root.
  // Request launch P ->SU source capture P+INJLAT; VM capture P+10.
  always @(posedge clk_control) begin
@@ -356,7 +374,7 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
   end
 
   for(integer j=0;j<2;j=j+1)begin
-   inj_idx_pin[j*16+:16]<=p_inj_idx[j*16+:16]+m_idx;
+   inj_idx_pin[j*16+:16]<=FAST16?fast_inj_idx[j*16+:16]:(p_inj_idx[j*16+:16]+m_idx);
    for(integer h=0;h<2;h=h+1)
     inj_addr_pin[j*80+h*40+:40]<=ks_inj_addr[j*80+h*40+:40];
    if(SAFE_DELAY==0)inj_meta_pipe[0][j*33+:33]<={p_inj_meta[j*33+16+:17],
@@ -374,7 +392,7 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
   for(integer j=1;j<9+VM_RT;j=j+1)vm_select_pipe[j]<=vm_select_pipe[j-1];
   end
   for(integer b=0;b<8;b=b+1)
-   vm_req_sector[b*16+:16]<=p_vm_rq[b*17+:16]+((FANCOPY>=2 && b>=4)?m_vm_c:m_vm);
+   vm_req_sector[b*16+:16]<=FAST16?fast_vm_sector[b*16+:16]:(p_vm_rq[b*17+:16]+((FANCOPY>=2 && b>=4)?m_vm_c:m_vm));
  end
  // LH-SMATT 10-19: plain captures / counter moved out of the protocol block so each reset copy drives <=32 flops.
  // Same edges, same reset values, same async-assert / sync-release age (all copies are the core's D1 flop).
@@ -401,6 +419,62 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
    arg_active_e<=arg_active;arg_start_e<=a_arg_start;
    for(integer b=0;b<8;b=b+1)begin vm_raw_valid[b]<=vm_rv[b];vm_req_valid[b]<=p_vm_rq[b*17+16];end
   end
+ wire [127:0] fast_fault_bits;
+ wire [15:0] fast_fault_groups;
+ generate if(FAST16)begin:g_fast_fault
+  for(genvar i=0;i<128;i=i+1)begin:g_pred
+   if(i<8)begin
+`ifdef OT_COLL_V7_MUT_OBS_NOALIGN
+    assign fast_fault_bits[i]=(vm_raw_valid[i]!=vm_valid_pipe[7+VM_RT][i]);
+`else
+    assign fast_fault_bits[i]=(vm_raw_valid[i]!=vm_valid_safe[i]);
+`endif
+   end else if(i<12)begin
+    localparam integer J=i-8;
+    assign fast_fault_bits[i]=(vm_select_late_safe[J*6+:3]!=vm_select_late_safe[J*6+3+:3]) &&
+     (vm_raw_valid[vm_select_late_safe[J*6+:3]]!=vm_raw_valid[vm_select_late_safe[J*6+3+:3]]);
+   end else if(i<12+NPT)begin
+    localparam integer K=i-12;
+    assign fast_fault_bits[i]=(dest_q[K]!=lk_wr_v_e[K]);
+   end else if(i>=15 && i<15+NPT)begin
+    localparam integer K=i-15;
+    assign fast_fault_bits[i]=(p_lk_wr_v[K]&&wr_sequence_overflow[K]) ||
+     (p_lk_rd_v[K]&&rd_sequence_overflow[K]) || (p_lk_rx_expect[K]&&rx_sequence_overflow[K]);
+   end else if(i==18)begin
+`ifndef OT_COLL_V7_MUT_RCDROP
+    assign fast_fault_bits[i]=(rc_v_q!=lp_we_e)||(rc_v_q&&rc_tag_q!=lp_tag_e);
+`else
+    assign fast_fault_bits[i]=1'b0;
+`endif
+   end else if(i==19)assign fast_fault_bits[i]=(tkm_done_q!=tkm_done_slot_e)||(issue_done_q&&(tkm_busy_q||arg_active_e))||(arg_start_e&&tkm_busy_q);
+   else if(i==20)assign fast_fault_bits[i]=(a_arg_start&&(!a_arg_mode||p_tkm_start))||
+    (a_arg_mode&&(p_tkm_start||(|p_tkm_del_slot)||p_tkm_done_slot))||(p_tkm_start&&arg_active)||
+    (!a_arg_mode&&(a_arg_flush||a_arg_publish||(|a_arg_in_slot)));
+   else if(i==21)assign fast_fault_bits[i]=(SOLO==0)&&(a_arg_mode||a_arg_start||a_arg_flush||a_arg_publish||(|a_arg_in_slot)||p_ring[82]);
+   else if(i==22)assign fast_fault_bits[i]=(SOLO==0)&&(p_tkm_start||(|p_tkm_del_slot));
+   else if(i==23)assign fast_fault_bits[i]=(SOLO==0)&&(|dest_q[NPT+8+:4]);
+   else if(i==24)assign fast_fault_bits[i]=|p_ring[87:84];
+   else if(i>=25 && i<35)assign fast_fault_bits[i]=(i-25>=NPT+7)&&p_capture_slot[i-25];
+   else if(i>=35 && i<51)assign fast_fault_bits[i]=(i-35>=NPT+13)&&p_sink_slot[i-35];
+   else if(i>=51 && i<115)assign fast_fault_bits[i]=(i-51>=(NPT+13)*4)&&p_sink_select[i-51];
+   else if(i>=115 && i<118)begin
+    localparam integer K=i-115;
+    assign fast_fault_bits[i]=(K>=NPT)&&(p_lk_wr_v[K]||p_lk_rd_v[K]||p_lk_rx_expect[K]||p_lk_epoch_begin[K]);
+   end else assign fast_fault_bits[i]=1'b0;
+  end
+  for(genvar g=0;g<16;g=g+1)begin:g_reduce
+   (* keep="true" *)ot_hgi_coll_fault_or8_safephys u_or(.d(fast_fault_bits[8*g+:8]),.q(fast_fault_groups[g]));
+  end
+ end else begin:g_no_fast_fault
+  assign fast_fault_bits='0;assign fast_fault_groups='0;
+ end endgenerate
+ wire fast_fault_any,fast_fault_real;
+ (* keep="true" *)ot_hgi_coll_fault_or16_safephys u_fault_or(.d(fast_fault_groups),.q(fast_fault_real));
+`ifdef OT_COLL_FAST_MUT_FAULT
+ assign fast_fault_any=1'b0;
+`else
+ assign fast_fault_any=fast_fault_real;
+`endif
  always @(posedge clk_control or negedge rst_v[0])begin
   if(!rst_v[0])begin
    protocol_fault<=0;arg_active<=0;wr_sequence_overflow<=0;rd_sequence_overflow<=0;rx_sequence_overflow<=0;vm_assembled_v<=0;
@@ -408,14 +482,15 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
    if(SAFE_DELAY==0)for(integer j=0;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=0;
    for(integer k=0;k<NPT;k=k+1)link_epoch[k]<=0;
   end else begin
+   if(FAST16 && fast_fault_any)protocol_fault<=1;
    if(SAFE_DELAY==0)inj_valid_pipe[0]<=p_inj_rd;
    if(SAFE_DELAY==0)for(integer j=1;j<INJLAT;j=j+1)inj_valid_pipe[j]<=inj_valid_pipe[j-1];
    for(integer b=0;b<8;b=b+1)begin
     if(SAFE_DELAY==0)vm_valid_pipe[0][b]<=p_vm_rq[b*17+16];
 `ifdef OT_COLL_V7_MUT_OBS_NOALIGN
-    if(vm_raw_valid[b]!=vm_valid_pipe[7+VM_RT][b])protocol_fault<=1;   // mutant: observed captured, expected not delayed
+    if(vm_raw_valid[b]!=vm_valid_pipe[7+VM_RT][b])if(!FAST16)protocol_fault<=1;   // mutant: observed captured, expected not delayed
 `else
-    if(vm_raw_valid[b]!=vm_valid_safe[b])protocol_fault<=1;
+    if(vm_raw_valid[b]!=vm_valid_safe[b])if(!FAST16)protocol_fault<=1;
 `endif
    end
    if(SAFE_DELAY==0)for(integer j=1;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=vm_valid_pipe[j-1];
@@ -425,41 +500,41 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
                         vm_select_late_safe[j*6+:3]!=vm_select_late_safe[j*6+3+:3];
     if(vm_select_late_safe[j*6+:3]!=vm_select_late_safe[j*6+3+:3] &&
        vm_raw_valid[vm_select_late_safe[j*6+:3]] !=
-       vm_raw_valid[vm_select_late_safe[j*6+3+:3]])protocol_fault<=1;
+       vm_raw_valid[vm_select_late_safe[j*6+3+:3]])if(!FAST16)protocol_fault<=1;
 
    end
    for(integer k=0;k<NPT;k=k+1)begin
     if(p_lk_epoch_begin[k])link_epoch[k]<=p_lk_epoch;
-    if(dest_q[k]!=lk_wr_v_e[k])protocol_fault<=1;
+    if(dest_q[k]!=lk_wr_v_e[k])if(!FAST16)protocol_fault<=1;
     wr_sequence_overflow[k]<=(40'({p_lk_wr_seq_high[k*10+:10],p_lk_wr_slot[k*6+:6]})+link_slot_offset)>=65536;
     rd_sequence_overflow[k]<=(40'({p_lk_rd_seq_high[k*10+:10],p_lk_rd_slot[k*6+:6]})+link_slot_offset)>=65536;
     rx_sequence_overflow[k]<=(40'({p_lk_rx_seq_high[k*10+:10],p_lk_rx_slot[k*6+:6]})+link_slot_offset)>=65536;
     if((p_lk_wr_v[k] && wr_sequence_overflow[k]) ||
        (p_lk_rd_v[k] && rd_sequence_overflow[k]) ||
-       (p_lk_rx_expect[k] && rx_sequence_overflow[k]))protocol_fault<=1;
+       (p_lk_rx_expect[k] && rx_sequence_overflow[k]))if(!FAST16)protocol_fault<=1;
    end
 `ifndef OT_COLL_V7_MUT_RCDROP
-   if(rc_v_q!=lp_we_e || (rc_v_q && rc_tag_q!=lp_tag_e))protocol_fault<=1;
+   if(rc_v_q!=lp_we_e || (rc_v_q && rc_tag_q!=lp_tag_e))if(!FAST16)protocol_fault<=1;
 `endif
    if(tkm_done_q!=tkm_done_slot_e || (issue_done_q && (tkm_busy_q || arg_active_e)) || (arg_start_e && tkm_busy_q))
-    protocol_fault<=1;
+    if(!FAST16)protocol_fault<=1;
    if(a_arg_start)arg_active<=1'b1;
    if(a_arg_publish)arg_active<=1'b0;
    if((a_arg_start && (!a_arg_mode || p_tkm_start)) ||
       (a_arg_mode && (p_tkm_start || (|p_tkm_del_slot) || p_tkm_done_slot)) || (p_tkm_start && arg_active) ||
-      (!a_arg_mode && (a_arg_flush || a_arg_publish || (|a_arg_in_slot))))protocol_fault<=1;
+      (!a_arg_mode && (a_arg_flush || a_arg_publish || (|a_arg_in_slot))))if(!FAST16)protocol_fault<=1;
    if(SOLO==0 && (a_arg_mode || a_arg_start || a_arg_flush || a_arg_publish ||
-      (|a_arg_in_slot) || p_ring[82]))protocol_fault<=1;
-   if(SOLO==0 && (p_tkm_start || (|p_tkm_del_slot)))protocol_fault<=1;
-   if(SOLO==0 && (|dest_q[NPT+8+:4]))protocol_fault<=1;
-   if(|p_ring[87:84])protocol_fault<=1;
+      (|a_arg_in_slot) || p_ring[82]))if(!FAST16)protocol_fault<=1;
+   if(SOLO==0 && (p_tkm_start || (|p_tkm_del_slot)))if(!FAST16)protocol_fault<=1;
+   if(SOLO==0 && (|dest_q[NPT+8+:4]))if(!FAST16)protocol_fault<=1;
+   if(|p_ring[87:84])if(!FAST16)protocol_fault<=1;
    // NLINK (d4f): instruction fields of absent link lanes / slots must be zero (NPT=2: p_capture_slot[9],
    // p_sink_slot[15], p_sink_select[63:60], lane 2 -- the original check; NPT=3: none; NPT=1: from slot 8 / sink 14).
-   for(integer ui=0;ui<10;ui=ui+1)if(ui>=NPT+7 && p_capture_slot[ui])protocol_fault<=1;
-   for(integer ui=0;ui<16;ui=ui+1)if(ui>=NPT+13 && p_sink_slot[ui])protocol_fault<=1;
-   for(integer ui=0;ui<64;ui=ui+1)if(ui>=(NPT+13)*4 && p_sink_select[ui])protocol_fault<=1;
+   for(integer ui=0;ui<10;ui=ui+1)if(ui>=NPT+7 && p_capture_slot[ui])if(!FAST16)protocol_fault<=1;
+   for(integer ui=0;ui<16;ui=ui+1)if(ui>=NPT+13 && p_sink_slot[ui])if(!FAST16)protocol_fault<=1;
+   for(integer ui=0;ui<64;ui=ui+1)if(ui>=(NPT+13)*4 && p_sink_select[ui])if(!FAST16)protocol_fault<=1;
    for(integer ui=0;ui<3;ui=ui+1)
-    if(ui>=NPT && (p_lk_wr_v[ui] || p_lk_rd_v[ui] || p_lk_rx_expect[ui] || p_lk_epoch_begin[ui]))protocol_fault<=1;
+    if(ui>=NPT && (p_lk_wr_v[ui] || p_lk_rd_v[ui] || p_lk_rx_expect[ui] || p_lk_epoch_begin[ui]))if(!FAST16)protocol_fault<=1;
 
   end
  end
@@ -483,3 +558,8 @@ endmodule
 module ot_hgi_coll_pp_land_safephys(input wire clk,input wire[15:0]d,output reg[15:0]q);
  always @(posedge clk)q<=d;
 endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_fault_or8_safephys(input wire[7:0]d,output wire q);assign q=|d;endmodule
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_fault_or16_safephys(input wire[15:0]d,output wire q);assign q=|d;endmodule

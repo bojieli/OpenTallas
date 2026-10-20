@@ -10,7 +10,7 @@
 //   MUT 1 v74p RTL with MUL_PIPE 0 (products one edge early vs the instruction)   MUT 2 taps one edge late
 //   MUT 3 hgi_start/hgi_busy/issue_done fed one edge late as well (double delay)    MUT 4 s_rgx low byte cut (rgx products)
 module tb_hgi_coll_ctl_mulpipe_safephys;
- parameter integer MUT=0,SHAPE=0,NCYC=6000,FC=0,CARRY=0;   // CARRY=1: + a 66k-edge busy run so cycles[31:16] (FANCOPY hs_h half) is exercised   // HBM-COLL6 10-20: FC=1 = FANCOPY dut (kept per-product landings + hs x2)
+ parameter integer FAST16=0,MUT=0,SHAPE=0,NCYC=6000,FC=0,CARRY=0;   // CARRY=1: + a 66k-edge busy run so cycles[31:16] (FANCOPY hs_h half) is exercised   // HBM-COLL6 10-20: FC=1 = FANCOPY dut (kept per-product landings + hs x2)
  localparam integer NPT=SHAPE==0?1:2, SOLO=SHAPE==0?0:1, ND=NPT+13;
  localparam integer OW=136+2+32+160*3+2+66+132+4+NPT*8+NPT*16*3+1+32+24;
  reg clk=0; always #0.416 clk=~clk;
@@ -31,7 +31,7 @@ module tb_hgi_coll_ctl_mulpipe_safephys;
  ot_hgi_coll_ctl_v5_core_safephys #(.NPT(NPT),.SOLO(SOLO),.VM_RT(74),.SAFE_DELAY(1),.MUL_PIPE(0)) ref_l(
   .clk_control(clk),.rst_n(rst_n),.inst(inst),.tap_iteration(it),.tap_steps(st),.hgi_start(hs),.hgi_busy(hb),.issue_done(idn),
   .tkm_done(tkd),.tkm_busy(tkb),.dest_v(dv),.rc_v(rcv),.rc_tag(rct),.vm_rv(vrv),`COLLP_PORTS(ro));
- ot_hgi_coll_ctl_v5_core_safephys #(.NPT(NPT),.SOLO(SOLO),.VM_RT(74),.SAFE_DELAY(1),.MUL_PIPE(MUT==1?0:1),.FANCOPY(FC)) dut(
+ ot_hgi_coll_ctl_v5_core_safephys #(.NPT(NPT),.SOLO(SOLO),.VM_RT(74),.SAFE_DELAY(1),.MUL_PIPE(MUT==1?0:1),.FANCOPY(FC),.FAST16(FAST16)) dut(
   .clk_control(clk),.rst_n(rst_d),.inst(inst_d),.tap_iteration(MUT==2?it_d:it),
   .tap_steps(MUT==4?{st[87:72],st[71:64]&8'h00,st[63:0]}:st),
   .hgi_start(MUT==3?hs_d:hs),.hgi_busy(MUT==3?hb_d:hb),.issue_done(MUT==3?idn_d:idn),

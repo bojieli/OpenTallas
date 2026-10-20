@@ -14,7 +14,7 @@
 // L2H-COLLP 10-19: MULP=1 benches the v74p leaf (MUL_PIPE 1): it samples the uop pipe d3 word (inst_d3 here) and every
 // assembled pair lands one edge later (E + 11 + VM_RT, E = the v74 sample edge). MUT 4 (with MULP 1) expects the v74 edge: must FAIL.
 module tb_hgi_coll_ctl_v74_safephys;
- parameter integer LAT = 74, MUT = 0,SHAPE=0,DENSE=0,MULP=0,FC=0;   // FC: HBM-COLL6 FANCOPY
+ parameter integer FAST16=0,LAT = 74, MUT = 0,SHAPE=0,DENSE=0,MULP=0,FC=0;   // FC: HBM-COLL6 FANCOPY
  localparam integer EXPSH = (MUT == 4) ? 0 : MULP;
  localparam integer VM_RT = (MUT == 1) ? LAT - 1 : (MUT == 2) ? 0 : LAT;
  localparam integer NOPS = DENSE?2048:600;
@@ -35,7 +35,7 @@ module tb_hgi_coll_ctl_v74_safephys;
  wire [23:0] held; wire [47:0] wseq, rseq, xseq; wire [31:0] cycles;
  // HBM-ARGMAX 10-19: +define+CTL_Q3 benches the q3 leaf (kit hcoll_v5r_ctl3_v74); default = the q2 leaf
 ot_hgi_coll_ctl_v5_core_safephys
-  #(.NPT(SHAPE==0?1:2),.SOLO(SHAPE==0?0:1),.VM_RT(VM_RT),.SAFE_DELAY(MUT==2?0:1),.MUL_PIPE(MULP),.FANCOPY(FC)) dut(.clk_control(clk), .rst_n(rst_n), .inst(MULP ? inst_d3 : inst), .tap_iteration(32'd0),
+  #(.NPT(SHAPE==0?1:2),.SOLO(SHAPE==0?0:1),.VM_RT(VM_RT),.SAFE_DELAY(MUT==2?0:1),.MUL_PIPE(MULP),.FANCOPY(FC),.FAST16(FAST16)) dut(.clk_control(clk), .rst_n(rst_n), .inst(MULP ? inst_d3 : inst), .tap_iteration(32'd0),
   .tap_steps(88'd0), .hgi_start(1'b0), .hgi_busy(1'b0), .issue_done(1'b0), .tkm_done(1'b0), .tkm_busy(1'b0),
   .dest_v(15'd0), .rc_v(1'b0), .rc_tag(3'd0), .vm_rv(vm_rv), .vm_req_pin(vm_rq), .inj_req_pin(inj_req),
   .inj_idx_pin(inj_idx), .inj_addr_pin(inj_addr), .delivery_obase_pin(del_obase), .rgx_addr_pin(rgx_addr),
