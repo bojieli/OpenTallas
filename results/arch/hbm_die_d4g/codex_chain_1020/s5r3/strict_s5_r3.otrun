@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: ot-epyc6       admits   925 GB (avail 761, growth 113, headroom 0, waiters 0/0 GB) load 49/128 running 32 disk 4188 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-gen2e4r5-tailclasses-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-129649-1792495720 after 0 s
+UNREAD_L21_TRANSFER entries 309 repointed 0 approved_bits 65066 die_unread 65066 remaining 0 sha 74fd9f6d9704b1384d6094dc3ce6ac3a6f84c6efb4d7d7691a5fa75b09f78022
+S5R3_UNREAD_PROPOSAL 2a0f4791a0ebafbe1b6d8228e072dbc88f0b36d064a29964fb94eb38dade13be
+DIE_PORT_BIND PASS masters=199 instances=59994 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=125 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+S5R3_STRICT_PASS_WITH_PROPOSAL 2a0f4791a0ebafbe1b6d8228e072dbc88f0b36d064a29964fb94eb38dade13be (LEAD digest admission pending)
+S5_STRICT_REPLAY_DONE 27a01b34d
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-129649-1792495720): exit 0
