@@ -75,7 +75,7 @@ OPTOUT = {"pin_regs": {"enable": False, "reason": "the RTL registers every data/
 
 
 def job(name, purpose, mem):
-    return {"owner": "Claude:QW-SLICE3", "branch": "claude/qw-slice3-1019", "tag": "g1", "purpose": purpose,
+    return {"owner": "Claude:QW-SLICE3", "branch": "claude/qw-slice3-1019", "tag": "g2", "purpose": purpose,
             "extra_paths": ["rtl/qwen_dv", "rtl/hdc", "rtl/common/landed_parent", "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1"],
             "benches": [
                 {"name": "station_regional_eq", "cmd": "PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/rg 0 0",
@@ -134,8 +134,8 @@ def specs(rw, rh):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--rw", type=float, default=216.0)
-    ap.add_argument("--rh", type=float, default=216.0)
+    ap.add_argument("--rw", type=float, default=151.2)
+    ap.add_argument("--rh", type=float, default=151.2)
     a = ap.parse_args()
     (ROOT / "rtl/qwen_dv/qfd_dv_redstn2_rg8.sv").write_text(wrapper())
     d = ROOT / "physical/ref_tile/specs"

@@ -27,8 +27,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 216.0,
-  "h": 216.0
+  "w": 151.2,
+  "h": 151.2
  },
  "macros": [
   {
@@ -105,7 +105,7 @@
  "job": {
   "owner": "Claude:QW-SLICE3",
   "branch": "claude/qw-slice3-1019",
-  "tag": "g1",
+  "tag": "g2",
   "purpose": "QW-SLICE3: one SU-lane region of the slice2 station (8 per station, own clock root)",
   "extra_paths": [
    "rtl/qwen_dv",

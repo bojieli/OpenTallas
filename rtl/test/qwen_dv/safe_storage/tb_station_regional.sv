@@ -5,7 +5,7 @@
 // MUT (both sides, station mutants): 3 bt_word+1, 14 kcm1 ignored, 16 skew-S one edge short, 17 h9 bypass off.
 // RMUT (regional side only, witnesses): 1 = region 5 lanes take region 4's bt_q slice; 2 = fault ring hop 3->1 cut.
 // PIN (0/1): regional PIN_IN = BT_LAT = PIN; the bt table is modelled (one-edge read of a hashed clean table) on both
-// sides, so with PIN=1 every regional output equals the monolith output PIN edges earlier.
+// sides; with PIN=1 nb_o/bt_re/bt_word equal the monolith's 1 edge earlier, r_v/r_idx/r_last/r_d 2 edges earlier.
 module tb_station_regional #(parameter integer MUT=0, RMUT=0, NCYC=20000, PIN=0);
 reg ck=0; always #5 ck=~ck;
 integer cycle=0;
@@ -87,22 +87,32 @@ end endgenerate
 localparam integer OW = 514 + 1 + 9 + 1 + 8 + 1 + 512;
 wire [OW-1:0] m_out = {m_nb_o, m_bt_re, m_bt_word, m_r_v, m_r_idx, m_r_last, m_r_d};
 wire [OW-1:0] g_out = {g_nb_o, g_bt_re, g_bt_word, g_r_v, g_r_idx, g_r_last, g_r_d};
-reg [OW-1:0] m_out_d = 0;
+// PIN=1: front outputs (nb_o, bt_re, bt_word) are PIN edges late; the result outputs (r_v, r_idx, r_last, r_d) are
+// PIN + BT_LAT edges late (BT_LAT = PIN extra scale-wait edges for the pinned bt round trip).  Comparison resumes
+// RSTW edges after each reset release (the regional face landing delays release by 2 edges; quiet window).
+localparam integer FW = 514 + 1 + 9, RW = OW - FW, RSTW = 8;
+reg [OW-1:0] m_out_d = 0, m_out_d2 = 0;
+integer rel = 0;
+reg [OW-1:0] m_exp = 0;
 reg [FLT_LAG+1:0] m_hist = 0;
 integer mism = 0, rv_n = 0, flt_m_n = 0, nb_n = 0, bt_n = 0;
 always @(posedge ck) begin
     #1;
     if (!rst_n) m_hist = 0; else m_hist = {m_hist[FLT_LAG:0], m_fault};
-    if (rst_n && cycle > 12) begin
-        if ((PIN ? m_out_d : m_out) !== g_out) begin
+    rel = rst_n ? rel + 1 : 0;
+    m_exp = (PIN == 0) ? m_out : {m_out_d[OW-1:RW], m_out_d2[RW-1:0]};
+    if (rst_n && rel > RSTW) begin
+        if (m_exp !== g_out) begin
             mism = mism + 1;
-            if (mism <= 5) $display("REGIONAL_MISMATCH edge%0d", cycle);
+            if (mism <= 5) $display("REGIONAL_MISMATCH edge%0d front%0d r_v%0d r_idx%0d r_last%0d r_d%0d", cycle,
+                m_exp[OW-1:RW] !== g_out[OW-1:RW], m_exp[RW-1] !== g_out[RW-1], m_exp[RW-2:RW-9] !== g_out[RW-2:RW-9],
+                m_exp[512] !== g_out[512], m_exp[511:0] !== g_out[511:0]);
             if (mism == 5) $fatal(1, "REGIONAL_STATION_MISMATCH");
         end
         if (g_fault && !m_hist[PIN]) $fatal(1, "REGIONAL_FAULT_EARLY edge%0d", cycle);
         if (m_hist[FLT_LAG] && !g_fault) $fatal(1, "REGIONAL_FAULT_LATE edge%0d (> %0d edges)", cycle, FLT_LAG);
     end
-    m_out_d = m_out;
+    m_out_d2 = m_out_d; m_out_d = m_out;
     if (rst_n && m_fault && !m_hist[1] && flt_m_n == 0)
         $display("FAULT_SOURCE edge%0d mono in_bad%0d fp_bad%0d cfg_sched%0d", cycle, u_m.in_bad, u_m.fp_bad, u_m.cfg_schedule_fault);
     if (cycle < INJ && rst_n && m_fault) $fatal(1, "PHASE1_UNEXPECTED_FAULT edge%0d (stimulus not protocol-legal)", cycle);
