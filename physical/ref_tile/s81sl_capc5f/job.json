@@ -1,0 +1,150 @@
+{
+ "name": "s81sl_capc5f-capc5c-COMMIT",
+ "block": "ot_s81sl_capc5c",
+ "ref_tile": true,
+ "owner": "Claude:S81-CAPC5",
+ "purpose": "S81.STA.PAR.1 release CAPC cluster, landed-regions clock: closed rt/tr + ED24/LD16 leaves (variant C, 5 local regions)",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-capc5c-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/ref_tile/s81sl_cap_ed/views",
+   "physical/ref_tile/s81sl_cap_ld/views",
+   "physical/ref_tile/s81sl_cap_rt/views",
+   "physical/ref_tile/s81sl_cap_tr/views",
+   "results/arch/landed_parent_1018/s81sl_capc5c",
+   "rtl/common/landed_parent",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/dsrom_sys/s81_static_net",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/proto",
+   "tools/s81",
+   "tools/s81_slice",
+   "tools/landed_parent"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_capc5c u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_HARD_CHILDREN --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/common/landed_parent/ot_pl_land_rst_copy.sv rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5c.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "c5c_gold",
+    "cmd": "bash tools/s81_slice/cap_c5c_gold_bench.sh {RUN}/c5_gold {RUN}/slcap_vec_c5 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "pass_regex": "^PASS cap_c5c_gold MUT=0 slcap_vec_c5$"
+   },
+   {
+    "name": "c5c_lp_lockstep",
+    "cmd": "env SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5c_bench.sh {RUN}/lp_bench",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_EXIT 0$"
+   },
+   {
+    "name": "c5c_gold_mut1",
+    "cmd": "bash tools/s81_slice/cap_c5c_gold_bench.sh {RUN}/c5_gold_m1 {RUN}/slcap_vec_c5m1 1 raw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=1 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc5c_1020/gold_mut1.out"
+   },
+   {
+    "name": "c5c_gold_mut2",
+    "cmd": "bash tools/s81_slice/cap_c5c_gold_bench.sh {RUN}/c5_gold_m2 {RUN}/slcap_vec_c5m2 2 raw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=2 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc5c_1020/gold_mut2.out"
+   },
+   {
+    "name": "c5c_gold_mut4",
+    "cmd": "bash tools/s81_slice/cap_c5c_gold_bench.sh {RUN}/c5_gold_m4 {RUN}/slcap_vec_c5m4 4 raw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=4 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc5c_1020/gold_mut4.out"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_capc5f/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_capc5f/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_capc5f --out {RUN}/record/views/ot_s81sl_capc5c --macro-view physical/ref_tile/s81sl_cap_ed/views/ot_s81sl_cap_ed --macro-view physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld --macro-view physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt --macro-view physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_capc5f/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/s81sl_cap_ed/views/ot_s81sl_cap_ed",
+   "physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld",
+   "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt",
+   "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_capc5f/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_capc5f/s81sl_capc5f-capc5c-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-TILES-B 10-20 VARIANT F (parallel fallback of E: entry on the E face, same y) = capc5c with the ck_rt entry moved from the S face (x185) to the W face at y95-97, in the W channel beside u_rt between the two rt register bands (S band y~10-40 under u_rt, N band y~150-200 above it): capc5c/5d gates FAILED ck_rt TT 131/FF 108 pin-flop spread because the S-face entry reached the N band only around the 250-um-wide u_rt. Same RTL (ot_s81sl_capc5c), regions, children, landings. S81-CAPC5 10-20 VARIANT C of the LANDED capc parent (tools/landed_parent/specs/ot_s81sl_capc5c.json from flat ot_s81sl_capc5cf): capc5b gate 03:2x FAILED clock with cw 49/49 PASS but core 134/120 and rt 178/150 (a region holding a hard child or u_rt together with a full face of pin registers gets ~100+ ps TritonCTS soft spread). C = 5 LOCAL regions: rt (u_rt + landing rings only), cw (W face regs + u_ld3 + u_tw, as B PASS), ce (E face regs + u_te + u_ed), rn (N face: cfg in-regs + N out-regs), rs (S face out-regs + fault). Every u_rt output face is now LANDED into its own face region (S +3 vs capc5b: all outputs W+8 = +6 vs capc2; inputs unchanged). rt reset loads 45 -> lp regional_reset_copies (2 kept copies, same reset age, no added edge). n32 ring writer kept (native32)."
+}
