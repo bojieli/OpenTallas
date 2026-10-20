@@ -34,6 +34,7 @@ if [ $CMD = build ]; then
   for f in $SRCS; do [ -f $f ] || { echo "BUILD_FAILED $B missing $f"; exit 3; }; done
   mkdir -p $O/$B
   echo "$SET $* | $SRCS" > $O/$B/build_cmd.txt
+  sha256sum $SRCS > "$O/$B/sources.sha256"
   /usr/bin/time -v -o $O/$B/time_build.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
     -Wno-lint -Wno-style +incdir+$L +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 "$@" \
     --top-module tb_xdie_s81_2 -Mdir $O/$B/obj $SRCS --build-jobs ${J:-8} \
@@ -47,9 +48,11 @@ fi
 N=$1; G=$2; shift 2
 mkdir -p $O/$N
 [ -x $O/$B/obj/Vtb_xdie_s81_2 ] || { echo "NO_BUILD $B"; exit 3; }
+cp "$G/golden.json" "$O/$N/golden.json" || exit 3
 cp $G/stim.hex $O/$N/stim.hex; [ -f $G/mu.hex ] && cp $G/mu.hex $O/$N/mu.hex
 NS=$(cat $G/NS); NM=$(cat $G/NM 2>/dev/null || echo 0)
 cp $O/$B/verilator_version.txt $O/$N/ 2>/dev/null
+( sha256sum "$G/golden.json" "$G/stim.hex" "$G/NS"; [ ! -f "$G/mu.hex" ] || sha256sum "$G/mu.hex"; [ ! -f "$G/NM" ] || sha256sum "$G/NM"; sha256sum "$O/$B/build_cmd.txt" "$O/$B/obj/Vtb_xdie_s81_2"; [ ! -f "$O/$B/sources.sha256" ] || sha256sum "$O/$B/sources.sha256" ) > "$O/$N/inputs.sha256"
 ( cd $O/$N && /usr/bin/time -v -o time_run.log ../$B/obj/Vtb_xdie_s81_2 +NS=$NS +NM=$NM "$@" > run.log 2>&1 )
 grep -E "^XDIE2_CFG|^XDIE_STATS|^XDIE_MU|^XDIE_LINK|^PASS|^FAIL|^MISMATCH|^LATE|^TAGBAD" $O/$N/run.log | head -14
 grep -q "^PASS xdie_s81" $O/$N/run.log && { echo "BENCH_PASS $N"; exit 0; }; echo "BENCH_FAIL $N"; exit 1

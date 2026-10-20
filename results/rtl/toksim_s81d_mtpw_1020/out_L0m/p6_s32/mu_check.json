@@ -1,0 +1,41 @@
+{
+ "ok": false,
+ "errs": [
+  "(a) user 0 differs from the single-user run at event 1 (multi None vs single ('VO S', 414, '000000000000000000000000000000000000000000000000000000200fc0000200801'))",
+  "(b) 20 expected events missing (first ('VO S', 438, '000000000000000000000138a001f4000000000000000000000000001fc0000200801'))",
+  "(b) 1 unexpected events (first ('VO S', 470, '000000000000000000000138b001f4000000000000000000001808002c00000200801'))",
+  "(c) issuer fault at edge 427 code 5",
+  "(c) final issuer state PROG FCODE 5 fault 1 jobs 4 (want code 0 fault 0 jobs 6)",
+  "(c) unit status fault t_host[75] = 1"
+ ],
+ "users": 6,
+ "shifts": [
+  0,
+  32,
+  64,
+  96,
+  128,
+  160
+ ],
+ "ks": [
+  360,
+  392,
+  424,
+  456,
+  488,
+  520
+ ],
+ "user0_identical": false,
+ "user0_events": 9,
+ "events_per_user": 9,
+ "ctx_beats_per_user": 1,
+ "events_total": 35,
+ "missing": 20,
+ "extra": 1,
+ "faults": [
+  {
+   "edge": 427,
+   "code": 5
+  }
+ ]
+}

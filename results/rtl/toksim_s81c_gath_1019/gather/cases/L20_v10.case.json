@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.toksim_s81c.gath_case.v1",
+ "layer": "L20",
+ "kind": "ratio1+compressor+indexer+candidates",
+ "rank": 0,
+ "heads": [
+  0,
+  16
+ ],
+ "fixture": "/home/ubuntu/scratch/layerbench-s81/fixtures/L20",
+ "fixture_shard": {
+  "path": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_L20.npz",
+  "sha256": "5aaed10c1c559edac22c7acae25c3d72c53abc79518471262977de06488b5d45",
+  "input_sha256": "b767f751ade6df1a0d12a7ebbdba016c2585578817f470abe11b370a428f966c",
+  "output_sha256": "5ea08cb342ce918a7e87cf0522c2ca6716e7a81a2d28af0b4e9bcf8034b2669e"
+ },
+ "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "view": {
+  "die": 1,
+  "stack": 0
+ },
+ "compressed_rows": 1048575,
+ "n_sel": 512,
+ "T": 640,
+ "owned_rows": 41,
+ "owned_pc": [
+  17,
+  24
+ ],
+ "held_rows": 128,
+ "neighbour_rows": 2043,
+ "hbm_sectors": 22995,
+ "anchors": {
+  "window_rows": true,
+  "gathered_rows": true,
+  "rows_allgather": true,
+  "scores": true,
+  "pv": true,
+  "q_bf16": true
+ },
+ "counts": {
+  "NJOB": 1,
+  "NKV": 640,
+  "NP": 320,
+  "NSC": 640,
+  "NPV": 512
+ },
+ "expected": {
+  "scores": 10240,
+  "pv": 8192,
+  "score_faults": 0,
+  "pv_faults": 0,
+  "macs": 10485760
+ },
+ "golden": "fixture ops attn.gather / attn.window_load / attn.rows_allgather (stored rows, bitwise), attn.scores (x attn_scale) and attn.pv of heads 0..15 (bitwise)",
+ "images": {
+  "cfg.hex": "6b0ddae5c4a2af5b08f11ed35c459f50a29b1c4408f062023f26a6871d3d01c5",
+  "hdat.hex": "7163f297ff6811d1b555d4a6beab89793e79d651021cd65492935fca1069275c",
+  "hkey.hex": "d75a9a9bcecc1b3c14d4af14f971fb8bd06265756131d8e2d88072940ccde6f8",
+  "jobs.hex": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43",
+  "kv.hex": "7dc1b7ac92701751f27b6e25da9c88b3de5f6b7159b3bf439d9cc627ab9b6fb1",
+  "p.hex": "35861bd538b3549d14acd85735d3984ffd7bec536719ff5f4645affce6b44d75",
+  "pv.hex": "a4673c395e3b028d3573e64192ada3304347505345054881f2235443eb572347",
+  "q.hex": "8a5b518f3f3f380112c8f8253a2641a83063bf06fdb3423b794cd10b0f1a060f",
+  "sc.hex": "a3b2aad6c56492506b1cd87453fea665ed38132618bc917720d6ebc714ab0d6f",
+  "sel.hex": "8758447f64bb5d7f3238f4625ccf8f7a92f3fddeab989dd6add3277e4a6b311d",
+  "win.hex": "712fdb6bc56ce3baab81417637571f694c1f003a22da46593a990b00bfc12f6d"
+ }
+}
