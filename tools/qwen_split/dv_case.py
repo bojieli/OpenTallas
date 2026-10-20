@@ -409,6 +409,13 @@ def apply_dv(v, m):
                 i.w, i.h = DI[n]['w'], DI[n]['h']
                 if n != 'io_collective' and coll and DI[n]['y'] >= coll['y'] + coll['h'] - 1e-3:
                     i.orient = 'MX'
+    # Native track/site placement must be visible to the relay occupancy model.
+    # Opt-in source-pinned plans fail closed when the seed geometry changes.
+    if os.environ.get('OT_SPLIT_DV_NATIVE_ORIGINS'):
+        from qwen_split.native_origins import apply as apply_native_origins
+        native_plan = json.loads(Path(os.environ['OT_SPLIT_DV_NATIVE_ORIGINS']).read_text())
+        m['native_origin_plan'] = apply_native_origins(m['insts'], native_plan)
+        print('NATIVE_ORIGINS applied', len(m['native_origin_plan']['moved']), flush=True)
     M = v.masters(m, 1)
     if tall:
         # the frozen master set (b2 / q3h wrappers) still holds the collective / PHY frames of the old outline
