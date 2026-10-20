@@ -1,0 +1,24 @@
+# Minimum actual-reset-cone RTL experiment: shared K refused
+
+Terminal fleet unit2639156-1792484473, Verilator5.050, sixteenGB/two threads, 39actual GEN3reset cells; no imported Yosys ASR sequential model. Canonical gen_relay_rtl emits the selected real wrappers. D8 uses actual ot_qfd_land8 W1/ICG0 fallback RTL. Forty-one clock input waveforms use actual routed rN per-pin arrival_max_rise at TT and FF. The FF probe is not an independently bounded fast/slow envelope; the experiment does not replace physical signoff.
+
+| Case | Raw en G | Raw rs R0 | L | K formula | Checked steady reads | data errors / sticky faults |
+|---|---:|---:|---:|---:|---:|---|
+| TT |487|2053|3|4|685|0 / 0|
+| FF |492|2059|3|3|684|0 / 0|
+| TT K3 flip |487|2053|3|12|685|0 / 685|
+| FF K3 flip |492|2059|3|11|684|0 / 684|
+
+The combined runner terminates FAIL `NO_COMMON_IMMUTABLE_K TTFF=[4,3]`. Per-corner K values never become a binding. Mutants fail actual epoch faults, not merely the runner's formula guard. Checks begin32receiver edges after rs release: this is a steady-read cold experiment, NOT first-valid-read, partial-restart, physical hold, or complete epoch proof. Zero RTL data-wire/clk-to-q delays and clocks started independently at their measured arrival are deliberate laboratory assumptions; no physical impossibility is inferred.
+
+CRITICAL ORIGIN LIMIT: this39cell cone is cut at n_rst_fwd, whose actual GEN driver is qfd_ckbump ckb_rom(.pll_ck(n_pll_fwd),.rs(n_rst_fwd)). Actual source rtl/qwen_split/qfd_link_slots.sv describes qfd_ckbump as HARD-MACRO MODEL for package clock/reset outside this die; its simulation defaults HALF_NS0.41667/RST_NS20 release reset at fixed absolute time. That is not a production package/PLL correlation proof. This experiment instead holds the boundary to500T, to let all delayed clocks run. Its G/R0 indices count from artificial per-pin first clock edges. Therefore the experiment cannot assign production compiler origins and is not a production cold-origin coupon. Both modeled absolute-time choices require an actual upstream package/PLL contract.
+
+The code now fails closed on an incomplete upstream chain, fixed-absolute-time testbench release, absent external clock/reset correlation, absent common_schedule_epoch, or absent producer/consumer counter/event origin receipts. It also requires raw release cases at BOTH corners and a single immutable K. Same integer edge-origin rebasing is allowed only through a bound receipt; independently wrapping phase or selecting per-corner K/L is forbidden. Rebase equations: phi'=phi+(Rorigin-Sorigin)T; L'=L+Sorigin-Rorigin; G'=G-Sorigin; R0'=R0-Rorigin. Both physical age and K are invariant. Thirteen tests cover these invariants plus artifact refusals.
+
+Actual schedule-origin producers to bind next: d2d_rom.native_tx_slot comes from ot_qwen_d2d_end/u_txcal, whose counter/entry timer starts on cal_start; native59.tx_slot is consumed beside native_cmd/command_stage/layer-context events. These production event indices, their real reset trees, the forwarded PLL root and package reset waveform must share one compiler epoch receipt. The lane metadata's symbolic source clock is not itself the actual physical ck_s pin identity. Generator/phase exports must bind both. Upstream analog/package source is absent beyond qfd_ckbump in this die; no source driver can be invented.
+
+A static successor can use a source-clocked epoch-arm/release event delivered through registered/landed paths and consumed at fixed, compiled local edges after clocks are stable. It needs an actual all-corner fixed sampling-edge proof and exact arm/ready delays, then a common producer-calendar/consumer-context origin. No arrival-selected timing, credits, training or per-corner straps. Charge every arm/reset stage once per permitted reset/re-admission and every data-stage edge in the record ages. This packet proposes the contract requirement, not a new unmeasured RTL protocol or adopted cost.
+
+rN recovery is terminal01:13:16: GRT0overflow, TTsetup-6305.08ps, FFsetup-4917.18/hold-18579.43ps; 544data reach rows over425/max590.5. Old D4 window failures12, missing16. Reserved D8 diagnostic on the old named-edge convention adds three empty intervals: dvw_dr_wi520, dvw_hr_wi453, dvw_cmd_wi116. These are conditional on unqualified old origins; they are not proof a correctly origin-bound successor is impossible.
+
+Initial epoch attempt2630371 exited during elaboration because the wrapper extractor lacked three masters; canonical regeneration fixed it before simulation. Initial client exit is retained; build-detail log was replaced on retry, so the full first elaboration transcript is not preserved. All simulated passes/failures and mutant witnesses above are retained. No layout gate, submission, production bind or compiler image was generated.

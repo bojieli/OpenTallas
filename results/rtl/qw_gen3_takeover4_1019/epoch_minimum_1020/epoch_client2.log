@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-d8-epoch-1020
+ot-run: ot-epyc6       admits   734 GB (avail 627, growth 113, headroom 0, waiters 0/0 GB) load 57/128 running 43 disk 4738 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-d8-epoch-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-d8-epoch-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-d8-epoch-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-d8-epoch-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2639156-1792484473 after 1 s
+EPOCH_CORNER tt PASS K=4 K3_MUTANT_REJECTED
+EPOCH_CORNER ff PASS K=3 K3_MUTANT_REJECTED
+Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+AssertionError: NO_COMMON_IMMUTABLE_K TTFF=[4, 3]
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2639156-1792484473): exit 1

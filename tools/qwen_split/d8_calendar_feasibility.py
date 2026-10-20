@@ -44,6 +44,7 @@ def analyze(lanes, phases, oldplan, contracts=None, setup=150., hold=100.):
     for lane in lanes['lanes']:
         if lane.get('lane') == 'reset': continue
         bid = lane['bid']; failures = []; row = dict(bid=bid, bits=lane['bits'])
+        c = contracts.get(bid)
         phase = pd.get(bid, {})
         if not all(k in phase for k in ['dck_tt', 'dck_ff']): failures.append('MISSING_TTFF_PHASE')
         measured = old.get(bid, {})
@@ -56,6 +57,11 @@ def analyze(lanes, phases, oldplan, contracts=None, setup=150., hold=100.):
             failures.append('UNSUPPORTED_NATIVE_WIDTH'); kind = None
         if kind and all(k in phase for k in ['dck_tt', 'dck_ff']):
             phi = dict(tt=phase['dck_tt'], ff=phase['dck_ff'])
+            row['phase_edge_origin_status'] = 'LEGACY_NAMED_EDGES_UNQUALIFIED'
+            if c and all(type(c.get(k)) is int for k in ['source_edge_origin', 'receiver_edge_origin']):
+                shift = (c['receiver_edge_origin']-c['source_edge_origin'])*period
+                phi = {k:v+shift for k,v in phi.items()}
+                row['phase_edge_origin_status'] = 'EXPLICIT_SAME_INTEGER_REBASE_TTFF'
             lo, hi = interval(phi, period, kind, setup, hold)
             row.update(phi_ps=phi, L_interval=[lo, hi])
             if lo > hi: failures.append('NO_RESERVED_COMMON_TTFF_L')
@@ -68,10 +74,14 @@ def analyze(lanes, phases, oldplan, contracts=None, setup=150., hold=100.):
         if not c: failures.append('MISSING_NATIVE_INSTANCE_RESET_CONTRACT')
         else:
             required = ['landing', 'source_commit', 'netlist_sha256', 'native_receipt_sha256',
-                        'reset_trace_sha256', 'phase_receipt_sha256', 'G_raw', 'R0_raw',
+                        'reset_trace_sha256', 'phase_receipt_sha256', 'raw_release_cases',
                         'raw_release_verified', 'first_use_epoch_verified', 'all_roots_max_load',
                         'width', 'kind', 'straps', 'source_clock', 'receiver_clock',
-                        'source_to_input_edges', 'output_to_consumer_edges', 'compiled_total_edges']
+                        'source_to_input_edges', 'output_to_consumer_edges', 'compiled_total_edges',
+                        'source_edge_origin', 'receiver_edge_origin',
+                        'origin_receipt_sha256', 'upstream_source_kind', 'production_upstream_complete',
+                        'clock_reset_correlation_verified', 'common_schedule_epoch',
+                        'source_counter_pin', 'receiver_counter_pin', 'source_origin_event', 'receiver_origin_event']
             missing = [k for k in required if k not in c]
             if missing: failures.append('INCOMPLETE_NATIVE_CONTRACT:'+','.join(missing))
             else:
@@ -79,17 +89,28 @@ def analyze(lanes, phases, oldplan, contracts=None, setup=150., hold=100.):
                     failures.append('NATIVE_INSTANCE_IDENTITY_MISMATCH')
                 if c['source_clock'] != lane.get('src_ck') or c['receiver_clock'] != lane.get('dst_ck'):
                     failures.append('NATIVE_CLOCK_IDENTITY_MISMATCH')
-                for k in ['netlist_sha256','native_receipt_sha256','reset_trace_sha256','phase_receipt_sha256']:
+                for k in ['netlist_sha256','native_receipt_sha256','reset_trace_sha256','phase_receipt_sha256','origin_receipt_sha256']:
                     if not isinstance(c[k],str) or len(c[k]) != 64 or any(x not in '0123456789abcdef' for x in c[k]):
                         failures.append('INVALID_DIGEST:'+k)
+                if c['upstream_source_kind'] not in ['source_clocked_release','external_clock_reset_contract']:
+                    failures.append('ARTIFICIAL_UPSTREAM_RELEASE')
+                if not c['production_upstream_complete'] or not c['clock_reset_correlation_verified']:
+                    failures.append('PRODUCTION_UPSTREAM_CORRELATION_UNPROVEN')
+                if not all(isinstance(c[k],str) and c[k] for k in ['common_schedule_epoch','source_counter_pin','receiver_counter_pin','source_origin_event','receiver_origin_event']):
+                    failures.append('PRODUCER_CONSUMER_EDGE_ORIGIN_UNBOUND')
                 if not c['raw_release_verified'] or not c['first_use_epoch_verified']: failures.append('RESET_EPOCH_UNPROVEN')
                 if c['all_roots_max_load'] > 32: failures.append('NATIVE_FANOUT_OVER32')
-                if not all(type(c[k]) is int for k in ['G_raw','R0_raw']): failures.append('NONINTEGER_RAW_RELEASE')
+                cases=c['raw_release_cases']
+                if not isinstance(cases,dict) or set(cases) != {'tt','ff'}:
+                    failures.append('MISSING_RAW_RELEASE_TTFF_CASES')
+                elif not all(isinstance(v,dict) and all(type(v.get(k)) is int for k in ['G_raw','R0_raw']) for v in cases.values()):
+                    failures.append('NONINTEGER_RAW_RELEASE')
                 if len(c['straps']) != 4 or any(x not in (0,1) for x in c['straps']): failures.append('INVALID_FOUR_STRAPS')
                 if not failures and 'candidate_L' in row:
-                    proposal = reset_candidate(row['candidate_L'],c['G_raw'],c['R0_raw'],kind)
-                    if proposal['straps'] != c['straps']: failures.append('ACTUAL_K_STRAPS_MISMATCH')
-                    row['reset_model'] = proposal
+                    proposals = {corner:reset_candidate(row['candidate_L'],v['G_raw'],v['R0_raw'],kind) for corner,v in cases.items()}
+                    row['reset_models_by_corner']=proposals
+                    if len({v['K'] for v in proposals.values()}) != 1:failures.append('NO_COMMON_IMMUTABLE_K')
+                    if any(v['straps'] != c['straps'] for v in proposals.values()):failures.append('ACTUAL_K_STRAPS_MISMATCH')
                     priced = c['source_to_input_edges'] + row['candidate_L'] + c['output_to_consumer_edges']
                     row['priced_total_edges'] = priced
                     row['schedule_price_status'] = 'EXPLICIT_MODEL_PRICE'

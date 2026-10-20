@@ -57,6 +57,11 @@ def extract(text, lane):
     collect(result['en_trace']);collect(result['rs_trace'])
     result['required_actual_clock_pins']=sorted(clocks)
     result['blockers']=['UNMEASURED_NATIVE_ROOT_EPOCH:'+r for r in sorted(roots)]
+    result['upstream_boundary_models']=[dict(root=net,instance=u['instance'],master=u['master'],port=u['port'],
+         instance_statement=inst[u['instance']][2],production_clock_reset_correlation=False)
+         for net,ends in roots.items() for u in ends if u['master']=='qfd_ckbump']
+    if result['upstream_boundary_models']:
+        result['blockers'].append('NO_PRODUCTION_UPSTREAM_CLOCK_RESET_CORRELATION')
     result['bench_requirement']='Instantiate exact listed reset cells with measured per-cell-domain TT/FF clocks, actual root producer RTL/programme and real D8 en/rs. Observe RAW en/rs pin edges, source first write and receiver first legal output across cold/paired/source-only/receiver-only restart. Never infer a global release edge by summing nominal_local_edges across different clocks.'
     return result
 
