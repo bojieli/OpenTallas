@@ -5,6 +5,7 @@ module tb_ot_hbm_smh_rp4ah2;
     parameter integer SOFTBEAT = 1;
     parameter integer GN = 2;             // n gather relays (kit default)
     parameter integer GS = 1;             // s gather relays (kit default)
+    parameter integer XB = 1;             // n beat-crossing relays (kit default)
     parameter integer ATTN = 5'b01_101;   // attn_rowbase 1, attn_column 5
     wire [4:0] attn = ATTN;
     reg clk = 1'b0;  always #0.5 clk = ~clk;
@@ -56,7 +57,7 @@ module tb_ot_hbm_smh_rp4ah2;
     wire [199:0] fo_gout, lo_gout;  reg [199:0] dlo_gout [0:9];
     always @(posedge clk) begin : g_dlo_gout integer j; dlo_gout[0] <= fo_gout; for (j = 1; j <= 9; j = j + 1) dlo_gout[j] <= dlo_gout[j - 1]; end
     ot_hbm_smh_rp4a_flat u_flat (.clk(clk), .rst_n(rst_f), .attn(attn), .xs_a1(fi_xs_a1), .xs_g1(fi_xs_g1), .xs_a2(fi_xs_a2), .xs_g2(fi_xs_g2), .xss_a1(fi_xss_a1), .xss_g1(fi_xss_g1), .xss_a2(fi_xss_a2), .xss_g2(fi_xss_g2), .rin_n(fi_rin_n), .rin_s(fi_rin_s), .bin(fi_bin), .gin(fi_gin), .rout_n(fo_rout_n), .rout_s(fo_rout_s), .bout(fo_bout), .gout(fo_gout));
-    ot_hbm_smh_rp4ah2 #(.MUT(MUT), .SOFTBEAT(SOFTBEAT), .GN(GN), .GS(GS)) u_lp (.ck_n(clk), .ck_s(clk), .rst_n(rst), .attn(attn), .xs_a1(li_xs_a1), .xs_g1(li_xs_g1), .xs_a2(li_xs_a2), .xs_g2(li_xs_g2), .xss_a1(li_xss_a1), .xss_g1(li_xss_g1), .xss_a2(li_xss_a2), .xss_g2(li_xss_g2), .rin_n(li_rin_n), .rin_s(li_rin_s), .bin(li_bin), .gin(li_gin), .rout_n(lo_rout_n), .rout_s(lo_rout_s), .bout(lo_bout), .gout(lo_gout));
+    ot_hbm_smh_rp4ah2 #(.MUT(MUT), .SOFTBEAT(SOFTBEAT), .GN(GN), .GS(GS), .XB(XB)) u_lp (.ck_n(clk), .ck_s(clk), .rst_n(rst), .attn(attn), .xs_a1(li_xs_a1), .xs_g1(li_xs_g1), .xs_a2(li_xs_a2), .xs_g2(li_xs_g2), .xss_a1(li_xss_a1), .xss_g1(li_xss_g1), .xss_a2(li_xss_a2), .xss_g2(li_xss_g2), .rin_n(li_rin_n), .rin_s(li_rin_s), .bin(li_bin), .gin(li_gin), .rout_n(lo_rout_n), .rout_s(lo_rout_s), .bout(lo_bout), .gout(lo_gout));
     // activity census (the bench must exercise the attention datapath, not only the transport)
     integer c_bov = 0, c_fov = 0, c_ev = 0, c_pub = 0, c_pvin = 0;
     always @(posedge clk) begin
@@ -105,7 +106,7 @@ module tb_ot_hbm_smh_rp4ah2;
             end
         end
         $display("H2A_ACTIVITY bdc_out=%0d qk_out=%0d pv_events=%0d publications=%0d pv_inputs=%0d", c_bov, c_fov, c_ev, c_pub, c_pvin);
-        if (bad == 0 && nc > 0) $display("H2A_LOCKSTEP PASS MUT=%0d compared=%0d cycles=4000 warm=800 SOFTBEAT=%0d GN=%0d GS=%0d ATTN=%0d", MUT, nc, SOFTBEAT, GN, GS, ATTN);
+        if (bad == 0 && nc > 0) $display("H2A_LOCKSTEP PASS MUT=%0d compared=%0d cycles=4000 warm=800 SOFTBEAT=%0d GN=%0d GS=%0d XB=%0d ATTN=%0d", MUT, nc, SOFTBEAT, GN, GS, XB, ATTN);
         else $display("H2A_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d", MUT, bad, nc);
         $finish;
     end
