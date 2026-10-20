@@ -1,12 +1,13 @@
 {
  "schema": "toksim.hbm.measured.v1",
  "lane": "TOKSIM-HBM",
- "updated_utc": "2026-10-20T06:02:30Z",
+ "updated_utc": "2026-10-20T07:24:13Z",
  "clock": "833 ps stream edge; tok/s = 1/(cycles x 833 ps)",
  "row": "info_banklat_all (the composed d4g schedule incl. bank-latency budgets)",
  "release": {
   "ds_ar_tok_s": 1162.5,
-  "qwen_tok_s": 1002.9
+  "qwen_tok_s": 776.3,
+  "qwen_note": "HBM-QINT8 10-20: measured packed INT8 (was 1002.9 from the BF16w affine law)"
  },
  "scenarios": {
   "census": {
@@ -59,11 +60,18 @@
    "qwen_tok_s": 966.5
   },
   "rel98": {
-   "what": "RELEASE MEASURED: successor p80 rotated + multi-block attention (HBM-ATTN-MB), remainder 98/103.9",
+   "what": "RELEASE MEASURED: successor p80 rotated + multi-block attention (HBM-ATTN-MB), remainder 98/103.9 [Qwen SM.MATVEC = BF16w affine LAW; superseded by rel98_int8]",
    "ds_ar_cycles": 1032252.0,
    "ds_ar_tok_s": 1162.5,
    "qwen_cycles": 1196507.8,
    "qwen_tok_s": 1002.9
+  },
+  "rel98_int8": {
+   "what": "RELEASE MEASURED with Qwen SM.MATVEC measured on the PACKED INT8 stream (HBM-QINT8 svg S1-copy fix, successor p80 rotated, TP-8 rows); everything else = rel98",
+   "ds_ar_cycles": 1032252.0,
+   "ds_ar_tok_s": 1162.5,
+   "qwen_cycles": 1545794.2,
+   "qwen_tok_s": 776.3
   }
  },
  "per_class": {
@@ -524,6 +532,7 @@
   "units": "units/*.json (att serial, coll, idxdma, su, smhbm successor p80)",
   "variants": "units_variants/ (att_mb used in release; smhbm_p96; smhbm_h9b_bound)",
   "measured_json": "ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm/measured_rel.json",
-  "tool": "tools/hgi_sim/toksim_hbm_census_1019.py --measured + toksim_hbm_merge_units_1019.py"
+  "tool": "tools/hgi_sim/toksim_hbm_census_1019.py --measured + toksim_hbm_merge_units_1019.py",
+  "measured_json_int8": "measured_rel_int8.json (measured_rel.json with qwen SM.MATVEC <- units_variants/smhbm_int8.json); census run ot-epyc6:/srv/opentallas-scratch/claude/hbm-qint8-tok/rel98_i8.json (copy rel98_int8_census.json); reproduction rel98_chk = 1002.9"
  }
 }
