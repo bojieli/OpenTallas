@@ -239,6 +239,16 @@ module ot_hgi_coll_gq_issue #(
                     rc_t[x] = rc_t[x] | (rf[j][x] & cur_ohc[c][j]);
     end
     wire [DW-1:0] rc = rc_t;
+`ifdef OT_GQ_N32
+    // Independent same-edge low-bank row read for registered QA one-hot shadows.
+    wire [2:0] rc_bank_copy;
+    generate for(genvar bitn=0;bitn<3;bitn=bitn+1)begin:g_rc_bank
+        wire[15:0]rf_bit;
+        for(genvar r=0;r<16;r=r+1)begin:g_row assign rf_bit[r]=rf[r][37+bitn];end
+        (* keep="true" *)ot_hgi_coll_gq_row_bit u_rb(.r(rf_bit),.oh(cur_ohc[3]),.q(rc_bank_copy[bitn]));
+    end endgenerate
+`endif
+
     // N32 (HBM-GQ7 10-20, native32 census on the full mapped netlist incl. combinational drivers): rc[1] (two-ring flag)
     // reached ~70 fire-edge loads through ONE row AND-OR (f_kn mux, qa init adders, gather / slot / flag holds). Six kept
     // row reads of the same bit (keep_hierarchy, on cur_ohc[3], the lightest copy; every cur_ohc copy == 1 << cur), one
@@ -312,12 +322,18 @@ module ot_hgi_coll_gq_issue #(
             .q(run_copy[g]));
     end endgenerate
     generate for(genvar c=0;c<4;c=c+1)begin:g_cur_state
+`ifdef OT_GQ_N32
+        wire[15:0]start_oh;
+        (* keep="true" *)ot_hgi_coll_gq_decode16 u_decode(.a(p_sb[3:0]),.q(start_oh));
+`else
+        wire[15:0]start_oh=16'd1<<p_sb[3:0];
+`endif
         wire[15:0]rot={cur_ohc[c][14:0],cur_ohc[c][15]};
         for(genvar h=0;h<2;h=h+1)begin:g_half
             localparam integer L=(h==0)?c:9+c;
             always @(posedge clk or negedge rn)
                 if(!rn)cur_ohc[c][8*h+:8]<=(h==0)?8'd1:8'd0;
-                else if(p_start_bank[L])cur_ohc[c][8*h+:8]<=(16'd1<<p_sb[3:0])>>(8*h);
+                else if(p_start_bank[L])cur_ohc[c][8*h+:8]<=start_oh[8*h+:8];
                 else if(run_copy[2*c+h])begin
                     if(fire_cur[c])cur_ohc[c][8*h+:8]<=rot[8*h+:8];
                     if(tl==per-16'd1 && lps>16'd1)cur_ohc[c][8*h+:8]<=b0_oh[8*h+:8];
@@ -719,7 +735,7 @@ module ot_hgi_coll_gq_issue #(
             if(fire_local)qa[q]<=rc[49:37]+13'({i0,2'b00}+W);
             else if(ev_local)qa[q]<=qa[q]+(qa_r2[q]?13'd8:13'd4);
 `ifdef OT_GQ_N32
-        wire[2:0] qb0=rc[39:37]+3'({i0[0],2'b00}+W);
+        wire[2:0] qb0=rc_bank_copy+3'({i0[0],2'b00}+W);
         always @(posedge clk)
             if(fire_oh)qoh[q]<=oh8(qb0);
             else if(ev_local&&!qa_r2[q])qoh[q]<={qoh[q][3:0],qoh[q][7:4]};
@@ -1509,3 +1525,6 @@ module ot_hgi_coll_gq_em_chunk #(parameter integer R=0,BASE=0)(input wire clk,in
     end endgenerate
 endmodule
 `default_nettype wire
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_decode16(input wire[3:0]a,output wire[15:0]q);assign q=16'd1<<a;endmodule

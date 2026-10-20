@@ -99,11 +99,19 @@ module ot_hgi_coll_aq_mul13r (
 `ifdef OT_GQ_FAN32
     wire[23:0]s1_ac[0:5];
     generate for(genvar g=0;g<6;g=g+1)begin:g_s1_operand_copy
+`ifdef OT_GQ_N32
+        wire[23:0]normalized;
+        for(genvar c=0;c<3;c=c+1)begin:g_normalize_chunk
+            (* keep="true" *)ot_hgi_coll_scale_normalize8 #(.LO(8*c)) u_norm(.a(a_raw),.sh(a_shift),.q(normalized[8*c+:8]));
+        end
+`else
+        wire[23:0]normalized=a_raw<<a_shift;
+`endif
         ot_hgi_coll_scale_data_ff u_ff(.clk(clk),
 `ifdef OT_GQ_MUT_SCALE_DATA
-            .d((g==0)?((a_raw<<a_shift)^24'd1):(a_raw<<a_shift)),
+            .d((g==0)?(normalized^24'd1):normalized),
 `else
-            .d(a_raw<<a_shift),
+            .d(normalized),
 `endif
             .q(s1_ac[g]));
     end endgenerate
@@ -334,4 +342,9 @@ module ot_hgi_coll_scale_top_in_ff(input wire clk,input wire[3:0]d,output wire[3
     (* keep="true",dont_touch="true" *)reg[3:0]r;
     always @(posedge clk)r<=d;
     assign q=r;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_scale_normalize8 #(parameter integer LO=0)(input wire[23:0]a,input wire[4:0]sh,output wire[7:0]q);
+ wire[23:0]v=a<<sh;assign q=v[LO+:8];
 endmodule
