@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.closure_loop.equivalence_receipt.v1",
+ "lane": "ROOT4-S81POST",
+ "date": "2026-10-19",
+ "blocks": [
+  "dsfd_dvrlyh_276_EW",
+  "dsfd_dvrlyh_276_NS",
+  "dsfd_dvrlyh_276_SN",
+  "dsfd_dvrlyh_276_WE",
+  "dsfd_dvrlyh_512_EW",
+  "dsfd_dvrlyh_512_WE",
+  "dsfd_dvrlyh_562_EW",
+  "dsfd_dvrlyh_562_SN",
+  "dsfd_dvrlyh_562_WE",
+  "dsfd_dvrlyh_682_EW",
+  "dsfd_dvrlyh_682_NS",
+  "dsfd_dvrlyh_682_WE",
+  "dsfd_dvrlyh_70_NS",
+  "dsfd_dvrlyh_70_SN"
+ ],
+ "gold": {
+  "commit": "0408184bd^1 (252f5d7a0)",
+  "blobs": {
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "dd70cc2dc04aec1d96996db7b81d6a92bfc14379",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "72c17619b1b51ec7d9117501a52e130a19c82057",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv": "ae90ed0e0ca7a0a53719234f36ed197b2128b83d",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv": "c75406aa93a8dbd4d2416115a3e80a8f71cc8349"
+  }
+ },
+ "gate": {
+  "commit": "0408184bd",
+  "blobs": {
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "dd70cc2dc04aec1d96996db7b81d6a92bfc14379",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "72c17619b1b51ec7d9117501a52e130a19c82057",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv": "ae90ed0e0ca7a0a53719234f36ed197b2128b83d",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv": "0567b40829443510f99ba793d3579292db45410d"
+  }
+ },
+ "change": "dsfd_rly_masters_dvh.sv: three NEW masters appended (dsfd_dvrlyh_512_NS / 512_SN / 562_NS, no closed view); every existing master text unchanged",
+ "method": "tools/s81_slice/rtl_equiv.sh per top (as the xr1 receipt)",
+ "result": "EQUIV_PROVEN + SYNTH_STAT_IDENTICAL for all 14 closed relay masters bound in mu5",
+ "evidence": "results/rtl/root4_s81post_1019/equiv/rly_*",
+ "verdict": "closed dsfd_dvrlyh_* views stand"
+}

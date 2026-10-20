@@ -293,7 +293,7 @@ module ot_s81sl_xr #(
         snd[21 +: 16] = s_mask; snd[37 +: 3] = s_leaf; snd[40 +: 10] = s_row; snd[50 +: 2] = s_np; snd[52 +: 1024] = pk;
     end
     // S81-SMWIRE: SO gather words -> one XB ring beat (assembled from the B input flops; injected on the next edge)
-    reg [1:0] so_n; reg [511:0] so_lo, so_hi; reg so_go, so_f; reg [6:0] so_idx; reg [1:0] so_rt;
+    reg [1:0] so_n; wire [511:0] so_lo, so_hi; reg so_go, so_f; reg [6:0] so_idx; reg [1:0] so_rt;
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin so_n <= 2'd0; so_go <= 1'b0; so_f <= 1'b0; end
         else begin
@@ -309,11 +309,31 @@ module ot_s81sl_xr #(
                 end
             end
         end
-    always @(posedge clk) if (b_so) begin
-        if (so_n == 2'd0) so_lo <= bb[52 +: 512];
-        if (so_n == 2'd1) so_hi <= bb[52 +: 512];
-        if (so_n == 2'd2) begin so_idx <= bb[52 +: 7]; so_rt <= bb[6:5]; end
-    end
+    always @(posedge clk) if (b_so && so_n == 2'd2) begin so_idx <= bb[52 +: 7]; so_rt <= bb[6:5]; end
+    // ROOT4-S81POST (10-19, SAFE item 3): the lo / hi capture enables (b_so && so_n == 0 / 1) drove 512 loads each.  Now the
+    // word is staged one edge (so_w, no enable) and so_lo / so_hi capture so_w under KEPT registered enable copies, one per
+    // 8 bits (64 + 64 flops, D = the decode's next state, <= ~24 pins each).  lo is captured one edge after its B word,
+    // hi one edge after its B word = on the header edge, so both are valid in the so_go cycle exactly as before:
+    // so_b, ci_r and every SO cycle are unchanged (0 cycles).  C1 (HB = 0) has no B port: none of these flops there.
+    generate if (HB != 0) begin : g_soc
+        reg [511:0] so_w, so_lo_r, so_hi_r;
+        (* keep *) reg [63:0] sol_c; (* keep *) reg [63:0] soh_c;
+        always @(posedge clk) begin
+            so_w <= bb[52 +: 512];
+`ifdef OT_S81SL_XR_MUT_SOEN
+            for (k = 0; k < 64; k = k + 1) begin sol_c[k] <= b_so && so_n == 2'd0; soh_c[k] <= b_so && so_n == 2'd0; end
+`else
+            for (k = 0; k < 64; k = k + 1) begin sol_c[k] <= b_so && so_n == 2'd0; soh_c[k] <= b_so && so_n == 2'd1; end
+`endif
+            for (i = 0; i < 512; i = i + 1) begin
+                if (sol_c[i / 8]) so_lo_r[i] <= so_w[i];
+                if (soh_c[i / 8]) so_hi_r[i] <= so_w[i];
+            end
+        end
+        assign so_lo = so_lo_r; assign so_hi = so_hi_r;
+    end else begin : g_nosoc
+        assign so_lo = 512'd0; assign so_hi = 512'd0;
+    end endgenerate
     assign so_go_nx = b_so && so_n == 2'd2 && bb[4] && bb[52 + 32 +: 8] == 8'h5A && bb[6:5] != 2'd0 && bb[6:5] != 2'd3;
     wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_c, 5'd0, 3'd2, 1'b1};
     // V-from-G-unit CTL re-injection on the tier line (both sides, hops 0 = line default), SC relay to V

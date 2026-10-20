@@ -1,0 +1,399 @@
+{
+ "name": "s81sl_xr3",
+ "top": "ot_s81sl_xr3",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv"
+ ],
+ "params": {
+  "FOREG": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "E": [
+   "dl_ev",
+   "dl_e",
+   "clk",
+   "rst_n",
+   "ci_dir",
+   "ci_b"
+  ],
+  "N": [
+   "sid",
+   "dl_wv",
+   "dl_w",
+   "dl_vv",
+   "dl_vb",
+   "is_v",
+   "is_d",
+   "cfg_v",
+   "cfg_d"
+  ],
+  "W": [
+   "c_v",
+   "c_d",
+   "sw_v",
+   "sw_a",
+   "sw_m",
+   "sw_d",
+   "e_v",
+   "e_c",
+   "e_d",
+   "g_v",
+   "g_c",
+   "g_d"
+  ],
+  "S": [
+   "lo_v",
+   "lo_d",
+   "p_v",
+   "p_d",
+   "rb_v",
+   "rb_d",
+   "x_go",
+   "x_eps",
+   "x_sv",
+   "x_si",
+   "x_s",
+   "x_rbv",
+   "x_rbd",
+   "fault",
+   "x_mode",
+   "x_scale",
+   "eg_v",
+   "eg_c",
+   "eg_d",
+   "bi",
+   "bo"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "ROOT4-S81POST 10-19: FIRST xr3 kit (no earlier xr3 route). C3 variant of the closed xr1 (s81sl_xr1f-12b616b54; same XR2..XR7 structure, FOREG 1) plus the band port B: bi input flops, the bo 513-b {pk, valid} register, and the S81-SMWIRE SO assembler (main 0408184bd). SAFE checklist: 1 pins PASS (source-registered: every input a flop at the pin, every output a flop; reset_landing 2 stages); 2 reach PASS (pin flops anchored at the faces by io_flop_at_pins, 16 regional clock roots km16; longest flop->flop span is inside a 570 x 395 tile with registered classify stage); 3 fanout FIXED: the SO lo/hi capture enables (b_so && so_n == 0 / 1, 512 loads each) are now KEPT registered copies one per 8 bits (sol_c / soh_c 64 + 64) over a staged word so_w (verified: flow keep hook ot_keep_regs.tcl keeps 64/64 + 64/64 on the paramod, sos_r 69, cis_c 69); the SO ci select sos_c is a kept copy per 16 bits; every XR5 kept copy as xr1; 4 depth PASS (as xr1; SO beat select is a registered one-hot); 5 storage PASS (no runtime-indexed flop arrays; so_lo / so_hi / so_w are 512-b registers, not delay lines); 6 floorplan waived-with-reason (pin-bound, util ~7%, see outline_why; no macros; aspect 1.44); 7 clock PASS (km16 regional roots, pin-flop spread checked by the --cts gate, io_hold_margin 0.03); 8 schedule PASS (static; the enable fix adds 0 cycles: lo / hi are captured one edge after their B word and both are valid in the so_go cycle as before).",
+ "job": {
+  "owner": "Claude:ROOT4-S81POST",
+  "branch": "claude/root4-s81post-1019",
+  "tag": "s81sl_xr3",
+  "purpose": "S81 C3 control-plane sub-leaf ot_s81sl_xr3 (HB 1: band port B, S81-SMWIRE SO assembler) -- first hardened view; SAFE item 3 fix on the SO lo/hi capture enables (KEPT copies 64+64).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv",
+   "rtl/dsrom_sys/s81_suhc",
+   "rtl/hdc",
+   "rtl/lib",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "tools/s81_slice",
+   "tools/s81_dv/sm_target",
+   "results/rtl/root4_s81post_1019"
+  ],
+  "benches": [
+   {
+    "name": "slxr3_exact",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_exact base 1 1 6000",
+    "expect": "pass",
+    "pass_regex": "^PASS xr base hb=1 seed=1$",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_muthops",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_muthops hops 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_hops/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutrow",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutrow row 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_row/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutporder",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutporder porder 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_porder/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutnocol",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutnocol nocol 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRILL missed=[1-9][0-9]* of 14",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_nocol/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "smwire_e2e",
+    "cmd": "bash tools/s81_dv/sm_target/run_e2e.sh {RUN}/smwire_e2e",
+    "expect": "pass",
+    "pass_regex": "^E2E_DONE bad=0 define=none$",
+    "threads": 16,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "smwire_soen_mut",
+    "cmd": "bash tools/s81_dv/sm_target/run_e2e.sh {RUN}/smwire_soen OT_S81SL_XR_MUT_SOEN; head -3 {RUN}/smwire_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log; grep -q '^SMWIRE PASS' {RUN}/smwire_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log",
+    "expect": "fail",
+    "fail_regex": "^SMWIRE MISMATCH gather data",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/e2e_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log",
+    "threads": 16,
+    "peak_ram_gb": 24
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_xr3/views",
+  "record_to": "results/rtl/ref_tile/s81sl_xr3"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81-SLICE): every input lands in a flop at the pin and every output is a flop (ot_s81sl_xr header); recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+ },
+ "outline": {
+  "w": 570.24,
+  "h": 395.28
+ },
+ "std_area_um2": 16000,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_ranges": {
+  "dl_ev": [
+   6.48,
+   8.64
+  ],
+  "dl_e": [
+   8.64,
+   196.305
+  ],
+  "clk": [
+   196.305,
+   198.465
+  ],
+  "rst_n": [
+   198.465,
+   200.625
+  ],
+  "ci_dir": [
+   200.625,
+   201.135
+  ],
+  "ci_b": [
+   201.135,
+   388.8
+  ],
+  "sid": [
+   6.48,
+   7.768
+  ],
+  "dl_wv": [
+   7.768,
+   9.928
+  ],
+  "dl_w": [
+   9.928,
+   365.385
+  ],
+  "dl_vv": [
+   365.385,
+   367.545
+  ],
+  "dl_vb": [
+   367.545,
+   456.409
+  ],
+  "is_v": [
+   456.409,
+   458.569
+  ],
+  "is_d": [
+   458.569,
+   510.085
+  ],
+  "cfg_v": [
+   510.085,
+   512.245
+  ],
+  "cfg_d": [
+   512.245,
+   563.76
+  ],
+  "c_v": [
+   6.48,
+   7.399
+  ],
+  "c_d": [
+   7.399,
+   36.797
+  ],
+  "sw_v": [
+   36.797,
+   37.716
+  ],
+  "sw_a": [
+   37.716,
+   46.903
+  ],
+  "sw_m": [
+   46.903,
+   54.253
+  ],
+  "sw_d": [
+   54.253,
+   289.441
+  ],
+  "e_v": [
+   289.441,
+   290.36
+  ],
+  "e_c": [
+   290.36,
+   292.197
+  ],
+  "e_d": [
+   292.197,
+   380.393
+  ],
+  "g_v": [
+   380.393,
+   382.553
+  ],
+  "g_c": [
+   382.553,
+   382.92
+  ],
+  "g_d": [
+   382.92,
+   388.8
+  ],
+  "lo_v": [
+   6.48,
+   7.309
+  ],
+  "lo_d": [
+   7.309,
+   219.596
+  ],
+  "p_v": [
+   219.596,
+   220.425
+  ],
+  "p_d": [
+   220.425,
+   246.961
+  ],
+  "rb_v": [
+   246.961,
+   249.121
+  ],
+  "rb_d": [
+   249.121,
+   254.428
+  ],
+  "x_go": [
+   254.428,
+   256.588
+  ],
+  "x_eps": [
+   256.588,
+   261.895
+  ],
+  "x_sv": [
+   261.895,
+   264.055
+  ],
+  "x_si": [
+   264.055,
+   265.382
+  ],
+  "x_s": [
+   265.382,
+   270.689
+  ],
+  "x_rbv": [
+   270.689,
+   272.849
+  ],
+  "x_rbd": [
+   272.849,
+   278.156
+  ],
+  "fault": [
+   278.156,
+   280.316
+  ],
+  "x_mode": [
+   280.316,
+   282.476
+  ],
+  "x_scale": [
+   282.476,
+   287.783
+  ],
+  "eg_v": [
+   287.783,
+   289.943
+  ],
+  "eg_c": [
+   289.943,
+   290.275
+  ],
+  "eg_d": [
+   290.275,
+   295.582
+  ],
+  "bi": [
+   295.582,
+   478.68
+  ],
+  "bo": [
+   478.68,
+   563.76
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "16"
+ },
+ "pin_reg_split": false,
+ "pin_reg_split_why": "XR6 fallback (FOREG=1): fault leaves a dedicated output flop (fault <= fcore), no recirculation at the pin flop, so io_flop_at_pins anchors it; no pin_reg_split.",
+ "outline_why": "ROOT4-S81POST 10-19: first xr3 (C3, HB 1) kit, from the closed s81sl_xr1f kit: same faces + the band port B (bi 1104 in, bo 513 out) on S (the slice band face: pvrd lands bi from below, bo feeds the svc entry q below). Pin-bound: 9,268 pins; S 3,276 on 570.24 um = 5.9/um sets the width, E 2,214 on 395.28 = 5.7/um the height (as xr1f); ranges spread uniformly per face, scalars 2.16 um, clk at the E-face centre. Util ~7% (std ~16k um2 est.): the 40-60% target is unreachable without cutting boundary bits (slice seam architecture), as xr1f.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

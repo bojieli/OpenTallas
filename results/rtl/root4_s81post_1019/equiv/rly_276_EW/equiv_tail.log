@@ -1,0 +1,40 @@
+ success!
+  Trying to prove $equiv for \o [268]:ezsat
+ success!
+  Trying to prove $equiv for \o [269]:ezsat
+ success!
+  Trying to prove $equiv for \o [270]:ezsat
+ success!
+  Trying to prove $equiv for \o [271]:ezsat
+ success!
+  Trying to prove $equiv for \o [272]:ezsat
+ success!
+  Trying to prove $equiv for \o [273]:ezsat
+ success!
+  Trying to prove $equiv for \o [274]:ezsat
+ success!
+  Trying to prove $equiv for \o [275]:ezsat
+ success!
+  Trying to prove $equiv for \ck_o:ezsat
+ success!
+  Trying to prove $equiv for \u_st.u.g_rsreg.rq:ezsat
+ success!
+Proved 278 previously unproven $equiv cells.
+
+30. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+31. Executing EQUIV_STATUS pass.
+Found 278 $equiv cells in equiv:
+  Of those cells 278 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+32. Executing EQUIV_STATUS pass.
+Found 278 $equiv cells in equiv:
+  Of those cells 278 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 88efa00981, time: 0.10s, user: 0.10s, system: 0.01s, MEM: 30.18 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 66% 1x equiv_simple (0 sec), 10% 10x read_verilog (0 sec), ...
