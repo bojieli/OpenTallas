@@ -8,8 +8,8 @@ MISMATCH t=337 pll out er
 MISMATCH t=338  ck out er
 OUT er mismatches=8496
 KVPC_CTRL FAIL edges=20000 checks=600624 errors=8496 active_out=172267 mut=2
-- /srv/opentallas-scratch/claude/kv-pc7/src-s9h/out/ctrl_x_m2/tb.sv:159: Verilog $finish
+- /srv/opentallas-scratch/claude/kv-pc7/src-s9i/out/ctrl_x_m2/tb.sv:159: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 17us; walltime 0.455 s; speed 36.691 us/s
-- Verilator: cpu 0.455 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 17us; walltime 0.525 s; speed 31.812 us/s
+- Verilator: cpu 0.524 s on 1 threads; allocated 7 MB
 

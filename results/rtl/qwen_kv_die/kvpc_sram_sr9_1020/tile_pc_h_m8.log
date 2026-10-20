@@ -18,9 +18,9 @@ OUT pc__hcompletion_we mismatches=1862
 OUT o_grp mismatches=590
 OUT o_grp_h mismatches=6693
 KVPC_TILE FAIL edges=20000 checks=491757 errors=47787 active_out=163690 mut=8
-- /srv/opentallas-scratch/claude/kv-pc7/src-s9h/out/tile_pc_h_m8/tb.sv:129: Verilog $finish
+- /srv/opentallas-scratch/claude/kv-pc7/src-s9i/out/tile_pc_h_m8/tb.sv:129: Verilog $finish
 HFX active_edges=19990 final=011
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 17us; walltime 0.422 s; speed 39.606 us/s
-- Verilator: cpu 0.421 s on 1 threads; allocated 8 MB
+- Verilator: $finish at 17us; walltime 0.404 s; speed 41.284 us/s
+- Verilator: cpu 0.404 s on 1 threads; allocated 8 MB
 
