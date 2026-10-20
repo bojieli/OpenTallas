@@ -1,0 +1,10 @@
+LP_MISMATCH port=command_stage cycle=54 flat=15 landed=14
+LP_MISMATCH port=command_stage cycle=55 flat=02 landed=03
+LP_MISMATCH port=command_stage cycle=56 flat=1e landed=1f
+LP_MISMATCH port=command_stage cycle=57 flat=21 landed=20
+LP_MISMATCH port=command_stage cycle=58 flat=21 landed=20
+LP_LOCKSTEP FAIL MUT=1 mismatches=9838 of 186922
+- tb_np7.sv:158: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.959 s; speed 10.427 us/s
+- Verilator: cpu 0.959 s on 1 threads; allocated 10 MB

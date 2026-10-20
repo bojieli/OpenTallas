@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-epyc7       admits   862 GB (avail 704, growth 101, headroom 0, waiters 0/0 GB) load 44/96 running 26 disk 5457 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3907577-1792497876 after 0 s
+merged 211 cells
+native PASS 32 None
+textbook WARN None {'clock_roots': [{'root': 'port:ck_core[0]', 'ff': 11246, 'icg': 0, 'macro_pins': 9, 'example': 'u_0._2_'}, {'root': 'port:ck_hr[0]', 'ff': 4463, 'icg': 0, 'macro_pins': 3, 'example': 'u_1000._2_'}], 'hier_subblocks': 1, 'clock_max_root_sinks': 11255, 'clock_max_root': 'port:ck_core[0]', 'high_fanout_top': [], 'hf_max_port': 0, 'hf_max_reset': 0, 'hf_max_net': 0, 'reset_landing': [{'port': 'rst_n[0]', 'sinks': 1, 'flops': 1, 'macros': 0}], 'in_to_out_bits': 0, 'in_to_reg_levels': 2, 'reg_to_out_levels': 5, 'icg_enable_from_port': 0, 'depth_ps': 2927.3, 'depth_path': ['u_804._2_', 'u_8165._2_/D'], 'depth_levels': 95}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3907577-1792497876): exit 0

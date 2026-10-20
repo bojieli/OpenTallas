@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-epyc7       admits   893 GB (avail 724, growth 99, headroom 0, waiters 0/0 GB) load 38/96 running 23 disk 5440 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/fullsrc6
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3811963-1792497847 after 0 s
+CTLM_CONSTRUCT 60552 61760 passes 5 macros 10 added {'$_AND_': 449, '$_DFF_P_': 276, '$_OR_': 97, '$_DFF_PN0_': 266, '$_NOT_': 69, '$_DFF_PN1_': 32, '$_MUX_': 11, '$_OA21_': 4, '$_AO21_': 4}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3811963-1792497847): exit 0
