@@ -1,5 +1,5 @@
 {
- "name": "qfd_dv_stream_t_1019-s1-COMMIT",
+ "name": "qfd_dv_stream_t_1019-s1-dbe7439ef",
  "block": "qfd_dv_stream_tile",
  "ref_tile": true,
  "owner": "Claude:LEAD2-QW/QW-CLUSTER3-STREAM",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/qw-cluster3-stream-1019",
-  "commit": "COMMIT",
+  "commit": "dbe7439ef",
   "extra_paths": [
    "rtl/qwen_dv/qfd_dv_stream.sv",
    "rtl/test/qwen_dv/static_stream/tb_stream_tile.sv",
@@ -181,7 +181,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_dv_stream_t_1019/qfd_dv_stream_t_1019-s1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_dv_stream_t_1019/qfd_dv_stream_t_1019-s1-dbe7439ef"
   }
  ],
  "cycles_added": 0,
