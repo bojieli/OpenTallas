@@ -10,12 +10,17 @@
 Only slot ORIGINS change; outlines, orientations, pins and every other grant field stay.  The script refuses a shift that
 creates a new slot-outline overlap or leaves the die.  The d4g plan blocks of the same blocks (hc_<q>, dbk_NW/SW) move by
 the same dx so plan regions and slots stay aligned.
+Cell labels: 6 GEN2c slots carry the pre-wrapper cell names (calendar_* hfd_hgi_vm_calendar, fs_SW/NW ot_hbm_fault_leaf) while the
+GEN2c contract binds the selected wrappers (_f20, _n8_s0); die_case_v16 (grant_slot_bind) refuses explicit-instance slots whose
+cell differs from the contract master, so CELL_SYNC renames exactly those labels (as 9d5a2c350 did for GEN2e; no geometry change).
 Usage: d4g_fp_channel_shift.py in_grants.json out_grants.json [in_plan.json out_plan.json]
 """
 import json, sys
 
 STEP = 43.2
 PLAN_SHIFT = {'dbk_NW': STEP, 'hc_NW': STEP, 'dbk_SW': STEP, 'hc_SW': STEP, 'hc_NE': -STEP, 'hc_SE': -STEP}
+CELL_SYNC = {f'calendar_{q}': ('hfd_hgi_vm_calendar', 'hfd_hgi_vm_calendar_f20') for q in ('SW', 'SE', 'NW', 'NE')}
+CELL_SYNC.update({f'fs_{q}': ('ot_hbm_fault_leaf', 'ot_hbm_fault_leaf_n8_s0') for q in ('SW', 'NW')})
 SHIFT = {'hb_dbk_NW': STEP, 'hc_NW': STEP, 'hb_dbk_SW': STEP, 'hc_SW': STEP, 'calendar_SW': STEP,
          'hc_NE': -STEP, 'hc_SE': -STEP}
 
@@ -55,6 +60,10 @@ def main():
         moved[n] = [x0, s['origin']['x']]
         if s['origin']['x'] < 0 or (W and s['origin']['x'] + s['outline']['w'] > W):
             raise SystemExit(f'{n} leaves the die')
+    for n, (old, new) in CELL_SYNC.items():
+        if by[n].get('cell') != old:
+            raise SystemExit(f'{n}: cell {by[n].get("cell")} != expected {old}')
+        by[n]['cell'] = new; by[n]['fp_cell_sync_1019'] = f'{old} -> {new} (contract master)'
     after = overlaps(slots)
     new = sorted(after - before)
     if new:

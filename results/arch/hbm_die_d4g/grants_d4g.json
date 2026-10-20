@@ -16910,7 +16910,7 @@
   },
   {
    "name": "calendar_SW",
-   "cell": "hfd_hgi_vm_calendar",
+   "cell": "hfd_hgi_vm_calendar_f20",
    "instance": "calendar_SW",
    "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "source_prerequisite": "53ece5c68",
@@ -16954,11 +16954,12 @@
     "from_x": 8286.408,
     "to_x": 8329.608,
     "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
-   }
+   },
+   "fp_cell_sync_1019": "hfd_hgi_vm_calendar -> hfd_hgi_vm_calendar_f20 (contract master)"
   },
   {
    "name": "calendar_SE",
-   "cell": "hfd_hgi_vm_calendar",
+   "cell": "hfd_hgi_vm_calendar_f20",
    "instance": "calendar_SE",
    "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "source_prerequisite": "53ece5c68",
@@ -16996,11 +16997,12 @@
     "native": "OPEN",
     "moved_west_um": 21.6
    },
-   "pins_d4f_dropped": 31
+   "pins_d4f_dropped": 31,
+   "fp_cell_sync_1019": "hfd_hgi_vm_calendar -> hfd_hgi_vm_calendar_f20 (contract master)"
   },
   {
    "name": "calendar_NW",
-   "cell": "hfd_hgi_vm_calendar",
+   "cell": "hfd_hgi_vm_calendar_f20",
    "instance": "calendar_NW",
    "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "source_prerequisite": "53ece5c68",
@@ -17038,11 +17040,12 @@
     "native": "OPEN",
     "moved_west_um": 21.6
    },
-   "pins_d4f_dropped": 31
+   "pins_d4f_dropped": 31,
+   "fp_cell_sync_1019": "hfd_hgi_vm_calendar -> hfd_hgi_vm_calendar_f20 (contract master)"
   },
   {
    "name": "calendar_NE",
-   "cell": "hfd_hgi_vm_calendar",
+   "cell": "hfd_hgi_vm_calendar_f20",
    "instance": "calendar_NE",
    "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "source_prerequisite": "53ece5c68",
@@ -17080,7 +17083,8 @@
     "native": "OPEN",
     "moved_west_um": 21.6
    },
-   "pins_d4f_dropped": 31
+   "pins_d4f_dropped": 31,
+   "fp_cell_sync_1019": "hfd_hgi_vm_calendar -> hfd_hgi_vm_calendar_f20 (contract master)"
   },
   {
    "name": "sfucore_SW",
@@ -20087,7 +20091,7 @@
   },
   {
    "name": "fs_SW",
-   "cell": "ot_hbm_fault_leaf",
+   "cell": "ot_hbm_fault_leaf_n8_s0",
    "instance": "fs_SW",
    "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
    "params": {},
@@ -20106,7 +20110,8 @@
    "clock_period_ps": 833.333,
    "layer_cap": "M5",
    "grant": "H-DIE-R8 fault-tree leaf slot",
-   "home_rule": "E of sfault_SW (run6 placement; checked free of every run6 instance with a 2 um halo)"
+   "home_rule": "E of sfault_SW (run6 placement; checked free of every run6 instance with a 2 um halo)",
+   "fp_cell_sync_1019": "ot_hbm_fault_leaf -> ot_hbm_fault_leaf_n8_s0 (contract master)"
   },
   {
    "name": "fr_SW",
@@ -20455,7 +20460,7 @@
   },
   {
    "name": "fs_NW",
-   "cell": "ot_hbm_fault_leaf",
+   "cell": "ot_hbm_fault_leaf_n8_s0",
    "instance": "fs_NW",
    "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
    "params": {},
@@ -20474,7 +20479,8 @@
    "clock_period_ps": 833.333,
    "layer_cap": "M5",
    "grant": "H-DIE-R8 fault-tree leaf slot",
-   "home_rule": "E of sfault_NW (run6 placement; checked free of every run6 instance with a 2 um halo)"
+   "home_rule": "E of sfault_NW (run6 placement; checked free of every run6 instance with a 2 um halo)",
+   "fp_cell_sync_1019": "ot_hbm_fault_leaf -> ot_hbm_fault_leaf_n8_s0 (contract master)"
   },
   {
    "name": "fr_NW",
