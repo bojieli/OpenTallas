@@ -20,9 +20,9 @@ for category,expected in [('vec_pt',12),('vec_ptreg',4)]:
         if not ok:failures.append(f'{d.name}: positive not bit-exact')
 for kind in ['data','m1024','pt0']:
     for record in ['qw_softmax_exp_sum_r1','ds_q_norm_ss']:
-        d=root/'mutw'/f'{kind}_{record}'; logs=list(d.glob('sim_mr10*.log'));t='\n'.join(p.read_text() for p in logs)
+        d=root/'mutw'/f'{kind}_{record}'; name={'data':'sim_mr10_pt.log','m1024':'sim_mr10_pt_m1024.log','pt0':'sim_mr10.log'}[kind]; p=d/name;t=p.read_text() if p.exists() else ''
         ok=bool(re.search(r'SU_TOP FAIL errors=[1-9][0-9]*',t)) and bool(re.search(r'^SU_TOP ERROR\b',t,re.M)) and not re.search(r'^SU_TOP PASS\b',t,re.M)
-        rows.append({'record':str(d.relative_to(root)),'expected':'causal FAIL','ok':ok})
+        rows.append({'record':str(d.relative_to(root)),'expected':'causal FAIL','log':str(p.relative_to(root)),'ok':ok})
         if not ok:failures.append(f'{d.name}: causal rejection not established')
 (root/'codex_acceptance.json').write_text(json.dumps({'accepted':not failures,'failures':failures,'records':rows},indent=2)+'\n')
 if failures:raise SystemExit('PRETREE_ACCEPTANCE_FAIL: '+'; '.join(failures))
