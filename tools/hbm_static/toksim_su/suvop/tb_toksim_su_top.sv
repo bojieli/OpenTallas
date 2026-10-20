@@ -39,6 +39,8 @@ module tb_toksim_su_top;
  integer stop=NE; integer last_w=-1,last_s=-1;
  integer cyc=-1,errors=0,ew=0,es=0,reads=0,writes=0,scalars=0,i,q,p,k;
  bit mut_data,mut_addr,mut_rf,mut_red;
+ bit mut_force; integer mut_at;   // HBM-COLLFUSE2: +MUT_FORCE[+MUT_AT=n]: lane 0 of VM read n (default 0) := +0x7f000000 (finite
+                                  // max-magnitude positive) -> causal for max / sum / elementwise records of any size
  reg pend_v [0:31][0:3][0:7]; reg [15:0] pend_s [0:31][0:3][0:7]; reg pend_w [0:31][0:3][0:7];
  task fail(input string m); begin if(errors<40)$display("SU_TOP ERROR cyc=%0d %s",cyc,m); errors=errors+1; end endtask
  function automatic [255:0] vm_image(input integer qq,input [15:0] s);
@@ -51,7 +53,7 @@ module tb_toksim_su_top;
   // ---- LG boundary: returns scheduled for this edge (registered: held this edge .. next)
   for(q=0;q<4;q=q+1)for(p=0;p<8;p=p+1)begin
    if(pend_v[cyc%32][q][p])begin
-    lg_rr[(q*8+p)*257+:257]<={1'b1,vm_image(q,pend_s[cyc%32][q][p])^((mut_data&&reads==777)?256'h10000:256'h0)};
+    lg_rr[(q*8+p)*257+:257]<={1'b1,(mut_force&&reads==mut_at)?((vm_image(q,pend_s[cyc%32][q][p])&~256'hffffffff)|256'h7f000000):vm_image(q,pend_s[cyc%32][q][p])^((mut_data&&reads==777)?256'h10000:256'h0)};
     reads=reads+1;
    end else lg_rr[(q*8+p)*257+:257]<=257'd0;
    lg_w_done[q*8+p]<=pend_w[cyc%32][q][p];
@@ -96,6 +98,7 @@ module tb_toksim_su_top;
   if(!$value$plusargs("NE_RUN=%d",ne_run))ne_run=NE; if(!$value$plusargs("NW_RUN=%d",nw_run))nw_run=NW; if(!$value$plusargs("NS_RUN=%d",ns_run))ns_run=NS;
   if(!$value$plusargs("STOP=%d",stop))stop=ne_run;
   mut_data=$test$plusargs("MUT_DATA");mut_addr=$test$plusargs("MUT_ADDR");mut_rf=$test$plusargs("MUT_RF");mut_red=$test$plusargs("MUT_RED");
+  mut_force=$test$plusargs("MUT_FORCE");if(!$value$plusargs("MUT_AT=%d",mut_at))mut_at=0;
   for(i=0;i<32;i=i+1)for(q=0;q<4;q=q+1)for(p=0;p<8;p=p+1)begin pend_v[i][q][p]=0;pend_w[i][q][p]=0;pend_s[i][q][p]=0;end
   $readmemh({dir,"/prog.mem"},prog);$readmemh({dir,"/expw.mem"},expw);$readmemh({dir,"/exps.mem"},exps);
   $readmemh({dir,"/explw.mem"},explw);$readmemh({dir,"/arith/seed.mem"},seed);

@@ -48,5 +48,28 @@
    1109.7,
    498.6
   ]
+ },
+ "5_pretree_baseline": {
+  "baseline": "HBM-PRETREE3 claude/hbm-pretree3-1020 305771cf6 m_pt3_tp8.json (SU reductions on the bound HH-6 pre-tree, Qwen softmax 4-row values keyed at the 8-row census key), tok/s by its tok_from_sched.py delta rule",
+  "rows": {
+   "p0 reproduce pt3_tp8 (--qwen-tp4-rows)": [
+    1148.8,
+    1000.7
+   ],
+   "p1 + L1 fuse": [
+    1148.8,
+    1010.4
+   ],
+   "p2 TP-8 remap: softmax 4-row pre-tree values at 4-row keys + as-built measured 4-row bf16_p/pv_normalize/round_q/row_scale_qkv": [
+    1148.8,
+    1012.9
+   ],
+   "p3 p2 + L1 fuse": [
+    1148.8,
+    1022.8
+   ]
+  },
+  "inputs": "results/token_pass/measured_hbm_1019/collfuse2/m_p{1,2,3}.json (p0 = pretree3 m_pt3_tp8.json)",
+  "note": "38 Qwen SU.VOP records (rope) still by measured ratio; p2/p3 PROVISIONAL until the 4 elementwise/max qw8 records have causal mutants (MUT_FORCE run pending)"
  }
 }
