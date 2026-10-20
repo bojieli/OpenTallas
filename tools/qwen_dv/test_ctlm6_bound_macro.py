@@ -129,6 +129,33 @@ def main():
                          shared_helpers=True, retain_all_comb=True)
     #17 select endpoints are34 actual data pins; one source FF copy is needed.
     assert muxr['added_by_type']['$_DFF_PN0_'] == 1
+    _, _, isolated = B.build(json.dumps(design).encode(), 'top', 'bounded', load_cap=32,
+                              transparent_inverters=True, retain_mux=True,
+                              shared_helpers=True, retain_all_comb=True,
+                              macro_contracts=soft, isolate_soft_inputs=True)
+    assert isolated['added_by_type']['$_DFF_PN0_'] == 65
+    conn=isolated['retained_macro_terminals'][0]['emitted_connections']['D']
+    assert len(set(conn)) == len(conn) == 66
+    assert isolated['macro_contracts']['real_memory']['input_loads']['D'] == [16]*66
+    # Parent-producer isolation cannot clone or discount real macro outputs.
+    imd, imc = fixture()
+    child_ports={'CLK':{'direction':'input','bits':[1]},
+                 'D':{'direction':'input','bits':[2,3]},
+                 'Q':{'direction':'output','bits':[4]}}
+    imd['modules']['soft_consumer']={'attributes':{'blackbox':'1'},'ports':child_ports}
+    imd['modules']['top']['ports']['other_q']={'direction':'output','bits':[80]}
+    imd['modules']['top']['cells']['consumer']={'type':'soft_consumer',
+      'connections':{'CLK':[2],'D':[20,20],'Q':[80]},
+      'port_directions':{'CLK':'input','D':'input','Q':'output'}}
+    imc['soft_consumer']={'kind':'soft_child','ports':{n:dict(direction=v['direction'],width=len(v['bits']),clock=n=='CLK') for n,v in child_ports.items()},
+      'input_loads':{'D':[16,16]},'load_source_sha256':'1'*64}
+    try:
+        B.build(json.dumps(imd).encode(),'top','bounded',load_cap=32,
+                macro_contracts=imc,isolate_soft_inputs=True)
+    except ValueError as exc:
+        assert 'macro output overload' in str(exc)
+    else:
+        raise AssertionError('discounted or cloned real macro output')
     for mutate, phrase in [
         ('missing_direction', 'ports differ'), ('wrong_width', 'direction/width mismatch'),
         ('no_clock_role', 'boolean clock'), ('not_blackbox', 'not an actual declared blackbox'),
