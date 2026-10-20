@@ -1,0 +1,19 @@
+{
+ "top": "dsfd_coll_lane_w_safe4",
+ "flops": 16306,
+ "macros": 55,
+ "max_nonclock_loads": 34,
+ "sha256": "b1e4e777c36c01a16a20364315e254a7193cb591621ca434d3fc5c7d4340680c",
+ "nonclock_roots_over32": 1,
+ "over32": [
+  {
+   "net": "_46452_/Y (NAND2x1_ASAP7_75t_R)",
+   "loads": 34,
+   "flop_loads": 0,
+   "driver": "_46452_",
+   "kind": "comb"
+  }
+ ],
+ "macro_cells_direction_inferred": 55,
+ "scope": "mapped native standard-cell roots, BUF/INV collapsed; no physical reach or complete macro-direction claim"
+}

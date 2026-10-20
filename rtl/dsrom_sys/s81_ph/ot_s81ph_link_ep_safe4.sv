@@ -356,13 +356,7 @@ module ot_s81ph_link_ep_safe4 #(
     wire [IW-1:0]   snd_i_l = launch ? idx_add(snd_i, 1) : snd_i;
     wire [SEQW-1:0] snd_off = snd_l - una_skip;
     wire            retry_exh = rewind && !progress && (retry >= MR_W);
-`ifdef OT_COLL_NATIVE32
-    wire ack_gt_pre;
-    ot_s81ph_skip_before_launch #(.W(SEQW)) u_ack_pre (.a(snd),.b(una_skip),.limit(d_ack),.inc(launch),.gt(ack_gt_pre));
-    wire ack_skip=ack_ok && ack_gt_pre;
-`else
     wire            ack_skip  = ack_ok && (d_ack > snd_off);
-`endif
     wire [IW-1:0]   snd_i_nx  = (rewind_sender || ack_skip) ? una_i_n : snd_i_l;
 
     generate if(OLDREAD!=0) begin:g_rb_safe
@@ -629,14 +623,7 @@ module ot_s81ph_link_ep_safe4 #(
     wire            lnch_0 = replaying && pace_ok;
     wire [SEQW-1:0] sndl_0 = lnch_0 ? snd + 1'b1 : snd, sndl_1 = snd + 1'b1;
     wire [IW-1:0]   sndil_0 = lnch_0 ? idx_add(snd_i, 1) : snd_i, sndil_1 = idx_add(snd_i, 1);
-`ifdef OT_COLL_NATIVE32
-    wire skip_gt_pre0, skip_gt_pre1;
-    ot_s81ph_skip_before_launch #(.W(SEQW)) u_skip_pre0 (.a(snd),.b(una_skip),.limit(d_ack),.inc(lnch_0),.gt(skip_gt_pre0));
-    ot_s81ph_skip_before_launch #(.W(SEQW)) u_skip_pre1 (.a(snd),.b(una_skip),.limit(d_ack),.inc(1'b1),.gt(skip_gt_pre1));
-    wire skip_0=ack_ok && skip_gt_pre0, skip_1=ack_ok && skip_gt_pre1;
-`else
     wire            skip_0 = ack_ok && (d_ack > (sndl_0 - una_skip)), skip_1 = ack_ok && (d_ack > (sndl_1 - una_skip));
-`endif
     wire [SEQW-1:0] sndnx_0 = rewind_sender_state ? una_n : (skip_0 ? rr_ack : sndl_0);
     wire [SEQW-1:0] sndnx_1 = rewind_sender_state ? una_n : (skip_1 ? rr_ack : sndl_1);
     wire [IW-1:0]   sndinx_0 = (rewind_sender || skip_0) ? una_i_n : sndil_0;
@@ -814,17 +801,4 @@ endmodule
 `else
  assign y = (ack_ok && nak) || ((occ != 0) && !progress && at_lim);
 `endif
-endmodule
-
-// Native32 v6: execute full modulo arithmetic independently of the late launch
-// choice, then select one bit. threshold-1 is parallel with the difference,
-// avoiding the increment -> launch mux -> subtract -> compare serial chain.
-// This identity includes all wrap cases and assumes no protocol input range.
-(* keep_hierarchy = 1 *) module ot_s81ph_skip_before_launch #(parameter integer W=10) (
- input wire [W-1:0] a,b,limit, input wire inc, output wire gt);
- wire [W-1:0] difference=a-b;
- wire [W-1:0] threshold_prev=limit-1'b1;
- wire gt0=limit>difference;
- wire gt1=(|limit) && ((&difference) || (threshold_prev>difference));
- assign gt=inc?gt1:gt0;
 endmodule

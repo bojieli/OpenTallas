@@ -27,3 +27,5 @@ library, CH_BOARD700/770ps, and explicitly keeps the new helper module.
 Native load/depth and full production source receipts are pending. No
 physical gate or packing qualification. V3 depth621.8 remains historical
 blocker until a source successor actually proves <=600 and native32.
+
+TERMINAL REJECTED: nominal79994 PASS; native16306FF/55SRAM FAIL1 combroot34; depth621.8ps/17levels sender->rp_r still>600. Fullfailedsource/census/depth/nominal receipts preserved. Current RTL restored immutable v3. No gate.
