@@ -1,0 +1,159 @@
+{
+  "scope": "SOURCE_GRAPH_IDENTITY_ONLY_NO_AB_COLD_NATIVE_PHYSICAL_OR_RECEIPT_ADMISSION",
+  "root_review": "2026-10-20 exact7 approval, raw strict FAIL preserved",
+  "required_separate_lemma": "Exact same authoritative stateful SRAM proof still required",
+  "results": [
+    {
+      "top": "qkd_static_ectla_kiss",
+      "status": "EXACT7_COMPLETE_GRAPH_IDENTICAL",
+      "input_sha256": [
+        "feae87ebd4f62de29ce3c023894e3446986b93792a64fd87817d869da6fb1582",
+        "87b00ca06edca71b6bc1fda8cf40030decd10515a194d947406601c821269dbd"
+      ],
+      "canonical_sha256": [
+        "78f22ad4024251d86b88a282e3840ebaf6e1ccdfbf30d872b0db7d9c334aad14",
+        "78f22ad4024251d86b88a282e3840ebaf6e1ccdfbf30d872b0db7d9c334aad14"
+      ],
+      "causals": [
+        {
+          "name": "real functional TYPE",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "port direction",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "port width",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "port offset",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "sequential ARST connectivity",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "sequential CLK connectivity",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "state parameter",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "SRAM master",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "SRAM parameter",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "SRAM full pin graph",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "extra cell",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "extra alias",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "net literal/occurrence",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "hierarchy/name",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "third scopeinfo string",
+          "status": "REFUSED_EXACT_CELL_IDENTITY"
+        }
+      ],
+      "actual_state_cell": "$flatten\\u.\\u.$procdff$2269",
+      "actual_sram_cell": "u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s"
+    },
+    {
+      "top": "qkd_ectl_b_tp8_direct",
+      "status": "EXACT7_COMPLETE_GRAPH_IDENTICAL",
+      "input_sha256": [
+        "aeb5ddb29f0ca90e5bb1864762e1aa5a9e84c0257e937170acfe7096b979d0db",
+        "4b1e0f8687e26961c65af36b8524501bf325a70c2956a6add0302d9087a7bb14"
+      ],
+      "canonical_sha256": [
+        "41b0318260375d27636b1b21e2354b0bb7159521873d0ed107705ee2ee159264",
+        "41b0318260375d27636b1b21e2354b0bb7159521873d0ed107705ee2ee159264"
+      ],
+      "causals": [
+        {
+          "name": "real functional TYPE",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "port direction",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "port width",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "port offset",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "sequential ARST connectivity",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "sequential CLK connectivity",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "state parameter",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "SRAM master",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "SRAM parameter",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "SRAM full pin graph",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "extra cell",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "extra alias",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "net literal/occurrence",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "hierarchy/name",
+          "status": "REFUSED_COMPLETE_GRAPH_DIFF"
+        },
+        {
+          "name": "third scopeinfo string",
+          "status": "REFUSED_EXACT_CELL_IDENTITY"
+        }
+      ],
+      "actual_state_cell": "$flatten\\u.$procdff$2218",
+      "actual_sram_cell": "u.g_static_rows.u_rows.g_data.g_macro[0].u_s"
+    }
+  ]
+}
