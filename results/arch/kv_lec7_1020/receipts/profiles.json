@@ -1,0 +1,39 @@
+{
+ "ot_qkh_ktree_lk_nc32c": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qkh_ktree_lk_nc32c.json",
+   "sha256": "6be7f628eb022cd87fea628a344ef0f36ffbcb9aec40df3f0c31ee69e0c6a3e5"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "4449b9adb348404861b308b49d73d1982acd67c126ef36dc3d5c6de8d9ed9b42",
+    "child_lint.json": "a204223556ec8cb0de7006dd64016172f26b314430d3c01fba05189420f77f5e",
+    "export_ff.log": "99328d6bb8ab62708e7874cecdee2f769b282f486424483de615e9ce41331625",
+    "export_ff.tcl": "a4fb96634fda622a9985f00f71501bd16c469e7b128a22dbd72ceb6ca1ff0826",
+    "export_ss.log": "a8da801f36ba41901fca50f2b8fcdf396a0e0218c089164290303c0ae999247c",
+    "export_ss.tcl": "db10e4f7fedcf46038c0d5bbaec80ca7bb95b417042ac382387cb34c9d4aa3ef",
+    "export_tt.log": "f5b8c99b85e13d3940644f24459f760de41c1c4debfe7fff8645ddeba0271ceb",
+    "export_tt.tcl": "475be6f92dec1abc47ebf10b5e4d2c1625c91c54d0d2d3794959d60c74b4cb23",
+    "insertion.json": "3d6226f0b21d5b7af6c1a5672a06c7369c215be9af100dcf2d0e3c866850d978",
+    "ot_qkh_ktree_lk_nc32c.lef": "1214e855224bf82e857092678ff0661fd968ecce423c8320d728e7ed135d43ac",
+    "ot_qkh_ktree_lk_nc32c_ff.lib": "70e94e7e2a7503a1c37ba3484b061075d216ba9b420bc42644de59ce7821f25e",
+    "ot_qkh_ktree_lk_nc32c_ss.lib": "f85d4511effd5d3687fd1250ef9bf3613edf2bb9e42a8652aa1d1296ac0e03fb",
+    "ot_qkh_ktree_lk_nc32c_tt.lib": "956c588a05e15b55780a7c3b822a2f09ab3f9f8f8ddd733abed2cb6b7b0abf7a",
+    "provenance/abstract_pin_stub.json": "8cf0ccb016bde3c89becb5c43d6d71ad13a04744020421d774309370e4fdc588",
+    "provenance/raw/ot_qkh_ktree_lk_nc32c.lef": "045f786006271609990ed9e9e4271e7bbb56bbd74213837128e5aafef07c87db",
+    "provenance/view_export.abstract.json": "9b3480f675c3aafa9187067a0e5c2641be2b5621a28fbede6547b9583355951c"
+   },
+   "rtl": {
+    "path": "rtl/hdc/nearhbm/ot_qkh_ktree_nc32c.sv",
+    "sha256": "3e535ed694bfe6c0f19f6a58ec21b7dac1d68f280c9eefc64a6167c72aa9a09c"
+   },
+   "view": "physical/ref_tile/ot_qkh_ktree_lk_nc32c/views/ot_qkh_ktree_lk_nc32c"
+  },
+  "parameters": {
+   "ADD_LAT": 7,
+   "MUL_LAT": 6,
+   "MUT": 0,
+   "SCALE": 1035273459
+  }
+ }
+}
