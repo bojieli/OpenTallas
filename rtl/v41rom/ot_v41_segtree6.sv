@@ -42,6 +42,7 @@ module ot_v41_segtree6 #(
     parameter integer QD = 8,
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer LAT = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
+    parameter integer NP = 0,         // 1: native partition (S81-QXPQ3: no driver > 32 loads), default 0 = unchanged
     parameter integer YF = 0,        // 1: the read stage's in-flight forward from registers (see the header)
     parameter integer EARLY = 0      // 1: a final node with nothing held above it and nothing of its tree in the
                                      //    adder leaves at once instead of being promoted (+0) level by level
@@ -283,7 +284,7 @@ module ot_v41_segtree6 #(
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) add_v <= 1'b0; else if (ce) add_v <= z_v;
-    ot_v41_fadd #(.CUT(CUT)) u_add (.clk(pclk), .rst_n(rst_n), .valid_in(add_v), .a(add_a), .b(add_b),
+    ot_v41_fadd #(.CUT(CUT), .NP(NP)) u_add (.clk(pclk), .rst_n(rst_n), .valid_in(add_v), .a(add_a), .b(add_b),
                                      .y(sum_a), .err(err_a), .valid_out(sv_a));
     ot_hdc_delay #(.W(PW + LW + 2), .D(LAT + 2)) u_t (.clk(pclk), .rst_n(rst_n),
         .d({y_t, y_l + 1'b1, y_f, y_e | (pair && u_herr)}), .q(st_a));

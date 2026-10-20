@@ -29,7 +29,8 @@ module ot_v41_chain4 #(
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer LAT = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8]
 ,
-    parameter integer PD = 0) (
+    parameter integer PD = 0,
+    parameter integer NP = 0) (  // NP 1: native partition (S81-QXPQ3), default 0 = unchanged
     input  wire                     clk,
     input  wire                     rst_n,
     input  wire                     v,
@@ -76,7 +77,7 @@ module ot_v41_chain4 #(
     wire af;
     // PD: the adder's step 0 formed on every forward candidate in parallel, the bundle selected (see the header)
     wire [104:0] o0_ext;
-    ot_v41_fadd2 #(.CUT(CUT), .EXT0(PD != 0 ? 1 : 0)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(v_r), .a(a), .b(term_r),
+    ot_v41_fadd2 #(.CUT(CUT), .EXT0(PD != 0 ? 1 : 0), .NP(NP)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(v_r), .a(a), .b(term_r),
                                      .o0_ext(o0_ext), .y(sum), .err(err), .valid_out(sv));
     wire [TW+2:0] dt;
     ot_hdc_delay #(.W(TW + 3), .D(LAT)) u_t (.clk(clk), .rst_n(rst_n), .d({tag_r, last_r, af | termf_r, 1'b0}), .q(dt));

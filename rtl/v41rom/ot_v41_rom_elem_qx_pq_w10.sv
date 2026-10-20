@@ -234,6 +234,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
                                         //     register is 1), so no clock gate drives a macro (Z27a post-CTS at 770: the
                                         //     macro-gating clones sat at the clock root, ENA -208.8 / -119.3, ce_in -96.7,
                                         //     launch latency 742 ps under the outputs; flop-only clones closed > +80)
+    // NP (S81-QXPQ3 2026-10-20, SAFE items 1/3/4, default 0 = every closed element unchanged): native partition.  No
+    // register or combinational node drives more than 32 loads (through BUF / INV, resets included): kept copies per
+    // consumer slice (ot_v41_kreg instances, never merged), regional reset leaves with 2-stage landing, registered
+    // one-hot selects.  Passed to the lanes, chains, adders, segment tree and tag table.  See results/rtl/s81_qxpq3_np_1020.
+    parameter integer NP = 0,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -537,7 +542,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         assign cfg_v = cfg_v_x; assign cfg_a = cfg_a_x; assign cfg_d = cfg_d_x; assign qy_cdec = qy_cdec_x;
         assign pq_walking = walk_busy;
     end
-    ot_v41_elem_pq_tags #(.NSEG(NSEG), .NB(NB), .MTP(MTP), .PQ(PQ), .DRAIN(DRAIN), .WP(QM >= 4 ? 1 : 0)) u_pq (.clk(clk), .rst_n(rst_n),
+    ot_v41_elem_pq_tags #(.NSEG(NSEG), .NB(NB), .MTP(MTP), .PQ(PQ), .DRAIN(DRAIN), .WP(QM >= 4 ? 1 : 0), .NP(NP)) u_pq (.clk(clk), .rst_n(rst_n),
         .cfg_v(cfg_v_x), .cfg_a(cfg_a_x), .cfg_d(cfg_d_x[25:0]), .go_e(go_e), .go_tag(go_tag_e), .walk_busy(walk_busy),
         .walking(pq_walking), .tp(pq_tp), .bank_free(pq_bank_free), .sh_free(pq_sh_free), .swap(pq_swap), .fault(pq_fault),
         .t_tree(pq_tree), .t_pos(pq_pos), .q_idle(pq_idle), .q_row(pq_row), .q_idx(pq_idx), .q_n(pq_n));
@@ -2199,9 +2204,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             assign p_xe0 = l_xe0; assign p_xe1 = l_xe1; assign p_w0q = w0q; assign p_w1q = w1q;
             assign p_we0 = we0; assign p_we1 = we1;
         end
-        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS >= 3 ? 3 : QS)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
+        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS >= 3 ? 3 : QS), .NP(NP)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
             .xq(p_xq0), .xe(p_xe0), .wq(p_w0q), .we(p_we0), .tag(p_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS >= 3 ? 3 : QS)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
+        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS >= 3 ? 3 : QS), .NP(NP)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
             .xq(p_xq1), .xe(p_xe1), .wq(p_w1q), .we(p_we1), .tag(p_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0 && QPIPE != 0) begin : g_l3
         ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
@@ -2291,10 +2296,10 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire          ci1_last = (BP != 0 && fam) ? m_last : l1_t[4];
     wire [TG:0]   ci1_tag = (BP != 0 && fam) ? m_tag : {l1_t[TW-HW-1 -: TG], l1_t[3]};
     if (FAST != 0 && QZ != 0) begin : g_ch3
-    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_mb), .rst_n(rst_mc), .v(ci0_v),
+    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT), .NP(NP)) u_c0 (.clk(gclk_mb), .rst_n(rst_mc), .v(ci0_v),
         .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
         .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
-    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_mb), .rst_n(rst_mc), .v(ci1_v),
+    ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT), .NP(NP)) u_c1 (.clk(gclk_mb), .rst_n(rst_mc), .v(ci1_v),
         .slot(ci1_slot), .first(ci1_first), .last(ci1_last), .term(ci1_y), .term_f(ci1_f),
         .tag(ci1_tag), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
     end else if (FAST != 0) begin : g_ch2
@@ -2341,7 +2346,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [1:0] pr_err;
     wire pr_vo;
     if (FAST != 0) begin : g_pa2
-        ot_v41_fadd #(.CUT(CUT)) u_pair (.clk(gclk_mb), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),
+        ot_v41_fadd #(.CUT(CUT), .NP(NP)) u_pair (.clk(gclk_mb), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),
             .y(pr_sum), .err(pr_err), .valid_out(pr_vo));
     end else begin : g_pa1
         ot_fp32_add_rne_pipe u_pair (.clk(gclk_mb), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),
@@ -2417,7 +2422,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire [31:0] t_val;
     if (FAST != 0 && QPIPE != 0 && QX >= 9 && QM >= 2) begin : g_tr5
     // QM >= 2 (margin-first): registered adder-operand stage (+1 cycle a tree level) and the queue head from count flags
-    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8), .YF(QS >= 3 ? 1 : 0)) u_tree (.clk((QS >= 5) ? wclk : gclk_mb), .rst_n(rst_mt), .ce((QS >= 5) ? wen_t : 1'b1), .pclk(gclk_mb), .in_v(b_v),
+    ot_v41_segtree6 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8), .YF(QS >= 3 ? 1 : 0), .NP(NP)) u_tree (.clk((QS >= 5) ? wclk : gclk_mb), .rst_n(rst_mt), .ce((QS >= 5) ? wen_t : 1'b1), .pclk(gclk_mb), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5

@@ -28,6 +28,7 @@ module ot_v41_fadd #(
     // SPLIT9 (default 0; SAFE head 2026-10-06): step 9 cut in two (+1 latency). The round carry leaves u_c8 as four kept
     // copies (one per 6-8 loads), step 9a forms the normalised mantissa / exponent / subnormal / overflow terms into a
     // register, step 9b encodes and selects. Bit-identical.
+    parameter integer NP = 0,         // 1: native partition (S81-QXPQ3: no driver > 32 loads), default 0 = unchanged
     parameter integer SPLIT9 = 0,
     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
 ) (

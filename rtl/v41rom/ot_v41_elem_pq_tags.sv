@@ -22,6 +22,7 @@ module ot_v41_elem_pq_tags #(
     parameter integer NSEG = 8,
     parameter integer NB = 2,
     parameter integer MTP = 1,
+    parameter integer NP = 0,         // 1: native partition (S81-QXPQ3: no driver > 32 loads), default 0 = unchanged
     parameter integer PQ = 0,
     parameter integer DRAIN = 127,
     parameter integer SETTLE = 5,

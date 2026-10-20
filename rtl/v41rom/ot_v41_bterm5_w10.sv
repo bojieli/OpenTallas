@@ -22,6 +22,7 @@
 // ---------------------------------------------------------------------------
 module ot_v41_bterm5_w10 #(
     parameter integer TW = 8,
+    parameter integer NP = 0,         // 1: native partition (S81-QXPQ3: no driver > 32 loads), default 0 = unchanged
     parameter integer FPC = 4,        // kept copies of the FP4 select (32 = one per lane: q-element QM >= 5)
     parameter integer P0B = 0         // 3 (owner decision 2026-10-06 23:00, Z29c post-CTS at 730: q0_pm -158.8, p0_ws -> 260 ps
                                       // of wire -> product, the placer put the S1b product registers at the CSA end):

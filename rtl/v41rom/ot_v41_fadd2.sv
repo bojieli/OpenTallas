@@ -7,6 +7,7 @@
 module ot_v41_fadd2 #(
     parameter [8:0] CUT = 9'b1_0111_1011,          // 8 stages: steps 2+3 and 7+8 share a stage
     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
+    parameter integer NP = 0,         // 1: native partition (S81-QXPQ3: no driver > 32 loads), default 0 = unchanged
     parameter integer EXT0 = 0                       // 1: step 0's output bundle comes from o0_ext (ot_v41_fadd_s0)
 ) (
     input  wire        clk,
