@@ -199,7 +199,7 @@ def calibrate(work, seed):
     probes = {}
     for s in (0, N - 1):                                   # L8 AR, unscaled
         land = t
-        ev.cmd(land - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1)))
+        ev.cmd(land - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1), kc=1))
         far = land + 10
         for j in range(8):
             LB_pair(ev, s, v(), v(), v(), v(), far + j)
@@ -214,7 +214,7 @@ def calibrate(work, seed):
     ev.cmd(t + 2, D.cmd_amax(0, arx=1))
     t += 30
     for s in (0, 5):
-        ev.cmd(t - 2 * s - 1, D.cmd_stn(s, 1, 1, 8, 0, 0, 0x40 * s, amax=1))
+        ev.cmd(t - 2 * s - 1, D.cmd_stn(s, 1, 1, 8, 0, 0, 0x40 * s, amax=1, kc=1))
     for j in range(8):
         for s in (0, 5):
             LB_pair(ev, s, v(), v(), v(), v(), t + 10 + j)
