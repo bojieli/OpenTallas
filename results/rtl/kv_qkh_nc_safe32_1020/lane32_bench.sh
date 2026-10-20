@@ -8,7 +8,7 @@ MODE=$1; M=$2; O=$3; shift 3
 R=$PWD
 for _d in "$HOME/.local/opentallas-tools/verilator-5.050/bin"; do [ -d "$_d" ] && export PATH="$_d:$PATH"; done
 verilator --version
-OBJ="$O/obj_r7_m$M"; mkdir -p "$OBJ"
+OBJ="$O/obj_r8_m$M"; mkdir -p "$OBJ"
 DEF=""; [ "$M" != 0 ] && DEF="-DKVP3_MUT$M"
 if [ ! -x "$OBJ/Vtb_qkh_nc" ]; then
   verilator --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS $DEF \

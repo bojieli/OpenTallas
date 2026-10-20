@@ -45,7 +45,8 @@ module ot_hdc_fp32_add_lat_ncr #(
     (* keep="true",dont_touch="true" *) reg [27:0] x_dab_oh,x_dba_oh;
     (* keep="true",dont_touch="true" *) reg x_dab_big,x_dba_big;
     reg [31:0] x_code_a,x_code_b;
-    (* keep="true",dont_touch="true" *) reg [3:0] x_az_dist,x_bz_dist,x_nf_dist;
+    // R8: two kept copies per 8-bit bypass bank (one per 4-bit half) -> each copy feeds 4 bits x 4 ring slots (R7 census: 33 loads)
+    (* keep="true",dont_touch="true" *) reg [7:0] x_az_dist,x_bz_dist,x_nf_dist;
     reg  [7:0]  x_aexp, x_bexp;
     reg  [23:0] x_aman, x_bman;
     always @(posedge clk or negedge rst_n)
@@ -53,7 +54,7 @@ module ot_hdc_fp32_add_lat_ncr #(
         else x_v <= valid_in;
     always @(posedge clk) begin
         x_swap <= {7{!cmp_c}}; x_byp <= bypass; x_nf <= nonfinite; x_code_a<=a;x_code_b<=b;
-        x_az_dist<={4{a_zero}};x_bz_dist<={4{b_zero}};x_nf_dist<={4{nonfinite}};
+        x_az_dist<={8{a_zero}};x_bz_dist<={8{b_zero}};x_nf_dist<={8{nonfinite}};
         x_sub <= a[31] ^ b[31]; x_as <= a[31]; x_bs <= b[31];
         x_aexp <= a_exp; x_bexp <= b_exp; x_aman <= a_man; x_bman <= b_man; x_dab_big<=(dab>=28);x_dba_big<=(dba>=28);
     end
@@ -114,7 +115,9 @@ module ot_hdc_fp32_add_lat_ncr #(
     (* keep="true",dont_touch="true" *) reg [3:0] bypass_wp[0:3];
     wire [31:0] bypass_read;
     generate for(j=0;j<4;j=j+1)begin:bypass_bank
-      assign bypass_stage2[8*j+:8]=x_nf_dist[j]?8'd0:(x_az_dist[j]?(x_bz_dist[j]?8'd0:x_code_b[8*j+:8]):x_code_a[8*j+:8]);
+      for(genvar h=0;h<2;h=h+1)begin:half
+        assign bypass_stage2[8*j+4*h+:4]=x_nf_dist[2*j+h]?4'd0:(x_az_dist[2*j+h]?(x_bz_dist[2*j+h]?4'd0:x_code_b[8*j+4*h+:4]):x_code_a[8*j+4*h+:4]);
+      end
       always @(posedge clk or negedge rst_n)
         if(!rst_n)bypass_wp[j]<=4'b0001;
         else bypass_wp[j]<={bypass_wp[j][2:0],bypass_wp[j][3]};
