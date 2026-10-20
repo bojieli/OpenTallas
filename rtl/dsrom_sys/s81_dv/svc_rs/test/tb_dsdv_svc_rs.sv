@@ -32,6 +32,14 @@
 //   job    one jd done per entry, no jd fault, no slice fault (att / sx / stream / SM / return tree), host image + acks
 //          + credits,
 //          HBM credit discipline (<= 8 per PC).
+//   SO     (S81-SVC6 10-19, +so=1 default; the SMT=1 slice holds the SO target dsdv_sm_so_target, which faults any SM
+//          write without its SOT config): the job carries the compiler's SOT frame (type 14) right after WIN_LOAD and,
+//          at the booked edge t_sot + DSO (after the P.V drain), the SO SMJ job (kind 5, jid 22, 5 parameter rows, then
+//          8 operand frames of 32 rows, each masked to one W head + one E head).  Checked: every slice's 32 SO o rows
+//          (w_m != ffff), every entry's 64 stamped gather beats (pv_x[47]: lo, hi, hdr{5A, owner, head, group, idx})
+//          bit-exact vs the head's captured o-row halves, no stamped word outside the booked window (P.V checker),
+//          no slice fault (target booked edges / sot owner / gw), SO start after the last P.V word.  +so=0 = the
+//          pre-SVC6 SE-only job (SMT = 0 slices only).
 `ifndef RS_OBS
 `define RS_OBS
 `endif
@@ -66,6 +74,10 @@ module tb_dsdv_svc_rs;
     integer static_io = 0, start2 = 8192; bit j0_checked = 0;
     integer cur_user = WUSER, u1 = 4, cur_sb = SB, sb1 = SB + 30'h9000, cur_job = 0, mumut = 0, trace = 0;
     integer u0 = WUSER, sb0 = SB; reg [7:0] cur_tag = 8'h5a; reg [1023:0] dir2; bit mu = 0;
+    // S81-SVC6: SO job (SOT config + SO SMJ) for the SMT = 1 slice
+    integer so_en = 1, i_sot = -1, nq_so = 1 << 30, nq_so2 = 1 << 30, t_sot = 1 << 30, dso_c = 0, so_t0 = -1;
+    reg [19:0] so_owner = 0; reg [31:0] so_rng = 32'h5eed_0c06;
+    localparam integer SO_OBASE = 14'h300, SO_GAP = 40;
     reg ck = 0; always #0.5 ck = ~ck;
     reg rst = 0;
     reg [31:0] cfg [0:31];
@@ -111,6 +123,7 @@ module tb_dsdv_svc_rs;
         if ($value$plusargs("static_io=%d", static_io)) ;
         if ($value$plusargs("tag0=%h", cur_tag)) ;
         if ($value$plusargs("start2=%d", start2)) ;
+        if ($value$plusargs("so=%d", so_en)) ;
         if (mu && (u0 == u1 || start2 <= 40 || start2 >= MAXCYC - 40))
             $fatal(1, "MU invalid distinct users or fixed start2");
         $display("SVCRS_CONFIG sram_macro=%0d static_io=%0d start2=%0d", SRAM_MACRO, static_io, start2);
@@ -159,7 +172,7 @@ module tb_dsdv_svc_rs;
     wire [2*341-1:0] rq [0:15]; reg [1:0] rk [0:15], wd [0:15], rv [0:15];
     reg [2*256-1:0] r_data [0:15]; reg [2*17-1:0] r_tag [0:15]; reg [2*4-1:0] r_beat [0:15];
     wire [15:0] pv_v, w_v; wire [512:0] pv_d [0:15]; wire [13:0] w_a [0:15]; wire [15:0] w_m [0:15];
-    wire [511:0] w_d [0:15]; wire [11:0] w_st [0:15];
+    wire [511:0] w_d [0:15]; wire [11:0] w_st [0:15]; wire [47:0] pv_x [0:15];
     reg [32:0] jcmd = 0; reg q_v = 0; reg [511:0] q_d = 0;
     wire [1:0] jdx [0:1]; reg [291:0] hwx [0:1]; wire [8:0] hcx [0:1]; wire [1:0] rfx;   // [0] W entry 5, [1] E entry 11
     wire [4*514-1:0] ri [0:15], ro [0:15];
@@ -203,7 +216,7 @@ module tb_dsdv_svc_rs;
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
                 .rq(rq[gs]), .rk(rk[gs]), .wd(wd[gs]), .rv(rv[gs]), .r_data(r_data[gs]), .r_tag(r_tag[gs]),
-                .r_beat(r_beat[gs]), .hs(hsv[gs]), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
+                .r_beat(r_beat[gs]), .hs(hsv[gs]), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]), .pv_x(pv_x[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
         end else begin : g_n
             `RS_SL_MOD `RS_PRM u (.ck(ck), .rst(rst), .sid(4'(gs)),
@@ -213,7 +226,7 @@ module tb_dsdv_svc_rs;
                 .rq(rq[gs]), .rk(rk[gs]), .wd(wd[gs]), .rv(rv[gs]), .r_data(r_data[gs]), .r_tag(r_tag[gs]),
                 .r_beat(r_beat[gs]), .hs(hsv[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
-            assign pv_v[gs] = 1'b0; assign pv_d[gs] = '0;
+            assign pv_v[gs] = 1'b0; assign pv_d[gs] = '0; assign pv_x[gs] = '0;
         end
     end endgenerate
     // per-slice local faults and probes (observation ports, RS_OBS: {rt_v, rt_d, se_v, se_d, a_fc, lf})
@@ -254,6 +267,14 @@ module tb_dsdv_svc_rs;
         end
         sp = 0; sp[29:0] = (cur_job == 1 && mumut == 1) ? 30'(sb0) : 30'(cur_sb); sp[88:81] = wcount; sp[98:89] = nsel; sp[119:99] = WFIRST;
         qw[nq] = hdr(4'd2, 0, sp); qw[nq][458:449] = (cur_job == 1 && mumut == 2) ? 10'(u0) : 10'(cur_user); nq = nq + 1;
+        // S81-SVC6: the SOT frame (dsdv_svc_sot: owner = this WIN_LOAD's tag / user + epoch 1); payload = the booked
+        // edges, filled below once the job's frame count fixes DSO
+        if (so_en != 0) begin
+            so_owner = {2'b01, qw[nq - 1][458:449], cur_tag};
+            sp = 0; sp[19:0] = so_owner; sp[27:20] = 8'h21; sp[35:28] = 8'h22; sp[49:36] = SO_OBASE; sp[51:50] = 2'd1;
+            i_sot = nq; qw[nq] = hdr(4'd14, 12'd2, sp); nq = nq + 1;
+            qw[nq] = 0; nq = nq + 1; qw[nq] = 0; nq = nq + 1;
+        end
         n = (nsel + 15) / 16;
         sp = 0; sp[19:10] = nsel;
         if (nsel > 0) begin
@@ -302,7 +323,44 @@ module tb_dsdv_svc_rs;
             for (b = 0; b < sz; b = b + 1) begin qw[nq] = pm[base + b]; nq = nq + 1; end
             base = base + sz;
         end
+        if (so_en != 0) build_so();
         qw[last_hdr][507] = 1'b1;      // protocol v1.1: END on the job's last q frame
+    endtask
+
+    // S81-SVC6: SO job frames + the SOT booked edges.  Static calendar relative to the SOT (t_sot = the cycle its last
+    // word is on the q pins): SO start at t_sot + DSO (DSO bounds the pre-GO stream at 2 cycles a word + GODLY + the
+    // P.V drain), operand frame i (heads tile_of(i) W, tile_of(8 + i) E) at t_sot + DSO + 6 + SO_GAP + 33 i.  Booked at
+    // the target (cycles after its install): o rows of frame i = DSO + 100 + 33 i + 0..31 (+-24 booked slack), reads
+    // DSO + 388 + 64 i (half slot i; 64 > 32 words + 30 tree / install skew: no merge collision), retire + 40; the
+    // entry window DSO + 388 .. DSO + 914 (all 8 heads of the half).
+    function automatic [31:0] so_rand(input integer dummy);
+        so_rng = so_rng * 32'd1103515245 + 32'd12345; so_rand = so_rng ^ (so_rng >> 15);
+    endfunction
+    function automatic [511:0] so_row(input integer dummy);
+        reg [31:0] r; for (int e = 0; e < 16; e++) begin r = so_rand(0); so_row[32*e +: 32] = {r[31], 8'(118 + r[30:23] % 14), r[22:0]}; end
+    endfunction
+    task automatic build_so();
+        reg [448:0] sp; integer i, k, t, pre;
+        pre = nq_go - (i_sot + 3);
+        dso_c = 2 * pre + 64 + GODLY + pvo_c + 216 + 150;
+        nq_so = nq;
+        sp = 0; sp[0] = 1'b1; sp[4:1] = 4'd5; sp[12:5] = 8'h22;
+        qw[nq] = hdr(4'd9, 12'd5, sp); nq = nq + 1;
+        qw[nq] = so_row(0); qw[nq][13:0] = SO_OBASE; qw[nq][64 +: 7] = 7'd0; qw[nq][128 +: 3] = 3'd0;
+        qw[nq][96 +: 32] = {1'b0, 8'(121 + so_rand(0) % 4), 23'(so_rand(0))}; nq = nq + 1;
+        for (k = 1; k < 5; k = k + 1) begin qw[nq] = so_row(0); nq = nq + 1; end
+        nq_so2 = nq;
+        for (i = 0; i < 8; i = i + 1) begin
+            sp = 0; sp[4:1] = 4'd5; sp[12:5] = 8'h22; sp[13] = 1'b1; sp[14 + tile_of(i)] = 1'b1; sp[14 + tile_of(8 + i)] = 1'b1;
+            qw[nq] = hdr(4'd9, 12'd32, sp); nq = nq + 1;
+            for (k = 0; k < 32; k = k + 1) begin qw[nq] = so_row(0); nq = nq + 1; end
+        end
+        for (i = 0; i < 16; i = i + 1) begin
+            t = tile_of(i); k = i % 8;
+            qw[i_sot + 1][32*t +: 32] = {16'(dso_c + 100 + 33 * k + 31 + 24), 16'(dso_c + 100 + 33 * k - 24)};
+            qw[i_sot + 2][32*t +: 32] = {16'(dso_c + 388 + 64 * k + 40), 16'(dso_c + 388 + 64 * k)};
+        end
+        qw[i_sot][67:52] = 16'(dso_c + 388); qw[i_sot][83:68] = 16'(dso_c + 914);
     endtask
 
     // ---------------- host writes (dsfd_host_sd hw / hc: 8 credits, cr per word taken, ack per completed sector) ----
@@ -389,6 +447,14 @@ module tb_dsdv_svc_rs;
     integer go_cyc = -1, first_rt = -1, last_rt = -1, end_cyc = -1, pv_early = 0, pv_sent = -1;
     integer n_done_x [0:1], pv_first = -1, pv_last = -1, pv_gap = 0, pv_other = 0, pv_n = 0;
     initial for (i = 0; i < 16; i = i + 1) begin se_rows[i] = 0; pv_words[i] = 0; wrows[i] = 0; end
+    // S81-SVC6 SO checker state
+    integer so_n [0:15], so_beats = 0, so_err = 0, so_words = 0, so_nb [0:1], so_ph [0:1];
+    integer so_wf [0:15]; integer so_wfirst = -1, so_wlast = -1, so_gfirst = -1, so_glast = -1;
+    reg [255:0] so_rows [0:15][0:31]; reg [511:0] so_lo [0:1], so_hi [0:1]; reg [7:0] so_seen [0:15];
+    initial begin
+        for (i = 0; i < 16; i = i + 1) begin so_n[i] = 0; so_seen[i] = 0; so_wf[i] = -1; end
+        so_nb[0] = 0; so_nb[1] = 0; so_ph[0] = 0; so_ph[1] = 0;
+    end
     initial begin n_done_x[0] = 0; n_done_x[1] = 0; end
     localparam integer PVH = (ST >= 2) ? 0 : 1;      // the half whose entry carries quarter ST's P.V (tiles 4 ST .. 4 ST + 3)
     always @(posedge ck) begin
@@ -405,10 +471,14 @@ module tb_dsdv_svc_rs;
         q_v <= 0;
         if (rst && cyc > q_cyc && qi < nq) begin
             if (qi < nq_go) begin
-                if (static_io != 0 || ($urandom % 8) != 0) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; if (qi == nq_go) t_pre = cyc; end
+                if (static_io != 0 || ($urandom % 8) != 0) begin
+                    q_v <= 1; q_d <= qw[qi]; if (qi == i_sot + 2) t_sot = cyc; qi = qi + 1; if (qi == nq_go) t_pre = cyc;
+                end
             end else if (qi == nq_go) begin
                 if (cyc >= t_pre + GODLY) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; go_cyc = cyc; end
-            end else if (cyc >= go_cyc + pvs_c) begin
+            end else if (cyc >= go_cyc + pvs_c && (qi < nq_so || cyc >= t_sot + dso_c) &&
+                         (qi < nq_so2 || cyc >= t_sot + dso_c + 6 + SO_GAP)) begin
+                if (qi == nq_so) so_t0 = cyc;
                 if (qi == nq_pv && rt_beats < (T + 3) / 4) pv_early = 1;      // the compiled PV send precedes a fold score
                 if (qi == nq_pv) pv_sent = cyc;
                 q_v <= 1; q_d <= qw[qi]; qi = qi + 1;
@@ -450,7 +520,7 @@ module tb_dsdv_svc_rs;
             end
             if (w_v[s]) wrows[s] = wrows[s] + 1;
             // P.V words: only at the entry pins; owner k = tile 4 ST + k in window k (40 words), back to back
-            if (pv_v[s]) begin
+            if (pv_v[s] && !pv_x[s][47]) begin
                 integer wi, t, dm;
                 if (s != ((PVH == 1) ? RS_ENTRY_E : RS_ENTRY_W)) pv_other = pv_other + 1;
                 else begin
@@ -478,16 +548,59 @@ module tb_dsdv_svc_rs;
                 end
             end
         end
+        // S81-SVC6: SO o rows (the head's mask half, in write order = the target's SRAM rows) and the entries' gather words
+        for (s = 0; s < 16; s = s + 1) if (so_en != 0 && w_v[s] && w_m[s] != 16'hffff) begin
+            if (so_n[s] < 32) so_rows[s][so_n[s]] = tile_of(s) % 2 ? w_d[s][511:256] : w_d[s][255:0];
+            so_n[s] = so_n[s] + 1;
+            if (so_wfirst < 0) so_wfirst = cyc; so_wlast = cyc;
+            if (so_n[s] == 1) so_wf[s] = cyc - (t_sot + dso_c + 6 + SO_GAP + 33 * (s % 8) + 1);   // o row 0 - its q-pin row
+        end
+        for (k = 0; k < 2; k = k + 1) begin
+            integer es, hh, sl, bt; reg [31:0] hw32; reg [1023:0] want;
+            es = (k == 0) ? RS_ENTRY_W : RS_ENTRY_E;
+            if (pv_v[es] && pv_x[es][47]) begin
+                so_words = so_words + 1; if (so_gfirst < 0) so_gfirst = cyc; so_glast = cyc;
+                if (so_ph[k] == 0) begin so_lo[k] = pv_d[es][511:0]; if (pv_d[es][512]) so_err = so_err + 1; so_ph[k] = 1; end
+                else if (so_ph[k] == 1) begin so_hi[k] = pv_d[es][511:0]; if (pv_d[es][512]) so_err = so_err + 1; so_ph[k] = 2; end
+                else begin
+                    so_ph[k] = 0; hw32 = pv_d[es][31:0]; hh = hw32[11:8]; bt = hw32[2:0]; sl = -1;
+                    for (int q = 8 * k; q < 8 * k + 8; q++) if (tile_of(q) == hh) sl = q;
+                    if (!pv_d[es][512] || pv_d[es][39:32] != 8'h5a || pv_d[es][511:40] != 0 || hw32[31:12] != so_owner ||
+                        hw32[7] != hh[3] || hw32[6:3] != {1'b0, hh[2:0]} || sl < 0 || so_seen[hh][bt]) begin
+                        so_err = so_err + 1;
+                        if (so_err < 8) $display("SO MISMATCH entry %0d hdr %08x sl %0d", es, hw32, sl);
+                    end else begin
+                        so_seen[hh][bt] = 1'b1; so_beats = so_beats + 1; so_nb[k] = so_nb[k] + 1;
+                        want = {so_rows[sl][4*bt+3], so_rows[sl][4*bt+2], so_rows[sl][4*bt+1], so_rows[sl][4*bt]};
+                        if ({so_hi[k], so_lo[k]} !== want) begin
+                            so_err = so_err + 1;
+                            if (so_err < 8) $display("SO MISMATCH entry %0d head %0d beat %0d data", es, hh, bt);
+                        end
+                    end
+                end
+            end
+        end
         if ((!j0_checked && n_done_x[0] > 0 && n_done_x[1] > 0 && cyc > end_cyc + 300) || cyc >= MAXCYC) begin
-            integer bad_se, bad_pv, bad_w, nown, st_bad; reg [15:0] fl; reg [31:0] fc0; bit jpass;
+            integer bad_se, bad_pv, bad_w, nown, st_bad; reg [15:0] fl; reg [31:0] fc0; bit jpass, so_late, so_ok;
             bad_se = 0; bad_pv = 0; bad_w = 0; nown = 0; fl = 0; fc0 = 0;
             for (s = 0; s < 16; s = s + 1) begin
                 if (se_rows[s] != (T + 15) / 16) bad_se = bad_se + 1;
-                if (wrows[s] != se_rows[s]) bad_w = bad_w + 1;
+                if (wrows[s] != se_rows[s] + ((so_en != 0) ? 32 : 0)) bad_w = bad_w + 1;
+                if (so_en != 0 && so_n[s] != 32) so_err = so_err + 1;
                 if (tile_of(s) / 4 == ST) nown = nown + 1;
                 fl[s] = sflt[s]; if (sflt[s] && fc0 == 0) fc0 = afc[s];
             end
             host_check();
+            so_late = (so_en != 0) && (so_t0 < 0 || pv_last < 0 || so_t0 <= pv_last + 8);
+            so_ok = (so_en == 0) || (so_err == 0 && so_beats == 128 && !so_late);
+            if (so_en != 0) $display("SVCRS_SO t_sot=%0d dso=%0d so_start=%0d pv_last=%0d late=%0d beats=%0d (W %0d E %0d) words=%0d errors=%0d first_w=%0d last_w=%0d gw_first=%0d gw_last=%0d verdict=%s",
+                t_sot, dso_c, so_t0, pv_last, so_late, so_beats, so_nb[0], so_nb[1], so_words, so_err, so_wfirst, so_wlast,
+                so_gfirst, so_glast, so_ok ? "PASS" : "FAIL");
+            if (so_en != 0) begin
+                $write("SVCRS_SO_LAT o_row0_minus_q_row0 per sid:");
+                for (s = 0; s < 16; s = s + 1) $write(" %0d", so_wf[s]);
+                $display("");
+            end
             st_bad = (stx[0] !== {1'b0, !(hsdrop >= 0 && hsdrop < 8)}) + (stx[1] !== {1'b0, !(hsdrop >= 8 && hsdrop < 16)});
             $display("SVCRS_ST hsdrop=%0d st_rg W=%b E=%b bad=%0d", hsdrop, stx[0], stx[1], st_bad);
             bad_pv = (pv_n != 160) + (pv_gap != 0) + (pv_other != 0);
@@ -502,11 +615,11 @@ module tb_dsdv_svc_rs;
                 (sc_err == 0 && ord_err == 0 && rt_beats == (T + 3) / 4 && sc_chk > 0 && se_err == 0 && se_chk > 0 &&
                  bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && bad_pv == 0 &&
                  n_done_x[0] == 1 && n_done_x[1] == 1 && pv_early == 0 &&
-                 !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && st_bad == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
+                 !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && st_bad == 0 && cyc < MAXCYC && so_ok) ? "PASS" : "FAIL");
             jpass = sc_err == 0 && ord_err == 0 && rt_beats == (T + 3) / 4 && sc_chk > 0 && se_err == 0 && se_chk > 0 &&
                     bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && bad_pv == 0 &&
                     n_done_x[0] == 1 && n_done_x[1] == 1 && pv_early == 0 &&
-                    !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && st_bad == 0 && cyc < MAXCYC;
+                    !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && st_bad == 0 && cyc < MAXCYC && so_ok;
             if (mu) $display("SVCRS_JOB job=%0d user=%0d sb=%08x wb=%08x mumut=%0d T=%0d sc_checked=%0d sc_errors=%0d se_errors=%0d pv_checked=%0d pv_errors=%0d slice_faults=%04x verdict=%s",
                 cur_job, cur_user, cur_sb, WB, mumut, T, sc_chk, sc_err, se_err, pv_chk, pv_err, fl, jpass ? "PASS" : "FAIL");
             if (mu && cur_job == 0 && cyc < MAXCYC) begin j0_pass = jpass; j0_checked = 1; end
@@ -533,7 +646,9 @@ module tb_dsdv_svc_rs;
         rt_beats = 0; sc_err = 0; sc_chk = 0; ord_err = 0; se_err = 0; se_chk = 0; pv_err = 0; pv_chk = 0;
         go_cyc = -1; first_rt = -1; last_rt = -1; end_cyc = -1; pv_early = 0; pv_sent = -1;
         n_done_x[0] = 0; n_done_x[1] = 0; pv_first = -1; pv_last = -1; pv_gap = 0; pv_other = 0; pv_n = 0;
-        for (i = 0; i < 16; i = i + 1) begin se_rows[i] = 0; pv_words[i] = 0; wrows[i] = 0; end
+        for (i = 0; i < 16; i = i + 1) begin se_rows[i] = 0; pv_words[i] = 0; wrows[i] = 0; so_n[i] = 0; so_seen[i] = 0; end
+        so_beats = 0; so_err = 0; so_words = 0; so_nb[0] = 0; so_nb[1] = 0; so_ph[0] = 0; so_ph[1] = 0; so_t0 = -1;
+        so_wfirst = -1; so_wlast = -1; so_gfirst = -1; so_glast = -1; t_sot = 1 << 30;
         build_frames();
         j_cyc = start2 + 8; q_cyc = start2 + 40;
     endtask
