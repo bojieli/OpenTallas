@@ -1,0 +1,338 @@
+{
+  "schema": "peer.complete_nonclock_stage_overlay.v1",
+  "identity_sha256": "f4e123c11d50b34f19f88b593dc891e0a65d2e0b5bd98987b17a1246852024e9",
+  "pin_model_sha256": "c8e47012ef182cd955361c083448047a6ab4714769cdcc84a65779ed6bbe1def",
+  "scope": "Actual frozen3_place plus nominal boundary-only pin/FF overlay, interior FFs unchanged except named boundary targets; macro translations follow the candidate explicit two-slot swap. Standardcell centers approximate actual pin XY; macro actualpin. data_stage_edges augmented with all captured nondata seq controls and output-port roots; constants retained in separate source identity. No legalization, reach or physical approval.",
+  "counts": {
+    "actual_preCTS:data_to_seq_or_memory:pairs": 1955528,
+    "nominal_boundary_overlay:data_to_seq_or_memory:pairs": 1955528,
+    "actual_preCTS:data_to_seq_or_memory:over405": 182944,
+    "nominal_boundary_overlay:data_to_seq_or_memory:over405": 181982,
+    "actual_preCTS:async_or_other_seq_control:pairs": 9670,
+    "nominal_boundary_overlay:async_or_other_seq_control:pairs": 9670,
+    "actual_preCTS:async_or_other_seq_control:over405": 15,
+    "nominal_boundary_overlay:async_or_other_seq_control:over405": 15,
+    "actual_preCTS:roots_to_output_port:pairs": 3223,
+    "nominal_boundary_overlay:roots_to_output_port:pairs": 3223
+  },
+  "max_L1_um": {
+    "actual_preCTS:data_to_seq_or_memory": 712.5840000000001,
+    "nominal_boundary_overlay:data_to_seq_or_memory": 709.3492508038585,
+    "actual_preCTS:async_or_other_seq_control": 438.426,
+    "nominal_boundary_overlay:async_or_other_seq_control": 437.977,
+    "actual_preCTS:roots_to_output_port": 9.830999999999996,
+    "nominal_boundary_overlay:roots_to_output_port": 8.0
+  },
+  "worst": {
+    "actual_preCTS:data_to_seq_or_memory": {
+      "root": {
+        "name": "u69576_c0/u_cell/QN",
+        "instance": "u69576_c0/u_cell",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          345.222,
+          25.245
+        ],
+        "net": "n31135_c0",
+        "net_id": 29443
+      },
+      "endpoint": {
+        "name": "u75841_c0/u_cell/D",
+        "instance": "u75841_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          3.078,
+          395.685
+        ],
+        "net": "u75841_c0/net70453",
+        "net_id": 101025
+      },
+      "evaluated_root_xy": [
+        345.222,
+        25.245
+      ],
+      "evaluated_endpoint_xy": [
+        3.078,
+        395.685
+      ],
+      "L1_um": 712.5840000000001
+    },
+    "nominal_boundary_overlay:data_to_seq_or_memory": {
+      "root": {
+        "name": "u69576_c0/u_cell/QN",
+        "instance": "u69576_c0/u_cell",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          345.222,
+          25.245
+        ],
+        "net": "n31135_c0",
+        "net_id": 29443
+      },
+      "endpoint": {
+        "name": "u75841_c0/u_cell/D",
+        "instance": "u75841_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "data_next_state",
+        "xy_um": [
+          3.078,
+          395.685
+        ],
+        "net": "u75841_c0/net70453",
+        "net_id": 101025
+      },
+      "evaluated_root_xy": [
+        345.222,
+        25.245
+      ],
+      "evaluated_endpoint_xy": [
+        8,
+        397.37225080385855
+      ],
+      "L1_um": 709.3492508038585
+    },
+    "actual_preCTS:async_or_other_seq_control": {
+      "root": {
+        "name": "u61138_c0/u_cell/QN",
+        "instance": "u61138_c0/u_cell",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          467.964,
+          259.335
+        ],
+        "net": "n49710_c0",
+        "net_id": 41394
+      },
+      "endpoint": {
+        "name": "u60022_c1/u_cell/RESETN",
+        "instance": "u60022_c1/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "kind": "asynchronous_preset",
+        "xy_um": [
+          259.038,
+          488.835
+        ],
+        "net": "net81778",
+        "net_id": 107491,
+        "roots": [
+          {
+            "name": "u59951_c0/u_cell/QN",
+            "instance": "u59951_c0/u_cell",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "kind": "sequential_output",
+            "xy_um": [
+              258.066,
+              464.805
+            ],
+            "net": "n49718_c0",
+            "net_id": 41398
+          },
+          {
+            "name": "u61138_c0/u_cell/QN",
+            "instance": "u61138_c0/u_cell",
+            "master": "DFFHQNx3_ASAP7_75t_R",
+            "pin": "QN",
+            "kind": "sequential_output",
+            "xy_um": [
+              467.964,
+              259.335
+            ],
+            "net": "n49710_c0",
+            "net_id": 41394
+          }
+        ],
+        "constant_sources": []
+      },
+      "evaluated_root_xy": [
+        467.964,
+        259.335
+      ],
+      "evaluated_endpoint_xy": [
+        259.038,
+        488.835
+      ],
+      "L1_um": 438.426
+    },
+    "nominal_boundary_overlay:async_or_other_seq_control": {
+      "root": {
+        "name": "u61138_c0/u_cell/QN",
+        "instance": "u61138_c0/u_cell",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          467.964,
+          259.335
+        ],
+        "net": "n49710_c0",
+        "net_id": 41394
+      },
+      "endpoint": {
+        "name": "u60022_c1/u_cell/RESETN",
+        "instance": "u60022_c1/u_cell",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "RESETN",
+        "kind": "asynchronous_preset",
+        "xy_um": [
+          259.038,
+          488.835
+        ],
+        "net": "net81778",
+        "net_id": 107491,
+        "roots": [
+          {
+            "name": "u59951_c0/u_cell/QN",
+            "instance": "u59951_c0/u_cell",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "kind": "sequential_output",
+            "xy_um": [
+              258.066,
+              464.805
+            ],
+            "net": "n49718_c0",
+            "net_id": 41398
+          },
+          {
+            "name": "u61138_c0/u_cell/QN",
+            "instance": "u61138_c0/u_cell",
+            "master": "DFFHQNx3_ASAP7_75t_R",
+            "pin": "QN",
+            "kind": "sequential_output",
+            "xy_um": [
+              467.964,
+              259.335
+            ],
+            "net": "n49710_c0",
+            "net_id": 41394
+          }
+        ],
+        "constant_sources": []
+      },
+      "evaluated_root_xy": [
+        467.2,
+        259.02
+      ],
+      "evaluated_endpoint_xy": [
+        259.038,
+        488.835
+      ],
+      "L1_um": 437.977
+    },
+    "actual_preCTS:roots_to_output_port": {
+      "root": {
+        "name": "u75530_c0/u_cell/QN",
+        "instance": "u75530_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          8.856,
+          188.595
+        ],
+        "net": "n40903_c0",
+        "net_id": 36976
+      },
+      "endpoint": {
+        "net": "u_rank__program_rx_d[169]",
+        "net_id": 114674,
+        "name": "port:u_rank__program_rx_d[169]",
+        "pin": "u_rank__program_rx_d[169]",
+        "kind": "port_bit",
+        "xy_um": [
+          0.042,
+          189.612
+        ],
+        "direction": "OUTPUT",
+        "base_port": "u_rank__program_rx_d",
+        "bit": 169,
+        "spec_face": "W",
+        "actual_nearest_face": "W",
+        "pin_boxes_um": [
+          [
+            0.0,
+            189.6,
+            0.084,
+            189.624
+          ]
+        ],
+        "data_input_flops": [],
+        "data_output_flops": [
+          "u75530_c0/u_cell/QN"
+        ]
+      },
+      "evaluated_root_xy": [
+        8.856,
+        188.595
+      ],
+      "evaluated_endpoint_xy": [
+        0.042,
+        189.612
+      ],
+      "L1_um": 9.830999999999996
+    },
+    "nominal_boundary_overlay:roots_to_output_port": {
+      "root": {
+        "name": "u58740_c0/u_cell/QN",
+        "instance": "u58740_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          468.504,
+          89.505
+        ],
+        "net": "n49356_c0",
+        "net_id": 41215
+      },
+      "endpoint": {
+        "net": "accepted_ranks[0]",
+        "net_id": 116332,
+        "name": "port:accepted_ranks[0]",
+        "pin": "accepted_ranks[0]",
+        "kind": "port_bit",
+        "xy_um": [
+          475.158,
+          89.148
+        ],
+        "direction": "OUTPUT",
+        "base_port": "accepted_ranks",
+        "bit": 0,
+        "spec_face": "E",
+        "actual_nearest_face": "E",
+        "pin_boxes_um": [
+          [
+            475.116,
+            89.136,
+            475.2,
+            89.16
+          ]
+        ],
+        "data_input_flops": [],
+        "data_output_flops": [
+          "u58740_c0/u_cell/QN"
+        ]
+      },
+      "evaluated_root_xy": [
+        467.2,
+        82.438
+      ],
+      "evaluated_endpoint_xy": [
+        475.2,
+        82.438
+      ],
+      "L1_um": 8.0
+    }
+  }
+}

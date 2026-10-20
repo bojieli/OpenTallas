@@ -2,13 +2,15 @@
 from pathlib import Path
 import json,collections,math,sys
 p=Path(sys.argv[1]);d=json.loads(p.read_text());ports={x['name'][5:]:x for x in d['port_bits']};pairs=d['all_boundary_macro_pairs'];width,height=475.2,518.4
+mode=sys.argv[2] if len(sys.argv)>2 else 'pll_s';assert mode in ('pll_s','derived_reset_e')
 model={};reserved={'ck_core','por_n','host_rst_n','u_rank__u_control__por_n','pll_locked'}
 tx={x for x in ports if x.startswith('u_rank__tx_d[')}|{'u_rank__tx_v','u_rank__tx_cr'};assert len(tx)==530
 # Keep the existing reset/clock port faces and positions. PLL face relocation is a ROOT-only parent clock-status proposal.
 for n in reserved:
  v=ports[n];face=v['actual_nearest_face'];along=v['xy_um'][1 if face in 'WE' else 0]
- if n=='pll_locked':face,along='S',238.2
- model[n]={'face':face,'along_um':along,'reason':'preserve reset/clock anchor' if n!='pll_locked' else 'PROPOSE PLL status S beside existing derived reset; ROOT parent-binding approval required'}
+ if n=='pll_locked' and mode=='pll_s':face,along='S',238.2
+ if n=='u_rank__u_control__por_n' and mode=='derived_reset_e':face,along='E',259.8
+ model[n]={'face':face,'along_um':along,'reason':'MODEL '+mode+'; raw clock/reset anchors retained, changed PLL/derived-reset face needs ROOT parent binding'}
 byport=collections.defaultdict(list)
 for q in pairs:
  for n in q['root_ports']['input']:byport[n].append(q['endpoint']['xy_um'][1])
@@ -46,5 +48,5 @@ for face,slots in face_pins.items():
 fixed=[]
 for q in d['fixed_boundary_pairs_over405']:
  a=ffmap[q['root']['instance']];b=ffmap[q['endpoint']['instance']];dist=sum(abs(x-y) for x,y in zip(a,b));fixed.append({'root_ports':q['root_ports'],'endpoint_ports':q['endpoint_ports'],'proposed_root_xy':a,'proposed_endpoint_xy':b,'L1_um':dist,'pass405':dist<=405})
-r={'schema':'peer.proposed_pin_map.geometry_only.v1','status':'MODEL_ONLY_NOT_ADOPTED','outline_um':[width,height],'macro_origins_orientations':'unchanged exact p32a actual R0 macros; actual per-bit WD split respected','added_data_edges':0,'source_sha256':'1277bb49de6e8e577c431282c5d8a057211f6e0ff06e6674b78b37393fce4336','input_odb_sha256':d['odb_sha256'],'nominal_capture_face_inset_um':8,'physical_scope':'Nominal projection model only: row legalization, actual pin access, per-FF cell extent, clock/reset landing routing, interior stage repack, timing and all-stage overlay still OPEN. No kit/source changes. Native/current gate failures retained.','parent_contract_change':'TX data[527:0]/valid/credit E->W; PLL status E->S proposed. Raw por_n E, host_rst_n S, ck_core W and derived reset S stay exact current port coordinates. ROOT must approve coherent parent model before implementation.','all_boundary_macro_pairs':len(checks),'boundary_macro_over405':sum(not x['pass405']for x in checks),'boundary_macro_max_L1_um':max(x['L1_um']for x in checks),'face_density':summary,'fixed_pair_checks':fixed,'ports':model,'FF_nominal_targets':ffmap,'bit_pin_checks':checks}
-p.with_name('pin_model.json').write_text(json.dumps(r,indent=2)+'\n');print({k:v for k,v in r.items() if k not in ('ports','FF_nominal_targets','bit_pin_checks')})
+r={'schema':'peer.proposed_pin_map.geometry_only.v1','status':'MODEL_ONLY_NOT_ADOPTED','outline_um':[width,height],'macro_origins_orientations':'unchanged exact p32a actual R0 macros; actual per-bit WD split respected','added_data_edges':0,'source_sha256':'1277bb49de6e8e577c431282c5d8a057211f6e0ff06e6674b78b37393fce4336','input_odb_sha256':d['odb_sha256'],'nominal_capture_face_inset_um':8,'physical_scope':'Nominal projection model only: row legalization, actual pin access, per-FF cell extent, clock/reset landing routing, interior stage repack, timing and all-stage overlay still OPEN. No kit/source changes. Native/current gate failures retained.','parent_contract_change':'TX data[527:0]/valid/credit E->W; '+('PLLstatus E->S; derivedreset staysS.' if mode=='pll_s' else 'Derivedreset output S->E; PLLstatus staysE.')+' Raw por_n E/host_rst_n S/ck_core W unchanged. ROOT coherent parent approval required.','all_boundary_macro_pairs':len(checks),'boundary_macro_over405':sum(not x['pass405']for x in checks),'boundary_macro_max_L1_um':max(x['L1_um']for x in checks),'face_density':summary,'fixed_pair_checks':fixed,'ports':model,'FF_nominal_targets':ffmap,'bit_pin_checks':checks}
+p.with_name('pin_model.json' if mode=='pll_s' else 'pin_model_reset_e.json').write_text(json.dumps(r,indent=2)+'\n');print({k:v for k,v in r.items() if k not in ('ports','FF_nominal_targets','bit_pin_checks')})
