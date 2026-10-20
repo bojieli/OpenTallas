@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_col_idx256_1019-pg1-59616a483 bench bench_idx256_11 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256_1019-pg1-59616a483 log cl/bench_idx256_11.a1b1.log captured 2026-10-19T16:45:32-07:00
+# fail_regex 'IDX256_FAIL'
+[44527000] %Fatal: tb_idx256.sv:73: Assertion failed in tb_idx256.unnamedblk5: IDX256_FAIL missing need rejection MUT11 k0
+%Error: rtl/test/hbm_collar_idx256/tb_idx256.sv:73: Verilog $stop
+Aborting...
