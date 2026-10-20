@@ -5,6 +5,30 @@
 // final datapath loads. Region counters/reset/epochs/first-use edges unchanged.
 // W<=116 bounds source en_s0 fanout at29 data+1meta+en_icg+en_qm=32.
 // This modeled bound still requires mapped all-root census before any gate.
+// Same-edge receiver calendar copies, one per <=4 data regions. No protocol edge is added.
+(* keep_hierarchy = "yes" *)
+module ot_qfd_land8_ctrl_copy #(parameter integer ID=0)(
+ input wire ck, input wire rs, input wire [3:0] k,
+ output wire [2:0] nxt_o, output wire [2:0] seed_o
+);
+ (* keep="true", dont_touch="true" *) reg rs0,rs1;
+ always @(posedge ck or negedge rs) if (!rs) rs0<=1'b0;else rs0<=1'b1;
+ always @(posedge ck or negedge rs0) if (!rs0) rs1<=1'b0;else rs1<=1'b1;
+ (* keep="true", dont_touch="true" *) reg [3:0] k_q,rc;
+`ifdef OT_QFD_LAND8_MUT_K3
+ always @(posedge ck) k_q<={1'b0,k[2:0]};
+`else
+ always @(posedge ck) k_q<=k;
+`endif
+ always @(posedge ck or negedge rs1) if (!rs1) rc<=4'b0;else rc<=rc+1'b1;
+`ifdef OT_QFD_LAND8_MUT_SEL
+ wire [3:0] nxt=rc+4'd2-k_q;wire [3:0] seed=4'd1-k_q;
+`else
+ wire [3:0] nxt=rc+4'd1-k_q;wire [3:0] seed=4'd0-k_q;
+`endif
+ assign nxt_o=nxt[2:0];assign seed_o=seed[2:0];
+endmodule
+
 module ot_qfd_land8_fan32 #(
     parameter integer W    = 32,
     parameter integer ICG  = 1       // 1: hop-0 clock gate on ck_s (registered enable); 0: no gate (fallback)
@@ -79,13 +103,20 @@ module ot_qfd_land8_fan32 #(
     // ---------------------------------------------------------------- data regions + metadata region
     wire [W-1:0] o_r;
     assign o = o_r;
+    localparam integer NC=(NR+3)/4;
+    wire [NC*3-1:0] local_nxt,local_seed;
+    genvar c;
+    generate for(c=0;c<NC;c=c+1)begin:g_ctrl
+      ot_qfd_land8_ctrl_copy #(.ID(c)) u_ctrl(
+        .ck(ck),.rs(rs),.k(k),.nxt_o(local_nxt[c*3+:3]),.seed_o(local_seed[c*3+:3]));
+    end endgenerate
     genvar r;
     generate for (r = 0; r < NR; r = r + 1) begin : g_region
         localparam integer LO = r * 4, N = (W - LO < 4) ? W - LO : 4;
         wire [7:0] vld_u, rds_u;
         ot_qfd_land8_region #(.W(N)) u_region (
             .wck(wck), .ckw(ck_s), .en_s0(en_s0), .i(i[LO +: N]), .ck(ck), .rs0(rs0),
-            .rnext(nxt[2:0]), .rseed(seed[2:0]), .warm_next(warm_next),
+            .rnext(local_nxt[(r/4)*3+:3]), .rseed(local_seed[(r/4)*3+:3]), .warm_next(warm_next),
             .vld_o(vld_u), .rdsel_o(rds_u), .o(o_r[LO +: N]));
     end endgenerate
     // metadata: the write epoch of every slot, read through the region's own select into an aligned compare

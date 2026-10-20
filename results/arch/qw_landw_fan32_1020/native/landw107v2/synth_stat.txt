@@ -1,0 +1,528 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       38        - wires
+       45        -       45        - wire bits
+       15        -       15        - public wires
+       22        -       22        - public wire bits
+        5        -        5        - ports
+       12        -       12        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       39    6.255       39    6.255 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AO21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        6    2.274        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        7    0.306        7    0.306   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        3    0.481        3    0.481   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000000': 6.254820
+     of which used for sequential elements: 3.440880 (55.01%)
+
+=== $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       38        - wires
+       45        -       45        - wire bits
+       15        -       15        - public wires
+       22        -       22        - public wire bits
+        5        -        5        - ports
+       12        -       12        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       39    6.255       39    6.255 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AO21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        6    2.274        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        7    0.306        7    0.306   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        3    0.481        3    0.481   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000001': 6.254820
+     of which used for sequential elements: 3.440880 (55.01%)
+
+=== $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000010 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       38        - wires
+       45        -       45        - wire bits
+       15        -       15        - public wires
+       22        -       22        - public wire bits
+        5        -        5        - ports
+       12        -       12        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       39    6.255       39    6.255 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AO21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        6    2.274        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        7    0.306        7    0.306   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        3    0.481        3    0.481   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000010': 6.254820
+     of which used for sequential elements: 3.440880 (55.01%)
+
+=== $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       38        - wires
+       45        -       45        - wire bits
+       15        -       15        - public wires
+       22        -       22        - public wire bits
+        5        -        5        - ports
+       12        -       12        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       39    6.255       39    6.255 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AO21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        6    2.274        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        7    0.306        7    0.306   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        3    0.481        3    0.481   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000011': 6.254820
+     of which used for sequential elements: 3.440880 (55.01%)
+
+=== $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000100 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       38        - wires
+       45        -       45        - wire bits
+       15        -       15        - public wires
+       22        -       22        - public wire bits
+        5        -        5        - ports
+       12        -       12        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       39    6.255       39    6.255 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AO21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        6    2.274        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        7    0.306        7    0.306   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        3    0.481        3    0.481   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000100': 6.254820
+     of which used for sequential elements: 3.440880 (55.01%)
+
+=== $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000101 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       38        - wires
+       45        -       45        - wire bits
+       15        -       15        - public wires
+       22        -       22        - public wire bits
+        5        -        5        - ports
+       12        -       12        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       39    6.255       39    6.255 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AO21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        6    2.274        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        7    0.306        7    0.306   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        3    0.481        3    0.481   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000101': 6.254820
+     of which used for sequential elements: 3.440880 (55.01%)
+
+=== $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000110 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       38        -       38        - wires
+       45        -       45        - wire bits
+       15        -       15        - public wires
+       22        -       22        - public wire bits
+        5        -        5        - ports
+       12        -       12        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       39    6.255       39    6.255 cells
+        3    0.262        3    0.262   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AO21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        6    2.274        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        7    0.306        7    0.306   INVx1_ASAP7_75t_R
+        2    0.117        2    0.117   INVx2_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        3    0.481        3    0.481   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000110': 6.254820
+     of which used for sequential elements: 3.440880 (55.01%)
+
+=== $paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+      210        -      210        - wires
+      232        -      232        - wire bits
+       40        -       40        - public wires
+       62        -       62        - public wire bits
+       12        -       12        - ports
+       34        -       34        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      217    31.58      217    31.58 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        6      0.7        6      0.7   AND4x2_ASAP7_75t_R
+        4     0.35        4     0.35   AO21x1_ASAP7_75t_R
+        3     0.35        3     0.35   AO32x1_ASAP7_75t_R
+        1    0.117        1    0.117   AOI21x1_ASAP7_75t_R
+        1    0.146        1    0.146   AOI22x1_ASAP7_75t_R
+       20    1.458       20    1.458   BUFx2_ASAP7_75t_R
+        2    0.292        2    0.292   BUFx6f_ASAP7_75t_R
+       19    7.203       19    7.203   DFFASRHQNx1_ASAP7_75t_R
+       35   10.206       35   10.206   DFFHQNx1_ASAP7_75t_R
+       26    1.137       26    1.137   INVx1_ASAP7_75t_R
+        7    0.408        7    0.408   INVx2_ASAP7_75t_R
+       29    2.537       29    2.537   NAND2x1_ASAP7_75t_R
+        3    0.437        3    0.437   NAND2x2_ASAP7_75t_R
+        7    0.612        7    0.612   NOR2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+       20    2.333       20    2.333   OAI21x1_ASAP7_75t_R
+       24    2.449       24    2.449   OR4x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000011': 31.580280
+     of which used for sequential elements: 17.408520 (55.12%)
+
+=== $paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000100 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+      230        -      230        - wires
+      254        -      254        - wire bits
+       40        -       40        - public wires
+       64        -       64        - public wire bits
+       12        -       12        - ports
+       36        -       36        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      238   35.823      238   35.823 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        5    0.437        5    0.437   AO21x1_ASAP7_75t_R
+        3     0.35        3     0.35   AO32x1_ASAP7_75t_R
+        1    0.117        1    0.117   AOI21x1_ASAP7_75t_R
+        1    0.146        1    0.146   AOI22x1_ASAP7_75t_R
+       21    1.531       21    1.531   BUFx2_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+       19    7.203       19    7.203   DFFASRHQNx1_ASAP7_75t_R
+       44    12.83       44    12.83   DFFHQNx1_ASAP7_75t_R
+       26    1.137       26    1.137   INVx1_ASAP7_75t_R
+        8    0.467        8    0.467   INVx2_ASAP7_75t_R
+       36    3.149       36    3.149   NAND2x1_ASAP7_75t_R
+        8      0.7        8      0.7   NOR2x1_ASAP7_75t_R
+        1    0.102        1    0.102   OA21x2_ASAP7_75t_R
+       27    3.149       27    3.149   OAI21x1_ASAP7_75t_R
+       16    2.333       16    2.333   OAI22x1_ASAP7_75t_R
+        8    0.816        8    0.816   OR3x2_ASAP7_75t_R
+        4    0.467        4    0.467   OR4x2_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000100': 35.823060
+     of which used for sequential elements: 20.032920 (55.92%)
+
+=== ot_qfd_land8_gate ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        4        -        4        - wire bits
+        3        -        3        - public wires
+        3        -        3        - public wire bits
+        3        -        3        - ports
+        3        -        3        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.306        2    0.306 cells
+        1    0.262        1    0.262   ICGx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+
+   Chip area for module '\ot_qfd_land8_gate': 0.306180
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== qfd_landh0d8f_107_EW_44x44 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     7295        -      605        - wires
+     8226        -      817        - wire bits
+     1754        -      526        - public wires
+     2685        -      738        - public wire bits
+      387        -       13        - ports
+     1318        -      225        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     7018  1059.31      100   16.417 cells
+      249   21.783        4     0.35   AND2x2_ASAP7_75t_R
+        1    0.146        1    0.146   AND2x4_ASAP7_75t_R
+        2    0.175        2    0.175   AND3x1_ASAP7_75t_R
+        1    0.102        1    0.102   AND4x1_ASAP7_75t_R
+        7    0.816        1    0.117   AND4x2_ASAP7_75t_R
+      149   13.035        3    0.262   AO21x1_ASAP7_75t_R
+        1    0.102        1    0.102   AO21x2_ASAP7_75t_R
+        3    0.437        3    0.437   AO221x1_ASAP7_75t_R
+        2    0.262        2    0.262   AO22x1_ASAP7_75t_R
+       84    9.798        -        -   AO32x1_ASAP7_75t_R
+       28    3.266        -        -   AOI21x1_ASAP7_75t_R
+       28    4.082        -        -   AOI22x1_ASAP7_75t_R
+        1    0.262        1    0.262   BUFx12f_ASAP7_75t_R
+      598   43.594        4    0.292   BUFx2_ASAP7_75t_R
+        3    0.262        3    0.262   BUFx3_ASAP7_75t_R
+       29    4.228        -        -   BUFx6f_ASAP7_75t_R
+      589  223.278       15    5.686   DFFASRHQNx1_ASAP7_75t_R
+     1260  367.416        9    2.624   DFFHQNx1_ASAP7_75t_R
+        1    0.262        -        -   ICGx1_ASAP7_75t_R
+      792   34.642       15    0.656   INVx1_ASAP7_75t_R
+      238    13.88        1    0.058   INVx2_ASAP7_75t_R
+        7    0.612        -        -   INVx4_ASAP7_75t_R
+        1    0.146        1    0.146   INVx8_ASAP7_75t_R
+        2    0.262        2    0.262   MAJx2_ASAP7_75t_R
+     1009   88.267        1    0.087   NAND2x1_ASAP7_75t_R
+        3    0.437        -        -   NAND2x2_ASAP7_75t_R
+      226    19.77        3    0.262   NOR2x1_ASAP7_75t_R
+       36    3.674        1    0.102   OA21x2_ASAP7_75t_R
+      750    87.48        1    0.117   OAI21x1_ASAP7_75t_R
+      432   62.986        -        -   OAI22x1_ASAP7_75t_R
+        9    0.787        2    0.175   OR3x1_ASAP7_75t_R
+      216   22.045        -        -   OR3x2_ASAP7_75t_R
+       31    3.164        -        -   OR4x1_ASAP7_75t_R
+      108   12.597        -        -   OR4x2_ASAP7_75t_R
+       36    1.575        1    0.044   TIEHIx1_ASAP7_75t_R
+        2    0.087        1    0.044   TIELOx1_ASAP7_75t_R
+        8      1.4        1    0.175   XNOR2x1_ASAP7_75t_R
+       43    6.896        8    1.283   XNOR2x2_ASAP7_75t_R
+       33    5.293       12    1.925   XOR2x2_ASAP7_75t_R
+       36 1.04E+03       36        - submodules
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000000
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000001
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000010
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000011
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000100
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000101
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000110
+        1    31.58        1        -   $paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000011
+       27  967.223       27        -   $paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000100
+        1    0.306        1        -   ot_qfd_land8_gate
+
+   Chip area for module '\qfd_landh0d8f_107_EW_44x44': 1059.309900
+     of which used for sequential elements: 590.694120 (55.76%)
+
+=== design hierarchy ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     7018  1059.31      100   16.417 qfd_landh0d8f_107_EW_44x44
+       39    6.255       39    6.255 $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000000
+       39    6.255       39    6.255 $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000001
+       39    6.255       39    6.255 $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000010
+       39    6.255       39    6.255 $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000011
+       39    6.255       39    6.255 $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000100
+       39    6.255       39    6.255 $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000101
+       39    6.255       39    6.255 $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000110
+      217    31.58      217    31.58 $paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000011
+      238   35.823      238   35.823 $paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000100
+        2    0.306        2    0.306 ot_qfd_land8_gate
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     7295        -      605        - wires
+     8226        -      817        - wire bits
+     1754        -      526        - public wires
+     2685        -      738        - public wire bits
+      387        -       13        - ports
+     1318        -      225        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     7018  1059.31      100   16.417 cells
+      249   21.783        4     0.35   AND2x2_ASAP7_75t_R
+        1    0.146        1    0.146   AND2x4_ASAP7_75t_R
+        2    0.175        2    0.175   AND3x1_ASAP7_75t_R
+        1    0.102        1    0.102   AND4x1_ASAP7_75t_R
+        7    0.816        1    0.117   AND4x2_ASAP7_75t_R
+      149   13.035        3    0.262   AO21x1_ASAP7_75t_R
+        1    0.102        1    0.102   AO21x2_ASAP7_75t_R
+        3    0.437        3    0.437   AO221x1_ASAP7_75t_R
+        2    0.262        2    0.262   AO22x1_ASAP7_75t_R
+       84    9.798        -        -   AO32x1_ASAP7_75t_R
+       28    3.266        -        -   AOI21x1_ASAP7_75t_R
+       28    4.082        -        -   AOI22x1_ASAP7_75t_R
+        1    0.262        1    0.262   BUFx12f_ASAP7_75t_R
+      598   43.594        4    0.292   BUFx2_ASAP7_75t_R
+        3    0.262        3    0.262   BUFx3_ASAP7_75t_R
+       29    4.228        -        -   BUFx6f_ASAP7_75t_R
+      589  223.278       15    5.686   DFFASRHQNx1_ASAP7_75t_R
+     1260  367.416        9    2.624   DFFHQNx1_ASAP7_75t_R
+        1    0.262        -        -   ICGx1_ASAP7_75t_R
+      792   34.642       15    0.656   INVx1_ASAP7_75t_R
+      238    13.88        1    0.058   INVx2_ASAP7_75t_R
+        7    0.612        -        -   INVx4_ASAP7_75t_R
+        1    0.146        1    0.146   INVx8_ASAP7_75t_R
+        2    0.262        2    0.262   MAJx2_ASAP7_75t_R
+     1009   88.267        1    0.087   NAND2x1_ASAP7_75t_R
+        3    0.437        -        -   NAND2x2_ASAP7_75t_R
+      226    19.77        3    0.262   NOR2x1_ASAP7_75t_R
+       36    3.674        1    0.102   OA21x2_ASAP7_75t_R
+      750    87.48        1    0.117   OAI21x1_ASAP7_75t_R
+      432   62.986        -        -   OAI22x1_ASAP7_75t_R
+        9    0.787        2    0.175   OR3x1_ASAP7_75t_R
+      216   22.045        -        -   OR3x2_ASAP7_75t_R
+       31    3.164        -        -   OR4x1_ASAP7_75t_R
+      108   12.597        -        -   OR4x2_ASAP7_75t_R
+       36    1.575        1    0.044   TIEHIx1_ASAP7_75t_R
+        2    0.087        1    0.044   TIELOx1_ASAP7_75t_R
+        8      1.4        1    0.175   XNOR2x1_ASAP7_75t_R
+       43    6.896        8    1.283   XNOR2x2_ASAP7_75t_R
+       33    5.293       12    1.925   XOR2x2_ASAP7_75t_R
+       36 1.04E+03       36        - submodules
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000000
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000001
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000010
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000011
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000100
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000101
+        1    6.255        1        -   $paramod\ot_qfd_land8_ctrl_copy\ID=s32'00000000000000000000000000000110
+        1    31.58        1        -   $paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000011
+       27  967.223       27        -   $paramod\ot_qfd_land8_region\W=s32'00000000000000000000000000000100
+        1    0.306        1        -   ot_qfd_land8_gate
+
+   Chip area for top module '\qfd_landh0d8f_107_EW_44x44': 1059.309900
+     of which used for sequential elements: 590.694120 (55.76%)
+

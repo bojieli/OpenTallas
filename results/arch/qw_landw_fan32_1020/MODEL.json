@@ -20,7 +20,10 @@
         60,
         60
       ],
-      "outline_basis": "provisional50percent density; replace from actual mappedarea before gate"
+      "outline_basis": "provisional50percent density; replace from actual mappedarea before gate",
+      "calendar_copies": 7,
+      "modeled_extra_calendar_ff": 70,
+      "input_rs_max_firststage_sinks": 8
     },
     {
       "width": 116,
@@ -36,7 +39,12 @@
         60,
         60
       ],
-      "outline_basis": "provisional50percent density; replace from actual mappedarea before gate"
+      "outline_basis": "provisional50percent density; replace from actual mappedarea before gate",
+      "calendar_copies": 8,
+      "modeled_extra_calendar_ff": 80,
+      "input_rs_max_firststage_sinks": 9
     }
-  ]
+  ],
+  "revision": 2,
+  "same_edge_calendar_copies": "ceil(NR/4) keptlocal receiver counters/K flops, each own2stage reset landing; metadata remains originalcounter; no warm/read edge change"
 }
