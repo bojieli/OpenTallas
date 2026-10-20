@@ -203,6 +203,46 @@ module qfd_dv_cmd_cal_mu #(
                 sb_n = 1'b1;
         end
     end
+    // CTLM8 (same value as sb_n): the seal check per candidate word, so the dw_v / pw_v decode only SELECTS.
+    // One dw write replaces at most one word k; meta_n is meta_rows, 0 or pw_data[27:18].
+    function automatic sgb8(input [63:0] d, input [9:0] n);
+        reg [18:0] cs, cc, ct;
+        begin
+            cs = {3'd0, d[31:16]} ^ {3'd0, d[15:0]} ^ {1'b0, 8'hff, ~n};
+            cc = {(({3'd0, d[31:16]} & {3'd0, d[15:0]}) | ({3'd0, d[31:16]} & {1'b0, 8'hff, ~n}) |
+                   ({3'd0, d[15:0]} & {1'b0, 8'hff, ~n})), 1'b0} & 19'h7ffff;
+            ct = cs + cc;
+            sgb8 = d[63:32] != 32'd0 || (d[15:0] != 16'd0 && (d[17:16] != 2'd0 || ct[18]));
+        end
+    endfunction
+    function automatic [9:0] nent8(input [63:0] d);
+        nent8 = CALENDAR_ROM ? d[9:0] : {1'b0, d[8:0]};
+    endfunction
+    function automatic hdr8(input [63:0] d);   // header word checks except the metadata overlap
+        reg [9:0] b, n;
+        begin
+            b = d[25:16]; n = nent8(d);
+            hdr8 = (CALENDAR_ROM ? (d[63:32] != 32'h43414c52 || d[31:10] != 22'd0) :
+                    (d[63:32] != 32'h43414c44 || d[31:26] != 6'd0 || d[15:9] != 7'd0 || b[2:0] != 3'd0 ||
+                     {1'b0, b} + {n, 1'b0} > 11'd976)) || n == 10'd0;
+        end
+    endfunction
+    wire        k0_8 = dw_v && dw_addr == 3'd0;
+    wire        mz_8 = pw_v && pw_addr == 10'd0, mp_8 = pw_v && pw_addr == 10'd1017 && !mz_8;
+    wire [9:0]  bo_8 = dwr[0][25:16], bw_8 = dw_data[25:16];
+    wire        lt_o8 = mz_8 ? 1'b0 : mp_8 ? ({4'd0, bo_8} < {pw_data[27:18], 4'd0}) : ({4'd0, bo_8} < {meta_rows, 4'd0});
+    wire        lt_w8 = mz_8 ? 1'b0 : mp_8 ? ({4'd0, bw_8} < {pw_data[27:18], 4'd0}) : ({4'd0, bw_8} < {meta_rows, 4'd0});
+    wire        t0_o8 = hdr8(dwr[0]) || (!CALENDAR_ROM && lt_o8), t0_w8 = hdr8(dw_data) || (!CALENDAR_ROM && lt_w8);
+    wire [9:0]  no_8 = nent8(dwr[0]), nw_8 = nent8(dw_data);
+    reg         sb8;
+    integer     s8;
+    always @* begin
+        sb8 = k0_8 ? t0_w8 : t0_o8;
+        for (s8 = 1; s8 <= 4; s8 = s8 + 1)
+            if ((dw_v && dw_addr == s8) ? sgb8(dw_data, no_8) : k0_8 ? sgb8(dwr[s8], nw_8) : sgb8(dwr[s8], no_8)) sb8 = 1'b1;
+        if (CTX_DW == 0 && (((dw_v && dw_addr == 3'd5) ? dw_data : dwr[5]) != 64'd0 ||
+                            ((dw_v && dw_addr == 3'd6) ? dw_data : dwr[6]) != 64'd0)) sb8 = 1'b1;
+    end
     // CTLM7: the image end base + 2*nent (11 b, as the original expression) for the TLOAD
     // overlap check, registered from the exact next-state of dwr[0] (0 at reset = f(0)).
     reg  [10:0] bend_r; reg [7:0] bend_c;
@@ -210,7 +250,7 @@ module qfd_dv_cmd_cal_mu #(
     wire [11:0] bend_up = {1'b0, bend_n} + 12'd15;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin sb_r <= 1'b1; bend_r <= 11'd0; bend_c <= 8'd0; end   // all-zero dwr: nent == 0 -> bad
-        else begin sb_r <= sb_n; bend_r <= bend_n; bend_c <= bend_up[11:4]; end
+        else begin sb_r <= sb8; bend_r <= bend_n; bend_c <= bend_up[11:4]; end   // CTLM8: sb8 == sb_n
     assign seal_bad = sb_r || dw_data != 64'd0;
     reg         pw_v2, pw_b2; reg [5:0] pw_row2; reg [7:0] pw_sl2; reg [63:0] pw_d2;
     reg         dw_v2; reg [2:0] dw_a2; reg [63:0] dw_d2;
@@ -495,7 +535,10 @@ module qfd_dv_cmd_cal_mu #(
         for (gcs = 0; gcs < 4; gcs = gcs + 1) begin : g_src
             wire [11:0] x = (gcs == 0) ? dsw[gcd] : (gcs == 1) ? dsb[gcd] : (gcs == 2) ? dsr[gcd] : dlt[0];
             wire [13:0] lo;   // {0, plo} - {00, x}: signed, -4095 .. 4096
-            ot_ks_add #(.W(14)) u_lo (.a({1'b0, plo}), .b({2'b11, ~x}), .cin(1'b1), .s(lo));
+            // = plo - x as dq_lo + ~x + run + 1: one 3:2 compressor + one 14-b KS (no plo carry chain in series)
+            wire [13:0] la = {2'b00, dq[gcd][11:0]}, lb = {2'b11, ~x}, lc = {13'd0, run_q[gcd]};
+            wire [13:0] ls = la ^ lb ^ lc, lk = {((la[12:0] & lb[12:0]) | (la[12:0] & lc[12:0]) | (lb[12:0] & lc[12:0])), 1'b1};
+            ot_ks_add #(.W(14)) u_lo (.a(ls), .b(lk), .cin(1'b0), .s(lo));
             wire [12:0] tl;
             ot_ks_add #(.W(13)) u_tl (.a({1'b0, ht_q[gcd][11:0]}), .b({1'b0, x}), .cin(1'b0), .s(tl));
             // lo[13:12]: 11 = -1, 00 = 0, 01 = +1 (only with plo = 4096, x = 0)

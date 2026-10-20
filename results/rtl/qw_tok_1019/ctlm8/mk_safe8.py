@@ -49,7 +49,7 @@ for name, v in VAR.items():
     j["purpose"] = ("QW-SUVM9/CTLM8 10-20 " + v["tag"] + ": structural redesign of the safe7 GPL-0307 FAIL: candidate8 netlist (FIREDQ head "
                     "candidates, cf pin register), SRAM rows with channels, outline from synthesis fill. " + v["note"])
     j["extra_paths"] = [p for p in j.get("extra_paths", []) if "ctlm7_cand7" not in p and "lp7_np" not in p] + \
-                       ["rtl/qwen_dv/lp8_np", "results/rtl/qw_tok_1019/ctlm8"]
+                       ["rtl/qwen_dv/lp8_np", "results/rtl/qw_tok_1019/ctlm8", "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv"]
     s["std_area_um2"] = STD
     (dst / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
     t = (dst / "lp_cone_regions.tcl").read_text()

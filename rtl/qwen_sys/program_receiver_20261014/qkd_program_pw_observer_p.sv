@@ -26,14 +26,23 @@ module qkd_program_pw_observer_p(
  end endgenerate
  wire [15:0] pick=eff&~later;
  // exactly one effective slice: none later than the picked one and none earlier
- wire one=(|eff)&&((eff&(eff-16'd1))==16'd0);
+ // CTLM8: at most one effective <=> no effective slice has a later one (no 16-b decrement chain)
+ wire one=(|eff)&&((eff&later)==16'd0);
+ // CTLM8: AND-OR selects as per-bit reduction trees (the serial OR accumulation mapped to a 16-deep AO21 chain)
+ wire [15:0] col_d [0:63];
+ wire [15:0] col_a [0:9];
+ genvar b,k;
+ generate for(b=0;b<64;b=b+1)begin:g_cd
+  for(k=0;k<16;k=k+1)begin:g_k assign col_d[b][k]=pick[k]&macro_data[64*k+b]; end
+ end endgenerate
+ generate for(k=0;k<16;k=k+1)begin:g_ca
+  wire [9:0] av={macro_row[6*(k/8) +:6],1'(k/8),3'(k%8)};
+  for(b=0;b<10;b=b+1)begin:g_b assign col_a[b][k]=pick[k]&av[b]; end
+ end endgenerate
  integer i;
  always @* begin
-  consumed_addr=0;consumed_data=0;
-  for(i=0;i<16;i=i+1)begin
-   consumed_addr=consumed_addr|({10{pick[i]}}&{macro_row[6*(i/8) +:6],1'(i/8),3'(i%8)});
-   consumed_data=consumed_data|({64{pick[i]}}&macro_data[64*i +:64]);
-  end
+  for(i=0;i<64;i=i+1)consumed_data[i]=|col_d[i];
+  for(i=0;i<10;i=i+1)consumed_addr[i]=|col_a[i];
   full_word=(macro_ce!=2'b11)&&one&&((eff&~ful)==16'd0);
  end
 endmodule
