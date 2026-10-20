@@ -26,7 +26,10 @@ module ot_hgi_coll_iter_mul_safephys #(parameter integer PIPE=0,FANCOPY=0)(
  output reg [15:0] m_idx,m_vm,
  output reg [31:0] m_iaddr_l,m_del_l,m_rgx_l,
  output reg [15:0] m_iaddr_h,m_del_h,m_rgx_h,
- output reg [23:0] m_lk_l,m_lk_h
+ output reg [23:0] m_lk_l,m_lk_h,
+ // HBM-COLL6 10-20 FANCOPY>=2: m_vm_c = a KEPT copy of m_vm (same D, same edge) for VM banks 4..7 (v74f n2s1 census:
+ // m_vm[10] 34 loads over the 8 sector adders); 0 otherwise
+ output wire [15:0] m_vm_c
 );
  // V5b (H-NETLIST 1315, ctl3 gate reg->reg -181.2 ps: it[3] -> m_rgx_l[30], 16x16 product, 24 levels ~872 ps):
  // the registered stage holds 16x8 partial products only; the combine is folded into ot_hgi_coll_ctl_v5_combine
@@ -104,10 +107,24 @@ end endgenerate
  function automatic [31:0] off(input [15:0] p0,p1,p2,p3,q0,q1,q2);
   off=32'({16'd0,p0}+{8'd0,p1,8'd0}+{p2,16'd0}+{p3[7:0],24'd0}+{8'd0,q0,8'd0}+{q1,16'd0}+{q2[7:0],24'd0});
  endfunction
+ wire [15:0] m_vm_d0=16'(pv[0]+{pv[1][7:0],8'd0}+{pv[2][7:0],8'd0});
+ wire [15:0] m_vm_dn;
+generate if(FANCOPY>=2)begin:g_vmc
+ wire [15:0] vmc_q;
+ (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_pp_land_safephys u_vmc(.clk(clk),.d(m_vm_dn),.q(vmc_q));
+`ifdef OT_COLL_FC_MUT_VMC
+ assign m_vm_c=vmc_q^16'h0400;   // mutant: copy bit 10 inverted
+`else
+ assign m_vm_c=vmc_q;
+`endif
+end else begin:g_vmc0
+ assign m_vm_c=16'd0;
+end endgenerate
 generate if(PIPE==0)begin:g_s3
+ assign m_vm_dn=m_vm_d0;
  always @(posedge clk)begin
   m_idx<=16'(pa[0]+{pa[1][7:0],8'd0}+{pa[2][7:0],8'd0});
-  m_vm<=16'(pv[0]+{pv[1][7:0],8'd0}+{pv[2][7:0],8'd0});
+  m_vm<=m_vm_d0;
   m_iaddr_l<=off(pb[0],pb[1],pb[2],pb[3],pb[4],pb[5],pb[6]);
   m_del_l<=off(pc[0],pc[1],pc[2],pc[3],pc[4],pc[5],pc[6]);
   m_rgx_l<=off(pd[0],pd[1],pd[2],pd[3],pd[4],pd[5],pd[6]);
@@ -117,6 +134,7 @@ generate if(PIPE==0)begin:g_s3
 end else begin:g_s3p
  // stage 3a: exact split of off() (no bit of {p2,p0} / {p3,p1} overlaps, so the concatenations equal the sums)
  reg [15:0] xa,xv;reg [31:0] ub,wb,uc,wc,ud,wd;reg [23:0] xl,xh;
+ assign m_vm_dn=xv;
  function automatic [31:0] off_u(input [15:0] p0,p1,p2,p3);off_u=32'({p2,p0}+{p3[7:0],p1,8'd0});endfunction
  function automatic [31:0] off_w(input [15:0] q0,q1,q2);off_w=32'({8'd0,q0,8'd0}+{q1,16'd0}+{q2[7:0],24'd0});endfunction
  always @(posedge clk)begin
@@ -156,6 +174,7 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  input wire [1535:0] inst,
  // registered iteration products from ot_hgi_coll_iter_mul_safephys (aligned with inst):
  input wire [15:0] m_idx,m_vm,
+ input wire [15:0] m_vm_c,                   // FANCOPY>=2: kept copy of m_vm for banks 4..7
  input wire [31:0] m_iaddr_l,m_del_l,m_rgx_l,
  input wire [15:0] m_iaddr_h,m_del_h,m_rgx_h,
  input wire [23:0] m_lk_l,m_lk_h,
@@ -355,7 +374,7 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
   for(integer j=1;j<9+VM_RT;j=j+1)vm_select_pipe[j]<=vm_select_pipe[j-1];
   end
   for(integer b=0;b<8;b=b+1)
-   vm_req_sector[b*16+:16]<=p_vm_rq[b*17+:16]+m_vm;
+   vm_req_sector[b*16+:16]<=p_vm_rq[b*17+:16]+((FANCOPY>=2 && b>=4)?m_vm_c:m_vm);
  end
  // LH-SMATT 10-19: plain captures / counter moved out of the protocol block so each reset copy drives <=32 flops.
  // Same edges, same reset values, same async-assert / sync-release age (all copies are the core's D1 flop).

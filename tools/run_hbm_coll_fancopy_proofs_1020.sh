@@ -1,5 +1,5 @@
 #!/bin/bash
-# HBM-COLL6 10-20: v74k COLL protocol leaf (v74p MUL_PIPE 1 + FANCOPY 1: kept per-partial-product operand landings, hs_q x2)
+# HBM-COLL6 10-20 (r2: + FANCOPY 2 = FC1 + kept m_vm copy for VM banks 4..7): v74k COLL protocol leaf (v74p MUL_PIPE 1 + FANCOPY 1: kept per-partial-product operand landings, hs_q x2)
 # proofs on Verilator 5.050 (no added edge vs v74p; shift-equivalence vs v74 one edge earlier).
 # usage: run_hbm_coll_fancopy_proofs_1020.sh OUT [TAG...]   (no TAG = all; runs in parallel, -j 2 each)
 # PASS benches (must pass) and mutant benches (must FAIL with their fail regex): see the case table below.
@@ -35,6 +35,11 @@ CASES=(
  "v74k_s0_m1|tb_hgi_coll_ctl_v74_safephys|fail|-GMULP=1 -GFC=1 -GSHAPE=0 -GMUT=1"
  "v74k_s0_m4|tb_hgi_coll_ctl_v74_safephys|fail|-GMULP=1 -GFC=1 -GSHAPE=0 -GMUT=4"
  "v74k_s1_m4|tb_hgi_coll_ctl_v74_safephys|fail|-GMULP=1 -GFC=1 -GSHAPE=1 -GMUT=4"
+ "mulp_fc2_s0|tb_hgi_coll_ctl_mulpipe_safephys|pass|-GSHAPE=0 -GFC=2 -GCARRY=1 -GMUT=0"
+ "mulp_fc2_s1|tb_hgi_coll_ctl_mulpipe_safephys|pass|-GSHAPE=1 -GFC=2 -GCARRY=1 -GMUT=0"
+ "mulp_fc2_s1_mvmc|tb_hgi_coll_ctl_mulpipe_safephys|fail|-GSHAPE=1 -GFC=2 -GMUT=0 +define+OT_COLL_FC_MUT_VMC"
+ "v74k2_s1|tb_hgi_coll_ctl_v74_safephys|pass|-GMULP=1 -GFC=2 -GSHAPE=1 -GMUT=0"
+ "v74k2_s1_dense|tb_hgi_coll_ctl_v74_safephys|pass|-GMULP=1 -GFC=2 -GSHAPE=1 -GDENSE=1"
  "iter_p1_regress|tb_hgi_coll_iter_safephys|pass|-GPIPE=1 -GFC=0 -GMUT=0"
  "mulp_s0_regress|tb_hgi_coll_ctl_mulpipe_safephys|pass|-GSHAPE=0 -GFC=0 -GMUT=0"
  "v74p_s0_regress|tb_hgi_coll_ctl_v74_safephys|pass|-GMULP=1 -GFC=0 -GSHAPE=0 -GMUT=0"
