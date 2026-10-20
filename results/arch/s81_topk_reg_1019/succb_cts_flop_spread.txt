@@ -1,0 +1,43 @@
+succb s81dvbk_sq_succb-20261019-114414 (07fb519c3) 4_1_cts.odb, placement-estimated RC, raw source, ck_insertion replay; per-module register clock arrival (ps)
+TT n 40510 min 497.8 p1 526.4 p50 546.8 p99 633.1 max 656.4
+  u_s.u_hc.g_sum1                          n  4800 min 538 p50 551 p95 616 max 629
+  u_s.u_hf.g_sum1                          n  4800 min 534 p50 542 p95 549 max 563
+  u_s.u_pi.g_rst[]                         n  1920 min 563 p50 613 p95 639 max 656
+  u_s.u_ps.g_rst[]                         n  1920 min 522 p50 537 p95 554 max 591
+  g_m2.u_mem                               n  1877 min 522 p50 558 p95 633 max 656
+  u_s.g_ofq_sram.u_q                       n  1866 min 498 p50 549 p95 606 max 618
+  u_s.g_fq_sram.u_q                        n  1859 min 507 p50 546 p95 623 max 656
+  u_s.u_ps.g_cst[]                         n  1307 min 522 p50 537 p95 541 max 550
+  u_s.u_pi.g_cst[]                         n  1291 min 564 p50 610 p95 630 max 633
+  u_s.u_hc.h2[]                            n  1280 min 538 p50 560 p95 618 max 628
+  u_s.u_hf.h2[]                            n  1280 min 534 p50 541 p95 549 max 560
+  t_s[]                                    n   865 min 546 p50 549 p95 556 max 556
+  sq[]                                     n   865 min 541 p50 549 p95 555 max 623
+  u_s.u_hc.gs1[]                           n   832 min 539 p50 551 p95 620 max 629
+  u_s.u_hf.gs1[]                           n   832 min 535 p50 544 p95 553 max 560
+  u_s.u_pi.acc[]                           n   608 min 564 p50 613 p95 639 max 656
+  u_s.u_pi.cp[]                            n   608 min 563 p50 613 p95 652 max 656
+  u_s.u_ps.acc[]                           n   608 min 522 p50 540 p95 563 max 580
+  u_s.u_ps.cp[]                            n   608 min 524 p50 536 p95 541 max 542
+  u_s.c1_p[]                               n   592 min 522 p50 536 p95 564 max 591
+FF n 40510 min 404.2 p1 428.5 p50 446.5 p99 526.6 max 542.3
+  u_s.u_hc.g_sum1                          n  4800 min 439 p50 450 p95 509 max 522
+  u_s.u_hf.g_sum1                          n  4800 min 435 p50 442 p95 449 max 463
+  u_s.u_pi.g_rst[]                         n  1920 min 462 p50 504 p95 527 max 539
+  u_s.u_ps.g_rst[]                         n  1920 min 425 p50 438 p95 454 max 486
+  g_m2.u_mem                               n  1877 min 424 p50 457 p95 523 max 542
+  u_s.g_ofq_sram.u_q                       n  1866 min 404 p50 449 p95 500 max 513
+  u_s.g_fq_sram.u_q                        n  1859 min 417 p50 447 p95 512 max 539
+  u_s.u_ps.g_cst[]                         n  1307 min 424 p50 437 p95 441 max 449
+  u_s.u_pi.g_cst[]                         n  1291 min 462 p50 503 p95 525 max 528
+  u_s.u_hc.h2[]                            n  1280 min 438 p50 460 p95 513 max 521
+  u_s.u_hf.h2[]                            n  1280 min 435 p50 441 p95 449 max 459
+  t_s[]                                    n   865 min 445 p50 448 p95 455 max 455
+  sq[]                                     n   865 min 441 p50 448 p95 454 max 518
+  u_s.u_hc.gs1[]                           n   832 min 439 p50 450 p95 516 max 521
+  u_s.u_hf.gs1[]                           n   832 min 435 p50 444 p95 452 max 461
+  u_s.u_pi.acc[]                           n   608 min 463 p50 504 p95 524 max 539
+  u_s.u_pi.cp[]                            n   608 min 462 p50 508 p95 535 max 539
+  u_s.u_ps.acc[]                           n   608 min 425 p50 440 p95 463 max 478
+  u_s.u_ps.cp[]                            n   608 min 426 p50 436 p95 441 max 442
+  u_s.c1_p[]                               n   592 min 424 p50 437 p95 464 max 486

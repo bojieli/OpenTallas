@@ -1,0 +1,171 @@
+{
+ "name": "s81dvbk_sq_reg-fan32a-COMMIT",
+ "block": "dsdv_bksel_q",
+ "ref_tile": true,
+ "owner": "Claude:S81-TOPK",
+ "purpose": "TOPK selector quarter FAN32: KEPT copies of all >256-load selector control nets + CTS without SRAM-stack detour; INDEXED13 1037 reserved cycles priced.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-topk-fan32-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link",
+   "tools/s81_dv/layer_prog",
+   "results/arch/s81_topk_final_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl/lib",
+   "results/arch/s81_topk_succ_1019",
+   "results/arch/s81_topk_fifo_safe_1019",
+   "results/arch/s81_topk_fan32_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_bksel_q u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "indexed13_production",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^BK_LAYER PASS"
+   },
+   {
+    "name": "indexed13_identity_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13_identity",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk_final_1019/bench/indexed13_identity/verdict.txt"
+   },
+   {
+    "name": "succ_onehot_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_SUCC_MUT_OH' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build_mut results/arch/s81_topk_succ_1019/bench/mut_oh",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk_succ_1019/bench/mut_oh/verdict.txt"
+   },
+   {
+    "name": "fan32_groupselect_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_FAN32_MUT_GS' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build_mutgs results/arch/s81_topk_fan32_1019/bench/mut_gs",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk_fan32_1019/bench/mut_gs/verdict.txt"
+   },
+   {
+    "name": "fan32_clearcopy_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_FAN32_MUT_CLR' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build_mutclr results/arch/s81_topk_fan32_1019/bench/mut_clr",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk_fan32_1019/bench/mut_clr/verdict.txt"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81dvbk_sq_reg/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81dvbk_sq_reg/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81dvbk_sq_reg --out {RUN}/record/views/dsdv_bksel_q --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81dvbk_sq_reg/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81dvbk_sq_succ2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81dvbk_sq_succ2/s81dvbk_sq_reg-fan32a-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-TOPK2 REGIONAL CLOCK (LEAD2-S81/TOPK2 10-19): FAN32 RTL (d58faf9b0) + regional local clock roots. Per-flop CTS dump of succb (07fb519c3, 4_1_cts.odb, TT): the single 12-level tree is BIMODAL -- band / upper-stack masses (u_ps, u_hf, FQ/OFQ, IO) at 522-560 ps, the line-pool/ingest masses (u_pi 563-656, pi_line, i1_p 585-632, half of u_hc, g_m2 up to 656) hang on one late branch (+70..+100 ps): all-flop spread 158.6 TT / 138.1 FF. Fix: physical/common_flow/clock_split_km.tcl K 16 (k-means on placed sinks: one BUFx24 local root at each register-mass centroid, beside its SRAM stack; CTS builds one short tree per region and balances the 16 roots under one top tree). Crossings between regions stay the existing register-to-register paths on one phase-0 port, timed by ordinary STA; tile 324x540 (< 405 um per hop) so no ring landing / 0 added edges.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "FAN32 successor master + regional clock roots (K16) after s81dvbk_sq_succ gate CTS rc137 stall and succb bimodal clock spread 158.6/138.1 FAIL; earlier closed quarter retained."
+ }
+}
