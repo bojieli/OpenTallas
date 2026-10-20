@@ -163,6 +163,25 @@ def census(g, roles):
     for net in loads:
         if net not in drivers and net not in constants:
             errors.append(f'undriven dynamic net {g.net_name[net]}')
+    # Report constants for independent source-contract review. Packed protocol
+    # fields/instance IDs may be constant; mapped topology cannot decide whether
+    # a bit is a reserved field or an illegal functional tie-off.
+    const_reached, todo, output_bits = set(), [(x, x, []) for x in constants], []
+    while todo:
+        x, source, path = todo.pop()
+        if x in const_reached:
+            continue
+        const_reached.add(x)
+        d = drivers.get(source)
+        provenance = ({'kind': 'liberty_function', 'instance': g.cells[d[0]][1],
+                       'master': g.cells[d[0]][0], 'pin': d[1],
+                       'function': roles[g.cells[d[0]][0]]['pins'][d[1]]['function']}
+                      if d and d[0] != 'port' else {'kind': 'literal', 'net': g.net_name[source]})
+        for _, name, _ in ports.get(x, ()):
+            output_bits.append({'port_bit': name, 'source': provenance, 'transparent_path': path})
+        for ci, _, _ in loads.get(x, ()):
+            if ci in transparent:
+                todo.append((transparent[ci][1], source, path + [g.cells[ci][1]]))
     violations, counts, max_loads, examined = [], [], 0, 0
     for net, driver in drivers.items():
         if net in constants or driver[0] in transparent:
@@ -191,7 +210,11 @@ def census(g, roles):
                                'endpoints': [list(e) for e in sorted(endpoints, key=str)[:40]]})
     return {'status': 'FAIL' if errors or violations else 'PASS', 'limit': 32,
             'roots_examined': examined, 'max_dynamic_loads': max_loads,
-            'driver_counts': counts, 'role_errors': errors, 'violations': violations}
+            'driver_counts': counts, 'constant_output_bits': output_bits,
+            'functional_pin_contract': 'NOT_EVALUATED',
+            'pin_registration_contract': 'NOT_EVALUATED', 'storage_contract': 'NOT_EVALUATED',
+            'independent_source_contract_audit_required': True,
+            'role_errors': errors, 'violations': violations}
 
 
 def main():

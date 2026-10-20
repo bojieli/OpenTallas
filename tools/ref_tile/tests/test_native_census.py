@@ -72,6 +72,16 @@ def test_only_real_constant_and_clock_pin_exempt(tmp_path):
     assert run(tmp_path,33,extra='assign d=ck;')['status']=='FAIL'
 
 
+def test_constant_output_requires_independent_functional_contract_audit(tmp_path):
+    p=tmp_path/'roles.lib';p.write_text(LIB);roles,_=N.liberty_roles([str(p)])
+    g,_=N.TL.flatten(N.TL.parse_verilog('module top(y); output y; wire z; CONSTANT t(.Y(z)); TRANSPARENT b(.A(z),.Y(y)); endmodule'),'top')
+    r=N.census(g,roles)
+    assert r['status']=='PASS'  # fanout only: not semantic admission
+    assert r['functional_pin_contract']=='NOT_EVALUATED'
+    assert r['independent_source_contract_audit_required']
+    assert r['constant_output_bits']==[{'port_bit':'y', 'source':{'kind':'liberty_function','instance':'t','master':'CONSTANT','pin':'Y','function':'0'}, 'transparent_path':['b']}]
+
+
 def test_nested_attributes_never_become_pin_roles_and_bus_bits_are_explicit(tmp_path):
     assert N.attr('timing() { clock:true; function:"0"; direction:output; }', 'clock') is None
     assert N.attr('timing() { function:"0"; } function:"!A";', 'function') == '!A'
