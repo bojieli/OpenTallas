@@ -7,8 +7,71 @@
       "Macro origins86.4,43.2 and86.4,172.8 literal43.2 lattice.",
       "Density distributed through nearly entire outline rather than one std band.",
       "Gate old WARN0FAIL/GRT0; actual native5_1_grt audit pending.",
-      "Old worktree removed; no review or submit mutation."
-    ]
+      "Old worktree removed; no review or submit mutation.",
+      "Actual5_1_grt census finds registered512-load selectors and reset122-load/~494um; structural redesign before any approval."
+    ],
+    "native_status": {
+      "status": "FAIL_NATIVE_DYNAMIC_AND_REACH",
+      "over32_all_driver_rows": 3478,
+      "over32_nonunary_driver_rows": 1061,
+      "far405": 55,
+      "max_reach": 495.35499999999996,
+      "openclockloads": 1085,
+      "max_fanout": 512,
+      "original_pg_unbound_intermediate": 76650,
+      "odb_sha256": "a095585d53806c9783de5222620ffb1d816cf5c8764e74d676e16067a5911a06",
+      "examples": [
+        {
+          "driver": "u_ot_pr_core.g_sec\\[0\\].u_s/g_h\\[0\\].g_c\\[0\\].u_ra/q\\[0\\]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "terminals": 512,
+          "max_L1_pin_bbox_upper_um": 185.56900000000002
+        },
+        {
+          "driver": "u_ot_pr_core.g_sec\\[0\\].u_s/g_h\\[0\\].g_c\\[1\\].u_ra/q\\[0\\]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "terminals": 512,
+          "max_L1_pin_bbox_upper_um": 168.991
+        },
+        {
+          "driver": "u_ot_pr_core.g_sec\\[0\\].u_s/g_h\\[0\\].g_c\\[2\\].u_ra/q\\[1\\]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "terminals": 512,
+          "max_L1_pin_bbox_upper_um": 166.86700000000002
+        },
+        {
+          "driver": "u_ot_pr_core.g_sec\\[0\\].u_s/g_h\\[0\\].g_c\\[3\\].u_ra/q\\[0\\]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "terminals": 512,
+          "max_L1_pin_bbox_upper_um": 157.957
+        },
+        {
+          "driver": "u_ot_pr_core.g_sec\\[0\\].u_s/g_h\\[0\\].g_c\\[4\\].u_ra/q\\[0\\]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "terminals": 512,
+          "max_L1_pin_bbox_upper_um": 154.03300000000002
+        },
+        {
+          "driver": "u_ot_pr_core.g_sec\\[0\\].u_s/g_h\\[0\\].u_r5a/q\\[3\\]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "terminals": 512,
+          "max_L1_pin_bbox_upper_um": 147.75099999999998
+        },
+        {
+          "driver": "u_ot_pr_core.g_sec\\[0\\].u_s/g_h\\[1\\].g_c\\[0\\].u_ra/q\\[0\\]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "terminals": 512,
+          "max_L1_pin_bbox_upper_um": 77.49700000000001
+        },
+        {
+          "driver": "u_ot_pr_core.g_sec\\[0\\].u_s/g_h\\[1\\].g_c\\[1\\].u_ra/q\\[0\\]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "terminals": 512,
+          "max_L1_pin_bbox_upper_um": 75.877
+        }
+      ],
+      "scope": "All native driver rows include transparent descendants; nonunary source roots separately listed. No raw intermediate PG conclusion; protected/final audit separate."
+    }
   },
   "cx_ijq": {
     "source": "52b4c9280",
