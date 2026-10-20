@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qbank.full_stage_necessary_reach_model.v1",
+  "mode": "split_input",
+  "status": "MODEL_ONLY_HOLD",
+  "source_graph_sha256": "d0e361107733a79787f95883db6924537c8b29aaa2296f9849633e1a5f643f31",
+  "source_role_errors": [],
+  "original_graph_edges": 320372,
+  "modeled_edges": 333733,
+  "seq_instances": 11106,
+  "qrow_a_original_instances": 512,
+  "extra_input_instances": 561,
+  "solver_status": 1,
+  "solver_message": "Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)",
+  "scope": "Continuous FF centres, actual fixed macro/pad pins and full actualLib Boolean-closure stage root edges. Necessary endpoint span ONLY; no packing/legal rows/route length/cell timing/clock/PG/native32/source semantics qualification. New topology proposal is not source implemented or proven."
+}

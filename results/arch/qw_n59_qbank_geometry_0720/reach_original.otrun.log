@@ -1,0 +1,27 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc9       admits   908 GB (avail 741, growth 105, headroom 0, waiters 0/0 GB) load 61/128 running 28 disk 105 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3865059-1792507879 after 0 s
+LP original edges 320372 seq 10594 rows 1281488 nnz 6173936
+LPresult 0 Optimization terminated successfully. (HiGHS Status 7: Optimal) seconds 44.102596282958984
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720/reach_model.py", line 67, in <module>
+    (base/('reach_'+mode+'.json')).write_text(json.dumps(out,indent=2)+'\n');print(json.dumps({k:v for k,v in out.items() if k!='coordinates'}),flush=True)
+                                              ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/usr/lib/python3.14/json/encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.14/json/encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "/usr/lib/python3.14/json/encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type int64 is not JSON serializable
+when serializing dict item 'stage_endpoint_violations_gt405'
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3865059-1792507879): exit 1

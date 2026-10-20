@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-epyc9       admits   945 GB (avail 755, growth 94, headroom 0, waiters 0/0 GB) load 46/128 running 26 disk 99 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qw-n59-qb-geometry-0720
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3871560-1792508314 after 0 s
+LP split_input_output405 edges 334809 seq 11106 rows 1339236 nnz 6436484
+LPresult 0 Optimization terminated successfully. (HiGHS Status 7: Optimal) seconds 10.854571342468262
+{"schema": "opentallas.qbank.full_stage_necessary_reach_model.v1", "mode": "split_input_output405", "status": "MODEL_ONLY_HOLD", "source_graph_sha256": "d0e361107733a79787f95883db6924537c8b29aaa2296f9849633e1a5f643f31", "source_role_errors": [], "original_graph_edges": 320372, "modeled_edges": 334809, "seq_instances": 11106, "qrow_a_original_instances": 512, "extra_input_instances": 561, "extra_output_instances": 1076, "solver_status": 0, "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)", "scope": "Continuous FF centres, actual fixed macro/pad pins and full actualLib Boolean-closure stage root edges. Necessary endpoint span ONLY; no packing/legal rows/route length/cell timing/clock/PG/native32/source semantics qualification. New topology proposal is not source implemented or proven.", "minimax_endpoint_L1_um": 405.0, "maximum_recomputed": [405.00000000000057, "u_ot_pr_core.u_qseat.g_read\\[5\\].g_gather\\[6\\].g_word\\[0\\].sel$_DFFE_PP_/QN", "u_ot_pr_core.qrow_a\\[167\\]$_DFF_P_/D@R"], "stage_endpoint_violations_gt405": 0}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3871560-1792508314): exit 0
