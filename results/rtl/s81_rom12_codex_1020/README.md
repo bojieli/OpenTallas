@@ -16,6 +16,8 @@ The switches are off by default:
 | Causal data/calendar negatives | GU and wq_b swap/shift controls each FAIL with retained witness logs |
 | Full L0 frame compilation | 72 phases, zero legaliser faults, fixture max fill1088/8192 |
 | Default / segmented calendar selftests | 23/23 PASS in both modes |
+| Production GU sequence | 18 phases /54 fixture rows, P145 PASS, exact span2810; P144 FAIL4 sticky faults |
+| Production wq_b sequence | 8 phases /64 fixture rows /96 RET words, P126 PASS, measured span1189; P125 FAIL4 sticky faults |
 | Actual L0 multi-phase calendar | 5278 rows before reuse -> **1868**, 65 intervals, 19 unique |
 | Actual L2 multi-phase calendar | 5552 rows before reuse -> **2006**, 68 intervals, 20 unique |
 | MU admission, L0 and L2 | 46 AR users / 10+1 MTP users: zero collisions, busy-span premise PASS |
@@ -40,6 +42,20 @@ This is a compiler/mechanism result, not a headline token-rate update or a die-b
 
 The1088-word fill is the six-expert fixture, not a full release-checkpoint capacity claim. ROMCAP's all-twelve-pair110-stage estimate leaves headroom, but a complete per-stage expert map must still be admitted against actual per-pair ROM depth and cfg7 phase counts.
 
-The new-shape pipelined production FSEQ throughput run is recorded separately in `fseq12.otrun.log` when collected. Until that run passes, the period laws for the larger wq_b row batch and rotating GU subsets remain an inference from unchanged per-element work and the passing single-phase calendars.
+The new-shape production sequence runs are committed in `fseq12/` and `fseq12r2.otrun.log`. All78 production RTL hashes match1a4084829; the differing sequence testbench is retained in `fseq_src/`. GU18-phase P145 measures2810 exactly. The eight-phase wq_b P126 measures1189 from `u_sp.go` (GO0 edge63) to frame-root RET (edge1252). Its old compiler prediction1105 was84 edges short (7.6%). Commitc865c47c3 prices the twelve-pair vehicle with tail307; the default old223 remains unchanged. `span_correction.json` proves the corrected price changes no ROM/action/issuer bytes.
+
+The WQBP composition denominator is a DIFFERENT origin and shape: first actual element capture to final root return,1987 edges on the fullsix15-phase/512-row vehicle, plus transport195 separately. The FSEQ1189 raw span must not silently replace that value. The same-origin GU3680->2810 replacement is directly composable.
+
+`compose/` preserves both cases, with29 input hashes verified againstc865c47c3:
+
+| Composition | AR tok/s | MTP tok/s | Qualification |
+|---|---:|---:|---|
+| Existing measured baseline |834.0|2649.1|Unchanged|
+| GU same-origin improvement alone |854.7|2705.4|Component substitution; existing other shapes retained|
+| Existing CALPIPE scenario |915.9|2869.4|Already a proposed scenario|
+| CALPIPE + measured GU |940.8|2935.5|Same-origin GU substitution|
+| Eight-frame compiled projection |965.0|2998.8|Assumes8x64=512 parallel rows; one h9 frame measured, new earlier spine-go origin retained conservatively, fixed transport195 and owed source-age edges unchanged; NOT release-adopted|
+
+Minimum remaining measurement for the final projection: use the real static eight-frame slice stage bench and its native gather/launch calendar; measure actual producer capture, each frame-root RET and CAP consumer acceptance. Include h9, h9_MX and h10 geometries and take the slowest frame. Measure the same512-row/K1280 contract, with source-age markers for both spine GO and first actual element capture. Prove CAP descriptors, golden rows and consumer deadline, then compose fixed die transport analytically. A full-die simulation is unnecessary.
 
 Initial stale-topology, insufficient-gap and legacy-base-overflow failures are preserved. They are superseded by the source-pinned real-image and RTL reader results, not overwritten.
