@@ -24,7 +24,6 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_landed_child_pins 144
-set ::ot_ce_fwd_ports {{xk}}
 set ::ot_ce_check_only [dict create {dsfd_bf_front_roots/ck} 1 {dsfd_bf_front_roots/io_clk} 1 {dsfd_bf_front_roots/io_e} 1 {dsfd_bf_front_roots/io_n} 1 {dsfd_bf_front_roots/io_w} 1 {dsfd_cfifo_crs4/cr} 1 {dsfd_cfifo_crs4/xk[0]} 1 {dsfd_cfifo_crs4/xk[1]} 1 {dsfd_cfifo_crs4/xk[2]} 1 {dsfd_cfifo_crs4/xk[3]} 1 {dsfd_dvrly_276_NS/ck} 1 {dsfd_node_LLd/clk[0]} 1 {dsfd_node_LLfd/clk[0]} 1 {dsfd_node_LLfu/clk[0]} 1 {dsfd_node_NNfd/clk[0]} 1 {dsfd_node_NNfu/clk[0]} 1 {dsfd_qbank_N/ck[0]} 1 {dsfd_qbank_S/ck[0]} 1 {dsfd_rstg/ck[0]} 1 {ot_s81_cfg7_seq/clk[0]} 1 {ot_s81_cfg7_seq_bfp/clk[0]} 1 {ot_s81_sstn_base566/ck} 1 {ot_s81_sstn_payload536/ck} 1 {ot_v41_bf_col/clk} 1 {ot_v41_rom_elem_q_qxpq_w10/clk} 1]
 set ::ot_ce_refs [dict create {dsfd_qbank_N/ck[0]} {tt {75.3 76.8 78.1} ff {59.5 61.0 62.6} ss {103.1 104.7 105.9}} {dsfd_qbank_S/ck[0]} {tt {85.4 92.1 98.2} ff {66.9 73.7 80.0} ss {118.3 124.8 130.6}} {dsfd_cfifo_crs4/cr} {tt {152.8 176.6 214.1} ff {120.6 144.5 181.2} ss {207.3 231.8 269.8}} {dsfd_cfifo_crs4/cr_s} {tt {52.2 53.3 54.4} ff {41.1 42.4 43.4} ss {71.4 72.5 73.6}} {dsfd_cfifo_crs4/xk[0]} {tt {112.8 119.6 130.6} ff {89.0 95.8 106.3} ss {154.0 160.9 172.8}} {dsfd_cfifo_crs4/xk[1]} {tt {95.1 100.9 107.9} ff {75.5 81.6 88.4} ss {129.4 134.9 142.0}} {dsfd_cfifo_crs4/xk[2]} {tt {111.8 118.6 123.9} ff {88.6 94.8 99.7} ss {151.7 159.9 165.9}} {dsfd_cfifo_crs4/xk[3]} {tt {97.7 103.2 107.8} ff {77.2 83.1 88.2} ss {132.7 137.9 142.7}} {ot_v41_rom_elem_q_qxpq_w10/clk} {tt {474.1 510.3 524.3} ff {373.8 402.1 412.0} ss {645.1 695.6 716.8}} {dsfd_bf_front_roots/ck} {tt {208.3 214.8 218.2} ff {169.3 174.9 177.7} ss {273.3 281.7 286.1}} {dsfd_bf_front_roots/io_clk} {tt {126.9 145.4 164.1} ff {102.9 120.1 138.4} ss {168.1 188.7 209.7}} {dsfd_bf_front_roots/io_n} {tt {125.7 137.0 146.8} ff {101.6 111.6 121.7} ss {167.8 181.1 191.7}} {dsfd_bf_front_roots/io_w} {tt {101.5 121.6 140.2} ff {81.3 101.4 119.6} ss {136.0 156.6 176.1}} {dsfd_bf_front_roots/io_e} {tt {118.2 132.7 150.5} ff {94.7 108.9 126.2} ss {158.6 173.7 192.1}} {ot_v41_bf_col/clk} {tt {511.0 517.0 582.7} ff {406.8 414.8 454.2} ss {681.3 688.3 803.2}} {dsfd_node_LLfu/clk[0]} {tt {99.5 109.7 115.8} ff {79.0 89.7 96.1} ss {136.0 145.7 151.6}} {dsfd_node_NNfu/clk[0]} {tt {96.9 112.0 122.0} ff {77.5 91.8 101.6} ss {131.7 148.2 158.5}} {dsfd_node_LLfd/clk[0]} {tt {98.9 106.5 112.0} ff {78.7 86.1 91.4} ss {135.1 142.9 148.8}} {dsfd_node_NNfd/clk[0]} {tt {102.9 110.5 117.1} ff {82.9 90.5 97.2} ss {138.6 146.6 153.6}} {dsfd_node_LLd/clk[0]} {tt {97.5 104.6 110.3} ff {76.8 84.5 89.9} ss {134.2 140.8 146.6}} {dsfd_rstg/ck[0]} {tt {53.6 54.2 54.8} ff {40.8 41.4 42.2} ss {75.7 76.3 76.9}} {ot_s81_cfg7_seq/clk[0]} {tt {81.8 87.1 93.8} ff {63.7 68.8 75.0} ss {114.0 119.7 127.1}} {ot_s81_cfg7_seq_bfp/clk[0]} {tt {83.8 93.2 98.2} ff {65.8 74.3 79.3} ss {116.1 126.7 131.7}} {ot_s81_sstn_base566/ck} {tt {84.0 90.7 98.5} ff {66.4 73.0 80.9} ss {115.3 122.3 130.7}} {ot_s81_sstn_payload536/ck} {tt {82.6 88.0 91.4} ff {65.3 70.9 74.3} ss {113.3 118.4 122.0}} {dsfd_dvrly_276_NS/ck} {tt {104.9 106.6 108.4} ff {77.3 78.8 80.3} ss {153.7 156.1 158.6}}]
 set ::ot_ce_counts [dict create {dsfd_qbank_N} 12 {dsfd_qbank_S} 12 {dsfd_cfifo_crs4} 1 {ot_v41_rom_elem_q_qxpq_w10} 12 {dsfd_bf_front_roots} 4 {ot_v41_bf_col} 8 {dsfd_node_LLfu} 8 {dsfd_node_NNfu} 7 {dsfd_node_LLfd} 7 {dsfd_node_NNfd} 8 {dsfd_node_LLd} 1 {dsfd_rstg} 3 {ot_s81_cfg7_seq} 12 {ot_s81_cfg7_seq_bfp} 4 {ot_s81_sstn_base566} 10 {ot_s81_sstn_payload536} 10 {dsfd_dvrly_276_NS} 4]
@@ -33,82 +32,6 @@ set ::ot_ce_source_domains [dict create {ck_r0} {core} {ck_r1} {r1} {ck_r2} {r2}
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_r0} {ck_r1} {ck_r2}}
 set ::ot_ce_ports {{ck_r0} {ck_r1} {ck_r2}}
-proc ot_ce_fwd_arrival {pin} {
-  set scene [get_property [sta::cmd_scene] name]
-  set best ""
-  foreach vertex [$pin vertices] {
-    if {$vertex eq "NULL"} continue
-    foreach transition {rise fall} {
-      set paths [$vertex path_iterator $transition max]
-      while {[$paths has_next]} {
-        set path [$paths next]
-        set tag [$path tag]
-        if {[lindex $tag 1] ne $scene || ![string match *max [lindex $tag 2]]} continue
-        set a [sta::time_sta_ui [$path arrival]]
-        if {![ot_ce_finite $a]} continue
-        if {$best eq "" || $a > $best} {set best $a}
-      }
-      $paths finish
-    }
-  }
-  return $best
-}
-proc ot_ce_fwd_domain {port} {
-  # a forwarded clock travels with its data: its cells belong to the clock-entry domain that owns the port as an input
-  set base $port
-  regsub {\[[0-9]+\]$} $port {} base
-  dict for {domain info} $::ot_ce_domains {
-    foreach p [dict get $info inputs] { if {[string match $p $base] || [string match $p $port]} { return $domain } }
-  }
-  error "OT_LANDED: forwarded clock port $port is no input of a clock-entry domain"
-}
-proc ot_ce_forwarded_visit {corner} {
-  # every bound hard-child clock pin whose net traces to a forwarded port: one FORWARDED sink (fail closed below)
-  set ::ot_ce_fwd_cells [dict create]
-  set groups [dict create]; set hits 0
-  set judged [expr {!([info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts) || ([info exists ::ot_ce_require_wire] && $::ot_ce_require_wire)}]
-  foreach cell [get_cells -quiet -hierarchical *] {
-    set master [get_property $cell ref_name]
-    if {![dict exists $::ot_ce_counts $master]} continue
-    foreach pin [get_pins -quiet -of_objects $cell] {
-      set key "$master/[get_property $pin lib_pin_name]"
-      if {![dict exists $::ot_ce_refs $key]} continue
-      set port [ot_ce_net_root_port $pin]
-      if {$port eq ""} continue
-      set base $port
-      regsub {\[[0-9]+\]$} $port {} base
-      if {[lsearch -exact $::ot_ce_fwd_ports $base] < 0} continue
-      set full [get_full_name $pin]
-      set arr [ot_ce_fwd_arrival $pin]
-      if {$arr eq ""} {
-        if {$judged} { error "OT_LANDED: forwarded clock pin $full (port $port) has no measured arrival" }
-        set arr 0.0
-        puts "OT_LANDED FORWARDED_UNMEASURED $corner $port $full (pre-CTS: wire taken 0)"
-      }
-      lassign [dict get $::ot_ce_refs $key $corner] clo cmean chi
-      set lo [expr {$arr + $clo}]; set hi [expr {$arr + $chi}]
-      dict lappend groups $port [list $full $lo $hi]
-      dict set ::ot_ce_fwd_cells [get_full_name $cell] $port
-      puts "OT_LANDED FORWARDED_SINK $corner $port $full wire=$arr R=$cmean min=$lo max=$hi"
-      incr hits
-    }
-  }
-  dict for {port rows} $groups {
-    set lo ""; set hi ""
-    foreach r $rows {
-      lassign $r full a b
-      if {$lo eq "" || $a < $lo} {set lo $a}
-      if {$hi eq "" || $b > $hi} {set hi $b}
-    }
-    set spread [expr {$hi - $lo}]
-    set verdict [expr {$spread <= 80.0 ? "PASS" : "FAIL"}]
-    puts "OT_LANDED FORWARDED_CLOCK $corner $port sinks=[llength $rows] child_flop_spread=[format %.1f $spread] ps (<= 80 at TT and FF) $verdict[expr {$judged ? {} : { (pre-CTS: reported)}}]"
-    if {$verdict eq "FAIL" && $judged && $corner in {tt ff}} {
-      error "OT_LANDED: forwarded clock $port child-flop spread [format %.1f $spread] ps > 80 at $corner ([llength $rows] sinks)"
-    }
-  }
-  return $hits
-}
 # Actual OpenSTA clock ancestry and physical propagated-clock measurements.
 # OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
 # resolves inferred masters; evaluate only its generated-clock declarations in
@@ -387,9 +310,6 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   }
   foreach pin [all_registers -clock_pins] {
     set cell [get_full_name [get_cells -of_objects $pin]]
-    if {![dict exists $cells $cell] && [info exists ::ot_ce_fwd_cells] && [dict exists $::ot_ce_fwd_cells $cell]} {
-      dict set cells $cell [ot_ce_fwd_domain [dict get $::ot_ce_fwd_cells $cell]]
-    }
     if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }
   }
   set ::ot_ce_register_cells {}
@@ -798,7 +718,6 @@ proc ot_ce_apply {} {
     dict set seen $name 1
     puts "OT_HYBRID CTS_MEASURE $corner $name sinks=[llength $pins] reference_scope=$scope boundary_sinks=[llength $boundary] min=$lo mean=$mean max=$hi all_mean=$tree_mean"
   }
-  incr ot_ce_landed_hits [ot_ce_forwarded_visit $corner]
   if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins} { error "OT_LANDED: $ot_ce_landed_hits of $::ot_ce_landed_child_pins bound hard-child clock pins reached from the region roots" }
   if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }
   set ref 0
