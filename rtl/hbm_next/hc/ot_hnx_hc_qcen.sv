@@ -44,8 +44,10 @@ module ot_hnx_hc_qcen #(
     initial if (K % 2048 != 0 || R > 16 || WPRQ > 32) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
     initial if (SIREG != 0 && (SIREG != 1 || TLA != 7)) $fatal(1, "SIREG 1 needs TLA 7 (level-1 adders run LAT 6)");
 
-    wire [8:0] rn;
-    ot_rst_relay #(.REGIONS(9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    // HUB-SAFE2 2026-10-20: relay named u_rst_relay (recognised by physical/common_flow/ot_rst_copies.py, which re-points
+    // the reset loads over the kept identical copies, <= 32 each); REGIONS 16 = the 9 regions + 7 balancing copies.
+    wire [15:0] rn;
+    ot_rst_relay #(.REGIONS(16)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
     wire rc = rn[8];
     assign rst_b = rn[7:0];
 

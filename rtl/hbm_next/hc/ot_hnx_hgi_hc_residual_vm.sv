@@ -101,7 +101,25 @@ module ot_hnx_hgi_hc_residual_vm #(
             x_wave_beat<=nx_beat;
             if(valid[CAPTURE_LAT-1]&&cap_beat==3)begin x_wave_word<=cap_word;x_wave<={cap_d,assembly};end
         end
-    end else begin:g_beats
+    end else if(MUT_BEAT!=2)begin:g_beats
+        // HUB-SAFE2 2026-10-20 (SAFE item 3; zero added edges, x_wave bit-identical): the 2,048-b beat register loads
+        // under 64 KEPT copies vc_c of the capture valid (one per 32-b lane group, each = valid[CAPTURE_LAT-1] on the same
+        // edge: D = valid[CAPTURE_LAT-2]); census safe1019: valid[22] drove 4,129 loads.
+        (* keep = "true", dont_touch = "true" *) reg [63:0] vc_c;
+        initial if(CAPTURE_LAT<2)$fatal(1,"CAPTURE_LAT >= 2");
+        always @(posedge clk)vc_c<={64{valid[CAPTURE_LAT-2]}};
+        assign nx_v=valid[CAPTURE_LAT-1]; assign nx_en=valid[CAPTURE_LAT-1]; assign nx_beat=mut_beat;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)x_wave_v<=0;
+            else x_wave_v<=nx_v;
+        always @(posedge clk)begin
+            if(nx_en)x_wave_beat<=nx_beat;
+            if(valid[CAPTURE_LAT-1])x_wave_word<=cap_word;
+        end
+        for(genvar g=0;g<64;g=g+1)begin:g_xw
+            always @(posedge clk)if(vc_c[g])x_wave[g*32+:32]<=cap_d[g*32+:32];
+        end
+    end else begin:g_beats_m2
         reg late_v; reg [9:0] late_word; reg [2047:0] late_d;
         wire send=valid[CAPTURE_LAT-1]&&!(MUT_BEAT==2&&cap_beat==3);
         assign nx_v=send||late_v; assign nx_en=send||late_v; assign nx_beat=late_v?2'd3:mut_beat;

@@ -11,12 +11,18 @@ module ot_hnx_hc_xbrep (
     input  wire       d_v,              // next x_wave_v
     input  wire       en,               // x_wave_beat load enable
     input  wire [1:0] d_beat,           // next x_wave_beat
-    output reg        q_v,
-    output reg  [1:0] q_beat
+    output wire       q_v,
+    output wire [1:0] q_beat
 );
+    // HUB-SAFE2 2026-10-20: the copies are KEPT registers (ot_keep_regs.tcl): the module-name keep of the safe1019 kit
+    // matched nothing after flattening (gate keep_modules FAIL), the four copies folded into the centre's x_beat
+    // register and one flop drove the N and E face pins 540..560 um apart (wire_reach FAIL).
+    (* keep = "true", dont_touch = "true" *) reg       qv_r;
+    (* keep = "true", dont_touch = "true" *) reg [1:0] qb_r;
+    assign q_v = qv_r; assign q_beat = qb_r;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) q_v <= 1'b0; else q_v <= d_v;
+        if (!rst_n) qv_r <= 1'b0; else qv_r <= d_v;
     always @(posedge clk)
-        if (en) q_beat <= d_beat;
+        if (en) qb_r <= d_beat;
 endmodule
 `default_nettype wire

@@ -28,6 +28,7 @@ H=rtl/hbm_next/hc
 COMMON=(rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay.sv)
 QSRC=(rtl/hbm_next/hc/tb/tb_hnx_hc_q.sv $H/ot_hnx_hc_q.sv $H/ot_hnx_hgi_hc_residual_vm.sv $H/ot_hnx_hgi_hc_result_vm.sv
   $H/ot_hnx_hgi_hc_gathered_mix_reader.sv $H/ot_hnx_hc_xw_rx.sv $H/ot_hnx_hc_xbrep.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
+  $H/ot_hnx_hc_cal.sv $H/ot_hnx_prog_target.sv
   rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv
   rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv "${COMMON[@]}"
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
