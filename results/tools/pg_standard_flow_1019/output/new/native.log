@@ -1,0 +1,76 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_PG_FINAL_PASS native_pg_terminals=406
+[INFO CTS-0050] Root buffer is BUFx8_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx8_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx8_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx8_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 51 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 51.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(3763, 21116), (39260, 22388)].
+[INFO CTS-0024]  Normalized sink region: [(2.78741, 15.6415), (29.0815, 16.5837)].
+[INFO CTS-0025]     Width:  26.2941.
+[INFO CTS-0026]     Height: 0.9422.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 26
+    Sub-region size: 13.1470 X 0.9422
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 13.1470 X 0.4711
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (183.934 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 51.
+[INFO CTS-0018]     Created 5 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 5 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 10:1, 12:1, 13:1, 16:1..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 54
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 46.35 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 3
+[INFO CTS-0500] Runtime: 0.80s
+FIXTURE_AFTER_CTS unbound=16
+OT_PG_FINAL_PASS native_pg_terminals=422
+OT_CLK_PROTECT dont_touch clock nets=6 clock buffers=5 pg_bound=16 scope=source_cts_before_protect
+[INFO RSZ-0046] Found 36 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |  12.954 |   0.000 | u_reset_a/q$_DFF_PN0_/RESETN
+    final |       0 |      33 |            0 |   +11.1% |  30.098 |   0.000 | a_q[9]$_DFF_PN0_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 33 hold buffers.
+[INFO RSZ-0506] Runtime: 0.02s
+OT_PG_FINAL_PASS native_pg_terminals=488
+OT_PG_POST_REPAIR bound=66 scope=source_cts_return_boundary
+FIXTURE_AFTER_REPAIR unbound=0
+OT_PG_FINAL_PASS native_pg_terminals=488
+STANDARD_NATIVE_CTS_REPAIR_BOUNDARY_PASS
+STRICT_UNSUPPORTED_NATIVE_BIRTH_REFUSAL_PASS
