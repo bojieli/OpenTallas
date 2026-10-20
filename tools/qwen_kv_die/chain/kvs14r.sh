@@ -44,6 +44,8 @@ export OT_KV_PV_CTL_KIT=qkd_pv_ctl_rstpin_a72 OT_KV_HOST_V14=1 OT_KV_HOST_NORTH=
 export OT_KV_HROOT=1 OT_KV_FANFOLD=1 OT_KV_V144_DW=2462.4 OT_KV_SN_LIFT=432 OT_KV_CTL_BAND=302.4 OT_KV_PVT_HUB_CLEAR=172.8 OT_KV_KV_CHAN_EXTRA=86.4 OT_KV_V144_RLY_FIRST=pvin_,krs_,kvn_,ap_,aq_,am_,ks_acal_,pve_
 export OT_KV_STATIC_DIE_STRICT=1 OT_KV_TILE_KITS=1 OT_KV_PVFORK_GAP=64.8 OT_KV_ATTN_LAND=1 ${KVS14R_EXTRA:-}
 export OT_KV_EXPAND=qkd_rhead,qkd_rhead_ft,qkd_ectl,qkd_ctrl,qkd_ctrl_n,qkd_pvfork,qkd_pvtap2,qkd_pvtap3,qkd_pvtap4,qkd_seq_st,qkd_pvw_s,qkd_pvw_n
+# KV-HEALTH 10-19 (MU release defaults): health plane installed, reset roots on the HOLD273 view
+export OT_KV_HEALTH=${OT_KV_HEALTH:-1} OT_KV_RST_HOLD=${OT_KV_RST_HOLD:-273}
 export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_KV_BUNDLE_EQ=1 OT_KV_D2D_NTX=3
 # KVR-VIEWS 10-19 view defaults (each binds ONLY a CLOSED view; overridable from the caller's environment / KVS14R_EXTRA):
 #  * OT_KV_FACE_LAND=astk_rly_296: the expanded ASTK strip's relay child binds the CLOSED face-landed view
@@ -74,6 +76,11 @@ if [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ]; then
   say "CLK UNMEASURED DIAGNOSTIC (R=0): $(cat $R/libs/CLK_UNMEASURED_DIAGNOSTIC | head -c 300) -- NOT A DIE RESULT"
   echo "CLK_UNMEASURED_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
 fi
+# KV-HEALTH 10-19: an incomplete health plane / HOLD128 reset roots are diagnostics, never a die result
+for mk in HEALTH_DIAGNOSTIC RST_HOLD_DIAGNOSTIC; do
+  if [ -s $R/$mk ]; then say "$mk: $(head -c 400 $R/$mk) -- NOT A DIE RESULT"; echo "${mk}_ONLY" >> $R/NOT_A_DIE_RESULT; fi
+done
+say "HEALTH: $(grep -m1 '^KV_HEALTH {' $R/health_plane.log 2>/dev/null | head -c 600)"
 # KVR-LANDLAG 10-19: landed crossings vs compiled ages (kvsys_prep kv-check; only OT_KV_LAND_LAG_DIAG=1 lets a FAIL through)
 if [ -s $R/LAND_LAG_DIAGNOSTIC ]; then
   say "LAND_LAG DIAGNOSTIC: $(head -c 400 $R/LAND_LAG_DIAGNOSTIC) -- NOT A DIE RESULT"
@@ -108,6 +115,8 @@ unset OT_BIND_DIAGNOSTIC
 [ -s $R/FWD_UNLANDED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ -s $R/LAND_LAG_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
+[ -s $R/HEALTH_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
+[ -s $R/RST_HOLD_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ "${OT_KV_PARAM_DIAG:-0}" = 1 ] && export OT_BIND_DIAGNOSTIC=1
 say "chain start (laned netlist; OT_BIND_DIAGNOSTIC=${OT_BIND_DIAGNOSTIC:-0})"
 bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain.log" 2>&1 || say "chain rc=$?"
