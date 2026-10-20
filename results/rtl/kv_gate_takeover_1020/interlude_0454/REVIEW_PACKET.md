@@ -1,0 +1,13 @@
+HROOT interlude source/admission packet; NOT approval or qualification.
+
+Exact queued and frozen jobs295504c93 preserved; unsupported structural_reach kind remains. Old closure revoked actual filemtime04:53:17PT before ingest04:54:53/04:55:01 (embeddedat04:58 future estimate). Canonical closure_counts therefore excludes predecessor, making closed_stands NA with no event/check. ROOT recognized adoption_holds now prohibit do_verdict/do_commit adoption while routes continue; no pickup state mutation. No new P&R was launched by pickup.
+
+source_equivalence_partial.json pins actual Git objects. Both RTL byte-identical, actual top/sources/params/clock/reset/outline300.24sq/layercap/macros/faces/ranges/native boundary settings equal predecessor. Changed fields explicit: job/name/purpose/reason/structural text/after-flops pin hook/preCTS release; v4b additionally fencehalf45. Existing unsupported reason legacy417roots/517.212 is not authoritative v5 receipt (actual411center/420bbox/516.4365). No relabeling proposed.
+
+Actual CTS inventory audit (readonly,8GB1thread) joins actual Lib sequential masters and all ITerm direction/function/clock/net with consumed preGPL membership and transformed bboxes. Both5890 sequential instances =3128 boundary anchors +2762 central. Zero missing original sequential members. Original hook listed central7306; CTS7092 remain after comb buffers optimized, combined308/309 hook members missing total and10689/10806 posthook births explicitly unknown class. No semantic classification claimed for new clocks/repair buffers. All native/all-driver reach v5 candidatePASS separately preserved in prior295504c93 packet, still CTS scope only.
+
+Central allcell actualCTS bboxes v4 [110.214,109.08,190.890,190.080], v4b [105.192,105.030,195.858,194.940]; not claimed strict80/90box containment after preCTS fence release. Actual endpoint audit is reach authority. Consumed fenceSHA e62d7fec1bd3b464..., release3ccf7c10c6c7f282..., preGPLffb416987dc94541... both, exactfullSHA in receipts. Hook membership+anchor files copied intact; actualfinalgeometry/PG/clock/source remains to audit perheldroutes.
+
+OriginalPG failure remains: predecessor6242HB1/HB2unbound, candidatesCTS4510/4694BUFx2unbound; no repair/source-stage classification performed by this registerinventory. No pg_binding admission workaround. Actual ODB rewire causal segfault and graph-only negative limitation in closed_predecessor/HAND_BACK.md retained.
+
+First inventory job completedv4 then failedv4b consumedpreGPL path because /gate mountalias loses originalkind. hroot_inventory_0507.log retained. Correcteduniqueactualkitglob v2 bothPASS terminal0; originalremote script unchanged, outputs separate.

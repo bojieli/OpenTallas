@@ -1,0 +1,28 @@
+ot-run: ot-epyc5       admits   603 GB (avail 535, growth 113, headroom 0, waiters 0/0 GB) load 66/128 running 29 disk 508 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3872159-1792497935 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{"scope": "Actual CTS sequential register inventory and transformed instance bboxes joined to consumed pre-GPL hook membership. Membership is consumed original Tcl classification, not independently semantic classification. Post-hook births explicitly unclassified; no extrapolated final PG/405/clock proof.", "odb_sha256": "bb531b1097ff0f930402812036356feacc6f7d31101c67146a894efbb6aef742", "sequential_count": 5890, "sequential_by_hook_class": {"anchor": 3128, "central": 2762}, "all_cells_by_hook_class": {"port_chain": 1557, "anchor": 10833, "central": 7092, "physical": 8231, "post_hook_birth_unclassified": 10689, "tie": 780}, "all_cell_bbox_by_hook_class_um": {"port_chain": [90.45, 2.16, 297.918, 298.08], "anchor": [2.268, 2.16, 297.972, 298.08], "central": [110.214, 109.08, 190.89, 190.08], "physical": [2.16, 2.16, 298.08, 298.08], "post_hook_birth_unclassified": [2.646, 2.16, 297.972, 298.08], "tie": [143.37, 3.51, 295.164, 30.78]}}
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+Traceback (most recent call last):
+  File "/audit/register_inventory.py", line 22, in <module>
+    files[str(p)]={'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size}
+  File "/usr/lib/python3.10/pathlib.py", line 1126, in read_bytes
+    with self.open(mode='rb') as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/gate/src/physical/ref_tile/qkd_kvs_hroot_s32v4/pre_gpl.tcl'
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3872159-1792497935): exit 1

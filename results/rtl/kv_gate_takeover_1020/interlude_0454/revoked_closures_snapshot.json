@@ -1,0 +1,272 @@
+{
+ "hbm_cmdproc_n_ac6ef1af3": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -54.19,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_cmdproc_s_ac6ef1af3": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -46.57,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_idxq_b1_841beb3ab_we-cgfix": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -20.08,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_idxq_b1_841beb3ab_we-cgfix-tt": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -17.6,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_router_r23_kneg_94fab53cc_a": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -82.37,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_router_r23_kneg_94fab53cc_b": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -69.28,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_router_kneg_368f1f6d2_b": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -48.43,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_svc_SE_s6_41d574827_bud": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -7.68,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_svc_SE_s6_70a27c406": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -8.55,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_svc_SW_s4_41d574827_bud": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -59.34,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_svc_SW_s4_70a27c406": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -42.43,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_svc_SW_s7_tc_4aadc92bc": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -28.08,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_svc_SW_s7_tt_c10b5fc9a": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -28.08,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "wcol256-pinreg-f1b64667d-tt": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -3.26,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "wcol256-pinreg-r1-f1b64667d-tt": {
+  "reason": "H1 re-time: FF hold fails on corrected link constraints",
+  "ff_ps": -2.46,
+  "by": "h1-verify",
+  "at": "2026-10-08T07:40:00-07:00"
+ },
+ "hbm_smh_front_s_vq-933923316-tc-hm25-cl": {
+  "reason": "LOOP-CORNER: OT_ORFS_CORNER_OVERRIDE=TC ignored by the SM generator since c10b5fc9a / 48c78e37f -> routed at SS libs (confirmed from read_liberty in its route logs); CTS hold repair ran on SS libs vs the TT IO reference. Re-route at TC after 79df6b9e7 and re-judge.",
+  "by": "drive-1010",
+  "at": "2026-10-10T12:07:53-07:00"
+ },
+ "hbm_smh_be_eg_cg-80412d770-tc-np-cl-r2": {
+  "reason": "LOOP-CORNER: OT_ORFS_CORNER_OVERRIDE=TC ignored by the SM generator since c10b5fc9a / 48c78e37f -> routed at SS libs (inferred: same SM generator version, host logs unreadable); CTS hold repair ran on SS libs vs the TT IO reference. Re-route at TC after 79df6b9e7 and re-judge.",
+  "by": "drive-1010",
+  "at": "2026-10-10T12:07:53-07:00"
+ },
+ "hbm_smh_be_wg_cg-80412d770-tc-np-cl-r2": {
+  "reason": "LOOP-CORNER: OT_ORFS_CORNER_OVERRIDE=TC ignored by the SM generator since c10b5fc9a / 48c78e37f -> routed at SS libs (inferred: same SM generator version, host logs unreadable); CTS hold repair ran on SS libs vs the TT IO reference. Re-route at TC after 79df6b9e7 and re-judge.",
+  "by": "drive-1010",
+  "at": "2026-10-10T12:07:53-07:00"
+ },
+ "hbm_smh_front_s_dsk-8e93e5a83-tc-hm25-cl": {
+  "reason": "LOOP-CORNER: OT_ORFS_CORNER_OVERRIDE=TC ignored by the SM generator since c10b5fc9a / 48c78e37f -> routed at SS libs (inferred: same SM generator version, host logs unreadable); CTS hold repair ran on SS libs vs the TT IO reference. Re-route at TC after 79df6b9e7 and re-judge.",
+  "by": "drive-1010",
+  "at": "2026-10-10T12:07:53-07:00"
+ },
+ "hbm_smh_front_s_dsk-8e93e5a83-tc-hm75-cl": {
+  "reason": "LOOP-CORNER: OT_ORFS_CORNER_OVERRIDE=TC ignored by the SM generator since c10b5fc9a / 48c78e37f -> routed at SS libs (inferred: same SM generator version, host logs unreadable); CTS hold repair ran on SS libs vs the TT IO reference. Re-route at TC after 79df6b9e7 and re-judge.",
+  "by": "drive-1010",
+  "at": "2026-10-10T12:07:53-07:00"
+ },
+ "hbm_attn_bank_sn136-080a332be-tc-cl": {
+  "reason": "SENTINEL-SLACK: CLOSED at TT/FF = +1e42 (STA 'no constrained path' sentinel: constraints not applied or clock not found) -> not a timing pass; fix the SDC/clock and re-judge",
+  "by": "drive-1010",
+  "at": "2026-10-10T18:25:41-07:00"
+ },
+ "hbm_attn_quad_qb1_tc_6ce4b64fd": {
+  "reason": "SENTINEL-SLACK: CLOSED at TT/FF = +1e42 (STA 'no constrained path' sentinel: constraints not applied or clock not found) -> not a timing pass; fix the SDC/clock and re-judge",
+  "by": "drive-1010",
+  "at": "2026-10-10T18:25:41-07:00"
+ },
+ "hgi_idx_t4_join-sram-ff4827405-tc-cl-f9a2": {
+  "reason": "SENTINEL-SLACK: CLOSED at TT/FF = +1e42 (STA 'no constrained path' sentinel: constraints not applied or clock not found) -> not a timing pass; fix the SDC/clock and re-judge",
+  "by": "drive-1010",
+  "at": "2026-10-10T18:25:41-07:00"
+ },
+ "hbm_attn_bank_ew136-080a332be-tc-cl": {
+  "reason": "SENTINEL-SLACK: CLOSED at TT/FF = +1e42 (STA 'no constrained path' sentinel: constraints not applied or clock not found) -> not a timing pass; fix the SDC/clock and re-judge",
+  "by": "drive-1010",
+  "at": "2026-10-10T18:25:41-07:00"
+ },
+ "hbm_attn_bank_ew544_tc_e1f264030": {
+  "reason": "SENTINEL-SLACK: CLOSED at TT/FF = +1e42 (STA 'no constrained path' sentinel: constraints not applied or clock not found) -> not a timing pass; fix the SDC/clock and re-judge",
+  "by": "drive-1010",
+  "at": "2026-10-10T18:25:41-07:00"
+ },
+ "hbm_attn_bank_sn544_tc_e1f264030": {
+  "reason": "SENTINEL-SLACK: CLOSED at TT/FF = +1e42 (STA 'no constrained path' sentinel: constraints not applied or clock not found) -> not a timing pass; fix the SDC/clock and re-judge",
+  "by": "drive-1010",
+  "at": "2026-10-10T18:25:41-07:00"
+ },
+ "bfh_col600_28fa6290c-cl": {
+  "reason": "EVIDENCE ONLY (owner 2026-10-10 late): compact hierarchical full-rate BF (bfh_compact220, claude/bf-compact-1011) is the BF of record; this element counts closed when the compact route closes",
+  "by": "drive-1010 BF of record",
+  "at": "2026-10-10T19:35:54-07:00"
+ },
+ "bfh_front280_28fa6290c-cl": {
+  "reason": "EVIDENCE ONLY (owner 2026-10-10 late): compact hierarchical full-rate BF (bfh_compact220, claude/bf-compact-1011) is the BF of record; this element counts closed when the compact route closes",
+  "by": "drive-1010 BF of record",
+  "at": "2026-10-10T19:35:54-07:00"
+ },
+ "bfh_front280i222_28fa6290c-cl": {
+  "reason": "EVIDENCE ONLY (owner 2026-10-10 late): compact hierarchical full-rate BF (bfh_compact220, claude/bf-compact-1011) is the BF of record; this element counts closed when the compact route closes",
+  "by": "drive-1010 BF of record",
+  "at": "2026-10-10T19:35:54-07:00"
+ },
+ "qfd_tile_lsl3-17c2e7993-tc-hm0-cl": {
+  "reason": "leaf (ot_qwen_tile_lsl) closure filed under block qfd_tile: the leaf closed, the qfd_tile parent (qfd_tile_h2) has not",
+  "by": "main-1011",
+  "at": "2026-10-11T20:10:00-07:00"
+ },
+ "qfd_tile_lsl_iof-72938bec5-tc-hm0-cl": {
+  "reason": "leaf (ot_qwen_tile_lsl) closure filed under block qfd_tile: the leaf closed, the qfd_tile parent (qfd_tile_h2) has not",
+  "by": "main-1011",
+  "at": "2026-10-11T20:10:00-07:00"
+ },
+ "qfd_tile_lsl2-24538c0b4-tc-hm0-cl": {
+  "reason": "leaf (ot_qwen_tile_lsl) closure filed under block qfd_tile: the leaf closed, the qfd_tile parent (qfd_tile_h2) has not",
+  "by": "main-1011",
+  "at": "2026-10-11T20:10:00-07:00"
+ },
+ "hbfd_rly_48_we_fc-fc1-8cd3001df": {
+  "reason": "F1 form not met: CTS made the clk_out buffer a tree sink (clk_in->clk_out 58-60 ps TT through 2 CTS BUFx4, not one buffer; forwarded-hop hold ~-23 ps FF); 624 NS/SN native capture 193.5/192.9; successor fc2 claude/hnl-f1rly-1815 55bd4ff91",
+  "by": "H-NETLIST/F1 (own job)",
+  "at": "2026-10-16T19:45:00-07:00"
+ },
+ "hbfd_rly_624_ns_fc-fc1-e910cd3d7": {
+  "reason": "F1 form not met: CTS made the clk_out buffer a tree sink (clk_in->clk_out 58-60 ps TT through 2 CTS BUFx4, not one buffer; forwarded-hop hold ~-23 ps FF); 624 NS/SN native capture 193.5/192.9; successor fc2 claude/hnl-f1rly-1815 55bd4ff91",
+  "by": "H-NETLIST/F1 (own job)",
+  "at": "2026-10-16T19:45:00-07:00"
+ },
+ "hbfd_rly_624_we_fc-fc1-3662dd43d": {
+  "reason": "F1 form not met: CTS made the clk_out buffer a tree sink (clk_in->clk_out 58-60 ps TT through 2 CTS BUFx4, not one buffer; forwarded-hop hold ~-23 ps FF); 624 NS/SN native capture 193.5/192.9; successor fc2 claude/hnl-f1rly-1815 55bd4ff91",
+  "by": "H-NETLIST/F1 (own job)",
+  "at": "2026-10-16T19:45:00-07:00"
+ },
+ "hbfd_rly_624_ew_fc-fc1-501e180d4": {
+  "reason": "F1 form not met: CTS made the clk_out buffer a tree sink (clk_in->clk_out 58-60 ps TT through 2 CTS BUFx4, not one buffer; forwarded-hop hold ~-23 ps FF); 624 NS/SN native capture 193.5/192.9; successor fc2 claude/hnl-f1rly-1815 55bd4ff91",
+  "by": "H-NETLIST/F1 (own job)",
+  "at": "2026-10-16T19:45:00-07:00"
+ },
+ "hbfd_rly_624_sn_fc-fc1-ef0d0c1a2": {
+  "reason": "F1 form not met: CTS made the clk_out buffer a tree sink (clk_in->clk_out 58-60 ps TT through 2 CTS BUFx4, not one buffer; forwarded-hop hold ~-23 ps FF); 624 NS/SN native capture 193.5/192.9; successor fc2 claude/hnl-f1rly-1815 55bd4ff91",
+  "by": "H-NETLIST/F1 (own job)",
+  "at": "2026-10-16T19:45:00-07:00"
+ },
+ "hbfd_rly_48_ew_fc-fc1-b1461be97": {
+  "reason": "F1 form not met: CTS made the clk_out buffer a tree sink (clk_in->clk_out 58-60 ps TT through 2 CTS BUFx4, not one buffer; forwarded-hop hold ~-23 ps FF); 624 NS/SN native capture 193.5/192.9; successor fc2 claude/hnl-f1rly-1815 55bd4ff91",
+  "by": "H-NETLIST/F1 (own job)",
+  "at": "2026-10-16T19:45:00-07:00"
+ },
+ "hbfd_rly_48_sn_fc-fc1-11fa2b143": {
+  "reason": "F1 form not met: CTS made the clk_out buffer a tree sink (clk_in->clk_out 58-60 ps TT through 2 CTS BUFx4, not one buffer; forwarded-hop hold ~-23 ps FF); 624 NS/SN native capture 193.5/192.9; successor fc2 claude/hnl-f1rly-1815 55bd4ff91",
+  "by": "H-NETLIST/F1 (own job)",
+  "at": "2026-10-16T19:45:00-07:00"
+ },
+ "hbfd_rly_48_ns_fc-fc1-940b052c0": {
+  "reason": "F1 form not met: CTS made the clk_out buffer a tree sink (clk_in->clk_out 58-60 ps TT through 2 CTS BUFx4, not one buffer; forwarded-hop hold ~-23 ps FF); 624 NS/SN native capture 193.5/192.9; successor fc2 claude/hnl-f1rly-1815 55bd4ff91",
+  "by": "H-NETLIST/F1 (own job)",
+  "at": "2026-10-16T19:45:00-07:00"
+ },
+ "s81hc_ctrnown_e_ref-a5-f068a2c9c": {
+  "reason": "native FAIL launch 224.7 ps > 220 (coordinator revoke so successor a7 can route)",
+  "by": "coordinator",
+  "at": "2026-10-16T19:47:10-07:00"
+ },
+ "s81hc_ctrnown_e_ref-a6-fadd15091": {
+  "reason": "native FAIL capture 192.5 ps > 190 at flg_fault[0] (receipt results/rtl/s81_hc_native_1016/ctrnown_e_a6_native.json); coordinator revoke for a7",
+  "by": "coordinator",
+  "at": "2026-10-16T19:47:10-07:00"
+ },
+ "s81hc_retcol_c2f_ref-a4f-943f43ffa": {
+  "reason": "native FAIL capture 191.7 ps > 190 at pflt_s (one pin; per-face fault-OR flop serves pins ~106 um apart); successor a4g d11ffd597 moves pflt pins beside nflt_col, same RTL/outline, 0 cycles; slot_change inapplicable (same faces), native_capture kind not yet available; coordinator revoke for a4g",
+  "by": "coordinator",
+  "at": "2026-10-16T22:23:14-07:00"
+ },
+ "qkd_static_kv_return_slots_mc_r3-mc3b-d4c0e5fee": {
+  "reason": "NOT BINDABLE: native FAIL (capture 259.3 / launch 221.1) and its RTL (mc_r3) is superseded; main RTL is now mc_r5 (df4bbb47d, merged 531edf398) after main mc_r4 FATALed tb_static_return_idle_mc both phases (functional FAIL); r5 route supplies the bindable view",
+  "by": "coordinator (via ROOT CLUSTER-FLOW)",
+  "at": "2026-10-16T23:36:56-07:00"
+ },
+ "qkd_static_kv_return_slots_mc_r3-mc3c-b1633f90c": {
+  "reason": "NOT BINDABLE: native FAIL launch 223.1 > 220 (idle_core); RTL mc_r3c != main mc_r5 (df4bbb47d, merged 531edf398; main mc_r4 was functional FAIL on tb_static_return_idle_mc); r5 route supplies the bindable view",
+  "by": "coordinator (via ROOT CLUSTER-FLOW)",
+  "at": "2026-10-16T23:36:56-07:00"
+ },
+ "s81sl_capc_p1_die_rc_order-s81capc_die_rc_order-a62cd1284": {
+  "reason": "NOT BINDABLE: exact final TT electrical report has 2 max-slew violations 300.71/275.63 ps > 260 (receipt 38183aece ELECTRICAL_HOLD.json); never adopted. Successor s81sl_capc_p1_die_slew (same RTL, max_wire_repeat hook) gate 267b35821 0 slew violators.",
+  "by": "LEAD-S81 (Claude S81 lead)",
+  "at": "2026-10-19T11:51:10-07:00"
+ },
+ "hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33": {
+  "reason": "NOT BINDABLE: PG_HOLD unbound PG ITerms in final ODB (780 unbound, dd3920111 artifacts/hbm-closed-pg-scope-1019/selected.json); timing history retained; successor reroute on PG final-connect daemon 8cbc (LEAD2-HBM D3)",
+  "by": "LEAD2-HBM/L2H-IDX",
+  "at": "2026-10-19T16:29:24-07:00"
+ },
+ "hidx_op_n12_g2c_1019-g2c-c11f3bb33": {
+  "reason": "NOT BINDABLE: PG_HOLD unbound PG ITerms in final ODB (1494572 unbound, dd3920111); timing history retained; successor reroute on PG final-connect daemon 8cbc (LEAD2-HBM D3)",
+  "by": "LEAD2-HBM/L2H-IDX",
+  "at": "2026-10-19T16:29:24-07:00"
+ },
+ "hidx_rootctl_am_1018-r4-49a5acb8f": {
+  "reason": "NOT BINDABLE: PG_HOLD unbound PG ITerms in final ODB (6931852 unbound, dd3920111); timing history retained; successor reroute on PG final-connect daemon 8cbc (LEAD2-HBM D3)",
+  "by": "LEAD2-HBM/L2H-IDX",
+  "at": "2026-10-19T16:29:24-07:00"
+ },
+ "hdie_col_idx256_1019-fan32g1-2727e1f68": {
+  "reason": "NOT BINDABLE: PG_HOLD unbound PG ITerms in final ODB (644 unbound PG pins / 322 BUFx24, codex/hbm-idx-final-native-1019 535afd687); timing history retained; successor reroute on PG final-connect daemon 8cbc (LEAD2-HBM D3)",
+  "by": "LEAD2-HBM/L2H-IDX",
+  "at": "2026-10-19T16:29:24-07:00"
+ },
+ "qkd_kvs_hroot_safe32-s32v3-e52c7bca5": {
+  "reason": "NOT BINDABLE: native reach FAIL on final ODB 5f1e2797 (411 drivers center >405 um, max 516.44; real single-cycle cap.dat q0->q1 wires) + PG_HOLD 6242 unbound PG ITerms (HB1/HB2); diagnostic only (KV-RST3 02:26). Evidence codex/kv-gates-takeover-1020 295504c93 closed_predecessor/. Successors qkd_kvs_hroot_s32v4/s32v4b (centre fence, CTS reach 339.6/343.5).",
+  "by": "KV-BIND7",
+  "at": "2026-10-20T04:58:00-07:00"
+ }
+}

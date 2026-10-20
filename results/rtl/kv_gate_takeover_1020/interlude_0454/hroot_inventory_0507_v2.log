@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       admits   706 GB (avail 607, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 28 disk 508 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hroot-candidate-v5-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3876095-1792497974 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{"scope": "Actual CTS sequential register inventory and transformed instance bboxes joined to consumed pre-GPL hook membership. Membership is consumed original Tcl classification, not independently semantic classification. Post-hook births explicitly unclassified; no extrapolated final PG/405/clock proof.", "odb_sha256": "bb531b1097ff0f930402812036356feacc6f7d31101c67146a894efbb6aef742", "sequential_count": 5890, "sequential_by_hook_class": {"anchor": 3128, "central": 2762}, "all_cells_by_hook_class": {"port_chain": 1557, "anchor": 10833, "central": 7092, "physical": 8231, "post_hook_birth_unclassified": 10689, "tie": 780}, "all_cell_bbox_by_hook_class_um": {"port_chain": [90.45, 2.16, 297.918, 298.08], "anchor": [2.268, 2.16, 297.972, 298.08], "central": [110.214, 109.08, 190.89, 190.08], "physical": [2.16, 2.16, 298.08, 298.08], "post_hook_birth_unclassified": [2.646, 2.16, 297.972, 298.08], "tie": [143.37, 3.51, 295.164, 30.78]}}
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{"scope": "Actual CTS sequential register inventory and transformed instance bboxes joined to consumed pre-GPL hook membership. Membership is consumed original Tcl classification, not independently semantic classification. Post-hook births explicitly unclassified; no extrapolated final PG/405/clock proof.", "odb_sha256": "947085a98a26946e88dd6eee080e2d236798aac8607bbb2805f054f0e6b56686", "sequential_count": 5890, "sequential_by_hook_class": {"anchor": 3128, "central": 2762}, "all_cells_by_hook_class": {"port_chain": 1557, "anchor": 10832, "central": 7092, "physical": 8231, "post_hook_birth_unclassified": 10806, "tie": 780}, "all_cell_bbox_by_hook_class_um": {"port_chain": [90.504, 2.16, 297.972, 297.54], "anchor": [2.268, 2.16, 297.972, 298.08], "central": [105.192, 105.03, 195.858, 194.94], "physical": [2.16, 2.16, 298.08, 298.08], "post_hook_birth_unclassified": [2.808, 2.16, 297.972, 298.08], "tie": [143.856, 4.32, 295.704, 32.13]}}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3876095-1792497974): exit 0
