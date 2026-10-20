@@ -1,0 +1,181 @@
+{
+  "schema": "opentallas.hbm.qcore-rf-sram-source-model.v1",
+  "status": "MODEL_ONLY_ENGINE_NOT_READY",
+  "production_qualified": false,
+  "physical_qualified": false,
+  "unified_model_entry": "tools/uarch_model.py:hbm_qcore_rf_sram_candidate_model",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r9.sv": "4cd476a91ab5f183907d2ba3a79449ed48efb312f8798f89711482cfba80d305",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv": "494b44832bff3f637c6039f233fc1602f7be7391c9c0cf5cf95a5d0be4c226a3",
+    "physical/ref_tile/hbm_su_qcore_r6n_1019/spec.json": "9619cdce1e4c3f97eedf0fa0dfbd07e061a692418eb66ec0298c5e784e8f5d82",
+    "tools/hbm_static/su_top_compile.py": "4a423adb15c29316a53fae23ee6baa2ec384cbd46fb80f064e952c8e83018fee",
+    "tools/hbm_static/su_red_carry_calendar.py": "51a93ae656aaba7ebaea7965232870e3cf4b1005a1cb109464210b0cf86453ec",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84"
+  },
+  "production_binding": {
+    "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r7portage/net/contract_pre.json",
+    "source_commit": "0ae60e322",
+    "qcore_params": {
+      "MUT": 0,
+      "COLLPORT": 1,
+      "RF_LOCAL": 1
+    },
+    "programme": "ot_hbm_su_programme_pslice_c5",
+    "command_quarter": "NW command[4844+:2422]",
+    "PIPE": 2,
+    "compiler_start_advance_edges": 6,
+    "EDGES_default": 7111,
+    "old_component_manifest_sha256": "544ba72d0cf50f2ca1f75092fd1ba5c9a56adbb2b590bd77e7f30ebdb2a25e93",
+    "old_component_edges": 7116,
+    "old_component_qualified": false,
+    "actual_host_configuration_and_current_command_inventory": "NOT PROVEN; never alias old standalone image to current binding"
+  },
+  "RF": {
+    "words": 256,
+    "bits_per_word": 32,
+    "banks": 64,
+    "rows_per_bank": 4,
+    "logical_bits": 8192,
+    "read_classes_normal": 5,
+    "read_class5_words": 8,
+    "read_bits_per_edge": 416,
+    "read_bytes_per_edge": 52,
+    "relay_write_ports": 4,
+    "relay_write_bits_per_port": 32,
+    "coll_write_bits": 256,
+    "write_bits_per_edge": 384,
+    "write_bytes_per_edge": 48,
+    "issue_interval_edges": 1,
+    "macs_per_cycle": 0,
+    "external_RF_command_and_writer_bits": 480,
+    "external_RF_drain_control_bits": 2,
+    "external_RF_data_and_command_return_bits": 420,
+    "external_RF_boundary_bits": 902
+  },
+  "semantic_contract": {
+    "write_capture": "pin E; memory commit E+1",
+    "read_capture": "command E; read-before-write array sample E+1; selected data E+2; external rf_bword/rf_dsec E+3",
+    "macro": "1R1W sampled at rising edge, registered read; word_read executes before masked word_write",
+    "collision": "highest relay writer wins per 6-bit bank even when rows differ; COLL overrides matching eight banks; preserve conflict fault",
+    "reset": "RF data unreset; ownership table must persist, no reset-to-owner0 that changes retained data",
+    "invalid": "preserve every-edge output hold contract, not only valid data",
+    "startup": "arbitrary SRAM state and arbitrary persistent owner code need an explicit coupled-state proof and real first-valid calendar; no zero-init credit",
+    "logical_added_edges": 0,
+    "logical_edge_status": "candidate only; physical regional transport can require additional edges"
+  },
+  "candidates": [
+    {
+      "name": "general_five_writer_LVT",
+      "macros": 30,
+      "read_replicas": 6,
+      "writer_arrays": 5,
+      "physical_banks": 1,
+      "logical_bits": 8192,
+      "allocated_bits": 983040,
+      "capacity_amplification": 120,
+      "macro_area_um2": 116747.3088,
+      "required_calendar_condition": "No traffic restriction; implement exact same-bank priority and COLL precedence before writer-owned arrays",
+      "status": "NOT RUN"
+    },
+    {
+      "name": "calendar_single_packed_row",
+      "macros": 6,
+      "read_replicas": 6,
+      "writer_arrays": 1,
+      "physical_banks": 1,
+      "logical_bits": 8192,
+      "allocated_bits": 196608,
+      "capacity_amplification": 24,
+      "macro_area_um2": 23349.46176,
+      "required_calendar_condition": "Every edge all active writes must share addr[7:3]; one composite256-bit write mask. Current production NOT PROVEN",
+      "status": "NOT RUN"
+    },
+    {
+      "name": "calendar_four_packed_banks",
+      "macros": 24,
+      "read_replicas": 6,
+      "writer_arrays": 1,
+      "physical_banks": 4,
+      "logical_bits": 8192,
+      "allocated_bits": 786432,
+      "capacity_amplification": 96,
+      "macro_area_um2": 93397.84704,
+      "required_calendar_condition": "Map bank=addr[4:3], row=addr[7:5]; at most one distinct packed row per physical bank/edge. Current production NOT PROVEN",
+      "status": "NOT RUN"
+    }
+  ],
+  "general_candidate": {
+    "mapping": "packed row=addr[7:3], lane=addr[2:0]; COLL address is packed-row directly",
+    "writer_arrays": 5,
+    "reads_per_array": 6,
+    "macro_count": 30,
+    "macro_active_rows": 32,
+    "macro_width": 256,
+    "allocated_bits": 983040,
+    "useful_replicated_bits": 245760,
+    "owner_table_bits": 768,
+    "owner_table": "256x3 persistent FF state (<2kb), 5-way latest-writer select per word; no reset clearing. Codes5..7 map to defined owner for total-state relation",
+    "normal_read": "read all five writer arrays for selected packed row, 8:1 lane selection then5:1 owner select",
+    "class5_read": "five256-bit reads, independent owner select for each of8words",
+    "physical_read_output_bits_per_edge": 7680,
+    "write_data_pin_bits": 7680,
+    "dynamic_written_bits_per_edge": 2304,
+    "control_copy_first_budget": {
+      "mask_copies": 480,
+      "extra_scalar_data_FF": 128,
+      "owner_read_selector_FF": 78,
+      "status": "STRUCTURAL ESTIMATE, not synthesized; write/address/control native fanout still owed"
+    },
+    "macro_clk_to_q_ps": {
+      "tt": 351.7716962013416,
+      "ss": 455.3205489475797,
+      "ff": 286.10773919130247
+    },
+    "latency_credit": 0,
+    "rate_credit": 0
+  },
+  "physical_screen": {
+    "status": "NOT RUN; screen is not floorplan/native/PG/clock admission",
+    "macro_width_um": 94.824,
+    "macro_height_um": 41.04,
+    "literal_origin_lattice_um": 43.2,
+    "coarse_pitch_um": [
+      129.6,
+      86.4
+    ],
+    "x_channel_um": 34.776,
+    "y_channel_um": 45.36,
+    "RF_plus_existing_reducer_macros": 32,
+    "coarse_grid": [
+      4,
+      8
+    ],
+    "coarse_outline_um": [
+      604.8,
+      777.6
+    ],
+    "old_outline_um": [
+      280.8,
+      280.8
+    ],
+    "outline_ratio": 5.964497041420118,
+    "density": "40-60% one full-width standard band requires actual mapped area and exact exception inventory; not proved",
+    "pin_access": "actual LEF role/pin geometry, track census and per-face channel capacity still owed; no pins/6 gap formula assumed",
+    "planning_reach": "outline exceeds405um; reject an unlanded global stage. Regional roots/registered seams need full transparent endpoint proof and explicit calendar price",
+    "clocks": "30 new macro clocks require real-Lib clock roles and bound regional root inventory; no shared-root spread assumption",
+    "PG": "fresh actual native PG census/protected/fixed/empty-net audit required; intermediate ordinary pre-global_connect nulls are not automatically defects"
+  },
+  "blockers": [
+    "Current production host-config/command image not source-bound; no reduced write concurrency admitted",
+    "General30 macro area116747.3088um2 alone exceeds old78848.64um2 outline",
+    "Every stage/all drivers <=32 including mask broadcasts/reset/owner readmux remains unmeasured",
+    "Full405reach and any added physical stages not composed with compiler staticcalendar",
+    "No actual full-band density, PG, clockspread, SS/FF timing or production throughput proof"
+  ],
+  "next": "Bind actual current command inventory; choose/model regional macro architecture; prove exact same-edge/state semantics; then source RTL and standalone native only"
+}

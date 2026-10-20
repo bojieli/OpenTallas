@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "scope": "Invoke exact AST-extracted unified-model wrapper and check port/capacity arithmetic only; no hardware/calendar proof",
+  "whole_uarch_import": "NOT RUN: sparse baseline dependencies absent; first observed arch_budget_v41 missing",
+  "counts": [
+    30,
+    6,
+    24
+  ],
+  "engine_ready": false
+}

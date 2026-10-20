@@ -35,6 +35,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def hbm_qcore_rf_sram_candidate_model():
+    """Price the production-port RF replacement; no traffic/physical admission."""
+    from hbm_static.qcore_rf_sram_model import model
+    return model()
+
+
 def qwen_tile_node_native_boundary_model():
     """Output pad correction on the existing 16-lane FP32 node; no schedule credit."""
     return dict(schema="opentallas.qwen-tile-node-native-boundary.v1",
