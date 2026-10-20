@@ -1,0 +1,143 @@
+
+-- Running command `read_verilog -formal -sv rtl/test/host_reset_copy_1020/common_reset.sv; hierarchy -top common_reset; proc; flatten; async2sync; opt_clean; sat -seq 3 -tempinduct -prove qualified_equal 1 -verify -show q0,q1,rst_n,d,reset_seen' --
+
+1. Executing Verilog-2005 frontend: rtl/test/host_reset_copy_1020/common_reset.sv
+Parsing formal SystemVerilog input from `rtl/test/host_reset_copy_1020/common_reset.sv' to AST representation.
+Generating RTLIL representation for module `\common_reset'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \common_reset
+
+2.2. Analyzing design hierarchy..
+Top module:  \common_reset
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/test/host_reset_copy_1020/common_reset.sv:17$5 in module common_reset.
+Marked 1 switch rules as full_case in process $proc$rtl/test/host_reset_copy_1020/common_reset.sv:8$3 in module common_reset.
+Marked 1 switch rules as full_case in process $proc$rtl/test/host_reset_copy_1020/common_reset.sv:2$1 in module common_reset.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 1 assignment to connection.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:16$10'.
+  Set init value: \reset_seen = 1'0
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:17$5'.
+Found async reset \rst_n in `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:8$3'.
+Found async reset \rst_n in `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:2$1'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:16$10'.
+Creating decoders for process `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:17$5'.
+     1/1: $0\reset_seen[0:0]
+Creating decoders for process `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:8$3'.
+     1/1: $0\q1[0:0]
+Creating decoders for process `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:2$1'.
+     1/1: $0\q0[0:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\common_reset.\reset_seen' using process `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:17$5'.
+  created $adff cell `$procdff$15' with positive edge clock and positive level reset.
+Creating register for signal `\common_reset.\q1' using process `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:8$3'.
+  created $adff cell `$procdff$20' with positive edge clock and positive level reset.
+Creating register for signal `\common_reset.\q0' using process `\common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:2$1'.
+  created $adff cell `$procdff$25' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:16$10'.
+Removing empty process `common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:17$5'.
+Removing empty process `common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:8$3'.
+Removing empty process `common_reset.$proc$rtl/test/host_reset_copy_1020/common_reset.sv:2$1'.
+Cleaned up 0 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module common_reset.
+<suppressed ~6 debug messages>
+
+4. Executing FLATTEN pass (flatten design).
+
+5. Executing ASYNC2SYNC pass.
+Replacing common_reset.$procdff$20 ($adff): ARST=\rst_n, D=\d, Q=\q1
+Replacing common_reset.$procdff$25 ($adff): ARST=\rst_n, D=\d, Q=\q0
+Replacing common_reset.$procdff$15 ($adff): ARST=\rst_n, D=\reset_seen, Q=\reset_seen
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \common_reset..
+Removed 6 unused cells and 15 unused wires.
+<suppressed ~7 debug messages>
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 9 cells to SAT database.
+Import set-constraint from init attribute: $auto$async2sync.cc:253:execute$30 = 1'0
+Final init constraint equation: $auto$async2sync.cc:253:execute$30 = 1'0
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 9 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 9 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 9 cells to SAT database.
+Import proof-constraint: \qualified_equal = 1'1
+Final proof equation: \qualified_equal = 1'1
+
+** Trying induction with length 1 **
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 9 cells to SAT database.
+Import proof-constraint: \qualified_equal = 1'1
+Final proof equation: \qualified_equal = 1'1
+Import show expression: { \q0 \q1 \rst_n \d \reset_seen }
+
+[base case 1] Solving problem with 203 variables and 511 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 9 cells to SAT database.
+Import proof-constraint: \qualified_equal = 1'1
+Final proof equation: \qualified_equal = 1'1
+Import show expression: { \q0 \q1 \rst_n \d \reset_seen }
+
+[induction step 1] Solving problem with 97 variables and 239 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

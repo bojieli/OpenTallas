@@ -1,0 +1,7 @@
+{
+  "exact": "PASS",
+  "wrong_D": "REFUSED D/clock/reset/type/value mismatch",
+  "wrong_clock": "REFUSED D/clock/reset/type/value mismatch",
+  "missing_reset": "REFUSED requires literal async reset value and edge type",
+  "wrong_value": "REFUSED D/clock/reset/type/value mismatch"
+}
