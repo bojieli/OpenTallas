@@ -103,33 +103,49 @@ def link(s):
 
 
 GUARD = """    // ---- FIRST-EPOCH GUARD (FEG; KV-SRAM-D2D 10-19).  Receipt of every ACCEPTED image write since local POR (the same
-    // predicates as the image / base register writes).  A start is authorised only with the complete receipt (32 entries
-    // + segment-1 base), no write on the start edge or the edge before (earliest start = W+2 after the last accepted
-    // write W) and no earlier rejection.  An unauthorised start does not start: it faults and poisons the calendar
-    // (halted until local reset).  ok_c: 4 KEPT copies of the registered authorisation, one D net. ----
+    // predicate as the image / base register writes: we && !running).  A start is authorised only with the complete receipt
+    // (32 entries + segment-1 base), no write on the start edge or the edge before (earliest start = W+2 after the last
+    // accepted write W) and no earlier rejection.  An unauthorised start does not start: it faults and poisons the calendar
+    // (halted until local rst_n).  The guard reads its OWN identical pin-flop copies of the write strobe / address (fg_we,
+    // fg_addr: same pins as cfg_we / cfg_addr, equal from the first edge) and its own KEPT copy of running (run_g, D = run_d),
+    // so no existing net gains a load (census <= 32); the 32 receipt set-enables come from a registered-free 2-level
+    // predecode (4 x 8).  ok_c: 4 KEPT copies of the registered authorisation, one D net. ----
     localparam integer FEGON = (FEG != 0) && (MUTFO != 5);
-    wire wr_entry = cfg_we && !running && !cfg_addr[AW];
+    (* keep = "true", dont_touch = "true" *) reg run_g;
+    wire g_wr = fg_we && !run_g;
+    wire g_ent = g_wr && !fg_addr[AW];
+    wire g_base = g_wr && fg_addr[AW];
+    wire [3:0] g_hi;
+    wire [7:0] g_lo;
+    genvar gq;
+    for (gq = 0; gq < 4; gq = gq + 1) begin : g_ghi
+        assign g_hi[gq] = g_ent && fg_addr[4:3] == gq;
+    end
+    for (gq = 0; gq < 8; gq = gq + 1) begin : g_glo
+        assign g_lo[gq] = fg_addr[2:0] == gq;
+    end
     reg [NE-1:0] seen;
     reg base_seen, poison;
     (* keep = "true", dont_touch = "true" *) reg [3:0] ok_c;
-    wire auth = ok_c[0] && !cfg_we;
+    wire auth = ok_c[0] && !fg_we;
     wire reject = start_c[0] && !auth;
     wire poison_d = poison | reject;
-    wire ok_d = (&seen) && base_seen && !cfg_we && !poison_d;
+    wire ok_d = (&seen) && base_seen && !fg_we && !poison_d;
     // The receipt follows the IMAGE's lifetime: the image registers are unreset and accept a write whenever cfg_we &&
     // !running, including inside the 4-edge local rst_n release window (the cold boot writes there), so the receipt
     // clears only on the local cold POR (por_n: image content undefined) and counts every write the image accepts
     // after it.  The rejection state (poison) and the authorisation copies clear on the calendar's local rst_n.
+    integer gk;
     always @(posedge ck or negedge por_n)
         if (!por_n) begin seen <= {NE{1'b0}}; base_seen <= 1'b0; end
         else begin
-            if (wr_entry) seen[cfg_addr[AW-1:0]] <= 1'b1;
-            if (seg_we) base_seen <= 1'b1;
+            for (gk = 0; gk < NE; gk = gk + 1) if (g_hi[gk / 8] && g_lo[gk % 8]) seen[gk] <= 1'b1;
+            if (g_base) base_seen <= 1'b1;
         end
     (* keep = "true", dont_touch = "true" *) always @(posedge ck or negedge rst_n)
         if (!rst_n) begin poison <= 1'b0; ok_c <= 4'd0; end
         else begin poison <= poison_d; ok_c <= {4{ok_d}}; end
-    wire [3:0] st_a = FEGON ? (start_c & ok_c & {4{!cfg_we}}) : start_c;
+    wire [3:0] st_a = FEGON ? (start_c & ok_c & {4{!fg_we}}) : start_c;
     wire [3:0] ht_a = FEGON ? (halt_c | {4{poison}}) : halt_c;
 """
 
@@ -138,7 +154,9 @@ def cal(s):
     c = module(s, 'ot_qwen_d2d_cal_sf')
     c = sub(c, 'module ot_qwen_d2d_cal_sf #(parameter integer NE = 32, parameter integer AW = $clog2(NE), parameter integer MUTFO = 0) (',
             'module ot_qwen_d2d_cal_sfg #(parameter integer NE = 32, parameter integer AW = $clog2(NE), parameter integer MUTFO = 0,\n'
-            '    parameter integer FEG = 1) (\n    input  wire          por_n,          // local cold POR copy (first-epoch guard receipt)')
+            '    parameter integer FEG = 1) (\n    input  wire          por_n,          // local cold POR copy (first-epoch guard receipt)\n'
+            '    input  wire          fg_we,          // guard pin copies: cfg_we and cfg_addr (same pins, equal from the first edge)\n'
+            '    input  wire [AW:0]   fg_addr,')
     a = '    wire [NE-1:0] sel1_dec = {{(NE-1){1\'b0}}, 1\'b1} << cfg_base_c;\n'
     c = sub(c, a, a + GUARD)
     head, body = c.split(GUARD)
@@ -150,8 +168,11 @@ def cal(s):
     logic = sub(logic, "            if (cfg_we && running) fault <= 1'b1;\n",
                 "            if (cfg_we && running) fault <= 1'b1;\n"
                 "            if (FEGON && (reject || poison)) fault <= 1'b1;               // first-epoch guard: fail-stop\n")
+    logic = sub(logic, "        if (!rst_n) begin running <= 1'b0; run_c <= 1'b0; end\n        else begin running <= run_d; run_c <= run_d; end",
+                "        if (!rst_n) begin running <= 1'b0; run_c <= 1'b0; run_g <= 1'b0; end\n"
+                "        else begin running <= run_d; run_c <= run_d; run_g <= run_d; end")
     chk = sub(chk, '(sel1_c1 !== sel1_c0 || pc1 !== pc0 || run_c !== running)',
-              '(sel1_c1 !== sel1_c0 || pc1 !== pc0 || run_c !== running || ok_c !== {4{ok_c[0]}})')
+              '(sel1_c1 !== sel1_c0 || pc1 !== pc0 || run_c !== running || ok_c !== {4{ok_c[0]}} || run_g !== running)')
     return head + GUARD + pre + logic + chk
 
 
@@ -160,9 +181,11 @@ def end(s):
     c = sub(c, 'module ot_qwen_d2d_static_end_sf #(', 'module ot_qwen_d2d_static_end_sfm #(')
     c = sub(c, '    parameter integer MUTFO = 0\n) (', '    parameter integer MUTFO = 0,\n    parameter integer SRAMV = 1,\n'
                '    parameter integer FEG = 1\n) (')
-    c = sub(c, 'ot_qwen_d2d_cal_sf #(.NE(NE), .MUTFO(MUTFO)) u_txcal (', 'ot_qwen_d2d_cal_sfg #(.NE(NE), .MUTFO(MUTFO), .FEG(FEG)) u_txcal (.por_n(por_c[0]), ')
-    c = sub(c, 'ot_qwen_d2d_cal_sf #(.NE(NE)) u_rxcal (', 'ot_qwen_d2d_cal_sfg #(.NE(NE), .FEG(FEG)) u_rxcal (.por_n(por_c[1]), ')
-    c = sub(c, '    input  wire [NRC-1:0]   rst_n,\n', '    input  wire [NRC-1:0]   rst_n,\n    input  wire [1:0]       por_c,        // local POR copies: [0] TX, [1] RX calendar receipt\n')
+    c = sub(c, 'ot_qwen_d2d_cal_sf #(.NE(NE), .MUTFO(MUTFO)) u_txcal (', 'ot_qwen_d2d_cal_sfg #(.NE(NE), .MUTFO(MUTFO), .FEG(FEG)) u_txcal (.por_n(por_c[0]), .fg_we(fg_we[0]), .fg_addr(fg_addr[5:0]), ')
+    c = sub(c, 'ot_qwen_d2d_cal_sf #(.NE(NE)) u_rxcal (', 'ot_qwen_d2d_cal_sfg #(.NE(NE), .FEG(FEG)) u_rxcal (.por_n(por_c[1]), .fg_we(fg_we[1]), .fg_addr(fg_addr[11:6]), ')
+    c = sub(c, '    input  wire [NRC-1:0]   rst_n,\n', '    input  wire [NRC-1:0]   rst_n,\n    input  wire [1:0]       por_c,        // local POR copies: [0] TX, [1] RX calendar receipt\n'
+               '    input  wire [1:0]       fg_we,        // guard pin copies of cfg_tx_we / cfg_rx_we\n'
+               '    input  wire [11:0]      fg_addr,      // guard pin copies of cfg_addr: [5:0] TX, [11:6] RX\n')
     c = sub(c, 'ot_qwen_static_slot_link_sf #(.FW(FW), .CW(CW), .PW(PW), .MUTFO(MUTFO)) u_link (',
             'ot_qwen_static_slot_link_sfm #(.FW(FW), .CW(CW), .PW(PW), .MUTFO(MUTFO), .SRAMV(SRAMV)) u_link (')
     return c
@@ -187,7 +210,9 @@ def core(t):
     c = sub(c, 'ot_qwen_d2d_recovery_sf #(.MASTER(1), .NEB(NEB)) u_rec (', 'ot_qwen_d2d_recovery_sfm #(.MASTER(1), .NEB(NEB)) u_rec (')
     c = sub(c, 'ot_qwen_d2d_static_end_sf #(.NT(NTX), .NR(4), .TXD(TXDP), .MUT(MUT), .OVL(OVL), .NRC(4), .NG2(NG2), .MUTFO(MUTFO)) u_end (',
             'ot_qwen_d2d_static_end_sfm #(.NT(NTX), .NR(4), .TXD(TXDP), .MUT(MUT), .OVL(OVL), .NRC(4), .NG2(NG2), .MUTFO(MUTFO), '
-            '.SRAMV(SRAMV), .FEG(FEG)) u_end (.por_c({2{local_por_n[0]}}),')
+            '.SRAMV(SRAMV), .FEG(FEG)) u_end (.por_c({2{local_por_n[0]}}), .fg_we(fg_we), .fg_addr(fg_addr),')
+    c = sub(c, '    input  wire [9:0]   sf_cfg_base\n);', '    input  wire [9:0]   sf_cfg_base,\n'
+               '    input  wire [1:0]   fg_we, input wire [11:0] fg_addr   // first-epoch guard pin copies (wrapper)\n);')
     return c
 
 
@@ -216,6 +241,13 @@ def wrapper(t, name, new):
     a = '    assign rx_payload = PR ? q_rx_payload : c_rx_payload;\n'
     w = sub(w, a, a + Z17)
     w = sub(w, 'qkd_d2d_static_core_sf #(', 'qkd_d2d_static_core_sfm #(.SRAMV(SRAMV), .FEG(FEG), ')
+    w = sub(w, '.sf_cfg_base(q_sf_cfg_base));', '.sf_cfg_base(q_sf_cfg_base), .fg_we(q_fg_we), .fg_addr(q_fg_addr));')
+    a = '    (* keep = "true", dont_touch = "true" *) reg [9:0] q_sf_cfg_base;\n'
+    w = sub(w, a, a + '    // first-epoch guard pin copies (KV-SRAM-D2D): the same cfg_tx_we / cfg_rx_we / cfg_addr pins, equal from the first edge\n'
+                      '    (* keep = "true", dont_touch = "true" *) reg [1:0] q_fg_we;\n'
+                      '    (* keep = "true", dont_touch = "true" *) reg [11:0] q_fg_addr;\n'
+                      '    (* keep = "true", dont_touch = "true" *) always @(posedge ck) begin q_fg_we <= {cfg_rx_we, cfg_tx_we}; '
+                      'q_fg_addr <= {2{cfg_addr}}; end\n')
     return w
 
 

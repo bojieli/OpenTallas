@@ -259,6 +259,8 @@ endmodule
 module ot_qwen_d2d_cal_sfg #(parameter integer NE = 32, parameter integer AW = $clog2(NE), parameter integer MUTFO = 0,
     parameter integer FEG = 1) (
     input  wire          por_n,          // local cold POR copy (first-epoch guard receipt)
+    input  wire          fg_we,          // guard pin copies: cfg_we and cfg_addr (same pins, equal from the first edge)
+    input  wire [AW:0]   fg_addr,
     input  wire          ck,
     input  wire          rst_n,
     input  wire          cfg_we,
@@ -293,33 +295,49 @@ module ot_qwen_d2d_cal_sfg #(parameter integer NE = 32, parameter integer AW = $
     wire seg_we = cfg_we && !running && cfg_addr[AW];
     wire [NE-1:0] sel1_dec = {{(NE-1){1'b0}}, 1'b1} << cfg_base_c;
     // ---- FIRST-EPOCH GUARD (FEG; KV-SRAM-D2D 10-19).  Receipt of every ACCEPTED image write since local POR (the same
-    // predicates as the image / base register writes).  A start is authorised only with the complete receipt (32 entries
-    // + segment-1 base), no write on the start edge or the edge before (earliest start = W+2 after the last accepted
-    // write W) and no earlier rejection.  An unauthorised start does not start: it faults and poisons the calendar
-    // (halted until local reset).  ok_c: 4 KEPT copies of the registered authorisation, one D net. ----
+    // predicate as the image / base register writes: we && !running).  A start is authorised only with the complete receipt
+    // (32 entries + segment-1 base), no write on the start edge or the edge before (earliest start = W+2 after the last
+    // accepted write W) and no earlier rejection.  An unauthorised start does not start: it faults and poisons the calendar
+    // (halted until local rst_n).  The guard reads its OWN identical pin-flop copies of the write strobe / address (fg_we,
+    // fg_addr: same pins as cfg_we / cfg_addr, equal from the first edge) and its own KEPT copy of running (run_g, D = run_d),
+    // so no existing net gains a load (census <= 32); the 32 receipt set-enables come from a registered-free 2-level
+    // predecode (4 x 8).  ok_c: 4 KEPT copies of the registered authorisation, one D net. ----
     localparam integer FEGON = (FEG != 0) && (MUTFO != 5);
-    wire wr_entry = cfg_we && !running && !cfg_addr[AW];
+    (* keep = "true", dont_touch = "true" *) reg run_g;
+    wire g_wr = fg_we && !run_g;
+    wire g_ent = g_wr && !fg_addr[AW];
+    wire g_base = g_wr && fg_addr[AW];
+    wire [3:0] g_hi;
+    wire [7:0] g_lo;
+    genvar gq;
+    for (gq = 0; gq < 4; gq = gq + 1) begin : g_ghi
+        assign g_hi[gq] = g_ent && fg_addr[4:3] == gq;
+    end
+    for (gq = 0; gq < 8; gq = gq + 1) begin : g_glo
+        assign g_lo[gq] = fg_addr[2:0] == gq;
+    end
     reg [NE-1:0] seen;
     reg base_seen, poison;
     (* keep = "true", dont_touch = "true" *) reg [3:0] ok_c;
-    wire auth = ok_c[0] && !cfg_we;
+    wire auth = ok_c[0] && !fg_we;
     wire reject = start_c[0] && !auth;
     wire poison_d = poison | reject;
-    wire ok_d = (&seen) && base_seen && !cfg_we && !poison_d;
+    wire ok_d = (&seen) && base_seen && !fg_we && !poison_d;
     // The receipt follows the IMAGE's lifetime: the image registers are unreset and accept a write whenever cfg_we &&
     // !running, including inside the 4-edge local rst_n release window (the cold boot writes there), so the receipt
     // clears only on the local cold POR (por_n: image content undefined) and counts every write the image accepts
     // after it.  The rejection state (poison) and the authorisation copies clear on the calendar's local rst_n.
+    integer gk;
     always @(posedge ck or negedge por_n)
         if (!por_n) begin seen <= {NE{1'b0}}; base_seen <= 1'b0; end
         else begin
-            if (wr_entry) seen[cfg_addr[AW-1:0]] <= 1'b1;
-            if (seg_we) base_seen <= 1'b1;
+            for (gk = 0; gk < NE; gk = gk + 1) if (g_hi[gk / 8] && g_lo[gk % 8]) seen[gk] <= 1'b1;
+            if (g_base) base_seen <= 1'b1;
         end
     (* keep = "true", dont_touch = "true" *) always @(posedge ck or negedge rst_n)
         if (!rst_n) begin poison <= 1'b0; ok_c <= 4'd0; end
         else begin poison <= poison_d; ok_c <= {4{ok_d}}; end
-    wire [3:0] st_a = FEGON ? (start_c & ok_c & {4{!cfg_we}}) : start_c;
+    wire [3:0] st_a = FEGON ? (start_c & ok_c & {4{!fg_we}}) : start_c;
     wire [3:0] ht_a = FEGON ? (halt_c | {4{poison}}) : halt_c;
     (* keep = "true", dont_touch = "true" *) reg [NE-1:0] sel1_c0;
     (* keep = "true", dont_touch = "true" *) reg [NE-1:0] sel1_c1;
@@ -361,8 +379,8 @@ module ot_qwen_d2d_cal_sfg #(parameter integer NE = 32, parameter integer AW = $
     (* keep = "true", dont_touch = "true" *) reg run_c;
     wire run_d = ht_a[3] ? 1'b0 : st_a[0] ? 1'b1 : (running && cnt == 14'd1 && rep == 5'd0 && cur[17]) ? 1'b0 : running;
     (* keep = "true", dont_touch = "true" *) always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin running <= 1'b0; run_c <= 1'b0; end
-        else begin running <= run_d; run_c <= run_d; end
+        if (!rst_n) begin running <= 1'b0; run_c <= 1'b0; run_g <= 1'b0; end
+        else begin running <= run_d; run_c <= run_d; run_g <= run_d; end
     wire adv   = running && cnt == 14'd1 && rep == 5'd0 && !cur[17];
     wire adv_h = run_c && cnt == 14'd1 && rep == 5'd0 && !cur[17];
     // ---- pointer: one-hot + lap bit, ONE D net for master and copy (ptr <= {0,sb}+1 / ptr+1 / hold) ----
@@ -428,7 +446,7 @@ module ot_qwen_d2d_cal_sfg #(parameter integer NE = 32, parameter integer AW = $
 `ifdef OT_FO_CHECK
     reg fo_armed = 1'b0;
     always @(posedge ck) begin
-        if (fo_armed && (sel1_c1 !== sel1_c0 || pc1 !== pc0 || run_c !== running || ok_c !== {4{ok_c[0]}}))
+        if (fo_armed && (sel1_c1 !== sel1_c0 || pc1 !== pc0 || run_c !== running || ok_c !== {4{ok_c[0]}} || run_g !== running))
             $display("FO_COPY_MISMATCH %m t=%0t sel1 %h/%h pc %h/%h", $time, sel1_c0, sel1_c1, pc0, pc1);
         fo_armed <= 1'b1;
     end
@@ -450,6 +468,8 @@ module ot_qwen_d2d_static_end_sfm #(
     input  wire [4:0]       ck,
     input  wire [NRC-1:0]   rst_n,
     input  wire [1:0]       por_c,        // local POR copies: [0] TX, [1] RX calendar receipt
+    input  wire [1:0]       fg_we,        // guard pin copies of cfg_tx_we / cfg_rx_we
+    input  wire [11:0]      fg_addr,      // guard pin copies of cfg_addr: [5:0] TX, [11:6] RX
     input  wire             cfg_tx_we, cfg_rx_we,
     input  wire [11:0]      cfg_addr_c,   // [5:0] TX calendar, [11:6] RX calendar (pin copies)
     input  wire [127:0]     cfg_data_c,   // [63:0] TX calendar halves, [127:64] RX calendar halves (pin copies)
@@ -497,11 +517,11 @@ module ot_qwen_d2d_static_end_sfm #(
     wire halt = halt_c[8];
     wire rst_tc = rst_n[0], rst_cl = rst_n[1], rst_lk = rst_n[2], rst_rc = rst_n[3];
     wire tv, rv; wire [2:0] tp, rp; wire [3:0] tk, rk; wire [4:0] tb, rb; wire tf, rf, trun, rrun;
-    ot_qwen_d2d_cal_sfg #(.NE(NE), .MUTFO(MUTFO), .FEG(FEG)) u_txcal (.por_n(por_c[0]), .ck(ck[0]), .rst_n(rst_tc), .cfg_we(cfg_tx_we),
+    ot_qwen_d2d_cal_sfg #(.NE(NE), .MUTFO(MUTFO), .FEG(FEG)) u_txcal (.por_n(por_c[0]), .fg_we(fg_we[0]), .fg_addr(fg_addr[5:0]), .ck(ck[0]), .rst_n(rst_tc), .cfg_we(cfg_tx_we),
         .cfg_addr(cfg_addr_c[5:0]), .cfg_data_c(cfg_data_c[63:0]), .cfg_base_c(cfg_base_c[4:0]), .start_c(start_c[3:0]),
         .seg_c(seg_c[3:0]), .halt_c(halt_c[3:0]),
         .ev_v(tv), .ev_port(tp), .ev_kind(tk), .ev_beat(tb), .running(trun), .fault(tf));
-    ot_qwen_d2d_cal_sfg #(.NE(NE), .FEG(FEG)) u_rxcal (.por_n(por_c[1]), .ck(ck[0]), .rst_n(rst_rc), .cfg_we(cfg_rx_we),
+    ot_qwen_d2d_cal_sfg #(.NE(NE), .FEG(FEG)) u_rxcal (.por_n(por_c[1]), .fg_we(fg_we[1]), .fg_addr(fg_addr[11:6]), .ck(ck[0]), .rst_n(rst_rc), .cfg_we(cfg_rx_we),
         .cfg_addr(cfg_addr_c[11:6]), .cfg_data_c(cfg_data_c[127:64]), .cfg_base_c(cfg_base_c[9:5]), .start_c(start_c[7:4]),
         .seg_c(seg_c[7:4]), .halt_c(halt_c[7:4]),
         .ev_v(rv), .ev_port(rp), .ev_kind(rk), .ev_beat(rb), .running(rrun), .fault(rf));
@@ -815,7 +835,8 @@ module qkd_d2d_static_core_sfm #(parameter integer MUT = 0, parameter integer NL
     // identical pin-flop copies (wrapper): cal_start / cal_seg [3:0] TX calendar, [7:4] RX calendar; cfg_addr [5:0] TX,
     // [11:6] RX; cfg_data [63:0] TX table halves, [127:64] RX table halves
     input  wire [7:0]   sf_start, sf_seg, input wire [11:0] sf_cfg_addr, input wire [127:0] sf_cfg_data,
-    input  wire [9:0]   sf_cfg_base
+    input  wire [9:0]   sf_cfg_base,
+    input  wire [1:0]   fg_we, input wire [11:0] fg_addr   // first-epoch guard pin copies (wrapper)
 );
     generate if (SAFE_RC != 1) begin : g_sfo_needs_rc
         QKD_D2D_SAFE_FO_NEEDS_SAFE_RC1 u_sfo_rc ();
@@ -855,7 +876,7 @@ module qkd_d2d_static_core_sfm #(parameter integer MUT = 0, parameter integer NL
         .fwd_epoch_i(1'b0), .fwd_epoch_o(fwd_epoch), .fwd_link_rst_n(fwd_link_rst_n), .phy_rst_n(phy_rst_n),
         .epoch_begin(eb), .epoch(ep), .link_up(lu), .links_drained(dr), .link_reset_seen(seen), .retrained(rt),
         .transport_fault(tf), .recovering(rec), .recovery_cycles(recovery_cycles), .epoch_begin_c(ebc));
-    ot_qwen_d2d_static_end_sfm #(.NT(NTX), .NR(4), .TXD(TXDP), .MUT(MUT), .OVL(OVL), .NRC(4), .NG2(NG2), .MUTFO(MUTFO), .SRAMV(SRAMV), .FEG(FEG)) u_end (.por_c({2{local_por_n[0]}}),
+    ot_qwen_d2d_static_end_sfm #(.NT(NTX), .NR(4), .TXD(TXDP), .MUT(MUT), .OVL(OVL), .NRC(4), .NG2(NG2), .MUTFO(MUTFO), .SRAMV(SRAMV), .FEG(FEG)) u_end (.por_c({2{local_por_n[0]}}), .fg_we(fg_we), .fg_addr(fg_addr),
         .ck({5{ck}}), .rst_n(end_rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr_c(sf_cfg_addr), .cfg_data_c(sf_cfg_data), .cfg_base_c(sf_cfg_base), .eb_c(ebc[9:0]),
         .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .start_c(sf_start), .seg_c(sf_seg),
         .cal_start_rx(cal_start_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx),
@@ -1028,6 +1049,10 @@ module qkd_d2d_static_sfm #(parameter integer MUT = 0, parameter integer NL = 2,
     (* keep = "true", dont_touch = "true" *) reg [11:0] q_sf_cfg_addr;
     (* keep = "true", dont_touch = "true" *) reg [127:0] q_sf_cfg_data;
     (* keep = "true", dont_touch = "true" *) reg [9:0] q_sf_cfg_base;
+    // first-epoch guard pin copies (KV-SRAM-D2D): the same cfg_tx_we / cfg_rx_we / cfg_addr pins, equal from the first edge
+    (* keep = "true", dont_touch = "true" *) reg [1:0] q_fg_we;
+    (* keep = "true", dont_touch = "true" *) reg [11:0] q_fg_addr;
+    (* keep = "true", dont_touch = "true" *) always @(posedge ck) begin q_fg_we <= {cfg_rx_we, cfg_tx_we}; q_fg_addr <= {2{cfg_addr}}; end
     (* keep = "true", dont_touch = "true" *) always @(posedge ck) begin
         q_sf_start <= {{4{sf_rx_start_pin}}, {4{cal_start}}};
         q_sf_seg <= {{4{sf_rx_seg_pin}}, {4{cal_seg}}};
@@ -1343,7 +1368,7 @@ module qkd_d2d_static_sfm #(parameter integer MUT = 0, parameter integer NL = 2,
     reg q_fault;
     always @(posedge ck) q_fault <= c_fault;
     assign fault = PR ? q_fault : c_fault;
-    qkd_d2d_static_core_sfm #(.SRAMV(SRAMV), .FEG(FEG), .MUT(MUT), .MUTFO(MUTFO), .SAFE_RC(SAFE_RC), .NL(NL), .NTX(NTX), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data(c_cfg_data), .cal_start(c_cal_start), .cal_seg(c_cal_seg), .cal_start_rx(1'b0), .cal_seg_rx(1'b0), .cal_user_tx(2'd0), .cal_user_rx(2'd0), .tx_user(), .rx_user(), .host_link_reset_req(c_host_link_reset_req), .host_recovery_clear(c_host_recovery_clear), .host_boot_begin(c_host_boot_begin), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .att_tx_slot(c_att_tx_slot), .att_tx_kind(c_att_tx_kind), .att_tx_beat(c_att_tx_beat), .att_tx_v(c_att_tx_v), .att_tx_payload(c_att_tx_payload), .att_rx_v(c_att_rx_v), .att_rx_slot(c_att_rx_slot), .att_rx_kind(c_att_rx_kind), .att_rx_beat(c_att_rx_beat), .rx_payload(c_rx_payload), .emb_tx_slot(c_emb_tx_slot), .emb_tx_v(c_emb_tx_v), .emb_tx_payload(c_emb_tx_payload), .record_tx_observed_v(c_record_tx_observed_v), .record_tx(c_record_tx), .record_send_kind(c_record_send_kind), .record_witness_slot(c_record_witness_slot), .record_rx_v(c_record_rx_v), .record_rx(c_record_rx), .kvn_compiled_identity(c_kvn_compiled_identity), .kvn_compiled_generation(c_kvn_compiled_generation), .kvn_word_valid(c_kvn_word_valid), .kvn_word_tag(c_kvn_word_tag), .kvn_word_data(c_kvn_word_data), .kvn_word_identity(c_kvn_word_identity), .kvn_word_generation(c_kvn_word_generation), .kvn_word_slot(c_kvn_word_slot), .kvn_word_index(c_kvn_word_index), .status_epoch16(c_status_epoch16), .serdes_up(c_serdes_up), .kv_drained_local(c_kv_drained_local), .kv_flush_local(c_kv_flush_local), .host_drained_local(c_host_drained_local), .kv_active_local(c_kv_active_local), .link_up(c_link_up), .transport_fault(c_transport_fault), .native_links_drained(c_native_links_drained), .native_link_reset_seen(c_native_link_reset_seen), .native_retrained(c_native_retrained), .abort_drained(c_abort_drained), .native_kv_drained(c_native_kv_drained), .native_vm_drained(c_native_vm_drained), .native_collective_drained(c_native_collective_drained), .native_host_drained(c_native_host_drained), .native_collective_busy(c_native_collective_busy), .native_kv_flush(c_native_kv_flush), .native_admit_ready(c_native_admit_ready), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .engine_result_v(c_engine_result_v), .engine_result_done(c_engine_result_done), .engine_result_fault(c_engine_result_fault), .engine_result_cause(c_engine_result_cause), .engine_result_tag(c_engine_result_tag), .engine_result_gen(c_engine_result_gen), .engine_result_token(c_engine_result_token), .engine_result_value(c_engine_result_value), .engine_result_cycles(c_engine_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .recovery_cycles(c_recovery_cycles), .fault(c_fault), .sf_start(q_sf_start), .sf_seg(q_sf_seg), .sf_cfg_addr(q_sf_cfg_addr), .sf_cfg_data(q_sf_cfg_data), .sf_cfg_base(q_sf_cfg_base));
+    qkd_d2d_static_core_sfm #(.SRAMV(SRAMV), .FEG(FEG), .MUT(MUT), .MUTFO(MUTFO), .SAFE_RC(SAFE_RC), .NL(NL), .NTX(NTX), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data(c_cfg_data), .cal_start(c_cal_start), .cal_seg(c_cal_seg), .cal_start_rx(1'b0), .cal_seg_rx(1'b0), .cal_user_tx(2'd0), .cal_user_rx(2'd0), .tx_user(), .rx_user(), .host_link_reset_req(c_host_link_reset_req), .host_recovery_clear(c_host_recovery_clear), .host_boot_begin(c_host_boot_begin), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .att_tx_slot(c_att_tx_slot), .att_tx_kind(c_att_tx_kind), .att_tx_beat(c_att_tx_beat), .att_tx_v(c_att_tx_v), .att_tx_payload(c_att_tx_payload), .att_rx_v(c_att_rx_v), .att_rx_slot(c_att_rx_slot), .att_rx_kind(c_att_rx_kind), .att_rx_beat(c_att_rx_beat), .rx_payload(c_rx_payload), .emb_tx_slot(c_emb_tx_slot), .emb_tx_v(c_emb_tx_v), .emb_tx_payload(c_emb_tx_payload), .record_tx_observed_v(c_record_tx_observed_v), .record_tx(c_record_tx), .record_send_kind(c_record_send_kind), .record_witness_slot(c_record_witness_slot), .record_rx_v(c_record_rx_v), .record_rx(c_record_rx), .kvn_compiled_identity(c_kvn_compiled_identity), .kvn_compiled_generation(c_kvn_compiled_generation), .kvn_word_valid(c_kvn_word_valid), .kvn_word_tag(c_kvn_word_tag), .kvn_word_data(c_kvn_word_data), .kvn_word_identity(c_kvn_word_identity), .kvn_word_generation(c_kvn_word_generation), .kvn_word_slot(c_kvn_word_slot), .kvn_word_index(c_kvn_word_index), .status_epoch16(c_status_epoch16), .serdes_up(c_serdes_up), .kv_drained_local(c_kv_drained_local), .kv_flush_local(c_kv_flush_local), .host_drained_local(c_host_drained_local), .kv_active_local(c_kv_active_local), .link_up(c_link_up), .transport_fault(c_transport_fault), .native_links_drained(c_native_links_drained), .native_link_reset_seen(c_native_link_reset_seen), .native_retrained(c_native_retrained), .abort_drained(c_abort_drained), .native_kv_drained(c_native_kv_drained), .native_vm_drained(c_native_vm_drained), .native_collective_drained(c_native_collective_drained), .native_host_drained(c_native_host_drained), .native_collective_busy(c_native_collective_busy), .native_kv_flush(c_native_kv_flush), .native_admit_ready(c_native_admit_ready), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .engine_result_v(c_engine_result_v), .engine_result_done(c_engine_result_done), .engine_result_fault(c_engine_result_fault), .engine_result_cause(c_engine_result_cause), .engine_result_tag(c_engine_result_tag), .engine_result_gen(c_engine_result_gen), .engine_result_token(c_engine_result_token), .engine_result_value(c_engine_result_value), .engine_result_cycles(c_engine_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .recovery_cycles(c_recovery_cycles), .fault(c_fault), .sf_start(q_sf_start), .sf_seg(q_sf_seg), .sf_cfg_addr(q_sf_cfg_addr), .sf_cfg_data(q_sf_cfg_data), .sf_cfg_base(q_sf_cfg_base), .fg_we(q_fg_we), .fg_addr(q_fg_addr));
 endmodule
 
 module qkd_d2d_static_ovl_sfm #(parameter integer MUT = 0, parameter integer NL = 2, parameter integer NTX = 4, parameter integer SAFE_RC = 1, parameter integer MUTFO = 0, parameter integer SRAMV = 1, parameter integer FEG = 1, parameter integer PR = 1, parameter [31:0] TXDP = 32'd0) (
@@ -1471,6 +1496,10 @@ module qkd_d2d_static_ovl_sfm #(parameter integer MUT = 0, parameter integer NL 
     (* keep = "true", dont_touch = "true" *) reg [11:0] q_sf_cfg_addr;
     (* keep = "true", dont_touch = "true" *) reg [127:0] q_sf_cfg_data;
     (* keep = "true", dont_touch = "true" *) reg [9:0] q_sf_cfg_base;
+    // first-epoch guard pin copies (KV-SRAM-D2D): the same cfg_tx_we / cfg_rx_we / cfg_addr pins, equal from the first edge
+    (* keep = "true", dont_touch = "true" *) reg [1:0] q_fg_we;
+    (* keep = "true", dont_touch = "true" *) reg [11:0] q_fg_addr;
+    (* keep = "true", dont_touch = "true" *) always @(posedge ck) begin q_fg_we <= {cfg_rx_we, cfg_tx_we}; q_fg_addr <= {2{cfg_addr}}; end
     (* keep = "true", dont_touch = "true" *) always @(posedge ck) begin
         q_sf_start <= {{4{sf_rx_start_pin}}, {4{cal_start}}};
         q_sf_seg <= {{4{sf_rx_seg_pin}}, {4{cal_seg}}};
@@ -1810,5 +1839,5 @@ module qkd_d2d_static_ovl_sfm #(parameter integer MUT = 0, parameter integer NL 
     reg q_fault;
     always @(posedge ck) q_fault <= c_fault;
     assign fault = PR ? q_fault : c_fault;
-    qkd_d2d_static_core_sfm #(.SRAMV(SRAMV), .FEG(FEG), .OVL(1), .MUT(MUT), .MUTFO(MUTFO), .SAFE_RC(SAFE_RC), .NL(NL), .NTX(NTX), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data(c_cfg_data), .cal_start(c_cal_start), .cal_seg(c_cal_seg), .cal_start_rx(c_cal_start_rx), .cal_seg_rx(c_cal_seg_rx), .cal_user_tx(c_cal_user_tx), .cal_user_rx(c_cal_user_rx), .tx_user(c_tx_user), .rx_user(c_rx_user), .host_link_reset_req(c_host_link_reset_req), .host_recovery_clear(c_host_recovery_clear), .host_boot_begin(c_host_boot_begin), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .att_tx_slot(c_att_tx_slot), .att_tx_kind(c_att_tx_kind), .att_tx_beat(c_att_tx_beat), .att_tx_v(c_att_tx_v), .att_tx_payload(c_att_tx_payload), .att_rx_v(c_att_rx_v), .att_rx_slot(c_att_rx_slot), .att_rx_kind(c_att_rx_kind), .att_rx_beat(c_att_rx_beat), .rx_payload(c_rx_payload), .emb_tx_slot(c_emb_tx_slot), .emb_tx_v(c_emb_tx_v), .emb_tx_payload(c_emb_tx_payload), .record_tx_observed_v(c_record_tx_observed_v), .record_tx(c_record_tx), .record_send_kind(c_record_send_kind), .record_witness_slot(c_record_witness_slot), .record_rx_v(c_record_rx_v), .record_rx(c_record_rx), .kvn_compiled_identity(c_kvn_compiled_identity), .kvn_compiled_generation(c_kvn_compiled_generation), .kvn_word_valid(c_kvn_word_valid), .kvn_word_tag(c_kvn_word_tag), .kvn_word_data(c_kvn_word_data), .kvn_word_identity(c_kvn_word_identity), .kvn_word_generation(c_kvn_word_generation), .kvn_word_slot(c_kvn_word_slot), .kvn_word_index(c_kvn_word_index), .status_epoch16(c_status_epoch16), .serdes_up(c_serdes_up), .kv_drained_local(c_kv_drained_local), .kv_flush_local(c_kv_flush_local), .host_drained_local(c_host_drained_local), .kv_active_local(c_kv_active_local), .link_up(c_link_up), .transport_fault(c_transport_fault), .native_links_drained(c_native_links_drained), .native_link_reset_seen(c_native_link_reset_seen), .native_retrained(c_native_retrained), .abort_drained(c_abort_drained), .native_kv_drained(c_native_kv_drained), .native_vm_drained(c_native_vm_drained), .native_collective_drained(c_native_collective_drained), .native_host_drained(c_native_host_drained), .native_collective_busy(c_native_collective_busy), .native_kv_flush(c_native_kv_flush), .native_admit_ready(c_native_admit_ready), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .engine_result_v(c_engine_result_v), .engine_result_done(c_engine_result_done), .engine_result_fault(c_engine_result_fault), .engine_result_cause(c_engine_result_cause), .engine_result_tag(c_engine_result_tag), .engine_result_gen(c_engine_result_gen), .engine_result_token(c_engine_result_token), .engine_result_value(c_engine_result_value), .engine_result_cycles(c_engine_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .recovery_cycles(c_recovery_cycles), .fault(c_fault), .sf_start(q_sf_start), .sf_seg(q_sf_seg), .sf_cfg_addr(q_sf_cfg_addr), .sf_cfg_data(q_sf_cfg_data), .sf_cfg_base(q_sf_cfg_base));
+    qkd_d2d_static_core_sfm #(.SRAMV(SRAMV), .FEG(FEG), .OVL(1), .MUT(MUT), .MUTFO(MUTFO), .SAFE_RC(SAFE_RC), .NL(NL), .NTX(NTX), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data(c_cfg_data), .cal_start(c_cal_start), .cal_seg(c_cal_seg), .cal_start_rx(c_cal_start_rx), .cal_seg_rx(c_cal_seg_rx), .cal_user_tx(c_cal_user_tx), .cal_user_rx(c_cal_user_rx), .tx_user(c_tx_user), .rx_user(c_rx_user), .host_link_reset_req(c_host_link_reset_req), .host_recovery_clear(c_host_recovery_clear), .host_boot_begin(c_host_boot_begin), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .att_tx_slot(c_att_tx_slot), .att_tx_kind(c_att_tx_kind), .att_tx_beat(c_att_tx_beat), .att_tx_v(c_att_tx_v), .att_tx_payload(c_att_tx_payload), .att_rx_v(c_att_rx_v), .att_rx_slot(c_att_rx_slot), .att_rx_kind(c_att_rx_kind), .att_rx_beat(c_att_rx_beat), .rx_payload(c_rx_payload), .emb_tx_slot(c_emb_tx_slot), .emb_tx_v(c_emb_tx_v), .emb_tx_payload(c_emb_tx_payload), .record_tx_observed_v(c_record_tx_observed_v), .record_tx(c_record_tx), .record_send_kind(c_record_send_kind), .record_witness_slot(c_record_witness_slot), .record_rx_v(c_record_rx_v), .record_rx(c_record_rx), .kvn_compiled_identity(c_kvn_compiled_identity), .kvn_compiled_generation(c_kvn_compiled_generation), .kvn_word_valid(c_kvn_word_valid), .kvn_word_tag(c_kvn_word_tag), .kvn_word_data(c_kvn_word_data), .kvn_word_identity(c_kvn_word_identity), .kvn_word_generation(c_kvn_word_generation), .kvn_word_slot(c_kvn_word_slot), .kvn_word_index(c_kvn_word_index), .status_epoch16(c_status_epoch16), .serdes_up(c_serdes_up), .kv_drained_local(c_kv_drained_local), .kv_flush_local(c_kv_flush_local), .host_drained_local(c_host_drained_local), .kv_active_local(c_kv_active_local), .link_up(c_link_up), .transport_fault(c_transport_fault), .native_links_drained(c_native_links_drained), .native_link_reset_seen(c_native_link_reset_seen), .native_retrained(c_native_retrained), .abort_drained(c_abort_drained), .native_kv_drained(c_native_kv_drained), .native_vm_drained(c_native_vm_drained), .native_collective_drained(c_native_collective_drained), .native_host_drained(c_native_host_drained), .native_collective_busy(c_native_collective_busy), .native_kv_flush(c_native_kv_flush), .native_admit_ready(c_native_admit_ready), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .engine_result_v(c_engine_result_v), .engine_result_done(c_engine_result_done), .engine_result_fault(c_engine_result_fault), .engine_result_cause(c_engine_result_cause), .engine_result_tag(c_engine_result_tag), .engine_result_gen(c_engine_result_gen), .engine_result_token(c_engine_result_token), .engine_result_value(c_engine_result_value), .engine_result_cycles(c_engine_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .recovery_cycles(c_recovery_cycles), .fault(c_fault), .sf_start(q_sf_start), .sf_seg(q_sf_seg), .sf_cfg_addr(q_sf_cfg_addr), .sf_cfg_data(q_sf_cfg_data), .sf_cfg_base(q_sf_cfg_base), .fg_we(q_fg_we), .fg_addr(q_fg_addr));
 endmodule

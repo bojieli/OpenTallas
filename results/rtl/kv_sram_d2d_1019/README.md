@@ -46,7 +46,10 @@ exact text substitution from the sf sources (untouched; every closed / gated vie
    A start is authorised only with the complete receipt, no write on the start edge or the edge before (earliest start
    W+2) and no earlier rejection; an unauthorised start does not start, raises the calendar fault (-> end_fault ->
    epoch abort) and poisons the calendar (halted until local rst_n): fail-stop, never queued.  4 KEPT authorisation
-   copies (one D net).  No port, 0 cycles on the healthy path.  Contract: POR released >= 6 edges before the first cfg
+   copies (one D net).  The guard reads its OWN identical pin-flop copies of the write strobe / address (fg_we /
+   fg_addr, same pins) and a KEPT copy of running (run_g), with a 4 x 8 predecode, so no existing net gains a load (a
+   first version that shared cfg_addr / wr_entry measured 64 / 34 / 33 loads in the census and was rebuilt before any
+   gate).  No port, 0 cycles on the healthy path.  Contract: POR released >= 6 edges before the first cfg
    write (an earlier write is not counted -> the start is rejected, fail-stop).
 5. Z17 sideband `rx_zero17[16:0]` (Codex fe8eac3f2 / 8ec58f314 definition: Z0 = |[31:19], Z1 = |[31:5],
    Z[z+1] = |[32z +: 32], z = 1..15), 17 unreset flops on the exact `q_rx_payload` pin-flop edge; S-face pins after
@@ -71,3 +74,6 @@ mutant witnesses in `results/closure_witness/<kit>/`; every bench is the kit job
   keeps it; F writes inside the rst_n release window counted.  PASS ord / OVL; MUTFO5 (TX guard off) FAIL at A.
 * `run_d2d_dies.sh KSF=2` (compute end + KV sfm end, TXDP 0x03030416): PASS 198/198 frames, 6 results, 24 KVN, 0 faults;
   LOCK 1,192 edges 0 mismatches; OVL user tags tx 198 / rx 206; mutants slot / OVL user FAIL.
+* Native transparent census (`census/census.sh`: yosys 0.68, ORFS keep hook, OT_RST_COPIES_MAX 24, BUF/INV-transparent
+  terminal loads, the kv-d2d-1019 flow): qkd_d2d_static_sfm / _ovl_sfm max 32, 0 nets > 32 (`census/*.json.gz`);
+  12,012 / 12,029 DFF (sf 11,905 / 11,921 + guard receipt / copies, Z17, CRC register; recovery counter -11).
