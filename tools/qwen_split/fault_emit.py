@@ -35,6 +35,8 @@ TREE_DEG = int(os.environ.get('OT_SPLIT_FAULT_DEG', '8'))   # children per regio
 CLS = 'spine_local'
 ARRAY_MASTERS = ('qfd_c_b16', 'qfd_dv_slice2')
 ROW_DY = 400.0
+WIDE_BITS = int(os.environ.get('OT_SPLIT_FAULT_WIDE_BITS', '1024'))
+KEEP_UM = float(os.environ.get('OT_SPLIT_FAULT_KEEP_UM', '350'))
 HARD = 'io_collective:fault_code,transport_cdc_fault,transport_abort,transport_fault_cause;d2d_rom:transport_fault;' \
        'sys_face:fault;mu_ctxrx:mu_fault;mu_dhobs:mu_fault'
 RST_PORTS = ('rst_n', 'rs', 'rs_n', 'rst', 'por_n')
@@ -257,6 +259,15 @@ def pre(v, m, G):
     occ = Occ(m)
     for r_ in plan.get('reserved', ()):
         occ.add(tuple(r_))      # the relay / landing sites the same GEN used without the tree: roots keep off them
+    # g5f try 6/7: dvw_st_wi (1,088 b) lost its END frames beside dvs_W5 to three roots + their landings: the ends of
+    # every very wide die bus stay clear of roots (KEEP_UM box around each endpoint pin)
+    kc = 0
+    for bid, cl, bits, eps in m['buses']:
+        if bits >= WIDE_BITS and cl not in ('clock_trunk', 'reset', 'constant'):
+            for e in eps:
+                x_, y_ = pos(e[0], e[1].lstrip('*'))
+                occ.add((x_ - KEEP_UM, y_ - KEEP_UM, x_ + KEEP_UM, y_ + KEEP_UM))
+                kc += 1
     zn = Zones(v, m)
     q = make_master(v, FANIN)
     M[q.name] = q
@@ -319,7 +330,8 @@ def pre(v, m, G):
     rec['zones'] = dict(collections.Counter(r['zone'] for r in roots.values()))
     M_ = dict(M)
     v.masters = lambda model, k=1, port_bits=None: dict(M_)
-    print(f'FAULT_EMIT pre: {len(roots)} region roots, {len(rec["edges"])} tree edges, '
+    rec['wide_end_keepclear'] = dict(bits=WIDE_BITS, um=KEEP_UM, boxes=kc)
+    print(f'FAULT_EMIT pre: {kc} wide-bus end keep-clear boxes; {len(roots)} region roots, {len(rec["edges"])} tree edges, '
           f'max edge {max((e["um"] for e in rec["edges"]), default=0):.0f} um', flush=True)
     return rec
 
