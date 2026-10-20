@@ -16,10 +16,10 @@ module ot_hdc_fp32_add_lat_fan32 #(
   wire[70:0] c1;
   wire[34:0] c2,out;
   ot_hdc_fan32_decode u_decode(.a(a),.b(b),.v(valid_in),.q(a1));
-  ot_hdc_fan32_stage #(.STAGE(1),.WI(120),.WO(98),.VB(118),.SW(SLICE_W)) u_a2(.clk(clk),.rst_n(rst_n),.d(a1),.q(a2));
+  ot_hdc_fan32_stage #(.STAGE(1),.WI(120),.WO(98),.VB(118),.SW(2)) u_a2(.clk(clk),.rst_n(rst_n),.d(a1),.q(a2));
   ot_hdc_fan32_stage #(.STAGE(2),.WI(98),.WO(102),.VB(97),.SW(SLICE_W)) u_b1(.clk(clk),.rst_n(rst_n),.d(a2),.q(b1));
   ot_hdc_fan32_stage #(.STAGE(3),.WI(102),.WO(108),.VB(101),.SW(SLICE_W)) u_b2a(.clk(clk),.rst_n(rst_n),.d(b1),.q(b2a));
-  ot_hdc_fan32_stage #(.STAGE(4),.WI(108),.WO(73),.VB(107),.SW(SLICE_W)) u_b2b(.clk(clk),.rst_n(rst_n),.d(b2a),.q(b2b));
+  ot_hdc_fan32_stage #(.STAGE(4),.WI(108),.WO(73),.VB(107),.SW(2)) u_b2b(.clk(clk),.rst_n(rst_n),.d(b2a),.q(b2b));
   ot_hdc_fan32_stage #(.STAGE(5),.WI(73),.WO(71),.VB(72),.SW(SLICE_W)) u_c1(.clk(clk),.rst_n(rst_n),.d(b2b),.q(c1));
   ot_hdc_fan32_stage #(.STAGE(6),.WI(71),.WO(35),.VB(70),.SW(SLICE_W)) u_c2(.clk(clk),.rst_n(rst_n),.d(c1),.q(c2));
   ot_hdc_fan32_stage #(.STAGE(7),.WI(35),.WO(35),.VB(0),.SW(SLICE_W)) u_out(.clk(clk),.rst_n(rst_n),.d(c2),.q(out));
@@ -120,5 +120,29 @@ endmodule
   else if(STAGE==6)assign result=fc2(x);
   else assign result=x;
  endgenerate
- assign q=result[BASE+:W];
+ generate if(STAGE==1 && BASE<28)begin:g_jam
+  wire[W-1:0]sa,sb;
+  (* keep_hierarchy=1 *) ot_hdc_fan32_jam_part #(.BASE(BASE),.W(W)) u_a(.man(x[63:40]),.dist_(x[7:0]),.q(sa));
+  (* keep_hierarchy=1 *) ot_hdc_fan32_jam_part #(.BASE(BASE),.W(W)) u_b(.man(x[39:16]),.dist_(x[15:8]),.q(sb));
+  assign q=x[119]?sa:sb;
+ end else begin:g_other
+  assign q=result[BASE+:W];
+ end endgenerate
+endmodule
+
+// Keep the swap OUTSIDE alignment.  Sticky is a selected prefix OR rather
+// than a variable mask broadcast into28 gates plus every barrel mux.
+(* keep_hierarchy=1 *) module ot_hdc_fan32_jam_part #(parameter integer BASE=0,W=2)
+(input wire[23:0]man,input wire[7:0]dist_,output wire[W-1:0]q);
+ wire[27:0]val={1'b0,man,3'b000};
+ wire[27:0]shifted=val>>dist_[4:0];
+ reg[27:0]prefix;
+ integer j;
+ always @* begin
+  prefix=0;
+  for(j=1;j<28;j=j+1)prefix[j]=prefix[j-1]|val[j-1];
+ end
+ wire sticky=(dist_>=28)?(|val):prefix[dist_[4:0]];
+ wire[27:0]full=(dist_>=28)?{27'd0,|val}:(shifted|{27'd0,sticky});
+ assign q=full[BASE+:W];
 endmodule
