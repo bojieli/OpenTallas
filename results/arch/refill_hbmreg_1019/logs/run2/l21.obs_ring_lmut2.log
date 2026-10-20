@@ -1,0 +1,17 @@
+Verilator 5.050 2026-07-01 rev v5.050
+FAIL live addr 018 got 00001957 exp 00011957
+FAIL sticky_static addr 058 got 00001957 exp 00011957
+FAIL live addr 018 got 00002ece exp 00012ece
+FAIL sticky_static addr 058 got 00002ece exp 00012ece
+FAIL top_bit addr 018 got 000007dd exp 000107dd
+FAIL live addr 018 got 00007f2c exp 00017f2c
+FAIL sticky_static addr 058 got 00007f2c exp 00017f2c
+FAIL live addr 018 got 00009fcb exp 00019fcb
+FAIL sticky_static addr 058 got 00009fcb exp 00019fcb
+FAIL live addr 018 got 00002230 exp 00012230
+FAIL sticky_static addr 058 got 00002230 exp 00012230
+OBS RING BENCH FAIL errors=42 reads=7547 LMUT=2
+- rtl/hbm_accel/die_glue/tb/tb_hbm_obs_ring.sv:120: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 144us; walltime 0.275 s; speed 523.442 us/s
+- Verilator: cpu 0.275 s on 1 threads; allocated 7 MB

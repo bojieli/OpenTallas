@@ -1,0 +1,16 @@
+usage: die_port_bind.py [-h] [--top TOP] [--rtl-root RTL_ROOT]
+                        [--rtl-file RTL_FILE] [-f FILELISTS] [--define DEFINE]
+                        [--allow-model ALLOW_MODEL] [--prefer PREFER]
+                        [--params PARAMS] [--elab-out ELAB_OUT]
+                        [--closure CLOSURE] [--strap STRAP]
+                        [--strap-file STRAP_FILE] [--pad-file PAD_FILE]
+                        [--lib-root LIB_ROOT] [--no-child-closure]
+                        [--prefer-list PREFER_LIST] [--ref-tile-prefer]
+                        [--no-macro-dirs] [--unread-review UNREAD_REVIEW]
+                        [--unread-contract UNREAD_CONTRACT]
+                        [--unread-manifest UNREAD_MANIFEST]
+                        [--unread-manifest-sha256 UNREAD_MANIFEST_SHA256]
+                        [--unread-proposal-out UNREAD_PROPOSAL_OUT]
+                        [--out OUT]
+                        die_v
+die_port_bind.py: error: unread review REFUSED: source/contract/die/parameters/options identity drift; renewed semantic review required

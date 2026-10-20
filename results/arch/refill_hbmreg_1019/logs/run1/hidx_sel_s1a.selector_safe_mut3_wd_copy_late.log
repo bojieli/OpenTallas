@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+IDX_SELECTOR_STATIC SHELL1 MUT3 frame0 checked512 errors0 fault0 edges878 firstemit845 thresholdc0d6 selected01fc07e020c080
+bad id8111 frame1
+bad id10613 frame1
+bad id512 frame1
+IDX_SELECTOR_STATIC SHELL1 MUT3 frame1 checked514 errors8 fault0 edges878 firstemit845 thresholdbf80 selected00040010000200
+IDX_SELECTOR_STATIC SHELL1 MUT3 frame2 checked512 errors8 fault0 edges878 firstemit845 thresholdc098 selected000000002bc151
+[26420000] %Fatal: tb_selector_static.sv:65: Assertion failed in tb_selector_static: fullshape exact selector mismatch
+%Error: rtl/test/hbm_idx_static/tb_selector_static.sv:65: Verilog $stop
+Aborting...

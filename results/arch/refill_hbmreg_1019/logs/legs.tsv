@@ -1,0 +1,24 @@
+hidx_sel_s1a.selector_safe_exact	pass	IDX_SELECTOR_STATIC SHELL1 MUT0 frame2 checked512 errors0 fault0	bash rtl/test/hbm_idx_static/run_selector_vl.sh RUN/hidx_sel_s1a.selector_safe_exact/m0 0 1
+hidx_sel_s1a.selector_safe_mut1_ties	fail	fullshape exact selector mismatch	bash rtl/test/hbm_idx_static/run_selector_vl.sh RUN/hidx_sel_s1a.selector_safe_mut1_ties/m1 1 1
+hidx_sel_s1a.selector_safe_mut2_id	fail	fullshape exact selector mismatch	bash rtl/test/hbm_idx_static/run_selector_vl.sh RUN/hidx_sel_s1a.selector_safe_mut2_id/m2 2 1
+hidx_sel_s1a.selector_safe_mut3_wd_copy_late	fail	fullshape exact selector mismatch	bash rtl/test/hbm_idx_static/run_selector_vl.sh RUN/hidx_sel_s1a.selector_safe_mut3_wd_copy_late/m3 3 1
+hidx_sel_s1a.selector_safe_mut4_emit_copy_early	fail	fullshape exact selector mismatch	bash rtl/test/hbm_idx_static/run_selector_vl.sh RUN/hidx_sel_s1a.selector_safe_mut4_emit_copy_early/m4 4 1
+hbfd_rrl_csync.reset_carrier_exact	pass	RESET_CARRIER PASS checks=	python3 tools/hbm_die_v16/reset_carrier_bench.py
+hbfd_rrl_csync.reset_carrier_mutant	fail	RELEASE age pad	python3 tools/hbm_die_v16/reset_carrier_bench.py --mutant
+hbm_su_pslice_c5_lp8a.lp_lockstep_mut0	pass	MUT 0: LP_LOCKSTEP PASS	MUTS=0 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh RUN/hbm_su_pslice_c5_lp8a.lp_lockstep_mut0/bench/lp0
+hbm_su_pslice_c5_lp8a.lp_mut1_bypass	fail	MUT 1: LP_LOCKSTEP FAIL	MUTS=1 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh RUN/hbm_su_pslice_c5_lp8a.lp_mut1_bypass/bench/lp1
+hbm_su_pslice_c5_lp8a.lp_mut2_read_k1	fail	MUT 2: LP_LOCKSTEP FAIL	MUTS=2 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp8_bench.sh RUN/hbm_su_pslice_c5_lp8a.lp_mut2_read_k1/bench/lp2
+hbm_su_pslice_c5_lp8a.flat8_eq_mut0	pass	EQ MUT 0: FLAT_EQ PASS	ONLY=0 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat8_eq_bench.sh RUN/hbm_su_pslice_c5_lp8a.flat8_eq_mut0/bench/eq0
+hbm_su_pslice_c5_lp8a.flat8_eq_mut1_phase	fail	EQ MUT 1: FLAT_EQ FAIL	ONLY=1 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat8_eq_bench.sh RUN/hbm_su_pslice_c5_lp8a.flat8_eq_mut1_phase/bench/eq1
+hdie_col_idx256r_a.idx256r_0	pass	IDX256R_PASS cases=7	bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh RUN/hdie_col_idx256r_a.idx256r_0/bench/idx256r_0 0 1
+hdie_col_idx256r_a.idx256r_3	fail	IDX256R_FAIL	bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh RUN/hdie_col_idx256r_a.idx256r_3/bench/idx256r_3 3 1
+hdie_col_idx256r_a.idx256r_12	fail	IDX256R_FAIL	bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh RUN/hdie_col_idx256r_a.idx256r_12/bench/idx256r_12 12 1
+hdie_col_idx256r_a.idx256r_14	fail	IDX256R_FAIL	bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh RUN/hdie_col_idx256r_a.idx256r_14/bench/idx256r_14 14 1
+idxsel.iv_core_m0	pass	IDX_SELECTOR_STATIC SHELL0 MUT0 frame2 checked512 errors0 fault0	bash rtl/test/hbm_idx_static/run_selector.sh RUN/idxsel.iv_core 0 0
+idxsel.iv_shell_m0	pass	IDX_SELECTOR_STATIC SHELL1 MUT0 frame2 checked512 errors0 fault0	bash rtl/test/hbm_idx_static/run_selector.sh RUN/idxsel.iv_shell 0 1
+idx256r.fan32off_m0	pass	IDX256R_PASS cases=7	bash rtl/test/hbm_collar_idx256r/run_idx256r_one.sh RUN/idx256r.fan32off_m0 0 0
+l21.obs_ring_lmut0	pass	OBS RING BENCH PASS	bash tools/hbm_die_v16/obs_ring_bench.sh 0; rc=$?; mkdir -p RUN/l21.obs0; mv obj_obs_m0* RUN/l21.obs0/; exit $rc
+l21.obs_ring_lmut1	fail	NONE	bash tools/hbm_die_v16/obs_ring_bench.sh 1; rc=$?; mkdir -p RUN/l21.obs1; mv obj_obs_m1* RUN/l21.obs1/; exit $rc
+l21.obs_ring_lmut2	fail	NONE	bash tools/hbm_die_v16/obs_ring_bench.sh 2; rc=$?; mkdir -p RUN/l21.obs2; mv obj_obs_m2* RUN/l21.obs2/; exit $rc
+l21.obs_ring_lmut3	fail	NONE	bash tools/hbm_die_v16/obs_ring_bench.sh 3; rc=$?; mkdir -p RUN/l21.obs3; mv obj_obs_m3* RUN/l21.obs3/; exit $rc
+l21.strict_replay_combined	pass	^DIE_PORT_BIND PASS	L=results/arch/hbm_unread_gen2e3_1019/l21; mkdir -p RUN/l21.sr && zcat $L/pre_relay_l21.json.gz > RUN/l21.sr/pre_relay.json && sha256sum RUN/l21.sr/pre_relay.json && bash tools/hbm_die_v16/d4g_layers/l21_strict_replay.sh RUN/l21.sr/pre_relay.json RUN/l21.sr/pb $L/review_l21_candidate.json $L/manifest_proposal_l21.json 056f138ddbe6ff0f7c47f6292e638525ff6295f9df1c4c2e736e9c9a31b243cd

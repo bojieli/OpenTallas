@@ -1,0 +1,5 @@
+IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12 MUT=0 FAN32=0
+- rtl/test/hbm_collar_idx256r/tb_idx256r.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 56us; walltime 0.014 s; speed 3.895 ms/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 7 MB
