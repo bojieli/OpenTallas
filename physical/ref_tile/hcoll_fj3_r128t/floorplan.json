@@ -1,0 +1,136 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hcoll_fj3_r128t",
+ "top": "ot_hgi_coll_fj_n2s1_r128",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  103.68,
+  71.28
+ ],
+ "core": [
+  2.16,
+  2.16,
+  101.52000000000001,
+  69.12
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "qid",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "init_busy",
+   "program_fault",
+   "fault",
+   "fault_cause"
+  ],
+  "S": [
+   "program_active",
+   "issuer_busy",
+   "issuer_fault",
+   "issuer_uop_v",
+   "issuer_uop_pc",
+   "issuer_cfg",
+   "issuer_start",
+   "issuer_start_pc"
+  ],
+  "E": [
+   "protocol_fault",
+   "capture_fault",
+   "select_fault",
+   "unavailable_fault",
+   "arg_fault",
+   "tkm_fault"
+  ],
+  "W": [
+   "link_abort",
+   "ring_fault",
+   "writer_fault",
+   "reduce_fault"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir",
+   "master": "ot_sram_1rw_128x64_m2_r2c2_p192_mir",
+   "inst": "u.u_program.u_flow",
+   "idx": 0,
+   "x": 43.2,
+   "y": 23.76,
+   "w": 37.8,
+   "h": 23.784,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_bb.v",
+  "physical/ref_tile/hcoll_fj3_r128t/kit.env",
+  "physical/ref_tile/hcoll_fj3_r128t/clock.sdc",
+  "physical/ref_tile/hcoll_fj3_r128t/signoff.sdc",
+  "physical/ref_tile/hcoll_fj3_r128t/pdn.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/pre_cts.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/post_cts.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/post_grt.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/pre_drt.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/pre_fill.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/post_fill.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/pre_grt.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/pre_gpl.tcl",
+  "physical/ref_tile/hcoll_fj3_r128t/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir.lef",
+  "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_tt.lib",
+  "physical/ref_tile/hcoll_fj3_r128t/place.tcl"
+ ]
+}

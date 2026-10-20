@@ -1,0 +1,180 @@
+{
+ "name": "hcoll_fj2_r128t",
+ "top": "ot_hgi_coll_fj_q2_r128",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 103.68,
+  "h": 71.28
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "qid",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "init_busy",
+   "program_fault",
+   "fault",
+   "fault_cause"
+  ],
+  "S": [
+   "program_active",
+   "issuer_busy",
+   "issuer_fault",
+   "issuer_uop_v",
+   "issuer_uop_pc",
+   "issuer_cfg",
+   "issuer_start",
+   "issuer_start_pc"
+  ],
+  "E": [
+   "protocol_fault",
+   "capture_fault",
+   "select_fault",
+   "unavailable_fault",
+   "arg_capture_slot",
+   "tkm_start",
+   "tkm_del_slot",
+   "tkm_dest_v"
+  ],
+  "W": [
+   "link_abort",
+   "ring_fault",
+   "writer_fault",
+   "reduce_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir",
+   "count": 1,
+   "inst": "u.u_program.u_flow",
+   "at": [
+    43.2,
+    23.76
+   ],
+   "at_exact": true
+  }
+ ],
+ "children": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/fault_cause); the V5 lockstep bench fixes these edges (programme +1, issue +3, child faults +1). A synthesis pin stage would add a second, unbenched rung."
+ },
+ "job": {
+  "owner": "Claude:LEAD3-HBM/HBM-COLLFJ2",
+  "branch": "claude/collfj-1019",
+  "tag": "safe",
+  "purpose": "SAFE successor of hcoll_fj2_r128w (LEAD3-HBM 10-19, no waiver): q2 parent u_fj body ot_hgi_coll_fj_core_s128 = 12 KEPT reset copies rst__ot_rlv (<=32 loads each via reset_relay_split), flow store in ONE ot_sram_1rw_128x64 (u.u_program.u_flow, read = scan lookahead, registered write), registered frame/descriptor decode; port/edge-identical (0 cycles)",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "results/arch/landed_parent_1018/collq",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir"
+  ],
+  "benches": [
+   {
+    "name": "coll_q2_lp_ars_eq_s128",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_eq eq",
+    "expect": "pass",
+    "pass_regex": "COLL_LP_ARS_ALL_EXIT 0",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "SAFE q2 COLL parent ot_hfd_coll_q2_lpf_ars (binds this leaf: fj_core_s128 + issuer v7) == v8x/v8g #(AR_ITER 1, ROWS 128) (old fj_core + base programme target) every output every cycle + 3 EQ mutants rejected"
+   },
+   {
+    "name": "coll_q2_fj_mut_latespc",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_ptmut ptmut",
+    "expect": "fail",
+    "fail_regex": "EQ_MUTANT m_latespc REJECTED",
+    "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/s128_m_latespc_q2.log",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "OT_PT_MUT_LATE_SPC in programme_target_s128: start_pc only at launch -> v7 never primed -> parent EQ must fail"
+   },
+   {
+    "name": "coll_q2_fj_mut_s128",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_fjmut fjmut",
+    "expect": "fail",
+    "fail_regex": "COLL_LP_ARS_FJMUT_EXIT 1",
+    "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/s128_fjmut_q2.log",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "SAFE-body mutants LA_STALE (SRAM read/loaded lookahead frozen) + LDH_NOFWD (registered loaded decode drops the drain forward)"
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_fj2_r128t/views",
+  "record_to": "results/rtl/ref_tile/hcoll_fj2_r128t"
+ },
+ "params": {},
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "structural_change": "HBM-COLLFJ2 10-19 (LEAD3-HBM rejected the hcoll_fj2_r128w rst_q-fanout waiver; SAFE items 1/3/4/5 binding): same top / pins as hcoll_fj2_r128w; body ot_hgi_coll_fj_core_s128 (ot_hgi_coll_safe_leaves.sv): 12 kept reset copies (reset_relay_split 32), flow store 128x16 b -> ot_sram_1rw_128x64 at [43.2, 23.76] (fallback, x on the 43.2 lattice outline 103.68x71.28), registered frame/descriptor decode (r128w worst endpoints assembly/flow/fault D)",
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "floorplan_note": "macro u.u_program.u_flow at [43.2, 23.76]: W face (clk/ce/we/addr/wd/w_mask) and E face (rd_out/w_mask) each >= 20 um to the core edge, >= 21.5 um to S (issuer pins) and N (host frames); one connected std-cell band around it"
+}
