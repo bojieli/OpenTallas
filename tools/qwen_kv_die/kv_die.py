@@ -3584,6 +3584,8 @@ def _relays(m):
                     # kvs13d request padding: the word already reaches the V port; further registered stages go on free
                     # spots along the last reach of its path, each within reach of the previous stage AND of the V port
                     idxs = list(range(len(path_) - 1, max(-1, len(path_) - 2 - int(rch // G)), -1))
+                terminal_ = (os.environ.get('OT_KV_D2D_TERMINAL_APPROACH', '0') == '1'
+                             and bid == 'ks_kvs_attn__attn__tx_payload' and remaining_() <= 2 * rch)
                 at_end = bid in tree_meta and not idxs
                 if at_end:
                     idxs = [len(path_) - 1]          # at the path end: spots around the leader itself
@@ -3601,12 +3603,12 @@ def _relays(m):
                         if dd <= rch and free(qx, qy, fw, fh, *TG):
                             if pad_ and (d_ep((qx + fw, qy + fh / 2), b, pb) > rch or (qx, qy) == tuple(st_.get('last_xy', ()))):
                                 continue
-                            if not at_end:
+                            if not at_end and not terminal_:
                                 got = (qx, qy, idx)
                                 break
                             # a tree hop: of the free spots at this path point, the one nearest the leader (progress)
                             r_ = d_ep((qx + fw, qy + fh / 2), b, pb)
-                            if at_end and prev_pt_ is not None and r_ >= remaining_() - 1.0:
+                            if (at_end or terminal_) and prev_pt_ is not None and r_ >= remaining_() - 1.0:
                                 continue
                             if best_ is None or r_ < best_[0]:
                                 best_ = (r_, qx, qy, idx)
@@ -3725,6 +3727,20 @@ def _relays(m):
         if st_.get('exact_k') is not None and n != st_['exact_k']:
             m.setdefault('pvt_chunk_mismatch', []).append(dict(bus=bid, stages=n, need=st_['exact_k'], route_um=lengths.get(bid),
                                                                a=f'{a}.{pa}', b=f'{b}.{pb}'))
+        if os.environ.get('OT_KV_D2D_TERMINAL_APPROACH', '0') == '1' and bid == 'ks_kvs_attn__attn__tx_payload':
+            placed = m['insts'][mark[1]:]
+            previous = None
+            hops = []
+            for relay in placed:
+                incoming = (relay.x, relay.y + relay.h / 2)
+                hops.append(d_ep(incoming, a, pa) if previous is None else
+                            abs(incoming[0]-previous[0]) + abs(incoming[1]-previous[1]))
+                previous = (relay.x+relay.w, relay.y+relay.h/2)
+            if previous is not None:
+                hops.append(d_ep(previous, b, pb))
+            print('KV_PAYLOAD_APPROACH ' + json.dumps(dict(stages=n, hop_um=hops,
+                max_hop_um=max(hops or [remaining_()]), relay_rects=[[i.x,i.y,i.w,i.h] for i in placed],
+                physical_qualified=False)), file=sys.stderr)
         stages[bid] = n
         if bid in tree_meta:
             tm = tree_meta[bid]

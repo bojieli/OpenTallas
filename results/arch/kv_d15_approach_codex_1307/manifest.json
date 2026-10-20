@@ -1,11 +1,12 @@
 {
   "base_commit": "a34df2a74",
-  "source_sha256": "5a63ee87ce2908d542117617ea0d061997499d6d9d88625ed75862ec9358e976",
+  "source_sha256": "c72ad1a40f073c8fb7ae795fe9ad504346d1259308b77c41309ba9a472f92162",
   "status": "REJECTED_MODEL_VARIANTS_NO_GATE_OR_BIND",
   "live_job": "P216 standard LEC elsewhere only",
   "variants": {
     "priority-only exactfullsource": "FAIL same actual payload stage12 remaining607um",
-    "apron172.8 fullshape": "FAIL earlier seqst_rx stage0 remaining1209um"
+    "apron172.8 fullshape": "FAIL earlier seqst_rx stage0 remaining1209um",
+    "terminal-progress exactfullsource": "FAIL payloadstage12/final607um"
   },
   "original_die_chain": "d13r-de48 preserved diagnostic"
 }
