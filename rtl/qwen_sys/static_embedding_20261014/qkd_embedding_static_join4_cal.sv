@@ -13,6 +13,8 @@
 // Faults (sticky): join4 faults, a start while the calendar runs, a malformed or running-time boot word.
 // MUT (bench only): 1 = the last segment's length is one short (the scale beat has no slot).
 // ---------------------------------------------------------------------------------------------------------------------
+// NATIVE32 uses kept per-segment state/decode controls and six-edge regional reset release.
+// PIPE_JOIN independently adds one stream edge in the local low/high/scale join; both default OFF.
 module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0) (
     input  wire          ck,
     input  wire          rst_n,
@@ -29,10 +31,20 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
     output wire [15:0]   word_epoch,
     output wire          fault
 );
+    wire [2:0] reset_root;
+    wire [7:0] reset_bank;
+    wire [1:0] reset_main;
+    generate if(NATIVE32)begin:g_reset
+        ot_rst_relay #(.REGIONS(3)) u_root(.clk(ck),.rst_n_in(rst_n),.rst_n(reset_root));
+        ot_rst_relay #(.REGIONS(8)) u_bank(.clk(ck),.rst_n_in(reset_root[0]),.rst_n(reset_bank));
+        ot_rst_relay #(.REGIONS(2)) u_main(.clk(ck),.rst_n_in(reset_root[1]),.rst_n(reset_main));
+    end else begin:g_legacy_reset
+        assign reset_root={3{rst_n}};assign reset_bank={8{rst_n}};assign reset_main={2{rst_n}};
+    end endgenerate
     reg ss, cw; reg [7:0] ca; reg [63:0] cd;
     always @(posedge ck) begin ca <= cfg_addr; cd <= cfg_data; end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin ss <= 1'b0; cw <= 1'b0; end else begin ss <= start; cw <= cfg_we; end
+    always @(posedge ck or negedge reset_main[0])
+        if (!reset_main[0]) begin ss <= 1'b0; cw <= 1'b0; end else begin ss <= start; cw <= cfg_we; end
     reg [15:0] off [0:7]; reg [7:0] len [0:7];
     reg [15:0] cnt, last; reg act, slot, cf;
     reg [7:0] hit;
@@ -44,13 +56,26 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
         for (genvar segment = 0; segment < 8; segment = segment + 1) begin : g_segment
             (* keep = 1, dont_touch = 1 *) reg [15:0] count_q;
             (* keep = 1, dont_touch = 1 *) reg active_q;
-            always @(posedge ck or negedge rst_n)
-                if (!rst_n) active_q <= 1'b0;
-                else if (ss) active_q <= 1'b1;
+            (* keep = 1, dont_touch = 1 *) reg [1:0] start_count_q;
+            (* keep = 1, dont_touch = 1 *) reg start_active_q,cw_off_q,cw_len_q;
+            always @(posedge ck or negedge reset_bank[segment])
+                if(!reset_bank[segment])begin start_count_q<=0;start_active_q<=0;cw_off_q<=0;cw_len_q<=0;end
+                else begin start_count_q<={2{start}};start_active_q<=start;cw_off_q<=cfg_we;cw_len_q<=cfg_we;end
+            wire write_off = cw_off_q && cd[63:62] == 2'd1 && ca[2:0] == 3'(segment);
+            wire write_len = cw_len_q && cd[63:62] == 2'd1 && ca[2:0] == 3'(segment);
+            always @(posedge ck or negedge reset_bank[segment])
+                if(!reset_bank[segment])begin off[segment]<=0;len[segment]<=0;end
+                else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+            always @(posedge ck or negedge reset_bank[segment])
+                if (!reset_bank[segment]) active_q <= 1'b0;
+                else if (start_active_q) active_q <= 1'b1;
                 else if (act && cnt == last) active_q <= 1'b0;
-            always @(posedge ck)
-                if (ss) count_q <= 16'd0;
-                else if (active_q) count_q <= count_q + 16'd1;
+            wire [15:0] incremented = count_q + 16'd1;
+            for(genvar half = 0; half < 2; half = half + 1)begin:g_count_half
+                always @(posedge ck)
+                    if (start_count_q[half]) count_q[half*8+:8] <= 8'd0;
+                    else if (active_q) count_q[half*8+:8] <= incremented[half*8+:8];
+            end
             always @(*) hit[segment] = (count_q >= off[segment]) &&
                 ({8'd0, count_q} < {8'd0, off[segment]} + {16'd0, len[segment]} -
                  ((MUT == 1 && segment == 1) ? 24'd1 : 24'd0));
@@ -60,15 +85,31 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
             hit[k] = (cnt >= off[k]) && ({8'd0, cnt} < {8'd0, off[k]} + {16'd0, len[k]} - ((MUT == 1 && k == 1) ? 24'd1 : 24'd0));
     end endgenerate
     wire mine = cw && cd[63:62] == 2'd1;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin
-            for (k = 0; k < 8; k = k + 1) begin off[k] <= 16'd0; len[k] <= 8'd0; end
-            cnt <= 16'd0; last <= 16'd0; act <= 1'b0; slot <= 1'b0; cf <= 1'b0;
+    wire [23:0] configured_end = {8'd0,cd[15:0]}+{16'd0,cd[23:16]};
+    wire [15:0] configured_last = 16'(configured_end-24'd1);
+    generate if(NATIVE32)begin:g_last
+        (* keep=1,dont_touch=1 *)reg [1:0] cw_last_q;
+        always @(posedge ck or negedge reset_main[1])
+            if(!reset_main[1])cw_last_q<=0;else cw_last_q<={2{cfg_we}};
+        for(genvar half=0;half<2;half=half+1)begin:g_half
+            always @(posedge ck or negedge reset_main[1])
+                if(!reset_main[1])last[half*8+:8]<=0;
+                else if(cw_last_q[half] && cd[63:62]==2'd1 && cd[23:16]!=0 && configured_end>{8'd0,last}+24'd1)
+                    last[half*8+:8]<=configured_last[half*8+:8];
+        end
+    end else begin:g_legacy_last
+        always @(posedge ck or negedge reset_main[1])
+            if(!reset_main[1])last<=0;
+            else if(mine && cd[23:16]!=0 && configured_end>{8'd0,last}+24'd1)
+                last<=configured_last;
+    end endgenerate
+    always @(posedge ck or negedge reset_main[0])
+        if (!reset_main[0]) begin
+            if(!NATIVE32)for (k = 0; k < 8; k = k + 1) begin off[k] <= 16'd0; len[k] <= 8'd0; end
+            cnt <= 16'd0; act <= 1'b0; slot <= 1'b0; cf <= 1'b0;
         end else begin
             if (mine) begin
-                off[ca[2:0]] <= cd[15:0]; len[ca[2:0]] <= cd[23:16];
-                if (cd[23:16] != 8'd0 && {8'd0, cd[15:0]} + {16'd0, cd[23:16]} > {8'd0, last} + 24'd1)
-                    last <= 16'(({8'd0, cd[15:0]} + {16'd0, cd[23:16]}) - 24'd1);
+                if(!NATIVE32)begin off[ca[2:0]] <= cd[15:0]; len[ca[2:0]] <= cd[23:16];end
                 if (act || ca[7:3] != 5'd0 || cd[61:24] != 38'd0) cf <= 1'b1;
             end
             if (ss) begin if (act) cf <= 1'b1; act <= 1'b1; cnt <= 16'd0; end
@@ -76,11 +117,11 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
             slot <= act && (|hit);
         end
     wire jf;
-    qkd_embedding_static_join4 #(.NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)) u_join4 (.ck(ck), .rst_n(rst_n), .up0(up0), .up1(up1), .up2(up2), .up3(up3),
+    qkd_embedding_static_join4 #(.NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)) u_join4 (.ck(ck), .rst_n(reset_root[2]), .up0(up0), .up1(up1), .up2(up2), .up3(up3),
         .beat_slot(slot), .word_v(word_v), .word_data(word_data), .word_token(word_token), .word_index(word_index),
         .word_scale(word_scale), .word_epoch(word_epoch), .fault(jf));
     reg cf_q;
-    always @(posedge ck or negedge rst_n)
-        if(!rst_n)cf_q<=0;else cf_q<=cf;
+    always @(posedge ck or negedge reset_main[0])
+        if(!reset_main[0])cf_q<=0;else cf_q<=cf;
     assign fault = jf | (PIPE_JOIN ? cf_q : cf);
 endmodule

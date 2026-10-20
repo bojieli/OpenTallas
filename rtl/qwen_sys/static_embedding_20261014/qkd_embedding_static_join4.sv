@@ -17,11 +17,17 @@ module qkd_embedding_static_join4 #(parameter integer MUT = 0, parameter integer
     output wire word_scale,output wire [15:0] word_epoch,
     output reg fault
 );
+    wire [10:0] reset_region;
+    generate if(NATIVE32)begin:g_reset
+        ot_rst_relay #(.REGIONS(11)) u_reset(.clk(ck),.rst_n_in(rst_n),.rst_n(reset_region));
+    end else begin:g_legacy_reset
+        assign reset_region={11{rst_n}};
+    end endgenerate
     reg [298:0] u0,u1,u2,u3;
     reg slot_q;
     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
-    always @(posedge ck or negedge rst_n)
-        if(!rst_n) begin u0[0]<=0;u1[0]<=0;u2[0]<=0;u3[0]<=0;slot_q<=0;end
+    always @(posedge ck or negedge reset_region[10])
+        if(!reset_region[10]) begin u0[0]<=0;u1[0]<=0;u2[0]<=0;u3[0]<=0;slot_q<=0;end
         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
     wire v3=(MUT==2)?1'b0:u3[0];
     wire [3:0] hot={v3,u2[0],u1[0],u0[0]};
@@ -34,8 +40,8 @@ module qkd_embedding_static_join4 #(parameter integer MUT = 0, parameter integer
             localparam integer LO = slice * 30;
             localparam integer WIDTH = (298 - LO < 30) ? 298 - LO : 30;
             (* keep = 1, dont_touch = 1 *) reg [3:0] valid_q;
-            always @(posedge ck or negedge rst_n)
-                if (!rst_n) valid_q <= 4'b0;
+            always @(posedge ck or negedge reset_region[slice])
+                if (!reset_region[slice]) valid_q <= 4'b0;
                 else valid_q <= {(MUT == 2 ? 1'b0 : up3[0]), up2[0], up1[0], up0[0]};
             assign rec[LO +: WIDTH] =
                 ({WIDTH{valid_q[0]}} & u0[LO+1 +: WIDTH]) |
@@ -50,13 +56,13 @@ module qkd_embedding_static_join4 #(parameter integer MUT = 0, parameter integer
     wire multi=(MUT==1)?1'b0:((hot&(hot-4'd1))!=4'd0);
     wire jf;
     generate if (PIPE_JOIN) begin : g_pipelined_join
-    qkd_embedding_static_join_fan32 u_join(.ck(ck),.rst_n(rst_n),.beat_slot(slot_q),.beat_v(bv),
+    qkd_embedding_static_join_fan32 u_join(.ck(ck),.rst_n(reset_region[10]),.beat_slot(slot_q),.beat_v(bv),
         .beat_data(rec[255:0]),.beat_token(rec[273:256]),.beat_word(rec[279:274]),
         .beat_half(rec[280]),.beat_scale(rec[281]),.beat_epoch(rec[297:282]),
         .word_v(word_v),.word_data(word_data),.word_token(word_token),.word_index(word_index),
         .word_scale(word_scale),.word_epoch(word_epoch),.fault(jf));
     end else begin : g_legacy_join
-    qkd_embedding_static_join u_join(.ck(ck),.rst_n(rst_n),.beat_slot(slot_q),.beat_v(bv),
+    qkd_embedding_static_join u_join(.ck(ck),.rst_n(reset_region[10]),.beat_slot(slot_q),.beat_v(bv),
         .beat_data(rec[255:0]),.beat_token(rec[273:256]),.beat_word(rec[279:274]),
         .beat_half(rec[280]),.beat_scale(rec[281]),.beat_epoch(rec[297:282]),
         .word_v(word_v),.word_data(word_data),.word_token(word_token),.word_index(word_index),
@@ -64,10 +70,10 @@ module qkd_embedding_static_join4 #(parameter integer MUT = 0, parameter integer
     end endgenerate
     reg mf;
     reg mf_q,multi_q;
-    always @(posedge ck or negedge rst_n)
-        if(!rst_n)begin mf_q<=0;multi_q<=0;end
+    always @(posedge ck or negedge reset_region[10])
+        if(!reset_region[10])begin mf_q<=0;multi_q<=0;end
         else begin mf_q<=mf;multi_q<=multi;end
-    always @(posedge ck or negedge rst_n)
-        if(!rst_n) begin mf<=0;fault<=0;end
+    always @(posedge ck or negedge reset_region[10])
+        if(!reset_region[10]) begin mf<=0;fault<=0;end
         else begin if(multi)mf<=1;fault<=(PIPE_JOIN?mf_q:mf)|jf|(PIPE_JOIN?multi_q:multi);end
 endmodule
