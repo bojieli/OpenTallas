@@ -28,7 +28,14 @@ from pathlib import Path
 s=Path('tools/ref_tile/ref_route.sh').read_text()
 a='PRE_FLOORPLAN=tools/ref_tile/native_census.tcl'
 assert s.count(a)==1
-Path('census/source_route.sh').write_text(s.replace(a,'PRE_FLOORPLAN=tools/qwen_dv/slice11c_census_only.tcl'))
+s=s.replace(a,'PRE_FLOORPLAN=tools/qwen_dv/slice11c_census_only.tcl')
+# Source-only soft station regions contain their exact real32x64 SRAMs. Supply
+# that actual macro timing/role view before link_design; no layout executes.
+native_view='--macro-view ot_sram_1r1w_32x64_m1=physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1 '
+anchor='--routing-layers $RLAYERS'
+assert s.count(anchor)==1
+s=s.replace(anchor,native_view+anchor)
+Path('census/source_route.sh').write_text(s)
 PYCODE
 phase=mapped_native_census
 export SRC=$PWD OT_ORFS_CORNER_OVERRIDE=TC HM=0.03

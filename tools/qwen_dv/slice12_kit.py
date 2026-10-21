@@ -21,7 +21,7 @@ g.NAME=base.replace('_w12','_w12c').replace('_e12','_e12c') if CENSUS else base
 if CENSUS:
     old=g.children
     def children():
-        return [c for c in old() if not (c['inst'].startswith('u_r') and c['inst'][3:].isdigit()) and 'crh' not in c['view']]
+        return [c for c in old() if not (c['inst'].startswith('u_r') and c['inst'][3:].isdigit())]  # exact CRH rp1b is now CLOSED
     g.children=children
     for s in range(8):g.SOFT.setdefault(f'r_st{s}',[]).append(f'u_r{s}')
 def main():

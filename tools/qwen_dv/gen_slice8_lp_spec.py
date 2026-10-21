@@ -14,6 +14,18 @@ REC_DIR='results/arch/codex_slice2_native_1021/s8'
 CHILD_SOURCES=[x for x in g7.CHILD_SOURCES if x not in ['rtl/qwen_dv/s5/p3/qfd_dv_s5_suvm_su8p3.sv','rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv']]+[
     'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1','qfd_dv_s8_station_safe','qfd_dv_s8_station_math_g','qfd_dv_s8_tap_bounded','qfd_dv_s8_tap_bounded_helpers']]+['rtl/common/landed_parent/ot_pl_land_field_copies.sv','rtl/common/landed_parent/ot_pl_land_n32.sv']
 
+# Exact standalone station dependencies (5de01e82f kit), including its control
+# publication helpers and real32x64 macro declaration. Parent census is not
+# allowed to omit these just because the future physical child is unclosed.
+CHILD_SOURCES=list(dict.fromkeys(CHILD_SOURCES+[
+    'rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv',
+    'rtl/qwen_dv/qfd_dv_station_math_g.sv',
+    'rtl/qwen_dv/qfd_dv_ring_delay.sv',
+    'rtl/qwen_dv/qfd_dv_reset_tree.sv',
+    'rtl/common/landed_parent/ot_pl_land_physical.sv',
+    'physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v',
+]))
+
 def make_flat():
     import gen_slice8_rp_source
     gen_slice8_rp_source.main()

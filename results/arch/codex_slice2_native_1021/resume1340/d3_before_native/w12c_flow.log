@@ -1,0 +1,38 @@
+OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)
+FAILED: FlowError: ORFS synthesis failed with exit 2:
+end in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.140. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.141. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.142. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.143. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.144. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.145. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.146. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.147. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.148. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.149. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.150. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.151. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.152. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.153. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.154. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.155. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.156. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.157. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.158. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_rst_copy'.
+95.159. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_pad'.
+95.160. Analyzing design hierarchy..
+95.161. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_dv_s6_rst2x4'.
+95.162. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_dv_s5_rst2'.
+95.163. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_dv_s8_vm8q_rp1'.
+95.164. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_dv_s5_red2_k79'.
+95.165. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_dv_s5_sc2_k79'.
+95.166. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_dv_s8s_station_mul_bounded'.
+95.167. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_dv_s8s_station_mul_bounded'.
+ERROR: Module `\qfd_dv_station_out' referenced in module `\qfd_dv_s8_station_tail1' in cell `\g_nb[3].u_o' is not part of the design.
+
+Elapsed time: 0:31.69[h:]min:sec. CPU time: user 30.36 sys 1.48 (100%). Peak memory: 4514504KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/opentallas_qfd_dv_s8_lp_asap7_ref_census/base/1_1_yosys_canonicalize.rtlil] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/codex-q-s8-resume-1021-d3/w12c/src/census/run/census/physical.json
