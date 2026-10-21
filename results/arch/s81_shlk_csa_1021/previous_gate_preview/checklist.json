@@ -1,0 +1,42 @@
+{
+  "status": "LIVE_PREVIEW_NOT_APPROVAL",
+  "physical_source": "06daaa354",
+  "CSA_physical_evidence": false,
+  "kit": {
+    "gs": {
+      "outline_um": [
+        345.6,
+        432
+      ],
+      "placed_TT_setup_WNS_ps": -203.9,
+      "TT_clock_insertion_ps": [
+        567.1,
+        636.2
+      ],
+      "SS_clock_spread_ps": 97.3
+    },
+    "hs": {
+      "outline_um": [
+        388.8,
+        453.6
+      ],
+      "placed_TT_setup_WNS_ps": -200.7,
+      "TT_clock_insertion_ps": [
+        584.2,
+        663.4
+      ],
+      "SS_clock_spread_ps": 108.1
+    }
+  },
+  "visual_inspection": {
+    "macros": 6,
+    "overlap_seen": false,
+    "floorplan": "Two columns of three hard SRAMs, macros contained inside boundary; centre and horizontal streets visibly open.",
+    "density": "Most standard-cell bins low; concentration on centre street and west macro-side pocket. No visible red density island.",
+    "limits": "GRT/timing repair is still running; final congestion, native, routes, full geometry/clock/reset and SS/FF qualification not complete. Do not submit or select."
+  },
+  "raw_snapshots_sha256": {
+    "gs": "7a46e1ce3047561973a4c981db5dac736464ba71b4d0a2f7478b20220f0644f2",
+    "hs": "aa098d0771dd668be25b63980e6eaf079a186736a77d8ac39b868f3102da3795"
+  }
+}
