@@ -4285,6 +4285,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # An existing collision is a structural plan failure, never a legal site.
     grid.clear()
     for it in m['insts']:
+        if _flt_defer and it.kind == 'fault':
+            continue        # QW-G5FROOT: the data pads below see the data-only GEN's grid; roots re-land after them
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
     # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
     for r_ in m.get('relay_keepouts', ()):
@@ -4492,6 +4494,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done),
         centre_sink_buses=len(pad_hop_centre), centre_max_hop_um=max(pad_hop_centre.values(), default=None),
         centre_hops_over_reach=sorted(b_ for b_, h_ in pad_hop_centre.items() if h_ > RELAY_REACH_OK))
+    if _flt_defer:
+        # QW-G5FROOT 10-20: the arrival / landing pads were placed on the data-only grid (rfs try 6: with the roots on the
+        # rebuilt grid, q3h_col_42_2's pad went 705 um off its 43 um pins); a root a pad now covers moves to the nearest
+        # free box (its fault edges' pin-to-pin hops are audited with every die wire below)
+        _fault_land()
     # ---- emit relays and hops
     from qwen_split.relay_clock import assigned_clock, collective_core_clock
     # Q-DIE11-RLY 2026-10-18 (coordinator HANDOFF 0ea item 1, lanes/LANDING-CONTRACT.md): OT_SPLIT_FWD_LANES=1 turns every
