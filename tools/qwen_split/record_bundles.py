@@ -85,6 +85,8 @@ if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
         ('emb_start','head_prepare_v'),('emb_token','head_prepare_token'),
         ('emb_position','head_prepare_position'),('emb_user','head_prepare_user'))]
     BUNDLES['SF.head_descriptor'] = _same(N59,SF,('head_descriptor_v','head_descriptor_tag','head_descriptor_generation'))
+    BUNDLES['C.tx_slot'] += [(D2D,'tx_user',N59,'tx_user')]
+    BUNDLES['C.rx_record'] += [(D2D,'rx_user',N59,'rx_user')]
     BUNDLES['SF.head_slot'] = [(D2D,'prog_head_context_slot',SF,'prog_head_context_slot'),
                                (D2D,'tx_user',SF,'prog_head_context_user')]
     BUNDLES['SF.rx_record'] += [(D2D,'rx_user',SF,'prog_rx_user')]

@@ -1,6 +1,6 @@
 # Source-complete recurring compute head authority
 
-Opt-in `OT_QWEN_HEAD_PREP=1 OT_QWEN_ROPE=1` selects the actual DV-native producer `qfd_native59_dv_headprep`, `qfd_sys_face_ovl`, and `qfd_d2d_static_ovl_sf7`. It preserves the default 595-item integration masters and in-flight immutable jobs.
+Opt-in `OT_QWEN_HEAD_PREP=1 OT_QWEN_ROPE=1` selects the actual DV-native producer `qfd_native59_dv_headprep`, `qfd_sys_face_ovl`, and `qfd_d2d_static_ovl_sf7`. The unique native master is the recovered wires-only `qfd_native59_split_flat` composition of the hard Q-bank and actual modern service, with `USER_BIND=1 HEAD_PREP=1`; no legacy monolithic Q-seat implementation is copied. The native TX/RX schedule-user metadata is connected and bundled with the corresponding slots/records. It preserves the default 595-item integration masters and in-flight immutable jobs.
 
 The CTLM source samples `tok_b`, `pos_b`, and the command user on the actual `c_emb` edge. Native prepare uses the recovered two-edge input pipeline and one-edge descriptor producer; it advances the filler epoch at prepare, so stage 1 reuses that epoch. User 0 publishes only after the actual HOST O61 matches the stored prepare token/position. No retiring RESULT token or next-token alias supplies this identity.
 

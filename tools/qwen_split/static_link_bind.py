@@ -94,6 +94,9 @@ def apply(model):
                              (nat, 'x3_generation', 'd2d_rom', 'x3_generation')]:
         n = ports[sp][0] if src == 'd2d_rom' else ports[dp][0]
         new.append((f'lnk_{sp}', 'spine_local', n, [(src, sp), (dst, dp)]))
+    if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
+        for p in ('tx_user','rx_user'):
+            new.append((f'lnk_{p}', 'spine_local', 2, [('d2d_rom',p),(nat,p)]))
     out = []
     for b, c, n, es in kept:
         if b == clk_bus:
