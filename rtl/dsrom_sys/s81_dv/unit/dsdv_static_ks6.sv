@@ -24,7 +24,7 @@ module dsdv_static_ks6 #(
     input wire [514:0] f_host,
     input wire [52:0] f_ks,
     input wire upstream_fault,
-    output reg [52:0] timed_ks,
+    output wire [52:0] timed_ks,
     output reg selected,
     output reg armed,
     output reg done,
@@ -41,15 +41,16 @@ module dsdv_static_ks6 #(
     wire [27:0] pd = hd[59:32];
     wire prog_write = csr && (hd[7:0] == 8'h10 || hd[7:0] == 8'h11 ||
                                       hd[7:0] == 8'h13 || hd[7:0] == 8'h14);
-    reg [23:0] first_issue;
+    wire [23:0] first_issue;
     reg first_seen, sealed;
     reg [7:0] prog_len, settle;
     reg [1:0] seal_phase;
     reg epoch_valid;
-    reg [47:0] global_edge;
+    wire [47:0] global_edge;
     reg [9:0] owner;
     // 312 payload bits: below the 2-kbit SRAM threshold. Data is unreset.
-    wire [51:0] descriptor_read;
+    reg timed_valid;
+    assign timed_ks[52]=timed_valid;
     wire descriptor_write = !arm && fault == 0 && !immediate_bad && selected && armed && f_ks[52];
     genvar bank;
     generate for (bank=0;bank<4;bank=bank+1) begin : g_descriptor_bank
@@ -57,12 +58,12 @@ module dsdv_static_ks6 #(
         // on a select root. Preserve hierarchy so identical decode cones stay
         // local to their actual narrow storage bank, with no added edge.
         (* keep_hierarchy = "yes" *) dsdv_static_ks6_bank13 u_data (
-            .ck(ck), .we(descriptor_write), .wr(wr), .rd(rd),
-            .d(f_ks[13*bank+:13]), .q(descriptor_read[13*bank+:13]));
+            .ck(ck), .we(descriptor_write), .emit(descriptor_emit), .wr(wr), .rd(rd),
+            .d(f_ks[13*bank+:13]), .q(timed_ks[13*bank+:13]));
     end endgenerate
     reg [5:0] valid;
     reg [2:0] wr, rd;
-    reg [23:0] wait_edges;
+    wire [23:0] wait_edges;
     wire [47:0] epoch = hd[87:40];
     wire [47:0] first_ks = hd[135:88];
     wire [47:0] first_cmd = hd[183:136];
@@ -78,36 +79,66 @@ module dsdv_static_ks6 #(
                     (!armed || wr >= 6 || f_ks[51:42] != owner);
     wire config_race = selected && armed && (prog_write || sync_epoch);
     wire immediate_bad = upstream_fault || bad_desc || config_race || (arm && bad_arm);
+    wire arm_good=arm && !bad_arm && fault==0 && !upstream_fault;
+    wire running=!arm && fault==0 && !immediate_bad && selected && armed;
+    wire descriptor_emit=running && wait_edges==1 && rd<6 && valid[rd];
+    wire wait_dec=running && wait_edges>1;
+    wire wait_reload=descriptor_emit && rd!=5;
+    wire [23:0] initial_wait=delta[23:0]-1'b1;
+    wire [47:0] sync_value=hd[87:40]+1'b1;
+    wire sync_load=sync_epoch && !(selected && armed) && hd[39:8]==GRAPH_TAG;
+    wire first_load=pw && pa==0 && pd[27:26]==1;
+    // Wide data is unreset and valid only after its explicit producer writes:
+    // SYNC for epoch, ARM for owner/countdown, row0 for first issue, seal for
+    // settle, and timed_valid for the opaque output. Reset only control state.
+    genvar rg;
+    generate for(rg=0;rg<4;rg=rg+1) begin:g_epoch
+        (* keep_hierarchy="yes" *) dsdv_static_ks6_epoch12 u_epoch(
+            .ck(ck),.load(sync_load),.inc(epoch_valid),
+            .carry(&(global_edge | (48'hffffffffffff << (12*rg)))),
+            .d(sync_value[12*rg+:12]),.q(global_edge[12*rg+:12]));
+    end
+    for(rg=0;rg<2;rg=rg+1) begin:g_wide
+        (* keep_hierarchy="yes" *) dsdv_static_ks6_load12 u_first(
+            .ck(ck),.load(first_load),.d(pd[2+12*rg+:12]),.q(first_issue[12*rg+:12]));
+        (* keep_hierarchy="yes" *) dsdv_static_ks6_wait12 #(.RELOAD((SPAN>>(12*rg)) & 4095)) u_wait(
+            .ck(ck),.load(arm_good),.reload(wait_reload),.dec(wait_dec),
+            .borrow(rg==0 ? 1'b1 : wait_edges[11:0]==0),
+            .d(initial_wait[12*rg+:12]),.q(wait_edges[12*rg+:12]));
+    end endgenerate
+    always @(posedge ck) begin
+        if (arm_good) owner <= hd[193:184];
+        if (settle != 0) settle <= settle - 1'b1;
+        if (pw && pd[27:26]==3 && !pd[25]) settle <= 0;
+        if (pw && pd[27:26]==3 && pd[25]) settle <= NOPS+16;
+    end
     initial begin
         if (SPAN < 4 || SPAN >= (1<<24) || (SPAN % 4) != 0 || NOPS > 239)
             $fatal(1, "static KS: invalid immutable schedule parameters");
     end
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
-            timed_ks <= 0; selected <= 0; armed <= 0; done <= 0; fault <= 0;
-            valid <= 0; wr <= 0; rd <= 0; wait_edges <= 0; owner <= 0;
-            first_issue <= 0; first_seen <= 0; sealed <= 0; prog_len <= 0;
-            settle <= 0; seal_phase <= 0;
-            epoch_valid <= 0; global_edge <= 0;
+            timed_valid <= 0; selected <= 0; armed <= 0; done <= 0; fault <= 0;
+            valid <= 0; wr <= 0; rd <= 0;
+            first_seen <= 0; sealed <= 0; prog_len <= 0;
+            seal_phase <= 0;
+            epoch_valid <= 0;
         end else begin
-            timed_ks <= 0;
-            if (epoch_valid) global_edge <= global_edge + 1'b1;
+            timed_valid <= 0;
             if (sync_epoch && !(selected && armed)) begin
                 if (hd[39:8] != GRAPH_TAG) begin fault[1] <= 1; epoch_valid <= 0; end
                 else begin
                     epoch_valid <= 1;
                     // global_edge represents the NEXT capture edge after
                     // SYNC, hence the +1 on the synchronizing edge itself.
-                    global_edge <= hd[87:40] + 1'b1;
                 end
             end
-            if (settle != 0) settle <= settle - 1'b1;
             if (csr && hd[7:0] == 8'h11) prog_len <= hd[39:32];
             if (pw && pd[27:26] == 3 && !pd[25]) begin
-                first_seen <= 0; sealed <= 0; settle <= 0;
+                first_seen <= 0; sealed <= 0;
             end
             if (pw && pa == 0 && pd[27:26] == 1) begin
-                first_issue <= pd[25:2]; first_seen <= 1;
+                first_seen <= 1;
             end
             if (pw && pd[27:26] == 3 && pd[25]) begin
                 sealed <= first_seen && prog_len != 0 && prog_len == pd[16:9];
@@ -115,7 +146,6 @@ module dsdv_static_ks6 #(
                 // The real walker performs a one-row/edge seal scan. This
                 // conservative fixed BOOT guard covers its staging; it does
                 // not delay a token or wait for a completion.
-                settle <= NOPS + 16;
             end
             if (upstream_fault && selected) fault[3] <= 1;
             if (bad_desc) fault[0] <= 1;
@@ -125,8 +155,7 @@ module dsdv_static_ks6 #(
                 if (bad_arm || fault != 0 || upstream_fault) begin
                     fault[1] <= 1; armed <= 0;
                 end else begin
-                    owner <= hd[193:184]; valid <= 0; wr <= 0; rd <= 0;
-                    wait_edges <= delta[23:0] - 1'b1;
+                    valid <= 0; wr <= 0; rd <= 0;
                     armed <= 1; done <= 0;
                 end
             end else if (fault != 0 || immediate_bad) begin
@@ -135,17 +164,16 @@ module dsdv_static_ks6 #(
                 if (f_ks[52]) begin
                     valid[wr] <= 1; wr <= wr + 1'b1;
                 end
-                if (wait_edges > 1) wait_edges <= wait_edges - 1'b1;
-                else if (wait_edges == 1) begin
+                if (wait_edges == 1) begin
                     // Registered output is sampled by the original seqhost
                     // on the following edge: exactly the declared KS edge.
                     if (rd >= 6 || !valid[rd]) begin
                         fault[0] <= 1; armed <= 0;
                     end else begin
-                        timed_ks <= {1'b1, descriptor_read};
+                        timed_valid <= 1;
                         valid[rd] <= 0;
                         if (rd == 5) begin armed <= 0; done <= 1; end
-                        else begin rd <= rd + 1'b1; wait_edges <= SPAN; end
+                        else begin rd <= rd + 1'b1; end
                     end
                 end
             end
@@ -160,10 +188,10 @@ endmodule
 // explicit onehot read selection replace variable wide part-select barrels.
 (* keep_hierarchy = "yes" *)
 module dsdv_static_ks6_bank13 (
-    input wire ck,we,
+    input wire ck,we,emit,
     input wire [2:0] wr,rd,
     input wire [12:0] d,
-    output wire [12:0] q
+    output reg [12:0] q
 );
     reg [12:0] word0,word1,word2,word3,word4,word5;
     always @(posedge ck) begin
@@ -174,8 +202,22 @@ module dsdv_static_ks6_bank13 (
         if (we && wr==4) word4<=d;
         if (we && wr==5) word5<=d;
     end
-    assign q=({13{rd==0}}&word0)|({13{rd==1}}&word1)|
+    wire [12:0] chosen=({13{rd==0}}&word0)|({13{rd==1}}&word1)|
              ({13{rd==2}}&word2)|({13{rd==3}}&word3)|
              ({13{rd==4}}&word4)|({13{rd==5}}&word5);
+    always @(posedge ck) q <= emit ? chosen : 13'd0;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_static_ks6_epoch12(input wire ck,load,inc,carry,input wire[11:0] d,output reg[11:0] q);
+    always @(posedge ck) if(load) q<=d; else if(inc) q<=q+carry;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_static_ks6_load12(input wire ck,load,input wire[11:0] d,output reg[11:0] q);
+    always @(posedge ck) if(load) q<=d;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_static_ks6_wait12 #(parameter[11:0] RELOAD=0)
+(input wire ck,load,reload,dec,borrow,input wire[11:0] d,output reg[11:0] q);
+    always @(posedge ck) if(load) q<=d; else if(reload) q<=RELOAD; else if(dec) q<=q-borrow;
 endmodule
 `default_nettype wire
