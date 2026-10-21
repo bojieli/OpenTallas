@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_pdie_ucie_colf",
  "verdict": "FAIL",
- "generated": "2026-10-21T09:49:39-0700",
- "host": "ot-epyc5",
+ "generated": "2026-10-21T09:56:44-0700",
+ "host": "ot-gold2",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "52c98491a0c84f41e83bcadd165981047a8ae569",
+  "start_commit": "31f81c48e92b6f1a817e0cb83bd941f2a3ad7a4d",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "4223a2713c7afdda539738d462ce6fecf43fe51dbd7454065faa386aa63c3196",
-  "manifest_sha256": "c31ff2af681297cb4c06fc4541a5a3ca1791dbfe2687206112181d348ecd84a4",
+  "archive_sha256": "73a03dcea209a14f8a7606f0cf4436e52af10d3b282c703bc1db447b01dc7902",
+  "manifest_sha256": "f58d3319a11f7ba45e1d4cfe526dbc6a0ad880bd537b1f4a6e86035cd1f8fd7f",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.json",
@@ -17503,8 +17503,8 @@
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_colf/README.md",
     "kind": "file",
-    "sha256": "1c282e0eb0599aef3b7c01196b86ecffcd51be25a9c9a04dbcc4fbda59172234",
-    "git_blob": "c4f432a2a6d2be5e66722c90306e0d547cea137f",
+    "sha256": "c9f8ae608384e8f2ed34247b306e34aefc27faaa9a13f2594eb9522b8ff40e9d",
+    "git_blob": "2dec6caf2583c0e0f6f3a9da02b6e8d5149b8689",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -71231,8 +71231,8 @@
    {
     "path": "tools/ref_tile/specs/hbm_pdie_ucie_colf_rx_band.tcl",
     "kind": "file",
-    "sha256": "a8f552659b89b8cae12264e56cd75f3f18b1eddb57bf7bab2a5f1f43ae89b86f",
-    "git_blob": "d11d08922dda2593d0308ac312967c4697a9b3d1",
+    "sha256": "0ddb31757c9efe535ca3b2fa6665f95db1e25fdf76116d885fe1eb5d07e8c0d6",
+    "git_blob": "b4039b0f3b7e723cd738be134d0b7b3edf3ae300",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -71247,8 +71247,8 @@
    {
     "path": "tools/ref_tile/specs/hbm_pdie_ucie_colg_rx_band.tcl",
     "kind": "file",
-    "sha256": "2e01f112e0b8b30ad4dfa18724799e31a543f1e4053eb49e7babe9b571285ab8",
-    "git_blob": "047d248736f22b5c3ebbaeb2229f4b56944287d9",
+    "sha256": "a80e36b088f27d921f884f43e4f622f7732b7620071493c2c5f73c66fcd4000d",
+    "git_blob": "0c4bd892ae39e3ef784d419121e6519ca57da5f2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -114519,7 +114519,7 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 127921343,
+   "archive_bytes": 127921394,
    "unpacked_bytes": 713076736,
    "pick_gb": 22,
    "runtime_gb": 22
@@ -115099,7 +115099,7 @@
     "physical/qwen_die_masters/pre_ref_skew.tcl": "bf072d5f81136a555216d51947e242ef665f1e25fd5d8eb862de22eedc18d1dc",
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
-    "physical/ref_tile/hbm_pdie_ucie_colf/README.md": "1c282e0eb0599aef3b7c01196b86ecffcd51be25a9c9a04dbcc4fbda59172234",
+    "physical/ref_tile/hbm_pdie_ucie_colf/README.md": "c9f8ae608384e8f2ed34247b306e34aefc27faaa9a13f2594eb9522b8ff40e9d",
     "physical/ref_tile/hbm_pdie_ucie_colf/clock.sdc": "4a8f6dad9c301f9e68b3ccd3c7cd152a6ce0af0de14ca5a4f8085f64276e125b",
     "physical/ref_tile/hbm_pdie_ucie_colf/clock_entry.sdc": "d6d5d9686dc40b7600b538e63308fa38c633f197d6dcbc90cf436c957232e8ee",
     "physical/ref_tile/hbm_pdie_ucie_colf/floorplan.json": "cdc2fbac3fda43731ff2dbdef61ee38bec1329e3608459a6f2815d6b3c0fff8d",
@@ -115171,7 +115171,7 @@
     "tools/ref_tile/planning_birth_budget.py": "95dc9743fc09a4626681bab961f0019f7ad6d1d0628f14a01b1ae3599e9567d0",
     "tools/ref_tile/raw_macro_clocks.py": "178341a37d2613961625401dbe1a9a265f4869f59dbdabab5a35048f7cffb5a5",
     "tools/ref_tile/ref_route.sh": "471a153c17fdf26f2f2c6c8f39ab20c0907d5a6cc0bf3d05af905a1876d82bfe",
-    "tools/ref_tile/specs/hbm_pdie_ucie_colf_rx_band.tcl": "a8f552659b89b8cae12264e56cd75f3f18b1eddb57bf7bab2a5f1f43ae89b86f",
+    "tools/ref_tile/specs/hbm_pdie_ucie_colf_rx_band.tcl": "0ddb31757c9efe535ca3b2fa6665f95db1e25fdf76116d885fe1eb5d07e8c0d6",
     "tools/run_abi3_physical.py": "250623f82b99ecff19c927c2a2e0e4bf114345376eb6ebf09ced791918b633a5",
     "tools/textbook_lint.py": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b",
     "tools/w18/corner_sta.py": "5c0649785baa7af8af2dcb8effdad69bfea0450ee478453de5f102a6c2e0a212",
@@ -115179,16 +115179,16 @@
    },
    "digest": "4b63846bab206296b68ea43919e637e1ba9d3b1ef598c63b4bc472050c1ac6b7"
   },
-  "captured": "2026-10-21T09:47:33-0700",
+  "captured": "2026-10-21T09:52:48-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hbm_pdie_ucie_colf/signoff.sdc"
   },
-  "remote_script_sha256": "fcb6b475bfd7a28f1d8a5cbaa7894f759fc81579ba140f6d468b8207d8351401",
+  "remote_script_sha256": "6ebf2e1f387c100ce73195e4bb9f0c020adb32409d9dff5afa3290ef5a8fb8af",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc5",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_pdie_ucie_colf-20261021-094656",
+  "remote_host": "ot-gold2",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_pdie_ucie_colf-20261021-095220",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -115225,7 +115225,7 @@
   {
    "severity": "FAIL",
    "check": "cts_run",
-   "message": "placement / CTS of the kit failed: ",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0304] RePlAce diverged at initial iteration with steplength being -nan. Re-run with a smaller init_density_penalty value.",
    "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
   },
   {

@@ -6,3 +6,5 @@ Cold routed NEEDS_RTL TT-74.66/FF+5.36 DRC0: only failing class rx output; final
 
 
 PDN: inherited validated macro_m5 grid retained for M5-PG PMA abstracts; main generator still treats all macros as M4-PG SRAM. Same macro inventory/PG layers as cold.
+
+Placement-stage correction: r3 failed before optimization because the exclusive RX group contained only FIRM anchors (GPL movable area/target density 0 -> NaN). Create the same face region after generic pin-anchor release in PRE_DPL; normal GPL anchors remain. Native32 PASS; no timing/route verdict from r3.
