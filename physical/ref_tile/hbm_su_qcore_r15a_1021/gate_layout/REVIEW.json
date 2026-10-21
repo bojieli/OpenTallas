@@ -1,0 +1,25 @@
+{
+  "reviewer": "codex coordinator /root",
+  "time": "2026-10-21T11:49:33.531977-07:00",
+  "gate_commit": "2026-10-21T11:30:16-0700",
+  "geometry_sha256": "b983a03189cdc8c865839db93d99058e23c239ad26fff21a64bb16c4e8de5bdf",
+  "actual_pin_geometry_sha256": "0f56baab957b00a9dc781e66b3564db84d81dfa49c13ee206f5dca0408224aff",
+  "verdict": "APPROVED",
+  "source_archive_sha256": "4f8ab9c4c07f62f5e98e5ba4dbfd1edde6947e21147130b294d3d94cdd9e8fe8",
+  "source_manifest_sha256": "f6a9e3180ecbfcaa9891c3420fe7735bbeb1cec2b14433779b02d77ee18104fa",
+  "authority": "ROOT approval conveyed by /root/hbm_lead: exact frozen geometry/content; ONE actual route, no regate. Candidate approval only; final TT/FF/DRC decides.",
+  "checklist": {
+    "lattice": "ROOT accepted exact off43.2 origins for this candidate; prior README on-lattice text false, superseded here. Macro~10pins/um retained with21.6um halo/accessibility/GRT0 disposition.",
+    "std_cell_band": "Both PNGs inspected: contiguous surrounding cell band, two abutted uppercentre macros, no interior islands.",
+    "pin_spread": "TT57.1/FF52.8 boundary (<80); ALL87.2/89.6 retained and not substituted criterion.",
+    "clock_entry": "CentreNroot25427sinks; insertion422.5/354.0. Parent compensation not demonstrated by gate.",
+    "shape": "302.4x280.8 aspect1.077; totalfill34.8%, stdplaceabledensity29.2%.",
+    "pins": "1473checked geometryzero inaccessible/outside/missing; resetlandingmax2; existing capture-at-pin optout retained.",
+    "reach": "212.1um estimated <405.",
+    "fanout": "Actual nativePASSmax32 includesreset.",
+    "depth": "ROOT accepted candidate risk640.1ps/17levels; TTplacementPC-76.1ps diagnostic is negative, not signoff.",
+    "storage": "Existing8x1kbflopRFfreeze accepted byROOT for candidate only.",
+    "schedule": "Unchanged r13c static schedule;0 addededges."
+  },
+  "approval_scope": "Only hbm_su_qcore_r15a_1021 exact frozen content; no currentdie/sourcealias or approval for b/c"
+}
