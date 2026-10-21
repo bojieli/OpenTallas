@@ -9,11 +9,13 @@
   "source_manifest_sha256": "3e45fecc18981cee0daa0b8a8527413b0f9ae2c0968a08338401ef80a3939e9d",
   "original_archive_sha256": "e080f9b3f2a13661e5eb320e0530a82dd27a31806bc60fcbdacbb582f0af2902",
   "checklist": {
-    "macros": "8SRAM2x4; x full43.2lattice, y explicitOWNERaccepted21.6half43.2origins151.2/367.2 ONLY thisgeometry (not43.2latticePASS)",
-    "channels": "217.512um continuouscentre +>=30.216umrowchannels, continuousstdcellrows",
+    "lattice": "8SRAM2x4; x full43.2lattice, y explicitOWNERaccepted21.6half43.2origins151.2/367.2 ONLY thisgeometry (not43.2latticePASS)",
+    "std_cell_band": "217.512um continuouscentre +>=30.216umrowchannels, continuousstdcellrows",
+    "pin_spread": "boundaryTT44.6 FF44.6; literalEupper symmetricspine,31635sinks/insertion843/883guidance disclosed",
+    "clock_entry": "LiteralEupper contact/symmetricspine measured boundaryspread<=50.2ps;31635sinks and843/883psinsertion disclosedguidance, parentallclockreferences mustmatch.",
+    "shape": "650x561.6 r5x or650x518.4 r5y,217.512umcentre; xexistingpin_bound fill34.7%, y37.6%, exactapprovedaspect/geometry.",
     "density": "actualblue/green withbottomcentreolive/no red, GRT0, native31",
-    "pins": "ActualN/S~97%629.7/629.8 spans,2400/2416S+2219N. No newaccessibilityPASS.",
-    "clock": "boundaryTT44.6 FF44.6; literalEupper symmetricspine,31635sinks/insertion843/883guidance disclosed"
+    "pins": "ActualN/S~97%629.7/629.8 spans,2400/2416S+2219N. No newaccessibilityPASS."
   },
   "owner_disposition": "r5yhalf43.2origin explicitlyaccepted under existingguidancefreeze for thisexactgeometry. r5xexistingfrozenpin_bound accepted. No newrule/threshold/native/reach/timing waiver.",
   "obligations": "OnlyactualCLOSED qualifies; bind actualparent new650x561.6/650x518.4 bbox+SAFE2 source+allclockreferences, no oldviewalias. Actualroute timing/DRC decides; no timingPASS/SSclaim. Originalfrozenrunrecovered, no regate.",
