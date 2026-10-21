@@ -224,7 +224,7 @@ def lower(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
 
 
 def lower_norm_rs(raw, q=0, data=None, place=None, tag="", timing=None,
-                  side_profile=None, **unused):
+                  side_profile=None, side_source_path=None, **unused):
     """One scalar FULL-lane operation; require the repaired selected side ABI.
 
     side_profile is source provenance supplied by the integrator, never a DUT
@@ -246,6 +246,17 @@ def lower_norm_rs(raw, q=0, data=None, place=None, tag="", timing=None,
         return refusal("rsqrt_requires_selected_quarter0_FULL_lane0")
     if side_profile != (4, 3):
         return refusal("actual_selected_SIDE_MLAT4_ALAT3_source_required_old_fixed3_3_mismatches9edges")
+    from pathlib import Path
+    if side_source_path is None:
+        return refusal("actual_scoped_SIDE_source_path_required")
+    try:
+        scoped = Path(side_source_path).read_text()
+    except OSError:
+        return refusal("actual_scoped_SIDE_source_unreadable")
+    side_decl = "module ot_hbm_su_static_side__d4g_pgslice #(parameter integer MUT=0, MLAT=3, ALAT=3) ("
+    side_call = "ot_hbm_su_static_side__d4g_pgslice #(.MLAT(MLAT), .ALAT(ALAT)) u_side("
+    if scoped.count(side_decl) != 1 or scoped.count(side_call) != 1:
+        return refusal("actual_scoped_SIDE_parameters_not_propagated")
     if timing != NativeTiming(18, 15):
         return refusal("selected_native_READ_RETURN18_WRITE_RETURN15_required")
     for md in desc.values():
@@ -311,7 +322,8 @@ def lower_norm_rs(raw, q=0, data=None, place=None, tag="", timing=None,
         expected_reference=dict(role="comparison_only", source="NumPy IEEE DIV + hdc_golden add/rsqrt"),
         control_reservation=dict(first=0, last=commit, policy="exclusive_record"),
         source_contract=dict(lane="su_SW0.g_lane[0] FULL", side_MLAT=4, side_ALAT=3,
-            side_repair_required=True, scalar_external_drive=False),
+            side_repair_required=True, scalar_external_drive=False,
+            scoped_source_sha256=hashlib.sha256(scoped.encode()).hexdigest()),
         timing_obligations=dict(issue_to_output=latency, divider=19, rsqrt=46,
             serial_edges=commit+1, stream_edges=math.ceil(4*(commit+1)/3),
             old_price_preserved=False, connected_selected_case_RTL_required=True))
