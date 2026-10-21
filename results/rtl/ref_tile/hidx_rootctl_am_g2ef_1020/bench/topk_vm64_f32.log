@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-idx6-rootctl/src8
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-idx6-rootctl/src8
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-idx6-rootctl/src8
+ot-run: ot-epyc9       admits   228 GB (avail 372, growth 213, headroom 0, waiters 0/0 GB) load 329/128 running 58 disk 56 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-idx6-rootctl/src8
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-idx6-rootctl/src8
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3271256-1792564285 after 3 s
+CASE topk_vm64_f32 RQ 16 offset 65 row 1 RQ 17 offset 65 row 1 TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=64 CR_RT_P=36 AMMUT=0 requests 5103 writes 1136 events 240 (done 186 fault 27 illegal 27) max_row 3 share_fault 0/0 errors 5761 IDX_AM_TOPK_LAT FAIL 
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3271256-1792564285): exit 1
