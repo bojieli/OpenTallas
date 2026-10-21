@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   369 GB (avail 706, growth 448, headroom 0, waiters 0/0 GB) load 63/128 running 30 disk 1995 GB 
+ot-run: ot-epyc7       admits   451 GB (avail 366, growth 28, headroom 0, waiters 0/0 GB) load 121/96 running 22 disk 4685 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-endp-lr-bench-1021/src
+ot-run: ot-gold2       admits   238 GB (avail 328, growth 161, headroom 0, waiters 0/0 GB) load 70/112 running 27 disk 2910 GB 
+ot-run: ot-gold1       admits   303 GB (avail 625, growth 412, headroom 0, waiters 0/0 GB) load 78/112 running 32 disk 2323 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-endp-lr-bench-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-endp-lr-bench-1021/src
+ot-run: -> ot-epyc5
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 64 = 45 GB, admissible 1 GB: available 696 GB, growth charged 695 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 673 GB at x1), young 378 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 64 = 45 GB, admissible 5 GB: available 561 GB, growth charged 558 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 535 GB at x1), young 276 GB, floor 57 GB): env SIM=verilator VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator VL_JOBS=8 MUTS=1 LP_ROOT=/srv/opentallas-scratch/claude/s81-endp-lr-bench-1021/src bash rtl/dsrom_sys/s81_dv/slice/landed/lepw_mu_lr/ot_s81sl_slice_lepw_mu_lr_lp_bench.sh /srv/opentallas-scratch/claude/s81-endp-lr-bench-1021/out_lepw_mu_lr_m1
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-2514216-1792611831 after 2 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 1: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-2514216-1792611831): exit 0

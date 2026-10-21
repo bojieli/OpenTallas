@@ -1,49 +1,94 @@
 {
   "source": "f4a5652f9",
-  "scope": "existing parent lockstep mechanisms/actual compiler; diagnostic physical kits never submit",
-  "completed": 5,
-  "expected_total": 12,
-  "remaining": "preserve existing7builds, collect when terminal",
-  "rows": [
+  "status": "ALL12_TERMINAL_EXPECTED",
+  "positive": 3,
+  "caught_mutants": 9,
+  "unland_negative_caught": 12,
+  "scope": "Actual unchanged NH/MU/Wmu parent lockstep bench and source; no native/CTS/GRT or closedview promotion",
+  "runs": [
     {
       "log": "bench_lepe_mu_lr_m0.log",
-      "outcome": [
-        "MUT 0: LP_LOCKSTEP PASS",
-        "BENCH_EXIT 0"
-      ],
-      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+      "sha256": "98aed4ad9e9546ebbf6a1c9b20810d039be514618d8b3ad22ed6f8123ea794ef",
+      "mutant": 0,
+      "expected_result": "PASS",
+      "driver_exit": 0
+    },
+    {
+      "log": "bench_lepe_mu_lr_m1.log",
+      "sha256": "ef9eb20334a606e7dd80b380ab930b1d63e59bdaa1b56d37e063bfad5cf858a5",
+      "mutant": 1,
+      "expected_result": "FAIL",
+      "driver_exit": 0
+    },
+    {
+      "log": "bench_lepe_mu_lr_m2.log",
+      "sha256": "a3def0e0a11d03bca8995d46d41348960ffae6dcd1aa338c25e7803304080222",
+      "mutant": 2,
+      "expected_result": "FAIL",
+      "driver_exit": 0
+    },
+    {
+      "log": "bench_lepe_mu_lr_m4.log",
+      "sha256": "eac90ebd19a94cb3f8df727cd08a58d4725816cc7c0d58896a3be926cc765842",
+      "mutant": 4,
+      "expected_result": "FAIL",
+      "driver_exit": 0
     },
     {
       "log": "bench_lepe_nh_mu_lr_m0.log",
-      "outcome": [
-        "MUT 0: LP_LOCKSTEP PASS",
-        "BENCH_EXIT 0"
-      ],
-      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+      "sha256": "d49744e8a68b6e326f08ba62b93723559a85c707c11db50cd8b512d307978e2d",
+      "mutant": 0,
+      "expected_result": "PASS",
+      "driver_exit": 0
     },
     {
       "log": "bench_lepe_nh_mu_lr_m1.log",
-      "outcome": [
-        "MUT 1: LP_LOCKSTEP FAIL",
-        "BENCH_EXIT 0"
-      ],
-      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+      "sha256": "695a593ec776c2eb54e2ddf3807890546801eac7f61e7e0868438750efcc3a92",
+      "mutant": 1,
+      "expected_result": "FAIL",
+      "driver_exit": 0
     },
     {
       "log": "bench_lepe_nh_mu_lr_m2.log",
-      "outcome": [
-        "MUT 2: LP_LOCKSTEP FAIL",
-        "BENCH_EXIT 0"
-      ],
-      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+      "sha256": "37b01d0a525f1e6b1d63244ac2526c687989ce7c2c31f240c268f38dc2b7da98",
+      "mutant": 2,
+      "expected_result": "FAIL",
+      "driver_exit": 0
+    },
+    {
+      "log": "bench_lepe_nh_mu_lr_m4.log",
+      "sha256": "57b8f02ca5cf53d44a2e616f528641ba9259d284de97d93c2e0b678aabe7a48c",
+      "mutant": 4,
+      "expected_result": "FAIL",
+      "driver_exit": 0
+    },
+    {
+      "log": "bench_lepw_mu_lr_m0.log",
+      "sha256": "3818e7e0dabe11a03918afaf1586e362dcba8215b5b2d1c192a23044dbb4d4bb",
+      "mutant": 0,
+      "expected_result": "PASS",
+      "driver_exit": 0
+    },
+    {
+      "log": "bench_lepw_mu_lr_m1.log",
+      "sha256": "31883ace4c3058685f2348f3902039245c2be07cf4db8dd650bb24733940137d",
+      "mutant": 1,
+      "expected_result": "FAIL",
+      "driver_exit": 0
     },
     {
       "log": "bench_lepw_mu_lr_m2.log",
-      "outcome": [
-        "MUT 2: LP_LOCKSTEP FAIL",
-        "BENCH_EXIT 0"
-      ],
-      "driver": "BENCH_EXIT0 includes expected FAIL mutants, not positive qualification"
+      "sha256": "929f2b4d4f843f125730bf8f5b6f97d290f0c52e66ff7c3423b1eb0e36d1bbd1",
+      "mutant": 2,
+      "expected_result": "FAIL",
+      "driver_exit": 0
+    },
+    {
+      "log": "bench_lepw_mu_lr_m4.log",
+      "sha256": "617ae44dca4089758f24226e7529cacaab7fe07729ae0a40ca3bf5c2229ff50f",
+      "mutant": 4,
+      "expected_result": "FAIL",
+      "driver_exit": 0
     }
   ]
 }
