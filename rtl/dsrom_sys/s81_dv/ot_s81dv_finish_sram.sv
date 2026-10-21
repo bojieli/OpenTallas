@@ -2887,25 +2887,32 @@ endmodule
   end
  end
  for(genvar b=0;b<CNT;b=b+1)begin:g_out
-  wire[NC:0] a,s,h,j;
-  wire[5*(NC+1)-1:0] addr;
-  assign a[0]=0;assign s[0]=0;assign h[0]=0;assign j[0]=0;assign addr[4:0]=0;
+  wire[NC-1:0] a,s,h,j;
+  wire[NC-1:0] addr[0:4];
   for(genvar c=0;c<NC;c=c+1)begin:g_node
-   localparam integer N=c%NVP,T=c/NVP;
+   localparam integer N=c%NVP;
    if(N>=1 && node_live(N))begin:g_live
     wire take_a=da[c][10:6]==FIRST+b;
     wire take_b=db[c][10:6]==FIRST+b;
-    assign a[c+1]=a[c] | (nodes[c] && take_a);
-    assign s[c+1]=s[c] | (nodes[c] && take_b);
-    assign h[c+1]=h[c] | (nodes[c] && da[c][0]);
-    assign j[c+1]=j[c] | (nodes[c] && db[c][0]);
-    assign addr[(c+1)*5+:5]=addr[c*5+:5] | ({5{nodes[c]}} & (take_a?da[c][5:1]:db[c][5:1]));
+    wire[4:0] row=take_a?da[c][5:1]:db[c][5:1];
+    assign a[c]=nodes[c] && take_a;
+    assign s[c]=nodes[c] && take_b;
+    assign h[c]=nodes[c] && da[c][0];
+    assign j[c]=nodes[c] && db[c][0];
+    for(genvar k=0;k<5;k=k+1)begin:g_bit
+     assign addr[k][c]=nodes[c] && row[k];
+    end
    end else begin:g_empty
-    assign a[c+1]=a[c];assign s[c+1]=s[c];assign h[c+1]=h[c];assign j[c+1]=j[c];
-    assign addr[(c+1)*5+:5]=addr[c*5+:5];
+    assign a[c]=0;assign s[c]=0;assign h[c]=0;assign j[c]=0;
+    for(genvar k=0;k<5;k=k+1)begin:g_bit
+     assign addr[k][c]=0;
+    end
    end
   end
-  assign sa[b]=a[NC];assign sb[b]=s[NC];assign ren[b]=a[NC]|s[NC];
-  assign ha[b]=h[NC];assign hb[b]=j[NC];assign ra[b*5+:5]=addr[NC*5+:5];
+  assign sa[b]=|a;assign sb[b]=|s;assign ren[b]=(|a)||(|s);
+  assign ha[b]=|h;assign hb[b]=|j;
+  for(genvar k=0;k<5;k=k+1)begin:g_addr
+   assign ra[b*5+k]=|addr[k];
+  end
  end
 endmodule
