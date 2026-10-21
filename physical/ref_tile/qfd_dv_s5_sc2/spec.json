@@ -1,0 +1,139 @@
+{
+ "name": "qfd_dv_s5_sc2",
+ "top": "qfd_dv_s5_sc2_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv",
+  "rtl/hdc/ot_hdc_vreduce.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_sfu_q.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 248.4,
+  "h": 248.4,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "sc_cfg",
+   "am_v",
+   "am_idx",
+   "am_val",
+   "am_u",
+   "w1_we",
+   "w1_addr",
+   "w1_data",
+   "tok_v",
+   "tok_idx",
+   "tok_own",
+   "tok_val",
+   "tok_user",
+   "busy",
+   "fault",
+   "up_i",
+   "dn_o"
+  ],
+  "N": [
+   "red_we",
+   "red_addr",
+   "red_data",
+   "vm_we",
+   "vm_win0",
+   "vm_wdata0"
+  ],
+  "E": [
+   "dn_i",
+   "up_o"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input in one face register and launches every output from a face register (same in+1/out+1 as the old kit's flow wrapper); a flow wrapper would add a second, unpriced +1"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in 2 registered stages (qfd_dv_s5_rst2) then the rc stage the constructor replicates into <=32-load relays"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "QW-SLICE7-LEAVES successor of qfd_dv_s5_sc/scb after their mapped census FAIL (reset 740-3064 / data 504-742 loads, depth 775-1030 ps): qfd_dv_s5_sc2 RTL #(LA 7, LM 9) bounded by tools/qwen_dv/bound_math_netlist.py --load-cap 8 --transparent-inverters --retain-mux --shared-helpers --retain-keep --reuse-copies; two-stage sc_cfg landing, reset relays rc..rf, landed argmax edge candidates (QW-S5-SCRED)",
+ "safe_design_checklist": "see physical/ref_tile/qfd_dv_s5_sc2/README.md (numbers from results/arch/qw_slice6_1019/scred2_1020)",
+ "children": [],
+ "inter": [],
+ "macros": [],
+ "job": {
+  "owner": "Claude:QW-S5-SCRED",
+  "branch": "claude/qw-s5-scred-1021",
+  "tag": "sc2k",
+  "purpose": "QW-SLICE7 Q.STA.SLICE.2: slice2 scalar face sc2 (parallel argmax compares, bounded native fanout, LA/LM-cut FP) of the hardened one-level slice; price chain pass / own words / taps +0; root argmax->tok/TOK +2; root total->w1 +20; fused rsqrt->RB/w1 +96; sc_cfg apply +1 (two face stages); reset release +4 boot (rc..rf) and ring phases +2",
+  "extra_paths": [
+   "rtl",
+   "results/arch/qw_slice6_1019/scred2_1020",
+   "tools/qwen_dv/bound_math_netlist.py"
+  ],
+  "benches": [
+   {
+    "name": "sc2_kit_eq",
+    "cmd": "bash rtl/test/qwen_dv/s5_scred2/run_kit.sh {RUN}/bench/eq sc eq 79",
+    "expect": "pass",
+    "pass_regex": "SC2_EQ PASS",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sc2_kit_mut",
+    "cmd": "bash rtl/test/qwen_dv/s5_scred2/run_kit.sh {RUN}/bench/mut sc mut 79",
+    "expect": "fail",
+    "fail_regex": "SC2_EQ FAIL errors=",
+    "threads": 16,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice6_1019/scred2_1020/kitbench/sc79_mut.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_s5_sc2/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s5_sc2"
+ }
+}

@@ -31,7 +31,7 @@ def spec(kind,name,w,h,cfgname):
       "reset_landing":{"enable":False,"reason":"the RTL lands rst_n in 2 registered stages (qfd_dv_s5_rst2) then the rc stage the constructor replicates into <=32-load relays"},
       "keep_pin_regs":True,"inhold":False,"outhold":False,"io_flop_at_pins":{"cols":4,"allow_none":True},
       "route":{"pd":0.5,"threads":16,"peak_ram_gb":64,"hold_margin_ns":0.03,"io_hold_margin_ns":0.03,"pin_balance":{"group_max":1,"h":"M4","v":"M5"},"macro_halo_um":5.4},
-      "structural_change":f"QW-SLICE7-LEAVES successor of qfd_dv_s5_{kind}/{kind}b after their mapped census FAIL (reset 740-3064 / data 504-742 loads, depth 775-1030 ps): qfd_dv_s5_{kind}2 RTL #(LA {LA}, LM {LM}) bounded by tools/qwen_dv/bound_math_netlist.py --load-cap 8 --transparent-inverters --retain-mux --shared-helpers --retain-keep",
+      "structural_change":f"QW-SLICE7-LEAVES successor of qfd_dv_s5_{kind}/{kind}b after their mapped census FAIL (reset 740-3064 / data 504-742 loads, depth 775-1030 ps): qfd_dv_s5_{kind}2 RTL #(LA {LA}, LM {LM}) bounded by tools/qwen_dv/bound_math_netlist.py --load-cap 8 --transparent-inverters --retain-mux --shared-helpers --retain-keep"+(" --reuse-copies; two-stage sc_cfg landing, reset relays rc..rf, landed argmax edge candidates (QW-S5-SCRED)" if kind=="sc" else ""),
       "safe_design_checklist":"see physical/ref_tile/%s/README.md (numbers from results/arch/qw_slice6_1019/scred2_1020)"%name,
       "children":[],"inter":[],"macros":[],
       "job":{"owner":"Claude:QW-S5-SCRED","branch":"claude/qw-s5-scred-1021","tag":name.replace('qfd_dv_s5_','')+'k',
