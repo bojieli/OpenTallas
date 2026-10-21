@@ -28,7 +28,7 @@ files=x["files"]
 for z in files:assert hashlib.sha256(Path(z["path"]).read_bytes()).hexdigest()==z["sha256"]
 Path(sys.argv[1]).write_text("".join(z["path"]+"\n" for z in files))
 PYHEAD
- HEAD_ARGS=(+define+HBE_REAL_HEAD -f "$O/head.f")
+ HEAD_ARGS=(+define+HBE_REAL_HEAD +define+HBE_REVERSE_PATH -f "$O/head.f")
 fi
 H=rtl/dsrom_sys/s81_dv/hostb
 # Actual selected host subtree; no additional source/macros guessed.
@@ -36,7 +36,7 @@ H=rtl/dsrom_sys/s81_dv/hostb
  "${HEAD_ARGS[@]}" +define+HBE_REAL_CONSUMER +define+DSFD_PQ_STATIC_X2 +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF \
  +incdir+tools/s81_dv/hostb_1021 -Mdir "$O/obj" -f "$O/selected.f" \
  "$H/dsdv_hostb_hold.sv" "$H/dsdv_hostb_crc512.sv" "$H/dsdv_hostb_rx.sv" "$H/dsdv_hostb_tx.sv" "$H/dsdv_hostb_stage.sv" \
- "$H/dsdv_hostb_return.sv" "$H/dsdv_hostb_head.sv" "$H/dsdv_hostb_landing.sv" tools/s81_dv/hostb_1021/tb_hostb.sv \
+ "$H/dsdv_hostb_return.sv" "$H/dsdv_hostb_head.sv" "$H/dsdv_hostb_head_egress.sv" "$H/dsdv_hostb_landing.sv" tools/s81_dv/hostb_1021/tb_hostb.sv \
  --build-jobs 4 -MAKEFLAGS 'OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0' >"$O/build.log" 2>&1
 n=$(python3 tools/s81_dv/hostb_1021/prepare_bench.py --vectors "$B" --out "$O/v0" --mode 0)
 "$O/obj/Vtb_hostb" +VECTORS="$O/v0" +STOP="$n" +MODE=0 >"$O/bench.log" 2>&1

@@ -12,10 +12,10 @@ docker run --rm -v "$LIB:/techlib" "$IMAGE" bash -lc '
  done'
 sha256sum "$LIB"/*.lib >"$O/lib_sha256.txt"
 H=rtl/dsrom_sys/s81_dv/hostb
-for top in dsdv_hostb_stage dsdv_hostb_return dsdv_hostb_head;do
- D=$O/$top;mkdir -p "$D";PARAM='';test "$top" != dsdv_hostb_stage || PARAM='chparam -set ENABLE 1 dsdv_hostb_stage'
+for top in dsdv_hostb_stage dsdv_hostb_return dsdv_hostb_head dsdv_hostb_head_egress;do
+ D=$O/$top;mkdir -p "$D";PARAM='';case "$top" in dsdv_hostb_stage|dsdv_hostb_head_egress) PARAM="chparam -set ENABLE 1 $top";;esac
  cat >"$D/map.ys" <<YS
-read_verilog -sv -DSYNTHESIS /src/rtl/lib/ot_reset_sync.sv /src/$H/dsdv_hostb_hold.sv /src/$H/dsdv_hostb_crc512.sv /src/$H/dsdv_hostb_rx.sv /src/$H/dsdv_hostb_tx.sv /src/$H/dsdv_hostb_stage.sv /src/$H/dsdv_hostb_return.sv /src/$H/dsdv_hostb_head.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/lib/ot_reset_sync.sv /src/$H/dsdv_hostb_hold.sv /src/$H/dsdv_hostb_crc512.sv /src/$H/dsdv_hostb_rx.sv /src/$H/dsdv_hostb_tx.sv /src/$H/dsdv_hostb_stage.sv /src/$H/dsdv_hostb_return.sv /src/$H/dsdv_hostb_head.sv /src/$H/dsdv_hostb_head_egress.sv
 $PARAM
 hierarchy -check -top $top
 read_liberty -lib /techlib/SEQ.lib

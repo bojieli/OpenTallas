@@ -34,7 +34,13 @@ module tb_hostb;
  .ks_slot(sl1),.arm_mask(am1),.arm_commit(ac1),.fault(fault1));
  // Actual distinct head collector and actual source-return interface component.
  reg sample=0,send=0;reg [76:0] th=0;reg [53:0] tk=0;
- wire [1103:0] ret,toctl;wire [3:0] rf,hf;wire htv;wire [552:0] htd;
+ wire [1103:0] ret,toctl;
+`ifdef HBE_REVERSE_PATH
+ wire [1103:0] to_head;
+ `include "reverse_instance.svh"
+`else
+ wire [1103:0] to_head=ret;
+`endifwire [3:0] rf,hf;wire htv;wire [552:0] htd;
  reg returnslot=0;
  reg [76:0] sampled_th;reg [53:0] sampled_tk;
 `ifdef HBE_REAL_CONSUMER
@@ -48,7 +54,7 @@ module tb_hostb;
  .arrival_deadline(48'd9999),.programme_id(64'hf1c617d9224a57bf),.t_host(th),.t_kd(tk),.return_ring(ret),.fault(rf));
  dsdv_hostb_head h(.ck(ck),.rst_n(rst_n),.configured(1'b1),.return_slot(returnslot),.expected_stage(8'd1),.expected_rank(2'd0),.local_group(2'd2),
  .expected_tid(mode==19?16'd38:16'd37),.expected_user(10'd0),.expected_position(21'd1048575),.expected_token(21'd16754),.epoch_id(32'h1021),
- .programme_id(64'hf1c617d9224a57bf),.receiver_edge(48'(cyc)),.ring_i(ret),.to_ctl(toctl),.htv(htv),.htd(htd),.fault(hf));
+ .programme_id(64'hf1c617d9224a57bf),.receiver_edge(48'(cyc)),.ring_i(to_head),.to_ctl(toctl),.htv(htv),.htd(htd),.fault(hf));
 `ifdef HBE_REAL_CONSUMER
  `include "consumer_instance.svh"
 `endif
@@ -66,7 +72,11 @@ module tb_hostb;
   ri=events[cyc];local0=ordinary[cyc];local1=0;
   te0=transit[cyc];hs0=book[cyc][0];hs1=book[cyc][1];fw0=book[cyc][2];fw1=book[cyc][3];
   // Real source bits at fixtureboundary only, no stagecompletion fabricated.
-  sample=cyc==stopat-10;send=cyc==stopat-8&&mode!=18;returnslot=cyc==stopat-7;
+  sample=cyc==stopat-10;send=cyc==stopat-8&&mode!=18;`ifdef HBE_REVERSE_PATH
+  returnslot=cyc==stopat-2;
+`else
+  returnslot=cyc==stopat-7;
+`endif
 `ifdef HBE_REAL_CONSUMER
   th=actual_th;tk=actual_tk;
 `else
