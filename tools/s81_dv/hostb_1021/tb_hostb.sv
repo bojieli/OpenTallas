@@ -101,7 +101,7 @@ module tb_hostb;
      if((mode==0||mode==5||mode==6) && (fault0||fault1||rf||hf||retgot!=1))begin bad++;$display("BAD faults %h %h %h %h ret%0d",fault0,fault1,rf,hf,retgot);end
      if(mode!=0&&mode!=5&&mode!=6 && !(fault0||fault1||rf||hf))begin bad++;$display("BAD causal nofault");end
      if(bad)$fatal(1,"FAIL HBE1 mode%0d bad%0d host%0d/%0d KS%0d",mode,bad,got0,got1,ksgot);
-     $display("PASS HBE1 mode%0d host%0d/%0d KS%0d return%0d faults%h/%h",mode,got0,got1,ksgot,retgot,fault0,fault1);$finish;
+     #0.05;$display("PASS HBE1 mode%0d host%0d/%0d KS%0d return%0d faults%h/%h",mode,got0,got1,ksgot,retgot,fault0,fault1);$finish;
    end
   end
  end
