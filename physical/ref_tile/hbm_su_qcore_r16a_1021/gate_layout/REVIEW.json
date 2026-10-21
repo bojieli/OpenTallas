@@ -1,0 +1,25 @@
+{
+  "reviewer": "codex coordinator /root",
+  "time": "2026-10-21T16:15:41.829513-07:00",
+  "gate_commit": "2026-10-21T16:06:01-0700",
+  "geometry_sha256": "b983a03189cdc8c865839db93d99058e23c239ad26fff21a64bb16c4e8de5bdf",
+  "actual_pin_geometry_sha256": "3491f033792d1947e8daf9e448bbe9d0b36955a46705aaf08cc2f9ba85de61aa",
+  "verdict": "APPROVED",
+  "source_archive_sha256": "a4cb39ec0f41c64594e123cc5fae39545f4f497dd73b6af8b1c23dcd54ba8064",
+  "source_manifest_sha256": "8f7eb8f535a27b0708ec304d42a5f68238ef7757d68741078587f72fc1f648e0",
+  "authority": "ROOT personally inspected both canonical PNGs and packet907b386e7; exact approval conveyed by /root/hbm_lead. ONE normalroute after normalguards. ROOTexclusivepublisher owns final REVIEW write/commit and submission; this is the ready approved receipt packet, not a self-approval.",
+  "checklist": {
+    "lattice": "Exact302.4x280.8 candidate approved; existingorigins97.2/216 and97.2/174.96 OFF43.2lattice/~10pinsum explicitlyretained,21.6X/5.4Yhalo. No genericonlattice/accessibilityexception.",
+    "std_cell_band": "BothcanonicalPNGs personallyviewed byROOT+SUowner; broadsurroundingcellfield,2upperstackedSRAMs,denserEastpinflopstrip disclosed. ActualGRT0/worstM2 49.11%; no syntheticcongestionPNG.",
+    "pin_spread": "ActualTT54.7/FF51.8boundary per existing80rule; ALL62.1/64.4 separatelydiagnostic, no newall80rule. Old57.1/52.8measurements are not thresholds.",
+    "clock_entry": "CentreNroot25363sinks,insertion397.5TT/328.9FF guidanceWARN; actualparentinsertioncompensation required iff futureviewadopted. No currentdie/sourceviewalias.",
+    "shape": "Exact302.4x280.8 retainedcandidate,2actual128x256SRAMs; no squeezedslot/replacedhardchildren.",
+    "pins": "Currentactual pin_geometryPASS1473signal/clockpins/tracks,0inaccessible/outside/missing; resetlandingmax2. Inputcapture/outputflop interfaceunchanged.",
+    "reach": "Same registeredinterface/localCOLonehotwrite route; actualGRT0 andplacementregsetup+46.3/hold+48.08 diagnostic only. FinalTT/FF/DRC required, no finalSTAclaim.",
+    "fanout": "Exactsource4 fullparentnativePASS119694/max32/0viol inclreset. Existingstrict32splitter/24landingcopies; expandedinternal16rowhitresetports fixes prior36/39, no waiver.",
+    "depth": "Unchangedreducerstage estimated677ps/20logic WARN retained; placement+46.3 not signoff. OldsourcefinalTT-226.31/FF+7.74/DRC0 remains historicalfailure.",
+    "storage": "Existing8x1kbRFfreeze and2SRAMs unchanged; COL24rawbits\u219216onehotbits/sector(-8), resettable4\u219216. No addedruntimeindexedstorage/readport.",
+    "schedule": "Samek+1commit/k+3reads/writepriority,0addededges. Exactsource4 PASS9104/312scalars/5918validreads/faultlags0; MUT128 rejects27938errors via declaredFAILregex, not legacyprocessstatus."
+  },
+  "approval_scope": "Only exactr16a source4dd9+10overlays/archivea4cb/manifest8f7/geometryb983 candidate forONEactualroute; no newsource/geometry/currentdie alias, no finalclosedclaim."
+}
