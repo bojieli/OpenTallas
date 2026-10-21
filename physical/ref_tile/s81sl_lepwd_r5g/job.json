@@ -1,0 +1,243 @@
+{
+ "name": "s81sl_lepwd_r5g-s81sl_lepwd_r5g-COMMIT",
+ "block": "ot_s81sl_lep",
+ "ref_tile": true,
+ "owner": "Claude:DRIVE-S81-LEP",
+ "purpose": "S81.STA.OWN.3: standard LEP LOCAL_WD band kit to closure (TT setup / FF hold / DRC 0 + native audit)",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-lep-r5-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "tools/s81_dv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/common_flow/clock_split_km.tcl",
+   "results/rtl/mu_s81_2_hostep_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "results/rtl/s81_lepcap_1019",
+   "rtl/common/ot_link_credit.sv",
+   "rtl/dsrom_sys/s81_dv/slice/test",
+   "tools/s81_slice/lep_bench.sh",
+   "tools/s81_slice/lep_std_phase_bench.sh",
+   "results/rtl/s81_standard_lep_native32_1020",
+   "physical/dscoll_cx/native_cell_fence.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_lep #(.NATIVE32_STD(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lep_none_1",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_none_1 none 1 lep",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lep:"
+   },
+   {
+    "name": "lep_host_none_3",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_host_none_3 none 3 lep_host",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lep_host:"
+   },
+   {
+    "name": "lep_stdsel_1",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_stdsel_1 stdsel 1 lep",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL lep:",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/localwd_1020/benches_v4/lep_stdsel_1/run_lep_stdsel_1.log"
+   },
+   {
+    "name": "lep_vskew_1",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_vskew_1 vskew 1 lep",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL lep:",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/localwd_1020/benches_v4/lep_vskew_1/run_lep_vskew_1.log"
+   },
+   {
+    "name": "lep_swap_1",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_swap_1 swap 1 lep",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL lep:",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/localwd_1020/benches_v4/lep_swap_1/run_lep_swap_1.log"
+   },
+   {
+    "name": "lep_nopair_1",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_nopair_1 nopair 1 lep",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL lep:",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/localwd_1020/benches_v4/lep_nopair_1/run_lep_nopair_1.log"
+   },
+   {
+    "name": "lep_host_ksoff_3",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_host_ksoff_3 ksoff 3 lep_host",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL lep_host:",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/localwd_1020/benches_v4/lep_host_ksoff_3/run_lep_host_ksoff_3.log"
+   },
+   {
+    "name": "lep_host_hdrop_3",
+    "cmd": "STD_NATIVE32=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_host_hdrop_3 hdrop 3 lep_host",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL lep_host:",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/localwd_1020/benches_v4/lep_host_hdrop_3/run_lep_host_hdrop_3.log"
+   },
+   {
+    "name": "phase_h1_none",
+    "cmd": "bash tools/s81_slice/lep_std_phase_bench.sh {RUN}/phase/h1_none 1 none",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "LEP_STD_PHASE_PASS"
+   },
+   {
+    "name": "phase_h1_stdsel",
+    "cmd": "bash tools/s81_slice/lep_std_phase_bench.sh {RUN}/phase/h1_stdsel 1 stdsel",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LEP_STD_PHASE_FAIL",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/localwd_1020/phase_v4/h1_stdsel/run.log"
+   },
+   {
+    "name": "phase_h1_vskew",
+    "cmd": "bash tools/s81_slice/lep_std_phase_bench.sh {RUN}/phase/h1_vskew 1 vskew",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LEP_STD_PHASE_FAIL",
+    "fail_witness": "results/rtl/s81_standard_lep_native32_1020/localwd_1020/phase_v4/h1_vskew/run.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.045 OT_MM_FF_SDC='physical/ref_tile/s81sl_lepwd_r5g/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_lepwd_r5g/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_lepwd_r5g --out {RUN}/record/views/ot_s81sl_lep --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_lepwd_r5g/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_lepwd_r4m/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_lepwd_r4m/s81sl_lepwd_r5g-s81sl_lepwd_r5g-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.045,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "DRIVE-S81-LEP r5e (r4m lepnh twin gate: GRT 0 but clock spread TT 114.6 / FF 106.8 at km K8 and setup macro->reg -94.9 (RX SRAM rd_out -> ri pin flop, RX banks in two N rows at x 43..440 drive ri pins on the E face up to ~900 um away) plus reg->out -76): wide-bus repartition, 0 added cycles: the 10 RX landing SRAMs (g_rx[0] banks 0-4, g_rx[1] banks 0-4) move into ONE column beside the E face (x 475.2, y 43.2 + 43.2k, orient MY so rd_out faces the ri pins); the 1104-bit RX read bus stays inside a 35-um E strip, the long W->E RX hop is the flop->flop li pin flop (dq) -> LOCAL_WD register / SRAM write (registered both ends); TX columns unchanged (rd_out on their W edge facing lo, TX read stage qd). Outline 475.2 x 561.6 -> 561.6 x 518.4 (W/E 4.3/um, S 705 pins/561.6). Clock (r5f = r5e floorplan): NO km split, one TritonCTS tree (LEPNH 10-20: KM-8 unequal cluster depths gave lep_nh r4m 115/107; pre-native one-tree lepnh 40.2/36.8). Same RTL, ports, cycles, SDC. | SLICECOL 10-21: r5f floorplan + LEPNH r5b CTS recipe (24 sinks/30 um, 15-um buffers, -balance_levels): r5e km16 gate spread 91.9/89.6, r5f one-tree pre-repair 88/83",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "note": "Standard NATIVE32_STD + LOCAL_WD successor of the closed-view s81sl_lep (native census 526/502 > 32 there); new kit name, band floorplan."
+ }
+}
