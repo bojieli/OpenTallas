@@ -40,3 +40,8 @@ Structure (0 added edges vs SAFE 1, same compiled schedule):
 Benches (job.json): ring lockstep Verilator 5.050 (HC_QSAFE=2) m0 PASS / MUT 6 FAIL (witness ring_q2_mut6.log); hcq SAFE 2
 iverilog m0 PASS / MUT 7 FAIL (hcq_s2_mut7.log; MUT 1..4 FAIL too); gathered f32 m0 PASS / MUT 1 FAIL; program target
 FAN32 m0 PASS / MUT 1 FAIL; tree16 slice m0 PASS / MUT 4 FAIL (kit hbm_hcq_tree16_c1).
+
+## HBM-COLLECT9-QHUB 10-21: re-spaced slices (channel rule)
+The abutted slices (y 172.8/302.4/432.0/561.6, channel 0) FAIL main's `ref_tile.py gen` channel rule (abutted_stack admits
+macros only, hard children keep >= 20 um channels).  Slices now at x 43.2, y 43.2 / 216.0 / 388.8 / 561.6 (43.2 lattice,
+43.2-um channels, top 691.2); bottom slice s_i wires up to ~330 um (< 405).  RTL / census unchanged (README items 1-5, 7, 8).
