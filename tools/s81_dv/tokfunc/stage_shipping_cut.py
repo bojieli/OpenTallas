@@ -9,6 +9,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -50,6 +51,10 @@ def main():
     sys.path.insert(0,str(a.compiler_root/'tools/s81_dv'))
     import dv_slice_cut as cut
     cut.K.load_dpb=lambda repo,ref:B
+    # The generic grower's old clk/ck-only classifier misses actual MU72
+    # ck_CAP_*/ck_L* and LP frame ck_r* roots. Preserve every source clock
+    # identity in boundary metadata, without aliasing their epochs.
+    cut.CLOCK_PORT_RE=re.compile(r'^(?:clk|ck(?:_[A-Za-z0-9]+)*|cr|cr_s|CLK|xk|xok)$')
     selected=a.out/'selected_instances.txt'
     selected.write_text('\n'.join(inv['selected_instances'])+'\n')
     cut.main(['--die-v',str(bind/'die.v'),'--kit',str(portkit),'--insts',str(selected),
@@ -60,7 +65,8 @@ def main():
         die_sha256=inv['die_sha256'],inventory_sha256=digest(a.inventory),files=files,
         cut_grower_sha256=digest(Path(cut.__file__)),parser_sha256=digest(parser),
         functional_closure_qualified=False,landing_flight_model_applied=False,
-        runtime_clocks_qualified=False,producer_trace_bound=False),indent=1)+'\n')
+        runtime_clocks_qualified=False,producer_trace_bound=False,
+        clock_port_pattern=cut.CLOCK_PORT_RE.pattern),indent=1)+'\n')
 
 
 if __name__=='__main__':main()
