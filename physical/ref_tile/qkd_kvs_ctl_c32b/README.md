@@ -36,3 +36,5 @@ Kept same-edge cfg_we pin copy we_qseal now owns only seal accept; we_q2
 owns age accept. Ports, storage, floorplan, arithmetic and all schedule edges
 unchanged. Native census must PASS before layout/adoption. Checklist items
 1/2/4/5/6/7/8 unchanged; item3 fixed structurally, measurement pending.
+
+CODEX 2026-10-20 22:43: actual gate222038 native census PASS max32, 39340 roots, 0 violations/role errors; mapped SHA256 c1a53ef1e2422e73bea7d18f42d16d3d0ae625a7594d6c6289f613ac05e6f4e1. Source a0f130d37, same-edge seal copy verified by 400-episode V5.050 positive and causal mutants6/7 (logs in results/arch/kv_ctl_native32_2210/bench). Item3 PASS. Layout gate still live; no physical/adoption claim.

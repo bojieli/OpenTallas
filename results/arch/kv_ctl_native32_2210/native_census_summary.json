@@ -1,0 +1,38 @@
+{
+  "host": "ot-epyc9",
+  "actual_runs": {
+    "qkd_kvs_ctl_c32a-20261020-222038": {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_c32a-20261020-222038/routes/gate/work/orfs/native_census.json",
+      "full_census_sha256": "b4ea5ed4d7ff6d808b2acd1c61ca2816e9859ed3f762137766f853cbe84c9289",
+      "schema": "opentallas.pre_gate_native_census.v1",
+      "kit": "qkd_kvs_ctl_c32a",
+      "status": "PASS",
+      "limit": 32,
+      "roots_examined": 39212,
+      "max_dynamic_loads": 32,
+      "violations": [],
+      "role_errors": [],
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_qkd_kvs_ctl_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "17e568d62f2e72eb3211657fa8d41c386e15ccf792d2b55efb5457831746b0cf"
+      }
+    },
+    "qkd_kvs_ctl_c32b-20261020-222038": {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_c32b-20261020-222038/routes/gate/work/orfs/native_census.json",
+      "full_census_sha256": "10ca98ab6846235822bbb5e29c7dae20b1518f36b68d66da9dab6a2e6f413f64",
+      "schema": "opentallas.pre_gate_native_census.v1",
+      "kit": "qkd_kvs_ctl_c32b",
+      "status": "PASS",
+      "limit": 32,
+      "roots_examined": 39340,
+      "max_dynamic_loads": 32,
+      "violations": [],
+      "role_errors": [],
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_qkd_kvs_ctl_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "c1a53ef1e2422e73bea7d18f42d16d3d0ae625a7594d6c6289f613ac05e6f4e1"
+      }
+    }
+  },
+  "collected": "2026-10-20T22:43:00-07:00"
+}
