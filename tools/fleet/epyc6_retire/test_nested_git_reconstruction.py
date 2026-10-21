@@ -8,6 +8,7 @@ import os
 import pathlib
 import subprocess
 import tempfile
+import types
 import unittest
 
 HERE = pathlib.Path(__file__).parent
@@ -114,6 +115,37 @@ class NestedGit(unittest.TestCase):
         self.preservation()
         self.assertEqual(P.sha(self.repo/'.git/index'), before)
         self.assertEqual(self.git('for-each-ref'), refs)
+
+
+class RequiredRoots(unittest.TestCase):
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location('retire_required', HERE/'epyc6_retire.py')
+        self.m = importlib.util.module_from_spec(spec); spec.loader.exec_module(self.m)
+        self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
+        self.m.STATE = self.tmp.name; self.m.LOG = str(pathlib.Path(self.tmp.name)/'watch.log')
+        self.root = '/srv/opentallas-scratch/claude/qwen-kvsys'
+        self.args = types.SimpleNamespace(no_copy=False)
+
+    def check(self, resolved, error=None):
+        with patch.object(self.m, 'jload', side_effect=lambda p, d: {'roots':[self.root]} if p.endswith('required_roots.json') else d), \
+             patch.object(self.m, 'pending_roots', return_value=[]), patch.object(self.m, 'work_dirs', return_value=set()), \
+             patch.object(self.m, 'resolve', return_value=resolved), patch.object(self.m, 'note_pending'), \
+             patch.object(self.m, 'copy_roots', return_value=({self.root:{'bytes':10}}, {self.root:error} if error else {}, {})) as copy:
+            result = self.m.check_pending(True, {}, self.args)
+            return result, copy.call_args
+
+    def test_required_umbrella_uses_filtered_copy_and_hash_gate(self):
+        (ok, why), call = self.check({self.root:{'dir':self.root,'depth':4,'kb':3_000_000_000}})
+        self.assertTrue(ok, why)
+        self.assertEqual(call.args[0], [self.root]); self.assertTrue(call.kwargs['final'])
+
+    def test_required_unresolved_never_silently_skipped(self):
+        (ok, why), _ = self.check({})
+        self.assertFalse(ok); self.assertIn('not resolved exactly', str(why))
+
+    def test_required_full_copy_over_capacity_remains_wait(self):
+        (ok, why), _ = self.check({self.root:{'dir':self.root,'depth':4,'kb':3_000_000_000}}, 'archive floor blocks full copy')
+        self.assertFalse(ok); self.assertIn('archive floor', str(why))
 
 
 if __name__ == '__main__':

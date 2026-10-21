@@ -601,18 +601,23 @@ def check_pending(idle, st, args):
         obs.setdefault(d, now())
     jsave(obs_p, obs)
     cand = pending_roots()
+    required = set(jload(f"{STATE}/required_roots.json", {}).get("roots", []))
+    cand += [dict(path=d, src="required_roots.json", lane="owner-required preservation") for d in required]
     res = resolve({c["path"] for c in cand} | set(obs))
     roots_map = {}
     skipped = []
     for c in cand + [dict(path=d) for d in obs]:
         v = res.get(c["path"]) or {}
         d = v.get("dir")
+        if c["path"] in required and d != c["path"].rstrip("/"):
+            why.append(f"required preservation root not resolved exactly: {c['path']}")
+            continue
         if not d:
             continue                           # not on ot-epyc6 (another host's path)
         if v.get("depth", 0) < 5:              # resolved to an umbrella dir /srv/<root>/<user>/<proj>
             if d.rstrip("/") != c["path"].rstrip("/"):
                 continue                       # walked up: the named path is on another host
-            if v.get("kb", 0) * 1024 > TOP_CAP_BYTES:
+            if d not in required and v.get("kb", 0) * 1024 > TOP_CAP_BYTES:
                 skipped.append(f"{d} ({v.get('kb', 0) / 1e6:.0f} GB umbrella dir)")
                 continue
         roots_map.setdefault(d, [])
