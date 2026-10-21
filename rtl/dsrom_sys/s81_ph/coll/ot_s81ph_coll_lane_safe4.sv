@@ -107,7 +107,7 @@ module ot_s81ph_coll_lane_safe4 #(
     end else begin : g_lo1
         assign lo_vl = lo_v; assign lo_dl = lo_d;
     end endgenerate
-    ot_link_credit_rx_b64 #(.W(W + 1), .DEPTH(CORE_CRED), .WFREE(1), .LOCAL_HIT(1)) u_ski (
+    ot_link_credit_rx_b64 #(.W(W + 1), .DEPTH(CORE_CRED), .WFREE(1), .LOCAL_HIT(1), .LOCAL_POP(CORE_CRED==12)) u_ski (
         .clk(clk), .rst_n(rr[R_CRX]), .head_rst_n(head_rst_n), .l_valid(lo_vl), .l_data(lo_dl),
         .l_credit(lo_r), .o_valid(iv), .o_ready(ir_g), .o_data({il, id}), .fault(lcf));
     // link -> core: credit tx with registered ready copies
