@@ -67,6 +67,9 @@ B=/srv/opentallas-scratch/claude/hbm-die15-r15-1021/chain$VAR; OTRUN=/home/ubunt
 D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=codex/hbm-r15-binding-1021
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json"
+# Local transport override only in this successor process: ep6 public route loses packets.
+ssh() { local host=; for host in "$@"; do [ "$host" = ot-epyc6 ] && { command ssh -C -J ot-epyc5 -S none "$@"; return $?; }; done; command ssh -C -o ControlPath=none "$@"; }
+scp() { local arg=; for arg in "$@"; do [[ "$arg" == ot-epyc6:* ]] && { command scp -C -o ProxyJump=ot-epyc5 -o ControlPath=none "$@"; return $?; }; done; command scp -C -o ControlPath=none "$@"; }
 step() { echo "STEP $* $(date -Is)"; }
 mkdir -p $A; echo $$ > $A/chain.pid; echo "RUN14_HBM-DIE14 VAR $VAR PLAN $PL PLAN_UM $PLAN_UM GX=$GX"
 [ "$(git -C $W rev-parse --show-toplevel)" = "$W" ] || { echo BAD_WT; exit 9; }
@@ -116,6 +119,17 @@ print(' '.join(sorted({'--rtl-file '+f for i in c['instances'].values() for f in
 }
 synth_round() {   # $1 contract  $2 vplan dir  $3 tag  $4 prev vplan
   rm -rf $2; python3 tools/hbm_die_v15/v16_views.py --out $2 --contract $1 | tail -3
+  # Measured r14 top-k synthesis used 69 GiB; 48 GiB caused protected memcg livelock.
+  python3 - "$2/jobs.tsv" <<'PYMEM'
+import sys
+from pathlib import Path
+p=Path(sys.argv[1]); rows=[]
+for line in p.read_text().splitlines():
+    fields=line.split('\t')
+    if fields[0]=='ot_hbm_idx_topk_link_static': fields[3]=str(max(128,int(fields[3])))
+    rows.append('\t'.join(fields))
+p.write_text('\n'.join(rows)+'\n')
+PYMEM
   rm -rf $A/synmeta_$3; mkdir -p $A/synmeta_$3
   for P in $METAS; do [ -d $P ] && [ "$P" != "$2/synth" ] && (cd $P && tar -cf - */meta.json 2>/dev/null) | tar -x -C $A/synmeta_$3; done
   python3 tools/hbm_die_v16/synth_reuse_r8b.py --views $2 --metas $A/synmeta_$3 --root $W --out $A/reuse_$3.json --prev $4 > $A/reuse_$3.log; tail -3 $A/reuse_$3.log | cut -c1-600
@@ -163,7 +177,10 @@ views_to() {      # $1 remote views dir  $2 vplan dir  $3 contract  (all earlier
 }
 views_up() { views_to $B/views "$@"; }
 # HBM-DIE13: GEN CHECK (ROOT14) = d4g_reach_check per bus (real pins) -> tools/die_safety/gen_check.py W1 -> GEN packet
-gen_check_step() {   # $1 remote case dir  $2 remote contract  $3 tag  $4 extra gen_check args (e.g. --diagnostic REASON)
+gen_check_# Local transport override only in this successor process: ep6 public route loses packets.
+ssh() { local host=; for host in "$@"; do [ "$host" = ot-epyc6 ] && { command ssh -C -J ot-epyc5 -S none "$@"; return $?; }; done; command ssh -C -o ControlPath=none "$@"; }
+scp() { local arg=; for arg in "$@"; do [[ "$arg" == ot-epyc6:* ]] && { command scp -C -o ProxyJump=ot-epyc5 -o ControlPath=none "$@"; return $?; }; done; command scp -C -o ControlPath=none "$@"; }
+step() {   # $1 remote case dir  $2 remote contract  $3 tag  $4 extra gen_check args (e.g. --diagnostic REASON)
   $OTRUN --mem 64 --threads 1 --disk 2 --priority die --dir $1 -- bash -c "cd $B/src && python3 tools/hbm_die_v16/d4g_reach_check.py $1 $2 \
     --out $1/reach_check.json > $1/reach_check.log 2>&1; tail -3 $1/reach_check.log; python3 tools/die_safety/gen_check.py --design hbm \
     --hbm-reach $1/reach_check.json --packet $1/GEN_PACKET.json --out $1/gen_safety.json $4" > $A/gen_check_$3.otrun 2>&1; local rc=$?
