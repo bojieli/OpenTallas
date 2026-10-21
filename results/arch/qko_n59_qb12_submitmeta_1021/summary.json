@@ -1,0 +1,70 @@
+{
+  "a": {
+    "snapshot_identity": "ae570fdae7e0d8f0f6e24f314fdcfc62f26c967e767c0ad979f3e5a1b5f0ad1c",
+    "actual_rtl_sha256": "cfdf2a1c7bac4d72eb894d2913400eee8b70e599f8ee86127f5f1c11cdfcdd89",
+    "vs47_differences": [
+      {
+        "path": "tools/orfs_hold_mm.tcl",
+        "kind": "daemon_overlay",
+        "gate_sha256": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290",
+        "gate_git_blob": "66e94dd7004247342685c7493bf6f0c8bd69a719",
+        "provenance47_sha256": "ede40feef86db898b14692c4ae6887692cfb6e8693cc1d838f71df2076659a5f"
+      },
+      {
+        "path": "tools/textbook_lint.py",
+        "kind": "daemon_overlay",
+        "gate_sha256": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b",
+        "gate_git_blob": "dff8ef6f6c303eaebf58a6985670682eaba5d39a",
+        "provenance47_sha256": "06d11042c4e2e15d39d6f6062ec06d8f0b605357dd9d163b743186109656efb9"
+      }
+    ],
+    "metadata_delta": {
+      "job_json_excluded_from_gate_consumed": true,
+      "fields": [
+        "owner",
+        "source.branch",
+        "purpose",
+        "structural_change"
+      ],
+      "tags_already_correct_unchanged": "qfd_n59_qbank12a-qb12a-COMMIT",
+      "old_job_sha256": "05e92859d488b46ea0eb07220c19615aa6c35f94f136fd944751fe0760944f97",
+      "new_job_sha256": "e75ad3b441e96f5d96e30b56bd3e235752b79be1bf3ac9f9ec29cf3e84649a81",
+      "spec_job_template_preserved_byte_identical": true
+    },
+    "readiness": "NOT_SUBMITTED: actual gate final + ROOT critical PNG/source review required; exact frozen helper provenance retained, no rule relaxation or regate claim."
+  },
+  "b": {
+    "snapshot_identity": "fc2b092be4969c33c4fae82efe1fd4ecaf1713e188878486dab9ae2aa6a11a87",
+    "actual_rtl_sha256": "cfdf2a1c7bac4d72eb894d2913400eee8b70e599f8ee86127f5f1c11cdfcdd89",
+    "vs47_differences": [
+      {
+        "path": "tools/orfs_hold_mm.tcl",
+        "kind": "daemon_overlay",
+        "gate_sha256": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290",
+        "gate_git_blob": "66e94dd7004247342685c7493bf6f0c8bd69a719",
+        "provenance47_sha256": "ede40feef86db898b14692c4ae6887692cfb6e8693cc1d838f71df2076659a5f"
+      },
+      {
+        "path": "tools/textbook_lint.py",
+        "kind": "daemon_overlay",
+        "gate_sha256": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b",
+        "gate_git_blob": "dff8ef6f6c303eaebf58a6985670682eaba5d39a",
+        "provenance47_sha256": "06d11042c4e2e15d39d6f6062ec06d8f0b605357dd9d163b743186109656efb9"
+      }
+    ],
+    "metadata_delta": {
+      "job_json_excluded_from_gate_consumed": true,
+      "fields": [
+        "owner",
+        "source.branch",
+        "purpose",
+        "structural_change"
+      ],
+      "tags_already_correct_unchanged": "qfd_n59_qbank12b-qb12b-COMMIT",
+      "old_job_sha256": "98f01b86856d1021b561f092c901427fc829c5324e6967b58cf46dbb519a817b",
+      "new_job_sha256": "a4c3a487e12de94deaf4b3f9931662f1f86df1aeb1a17ab995bc3d3b4df75265",
+      "spec_job_template_preserved_byte_identical": true
+    },
+    "readiness": "NOT_SUBMITTED: actual gate final + ROOT critical PNG/source review required; exact frozen helper provenance retained, no rule relaxation or regate claim."
+  }
+}
