@@ -1667,6 +1667,8 @@ def rope_context_tiles(tiles):
     native = int(os.environ.get('OT_KV_EMB_N32', '0'))
     pipe = int(os.environ.get('OT_KV_EMB_PJ', '0'))
     delay = int(os.environ.get('OT_KV_ROPE_DELAY', '1024'))
+    if delay != 1024:
+        raise ValueError('KV RoPE EW1627 image requires the actual 1024-edge second HBM sweep separation')
     emb['body'] = [
         f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay})) u_context ('
         '.ck(ck), .rst_n(rst_n), '
