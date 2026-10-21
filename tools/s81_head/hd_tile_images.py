@@ -6,7 +6,9 @@ skewed ROM images of ot_dsrom_head_bundle exactly as tools/dsrom_1m_head.py cmd_
 P a0..a3 / P b, _0/_1 banks), plus xa.hex / xb.hex (golden final-norm x of the 1M token) and golden.json (per-bundle
 and joint argmax {row, bits} from the golden logits, lowest id on ties).
 
-    python3 tools/s81_head/hd_tile_images.py OUT h:21888 g:22016
+    python3 tools/s81_head/hd_tile_images.py OUT [--sk 7] h:21888 g:22016
+SK = the element adder latency (ot_s81hd_elem NC 1: ot_hdc_fp32_add_lat_fan32 LAT 7 -> 7; ot_v41_fadd CUT 0x17b -> 8).
+Also writes <P>lg.hex: the 128 golden logits (FP32 bits, local row order) of each bundle.
 """
 import json
 import sys
@@ -17,13 +19,18 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import dsrom_1m_head as H  # noqa: E402
 
-out = Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
+args = sys.argv[1:]
+sk = 7
+if '--sk' in args:
+    i = args.index('--sk'); sk = int(args[i + 1]); del args[i:i + 2]
+out = Path(args[0]); out.mkdir(parents=True, exist_ok=True)
 H.setup_gate()
+H.SK = sk
 xf, logits = H.golden_x()
 x16 = (H.G.bits(xf).astype(np.uint32) >> 16).astype(np.uint64)
 ck = H.Ckpt(H.SNAP)
 gold = {}
-for arg in sys.argv[2:]:
+for arg in args[1:]:
     pre, r0 = arg.split(":"); r0 = int(r0)
     m = H.gate.Mat(ck, "head", "bf16", H.BUNDLE_ROWS, H.K, r0=r0)
     u = np.asarray(m.u16, dtype=np.uint64)
@@ -34,6 +41,7 @@ for arg in sys.argv[2:]:
     lg = logits[r0:r0 + H.BUNDLE_ROWS]
     b = int(np.argmax(lg))
     gold[pre] = dict(row0=r0, row=r0 + b, bits=f"{int(H.G.bits(lg[b:b+1])[0]):08x}")
+    (out / f"{pre}lg.hex").write_text("".join(f"{int(v):08x}\n" for v in H.G.bits(lg)))
 
 
 def slices(xx, n):
@@ -43,5 +51,6 @@ def slices(xx, n):
 (out / "xa.hex").write_text(slices(x16[:4096], 256))
 (out / "xb.hex").write_text(slices(x16[4096:], 64))
 gold["checkpoint_header_sha256"] = ck.pins
+gold["sk"] = sk
 (out / "golden.json").write_text(json.dumps(gold, indent=1) + "\n")
 print(json.dumps(gold))

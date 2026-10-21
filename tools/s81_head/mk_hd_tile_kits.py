@@ -26,11 +26,14 @@ ROM = 'physical/asap7_memory_macros_v2/ot_rom_4096x274_m8'
 BR = 'claude/s81-head-tile-1021'
 RES = 'results/rtl/s81_head_tile_1021'
 HD = 'rtl/dsrom_sys/s81_head'
-LIB = ['rtl/common/ot_prefix.sv', 'rtl/v41rom/ot_v41_fadd.sv', 'rtl/v41rom/ot_v41_bmul2.sv', 'rtl/v41rom/ot_dsrom_bmul3.sv',
+LIB = ['rtl/hdc/ot_hdc_prefix.sv', 'rtl/hdc/ot_hdc_fastfp.sv', 'rtl/hdc/ot_hdc_fp32_add_lat.sv', 'rtl/hdc/ot_hdc_fp32_mul_lat.sv',
+       'rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv', 'rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv', 'rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v',
+       f'{HD}/ot_s81hd_key.sv', f'{HD}/ot_s81hd_fadd.sv', 'rtl/common/ot_prefix.sv', 'rtl/v41rom/ot_v41_fadd.sv', 'rtl/v41rom/ot_v41_bmul2.sv', 'rtl/v41rom/ot_dsrom_bmul3.sv',
        'rtl/hdc/ot_hdc_delay.sv', f'{ROM}/ot_rom_4096x274_m8_bb.v',
        f'{HD}/ot_s81hd_elem.sv', f'{HD}/ot_s81hd_bundle.sv', f'{HD}/ot_s81hd_tile.sv']
-NODE_SRC = [f'{HD}/ot_s81hd_spo.sv', f'{HD}/ot_s81hd_spr.sv']
-EXTRA = ['rtl/common', 'rtl/v41rom', 'rtl/hdc', HD, 'tools/s81_head', RES, ROM,
+NODE_SRC = [f'{HD}/ot_s81hd_key.sv', f'{HD}/ot_s81hd_spo.sv', f'{HD}/ot_s81hd_spr.sv']
+EXTRA = ['rtl/common', 'rtl/v41rom', 'rtl/hdc', HD, 'tools/s81_head', RES, ROM, 'tools/prepare_fp32_fan32_models.py',
+         'results/rtl/fp32_add_native_clone_1020/final_packet',
          'physical/asap7_memory_macros/ot_rom_4096x274_m8']
 
 
@@ -83,13 +86,16 @@ SAFE_TILE = """SAFE checklist (owner 10-19 / safe_1021, 8 points) -- ot_s81hd_ti
 2 reach: PASS -- the x stream is registered at both faces (2 stages a tile; tile pitch {w} um, so no single-cycle wire
   crosses the tile); chain best: W pin regs -> holds -> select (kept copies) -> E output regs.  Bundle internal: BST 2
   broadcast stages + skew lines + element IOREG / transport registers (unchanged from the bundle).
-3 fanout: PASS (pre-gate native census, see "census" below) -- census-safe bundle copy ot_s81hd_bundle /
-  ot_s81hd_elem (RP 10 capture copies, kept go / FIFO pointer / SAFE apply copies, enable-free j / k registers); tile
-  rv / select copies kept (3 each); reset by kit copies (<= 32 loads a copy).
-4 depth: PASS -- unchanged arithmetic (ot_v41_fadd CUT 0x17b, ot_dsrom_bmul3), SAFE = 1 registered argmax apply,
-  tile compare = one 32-bit key compare + 17-bit row compare into a registered select (fits 833 ps at TT).
+3 fanout: PASS (pre-gate native census, see "census" below; round 1 on the original element arithmetic: 2,575
+  drivers > 32, max 126, in ot_v41_fadd / ot_dsrom_bmul3 selects + element enables) -- census-safe bundle copy
+  ot_s81hd_bundle / ot_s81hd_elem NC 1: native-census arithmetic (adders ot_hdc_fp32_add_lat_fan32 LAT 7 SAFE_DIST 1,
+  products ot_hdc_fp32_mul_lat_ncr LAT 6), every wide enable / select a kept copy per <= 16 bits (a mapped select
+  costs 2 load pins a bit): capture RP 18, tree hold x3, FIFO pointers, SAFE apply x10, go x4, bundle compare tree 11
+  copies a level; FP32 keys via ot_s81hd_key; tile rv x5 / select x7 copies; reset by kit copies (<= 32 a copy).
+4 depth: PASS -- reviewed native arithmetic (fan32 adder native estimate 288 ps / 9 levels; ncr multiply LAT 6),
+  SAFE = 1 registered argmax apply, compares on registered keys into registered selects (fits 833 ps at TT).
 5 storage: WAIVED with reason -- the 10 ROM macros hold the weights; the only bulk flops are the bundle's fixed
-  systolic skew lines (16 lanes x 2 streams x SK*(j mod 8) <= 56 deep x 16 b = 14.3 kb total, <= 896 b a lane): fixed
+  systolic skew lines (16 lanes x 2 streams x SK*(j mod 8), SK 7: <= 49 deep x 16 b = 12.5 kb total, <= 784 b a lane): fixed
   delay shift registers, never runtime-indexed storage; turning them into ring-buffer SRAMs needs a bundle redesign
   (or skewing x once at ot_s81hd_ctl and carrying the skewed stream on bus B, an HD-CTL option recorded in the lane).
 6 floorplan: PASS -- macro columns on the 43.2 lattice (x {xs}; N stacks y {yn}, S stacks y {ys}; the MX upper
@@ -99,7 +105,8 @@ SAFE_TILE = """SAFE checklist (owner 10-19 / safe_1021, 8 points) -- ot_s81hd_ti
 7 clock: one region (the tile is one region of its row-pair chain clock region, SPEC 6), one TritonCTS tree, r6g
   sink recipe; pin-flop spread <= 80 ps TT+FF measured by the gate; io_hold_margin 0.03.
 8 schedule: static, valid-only pipeline (no credits / backpressure).  Added cycles vs SPEC v1: +1 a tile on the x
-  stream (2-stage forward) and IOREG / SAFE +2 in the bundle (go -> result 8,359); fire = 2 edges after both bests;
+  stream (2-stage forward); bundle IOREG / SAFE / key / census compare tree, with the LAT 7 adders (SK 7: shorter
+  chains and ROM read span); fire = 4 edges after both bests (2 key stages, select, output);
   measured mini array (spo -> 2 tiles -> spr) go -> result {cyc} cycles; handed to the calendar via lanes/S81-HEAD.md.
 """
 
@@ -186,10 +193,14 @@ for v, (W, H) in {'m': (216.0, 648.0), 'f': (259.2, 691.2)}.items():
          {'i': [10.0, W - 10], 'o': [10.0, W - 10], 'iw': [20.0, H - 20], 'ie': [20.0, H - 20]},
          'every input lands in a flop (i x / go / xv, per port 3 kept rv copies + row / bits / flt), every output '
          'leaves a flop; iw / ie x / go / xv are unused inputs (the chain ends\' stream copies).',
-         'hold enables from 3 kept rv copies a port (<= 18 loads), selects from 3 kept copies a compare level.',
-         '2 registered compare levels (pair (iw, ie), then (pair, i)): one 32-bit key + 17-bit row compare a stage.',
-         1300, 'fire = 4 edges after the last best (capture, select, pair, select, output), cleared by i.go.')]:
-        name = f's81hd_{top[-3:]}_{v}'
+         'hold enables from 5 kept rv copies a port (<= 22 load pins), selects 11 / 7 kept copies (<= 8 bits each), '
+         'keys from ot_s81hd_key (kept sign / -0 copies a byte).  Round 1 (s81hd_spr_m route EARLY_FAIL_SETUP reg -> out '
+         '-467 ps: the N-face stream flop drove the S-face pin in one cycle; gate census max 88): 2-stage stream forward, '
+         'key unit, copies.',
+         'keys 2 registered stages, then 2 registered compare levels (pair (iw, ie), then (pair, i)) on registered keys.',
+         2600, 'fire = 6 edges after the last best (2 key stages, select, pair, select, output), cleared by i.go; the '
+         'stream on the return spine is 2 cycles a node.')]:
+        name = f's81hd_{top[-3:]}_{v}' + ('2' if top == 'ot_s81hd_spr' else '')   # spr round 2 (route 1 EARLY_FAIL_SETUP)
         why = (f'S81-HEAD HD-TILE 10-21 {tag}: new spine node {top} (SPEC v1 section 2, 26 a die), std-cell only, '
                f'{W} x {H}.')
         nb = [BENCHES[0], bench('hd_mut_spo_ow_drop', 'A', 'SPO_OW_DROP', r'^A: TB_FAIL results 0 != positions 2$')

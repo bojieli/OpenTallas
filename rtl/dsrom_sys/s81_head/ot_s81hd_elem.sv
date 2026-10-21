@@ -10,6 +10,16 @@
 //   * root FIFO read pointers: kept copies per 16 / 8 bit group;
 //   * SAFE argmax apply: the staged valid / take / bad are 3 kept copies, one per best register group.
 // SAFE = 1 is required (the SAFE = 0 compare path is not census-safe and is refused at elaboration).
+// NC = 1 (default; HD-TILE census round 2, a mapped select / enable costs 2 load pins a bit):
+//   * arithmetic: adders ot_hdc_fp32_add_lat_fan32 (LAT 7, DRST 0, SAFE_DIST 1: the bounded native fp32_add_rne
+//     netlist, rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v), so SK = 7; products ot_hdc_fp32_mul_lat_ncr (LAT 6, the
+//     native-32 FP32 multiply) on the BF16 operands: exact for every product the S81 head forms (16-bit significand),
+//     the same latency as ot_dsrom_bmul3; zero products may carry a sign (the adder returns +0 for every zero sum, and
+//     x + (+-0) = x, so sums are unchanged); a product below the FP32 subnormal range is rounded instead of faulted;
+//   * every wide enable / select is a kept register copy per <= 16 bits: bank capture RP 18, tree hold `have` x3 a
+//     level, root FIFO write pointers x4 (8-bit groups), read pointers x4 / x8, SAFE apply x10, go x4;
+//   * the argmax key comes from ot_s81hd_key (2 registered stages; +1 cycle on the key / logit-to-best path);
+//   * the issue counter and the row counter are enable-free (AND-clear / carry-in increments).
 // Original header follows.
 // ---------------------------------------------------------------------------
 // ot_dsrom_head_elem: DS-ROM lm_head element at the ROM read rate (recovery lever "head", 2026-10-04).
@@ -43,7 +53,8 @@ module ot_s81hd_elem #(
     parameter integer ROWS = 32,           // rows the element holds (8192 >> LV)
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer SPLIT9 = 0,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows)
-    parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+    parameter integer NC = 1,              // native-census arithmetic + copies (see header)
+    parameter integer SK = NC ? 7 : 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
     parameter INSTANCE = "",
     // IOREG (default 0; redesign pass 2026-10-06): every input captured in a flop at its pin (+1 cycle, uniform);
     // outputs already leave flops (adder output stages, argmax/fault registers): register-to-register boundary
@@ -75,23 +86,23 @@ module ot_s81hd_elem #(
     output reg          fault
 );
     // IOREG: inputs captured at the pins (+1, uniform: go and x move together, the x contract is unchanged)
-    wire go_e, go_e2, b_v_e;
+    wire go_e, go_e2, go_e3, go_e4, b_v_e;      // go copies: [0] issue / fault / SAFE stage, [1] nrow[8:0], [2] nrow[16:9], [3] argmax control
     wire [16:0] row0_e;
     wire [255:0] x_e;
     wire [31:0] b_d_e;
     generate if (IOREG) begin : g_pin
-        (* keep *) reg [1:0] go_q;
+        (* keep *) reg [3:0] go_q;
         reg b_v_q;
         reg [16:0] row0_q;
         reg [255:0] x_q;
         reg [31:0] b_d_q;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin go_q <= 2'd0; b_v_q <= 1'b0; end
-            else begin go_q <= {2{go}}; b_v_q <= b_v; end
+            if (!rst_n) begin go_q <= 4'd0; b_v_q <= 1'b0; end
+            else begin go_q <= {4{go}}; b_v_q <= b_v; end
         always @(posedge clk) begin row0_q <= row0; x_q <= x; b_d_q <= b_d; end
-        assign go_e = go_q[0]; assign go_e2 = go_q[1]; assign b_v_e = b_v_q; assign row0_e = row0_q; assign x_e = x_q; assign b_d_e = b_d_q;
+        assign go_e = go_q[0]; assign go_e2 = go_q[1]; assign go_e3 = go_q[2]; assign go_e4 = go_q[3]; assign b_v_e = b_v_q; assign row0_e = row0_q; assign x_e = x_q; assign b_d_e = b_d_q;
     end else begin : g_direct
-        assign go_e = go; assign go_e2 = go; assign b_v_e = b_v; assign row0_e = row0; assign x_e = x; assign b_d_e = b_d;
+        assign go_e = go; assign go_e2 = go; assign go_e3 = go; assign go_e4 = go; assign b_v_e = b_v; assign row0_e = row0; assign x_e = x; assign b_d_e = b_d;
     end endgenerate
     localparam integer XLEAD = 5;
     localparam integer NW = 8192;
@@ -103,8 +114,10 @@ module ot_s81hd_elem #(
         if (!rst_n) begin go_r <= 1'b0; run <= 1'b0; a <= 14'd0; end
         else begin
             go_r <= go_e;
-            if (go_r) begin run <= 1'b1; a <= 14'd0; end
-            else if (run) begin a <= a + 14'd1; if (a == NPHYS - 1) run <= 1'b0; end
+            // a <= go_r ? 0 : a + run (AND-clear, carry-in increment: no 14-bit go_r / run select)
+            a <= (a + {13'd0, run}) & {14{~go_r}};
+            if (go_r) run <= 1'b1;
+            else if (run && a == NPHYS - 1) run <= 1'b0;
         end
     wire issue = run;
     wire lane0_live = run && a < NW;       // logical word a exists (lane 0 is unskewed)
@@ -120,7 +133,7 @@ module ot_s81hd_elem #(
     // physical closure (route r1): the bank chip enables come straight from flops (ce of word a registered in the
     // cycle before its issue), and the 274-bit capture enables / 256-bit bank select are registered and replicated
     // (RP copies, kept) instead of decoded from iv/ib in front of their loads.  Cycle-identical to issue && a[0].
-    localparam integer RP = 10;
+    localparam integer RP = 18;
     wire last = a == NPHYS - 1;
     reg ce0_q, ce1_q;
     always @(posedge clk or negedge rst_n)
@@ -170,8 +183,17 @@ module ot_s81hd_elem #(
     wire [15:0] pf;
     genvar l, s;
     generate for (l = 0; l < 16; l = l + 1) begin : g_m
-        ot_dsrom_bmul3 u_m (.clk(clk), .rst_n(rst_n), .v(w_v), .a({w_r[16*l +: 16], 16'd0}), .b({x_r[16*l +: 16], 16'd0}),
-                         .y(p[l]), .fault(pf[l]));
+        if (NC) begin : g_nc
+            wire [1:0] me;
+            wire       mv;
+            ot_hdc_fp32_mul_lat_ncr #(.LAT(6)) u_m (.clk(clk), .rst_v({21{rst_n}}), .valid_in(w_v),
+                .a({w_r[16*l +: 16], 16'd0}), .a_nrm({2{w_r[16*l +: 16], 16'd0}}), .b({x_r[16*l +: 16], 16'd0}),
+                .y(p[l]), .err(me), .valid_out(mv));
+            assign pf[l] = me != 2'd0;          // qualified by the chain valid (cerr), as bmul3's fault
+        end else begin : g_b3
+            ot_dsrom_bmul3 u_m (.clk(clk), .rst_n(rst_n), .v(w_v), .a({w_r[16*l +: 16], 16'd0}), .b({x_r[16*l +: 16], 16'd0}),
+                             .y(p[l]), .fault(pf[l]));
+        end
     end endgenerate
     reg [5:0] pl;                          // lane-0 live, aligned with the products (bmul3 latency 6)
     always @(posedge clk or negedge rst_n) if (!rst_n) pl <= 6'd0; else pl <= {pl[4:0], w_l};
@@ -183,7 +205,7 @@ module ot_s81hd_elem #(
         assign cs[l][0] = 32'd0;
         assign cv[l][0] = pl[5];
         for (s = 0; s < 8; s = s + 1) begin : g_s
-            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
+            ot_s81hd_fadd #(.NC(NC), .CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(cv[l][s]), .a(cs[l][s]), .b(p[8*l + s]),
                                           .y(cs[l][s+1]), .err(ce[l][s]), .valid_out(cv[l][s+1]));
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) cerr[8*l + s] <= 1'b0;
@@ -194,7 +216,7 @@ module ot_s81hd_elem #(
     wire        n1_v;
     wire [31:0] n1_d;
     wire [1:0]  n1_e;
-    ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_pair (.clk(clk), .rst_n(rst_n), .valid_in(cv[0][8]), .a(cs[0][8]), .b(cs[1][8]),
+    ot_s81hd_fadd #(.NC(NC), .CUT(CUT), .SPLIT9(SPLIT9)) u_pair (.clk(clk), .rst_n(rst_n), .valid_in(cv[0][8]), .a(cs[0][8]), .b(cs[1][8]),
                                      .y(n1_d), .err(n1_e), .valid_out(n1_v));
 
     // ---------------- streaming pairwise tree: LV levels, then PAD (+0) levels -----------------------------------
@@ -206,16 +228,20 @@ module ot_s81hd_elem #(
     genvar k;
     generate for (k = 0; k < LV + PAD; k = k + 1) begin : g_t
         if (k < LV) begin : g_pair
-            reg have;
+            (* keep *) reg [2:0] have;     // kept copies: [0] held[10:0], [1] held[21:11], [2] held[31:22] + valid
             reg [31:0] held;
             always @(posedge clk or negedge rst_n)
-                if (!rst_n) have <= 1'b0;
-                else if (tv[k]) have <= !have;
-            always @(posedge clk) if (tv[k] && !have) held <= td[k];
-            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k] && have), .a(held), .b(td[k]),
+                if (!rst_n) have <= 3'd0;
+                else if (tv[k]) have <= {3{!have[2]}};
+            always @(posedge clk) begin
+                if (tv[k] && !have[0]) held[10:0]  <= td[k][10:0];
+                if (tv[k] && !have[1]) held[21:11] <= td[k][21:11];
+                if (tv[k] && !have[2]) held[31:22] <= td[k][31:22];
+            end
+            ot_s81hd_fadd #(.NC(NC), .CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k] && have[2]), .a(held), .b(td[k]),
                                           .y(td[k+1]), .err(te[k+1]), .valid_out(tv[k+1]));
         end else begin : g_pad
-            ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k]), .a(td[k]), .b(32'd0),
+            ot_s81hd_fadd #(.NC(NC), .CUT(CUT), .SPLIT9(SPLIT9)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(tv[k]), .a(td[k]), .b(32'd0),
                                           .y(td[k+1]), .err(te[k+1]), .valid_out(tv[k+1]));
         end
     end endgenerate
@@ -232,58 +258,69 @@ module ot_s81hd_elem #(
         // root FIFOs (A: own roots; B: the bundle's padded root1024 for this element's rows, in row order)
         reg [31:0] fa [0:1];
         reg [31:0] fb [0:3];
-        reg fa_w;
-        reg [1:0] fb_w;
-        (* keep *) reg [1:0] fa_r;         // kept copies: [0] bits 15:0, [1] bits 31:16
-        (* keep *) reg [7:0] fb_r;         // kept copies: fb_r[2c +: 2] reads bits 8c +: 8
+        (* keep *) reg [3:0] fa_w;         // kept copies: fa_w[c] writes bits 8c +: 8
+        (* keep *) reg [7:0] fb_w;         // kept copies: fb_w[2c +: 2] writes bits 8c +: 8
+        (* keep *) reg [3:0] fa_r;         // kept copies: fa_r[c] reads bits 8c +: 8
+        (* keep *) reg [15:0] fb_r;        // kept copies: fb_r[2c +: 2] reads bits 4c +: 4
         reg [1:0] fa_n;
         reg [2:0] fb_n;
         wire pop = fa_n != 2'd0 && fb_n != 3'd0;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin fa_w <= 1'b0; fa_r <= 2'd0; fb_w <= 2'd0; fb_r <= 8'd0; fa_n <= 2'd0; fb_n <= 3'd0; jerr <= 1'b0; end
+            if (!rst_n) begin fa_w <= 4'd0; fa_r <= 4'd0; fb_w <= 8'd0; fb_r <= 16'd0; fa_n <= 2'd0; fb_n <= 3'd0; jerr <= 1'b0; end
             else begin
-                if (o_v) fa_w <= !fa_w;
-                if (b_v_e) fb_w <= fb_w + 2'd1;
-                if (pop) begin fa_r <= {2{!fa_r[0]}}; fb_r <= {4{fb_r[1:0] + 2'd1}}; end
+                if (o_v) fa_w <= {4{!fa_w[0]}};
+                if (b_v_e) fb_w <= {4{fb_w[1:0] + 2'd1}};
+                if (pop) begin fa_r <= {4{!fa_r[0]}}; fb_r <= {8{fb_r[1:0] + 2'd1}}; end
                 fa_n <= fa_n + {1'b0, o_v} - {1'b0, pop};
                 fb_n <= fb_n + {2'd0, b_v_e} - {2'd0, pop};
                 jerr <= (o_v && !pop && fa_n == 2'd2) || (b_v_e && !pop && fb_n == 3'd4);   // overflow: fail closed
             end
-        always @(posedge clk) begin
-            if (o_v) fa[fa_w] <= o_d;
-            if (b_v_e) fb[fb_w] <= b_d_e;
-        end
+        integer wc;
+        always @(posedge clk)
+            for (wc = 0; wc < 4; wc = wc + 1) begin
+                if (o_v) fa[fa_w[wc]][8*wc +: 8] <= o_d[8*wc +: 8];
+                if (b_v_e) fb[fb_w[2*wc +: 2]][8*wc +: 8] <= b_d_e[8*wc +: 8];
+            end
         reg        j_v;
         reg [31:0] j_a, j_b;
         always @(posedge clk or negedge rst_n) if (!rst_n) j_v <= 1'b0; else j_v <= pop;
         // read every cycle (consumed only under j_v): no 64-bit pop enable
         integer jc;
         always @(posedge clk) begin
-            j_a[15:0] <= fa[fa_r[0]][15:0]; j_a[31:16] <= fa[fa_r[1]][31:16];
-            for (jc = 0; jc < 4; jc = jc + 1) j_b[8*jc +: 8] <= fb[fb_r[2*jc +: 2]][8*jc +: 8];
+            for (jc = 0; jc < 4; jc = jc + 1) j_a[8*jc +: 8] <= fa[fa_r[jc]][8*jc +: 8];
+            for (jc = 0; jc < 8; jc = jc + 1) j_b[4*jc +: 4] <= fb[fb_r[2*jc +: 2]][4*jc +: 4];
         end
         wire [1:0] le;
-        ot_v41_fadd #(.CUT(CUT), .SPLIT9(SPLIT9)) u_join (.clk(clk), .rst_n(rst_n), .valid_in(j_v), .a(j_a), .b(j_b),
+        ot_s81hd_fadd #(.NC(NC), .CUT(CUT), .SPLIT9(SPLIT9)) u_join (.clk(clk), .rst_n(rst_n), .valid_in(j_v), .a(j_a), .b(j_b),
                                          .y(l_d), .err(le), .valid_out(l_v));
         // argmax: registered key, then compare (rows arrive in increasing id)
         reg        k_v, k_bad;
-        reg [31:0] k_key, k_bits;
+        reg [31:0] k_bits;
+        wire [31:0] k_key;
         reg [16:0] k_row, nrow;
         reg [6:0]  cnt;
         assign head_v = k_v;
         assign head_d = k_bits;
         assign head_row = k_row;
-        wire [31:0] canon = (l_d == 32'h80000000) ? 32'd0 : l_d;
+        // stage K1 registers the logit / row / bad with its valid; the key unit (2 stages) runs beside it, so the key
+        // register k_key and the K2 copies of K1 meet one edge later than the original single key stage
+        reg        k1_v, k1_bad;
+        reg [31:0] k1_bits;
+        reg [16:0] k1_row;
+        wire [31:0] kk;
+        ot_s81hd_key u_lkey (.ck(clk), .x(l_d), .key(kk));    // registered: valid with k_v (2 edges after l_v)
+        assign k_key = kk;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin k_v <= 1'b0; nrow <= 17'd0; end
-            else begin
-                k_v <= l_v;
-                if (go_e2) nrow <= row0_e; else if (l_v) nrow <= nrow + 17'd1;
-            end
-        always @(posedge clk) begin               // every cycle (consumed only under k_v): no 82-bit l_v enable
-            k_key <= canon[31] ? ~canon : {1'b1, canon[30:0]};
-            k_bits <= l_d; k_row <= nrow;
-            k_bad <= le != 2'd0 || l_d[30:23] == 8'hff;
+            if (!rst_n) begin k1_v <= 1'b0; k_v <= 1'b0; end
+            else begin k1_v <= l_v; k_v <= k1_v; end
+        // row counter: nrow counts the logits already keyed (increment at K1, so it holds this logit's id at l_v)
+        always @(posedge clk) begin
+            nrow[8:0]  <= go_e2 ? row0_e[8:0]  : nrow[8:0] + {8'd0, k1_v};
+            nrow[16:9] <= go_e3 ? row0_e[16:9] : nrow[16:9] + {7'd0, k1_v & (&nrow[8:0])};
+        end
+        always @(posedge clk) begin               // every cycle (consumed only under k1_v / k_v): no wide enable
+            k1_bits <= l_d; k1_row <= nrow; k1_bad <= le != 2'd0 || l_d[30:23] == 8'hff;
+            k_bits <= k1_bits; k_row <= k1_row; k_bad <= k1_bad;
         end
         reg have;
         wire take = !have || k_key > best_key || (k_key == best_key && k_row < best_row);
@@ -294,31 +331,35 @@ module ot_s81hd_elem #(
         reg         b2b;
         // SAFE (required): stage the key and its decision, apply one cycle later; the staged valid / take / bad are three
         // kept copies, one per best register group (key | bits | row + control)
-        (* keep *) reg [2:0] sv, st, sb;
+        // copies: [3:0] best_key bytes, [7:4] best_bits bytes, [8] best_row[8:0], [9] best_row[16:9] + control
+        (* keep *) reg [9:0] sv, st, sb;
         reg [31:0] skey, sbits;
         reg [16:0] srow;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin sv <= 3'd0; b2b <= 1'b0; end
-            else begin sv <= {3{k_v && !go_e}}; b2b <= k_v && sv[2]; end
-        always @(posedge clk) begin st <= {3{take}}; sb <= {3{k_bad}}; skey <= k_key; sbits <= k_bits; srow <= k_row; end
-        assign u_v = sv[2]; assign u_take = st[2]; assign u_bad = sb[2]; assign u_key = skey; assign u_bits = sbits; assign u_row = srow;
+            if (!rst_n) begin sv <= 10'd0; b2b <= 1'b0; end
+            else begin sv <= {10{k_v && !go_e}}; b2b <= k_v && sv[9]; end
+        always @(posedge clk) begin st <= {10{take}}; sb <= {10{k_bad}}; skey <= k_key; sbits <= k_bits; srow <= k_row; end
+        assign u_v = sv[9]; assign u_take = st[9]; assign u_bad = sb[9]; assign u_key = skey; assign u_bits = sbits; assign u_row = srow;
 `ifndef SYNTHESIS
         initial if (SAFE == 0) $fatal(1, "ot_s81hd_elem: SAFE = 1 required (census-safe registered argmax apply)");
 `endif
+        // best registers: datapath (no reset; `have` gates the first take), one enable copy per byte / row half
+        integer bc;
+        always @(posedge clk)
+            for (bc = 0; bc < 4; bc = bc + 1) begin
+                if (!go_e4 && sv[bc] && !sb[bc] && st[bc]) best_key[8*bc +: 8] <= skey[8*bc +: 8];
+                if (!go_e4 && sv[4 + bc] && !sb[4 + bc] && st[4 + bc]) best_bits[8*bc +: 8] <= sbits[8*bc +: 8];
+            end
+        always @(posedge clk) if (!go_e4 && sv[8] && !sb[8] && st[8]) best_row[8:0] <= srow[8:0];
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) best_key <= 32'd0;
-            else if (!go_e && sv[0] && !sb[0] && st[0]) best_key <= skey;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) best_bits <= 32'd0;
-            else if (!go_e && sv[1] && !sb[1] && st[1]) best_bits <= sbits;
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; best_row <= 17'd0; end
-            else if (go_e) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; end
+            if (!rst_n) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; end
+            else if (go_e4) begin have <= 1'b0; cnt <= 7'd0; done <= 1'b0; end
             else if (u_v) begin
                 cnt <= cnt + 7'd1;
                 if (cnt == ROWS - 1) done <= 1'b1;
-                if (!u_bad && u_take) begin have <= 1'b1; best_row <= u_row; end
+                if (!u_bad && u_take) have <= 1'b1;
             end
+        always @(posedge clk) if (!go_e4 && sv[9] && !sb[9] && st[9]) best_row[16:9] <= srow[16:9];
         reg kerr;
         always @(posedge clk or negedge rst_n) if (!rst_n) kerr <= 1'b0; else kerr <= (u_v && u_bad) || b2b;
         always @(posedge clk or negedge rst_n)

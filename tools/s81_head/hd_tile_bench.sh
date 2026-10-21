@@ -4,20 +4,23 @@
 #   SCEN A    t0 = rows 21888.. (ten 1), t1 = rows 22016.. (ten 1), 2 positions: golden argmax 21946 / 4173a558, cycles
 #        B    t0 = rows 22016.. (ten 1), t1 = rows 21888.. (ten 0): 22141 / 40cdce35 (the golden bundle is excluded)
 #        C    t0 = rows 21888.. row0 21888, t1 = the same image with strap row0 21760: equal logits, lowest id 21818 wins
-#        D    as A with one x slice lane at BF16 +Inf: the bundle faults, flt = 1 must reach the spr output
+#        D    as A with one x slice lane at BF16 +Inf: the bundle faults, flt = 1 must reach the spr output (no logit check)
 #        ALL  A B C D on one build
 #   MUT  none | TIE_FLIP | GO_DROP | TEN_IGNORED | FLT_DROP (ot_s81hd_tile) | SPO_OW_DROP (spo) | SPR_EARLY (spr)
 #        (+define+OT_S81HD_MUT_<MUT>)
-# Images: results/rtl/s81_head_tile_1021/img (tools/s81_head/hd_tile_images.py, released head.weight + golden x of the 1M
-# token).  Last line BENCH_PASS / BENCH_FAIL; exit 0 only on BENCH_PASS.
+# Images: results/rtl/s81_head_tile_1021/img (tools/s81_head/hd_tile_images.py --sk 7, released head.weight + golden x of
+# the 1M token, golden logits <P>lg.hex).  Every logit a running bundle forms is checked bit-exact against the golden.  Last line BENCH_PASS / BENCH_FAIL; exit 0 only on BENCH_PASS.
 set -u
 O=$(realpath -m "${1:?outdir}"); SC=${2:?scen}; M=${3:-none}; mkdir -p "$O"
 IMG=$(realpath results/rtl/s81_head_tile_1021/img)
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 $V --version
-SRCS="rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_dsrom_bmul3.sv rtl/hdc/ot_hdc_delay.sv
+python3 tools/prepare_fp32_fan32_models.py --out $O/cells.v || { echo "BENCH_FAIL models"; exit 3; }
+SRCS="$O/cells.v rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv
+ rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v
+ rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_dsrom_bmul3.sv rtl/hdc/ot_hdc_delay.sv
  physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v
- rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv
+ rtl/dsrom_sys/s81_head/ot_s81hd_key.sv rtl/dsrom_sys/s81_head/ot_s81hd_fadd.sv rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv
  rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv rtl/dsrom_sys/s81_head/test/tb_s81hd_mini.sv"
 D=""; [ "$M" != none ] && D="+define+OT_S81HD_MUT_$M"
 OBJ=$O/obj_$M
@@ -28,12 +31,13 @@ fi
 link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
   for e in a0 a1 a2 a3 b; do for k in 0 1; do ln -sf $IMG/$3${e}_$k.viamap.hex $1/$2${e}_$k.viamap.hex; done; done
 }
-EXP_CYC_A=${EXP_CYC_A:-8375}   # measured go (spo input) -> spr output, 2-tile chain: bundle 8,357 (IOREG 1, SAFE 1: +2) + spo 1 + pin 1 + fire 2 x 2 + spr 5 + chain hop
+EXP_CYC_A=${EXP_CYC_A:-8381}   # measured go (spo input) -> spr output, 2-tile chain (bundle 8,357 + IOREG/SAFE 2 + spo + pins + 2 x tile fire (4) + spr (6))
 run() {    # run NAME T0SRC T1SRC args...
   local N=$1 a=$2 b=$3; shift 3; local W=$O/scen_${N}_$M; mkdir -p $W
   ln -sf $IMG/xa.hex $W/xa.hex; ln -sf $IMG/xb.hex $W/xb.hex; link $W t0 $a; link $W t1 $b
+  ln -sf $IMG/${a}lg.hex $W/t0lg.hex; ln -sf $IMG/${b}lg.hex $W/t1lg.hex
   $OBJ/Vtb_s81hd_mini +DIR=$W +OT_ROM_DIR=$W "$@" > $O/run_${N}_$M.log 2>&1
-  grep -E "^(POS|TB_PASS|TB_FAIL|%Error|.*readmem)" $O/run_${N}_$M.log | sed "s/^/$N: /" | head -12
+  grep -E "^(POS|LOGITS|LOGIT_MISMATCH|TB_PASS|TB_FAIL|%Error|.*readmem)" $O/run_${N}_$M.log | sed "s/^/$N: /" | head -12
   grep -q "^TB_PASS" $O/run_${N}_$M.log
 }
 ok=0; n=0
@@ -43,7 +47,7 @@ for s in $( [ "$SC" = ALL ] && echo "A B C D" || echo $SC ); do
   A) run A h g +ROW0_0=21888 +ROW0_1=22016 +NPOS=2 +EXP_ROW=21946 +EXP_BITS=4173a558 +EXP_FLT=0 +EXP_CYC=$EXP_CYC_A && ok=$((ok+1)) ;;
   B) run B g h +ROW0_0=22016 +ROW0_1=21888 +TEN1=0 +EXP_ROW=22141 +EXP_BITS=40cdce35 +EXP_FLT=0 && ok=$((ok+1)) ;;
   C) run C h h +ROW0_0=21888 +ROW0_1=21760 +EXP_ROW=21818 +EXP_BITS=4173a558 +EXP_FLT=0 && ok=$((ok+1)) ;;
-  D) run D h g +ROW0_0=21888 +ROW0_1=22016 +XINF_M=100 +EXP_ROW=-1 +EXP_FLT=1 && ok=$((ok+1)) ;;
+  D) run D h g +ROW0_0=21888 +ROW0_1=22016 +XINF_M=100 +NOLG +EXP_ROW=-1 +EXP_FLT=1 && ok=$((ok+1)) ;;
   *) echo "unknown scenario $s"; exit 2 ;;
   esac
 done
