@@ -8,7 +8,7 @@
 #     its compiler budget (pads fill the short lanes: the static schedule is the one the post-relay die runs), then
 #     contract_die_v.py emits die.v.  OVERLAY="path[@rev] ..." replaces bundle files by another revision's (pending RTL
 #     the release source needs; default: main's per-bank RD_LAT x-load ctlx, which l12 requires).
-#   MODE=netlist (rerun at die closure, grade "die-netlist"): DIE_V=<GEN die.v of record> CONTRACT=<its contract>
+#   MODE=gen_rtl (GEN-composed RTL only, source children): DIE_V=<GEN die.v of record> CONTRACT=<its contract>
 #     SRC_REV=<its source rev>; no l12 (already in the GEN contract), no overlay unless given.
 #
 #   env: OUT (local work dir) SRC_REV CONTRACT [DIE_V] [L12_OVERLAY] [OVERLAY] [REPLAYS] [MEM=256] [JOBS=48]
@@ -21,6 +21,10 @@ set -u -o pipefail
 T=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$T/../.." && pwd)
 REPO=${REPO:-/home/ubuntu/OpenTallas}
 MODE=${MODE:-source}
+case "$MODE" in
+  source|gen_rtl) ;;
+  *) echo "MODE=$MODE unsupported: mapped-netlist qualification requires frozen mapped hierarchy and libraries; use gen_rtl for GEN composition with source children" >&2; exit 2;;
+esac
 OUT=${OUT:?OUT}; SRC_REV=${SRC_REV:?SRC_REV}; CONTRACT=${CONTRACT:?CONTRACT}
 FIX_DS=${FIX_DS:?FIX_DS (dir with L00 L02 L14 fixtures: records.json operands.npz images/)}
 QOP=${QOP:?QOP (dir with operands_L0.npz operands_chain.npz from qwen_layer_images snap)}
@@ -28,6 +32,7 @@ MEM=${MEM:-256}; JOBS=${JOBS:-48}; RUN=${RUN:-1}
 STAGE_HOSTS=${STAGE_HOSTS:-"ot-gold1 ot-gold2"}
 OVERLAY=${OVERLAY-"rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv@origin/main"}
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
+SRC_REV=$(git -C "$REPO" rev-parse --verify "$SRC_REV^{commit}") || exit 2
 TAG=${TAG:-$(basename "$OUT")}
 REMOTE=${REMOTE:-/srv/opentallas-scratch/claude/tok-func-hbm/$TAG}
 mkdir -p "$OUT/log"; L=$OUT/log
@@ -52,14 +57,14 @@ if [ "$MODE" = source ]; then
   grep -q "^FUNCTIONAL_BIND PASS" "$L/functional_bind.log" || exit 3
   DIEV=$OUT/die.v
 else
-  FC=$CONTRACT; DIEV=${DIE_V:?DIE_V (GEN die.v) for MODE=netlist}
+  FC=$CONTRACT; DIEV=${DIE_V:?DIE_V (GEN die.v) for MODE=gen_rtl}
 fi
-python3 "$T/die_filelist.py" --contract "$FC" --repo "$REPO" --rev "$SRC_REV" --out "$OUT/fl" > "$L/filelist.log" 2>&1; say "$(tail -1 "$L/filelist.log")"
+python3 "$T/die_filelist.py" --contract "$FC" --repo "$REPO" --rev "$SRC_REV" --out "$OUT/fl" > "$L/filelist.log" 2>&1 || { say FILELIST_FAIL; exit 3; }; say "$(tail -1 "$L/filelist.log")"
 VIEWS=${VIEWS:-}; VA=(); [ -n "$VIEWS" ] && VA=(--views "$VIEWS")
 python3 "$T/make_bundle.py" --fl "$OUT/fl" --repo "$REPO" --rev "$SRC_REV" --die "$DIEV" --wt "$ROOT" --out "$OUT/bundle" "${VA[@]}" > "$L/bundle.log" 2>&1 || { say BUNDLE_FAIL; exit 3; }
 for o in $OVERLAY; do f=${o%@*}; r=${o#*@}; [ "$r" = "$o" ] && r=origin/main
   git -C "$REPO" show "$r:$f" > "$OUT/bundle/$f" || { say "OVERLAY_FAIL $o"; exit 3; }
-  say "OVERLAY $f <- $r $(git -C "$REPO" rev-parse --short=9 "$r")"; done
+  say "OVERLAY $f <- $r $(git -C "$REPO" rev-parse "$r") sha256=$(sha256sum "$OUT/bundle/$f" | cut -d' ' -f1)"; done
 cp "$T/check_slice_run.py" "$OUT/bundle/"
 
 # 2. SW quadrant slice (input pads/relays pulled in: the die's own lane latency in front of the slice) --------------
@@ -101,25 +106,7 @@ for n in $REPLAYS; do
 done
 wait
 for n in $REPLAYS; do timeout 300 rsync -a "$H:$REMOTE/out_$n/" "$OUT/runs/$n/" 2>/dev/null; done
-python3 - "$OUT" "$MODE" "$SRC_REV" "$CONTRACT" $REPLAYS <<'PY'
-import json, re, sys, hashlib
-from pathlib import Path
-out, mode, rev, contract, names = Path(sys.argv[1]), sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5:]
-rows = {}
-for n in names:
-    rj = json.loads((out / "rj" / f"{n}.json").read_text())
-    log = out / "runs" / n / "run.log"; t = log.read_text(errors="replace") if log.exists() else ""
-    m = re.search(r"SLICE_SUMMARY drives=(\d+) checks=(\d+) fails=(\d+) rec_commit_ok=(\d+) rec_fail=(\d+) stream_edges=(\d+) serial_edges=(\d+)", t)
-    v = "PASS" if re.search(r"^SLICE_PASS", t, re.M) else ("FAIL" if t else "NO_RUN")
-    rows[n] = dict(verdict=v, scope=rj.get("scope", "component_probe"), priced_layer_cycles=rj.get("priced_layer_cycles"),
-                   t0_serial=rj.get("t0_serial"), events=len(rj["events"]),
-                   **({k: int(x) for k, x in zip(["drives", "checks", "fails", "rec_commit_ok", "rec_fail", "stream_edges", "serial_edges"], m.groups())} if m else {}))
-grade = "RTL-functional (source assembly)" if mode == "source" else "die-netlist"
-rep = dict(schema="opentallas.tok_func_hbm.v1", grade=grade, src_rev=rev, contract=contract,
-           contract_sha256=hashlib.sha256(Path(contract).read_bytes()).hexdigest(), replays=rows,
-           note="SW quadrant slice replays: SU-programme records emitted by the compiler of record; other units are "
-                "format_open in layer_images v1 (see emit/*/manifest.json counts) -> component probes, not full-layer tokens")
-(out / "report.json").write_text(json.dumps(rep, indent=1))
-print("REPORT", json.dumps({k: (r["verdict"], r.get("serial_edges")) for k, r in rows.items()}))
-PY
-say "DONE $(tail -1 "$L/summary.log" >/dev/null; echo report=$OUT/report.json)"
+python3 "$T/tok_func_hbm_report.py" --out "$OUT" --mode "$MODE" --rev "$SRC_REV" --contract "$CONTRACT" $REPLAYS
+RRC=$?
+say "DONE replay_rc=$RRC report=$OUT/report.json token=INCOMPLETE"
+exit "$RRC"
