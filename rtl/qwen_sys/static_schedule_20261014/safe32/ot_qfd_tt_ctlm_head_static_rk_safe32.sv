@@ -134,7 +134,8 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
         .q({q_token, q_pos, q_prog_base, q_pw_addr, q_pw_data, q_x_oacc, q_x_oprog, q_x_orows}));
     // program-store copy (the sequencer master's semantics)
     wire prog_re; wire [1:0] prog_re_copy; wire [11:0] prog_addr; reg [1023:0] prog_q;
-    wire [11:0] prog_a = q_prog_base + prog_addr;
+    wire [11:0] prog_a;                   // QW-H16V: q_prog_base + prog_addr (12-bit wrap) as a kept Kogge-Stone
+    ot_hdc_add_ks #(.W(12)) u_prog_a (.a(12'(q_prog_base)),.b(12'(prog_addr)),.s(prog_a),.cout());
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
     always @(posedge clk or negedge rsv[7]) if (!rsv[7]) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
     localparam integer PRN = (FQWE != 0) ? 32 : 1;      // h15: prog_q capture enable / range as PRN kept slice copies
@@ -208,9 +209,20 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
                 .w_ce_in(m_ce), .w_addr_in(m_row), .wd_in(m_wd), .w_mask_in(m_mask),
                 .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
         end
+        // QW-H16V (10-20): the write observer in closed form.  Here the raw macro write is structurally ONE macro (pw_b2) x
+        // ONE 64-bit slot (pw_sl2 = 1 << q_pw_addr[2:0]) with the full 64-bit mask, so qkd_program_pw_observer's serial
+        // 16-slot priority scan + count (h16t: wr_sl -> program_obs 26 levels, -92.5 ps TT) reduces to: v = pw_v2,
+        // full = pw_v2, addr = {row, bank, slot}, data = pw_d2 (all 0 when !pw_v2).  pw_s2 is the binary slot,
+        // registered on the pw_sl2 edge.  Exact, 0 edges; the original observer is checked against it in simulation.
+        reg [2:0] pw_s2;
+        always @(posedge clk) pw_s2 <= q_pw_addr[2:0];
+        wire [75:0] obs_word = pw_v2 ? {1'b1, 1'b1, pw_row2, pw_b2, pw_s2, pw_d2} : 76'd0;
+`ifndef SYNTHESIS
         wire observed_v,observed_full;wire [9:0]observed_addr;wire [63:0]observed_data;
         qkd_program_pw_observer u_program_observer(.macro_ce(program_raw_ce),.macro_row(program_raw_row),.macro_data(program_raw_data),.macro_mask(program_raw_mask),.consumed_v(observed_v),.consumed_addr(observed_addr),.consumed_data(observed_data),.full_word(observed_full));
-        wire [75:0] obs_word={observed_v,observed_full,observed_addr,observed_data};
+        always @(posedge clk) if (rsv[7] && obs_word !== {observed_v,observed_full,observed_addr,observed_data})
+            $fatal(1, "H16V program observer closed form %0h != %0h", obs_word, {observed_v,observed_full,observed_addr,observed_data});
+`endif
         genvar po;
         for(po=0;po<3;po=po+1)begin:g_obs_reset
             localparam integer LO=32*po,HI=(32*(po+1)>76)?76:32*(po+1);
@@ -316,10 +328,14 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
       else if(q_pw_v && q_pw_addr==1017) schedule_stage<=q_pw_data[17:12];
     // ck_sched and clk are independently entered, compiler phase-matched roots.
     // Candidate is sampled at the real decoder issue phase; there is no wait.
-    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG),.SLATE(SLATE),.SEG(SEGCAL)) u_fixed_issue (
+    // QW-H16V: the segment-relative candidate PC add as a kept Kogge-Stone (h16t: the gate mapping rippled it, candidate_pc ->
+    // fixed-issue fault 27 levels).  Exact (12-bit wrap, as q_prog_base+candidate_pc in the 12-bit port), 0 edges.
+    wire [11:0] fi_cand_pc;
+    ot_hdc_add_ks #(.W(12)) u_fi_cand_pc (.a(12'(q_prog_base)),.b(12'(candidate_pc)),.s(fi_cand_pc),.cout());
+    ot_qwen_fixed_issue_pw_ld #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG),.SLATE(SLATE),.SEG(SEGCAL)) u_fixed_issue (   // QW-H16V: safe32 log-depth copy
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
       .start(q_h_start && (q_prog_base==0 || SEGCAL!=0)),.stage(schedule_stage),.start_base(q_prog_base),
-      .candidate_v(candidate_v),.candidate_pc(q_prog_base+candidate_pc),.candidate_unit(candidate_unit),
+      .candidate_v(candidate_v),.candidate_pc(fi_cand_pc),.candidate_unit(candidate_unit),
       .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(!cp_active_q),
       .issue_v(fixed_issue),.end_v(fixed_end),.cp_cmd(cp_cmd),.cp_v(cp_v),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
       .active(schedule_active),.done(),.cycle(),.image_ready(me_image_ready),.fault(schedule_fault));
@@ -558,7 +574,7 @@ module qfd_tt_ctlm_head_static_rk_safe32 #(
     ot_tt_ce_delay #(.W(16), .D(1), .RESET(1)) u_su_me_progress (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(u_me_progress), .q(c_me_progress));
     ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_fault (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(u_me_fault), .q(c_me_fault));
     always @(posedge clk or negedge rsv[33])
-        if(!rsv[33])me_observe<=0;else me_observe<={fixed_issue||cp_v,candidate_v,fixed_unit,q_prog_base+candidate_pc};
+        if(!rsv[33])me_observe<=0;else me_observe<={fixed_issue||cp_v,candidate_v,fixed_unit,fi_cand_pc};   // QW-H16V: same 12-bit sum, kept KS
     always @(posedge clk or negedge rsv[34])
         if(!rsv[34])cp[27:0]<=0;else cp[27:0]<=cp_cmd[27:0];
     always @(posedge clk or negedge rsv[35])

@@ -542,10 +542,23 @@ localparam integer W_ME_AMC = 1;
     wire [NW-1:0] dyn_tiles_split_c; wire dyn_tiles_invalid_c;
     generate if (PCUT != 0) begin : g_dtab
         wire [16*NW-1:0] dts; wire [15:0] dti;
+        // QW-H16V: the 16 entries from ONE shared log-depth quotient (ot_hdc_dyn_ttiles_tab, bit-identical per entry to
+        // ot_hdc_dyn_ttiles .split_log2(ds)); h16t: 16 yosys array dividers, 40 levels, -345 ps TT.
+        // The quotient is a function of pos_r alone: registered with pos_r (same edge, same next value pos), so the
+        // S_DYN capture sees only the constant shifts + increments.  Exact, 0 edges.
+        wire [NW-1:0] pq_n; reg [NW-1:0] pq_r;
+        ot_hdc_dyn_ttiles_q #(.W(W),.G(DG),.NW(NW)) u_q (.pos(pos),.quot(pq_n));
+        always @(posedge clk) if (rst_n && st == S_IDLE && start) pq_r <= pq_n;
+`ifndef SYNTHESIS
+        wire [NW-1:0] pq_ref;
+        ot_hdc_dyn_ttiles_q #(.W(W),.G(DG),.NW(NW)) u_q_ref (.pos(pos_r),.quot(pq_ref));
+        always @(posedge clk) if (rst_n && st == S_DYN && pq_r !== pq_ref) $fatal(1, "H16V dts quotient %0h != %0h", pq_r, pq_ref);
+`endif
+        wire [16*NW-1:0] tab_r; wire [15:0] tab_i;
+        ot_hdc_dyn_ttiles_tab #(.W(W),.G(DG),.NW(NW)) u_tab (.quot(pq_r),.rounds(tab_r),.invalid(tab_i));
         genvar ds;
         for (ds = 0; ds < 16; ds = ds + 1) begin : g_ds
-            wire [NW-1:0] r_w; wire i_w; reg [NW-1:0] r_q; reg i_q;
-            ot_hdc_dyn_ttiles #(.W(W),.G(DG),.NW(NW)) u_t (.pos(pos_r),.split_log2(4'(ds)),.rounds(r_w),.invalid_split(i_w));
+            wire [NW-1:0] r_w = tab_r[ds*NW +: NW]; wire i_w = tab_i[ds]; reg [NW-1:0] r_q; reg i_q;
             always @(posedge clk) if (st == S_DYN) begin r_q <= r_w; i_q <= i_w; end
             assign dts[ds*NW +: NW] = r_q; assign dti[ds] = i_q;
         end

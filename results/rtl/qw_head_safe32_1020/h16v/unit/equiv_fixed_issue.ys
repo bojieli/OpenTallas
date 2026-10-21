@@ -1,0 +1,18 @@
+# QW-H16V: standard sequential equivalence, as-built ot_qwen_fixed_issue_seg_pw (+ ot_qwen_fixed_issue) vs the h16v
+# log-depth copies (head parameters DEPTH 8, BASE 976, SREG 1, SLATE 1); same register names, async reset as sync.
+read_verilog -sv -DSYNTHESIS /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv /src/rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv
+hierarchy -top ot_qwen_fixed_issue_seg_pw -chparam SREG 1 -chparam SLATE 1
+proc; flatten; memory_map; opt_clean; rename ot_qwen_fixed_issue_seg_pw gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS /src/rtl/qwen_sys/static_schedule_20261014/safe32/ot_hdc_ks_helpers.sv /src/rtl/qwen_sys/static_schedule_20261014/safe32/ot_qwen_fixed_issue_ld.sv
+hierarchy -top ot_qwen_fixed_issue_seg_pw_ld -chparam SREG 1 -chparam SLATE 1
+proc; flatten; memory_map; opt_clean; rename ot_qwen_fixed_issue_seg_pw_ld gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+async2sync
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

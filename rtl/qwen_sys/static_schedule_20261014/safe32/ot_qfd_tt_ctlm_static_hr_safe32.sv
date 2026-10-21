@@ -107,18 +107,36 @@ module ot_qfd_tt_ctlm_static_hr_safe32 #(parameter integer CMDREG = 1, parameter
     wire head_fault,relocation_fault;
     reg [5:0] loaded_stage;
     reg relocation_sticky;
+    // QW-H16V (10-20): the relocation's stage terms (valid / head / code_base / scale_base) are functions of loaded_stage
+    // alone, so they are registered on the SAME edge from the SAME next value (reloc_q == base(loaded_stage) every cycle,
+    // reset base(0)); the (stage-1)*512/816 products leave the rom_cmd_q cone (h16t: command_stage -> rom_cmd_q 37 levels,
+    // -140 ps TT).  Exact, 0 edges.
+    wire [5:0] loaded_stage_n = (STAGE_ME != 0) ? (stage_start ? stage : loaded_stage)
+                              : (pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53) ? pw_data[17:12] : loaded_stage;
+    wire rb_valid_n, rb_head_n; wire [23:0] rb_code_n, rb_scale_n;
+    ot_qwen_tp8_rom_relocate_base u_reloc_base(.in_stage(loaded_stage_n),.valid_stage(rb_valid_n),.head(rb_head_n),
+      .code_base(rb_code_n),.scale_base(rb_scale_n));
+    localparam [23:0] RB_CODE0 = 24'hFFFE00, RB_SCALE0 = 24'hFFFCD0;   // base(0): (0-1)*512, (0-1)*816 mod 2^24
+    reg rb_valid, rb_head; reg [23:0] rb_code, rb_scale;
     always @(posedge ck_head or negedge rsl)
-      if(!rsl)begin loaded_stage<=0;relocation_sticky<=0;end
+      if(!rsl)begin loaded_stage<=0;relocation_sticky<=0;rb_valid<=1'b0;rb_head<=1'b0;rb_code<=RB_CODE0;rb_scale<=RB_SCALE0;end
       else begin
-        if (STAGE_ME != 0) begin if (stage_start) loaded_stage<=stage; end
-        else if(pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53)
-          loaded_stage<=pw_data[17:12];
+        loaded_stage<=loaded_stage_n;
+        rb_valid<=rb_valid_n;rb_head<=rb_head_n;rb_code<=rb_code_n;rb_scale<=rb_scale_n;
         if(relocation_fault)relocation_sticky<=1;
       end
+`ifndef SYNTHESIS
+    wire rb_v_ref, rb_h_ref; wire [23:0] rb_c_ref, rb_s_ref;
+    ot_qwen_tp8_rom_relocate_base u_reloc_base_ref(.in_stage(loaded_stage),.valid_stage(rb_v_ref),.head(rb_h_ref),
+      .code_base(rb_c_ref),.scale_base(rb_s_ref));
+    always @(posedge ck_head) if(rsl && {rb_valid,rb_head,rb_code,rb_scale}!=={rb_v_ref,rb_h_ref,rb_c_ref,rb_s_ref})
+      $fatal(1,"H16V reloc base %0h != ref %0h",{rb_valid,rb_head,rb_code,rb_scale},{rb_v_ref,rb_h_ref,rb_c_ref,rb_s_ref});
+`endif
     assign command_stage=loaded_stage;
     wire [379:0] rom_cmd_c;
-    ot_qwen_tp8_rom_relocate u_resident_relocation(
-      .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd_c),.fault(relocation_fault));
+    ot_qwen_tp8_rom_relocate_pb u_resident_relocation(
+      .in_cmd(local_rom_cmd),.valid_stage(rb_valid),.head(rb_head),.code_base(rb_code),.scale_base(rb_scale),
+      .out_cmd(rom_cmd_c),.fault(relocation_fault));
     reg [379:0] rom_cmd_q;
     genvar cr;
     generate for(cr=0;cr<12;cr=cr+1)begin:g_cmdreg
