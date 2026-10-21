@@ -333,8 +333,9 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
   // KV-CTL3 census: the address field of pr_o (word 470 -> 326 on an accepted seal) is formed TWICE behind kept-hierarchy
   // leaves with distinct selects (the select and a kept reset-copy literal; the select is 0 on the first edge after reset:
   // open_q / o_lw are reset), so the dispatcher's address consumers split over two drivers (boot_pr[69/70]: 33-38 loads).
-  (* keep *) reg[1:0]rs_a;
-  always @(posedge ck)rs_a<={2{rst_n}};
+  // KV-CTL12b: u_pg gets its own select copy rs_a[2] (c32c native census: as&&rs_a[0] drove u_pa+u_pg = 36 > 32 loads)
+  (* keep *) reg[2:0]rs_a;
+  always @(posedge ck)rs_a<={3{rst_n}};
   wire as=seal_w&&ok_seal&&!bad_epoch;
   wire[9:0]pa_a;
   ot_s32_sel #(.W(10)) u_pa(.s(as&&rs_a[0]),.a(10'd326),.b(boot_pr[73:64]),.y(pa_a));
@@ -342,7 +343,7 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
   // KV-CTL12: /6 and %6 of the RAW address (parallel to the seal accept), then the word-326 constants on an accepted seal
   wire[4:0]gix_r;wire[2:0]rem_r;
   qkd_kv_ctl_c32_div6r u_gixr(.a(boot_pr[73:64]),.q(gix_r),.r(rem_r));
-  ot_s32_sel #(.W(8)) u_pg(.s(as&&rs_a[0]),.a({5'd22,3'd2}),.b({gix_r,rem_r}),.y({pr_gix,pr_rem6}));
+  ot_s32_sel #(.W(8)) u_pg(.s(as&&rs_a[2]),.a({5'd22,3'd2}),.b({gix_r,rem_r}),.y({pr_gix,pr_rem6}));
   wire v74=gap_w?1'b0:(seal_w?(ok_seal&&!bad_epoch):boot_pr[74]);
   assign pr_o={boot_pr[142:75],v74,pa_a,boot_pr[63:0]};
   always @(posedge ck or negedge rst_n)
