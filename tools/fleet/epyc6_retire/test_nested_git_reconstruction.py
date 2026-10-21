@@ -182,6 +182,7 @@ class RequiredRoots(unittest.TestCase):
         with patch.object(self.m, 'jload', side_effect=lambda p, d: {'roots':[self.root]} if p.endswith('required_roots.json') else d), \
              patch.object(self.m, 'pending_roots', return_value=[]), patch.object(self.m, 'work_dirs', return_value=set()), \
              patch.object(self.m, 'resolve', return_value=resolved), patch.object(self.m, 'note_pending'), \
+             patch.object(self.m, 'check_required_archive_inputs', return_value=[]), \
              patch.object(self.m, 'copy_roots', return_value=({self.root:{'bytes':10}}, {self.root:error} if error else {}, {})) as copy:
             result = self.m.check_pending(True, {}, self.args)
             return result, copy.call_args
