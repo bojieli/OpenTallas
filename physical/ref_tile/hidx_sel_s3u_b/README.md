@@ -4,5 +4,3 @@ Fix: per-lane threshold copies (16 + 2 histogram, thr bit -> 18 loads); 5-bit ti
 Safe-design checklist: 1 pins registered (kept pin-flop copies), reset 2-stage relay PASS; 2 reach: tile 259x216, no leg > 405 um PASS;
 3 fanout <= 32 (thr 18, census at gate); 4 depth: S2 popcount tail moved to S3, same edge; 5 storage in 3 SRAM macros PASS;
 6 floorplan identical to s3t_b (GRT 0, util ~51%, x 23.76 off-lattice waiver kept); 7 clock spread s3t_b 37.9/37.3 PASS; 8 schedule unchanged (registered_s3, 0 edges).
-
-- fresh resubmit (HBM-COLLECT10/IDX 10-21): hidx_sel_s3u_b-s3ub-7d6c18676 false NEEDS_RTL = daemon bench-host bug (bench_lint ran in trimmed ot-epyc5 run dir after retry moved route to ot-epyc6: "cd .../src: No such file"); RTL/kit/gate unchanged.
