@@ -1,0 +1,32 @@
+{
+  "status": "PASS_COMPONENT_MODEL_BEFORE_SOURCE_REPAIR",
+  "model_commit": "04541dc41",
+  "direct_real_SMQ": {
+    "unit": "1961275-1792624832 ep7 mem8",
+    "cycles": 8205,
+    "valid_payload": 2368,
+    "operands": 1920,
+    "cos": 2048,
+    "config": 64,
+    "negative_caught": 1920,
+    "invalid_payload_differences": 5708
+  },
+  "actual_SE_mux_and_SMQ": {
+    "unit": "1968559-1792624918 ep7 mem8",
+    "cycles": 8205,
+    "valid_payload": 2368,
+    "operands": 2048,
+    "cos": 2048,
+    "config": 64,
+    "negative_caught": 1792,
+    "invalid_payload_differences": 5708
+  },
+  "preserved_setup_failure": "1964729 initial actualmux compile failed missing roles include path; corrected packaging only, no source/bench stimulus change",
+  "open": [
+    "Actual ATT integration source not yet changed",
+    "Full actual ATT golden after integration",
+    "Actual SMH numerical behavior",
+    "Component mapped native/area",
+    "Wholecore native/clock/reset/physical/calendar"
+  ]
+}

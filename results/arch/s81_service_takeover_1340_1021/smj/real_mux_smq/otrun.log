@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_smj_mux
+ot-run: ot-epyc7       admits   357 GB (avail 454, growth 204, headroom 0, waiters 0/0 GB) load 57/96 running 11 disk 4426 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_smj_mux
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_smj_mux
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_smj_mux
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_smj_mux
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_smj_mux
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1968559-1792624918 after 0 s
+SMJ_ACTUAL_SMQ PASS cycles=8205 valid=2368 operands=2048 cos=2048 config=64 negative=1792 invalid_differences=5708
+- tools/s81_dv/svc_rs/smj_n32/tb_smj_mux.sv:51: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 82us; walltime 0.010 s; speed 8.406 ms/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1968559-1792624918): exit 0
