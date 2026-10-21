@@ -1,0 +1,20 @@
+{
+  "status": "SOURCE_RECIPE_CLOSURE_PASS_DIAGNOSTIC_ONLY",
+  "reviewed_model": "9a23b4f8b",
+  "reviewed_O2_recipe": "bdc375d09",
+  "RTL_tools_diff_from_O83d": [],
+  "selected_targets": 74,
+  "exact_slot_bodies": 11,
+  "fixed_root_coordinates_keepouts": 45,
+  "S2_reuse": 74,
+  "new_synthesis": 0,
+  "global_fit": false,
+  "recipe_changes": [
+    "owned fresh source/local/remote roots and branch",
+    "planpM model74 vs O2model73",
+    "11 exact actual body/root/reservation guards after A/PQ",
+    "readset refusal if any RTL/tools source diff from O83d"
+  ],
+  "model_sha256": "e61725f71530cc6fae0b0520ad05515bc40a2e2d373ae060ed7501224831032b",
+  "actual_GEN_pending": true
+}

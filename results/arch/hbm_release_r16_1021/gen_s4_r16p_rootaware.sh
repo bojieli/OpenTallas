@@ -16,7 +16,7 @@ AE=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e; AE4=/home/ubuntu/artifacts/hdie-d4/
 A0=/home/ubuntu/artifacts/hdie-d4/d4g_gen0; A1=/home/ubuntu/artifacts/hdie-d4/d4g_gen1; A2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2
 AC=/home/ubuntu/artifacts/hdie-d4/d4g_gen2c; AD=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d
 B=/srv/opentallas-scratch/claude/codex-hbm-r16p-rootaware-1021/chain$VAR; OLD=/srv/opentallas-scratch/claude/codex-hbm-r15-h158-grants-1021/chainB; OTRUN=/home/ubuntu/bin/ot-run
-D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r16_1021/plan$VAR; BR=codex/hbm-die-o2-binding-1021
+D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r16_1021/plan$VAR; BR=codex/hbm-die-rootaware-p-1021
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json --slot-map $(cat $W/$PD/slot_map.txt)"
 # Local transport override only in this successor process: ep6 public route loses packets.
