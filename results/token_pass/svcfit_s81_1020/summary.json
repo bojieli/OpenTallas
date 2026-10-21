@@ -1,0 +1,379 @@
+{
+ "schema": "opentallas.s81_svcfit.rate.v1",
+ "cal3_T": {
+  "s140": {
+   "ar": 1125809.175344779,
+   "mtp": 1518807.06025563
+  },
+  "s148": {
+   "ar": 1133893.9809127848,
+   "mtp": 1526845.5349221404
+  },
+  "s201": {
+   "ar": 1186826.228859658,
+   "mtp": 1579767.029627754
+  }
+ },
+ "rows": [
+  {
+   "groups": 16,
+   "passes": 1,
+   "scores": 289,
+   "pv": 596,
+   "dT": {
+    "ar": {
+     "fixed": 0.0,
+     "solved": 0.0
+    },
+    "mtp": {
+     "fixed": 0.0,
+     "solved": 0.0
+    }
+   },
+   "cal3": {
+    "s140": {
+     "ar_fixed": {
+      "tok_s": 1065.9,
+      "pct": 0.0
+     },
+     "ar_solved": {
+      "tok_s": 1065.9,
+      "pct": 0.0
+     },
+     "mtp_fixed": {
+      "tok_s": 3286.0,
+      "pct": 0.0
+     },
+     "mtp_solved": {
+      "tok_s": 3286.0,
+      "pct": 0.0
+     }
+    },
+    "s148": {
+     "ar_fixed": {
+      "tok_s": 1058.3,
+      "pct": 0.0
+     },
+     "ar_solved": {
+      "tok_s": 1058.3,
+      "pct": 0.0
+     },
+     "mtp_fixed": {
+      "tok_s": 3268.7,
+      "pct": 0.0
+     },
+     "mtp_solved": {
+      "tok_s": 3268.7,
+      "pct": 0.0
+     }
+    },
+    "s201": {
+     "ar_fixed": {
+      "tok_s": 1011.1,
+      "pct": 0.0
+     },
+     "ar_solved": {
+      "tok_s": 1011.1,
+      "pct": 0.0
+     },
+     "mtp_fixed": {
+      "tok_s": 3159.2,
+      "pct": 0.0
+     },
+     "mtp_solved": {
+      "tok_s": 3159.2,
+      "pct": 0.0
+     }
+    }
+   }
+  },
+  {
+   "groups": 8,
+   "passes": 2,
+   "scores": 449,
+   "pv": 756,
+   "dT": {
+    "ar": {
+     "fixed": 6400.0,
+     "solved": 12800.0
+    },
+    "mtp": {
+     "fixed": 7510.0,
+     "solved": 7510.0
+    }
+   },
+   "cal3": {
+    "s140": {
+     "ar_fixed": {
+      "tok_s": 1059.9,
+      "pct": -0.57
+     },
+     "ar_solved": {
+      "tok_s": 1053.9,
+      "pct": -1.12
+     },
+     "mtp_fixed": {
+      "tok_s": 3269.8,
+      "pct": -0.49
+     },
+     "mtp_solved": {
+      "tok_s": 3269.8,
+      "pct": -0.49
+     }
+    },
+    "s148": {
+     "ar_fixed": {
+      "tok_s": 1052.4,
+      "pct": -0.56
+     },
+     "ar_solved": {
+      "tok_s": 1046.5,
+      "pct": -1.12
+     },
+     "mtp_fixed": {
+      "tok_s": 3252.7,
+      "pct": -0.49
+     },
+     "mtp_solved": {
+      "tok_s": 3252.7,
+      "pct": -0.49
+     }
+    },
+    "s201": {
+     "ar_fixed": {
+      "tok_s": 1005.7,
+      "pct": -0.54
+     },
+     "ar_solved": {
+      "tok_s": 1000.3,
+      "pct": -1.07
+     },
+     "mtp_fixed": {
+      "tok_s": 3144.3,
+      "pct": -0.47
+     },
+     "mtp_solved": {
+      "tok_s": 3144.3,
+      "pct": -0.47
+     }
+    }
+   }
+  },
+  {
+   "groups": 4,
+   "passes": 4,
+   "scores": 769,
+   "pv": 1076,
+   "dT": {
+    "ar": {
+     "fixed": 19200.0,
+     "solved": 38400.0
+    },
+    "mtp": {
+     "fixed": 21270.0,
+     "solved": 21270.0
+    }
+   },
+   "cal3": {
+    "s140": {
+     "ar_fixed": {
+      "tok_s": 1048.0,
+      "pct": -1.68
+     },
+     "ar_solved": {
+      "tok_s": 1030.7,
+      "pct": -3.3
+     },
+     "mtp_fixed": {
+      "tok_s": 3240.6,
+      "pct": -1.38
+     },
+     "mtp_solved": {
+      "tok_s": 3240.6,
+      "pct": -1.38
+     }
+    },
+    "s148": {
+     "ar_fixed": {
+      "tok_s": 1040.7,
+      "pct": -1.67
+     },
+     "ar_solved": {
+      "tok_s": 1023.6,
+      "pct": -3.28
+     },
+     "mtp_fixed": {
+      "tok_s": 3223.8,
+      "pct": -1.37
+     },
+     "mtp_solved": {
+      "tok_s": 3223.8,
+      "pct": -1.37
+     }
+    },
+    "s201": {
+     "ar_fixed": {
+      "tok_s": 995.0,
+      "pct": -1.59
+     },
+     "ar_solved": {
+      "tok_s": 979.4,
+      "pct": -3.13
+     },
+     "mtp_fixed": {
+      "tok_s": 3117.2,
+      "pct": -1.33
+     },
+     "mtp_solved": {
+      "tok_s": 3117.2,
+      "pct": -1.33
+     }
+    }
+   }
+  },
+  {
+   "groups": 2,
+   "passes": 8,
+   "scores": 1409,
+   "pv": 1716,
+   "dT": {
+    "ar": {
+     "fixed": 44800.0,
+     "solved": 89600.0
+    },
+    "mtp": {
+     "fixed": 48790.0,
+     "solved": 48790.0
+    }
+   },
+   "cal3": {
+    "s140": {
+     "ar_fixed": {
+      "tok_s": 1025.1,
+      "pct": -3.83
+     },
+     "ar_solved": {
+      "tok_s": 987.3,
+      "pct": -7.37
+     },
+     "mtp_fixed": {
+      "tok_s": 3183.7,
+      "pct": -3.11
+     },
+     "mtp_solved": {
+      "tok_s": 3183.7,
+      "pct": -3.11
+     }
+    },
+    "s148": {
+     "ar_fixed": {
+      "tok_s": 1018.1,
+      "pct": -3.8
+     },
+     "ar_solved": {
+      "tok_s": 980.8,
+      "pct": -7.32
+     },
+     "mtp_fixed": {
+      "tok_s": 3167.5,
+      "pct": -3.1
+     },
+     "mtp_solved": {
+      "tok_s": 3167.5,
+      "pct": -3.1
+     }
+    },
+    "s201": {
+     "ar_fixed": {
+      "tok_s": 974.3,
+      "pct": -3.64
+     },
+     "ar_solved": {
+      "tok_s": 940.1,
+      "pct": -7.02
+     },
+     "mtp_fixed": {
+      "tok_s": 3064.6,
+      "pct": -3.0
+     },
+     "mtp_solved": {
+      "tok_s": 3064.6,
+      "pct": -3.0
+     }
+    }
+   }
+  },
+  {
+   "groups": 1,
+   "passes": 16,
+   "scores": 2689,
+   "pv": 2996,
+   "dT": {
+    "ar": {
+     "fixed": 96000.0,
+     "solved": 192000.0
+    },
+    "mtp": {
+     "fixed": 103830.0,
+     "solved": 103830.0
+    }
+   },
+   "cal3": {
+    "s140": {
+     "ar_fixed": {
+      "tok_s": 982.2,
+      "pct": -7.86
+     },
+     "ar_solved": {
+      "tok_s": 910.6,
+      "pct": -14.57
+     },
+     "mtp_fixed": {
+      "tok_s": 3075.7,
+      "pct": -6.4
+     },
+     "mtp_solved": {
+      "tok_s": 3075.7,
+      "pct": -6.4
+     }
+    },
+    "s148": {
+     "ar_fixed": {
+      "tok_s": 975.7,
+      "pct": -7.81
+     },
+     "ar_solved": {
+      "tok_s": 905.0,
+      "pct": -14.48
+     },
+     "mtp_fixed": {
+      "tok_s": 3060.6,
+      "pct": -6.37
+     },
+     "mtp_solved": {
+      "tok_s": 3060.6,
+      "pct": -6.37
+     }
+    },
+    "s201": {
+     "ar_fixed": {
+      "tok_s": 935.4,
+      "pct": -7.48
+     },
+     "ar_solved": {
+      "tok_s": 870.3,
+      "pct": -13.92
+     },
+     "mtp_fixed": {
+      "tok_s": 2964.4,
+      "pct": -6.17
+     },
+     "mtp_solved": {
+      "tok_s": 2964.4,
+      "pct": -6.17
+     }
+    }
+   }
+  }
+ ]
+}

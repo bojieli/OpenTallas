@@ -1,0 +1,136 @@
+{
+ "schema": "opentallas.s81_svcfit.fit.v1",
+ "grade": "MODEL (plan areas, scaled stage count; no packing proof)",
+ "region_now_mm2": 29.7,
+ "slot_now_um": [
+  1214.2,
+  1344.0
+ ],
+ "rest_pin_mm2": 2.706,
+ "rest_hard_mm2": 1.462,
+ "frame_mm2": 4.09,
+ "gap_factor": 1.1,
+ "die_um": [
+  31968.5,
+  25000.0
+ ],
+ "die_note": "at reticle: W margin 515.7 um, frame top 24705.8 of 25000 -> growth = frames dropped",
+ "s116_anchor": {
+  "frames": 116,
+  "stages": 201,
+  "ar": 1011.1,
+  "mtp": 3159.2,
+  "dies": 888,
+  "note": "qualified map (req201 201/201 PASS); drops f_2R01..f_5L01 above the band: region +~31 mm2 (comb: 39.4 contiguous y<5342 + 6 pockets 1437x2490 between slices)"
+ },
+ "rows": [
+  {
+   "groups": 16,
+   "attw_um": [
+    2851.2,
+    2160.0
+   ],
+   "attw_mm2": 6.16,
+   "hgrp_mm2": 47.8,
+   "slot_mm2": 8.86,
+   "band_need_mm2": 156.0,
+   "extra_mm2": 126.3,
+   "frames": 91,
+   "stages_model": 257,
+   "dies_model": 1182,
+   "ar": {
+    "unit_only": 1065.9,
+    "unit_pct": 0.0,
+    "with_frames": 964.8,
+    "total_pct": -9.48
+   },
+   "mtp": {
+    "unit_only": 3286.0,
+    "unit_pct": 0.0,
+    "with_frames": 3049.2,
+    "total_pct": -7.21
+   }
+  },
+  {
+   "groups": 8,
+   "attw_um": [
+    1814.4,
+    2160.0
+   ],
+   "attw_mm2": 3.92,
+   "hgrp_mm2": 23.9,
+   "slot_mm2": 6.63,
+   "band_need_mm2": 116.6,
+   "extra_mm2": 86.9,
+   "frames": 100,
+   "stages_model": 234,
+   "dies_model": 1076,
+   "ar": {
+    "unit_only": 1053.9,
+    "unit_pct": -1.12,
+    "with_frames": 973.0,
+    "total_pct": -8.72
+   },
+   "mtp": {
+    "unit_only": 3269.8,
+    "unit_pct": -0.49,
+    "with_frames": 3078.7,
+    "total_pct": -6.31
+   }
+  },
+  {
+   "groups": 4,
+   "attw_um": [
+    1296.0,
+    2160.0
+   ],
+   "attw_mm2": 2.8,
+   "hgrp_mm2": 11.9,
+   "slot_mm2": 5.51,
+   "band_need_mm2": 96.9,
+   "extra_mm2": 67.2,
+   "frames": 105,
+   "stages_model": 223,
+   "dies_model": 1026,
+   "ar": {
+    "unit_only": 1030.7,
+    "unit_pct": -3.3,
+    "with_frames": 961.6,
+    "total_pct": -9.78
+   },
+   "mtp": {
+    "unit_only": 3240.6,
+    "unit_pct": -1.38,
+    "with_frames": 3073.6,
+    "total_pct": -6.46
+   }
+  },
+  {
+   "groups": 2,
+   "attw_um": [
+    1382.4,
+    1512.0
+   ],
+   "attw_mm2": 2.09,
+   "hgrp_mm2": 6.0,
+   "slot_mm2": 4.8,
+   "band_need_mm2": 84.4,
+   "extra_mm2": 54.7,
+   "frames": 108,
+   "stages_model": 216,
+   "dies_model": 994,
+   "ar": {
+    "unit_only": 987.3,
+    "unit_pct": -7.37,
+    "with_frames": 928.8,
+    "total_pct": -12.86
+   },
+   "mtp": {
+    "unit_only": 3183.7,
+    "unit_pct": -3.11,
+    "with_frames": 3035.4,
+    "total_pct": -7.63
+   }
+  }
+ ]
+}
