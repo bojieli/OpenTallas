@@ -208,7 +208,10 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   // copy-bank copies follow choose_bank while idle and hold while a copy is active (captured on the start edge)
   for(k=0;k<10;k=k+1)if(!cac[k/5])copy_bank_c[k]<=choose_bank;
   // done payload captured every edge: the wrapper reads it only with done_v (the edge after ack_re)
-  for(k=0;k<3;k=k+1)dbk[k]<=copy_bank_c[5];done_epoch<={epoch[copy_bank_c[6]][15:8],epoch[cb4][7:0]};done_sectors<=ack_rdata[11:0];
+  for(k=0;k<3;k=k+1)dbk[k]<=copy_bank_c[5];done_epoch<={epoch[copy_bank_c[6]][15:8],epoch[cb4][7:0]};
+  // done_sectors follows the ack FIFO head only while both ack FIFOs are non-empty (WBK10 gen3: reviewed_gray_fifos storage
+  // miter refused the every-edge load; ack_re implies !ack_empty, so the captured value at ack_re is unchanged -- 0 cycles)
+  if(!ack_empty)done_sectors<=ack_rdata[11:0];
  end
  // per-column copy controls (kept): two-level copy start relay (start_copy -> st1[c] -> st_r[2c+h])
  (* keep="true",dont_touch="true" *) reg st1 [0:3];
@@ -456,6 +459,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  wire ack_pending_n=meta_re?1'b0:ack_we?1'b0:(meta_active&&!hbm_fault&&acks!=0&&ack_count+12'(acks)==meta_q[11:0])?1'b1:ack_pending;
  always @(posedge hbm_clk or negedge hl[HM+2])if(!hl[HM+2])begin mac<=1'b0;apc[0]<=1'b0;apc[1]<=1'b0;end
   else begin mac<=meta_active_n;apc[0]<=ack_pending_n;apc[1]<=ack_pending_n;end
- always @(posedge hbm_clk)if(!mac)meta_q<=meta_rdata;
+ // meta_q loads the meta FIFO head only while both meta FIFOs are non-empty (WBK10: storage miter; meta_re implies !meta_empty -> 0 cycles)
+ always @(posedge hbm_clk)if(!mac&&!meta_empty)meta_q<=meta_rdata;
 endmodule
 `default_nettype wire
