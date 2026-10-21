@@ -1,5 +1,5 @@
 {
- "name": "qkd_kvs_pc_sr8",
+ "name": "qkd_kvs_pc_sr11a",
  "top": "qkd_kvs_pc",
  "kind": "tile",
  "sources": [
@@ -83,10 +83,10 @@
    "inst": "*u_front.u_mem.g_b?3?.u_m",
    "at": [
     43.2,
-    75.744
+    99.36
    ],
    "orient": "MY",
-   "at_exact": true
+   "at_exact": false
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
@@ -94,7 +94,7 @@
    "inst": "*u_front.u_mem.g_b?4?.u_m",
    "at": [
     43.2,
-    93.072
+    116.688
    ],
    "orient": "MY",
    "at_exact": true
@@ -105,7 +105,7 @@
    "inst": "*u_return.u_mem.g_b?0?.u_m",
    "at": [
     43.2,
-    133.92
+    155.52
    ],
    "orient": "MY",
    "at_exact": false
@@ -116,7 +116,7 @@
    "inst": "*u_return.u_mem.g_b?1?.u_m",
    "at": [
     43.2,
-    151.248
+    172.848
    ],
    "orient": "MY",
    "at_exact": true
@@ -127,7 +127,7 @@
    "inst": "*u_return.u_mem.g_b?2?.u_m",
    "at": [
     43.2,
-    168.576
+    190.176
    ],
    "orient": "MY",
    "at_exact": true
@@ -138,10 +138,10 @@
    "inst": "*u_return.u_mem.g_b?3?.u_m",
    "at": [
     43.2,
-    185.904
+    228.96
    ],
    "orient": "MY",
-   "at_exact": true
+   "at_exact": false
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
@@ -149,7 +149,7 @@
    "inst": "*u_return.u_mem.g_b?4?.u_m",
    "at": [
     43.2,
-    203.232
+    246.288
    ],
    "orient": "MY",
    "at_exact": true
@@ -159,7 +159,7 @@
    "count": 1,
    "inst": "*u_sched.u_tq.u_e",
    "at": [
-    43.2,
+    108.0,
     241.92
    ],
    "orient": "MY",
@@ -170,7 +170,7 @@
    "count": 1,
    "inst": "*u_sched.u_tq.u_o",
    "at": [
-    43.2,
+    108.0,
     259.248
    ],
    "orient": "MY",
@@ -226,10 +226,10 @@
    "inst": "*u_ecdc.down.g_sram.u_mem.g_b?4?.u_m",
    "at": [
     172.8,
-    93.072
+    114.48
    ],
    "orient": "R0",
-   "at_exact": true
+   "at_exact": false
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
@@ -237,7 +237,7 @@
    "inst": "*u_ecdc.down.g_sram.u_mem.g_b?5?.u_m",
    "at": [
     172.8,
-    110.4
+    131.808
    ],
    "orient": "R0",
    "at_exact": true
@@ -248,10 +248,10 @@
    "inst": "*u_ecdc.up.g_sram.u_mem.g_b?0?.u_m",
    "at": [
     172.8,
-    151.2
+    149.136
    ],
    "orient": "R0",
-   "at_exact": false
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
@@ -259,7 +259,7 @@
    "inst": "*u_ecdc.up.g_sram.u_mem.g_b?1?.u_m",
    "at": [
     172.8,
-    168.528
+    166.464
    ],
    "orient": "R0",
    "at_exact": true
@@ -270,10 +270,10 @@
    "inst": "*u_ecdc.up.g_sram.u_mem.g_b?2?.u_m",
    "at": [
     172.8,
-    185.856
+    205.2
    ],
    "orient": "R0",
-   "at_exact": true
+   "at_exact": false
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
@@ -281,7 +281,7 @@
    "inst": "*u_ecdc.up.g_sram.u_mem.g_b?3?.u_m",
    "at": [
     172.8,
-    203.184
+    222.528
    ],
    "orient": "R0",
    "at_exact": true
@@ -292,7 +292,7 @@
    "inst": "*u_ecdc.up.g_sram.u_mem.g_b?4?.u_m",
    "at": [
     172.8,
-    220.512
+    239.856
    ],
    "orient": "R0",
    "at_exact": true
@@ -343,28 +343,28 @@
  },
  "pin_ranges": {
   "i_next": [
-   2.5,
-   134.53
+   55.08,
+   187.08
   ],
   "o_next": [
-   135.53,
-   185.52
+   2.16,
+   52.16
   ],
   "pc__ki": [
-   186.69,
-   191.32
+   187.76,
+   193.36
   ],
   "i_grp": [
-   192.49,
-   197.12
+   193.6,
+   199.2
   ],
   "i_grp_h": [
-   198.12,
-   213.32
+   199.44,
+   215.34
   ],
   "o_grp": [
-   214.32,
-   263.63
+   215.58,
+   264.98
   ],
   "i_prev": [
    2.5,
@@ -405,6 +405,18 @@
   "pc__po": [
    141.38,
    295.84
+  ],
+  "o_grp_h": [
+   52.4,
+   54.4
+  ],
+  "pc__fo": [
+   54.64,
+   54.84
+  ],
+  "x__est__0_1": [
+   187.32,
+   187.52
   ]
  },
  "route": {
@@ -421,12 +433,12 @@
   }
  },
  "recipe": 3,
- "purpose": "KV-PC4 sr8 (variant c, same RTL as sr6): column A banks (front / return / tag queue) mirrored (MY) in place (x=43.2) so their read faces (rd_out / addr / clocks: the W face in R0) look at the centre logic; gate pc_sr6 180008 overflowed GRT (1028: read words crossing column A through its stack gaps and ends; one failed route = structural redesign).  KV-PC3 sr6: (1) pc__fi / pc__ki / x__est__0_1 land in face registers (no S-face pin -> N-face output-clone cone, no kick-word or boot-ready input cone; +1 edge each, handed to the die schedule); (2) boundary_tcl re-applies the measured hck IO after every io_ref switch (the post-CTS io_ref_skew put the 419 hck-only inputs on core_clk: 505 fake CDC setup endpoints + ODB-0373 on the pc__pi[0] hold pad).  KV-PC2 10-19 (structurally safe successor of sr1 / sr2): KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo are kept copy families split <= 32 loads (ot_rst_copies); front banks write AND read on hck (the landing / pointer clock: no storage-root clocks, no same-phase claim); return-ring banks write on hck, read on ck behind per-slot toggle 2-flop synchronisers; embedding FIFOs are Gray-pointer async FIFOs; the three dropped sticky faults (chain / es_merge / embr) leave registered on pc__hfx[2:0] for the health plane.",
+ "purpose": "PC sr11 structural clock distribution successor: sr10b GRT overflow0 but ck pin-flop spread TT116.2/FF105.0ps (hck59.2/53.8). Replace sink-driven TritonCTS on both clock ports with independently balanced spatial clock spines, measured leaf padding, no RTL/latency change. Symmetric insertion-aware topology. KV-PC11 sr10b (parallel fallback of sr10): column B (CDC down 6 / up 5) in 4/4/3-bank groups with two 21.4 um channels and the tag queue moved to its own 2-bank stack at x 108.0 (MY): the sr10 gate showed column B as a 7-bank over a 6-bank stack with a 10.8 um gap, the same no-horizontal-crossing barrier (M5 cap) between the centre and the E-face logic that failed sr9 in column A.  KV-PC10 sr10 (route qkd_kvs_pc_h_sr9-sr9-596963735 NEEDS_RTL FF hold -57 / DRC 5): column A (front + return) in 3/2/3/2-bank groups with >= 21.5 um routing channels, tag queue abutted on the CDC up stack in column B: the sr9 5-bank stacks forced every horizontal wire (M5 cap: M2/M4 blocked over banks) to detour up to 45 um; the H-tree tap at x 39.4 fed capture leaves at x 80 over a 102 ps detoured net (70 ps skew between abutting flops -> FF hold -57 ps), and the shared return w_addr net shorted on M4 at the stacked bank pins (DRC 5).  RTL = r8 528d8460a.  KV-PC7 sr10b (SAFE successor of sr8 after gate *-20261020-054430: textbook REFUSE reset_landing 9 / 9 raw RESETN loads + logic_depth 895 / 942 ps; PRE-CTS reach 493 pairs > 405 um): (1) rst_n / hrst_n clear only two kept first-stage captures (the 8 second-stage copies clear from the second capture: 2 RESETN loads per port, release still 2 edges); (2) scheduler column decision restructured exactly (registered static-row match, no constant twin leaves, s_go in the last rd_ok / wr_ok gate, k1v / write-queue lookahead per case); (3) N-face order o_next | o_grp_h | pc__fo | i_next | ... so N <-> S feed-throughs run straight.  KV-PC4 sr10b (variant c, same RTL as sr6): column A banks (front / return / tag queue) mirrored (MY) in place (x=43.2) so their read faces (rd_out / addr / clocks: the W face in R0) look at the centre logic; gate pc_sr6 180008 overflowed GRT (1028: read words crossing column A through its stack gaps and ends; one failed route = structural redesign).  KV-PC3 sr6: (1) pc__fi / pc__ki / x__est__0_1 land in face registers (no S-face pin -> N-face output-clone cone, no kick-word or boot-ready input cone; +1 edge each, handed to the die schedule); (2) boundary_tcl re-applies the measured hck IO after every io_ref switch (the post-CTS io_ref_skew put the 419 hck-only inputs on core_clk: 505 fake CDC setup endpoints + ODB-0373 on the pc__pi[0] hold pad).  KV-PC2 10-19 (structurally safe successor of sr1 / sr2): KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo are kept copy families split <= 32 loads (ot_rst_copies); front banks write AND read on hck (the landing / pointer clock: no storage-root clocks, no same-phase claim); return-ring banks write on hck, read on ck behind per-slot toggle 2-flop synchronisers; embedding FIFOs are Gray-pointer async FIFOs; the three dropped sticky faults (chain / es_merge / embr) leave registered on pc__hfx[2:0] for the health plane.",
  "job": {
-  "owner": "Claude:KV-PC4",
-  "branch": "claude/kv-pc3-1019",
-  "tag": "sr8",
-  "purpose": "KV-PC4 sr8 (variant c, same RTL as sr6): column A banks (front / return / tag queue) mirrored (MY) in place (x=43.2) so their read faces (rd_out / addr / clocks: the W face in R0) look at the centre logic; gate pc_sr6 180008 overflowed GRT (1028: read words crossing column A through its stack gaps and ends; one failed route = structural redesign).  KV-PC3 sr6: (1) pc__fi / pc__ki / x__est__0_1 land in face registers (no S-face pin -> N-face output-clone cone, no kick-word or boot-ready input cone; +1 edge each, handed to the die schedule); (2) boundary_tcl re-applies the measured hck IO after every io_ref switch (the post-CTS io_ref_skew put the 419 hck-only inputs on core_clk: 505 fake CDC setup endpoints + ODB-0373 on the pc__pi[0] hold pad).  KV-PC2 10-19 (structurally safe successor of sr1 / sr2): KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo are kept copy families split <= 32 loads (ot_rst_copies); front banks write AND read on hck (the landing / pointer clock: no storage-root clocks, no same-phase claim); return-ring banks write on hck, read on ck behind per-slot toggle 2-flop synchronisers; embedding FIFOs are Gray-pointer async FIFOs; the three dropped sticky faults (chain / es_merge / embr) leave registered on pc__hfx[2:0] for the health plane.",
+  "owner": "Codex:K-CLOSE",
+  "branch": "codex/k-close-1021",
+  "tag": "sr11a",
+  "purpose": "PC sr11 structural clock distribution successor: sr10b GRT overflow0 but ck pin-flop spread TT116.2/FF105.0ps (hck59.2/53.8). Replace sink-driven TritonCTS on both clock ports with independently balanced spatial clock spines, measured leaf padding, no RTL/latency change. Symmetric insertion-aware topology. KV-PC11 sr10b (parallel fallback of sr10): column B (CDC down 6 / up 5) in 4/4/3-bank groups with two 21.4 um channels and the tag queue moved to its own 2-bank stack at x 108.0 (MY): the sr10 gate showed column B as a 7-bank over a 6-bank stack with a 10.8 um gap, the same no-horizontal-crossing barrier (M5 cap) between the centre and the E-face logic that failed sr9 in column A.  KV-PC10 sr10 (route qkd_kvs_pc_h_sr9-sr9-596963735 NEEDS_RTL FF hold -57 / DRC 5): column A (front + return) in 3/2/3/2-bank groups with >= 21.5 um routing channels, tag queue abutted on the CDC up stack in column B: the sr9 5-bank stacks forced every horizontal wire (M5 cap: M2/M4 blocked over banks) to detour up to 45 um; the H-tree tap at x 39.4 fed capture leaves at x 80 over a 102 ps detoured net (70 ps skew between abutting flops -> FF hold -57 ps), and the shared return w_addr net shorted on M4 at the stacked bank pins (DRC 5).  RTL = r8 528d8460a.  KV-PC7 sr10b (SAFE successor of sr8 after gate *-20261020-054430: textbook REFUSE reset_landing 9 / 9 raw RESETN loads + logic_depth 895 / 942 ps; PRE-CTS reach 493 pairs > 405 um): (1) rst_n / hrst_n clear only two kept first-stage captures (the 8 second-stage copies clear from the second capture: 2 RESETN loads per port, release still 2 edges); (2) scheduler column decision restructured exactly (registered static-row match, no constant twin leaves, s_go in the last rd_ok / wr_ok gate, k1v / write-queue lookahead per case); (3) N-face order o_next | o_grp_h | pc__fo | i_next | ... so N <-> S feed-throughs run straight.  KV-PC4 sr10b (variant c, same RTL as sr6): column A banks (front / return / tag queue) mirrored (MY) in place (x=43.2) so their read faces (rd_out / addr / clocks: the W face in R0) look at the centre logic; gate pc_sr6 180008 overflowed GRT (1028: read words crossing column A through its stack gaps and ends; one failed route = structural redesign).  KV-PC3 sr6: (1) pc__fi / pc__ki / x__est__0_1 land in face registers (no S-face pin -> N-face output-clone cone, no kick-word or boot-ready input cone; +1 edge each, handed to the die schedule); (2) boundary_tcl re-applies the measured hck IO after every io_ref switch (the post-CTS io_ref_skew put the 419 hck-only inputs on core_clk: 505 fake CDC setup endpoints + ODB-0373 on the pc__pi[0] hold pad).  KV-PC2 10-19 (structurally safe successor of sr1 / sr2): KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo are kept copy families split <= 32 loads (ot_rst_copies); front banks write AND read on hck (the landing / pointer clock: no storage-root clocks, no same-phase claim); return-ring banks write on hck, read on ck behind per-slot toggle 2-flop synchronisers; embedding FIFOs are Gray-pointer async FIFOs; the three dropped sticky faults (chain / es_merge / embr) leave registered on pc__hfx[2:0] for the health plane.",
   "benches": [
    {
     "name": "kvpc_front",
@@ -438,7 +450,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_FRONT PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/front_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/front_m0.log"
    },
    {
     "name": "kvpc_front_mut1",
@@ -451,7 +463,7 @@
     ],
     "pass_regex": "^KVPC_FRONT PASS ",
     "fail_regex": "^KVPC_FRONT FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/front_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/front_m1.log"
    },
    {
     "name": "kvpc_front_mut4",
@@ -464,7 +476,7 @@
     ],
     "pass_regex": "^KVPC_FRONT PASS ",
     "fail_regex": "^KVPC_FRONT FAIL .* mut=4",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/front_m4.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/front_m4.log"
    },
    {
     "name": "kvpc_front_mut5",
@@ -477,7 +489,7 @@
     ],
     "pass_regex": "^KVPC_FRONT PASS ",
     "fail_regex": "^KVPC_FRONT FAIL .* mut=5",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/front_m5.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/front_m5.log"
    },
    {
     "name": "kvpc_return",
@@ -489,7 +501,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_RETURN PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/return_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/return_m0.log"
    },
    {
     "name": "kvpc_return_mut1",
@@ -502,7 +514,7 @@
     ],
     "pass_regex": "^KVPC_RETURN PASS ",
     "fail_regex": "^KVPC_RETURN FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/return_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/return_m1.log"
    },
    {
     "name": "kvpc_return_mut2",
@@ -515,7 +527,7 @@
     ],
     "pass_regex": "^KVPC_RETURN PASS ",
     "fail_regex": "^KVPC_RETURN FAIL .* mut=2",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/return_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/return_m2.log"
    },
    {
     "name": "kvpc_cdc",
@@ -527,7 +539,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_CDC PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/cdc_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/cdc_m0.log"
    },
    {
     "name": "kvpc_cdc_mut1",
@@ -540,7 +552,7 @@
     ],
     "pass_regex": "^KVPC_CDC PASS ",
     "fail_regex": "^KVPC_CDC FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/cdc_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/cdc_m1.log"
    },
    {
     "name": "kvpc_cdc_mut2",
@@ -553,7 +565,7 @@
     ],
     "pass_regex": "^KVPC_CDC PASS ",
     "fail_regex": "^KVPC_CDC FAIL .* mut=2",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/cdc_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/cdc_m2.log"
    },
    {
     "name": "kvpc_tq",
@@ -565,7 +577,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_TQ PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/tq_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tq_m0.log"
    },
    {
     "name": "kvpc_tq_mut1",
@@ -578,7 +590,7 @@
     ],
     "pass_regex": "^KVPC_TQ PASS ",
     "fail_regex": "^KVPC_TQ FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/tq_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tq_m1.log"
    },
    {
     "name": "kvpc_sched",
@@ -590,7 +602,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_SCHED PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/sched_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/sched_m0.log"
    },
    {
     "name": "kvpc_sched_mut5",
@@ -603,7 +615,7 @@
     ],
     "pass_regex": "^KVPC_SCHED PASS ",
     "fail_regex": "^KVPC_SCHED FAIL .* mut=5",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/sched_m5.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/sched_m5.log"
    },
    {
     "name": "kvpc_ctrl",
@@ -615,7 +627,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_CTRL PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/ctrl_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/ctrl_m0.log"
    },
    {
     "name": "kvpc_ctrl_mut1",
@@ -628,7 +640,7 @@
     ],
     "pass_regex": "^KVPC_CTRL PASS ",
     "fail_regex": "^KVPC_CTRL FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/ctrl_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/ctrl_m1.log"
    },
    {
     "name": "kvpc_ctrl_mut2",
@@ -641,7 +653,7 @@
     ],
     "pass_regex": "^KVPC_CTRL PASS ",
     "fail_regex": "^KVPC_CTRL FAIL .* mut=2",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/ctrl_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/ctrl_m2.log"
    },
    {
     "name": "kvpc_ctrl_mut5",
@@ -654,7 +666,7 @@
     ],
     "pass_regex": "^KVPC_CTRL PASS ",
     "fail_regex": "^KVPC_CTRL FAIL .* mut=5",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/ctrl_m5.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/ctrl_m5.log"
    },
    {
     "name": "kvpc_path",
@@ -666,7 +678,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_PATH PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/path_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/path_m0.log"
    },
    {
     "name": "kvpc_path_mut2",
@@ -679,7 +691,7 @@
     ],
     "pass_regex": "^KVPC_PATH PASS ",
     "fail_regex": "^KVPC_PATH FAIL .* mut=2",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/path_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/path_m2.log"
    },
    {
     "name": "kvpc_path_mut5",
@@ -692,7 +704,7 @@
     ],
     "pass_regex": "^KVPC_PATH PASS ",
     "fail_regex": "^KVPC_PATH FAIL .* mut=5",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/path_m5.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/path_m5.log"
    },
    {
     "name": "kvpc_tile_pc",
@@ -704,7 +716,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_TILE PASS .* errors=0 mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/tile_pc_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tile_pc_m0.log"
    },
    {
     "name": "kvpc_tile_pc_mut4",
@@ -717,7 +729,46 @@
     ],
     "pass_regex": "^KVPC_TILE PASS ",
     "fail_regex": "^KVPC_TILE FAIL .* mut=4",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/tile_pc_m4.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tile_pc_m4.log"
+   },
+   {
+    "name": "kvpc_sched_mut7",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit sched --mut 7 --threads 4 --out {RUN}/bench/kvpc_sched_m7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_SCHED PASS ",
+    "fail_regex": "^KVPC_SCHED FAIL .* mut=7",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/sched_m7.log"
+   },
+   {
+    "name": "kvpc_tile_pc_mut7",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 7 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_TILE PASS ",
+    "fail_regex": "^KVPC_TILE FAIL .* mut=7",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tile_pc_m7.log"
+   },
+   {
+    "name": "kvpc_tile_pc_mut8",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 8 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVPC_TILE PASS ",
+    "fail_regex": "^KVPC_TILE FAIL .* mut=8",
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tile_pc_m8.log"
    },
    {
     "name": "kvpc_tile_pc_mut5",
@@ -730,7 +781,7 @@
     ],
     "pass_regex": "^KVPC_TILE PASS ",
     "fail_regex": "^KVPC_TILE FAIL .* mut=5",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019/tile_pc_m5.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020/tile_pc_m5.log"
    }
   ],
   "extra_paths": [
@@ -740,9 +791,8 @@
    "results/arch/qwen_kv_domsplit_1019/ports",
    "results/arch/qwen_kv_kits_b_1018",
    "results/arch/qwen_kv_static_programme_1017/die/target6.hex",
-   "results/rtl/qwen_kv_die/kvpc_sram_1019",
    "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019",
-   "results/rtl/qwen_kv_die/kvpc_sram_sr8_1019",
+   "results/rtl/qwen_kv_die/kvpc_sram_sr9_1020",
    "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018",
    "rtl",
    "rtl/lib/ot_rst_relay.sv",
@@ -788,8 +838,8 @@
    "tools/qwen_kv_die",
    "tools/qwen_kv_die/kvs_pc_rland_bench.py"
   ],
-  "views_to": "physical/ref_tile/qkd_kvs_pc_sr8/views",
-  "record_to": "results/rtl/ref_tile/qkd_kvs_pc_sr8",
+  "views_to": "physical/ref_tile/qkd_kvs_pc_sr10b/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_pc_sr10b",
   "structural_change": "KV-PC 10-19 (safe-design redo of qkd_kvs_pc_k1 route eb7cbd435 NEEDS_RTL TT -50.35 + pc_mu1 gate FAIL): MU 1 + DOMSPLIT ports (i_grp_h / o_grp_h) + reset landing per domain in RTL (OT_KV_PC_RLAND) + KEPT strap pin registers before u_pce; tile file qkd_kvs_tiles_hroot_ff_k_mu_ds_rl.sv."
  },
  "pin_regs": {
@@ -810,7 +860,7 @@
   "cell": "HB2xp67_ASAP7_75t_R",
   "out_cell": "HB1xp67_ASAP7_75t_R"
  },
- "structural_change": "KV-PC4 sr8 (variant c, same RTL as sr6): column A banks (front / return / tag queue) mirrored (MY) in place (x=43.2) so their read faces (rd_out / addr / clocks: the W face in R0) look at the centre logic; gate pc_sr6 180008 overflowed GRT (1028: read words crossing column A through its stack gaps and ends; one failed route = structural redesign).  KV-PC3 sr6: (1) pc__fi / pc__ki / x__est__0_1 land in face registers (no S-face pin -> N-face output-clone cone, no kick-word or boot-ready input cone; +1 edge each, handed to the die schedule); (2) boundary_tcl re-applies the measured hck IO after every io_ref switch (the post-CTS io_ref_skew put the 419 hck-only inputs on core_clk: 505 fake CDC setup endpoints + ODB-0373 on the pc__pi[0] hold pad).  KV-PC2 10-19 (structurally safe successor of sr1 / sr2): KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo are kept copy families split <= 32 loads (ot_rst_copies); front banks write AND read on hck (the landing / pointer clock: no storage-root clocks, no same-phase claim); return-ring banks write on hck, read on ck behind per-slot toggle 2-flop synchronisers; embedding FIFOs are Gray-pointer async FIFOs; the three dropped sticky faults (chain / es_merge / embr) leave registered on pc__hfx[2:0] for the health plane.",
+ "structural_change": "KV-PC11 sr10b (parallel fallback of sr10): column B (CDC down 6 / up 5) in 4/4/3-bank groups with two 21.4 um channels and the tag queue moved to its own 2-bank stack at x 108.0 (MY): the sr10 gate showed column B as a 7-bank over a 6-bank stack with a 10.8 um gap, the same no-horizontal-crossing barrier (M5 cap) between the centre and the E-face logic that failed sr9 in column A.  KV-PC10 sr10 (route qkd_kvs_pc_h_sr9-sr9-596963735 NEEDS_RTL FF hold -57 / DRC 5): column A (front + return) in 3/2/3/2-bank groups with >= 21.5 um routing channels, tag queue abutted on the CDC up stack in column B: the sr9 5-bank stacks forced every horizontal wire (M5 cap: M2/M4 blocked over banks) to detour up to 45 um; the H-tree tap at x 39.4 fed capture leaves at x 80 over a 102 ps detoured net (70 ps skew between abutting flops -> FF hold -57 ps), and the shared return w_addr net shorted on M4 at the stacked bank pins (DRC 5).  RTL = r8 528d8460a.  KV-PC7 sr10b (SAFE successor of sr8 after gate *-20261020-054430: textbook REFUSE reset_landing 9 / 9 raw RESETN loads + logic_depth 895 / 942 ps; PRE-CTS reach 493 pairs > 405 um): (1) rst_n / hrst_n clear only two kept first-stage captures (the 8 second-stage copies clear from the second capture: 2 RESETN loads per port, release still 2 edges); (2) scheduler column decision restructured exactly (registered static-row match, no constant twin leaves, s_go in the last rd_ok / wr_ok gate, k1v / write-queue lookahead per case); (3) N-face order o_next | o_grp_h | pc__fo | i_next | ... so N <-> S feed-throughs run straight.  KV-PC4 sr10b (variant c, same RTL as sr6): column A banks (front / return / tag queue) mirrored (MY) in place (x=43.2) so their read faces (rd_out / addr / clocks: the W face in R0) look at the centre logic; gate pc_sr6 180008 overflowed GRT (1028: read words crossing column A through its stack gaps and ends; one failed route = structural redesign).  KV-PC3 sr6: (1) pc__fi / pc__ki / x__est__0_1 land in face registers (no S-face pin -> N-face output-clone cone, no kick-word or boot-ready input cone; +1 edge each, handed to the die schedule); (2) boundary_tcl re-applies the measured hck IO after every io_ref switch (the post-CTS io_ref_skew put the 419 hck-only inputs on core_clk: 505 fake CDC setup endpoints + ODB-0373 on the pc__pi[0] hold pad).  KV-PC2 10-19 (structurally safe successor of sr1 / sr2): KV-PC SAFE 10-19 (one failed route = structural redesign; terminal gate 1248d0585 PC WARN / PC_H FAIL): the five runtime-indexed flop arrays (front 32x297 = 9216 FF on 4 storage roots, tag queue 64x34, return ring 8x288, embedding CDC FIFOs 8x349 / 8x258) are 23 native 32x64 dual-clock SRAM banks (kv_pc_sram_gen / qkd_kvpc_sram_1019.sv; 0 added edges); the 2405 / 2051 / 854-load pointer roots are gone; scheduler hr_q / hgo are kept copy families split <= 32 loads (ot_rst_copies); front banks write AND read on hck (the landing / pointer clock: no storage-root clocks, no same-phase claim); return-ring banks write on hck, read on ck behind per-slot toggle 2-flop synchronisers; embedding FIFOs are Gray-pointer async FIFOs; the three dropped sticky faults (chain / es_merge / embr) leave registered on pc__hfx[2:0] for the health plane.",
  "kits_b": {
   "frame": [
    270.0,
@@ -848,7 +898,7 @@
   "enable": false,
   "reason": "Landed in RTL (OT_KV_PC_RLAND=1, kv_static_die.pc_rland_text): rst_n -> ot_reset_sync u_rland_ck on ck, hrst_n -> ot_reset_sync u_rland_hck on hck, 2 registered stages each at the face, every child reset pin on the landed net.  The flow's OT_RST_LAND lands all reset_ports on ONE clock (it would move the hck reset release onto ck)."
  },
- "safe_design_checklist": "see physical/ref_tile/qkd_kvs_pc_sr8/README.md",
+ "safe_design_checklist": "see physical/ref_tile/qkd_kvs_pc_sr10b/README.md",
  "boundary_tcl": [
   "physical/qkd_kvs_kits/qkd_kvs_pc_rl1_hck_boundary.tcl",
   "physical/qkd_kvs_kits/qkd_kvs_pc_sr6_hck_boundary.tcl"
@@ -860,6 +910,11 @@
   "max_loads": 32
  },
  "orfs_vars": {
-  "OT_RST_COPIES_WIDE": "1"
- }
+  "OT_RST_COPIES_WIDE": "1",
+  "SKIP_GATE_CLONING": "1",
+  "SKIP_BUFFER_REMOVAL": "1"
+ },
+ "pre_cts_extra": [
+  "physical/qkd_kvs_kits/pc_sr11a_spine.tcl"
+ ]
 }
