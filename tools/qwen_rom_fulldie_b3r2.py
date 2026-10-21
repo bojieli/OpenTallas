@@ -4249,6 +4249,14 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         for dx, dy in cands:
                             x0, y0 = v.dn(qx - W_ / 2 + dx, v.GX), v.dn(qy - H_ / 2 + dy, v.GY)
                             cx_, cy_ = x0 + W_ / 2, y0 + H_ / 2
+                            if _xch:
+                                # QW-G5STA: a candidate in a slice landing channel snaps to the channel's W or E edge
+                                # (two station columns; a centred frame would block both: dv2f20g5l try 5 debug)
+                                for a_, b_, c_, d_ in _xch:
+                                    if a_ - 1e-3 <= cx_ <= c_ + 1e-3 and b_ <= cy_ <= d_:
+                                        x0 = v.up(a_, v.GX) if cx_ < (a_ + c_) / 2 else v.dn(c_ - W_, v.GX)
+                                        cx_ = x0 + W_ / 2
+                                        break
                             sc_ = max(abs(cx_ - Q[0]) + abs(cy_ - Q[1]), abs(cx_ - x1) + abs(cy_ - y1))
                             if best_ is not None and sc_ >= best_[0]:
                                 continue
