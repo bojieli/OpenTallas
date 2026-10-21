@@ -429,7 +429,7 @@
  "safe_design_checklist": {
   "1_pins": "PASS: every input lands on a child pin register (head c_* stage) or a landing ring; every output leaves a child register; each regional reset port lands on its own root (r11: kept forest u_lpr_<r> prefix -> branch -> leaf = 3 stages, + u_lprc_u_<r> 4 stages, lp regional_reset_ports + landing_reset_forest); reset only on control/valid (selectors, counters, valid; ring data unreset); r9: both chains fenced in their root's one box",
   "2_reach": "WAIVED (L leaves only, 3 bits per L leaf): the L leaf (453.6 um tall) has its cfg pins on one face and clk / status / reset pins on the other, so one compact cluster per root leaves three single-cycle hops of ~455-470 um (rst_n_c<k> port -> u_lpr stage 1, child fault / valid -> status write ring), each one repeated bit, STA-timed at TT / FF, inside the measured 600-750 um repeated reach; the alternative (a relay or a second register group on the same root) is exactly what failed r8 (stray sinks 100-640 um from the cluster = 86-535 ps soft spread). Everything else PASS: head ring -> leaf read is the E = 3 multicycle landing (<= ~1.9 mm); S leaves (cfg-face box beside the register mass; status pin -> ring and reset port -> stage 1 hops 259 um)",
-  "3_fanout": "r11 FIXED (lp10a/b census: ring read rc 1,532 loads / 96 roots, comb 513, rq 205): landings chunked at 16 bits with kept per-chunk one-hot selectors (<= ~21 loads each), each chunk reset from its own forest leaf (1 load), forest prefix -> <= 2 branches, branch -> <= 32 leaves; pre-gate native census decides (numbers in the gate packet)",
+  "3_fanout": "r11 FIXED (lp10a/b census: ring read rc 1,532 loads / 96 roots, comb 513, rq 205): landings chunked at 8 bits with kept per-chunk one-hot selectors (slot enable 2 x 12 + 1 = 25 loads; 16-bit census max was 41), each chunk reset from its own forest leaf (1 load), forest prefix -> <= 2 branches, branch -> <= 32 leaves; pre-gate native census decides (numbers in the gate packet)",
   "4_depth": "PASS: landing read = 8:1 registered slot mux (lp ot_pl_land_r); no combinational in -> out path (all child-registered)",
   "5_storage": "PASS: ring banks are D = 8 slot landings (fixed-latency rings, not runtime-indexed storage); leaf storage is SRAM in the hard leaves",
   "6_floorplan": "PASS: children on the 43.2 lattice, 43.2-um command strips + 151-um cfg channel; child faces <= 3.5 pins/um (head W 302 / 86.4); fill 57% (1.03 mm2 macros / 1.81 mm2); aspect 2:1; fences 6.48 um off every macro edge, <= 21.6 tall; r9: one fence per root",
@@ -441,7 +441,7 @@
  "landed": {
   "record": "results/arch/landed_parent_1018/pslice_c5_r10/ot_hbm_su_programme_pslice_c5_lp10_record.json",
   "landings": 90,
-  "landing_flops": 9750,
+  "landing_flops": 12648,
   "reset_depth": 3,
   "lp_spec": "tools/landed_parent/specs/pslice_c5_r10.json"
  },

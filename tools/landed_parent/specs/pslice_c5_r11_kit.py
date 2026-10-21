@@ -2,7 +2,7 @@
 """HBM-PSLICE9 10-20 r11: pslice_c5 lp11a / lp11b = the r10 floorplans (lp10a 21.6-um boxes / lp10b ~2x taller, fences
 released before placement DPL + CTS) on NEW RTL ot_hbm_su_programme_pslice_c5_lp10 (lp.py spec pslice_c5_r10.json): lp10a/b were
 REFUSED by the pre-gate native census (ring read rc counters 1,532 loads / 96 roots, comb 513, rq 205) because every landing
-was one wide ot_pl_land ring/read whose slot selectors fanned out across 256 bits.  Now every landing is CHUNKED (16-bit kept
+was one wide ot_pl_land ring/read whose slot selectors fanned out across 256 bits.  Now every landing is CHUNKED (8-bit kept
 ot_pl_land_local_w/_r selectors, ot_pl_land_vector_reset_*) and each region's reset PORT feeds a kept reset forest
 (ot_pl_land_reset_forest: prefix -> one branch per 32 leaves -> one leaf per landing chunk) of the SAME 3-stage depth
 (lp.py regional_reset_ports + landing_reset_forest, new in HBM-PSLICE9): no driver above 32 loads, reset release edge and
@@ -343,8 +343,8 @@ def main():
                    "TT / FF, inside the measured 600-750 um repeated reach; the alternative (a relay or a second register group "
                    "on the same root) is exactly what failed r8 (stray sinks 100-640 um from the cluster = 86-535 ps soft spread). "
                    "Everything else PASS: head ring -> leaf read is the E = 3 multicycle landing (<= ~1.9 mm); " + LS_,
-        "3_fanout": "r11 FIXED (lp10a/b census: ring read rc 1,532 loads / 96 roots, comb 513, rq 205): landings chunked at 16 bits with kept "
-                    "per-chunk one-hot selectors (<= ~21 loads each), each chunk reset from its own forest leaf (1 load), forest prefix -> "
+        "3_fanout": "r11 FIXED (lp10a/b census: ring read rc 1,532 loads / 96 roots, comb 513, rq 205): landings chunked at 8 bits with kept "
+                    "per-chunk one-hot selectors (slot enable 2 x 12 + 1 = 25 loads; 16-bit census max was 41), each chunk reset from its own forest leaf (1 load), forest prefix -> "
                     "<= 2 branches, branch -> <= 32 leaves; pre-gate native census decides (numbers in the gate packet)",
         "4_depth": "PASS: landing read = 8:1 registered slot mux (lp ot_pl_land_r); no combinational in -> out path (all child-registered)",
         "5_storage": "PASS: ring banks are D = 8 slot landings (fixed-latency rings, not runtime-indexed storage); leaf storage is SRAM in the hard leaves",
