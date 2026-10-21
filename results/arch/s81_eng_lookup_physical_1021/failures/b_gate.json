@@ -1,0 +1,119 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: RTL dsfd_engram_lkp_ra640 registers every data input and every output at its pin (one flop each; hr_tag two kept flops; no logic in front/behind); flow pin registers would add a second stage per port",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81engm_lkp_ra640b_20261021-134946.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81engm_lkp_ra640b_20261021-134946.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81engm_lkp_ra640b-20261021-134946",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 1900 s (gate total 3306 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 671, 'pin_rectangles': 671, 'pin_track_checked': 671, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 43d1cfad3ee78b5a6eb67d627d991b96b4acf484c5043d975ef8654b7d960c97",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "util",
+   "message": "synthesized std area 46294 um2 + macros 11682 in core 72242: util 83% (std-cell density 83.0% of placeable 55808 um2; total fill 80.3%)",
+   "fix": "set \"std_area_um2\": 46294 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsfd_engram_lkp_ra640 cells 339,507 flops 48,687 depth 771.8 ps util 0.6943 reach 0.0 um (10.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_ot_pr_core.u_e.u_hash.u_x_1_0.q[25]$_DFF_P_ -> u_ot_pr_core.u_e.u_hash.s1_1_3[23]$_DFF_P_/D: ~772 ps estimated (22 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "std-cell density 65.5% > 65% (std 38475 um2 in placeable 58743 um2 = core 72242 - macros/halos; total fill 69.4%): grow the outline",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "cross_clock",
+   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
+   "fix": "fix the signoff SDC read and re-gate with --cts"
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-eng-lookup33-1021/physical/ref_tile/s81engm_lkp_ra640b/gate_layout/floorplan.png",
+   "fix": ""
+  }
+ ]
+}

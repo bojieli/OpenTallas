@@ -1,0 +1,3 @@
+# Whole-reader clock ownership prerequisite
+
+Selected lookup actualmapped native48,687FF alone. Flattening it inside wholeENG_RR with its current singleck tying11childroots cannot meet15,000sinks/root rule. CurrentfullRRnative remains authoritative structural census only, not physicalclockqualification. Required physical architecture is explicit regionalclockentry interface or exactclosedlookuphardchildcomposition plus independentglueclockroots andactualparentpin grant. None is silentlyimplemented. Allfunctionalphase0 clocks canremainrelated1:1/0phase butclockspines musthaveboundedrealcohorts. Childleafview cannotaliaswholeRR. Native/semanticsproofs retained; no physicalwholeRR launched. Parent notified14:53; interfacechoice mustcoordinate G9die_chain.
