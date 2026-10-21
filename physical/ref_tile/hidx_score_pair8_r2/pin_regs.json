@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hidx_score_pair8_r2",
+ "enable": false,
+ "reason": "Original kept per-head query/key/hid input registers and region query pins; output cs_o/cf_o/onl are literal flops. Critical owner packet required; no waiver."
+}
