@@ -74,7 +74,7 @@ def plan():
                    added_stacks=new_dies, added_trays=sum(g['copy_b_trays'] for g in groups),
                    die_mm2=m.S81['die_mm2'], total_mm2=d['total_mm2'],
                    switch_ports_added=dict(serdes=new_dies * LANES_PER_DIE['serdes'],
-                                           note='0 UCIe: every die link leaves the package through the switch'),
+                                           note='0 UCIe: every die link leaves the package (direct cable / board trace, no switch)'),
                    extra_circuits_on_existing_dies=dict(circuits=2 * RANKS * len(M.DUP),
                                                         die_variant=('the 4 rank dies of each pre-group and post-group '
                                                                      'stage populate the 2 reserved SerDes slots '
@@ -87,7 +87,7 @@ def plan():
                    lanes_per_die=LANES_PER_DIE,
                    circuits_per_die=M.CIRCUITS,
                    circuits_array=dict(tp4_full_mesh_per_group=6, stage_per_boundary=RANKS,
-                                       note='every circuit is one switch crossing; per die 5 = 3 TP endpoints (6 TP circuits '
+                                       note='every circuit is one direct crossing (OWNER 10-21: board trace / DAC / AEC, no switch); per die 5 = 3 TP endpoints (6 TP circuits '
                                             'x 2 ends / 4 dies) + stage NEXT + stage PREV')),
         reuse=('per the token DAG of record (results/arch/token_path_20261009/ds_rom.json) every layer writes and reads '
                'its own rows on its own stage (own_row_write / window_load / pv nodes); what later layers reuse from '
@@ -95,21 +95,31 @@ def plan():
                'So copy B needs NO reuse link; the owner copy is addressed by user only through the h message order. '
                'Lane MU-S81/SVC confirms on the RTL (svc_bases.json).'),
         stage_hop=dict(circuit='s_0N pair A (TX, every window ab 0) -> next stage rank r s_0N pair B (RX -> ri)',
-                       crossings=1, beats=321, E_cycles=1125,
-                       E_basis='record token_compose stage_hop: 538 measured + 453 modelled PHY/switch + 134 priced '
-                               'on-die legs (results/rtl/xdie_s81_1019/record.json)',
+                       crossings=1, beats=320, windows='4 back-to-back 80-beat tag windows (NB 80, 4 mu_c a hop; '
+                                                        'lead 10-21)',
+                       E_cycles=538 + M.D_CYCLES['stage_hop'] + 134, E_cycles_switched=1125,
+                       E_basis='record token_compose stage_hop: 538 measured + off-chip leg (OWNER 10-21 direct '
+                               'cabling: stage_hop D_cycles_max %d, %s; was 453 switched) + 134 priced on-die legs '
+                               '(results/rtl/xdie_s81_1019/record.json)' % (M.D_CYCLES['stage_hop'], M.D_SOURCE),
+                       offchip_per_class=M.D_CYCLES,
                        was='folded onto the ES TP circuit (tb_xdie_s81 d -> d+1 inside the group): no real circuit '
                            'to the next stage existed on the 4-endpoint die',
-                       per_token_delta_cycles=0,
-                       per_token_delta_why='the composition of record already prices every hop as ONE crossing of '
-                                           '321 beats on one port; LINK5 makes that crossing real at the same cost. '
+                       per_token_delta_cycles_link5=0,
+                       per_token_delta_cycles_direct=dict(ar=-M.offchip_saving()['ar']['saved'],
+                                                          mtp_step=-M.offchip_saving()['mtp']['saved']),
+                       per_token_delta_why='LINK5 itself: 0 (the composition of record already prices every hop as '
+                                           'ONE crossing of 321 beats on one port; LINK5 makes that crossing real). '
+                                           'Direct cabling: every crossing\'s 453 switched leg -> its class D (see '
+                                           'calendar_<mode>.json offchip.saving). '
                                            'MU calendar: the fold had 0 collisions at stage granularity (min AR '
                                            'margin slot - (span + h) = 690.7 cycles, S005), the LINK5 calendar has '
                                            '0 collisions with the s_0N TX / RX resources'),
         latency=dict(copy_a='unchanged (the latency user is always on copy A: same dies, same circuits)',
                      copy_b_delta_cycles=0,
-                     why='every crossing is the same fixed-delay switched channel (377.6 ns budget), so copy B\'s hop '
-                         'latency equals copy A\'s; a copy-B user\'s windows are the copy-A windows shifted by its slot'),
+                     why='direct cabling (OWNER 10-21): copy-B circuits copyb_in %d / copyb_out %d / copyb_hop %d <= '
+                         'stage_hop %d cycles, so copy B\'s hop is never later than copy A\'s; a copy-B user\'s windows '
+                         'are the copy-A windows shifted by its slot' % (M.D_CYCLES['copyb_in'], M.D_CYCLES['copyb_out'],
+                                                                         M.D_CYCLES['copyb_hop'], M.D_CYCLES['stage_hop'])),
         checks=dict(link_occupancy_le_slot='PASS' if ok_occ else 'FAIL',
                     cable_budget_m=round(CABLE_BUDGET_NS / CABLE_NS_PER_M, 1)),
         groups=groups, links=links,

@@ -2,6 +2,47 @@
 >
 > (Superseded) Codex recovery 10-18: the owner target remained 47 AR users on 520 dies; the 46-user calendar was called diagnostic. Current main's S81-SCAND pricing corrections remain authoritative.
 
+> **Direct cabling (OWNER 10-21, supersedes the switched leg below): AR -74,484 cycles a token, MTP -79,624 cycles a step.**
+> The S81 release has no switch. The TP4 mesh is board trace inside one tray. Stage hops use passive DAC inside a rack and AEC between racks, in serpentine order.
+> Each crossing's off-chip leg is now its circuit class's `D_cycles_max` from `results/arch/release_rack_1021/hop_latency.json` (claude/rack-1021 @5a1c6dcea), replacing the 453-cycle switched leg:
+> - tp_mesh 251, stage_hop 265 (includes the longest turnaround AEC circuits), head_hop 257, token_return 251;
+> - copyb_in 258, copyb_hop 265, copyb_out 257.
+>
+> `dv_mu_calendar.offchip_saving()` re-prices every term of the composition of record (`results/rtl/xdie_s81_1019/record.json` token_compose) as exposed = max(0, E - O). The stage offsets use hop = 1006 - 453 + 265 = 818. The period = the model period minus the saving.
+>
+> | | switched (453) | direct | delta |
+> |---|---|---|---|
+> | AR period (cycles a token) | 980,428 | 905,944 | **-74,484** (tp_mesh 257 crossings -51,914; stage_hop 119 -22,372; head_hop 1 -196) |
+> | AR per user | 1,224.0 | 1,324.6 tok/s | +8.2% |
+> | AR users / aggregate | 46 / 56,302 | **42** / 55,633 | -1.2% |
+> | MTP step period | 1,303,400 | 1,223,776 | **-79,624** |
+> | MTP users / aggregate | 10 + 1 filler / 39,211 | 9 + 3 fillers / 39,645 | +1.1% |
+>
+> **Why AR drops to 42 users** (the calendar's own search):
+> - 44 users gives a slot of 20,590, which is below the largest non-replicated window of 20,754. It is short by 164 cycles.
+> - 43 is odd, and S002 cannot be 2-coloured.
+> - So 44 users would come back if the largest non-replicated window shrinks by 164 cycles or more.
+>
+> **L20 split:** the MTP L20-split record keeps 1 filler. With 3 fillers the S030 helper collides, so the build drops fillers until the helper check passes.
+>
+> **Stage hop on the wire:** NB stays 80 (lead 10-21: the existing lep and land masters; the closed land view 263e13fc3 has NS = 1).
+> - The 320-beat h goes out as 4 back-to-back 80-beat tag windows: 4 mu_c commands a hop, all ab 0.
+> - **AR:** every hop window cuts through with land = 0 (`circuits.hop_windows`). The tightest margin is 373 cycles at S005, so the NS = 1 landing slot is never used by stage hops.
+> - **MTP: FAULT, open.** At 12 groups (S005, S007, S008, S010, S014, S015, S017, S018, S023, S024, S026, S027) the MTP step fills the slot exactly. The h reaches the receiving stage 440 cycles before the previous user frees it.
+> - A landing leaf with NS = 1 cannot hold 4 back-to-back windows.
+> - Fix options: hold the h TX on the sender until the receiving stage is free (at most 12 x 440 = 5,280 cycles a step, 0.4%), or give the landing leaf NS >= 4.
+>
+> **Rack wiring mismatch.** `connections_s81.csv` @5a1c6dcea does not wire the LINK5 lane plan:
+> - It puts TP d+2 on WN<->WN (lk_WN0/1 at both ends) and the stage hop on EN0/1 -> WN2/3.
+> - The lane plan puts d+2 on s_7N EN<->EN and the stage hop on s_0N pair A -> s_0N pair B.
+> - In the rack wiring, s_0N receives d+2 TP on pair A AND the previous stage's h on pair B. Both release into ri, which is the sticky co-release fault.
+> - The latencies are per class, so this calendar is unaffected. The wiring table should follow the lane plan.
+>
+> **Downstream copies not regenerated here:**
+> - `calendar_*_q4.json` (TOK bench copies).
+> - `token_path_1018/ds_rom.json` `multi_user`, which still says 46 x 1,224.1.
+> - the xs_field_calendar MU check inputs. They read 42 users from `calendar_ar.json` the next time they run.
+
 > **S81-LINK5 (owner-approved 10-21 06:00): 5 static circuits a stage die; the stage hop gets its own circuit.**
 > The chain plan and calendars now use the real stage die. The stale "6 SerDes + 2 UCIe" p4l count is gone.
 > `dv_mu_calendar.CIRCUITS` holds the circuit table and `chain_plan.json` `array.circuits_per_die` repeats it.
@@ -26,20 +67,21 @@
 > - **Pair A and pair B never release into ri together.** Every stage-hop window is ab 0, and no ab 1 window is ever compiled on s_0N. So s_0N pair A RX only ever sees the link layer: the successor's pair B TX carries no ring beat.
 > - s_7N has no pair B (AB_EN 0), so the d+2 RX on s_7N has no merge rule.
 > - The TP endpoints carry no h window any more.
+> - (Figures in this block are the switched-leg values. The direct-cabling block above supersedes them.)
 > - `--hop-port es` rebuilds the old fold as a diagnostic and writes nothing. It also finds 0 collisions at stage granularity: the minimum AR margin, slot - (span + h), is 690.7 cycles at S005.
 >
 > **Compiler:**
 > - `layer_prog/lower_vpx.py`: the d+2 leg in `LEGS` now lands on peer `u_s_7N`, and `STAGE_LEG` = s_0N -> next-stage s_0N.
 > - `layer_prog/final_ffn_transport.py`: the d+2 end link is sid 15 -> 15 (was 15 -> 1).
 >
-> **Per-token cycle delta: 0 cycles, AR and MTP, single-user and MU.**
+> **Per-token cycle delta from LINK5 itself: 0 cycles, AR and MTP, single-user and MU.** The direct-cabling delta is in the block above.
 > - The composition of record (`results/rtl/xdie_s81_1019/record.json`) already prices each of the 120 stage hops a token as ONE crossing: 321 beats on one port, E = 538 measured + 453 PHY/switch + 134 on-die = 1,125.
 > - That crossing used to have no real circuit; LINK5 provides it at the same cost.
 > - Moving the d+2 RX from W to E keeps the priced on-die leg at 67 cycles an end.
 > - Against the no-hardware fallbacks [MODEL], LINK5 avoids about +135k cycles a token for relaying each hop through a TP peer (120 x 1,125), or about +160k for a TP ring.
 >
 > **Findings for the RTL / XDIE lanes:**
-> 1. s_0N now carries the whole h message on one endpoint, so its lep needs `NB` = 320 (40,960 B / 128 B; was 80 = one quarter per end slice). Otherwise the h ring beats must be funnelled to s_0N on die. The 652-cycle `H_MSG` window still covers 321 beats x 1.335 = 429 lane cycles.
+> 1. (Superseded by the lead 10-21: NB stays 80, and the h goes as 4 windows; see above.) s_0N now carries the whole h message on one endpoint, so its lep needs `NB` = 320 (40,960 B / 128 B; was 80 = one quarter per end slice). Otherwise the h ring beats must be funnelled to s_0N on die. The 652-cycle `H_MSG` window still covers 321 beats x 1.335 = 429 lane cycles.
 > 2. **The host plane on s_7N has no host-side peer in any static-circuit plan.**
 >    - s_7N sends THOST/TKD frames (types 3/4). A receiver accepts only ring, HOST and KS frames, so it takes them as a sticky protocol fault (`perr`, `ot_s81sl_slice_lep.sv` ~l.933).
 >    - Under EN<->EN the peer s_7N faults. Under the old EN->WN the peer WN, which is HOST_EN 0, faulted the same way. The rank-asymmetric alternative faults on s_0N / pair B.

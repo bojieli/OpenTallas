@@ -135,7 +135,7 @@ def helper_windows(m, st, sp=SPLIT_L20):
     mtp = max(mtp, sp.get('helper_window_mtp') or 0)
     return dict(keys_die=keys_die, scan=scan, score=round(score, 1), sel_local=round(sel_local, 1), ar=ar, mtp=mtp,
                 own_ar=math.ceil(own), own_mtp=math.ceil(6 * own),
-                q_at=math.ceil(m.HOP), helper_occ=sg[sp['helper']]['occ'], helper_step=sg[sp['helper']]['step'],
+                q_at=hop_cycles(m), helper_occ=sg[sp['helper']]['occ'], helper_step=sg[sp['helper']]['step'],
                 t_group=sg[sp['group']]['t'], t_helper=sg[sp['helper']]['t'], link_q=sp['q_words'],
                 link_topk=2 * sp['topk_words'])
 
@@ -227,6 +227,63 @@ def split_config():
     return sp
 
 
+# ------------------------------------------------------------------------------------------------ off-chip leg
+# OWNER 10-21 (S81 release = DIRECT CABLING, no switch): the off-chip leg of every circuit is its class's D_cycles_max
+# from results/arch/release_rack_1021/hop_latency.json (claude/rack-1021 @5a1c6dcea): TP4 mesh = board trace in one
+# tray, stage hops = passive DAC in a rack / AEC between racks (serpentine; the pipeline-turnaround circuits are the
+# longest, 265, inside stage_hop's max).  It replaces the 453-cycle switched leg (377.6 ns budget) that every crossing
+# of the composition of record carries (results/rtl/xdie_s81_1019/record.json token_compose, 'modelled-PHY' = 453 a
+# crossing).  OFFCHIP = 'switched' rebuilds the previous records (diagnostic).
+SWITCHED_LEG = 453
+D_CYCLES = dict(tp_mesh=251, stage_hop=265, head_hop=257, token_return=251, copyb_in=258, copyb_hop=265, copyb_out=257)
+D_SOURCE = 'results/arch/release_rack_1021/hop_latency.json @5a1c6dcea systems.S81.<class>.D_cycles_max'
+OFFCHIP = 'direct'
+XREC = ROOT / 'results/rtl/xdie_s81_1019/record.json'
+
+
+def leg(cls):
+    return D_CYCLES[cls] if OFFCHIP == 'direct' else SWITCHED_LEG
+
+
+def term_class(t):
+    if 'stage_hop' not in t['pointer']:
+        return 'tp_mesh'
+    return 'head_hop' if '.head.hop' in t['slot'] or t['slot'].endswith('head.hop') else 'stage_hop'
+
+
+def offchip_saving():
+    """per-token (AR) / per-step (MTP) cycles saved on the composition of record when every crossing's 453-cycle
+    switched leg becomes its class's direct leg: exposed = max(0, E - O) per term, E = measured + leg x crossings +
+    priced on-die (unchanged).  Draft-die hops take the stage_hop class (no draft class in hop_latency.json)."""
+    out = {}
+    terms = json.loads(XREC.read_text())['token_compose']['terms']
+    for wl in ('ar', 'mtp'):
+        old = new = 0.0
+        by = {}
+        for t in (x for x in terms if x['workload'] == wl):
+            e = {x['grade']: x['E'] for x in t['E']}
+            phy = e['modelled-PHY']
+            n_cross = phy / SWITCHED_LEG
+            cls = term_class(t)
+            rest = sum(t2 for g, t2 in e.items() if g != 'modelled-PHY')
+            eo = max(0.0, rest + phy - t['O'])
+            en = max(0.0, rest + n_cross * leg(cls) - t['O'])
+            old += eo
+            new += en
+            b = by.setdefault(cls, dict(crossings=0.0, saved=0.0))
+            b['crossings'] += n_cross if eo > 0 else 0
+            b['saved'] += eo - en
+        out[wl] = dict(T_xdie_switched=round(old, 1), T_xdie_now=round(new, 1), saved=round(old - new, 1),
+                       by_class={k: dict(crossings=round(v['crossings'], 1), saved=round(v['saved'], 1))
+                                 for k, v in by.items()})
+    return out
+
+
+def hop_cycles(m):
+    """stage-to-stage offset hop of the stage model (HOP = the 10-09 stage hop class incl. the switched leg)"""
+    return math.ceil(m.HOP) - (SWITCHED_LEG - leg('stage_hop'))
+
+
 def stage_windows(m):
     """per stage group: span (single-user, cycles), occ (one position held, 1 job context), step (one MTP step,
     6 verify positions with the shared index read), start offset t in the reference pass, copies"""
@@ -237,13 +294,18 @@ def stage_windows(m):
         span, occ, step = (math.ceil(o[k]) for k in ('span', 'occ', 'step'))
         out.append(dict(id=g['id'], label=g['label'], t=t, span=span, occ=occ, step=step,
                         copies=2 if g['id'] in DUP else 1, idx=g['idx_score_cycles'] > 0))
-        t += span + math.ceil(m.HOP)
+        t += span + hop_cycles(m)
     return out
 
 
 def design(m):
     d = m.s81_design('MU-S81 owner config: B3 + 8 duplicated index-attention groups', shard=m.sh_all,
                      expert_imb=m.IMB_BAL, mtp_share=True, repl={g: 2 for g in DUP})
+    sv = offchip_saving()
+    if OFFCHIP == 'direct':       # the period of record minus the direct-cabling saving of the composition
+        d = dict(d, T_ar_switched=d['T_ar'], T_mtp_switched=d['T_mtp'], T_ar=d['T_ar'] - sv['ar']['saved'],
+                 T_mtp=d['T_mtp'] - sv['mtp']['saved'])
+    d['offchip'] = dict(mode=OFFCHIP, switched_leg=SWITCHED_LEG, d_cycles=D_CYCLES, source=D_SOURCE, saving=sv)
     return d
 
 
@@ -323,7 +385,11 @@ CIRCUITS = [
 LANE_COUNT = dict(serdes=10, ucie=0, lane_pair_endpoints=5, circuits=5, reserved_serdes_slots=2,
                   copy_a_pairs=4, pair_b=1, note='8 copy-A SerDes (4 endpoints x pair A) + 2 pair-B SerDes on s_0N')
 RX_JIT = 2             # fluid crossing model: every landing lies in [deadline - 2, deadline] (XDIE-S81-MU, win_check)
-X_FLAT = 563           # fixed crossing incl. the die lane legs (tb_xdie_s81_2 LEG 1)
+X_FLAT = 563           # fixed crossing incl. the die lane legs (tb_xdie_s81_2 LEG 1), with the 453 switched leg
+
+
+def x_flat(cls):
+    return X_FLAT - SWITCHED_LEG + leg(cls)
 HOP_PORT = 's_0N'      # 'es' = pre-LINK5 fold (diagnostic only)
 TP_EPS = ('s_0S', 's_7S', 's_7N')
 
@@ -351,8 +417,9 @@ def windows(st, user, shift, kind, col):
         else:
             ws.append((f"link.{g['id']}.{cp}", h0, h0 + H))                     # s_0N pair A, stage NEXT
         if n is not None:
-            r0 = h0 + X_FLAT
+            r0 = h0 + x_flat('copyb_in' if cpn == 'B' and n['copies'] > 1 else 'stage_hop')
             if n['copies'] == 1 and g['copies'] > 1 and cp == 'B':
+                r0 = h0 + x_flat('copyb_out')
                 ws.append((f"rx.{n['id']}.{cpn}.rsv", r0 - RX_JIT, r0 + H))
             else:
                 ws.append((f"rx.{n['id']}.{cpn}.s_0N.B", r0 - RX_JIT, r0 + H))  # s_0N pair B, stage PREV
@@ -480,6 +547,43 @@ def bases(st, users, col, svc=None):
     return tabs, sb
 
 
+NB_WIN = 80             # lead 10-21: s_0N keeps NB 80 (existing lep / land masters); h = 4 back-to-back tag windows
+H_BEATS = 320
+
+
+def hop_land_plan(st, cal, mode):
+    """the 320-beat h as 4 back-to-back 80-beat tag windows (4 mu_c a hop, 4 cycles before each window's first beat).
+    land bit: a window may cut through (land 0) iff its first beat reaches the receiving stage n after the previous
+    user's window on n has ended: per-copy spacing - occupancy(n) >= hop_cycles - crossing (the h's first beat leads
+    the receiver's stage start by that much).  Otherwise land 1, and with the landing leaf's NS = 1 slot (closed land
+    view 263e13fc3) the slot must drain / replay before the next window fills -- impossible for 4 back-to-back windows
+    of one h, so every such group is listed as a FAULT."""
+    if not cal['S']:
+        return None
+    lead = HOP_NOW - x_flat('stage_hop')
+    rows, bad = [], []
+    for i, g in enumerate(st[1:], 1):
+        L = g['occ'] if mode == 'ar' else g['step']
+        sp = cal['S'] * (2 if g['copies'] > 1 else 1)
+        margin = sp - L - lead
+        rows.append((margin, g['id']))
+        if margin < 0:
+            bad.append(g['id'])
+    mn = min(rows)
+    return dict(windows_per_hop=H_BEATS // NB_WIN, beats_per_window=NB_WIN, mu_c_per_hop=H_BEATS // NB_WIN,
+                window_spacing_beats=NB_WIN, ab=0, land=0 if not bad else 'per group',
+                cut_through_margin_min=round(mn[0], 1), at=mn[1], groups_needing_land=bad,
+                tx_delay_fix=dict(per_group={g: round(-mg, 1) for mg, g in rows if mg < 0},
+                                  total=round(sum(-mg for mg, _ in rows if mg < 0), 1),
+                                  note='alternative to land 1: hold the h TX on the sender until n is free (each of '
+                                       'these groups\' stage start moves by its deficit; upper bound on the added '
+                                       'period); or a landing leaf with NS >= 4 (one whole 320-beat h)') if bad else None,
+                result='PASS (every hop window cuts through, land 0; NS 1 landing slot unused by stage hops)'
+                if not bad else 'FAULT (land 1 with NS 1 cannot hold 4 back-to-back windows)',
+                rule='land 0 iff spacing(n) - occ(n) >= hop - crossing; the 4 windows of one h are one user\'s, back '
+                     'to back on s_0N pair A (non-h beat inside a window / overlapping windows = lep sticky fault)')
+
+
 def record(mode, m, st, d, cal, svc=None):
     users = cal['users']
     bad, nres = collisions(st, users, cal['P'], cal['col'])
@@ -501,6 +605,8 @@ def record(mode, m, st, d, cal, svc=None):
     agg = n_main * per_user + (cal.get('fillers', 0) * m.F / cal['P'] if mode == 'mtp' else 0.0)
     rec = dict(schema=SCHEMA, lane='MU-S81', mode=mode, grade='modelled (exact calendar arithmetic on the S81-BALANCE '
                'stage model of record; measured by MU.TOK)',
+               offchip=dict(d['offchip'], T_switched=round(d.get(f'T_{mode}_switched', d[f'T_{mode}']), 1),
+                            T_now=round(d[f'T_{mode}'], 1)),
                config=dict(dup_groups=list(DUP), dup_layers=DUP_LAYER, dies=d['dies'], stacks=d['stacks'],
                            total_mm2=d['total_mm2'], model_users=cal['n_model'], model_agg_ar=d['agg_ar'],
                            model_agg_mtp=d['agg_mtp']),
@@ -519,11 +625,12 @@ def record(mode, m, st, d, cal, svc=None):
                circuits=dict(rule='S81-LINK5 (owner 10-21 06:00): 5 static circuits a stage die, stage hop on its own '
                                   's_0N circuit (1 crossing), d+2 TP on one EN<->EN circuit', per_die=CIRCUITS,
                              lanes=LANE_COUNT, hop_port='s_0N pair A TX -> successor s_0N pair B RX',
-                             hop_window_ab=0, crossing_flat=X_FLAT, rx_jitter=RX_JIT,
+                             hop_window_ab=0, crossing_flat={c: x_flat(c) for c in ('stage_hop', 'copyb_in', 'copyb_out')}, rx_jitter=RX_JIT,
                              link_resources=sorted(r for r in nres if r.startswith(('link.', 'rx.'))).__len__(),
                              ab_rule='every stage-hop TX window opens with ab 0 (pair A); no ab 1 window on any s_0N '
                                      'endpoint -> s_0N pair A RX carries link layer only -> no pair-A / pair-B '
                                      'co-release into ri (sticky fault) by construction',
+                             hop_windows=hop_land_plan(st, cal, mode),
                              tp_ports='s_0S / s_7S / s_7N carry TP only (no h window): their lep ports are held by '
                                       'the stage-group window (brute force on <g>.<cp>)'),
                stage_model=dict(source='results/arch/s81_balance_1018/compute.py group_occ (B3, IMB_BAL)',
@@ -540,6 +647,8 @@ def build(mode, users=None, fillers=None, split=False):
     if sp:
         apply_split(m, sp)
     st = stage_windows(m)
+    global HOP_NOW
+    HOP_NOW = hop_cycles(m)
     d = design(m)
     svc = None
     p = OUT / 'svc_bases.json'
@@ -548,8 +657,14 @@ def build(mode, users=None, fillers=None, split=False):
     cal = calendar_ar(m, st, d, users) if mode == 'ar' else calendar_mtp(m, st, d, users, fillers)
     rec = record(mode, m, st, d, cal, svc)
     if split:
-        rec['l20_split'] = dict(config=sp, decision='coordinator 0li (HANDOFF 10-19 ~15:45)',
-                                check=split_check(m, st, cal['users'], cal['P'], cal['col'], mode, sp))
+        chk = split_check(m, st, cal['users'], cal['P'], cal['col'], mode, sp)
+        # MTP fillers are placed without the helper windows: drop fillers (last first) until the helper check passes
+        # (direct cabling 10-21: the shorter period leaves 3 filler slots, the helper S030 holds only 1)
+        while mode == 'mtp' and fillers is None and chk['result'] != 'PASS' and cal.get('fillers', 0) > 0:
+            cal = calendar_mtp(m, st, d, users, cal['fillers'] - 1)
+            rec = record(mode, m, st, d, cal, svc)
+            chk = split_check(m, st, cal['users'], cal['P'], cal['col'], mode, sp)
+        rec['l20_split'] = dict(config=sp, decision='coordinator 0li (HANDOFF 10-19 ~15:45)', check=chk)
         if rec['l20_split']['check']['result'] != 'PASS':
             rec['lemma']['brute_force']['result'] = 'FAULT'
     return rec
@@ -565,12 +680,15 @@ def main(argv=None):
     ap.add_argument('--phase-q', type=int, default=4, help='shift / period quantum (4 = ot_dsdv_fixed_issue start phase)')
     ap.add_argument('--hop-port', default='s_0N', choices=('s_0N', 'es'),
                     help='es = the pre-LINK5 fold (h on the ES TP endpoint): delta report only, never written')
+    ap.add_argument('--offchip', default='direct', choices=('direct', 'switched'),
+                    help='switched = the pre-10-21 453-cycle switch leg (delta report only, never written)')
     ap.add_argument('--l20-split', action='store_true', help='S81-L20SPLIT (0li): S029 keys over 20 dies (+ S030 '
                     'helpers, measured reader) -> calendar_<mode>_l20split.json with the helper-die check')
     a = ap.parse_args(argv)
-    global PHASE_Q, HOP_PORT
+    global PHASE_Q, HOP_PORT, OFFCHIP
     PHASE_Q = a.phase_q
     HOP_PORT = a.hop_port
+    OFFCHIP = a.offchip
     modes = [a.mode] if a.mode else ['ar', 'mtp']
     rc = 0
     for mode in modes:
@@ -579,7 +697,9 @@ def main(argv=None):
         if a.l20_split:
             f = f.with_name(f.stem + '_l20split.json')
         txt = json.dumps(rec, indent=1) + '\n'
-        if HOP_PORT == 'es':
+        if OFFCHIP != 'direct':
+            print(f"{mode} (switched 453-cycle leg, diagnostic, not written)")
+        elif HOP_PORT == 'es':
             bf = rec['lemma']['brute_force']
             print(f"{mode} (pre-LINK5 fold, diagnostic, not written): {bf['n_collisions']} collisions "
                   f"{sorted({c['resource'] for c in bf['collisions']})[:8]}")
