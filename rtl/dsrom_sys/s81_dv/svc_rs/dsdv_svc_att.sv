@@ -87,6 +87,7 @@
 // wrapper is wires only (existing users unchanged).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_att_core #(
+    parameter integer RESET_PROFILE = 0,
     parameter integer MUT = 0,
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
@@ -107,6 +108,7 @@ module dsdv_svc_att_core #(
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
+    input wire [511:0] reset_leaf=512'd0,
     input  wire [3:0]           sid,
     input  wire [3:0]           tile,
     input  wire [7:0]           gd,
@@ -600,9 +602,9 @@ module dsdv_svc_att_core #(
 `endif
     ot_hdc_v41x_attn_s #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
                          .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
-                         .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
+                         .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX), .TR_RESET_PROFILE(RESET_PROFILE),
                          .SC_CRED(0), .PV_CRED(0), .TEXT(TEXT), .TLX(TLX), .TXD(TXD), .NTP(NTP)) u_eng (
-        .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
+        .clk(clk), .rst_n(rst_n), .reset_tr_leaf_i(reset_leaf[255:0]), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(1'b0),

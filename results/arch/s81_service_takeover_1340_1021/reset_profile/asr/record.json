@@ -1,0 +1,29 @@
+{
+  "status": "PARTIAL_SOURCE_COMPONENT_PASS_NOT_WHOLECORE",
+  "actual_asr_unit": "oth-ubuntu-1619295-1792621540",
+  "actual_controller_source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_glue.sv dsdv_svc_rs_rl",
+  "semantics": "LP2+plainforest9=assert11C; identical per-leaf ASR2 release13C. Assertion and deassertion are different contracts.",
+  "subcycle_assert_reassert_checks": 1942,
+  "leaves": 512,
+  "errors": 0,
+  "actual_transpose_checks": 4658,
+  "actual_transpose_vectors": 18632,
+  "collision_edges": 1995,
+  "reset_age_checks": 4800,
+  "reset_age_errors": 0,
+  "withdrawn": "Prior plain13 reference passes were an incorrect actual-u_rl assumption; preserved as diagnostics, never actual integration qualification. Initial missing SRAM helper shipping and invalid -j4 CLI failures preserved.",
+  "source_scope": "Four actual G4 D32/TD32/NL4 transpose controllers only;4224 reset contacts.512 leaves/730 plainFF+1024 ASR FF; unused leaves may optimize. No data/state edge or selected external ATT ABI change. Other reset/tag/math remain unqualified.",
+  "live": {
+    "actual_LP_lint": "1624852-1792621580 ep7 mem96",
+    "actual_ATT_golden": "source staged src_profile_att; terminal pending"
+  },
+  "hashes": {
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv": "547fb97a5061e590a9749f3a7d8f57b5aa4861291fc01e1dad85aa4797cd1cdd",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv": "628b3b5de4b7d669d3fa498d60579ecd66291e2d6b0913a3f098528ba652b23d",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "d85c1f458286c3574d3e36441618601c0e7ab027be6ed2e75af5db22623a9369",
+    "rtl/dsrom_sys/s81_dv/svc_rs/ot_s81svc_reset9_n32.sv": "125ef12dad8704190ce086d7ab49e35385b143f192c587fa22322cf6e4c6c380",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att_reset9.sv": "417d968d6baf230fd03d20695689ec05983827c730bb968639b27604690cb7f3",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_attw1_r9.sv": "d9205908c2b6a3ab6a070de90b5f4404ba237f09655e3476736f030c67de584a",
+    "rtl/dsrom_sys/s81_dv/svc_rs/attw/lp/dsdv_svc_attw_n1_r9_lp.sv": "e2ee4dff8d64b33749a2ea56b1ed1b759d8059088bb334572ed614e3f69d772d"
+  }
+}

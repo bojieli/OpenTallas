@@ -32,7 +32,7 @@
       "roles": 0
     }
   },
-  "integration_plan": "Replace nine existing same-clock plain-pad edges. LP C current1+3+7=11; use existing Croot1 +local1 +forest9=11. T0 keeps actual1C+10T0 sequence using Croot1+local1T0+forest9T0. Both assertion/release ages preserved, no async-shortcut relay. Landing resets stay on original region3 path.",
+  "integration_plan": "PRIOR plain delay actual-integration proposal WITHDRAWN before qualification: actual u_rl has ASYNC assertion/2-edge release. Source successor LP2 +forest9 => assertion11C, per-leaf exactASR2=>release13C. T0 and othercore reset unchanged. Partial transpose controls only; rest remains OPEN.",
   "open": [
     "Actual internal child/caller early9 routing and per-state leaf use",
     "Remaining core reset/control/tag distribution",

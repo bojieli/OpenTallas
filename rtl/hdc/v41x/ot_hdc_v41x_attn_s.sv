@@ -231,6 +231,7 @@ module ot_hdc_v41x_attn_s #(
                                        //    registered operands; LAT 5: ot_hdc_fp32_add_f12_l5x, operand mux in front)
     parameter integer TRX = 0,         // 1 (REPL >= 1): transposers with per-element one-hot read selects and per-row
                                        //    one-hot write enables (ot_hdc_v41x_attn_tr_x; same cycles)
+    parameter integer TR_RESET_PROFILE = 0,
     parameter integer MFAN = 0,        // 1: the block merges with per-head control copies (ot_hdc_v41x_attn_merge_x;
                                        //    +1 cycle on p.v results only)
     parameter integer NARROW = 0,      // 1: block counters (load / fill / issue / filled / count) BKW bits wide, not
@@ -263,6 +264,7 @@ module ot_hdc_v41x_attn_s #(
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
+    input wire [255:0] reset_tr_leaf_i=256'd0,
     // job
     input  wire                   job_v,
     input  wire [15:0]            job_t,
@@ -303,6 +305,7 @@ module ot_hdc_v41x_attn_s #(
     output wire [TX_NT*TXI-1:0] tx_i,
     input  wire [TX_NT*TXO-1:0] tx_o
 );
+    initial if(TR_RESET_PROFILE && (D!=32||TD!=32||NL!=4))$error("reset profile requires actualG4D32/TD32/NL4");
     localparam integer S = D / TD;
     localparam integer NT = NL * S;
     localparam integer G = D / 32;
@@ -795,8 +798,9 @@ module ot_hdc_v41x_attn_s #(
                     assign w_gx = w_g;
                     assign qk_x = qk_ib[gk*TD*18 +: TD*18];
                 end
-                ot_hdc_v41x_attn_tr_x #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32)) u_tr (
+                ot_hdc_v41x_attn_tr_x #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .RESET_SPLIT(TR_RESET_PROFILE)) u_tr (
                     .clk(clk), .rst_n(rst_n),
+                    .reset_leaf_i(TR_RESET_PROFILE?reset_tr_leaf_i[(gk%4)*64+:64]:64'd0),
                     .w_en_i((XD != 0) ? fill_wr : (fl_go && ((NSTAGE == 2) || !qk_go))),
                     .w_half_i((XD != 0) ? fill_blk_d[0] : fl_blk[0]),
                     .w_cnt_i((XD != 0) ? fill_cnt_d : fl_cnt),
@@ -1179,10 +1183,12 @@ module ot_hdc_v41x_attn_tr_x #(
     parameter integer TD = 64,
     parameter integer DPT = 16,
     parameter integer NL = 4,
+    parameter integer RESET_SPLIT = 0,
     parameter integer XOFF = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input wire[63:0] reset_leaf_i=64'd0,
     input  wire              w_en_i,
     input  wire              w_half_i,
     input  wire [7:0]        w_cnt_i,
@@ -1196,10 +1202,11 @@ module ot_hdc_v41x_attn_tr_x #(
     output wire [TD*18-1:0]  eib
 );
 `ifdef OT_SVC_TR_SRAM
-    ot_hdc_v41x_attn_tr_sram #(.TD(TD),.DPT(DPT),.NL(NL),.XOFF(XOFF)) u_sram (
-        .clk(clk),.rst_n(rst_n),.w_en_i(w_en_i),.w_half_i(w_half_i),.w_cnt_i(w_cnt_i),
+    ot_hdc_v41x_attn_tr_sram #(.TD(TD),.DPT(DPT),.NL(NL),.XOFF(XOFF),.RESET_SPLIT(RESET_SPLIT)) u_sram (
+        .clk(clk),.rst_n(rst_n),.reset_leaf_i(reset_leaf_i),.w_en_i(w_en_i),.w_half_i(w_half_i),.w_cnt_i(w_cnt_i),
         .w_pad_i(w_pad_i),.w_g(w_g),.r_half_i(r_half_i),.r_c_i(r_c_i),.sel_i(sel_i),.qk_ib(qk_ib),.col(col),.eib(eib));
 `else
+    initial if(RESET_SPLIT)$error("reset profile requires actual transpose SRAM");
     localparam integer GW = 265;
     localparam integer NS = 2 * DPT;          // read positions (half, dim)
     localparam integer NR = 2 * TD;           // stored rows (half, row)

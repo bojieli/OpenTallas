@@ -26,3 +26,18 @@ module ot_s81svc_reset9_n32 #(parameter integer MUT=0)(
   end
  end
 endmodule
+
+// Exact controller u_rl reset semantics after nine plain landing edges:
+// asynchronous assertion, two-clock deassertion. No initialized values assumed.
+module ot_s81svc_reset9_rl2_n32(input wire clk,reset_early9,output wire[511:0]reset_leaf);
+ wire[511:0]pre;
+ ot_s81svc_reset9_n32 u_pre(.clk(clk),.reset_early9(reset_early9),.reset_leaf(pre));
+ ot_s81svc_reset_rl2_n32 u_leaf(.clk(clk),.pre(pre),.reset_leaf(reset_leaf));
+endmodule
+module ot_s81svc_reset_rl2_n32(input wire clk,input wire[511:0]pre,output wire[511:0]reset_leaf);
+ for(genvar k=0;k<512;k=k+1)begin:g_leaf
+  (* keep = "true" *)reg[1:0]rs;
+  always@(posedge clk or negedge pre[k])if(!pre[k])rs<=2'b00;else rs<={rs[0],1'b1};
+  assign reset_leaf[k]=rs[1];
+ end
+endmodule
