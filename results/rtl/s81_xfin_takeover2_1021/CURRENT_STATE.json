@@ -1,0 +1,68 @@
+{
+  "updated": "2026-10-21T15:09:46.759360-07:00",
+  "owner": "CODEX-S81-XFV-1021 /root/s81_lead/slice_collect",
+  "qualified_FP": {
+    "source": "560abe5d2",
+    "receipt": "282ef8821",
+    "MUL": "LAT5 CUTS01101010 nativePASS32 +2Mseed12345 bad0/badr0",
+    "ADD": "LAT6 CUTS1101011, modulebyteidentical96 PASS28+2M",
+    "reset": "raw2edges early; internal6samephase2edge leaves",
+    "ENG_parent_receipt": "2358d5666/7c0f9b771 allpositive+6causalsPASS; separateENGnativepending"
+  },
+  "current_whole_source": {
+    "source": "3eb79fa3e",
+    "latest_evidence": "ac53e65bb",
+    "qualification": "source-only go ownership successor; fleetlintPASS0, fullproof/native pending",
+    "no_adoption": true
+  },
+  "active_XFIN": {
+    "native": {
+      "source": "560abe5d2",
+      "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r20-1021",
+      "local_pid": 3756329,
+      "unit": "oth-ubuntu-1410224-1792620024",
+      "mem_gib": 64,
+      "log": "scratch/codex-s81-xfin-takeover2-1021/r20_native.log"
+    },
+    "mechanism": {
+      "source": "40eb5678a",
+      "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r18-1021",
+      "local_pid": 3725689,
+      "unit": "oth-ubuntu-1375622-1792619679",
+      "mem_gib": 32,
+      "log": "scratch/codex-s81-xfin-takeover2-1021/r18_eng_base_s1.log"
+    }
+  },
+  "prior_measured": {
+    "source46e": "all3fullpositivegoldensPASS exactNORM234/13+ENG526/464+542/362 sealedac53; no newer source/causal promotion",
+    "source_a980": "all7mechanismPASS775, authoritative nativeFAIL155/920 dc11",
+    "r9native": "16GiB OOMbeforeNETLIST noverdict",
+    "bench8and16": "MEMCGOOM infrastructures; exact32continuationPASS"
+  },
+  "VS": {
+    "source": "8f57521dc",
+    "evidence": "839f6997e",
+    "FB_job": "s81sl_vs_n32f-n32f-71ac7943d",
+    "submission_source": "71ac7943d",
+    "state": "RUNNING route; all12benchesok",
+    "MAIN": "terminalclockFAIL129.5/123.1ps preservedf4e364ef6; no retry"
+  },
+  "XGT_XO": {
+    "source": "f5f35855d",
+    "mechanism_receipt": "09d05be9c",
+    "actual_native_receipt": "7800bff3c BOTH PASS32/0/0",
+    "live_pids": [
+      3256858,
+      3256860
+    ],
+    "stage": "ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/s81sl_xgtxo{,_b}-20261021-133256",
+    "warning": "localJSON earlierfail isstale; require currentterminalsource/path/mtime; no CLOSED claim"
+  },
+  "next_actions": [
+    "Collect current native/mechanism snapshots without mutation",
+    "Use actual current native failures to finish bounded structural repair; latergo3eb is not qualified",
+    "Current exact whole-source goldens+causals/native required before XFINphysicalgate;criticalprefix rootreview",
+    "Collect terminal XGT views and reviewPNG/submit per actual policy; preserve livejobs",
+    "Collect VS daemon terminal closure; no MAIN retry"
+  ]
+}
