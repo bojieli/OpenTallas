@@ -60,7 +60,7 @@ class Transport(unittest.TestCase):
         for packet in self.record['peers']:
             link=next(x for x in packet['legs'] if x['kind']=='end_link')
             delta=(link['destination_rank']-link['source_rank'])%4
-            self.assertEqual((link['source'],link['destination']),{1:(14,0),2:(15,1),3:(0,14)}[delta])
+            self.assertEqual((link['source'],link['destination']),{1:(14,0),2:(15,15),3:(0,14)}[delta])
             self.assertIsNone(link['arrival_age'])
             count+=1
         self.assertEqual(count,480)

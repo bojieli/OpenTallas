@@ -6757,8 +6757,8 @@
    "holds": true
   },
   "brute_force": {
-   "resources": 135,
-   "windows": 1309,
+   "resources": 217,
+   "windows": 1947,
    "collisions": [],
    "n_collisions": 0,
    "result": "PASS"
@@ -6769,6 +6769,70 @@
    "result": "PASS",
    "note": "user 0 runs the single-user schedule unshifted on copy A: its windows are the single-user windows, and no other user touches them (brute_force) -> its rate and cycle trace are the single-user ones"
   }
+ },
+ "circuits": {
+  "rule": "S81-LINK5 (owner 10-21 06:00): 5 static circuits a stage die, stage hop on its own s_0N circuit (1 crossing), d+2 TP on one EN<->EN circuit",
+  "per_die": [
+   {
+    "ep": "s_0S",
+    "pair": "A",
+    "serdes": "lk_WS0/lk_WS1",
+    "peer": "stage k, rank r-1, s_7S pair A",
+    "use": "TP d-1 (bidirectional)"
+   },
+   {
+    "ep": "s_7S",
+    "pair": "A",
+    "serdes": "lk_ES0/lk_ES1",
+    "peer": "stage k, rank r+1, s_0S pair A",
+    "use": "TP d+1 (bidirectional)"
+   },
+   {
+    "ep": "s_7N",
+    "pair": "A",
+    "serdes": "lk_EN0/lk_EN1",
+    "peer": "stage k, rank r+2, s_7N pair A",
+    "use": "TP d+2 (ONE bidirectional circuit EN<->EN; d+2 parts land on s_7N RX) + host plane (open, see README)"
+   },
+   {
+    "ep": "s_0N",
+    "pair": "A",
+    "serdes": "lk_WN0/lk_WN1",
+    "peer": "stage k+1, rank r, s_0N pair B",
+    "use": "stage NEXT: h TX, every window ab 0; RX = link layer only"
+   },
+   {
+    "ep": "s_0N",
+    "pair": "B",
+    "serdes": "lk_WN2/lk_WN3 (link_0_4/link_0_5)",
+    "peer": "stage k-1, rank r, s_0N pair A",
+    "use": "stage PREV: h RX -> ri; TX = link layer only"
+   },
+   {
+    "ep": "(reserve)",
+    "pair": "-",
+    "serdes": "link_1_4/link_1_5 (E column B, blockage)",
+    "peer": "copy-A/B pair (unpopulated)",
+    "use": "reserved: copy-B static circuit of the pre/post-group rank dies of the 8 duplicated groups"
+   }
+  ],
+  "lanes": {
+   "serdes": 10,
+   "ucie": 0,
+   "lane_pair_endpoints": 5,
+   "circuits": 5,
+   "reserved_serdes_slots": 2,
+   "copy_a_pairs": 4,
+   "pair_b": 1,
+   "note": "8 copy-A SerDes (4 endpoints x pair A) + 2 pair-B SerDes on s_0N"
+  },
+  "hop_port": "s_0N pair A TX -> successor s_0N pair B RX",
+  "hop_window_ab": 0,
+  "crossing_flat": 563,
+  "rx_jitter": 2,
+  "link_resources": 149,
+  "ab_rule": "every stage-hop TX window opens with ab 0 (pair A); no ab 1 window on any s_0N endpoint -> s_0N pair A RX carries link layer only -> no pair-A / pair-B co-release into ri (sticky fault) by construction",
+  "tp_ports": "s_0S / s_7S / s_7N carry TP only (no h window): their lep ports are held by the stage-group window (brute force on <g>.<cp>)"
  },
  "stage_model": {
   "source": "results/arch/s81_balance_1018/compute.py group_occ (B3, IMB_BAL)",

@@ -11,16 +11,81 @@
   "die_mm2": 799.2,
   "total_mm2": 478504,
   "switch_ports_added": {
-   "serdes": 480,
-   "note": "UCIe lanes stay inside the two-die package"
+   "serdes": 800,
+   "note": "0 UCIe: every die link leaves the package through the switch"
   },
   "extra_circuits_on_existing_dies": {
    "circuits": 64,
-   "die_variant": "the 4 rank dies of each pre-group and post-group stage need a die master with +1 SerDes lane pair (2 PHY lanes) and lep_mu (lane face ~4.4k pins): 64 dies, a p4l variant",
-   "note": "+1 tx lane pair on each upstream rank die, +1 rx lane pair on each downstream rank die"
+   "die_variant": "the 4 rank dies of each pre-group and post-group stage populate the 2 reserved SerDes slots (link_1_4/1_5, copy-A/B pair) = a 6th lane pair: 64 dies, a variant of the LINK5 stage die",
+   "note": "+1 tx lane pair on each upstream rank die, +1 rx lane pair on each downstream rank die (the s_0N pair B is the stage PREV circuit and cannot be the copy-B circuit)"
+  },
+  "lanes_per_die": {
+   "serdes": 10,
+   "ucie": 0,
+   "circuits": 5,
+   "reserved_serdes_slots": 2
+  },
+  "circuits_per_die": [
+   {
+    "ep": "s_0S",
+    "pair": "A",
+    "serdes": "lk_WS0/lk_WS1",
+    "peer": "stage k, rank r-1, s_7S pair A",
+    "use": "TP d-1 (bidirectional)"
+   },
+   {
+    "ep": "s_7S",
+    "pair": "A",
+    "serdes": "lk_ES0/lk_ES1",
+    "peer": "stage k, rank r+1, s_0S pair A",
+    "use": "TP d+1 (bidirectional)"
+   },
+   {
+    "ep": "s_7N",
+    "pair": "A",
+    "serdes": "lk_EN0/lk_EN1",
+    "peer": "stage k, rank r+2, s_7N pair A",
+    "use": "TP d+2 (ONE bidirectional circuit EN<->EN; d+2 parts land on s_7N RX) + host plane (open, see README)"
+   },
+   {
+    "ep": "s_0N",
+    "pair": "A",
+    "serdes": "lk_WN0/lk_WN1",
+    "peer": "stage k+1, rank r, s_0N pair B",
+    "use": "stage NEXT: h TX, every window ab 0; RX = link layer only"
+   },
+   {
+    "ep": "s_0N",
+    "pair": "B",
+    "serdes": "lk_WN2/lk_WN3 (link_0_4/link_0_5)",
+    "peer": "stage k-1, rank r, s_0N pair A",
+    "use": "stage PREV: h RX -> ri; TX = link layer only"
+   },
+   {
+    "ep": "(reserve)",
+    "pair": "-",
+    "serdes": "link_1_4/link_1_5 (E column B, blockage)",
+    "peer": "copy-A/B pair (unpopulated)",
+    "use": "reserved: copy-B static circuit of the pre/post-group rank dies of the 8 duplicated groups"
+   }
+  ],
+  "circuits_array": {
+   "tp4_full_mesh_per_group": 6,
+   "stage_per_boundary": 4,
+   "note": "every circuit is one switch crossing; per die 5 = 3 TP endpoints (6 TP circuits x 2 ends / 4 dies) + stage NEXT + stage PREV"
   }
  },
  "reuse": "per the token DAG of record (results/arch/token_path_20261009/ds_rom.json) every layer writes and reads its own rows on its own stage (own_row_write / window_load / pv nodes); what later layers reuse from the owner layers 2/8/14/20 is the top-k selection, which rides the stage h message with the user tag. So copy B needs NO reuse link; the owner copy is addressed by user only through the h message order. Lane MU-S81/SVC confirms on the RTL (svc_bases.json).",
+ "stage_hop": {
+  "circuit": "s_0N pair A (TX, every window ab 0) -> next stage rank r s_0N pair B (RX -> ri)",
+  "crossings": 1,
+  "beats": 321,
+  "E_cycles": 1125,
+  "E_basis": "record token_compose stage_hop: 538 measured + 453 modelled PHY/switch + 134 priced on-die legs (results/rtl/xdie_s81_1019/record.json)",
+  "was": "folded onto the ES TP circuit (tb_xdie_s81 d -> d+1 inside the group): no real circuit to the next stage existed on the 4-endpoint die",
+  "per_token_delta_cycles": 0,
+  "per_token_delta_why": "the composition of record already prices every hop as ONE crossing of 321 beats on one port; LINK5 makes that crossing real at the same cost. MU calendar: the fold had 0 collisions at stage granularity (min AR margin slot - (span + h) = 690.7 cycles, S005), the LINK5 calendar has 0 collisions with the s_0N TX / RX resources"
+ },
  "latency": {
   "copy_a": "unchanged (the latency user is always on copy A: same dies, same circuits)",
   "copy_b_delta_cycles": 0,
@@ -267,7 +332,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S029",
@@ -279,15 +344,15 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S029",
-   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "kind": "copy B internal (TP4 full mesh + intra-group stage hops)",
    "src": "S029.B",
    "dst": "S029.B",
-   "circuits": 60,
-   "form": "identical to copy A on the new dies' own lanes"
+   "circuit_ends": 50,
+   "form": "identical to copy A on the new dies' own lanes (5 lane-pair endpoints a die: 3 TP4 full-mesh ends + stage NEXT + stage PREV; 6 TP circuits a TP4 group = 4 S-ring + 2 EN<->EN)"
   },
   {
    "group": "S020",
@@ -299,7 +364,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S020",
@@ -311,15 +376,15 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S020",
-   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "kind": "copy B internal (TP4 full mesh + intra-group stage hops)",
    "src": "S020.B",
    "dst": "S020.B",
-   "circuits": 60,
-   "form": "identical to copy A on the new dies' own lanes"
+   "circuit_ends": 50,
+   "form": "identical to copy A on the new dies' own lanes (5 lane-pair endpoints a die: 3 TP4 full-mesh ends + stage NEXT + stage PREV; 6 TP circuits a TP4 group = 4 S-ring + 2 EN<->EN)"
   },
   {
    "group": "S011",
@@ -331,7 +396,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S011",
@@ -343,15 +408,15 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S011",
-   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "kind": "copy B internal (TP4 full mesh + intra-group stage hops)",
    "src": "S011.B",
    "dst": "S011.B",
-   "circuits": 60,
-   "form": "identical to copy A on the new dies' own lanes"
+   "circuit_ends": 50,
+   "form": "identical to copy A on the new dies' own lanes (5 lane-pair endpoints a die: 3 TP4 full-mesh ends + stage NEXT + stage PREV; 6 TP circuits a TP4 group = 4 S-ring + 2 EN<->EN)"
   },
   {
    "group": "S002",
@@ -363,7 +428,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S002",
@@ -375,15 +440,15 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S002",
-   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "kind": "copy B internal (TP4 full mesh + intra-group stage hops)",
    "src": "S002.B",
    "dst": "S002.B",
-   "circuits": 60,
-   "form": "identical to copy A on the new dies' own lanes"
+   "circuit_ends": 50,
+   "form": "identical to copy A on the new dies' own lanes (5 lane-pair endpoints a die: 3 TP4 full-mesh ends + stage NEXT + stage PREV; 6 TP circuits a TP4 group = 4 S-ring + 2 EN<->EN)"
   },
   {
    "group": "S034",
@@ -395,7 +460,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S034",
@@ -407,15 +472,15 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S034",
-   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "kind": "copy B internal (TP4 full mesh + intra-group stage hops)",
    "src": "S034.B",
    "dst": "S034.B",
-   "circuits": 60,
-   "form": "identical to copy A on the new dies' own lanes"
+   "circuit_ends": 50,
+   "form": "identical to copy A on the new dies' own lanes (5 lane-pair endpoints a die: 3 TP4 full-mesh ends + stage NEXT + stage PREV; 6 TP circuits a TP4 group = 4 S-ring + 2 EN<->EN)"
   },
   {
    "group": "S040",
@@ -427,7 +492,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S040",
@@ -439,15 +504,15 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S040",
-   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "kind": "copy B internal (TP4 full mesh + intra-group stage hops)",
    "src": "S040.B",
    "dst": "S040.B",
-   "circuits": 60,
-   "form": "identical to copy A on the new dies' own lanes"
+   "circuit_ends": 50,
+   "form": "identical to copy A on the new dies' own lanes (5 lane-pair endpoints a die: 3 TP4 full-mesh ends + stage NEXT + stage PREV; 6 TP circuits a TP4 group = 4 S-ring + 2 EN<->EN)"
   },
   {
    "group": "S046",
@@ -459,7 +524,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S046",
@@ -471,15 +536,15 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S046",
-   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "kind": "copy B internal (TP4 full mesh + intra-group stage hops)",
    "src": "S046.B",
    "dst": "S046.B",
-   "circuits": 60,
-   "form": "identical to copy A on the new dies' own lanes"
+   "circuit_ends": 50,
+   "form": "identical to copy A on the new dies' own lanes (5 lane-pair endpoints a die: 3 TP4 full-mesh ends + stage NEXT + stage PREV; 6 TP circuits a TP4 group = 4 S-ring + 2 EN<->EN)"
   },
   {
    "group": "S052",
@@ -491,7 +556,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S052",
@@ -503,15 +568,15 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.7,
    "occupancy": 0.0306,
-   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+   "form": "copy A: the stage NEXT circuit s_0N pair A -> s_0N pair B (S81-LINK5); copy B: the reserved copy-A/B pair (link_1_4/1_5) = a 6th static circuit on the 4 upstream / 4 downstream rank dies (a destination field is NOT possible: the frozen lane tile link layer is end-to-end per peer pair; user 0 forced to copy A)"
   },
   {
    "group": "S052",
-   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "kind": "copy B internal (TP4 full mesh + intra-group stage hops)",
    "src": "S052.B",
    "dst": "S052.B",
-   "circuits": 60,
-   "form": "identical to copy A on the new dies' own lanes"
+   "circuit_ends": 50,
+   "form": "identical to copy A on the new dies' own lanes (5 lane-pair endpoints a die: 3 TP4 full-mesh ends + stage NEXT + stage PREV; 6 TP circuits a TP4 group = 4 S-ring + 2 EN<->EN)"
   }
  ],
  "calendar": {

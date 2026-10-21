@@ -2,6 +2,52 @@
 >
 > (Superseded) Codex recovery 10-18: the owner target remained 47 AR users on 520 dies; the 46-user calendar was called diagnostic. Current main's S81-SCAND pricing corrections remain authoritative.
 
+> **S81-LINK5 (owner-approved 10-21 06:00): 5 static circuits a stage die; the stage hop gets its own circuit.**
+> The chain plan and calendars now use the real stage die. The stale "6 SerDes + 2 UCIe" p4l count is gone.
+> `dv_mu_calendar.CIRCUITS` holds the circuit table and `chain_plan.json` `array.circuits_per_die` repeats it.
+>
+> **Lanes per die:** 10 SerDes = 5 lane pairs (8 copy-A SerDes + 2 pair-B SerDes on s_0N), 0 UCIe, plus 2 reserved slots.
+>
+> | endpoint | pair | SerDes | peer (die of TP rank r, stage k) | use |
+> |---|---|---|---|---|
+> | s_0S (WS) | A | lk_WS0/WS1 | k.(r-1).s_7S A | TP d-1, bidirectional |
+> | s_7S (ES) | A | lk_ES0/ES1 | k.(r+1).s_0S A | TP d+1, bidirectional |
+> | s_7N (EN) | A | lk_EN0/EN1 | k.(r+2).s_7N A | TP d+2: ONE bidirectional EN<->EN circuit (was 2 one-way EN->WN). The d+2 parts now land on s_7N RX at the E end. Also the host plane (see finding 2) |
+> | s_0N (WN) | A | lk_WN0/WN1 | (k+1).r.s_0N B | stage NEXT: h TX. Every window opens with ab 0. RX carries only the link layer |
+> | s_0N (WN) | B | lk_WN2/WN3 = link_0_4/0_5 | (k-1).r.s_0N A | stage PREV: h RX, merged into ri. TX carries only the link layer |
+> | reserve | - | link_1_4/1_5 (E column B) | copy-A/B pair | blockage. Populated only on the 64 pre/post-group rank dies as the copy-B circuit |
+>
+> Per TP4 group there are 6 TP circuits (4 S-ring + 2 EN<->EN), so every peer is 1 crossing. There are 4 stage circuits per stage boundary. The first stage has no PREV circuit and the head die has no NEXT circuit.
+>
+> **Calendar** (`dv_mu_calendar.py`, records regenerated; slots, shifts, copies and bases are unchanged):
+> - The stage hop leaves the ES TP circuit. Its TX is `link.<g>.<cp>` = s_0N pair A. Its RX is `rx.<n>.<cp>.s_0N.B`, landing 563 cycles later (+-2).
+> - Copy-B hops use `link.<g>.A.rsv` / `rx.<n>.A.rsv`, the reserve pair.
+> - Brute force: AR 8,142 windows and MTP 1,947 windows, 0 collisions. The L20-split records also have 0 collisions with their helper check PASS.
+> - **Pair A and pair B never release into ri together.** Every stage-hop window is ab 0, and no ab 1 window is ever compiled on s_0N. So s_0N pair A RX only ever sees the link layer: the successor's pair B TX carries no ring beat.
+> - s_7N has no pair B (AB_EN 0), so the d+2 RX on s_7N has no merge rule.
+> - The TP endpoints carry no h window any more.
+> - `--hop-port es` rebuilds the old fold as a diagnostic and writes nothing. It also finds 0 collisions at stage granularity: the minimum AR margin, slot - (span + h), is 690.7 cycles at S005.
+>
+> **Compiler:**
+> - `layer_prog/lower_vpx.py`: the d+2 leg in `LEGS` now lands on peer `u_s_7N`, and `STAGE_LEG` = s_0N -> next-stage s_0N.
+> - `layer_prog/final_ffn_transport.py`: the d+2 end link is sid 15 -> 15 (was 15 -> 1).
+>
+> **Per-token cycle delta: 0 cycles, AR and MTP, single-user and MU.**
+> - The composition of record (`results/rtl/xdie_s81_1019/record.json`) already prices each of the 120 stage hops a token as ONE crossing: 321 beats on one port, E = 538 measured + 453 PHY/switch + 134 on-die = 1,125.
+> - That crossing used to have no real circuit; LINK5 provides it at the same cost.
+> - Moving the d+2 RX from W to E keeps the priced on-die leg at 67 cycles an end.
+> - Against the no-hardware fallbacks [MODEL], LINK5 avoids about +135k cycles a token for relaying each hop through a TP peer (120 x 1,125), or about +160k for a TP ring.
+>
+> **Findings for the RTL / XDIE lanes:**
+> 1. s_0N now carries the whole h message on one endpoint, so its lep needs `NB` = 320 (40,960 B / 128 B; was 80 = one quarter per end slice). Otherwise the h ring beats must be funnelled to s_0N on die. The 652-cycle `H_MSG` window still covers 321 beats x 1.335 = 429 lane cycles.
+> 2. **The host plane on s_7N has no host-side peer in any static-circuit plan.**
+>    - s_7N sends THOST/TKD frames (types 3/4). A receiver accepts only ring, HOST and KS frames, so it takes them as a sticky protocol fault (`perr`, `ot_s81sl_slice_lep.sv` ~l.933).
+>    - Under EN<->EN the peer s_7N faults. Under the old EN->WN the peer WN, which is HOST_EN 0, faulted the same way. The rank-asymmetric alternative faults on s_0N / pair B.
+>    - So EN<->EN creates no new conflict, and it is kept. The asymmetric alternative was not taken because it fixes nothing.
+>    - The host plane needs a lead decision: HOST_EN 0 on stage dies with host status carried in-band to a host-attached die, or a host circuit.
+> 3. Copy-B circuits: if the reserve pair is placed on a TP endpoint (copyb_relay_plan's s_0S), its pair-B h RX shares ri with the TP pair-A RX. Then the calendar must keep copy-B h landings (land = 1) out of the TP RX windows, or the reserve pair goes to its own endpoint.
+> 4. `calendar_ar_q4.json` / `calendar_mtp_q4.json` (TOK bench copies) were left as they were. Their slots and shifts equal the records.
+
 # MU-S81 2026-10-18: the S81 multi-user static calendar, chain plan and pricing
 
 Owner decision MU.DECIDE option A (HANDOFF 0is). The coordinator's S81 configuration is:

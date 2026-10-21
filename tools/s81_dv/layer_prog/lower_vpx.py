@@ -144,10 +144,14 @@ def a_rows(rank):
     return list(range(80 * rank, 80 * rank + 80)) + list(range(320 + 32 * rank, 320 + 32 * rank + 32))
 
 
-# TP4 circuits (TOKEN-XDIE-S81 vehicle / p4l plan): d.ES <-> (d+1).WS, d.EN <-> (d+2).WN -> each die sends its own part
-# out of s_0S (W, to d-1's s_7S), s_7S (E, to d+1's s_0S) and s_7N (E, to d+2's s_0N); parts land at s_0S (rank d-1),
-# s_7S (rank d+1), s_0N (rank d+2).
-LEGS = [('u_s_0S', 'W', 'u_s_7S'), ('u_s_7S', 'E', 'u_s_0S'), ('u_s_7N', 'E', 'u_s_0N')]
+# TP4 circuits (S81-LINK5, owner 10-21; dv_mu_calendar.CIRCUITS): d.ES <-> (d+1).WS, d.EN <-> (d+2).EN (ONE
+# bidirectional d+2 circuit; was d.EN -> (d+2).WN) -> each die sends its own part out of s_0S (W, to d-1's s_7S), s_7S
+# (E, to d+1's s_0S) and s_7N (E, to d+2's s_7N); parts land at s_0S (rank d-1), s_7S (rank d+1), s_7N (rank d+2: the
+# E end, so the d+2 part enters the N ring at slice 7 and runs westward; its on-die leg is the E-end leg).
+LEGS = [('u_s_0S', 'W', 'u_s_7S'), ('u_s_7S', 'E', 'u_s_0S'), ('u_s_7N', 'E', 'u_s_7N')]
+# Stage hop (S81-LINK5): h out of s_0N pair A (W, every window ab 0) to the NEXT stage's rank-r s_0N, where it arrives
+# on pair B (merged into ri).  Never on a TP endpoint.
+STAGE_LEG = ('u_s_0N', 'W', 'u_s_0N')
 
 BENCH_VP = 'results/rtl/s81_layer_tput_1018/compiler/bench_vp'
 # (10-18: the former GAP_PRE / old GAP_POST RTL gaps are fixed by vp op 7 NORMR + the G-unit POST row order, bench_vp)
@@ -251,6 +255,9 @@ def lower(die, op, ctx):
         st = 'PARTIAL' if own else 'GAP'
         gap = GAP_PLACE if own else dict(GAP_PLACE, missing='same endpoint ABI as attn.a_allgather (bench_vpx); the '
                                          'production rows of this op are not placed')
+        if re.search(r'substage_hop\d+$', name):
+            gap = dict(gap, port=f'{STAGE_LEG[0]} pair A -> next stage {STAGE_LEG[2]} pair B (S81-LINK5 stage NEXT; '
+                                 'TX window ab 0)')
         return dict(status=st, unit='end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive', insts=insts,
                     gap=gap, rows=rows, templates=templates, events=events, bench=BENCH)
     if name.endswith('allreduce'):

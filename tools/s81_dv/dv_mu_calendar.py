@@ -286,16 +286,76 @@ def copy_ok(shifts, P, win, col):
     return True
 
 
+# ------------------------------------------------------------------------------------------------ S81-LINK5 circuits
+# Owner 10-21 06:00 (lane S81-LINK5): every S81 stage die has 10 SerDes = 5 lane-pair endpoints, 0 UCIe, + 2 reserved
+# SerDes slots (E column B link_1_4/1_5 = the copy-A/B pair, blockage).  Fixed static circuits, no destination field
+# (the lane tile's link layer is end-to-end per peer pair).  Die of TP rank r (mod 4), stage k:
+#   s_0S pair A <-> k.(r-1).s_7S A     TP d-1
+#   s_7S pair A <-> k.(r+1).s_0S A     TP d+1
+#   s_7N pair A <-> k.(r+2).s_7N A     TP d+2: ONE bidirectional circuit EN<->EN (was 2 one-way EN->WN circuits); the
+#                                      d+2 parts now land at the E end (s_7N RX), not at s_0N
+#   s_0N pair A  -> (k+1).r.s_0N B     stage NEXT: the h message TX (every stage-hop window opens with ab 0 = pair A;
+#                                      user 0 is forced to A in hardware); its RX direction carries link layer only
+#   s_0N pair B <-  (k-1).r.s_0N A     stage PREV: h RX, merged into ri (ot_s81sl_slice_lep.sv relp[1]); its TX
+#                                      direction carries link layer only (no ab 1 window is ever compiled on s_0N)
+# Calendar resources this adds to the brute force (each a lep port, a calendar resource by the lep contract):
+#   link.<g>.<cp>        s_0N pair A TX of group g copy cp (the h of every user g hands to copy A / a non-dup group)
+#   link.<g>.<cp>.rsv    the copy-B circuit TX (reserve pair) of a non-dup group g whose successor's user is on copy B
+#   rx.<n>.<cp>.s_0N.B   s_0N pair B RX of the receiving group n (h landing / cut-through into ri), +- RX_JIT
+#   rx.<n>.<cp>.rsv      the copy-B circuit RX of a non-dup group n fed by a copy-B predecessor
+# Pair-A / pair-B co-release on s_0N (a sticky fault) cannot happen: pair A RX of s_0N only ever sees the successor's
+# pair-B TX, which carries no ring beat (no ab 1 window on s_0N, asserted in record()).  The d+2 RX on s_7N has no
+# pair B (AB_EN 0), so no merge rule applies there; the TP endpoints s_0S / s_7S / s_7N carry no h window any more.
+# HOP_PORT = 'es' rebuilds the pre-LINK5 fold (h TX on the ES TP endpoint, TP lep ports held over the stage window)
+# for the delta report only (dv_mu_calendar.py --hop-port es; never written as a record).
+CIRCUITS = [
+    dict(ep='s_0S', pair='A', serdes='lk_WS0/lk_WS1', peer='stage k, rank r-1, s_7S pair A', use='TP d-1 (bidirectional)'),
+    dict(ep='s_7S', pair='A', serdes='lk_ES0/lk_ES1', peer='stage k, rank r+1, s_0S pair A', use='TP d+1 (bidirectional)'),
+    dict(ep='s_7N', pair='A', serdes='lk_EN0/lk_EN1', peer='stage k, rank r+2, s_7N pair A',
+         use='TP d+2 (ONE bidirectional circuit EN<->EN; d+2 parts land on s_7N RX) + host plane (open, see README)'),
+    dict(ep='s_0N', pair='A', serdes='lk_WN0/lk_WN1', peer='stage k+1, rank r, s_0N pair B',
+         use='stage NEXT: h TX, every window ab 0; RX = link layer only'),
+    dict(ep='s_0N', pair='B', serdes='lk_WN2/lk_WN3 (link_0_4/link_0_5)', peer='stage k-1, rank r, s_0N pair A',
+         use='stage PREV: h RX -> ri; TX = link layer only'),
+    dict(ep='(reserve)', pair='-', serdes='link_1_4/link_1_5 (E column B, blockage)', peer='copy-A/B pair (unpopulated)',
+         use='reserved: copy-B static circuit of the pre/post-group rank dies of the 8 duplicated groups'),
+]
+LANE_COUNT = dict(serdes=10, ucie=0, lane_pair_endpoints=5, circuits=5, reserved_serdes_slots=2,
+                  copy_a_pairs=4, pair_b=1, note='8 copy-A SerDes (4 endpoints x pair A) + 2 pair-B SerDes on s_0N')
+RX_JIT = 2             # fluid crossing model: every landing lies in [deadline - 2, deadline] (XDIE-S81-MU, win_check)
+X_FLAT = 563           # fixed crossing incl. the die lane legs (tb_xdie_s81_2 LEG 1)
+HOP_PORT = 's_0N'      # 'es' = pre-LINK5 fold (diagnostic only)
+TP_EPS = ('s_0S', 's_7S', 's_7N')
+
+
 # ------------------------------------------------------------------------------------------------ brute-force lemma
 def windows(st, user, shift, kind, col):
     """every resource window of one user in one period: (resource, start, end)"""
     ws = []
-    for g in st:
+    H = H_MSG * (6 if kind == 'mtp' else 1)
+    for i, g in enumerate(st):
         L = g['occ'] if kind in ('ar', 'latency', 'filler') else g['step']
         cp = col.get(g['id'], {}).get(user, 'A') if g['copies'] > 1 else 'A'
         s = shift + g['t']
         ws.append((f"{g['id']}.{cp}", s, s + L))
-        ws.append((f"link.{g['id']}.{cp}", s + g['span'], s + g['span'] + H_MSG * (6 if kind == 'mtp' else 1)))
+        h0 = s + g['span']
+        if HOP_PORT == 'es':          # pre-LINK5: TP endpoints busy over the stage window, h folded onto ES (s_7S)
+            for ep in TP_EPS:
+                ws.append((f"ep.{g['id']}.{cp}.{ep}", s, s + L))
+            ws.append((f"ep.{g['id']}.{cp}.s_7S.h", h0, h0 + H))
+            continue
+        n = st[i + 1] if i + 1 < len(st) else None
+        cpn = (col.get(n['id'], {}).get(user, 'A') if n['copies'] > 1 else 'A') if n else 'A'
+        if n is not None and g['copies'] == 1 and cpn == 'B':
+            ws.append((f"link.{g['id']}.{cp}.rsv", h0, h0 + H))                 # copy-B circuit (reserve pair)
+        else:
+            ws.append((f"link.{g['id']}.{cp}", h0, h0 + H))                     # s_0N pair A, stage NEXT
+        if n is not None:
+            r0 = h0 + X_FLAT
+            if n['copies'] == 1 and g['copies'] > 1 and cp == 'B':
+                ws.append((f"rx.{n['id']}.{cpn}.rsv", r0 - RX_JIT, r0 + H))
+            else:
+                ws.append((f"rx.{n['id']}.{cpn}.s_0N.B", r0 - RX_JIT, r0 + H))  # s_0N pair B, stage PREV
     end = shift + st[-1]['t'] + st[-1]['span']
     ws.append(('host', end, end + HOST_TOK * (6 if kind == 'mtp' else 1)))
     return ws
@@ -456,6 +516,16 @@ def record(mode, m, st, d, cal, svc=None):
                         stride=6 if mode == 'mtp' else 1),
                bases=dict(units=f'HBM sectors ({SECTOR_B} B) relative to the group copy region base', **sb),
                tables=tabs, lemma=lemma,
+               circuits=dict(rule='S81-LINK5 (owner 10-21 06:00): 5 static circuits a stage die, stage hop on its own '
+                                  's_0N circuit (1 crossing), d+2 TP on one EN<->EN circuit', per_die=CIRCUITS,
+                             lanes=LANE_COUNT, hop_port='s_0N pair A TX -> successor s_0N pair B RX',
+                             hop_window_ab=0, crossing_flat=X_FLAT, rx_jitter=RX_JIT,
+                             link_resources=sorted(r for r in nres if r.startswith(('link.', 'rx.'))).__len__(),
+                             ab_rule='every stage-hop TX window opens with ab 0 (pair A); no ab 1 window on any s_0N '
+                                     'endpoint -> s_0N pair A RX carries link layer only -> no pair-A / pair-B '
+                                     'co-release into ri (sticky fault) by construction',
+                             tp_ports='s_0S / s_7S / s_7N carry TP only (no h window): their lep ports are held by '
+                                      'the stage-group window (brute force on <g>.<cp>)'),
                stage_model=dict(source='results/arch/s81_balance_1018/compute.py group_occ (B3, IMB_BAL)',
                                 sha256=hashlib.sha256(BAL.read_bytes()).hexdigest(),
                                 stages=[{k: (round(v, 1) if isinstance(v, float) else v) for k, v in g.items()}
@@ -493,11 +563,14 @@ def main(argv=None):
     ap.add_argument('--out', default=str(OUT))
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--phase-q', type=int, default=4, help='shift / period quantum (4 = ot_dsdv_fixed_issue start phase)')
+    ap.add_argument('--hop-port', default='s_0N', choices=('s_0N', 'es'),
+                    help='es = the pre-LINK5 fold (h on the ES TP endpoint): delta report only, never written')
     ap.add_argument('--l20-split', action='store_true', help='S81-L20SPLIT (0li): S029 keys over 20 dies (+ S030 '
                     'helpers, measured reader) -> calendar_<mode>_l20split.json with the helper-die check')
     a = ap.parse_args(argv)
-    global PHASE_Q
+    global PHASE_Q, HOP_PORT
     PHASE_Q = a.phase_q
+    HOP_PORT = a.hop_port
     modes = [a.mode] if a.mode else ['ar', 'mtp']
     rc = 0
     for mode in modes:
@@ -506,7 +579,11 @@ def main(argv=None):
         if a.l20_split:
             f = f.with_name(f.stem + '_l20split.json')
         txt = json.dumps(rec, indent=1) + '\n'
-        if a.check:
+        if HOP_PORT == 'es':
+            bf = rec['lemma']['brute_force']
+            print(f"{mode} (pre-LINK5 fold, diagnostic, not written): {bf['n_collisions']} collisions "
+                  f"{sorted({c['resource'] for c in bf['collisions']})[:8]}")
+        elif a.check:
             same = f.exists() and f.read_text() == txt
             print(f'{mode}: {"SAME" if same else "DIFFERS"} {f}')
             rc |= 0 if same else 1
