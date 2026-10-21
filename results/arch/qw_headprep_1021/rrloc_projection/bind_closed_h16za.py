@@ -12,7 +12,7 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('out');a=p.parse_args();out=Path(a.out).resolve()
  if out.exists() and any(out.iterdir()):raise SystemExit('fresh output required')
  out.mkdir(parents=True,exist_ok=True)
- r=json.loads(subprocess.check_output(['git','show','96d7c91d7:'+RECEIPT],cwd=ROOT))
+ r=json.loads((HERE/'closed_h16za/closed_child_input.json').read_text())
  verified={}
  for name,digest in {**r['source_hashes'],**r['view_hashes']}.items():
   data=blob(name)
