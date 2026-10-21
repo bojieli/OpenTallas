@@ -64,7 +64,17 @@ else
   FC=$CONTRACT; DIEV=${DIE_V:?DIE_V (GEN die.v) for MODE=gen_rtl}
 fi
 python3 "$T/die_filelist.py" --contract "$FC" --repo "$REPO" --rev "$SRC_REV" --out "$OUT/fl" > "$L/filelist.log" 2>&1 || { say FILELIST_FAIL; exit 3; }; say "$(tail -1 "$L/filelist.log")"
-VIEWS=${VIEWS:-}; VA=(); [ -n "$VIEWS" ] && VA=(--views "$VIEWS")
+# Functional compilation consumes source configuration, not closed physical views.
+# The only define-bearing current master is unchanged from the r14 source configuration.
+VIEWS=${VIEWS:-}
+if [ -z "$VIEWS" ]; then
+  VIEWS=$OUT/source_compile_defines.json
+  python3 - "$VIEWS" <<'PYDEFS'
+import json, sys
+json.dump({"ot_hbm_accel_smh_attn": {"env": "DEFINES=OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY"}}, open(sys.argv[1], "w"), indent=2)
+PYDEFS
+fi
+VA=(--views "$VIEWS")
 python3 "$T/make_bundle.py" --fl "$OUT/fl" --repo "$REPO" --rev "$SRC_REV" --die "$DIEV" --wt "$ROOT" --out "$OUT/bundle" "${VA[@]}" > "$L/bundle.log" 2>&1 || { say BUNDLE_FAIL; exit 3; }
 for o in $OVERLAY; do f=${o%@*}; r=${o#*@}; [ "$r" = "$o" ] && r=origin/main
   git -C "$REPO" show "$r:$f" > "$OUT/bundle/$f" || { say "OVERLAY_FAIL $o"; exit 3; }
