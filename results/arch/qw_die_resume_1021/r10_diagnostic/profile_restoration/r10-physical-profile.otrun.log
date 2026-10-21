@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536
+ot-run: ot-gold1       admits   535 GB (avail 668, growth 293, headroom 0, waiters 0/0 GB) load 40/112 running 12 disk 2116 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-3308001-1792622365 after 1 s
+SAVED_CASE_PHYSICAL_DIAGNOSTIC_IDENTITY_PASS originals remain FAIL
+libs failed
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-3308001-1792622365): exit 9

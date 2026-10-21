@@ -1,0 +1,13 @@
+{
+  "status": "EXACT_ORIGINAL_PHY_PROFILE_IDENTITY_PASS",
+  "scope": "source profile/environment only; ASSUMED analog/PG/native clock insertion/package qualifications remain separate",
+  "profiles": [
+    "ot_qfd_serdes_112g_x12_phy_s597",
+    "ot_qfd_ucie_x64_phy",
+    "ot_qkvd_ucie_x64_phy"
+  ],
+  "native_R_inferred": false,
+  "original_GEN_exit": 1,
+  "compiler": "FAIL",
+  "release_eligible": false
+}

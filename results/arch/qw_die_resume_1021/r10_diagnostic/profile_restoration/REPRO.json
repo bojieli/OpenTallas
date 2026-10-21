@@ -1,0 +1,38 @@
+{
+  "status": "DIAGNOSTIC_TERMINAL_LIBRARY_CLOCK_CONTRACT_FAIL",
+  "unit": "oth-ubuntu-3308001-1792622365",
+  "exit": 9,
+  "original_GEN_exit": 1,
+  "compiler": "FAIL",
+  "selected_release_route_STA_CLK": "NOTRUN",
+  "previous_failure": {
+    "unit": "oth-ubuntu-3097292-1792619155",
+    "exit": 11,
+    "cause": "my physical wrapper omitted actual original NFACE/TALL flags; preserved immutable"
+  },
+  "original_run_sha256": "4d7c31b3ed2aed3f8945577ee9728ce7f5beb9fc5f088b3eca9ee08ebe48a0bc",
+  "restored_environment": {
+    "OT_SPLIT_PHY_NFACE": 1,
+    "OT_SPLIT_PHY_TALL": 1,
+    "OT_SPLIT_UCIE_PHY_CLK": 1
+  },
+  "manifest_sha256": "fbab0d4a3ee382d467fbd4ac8d98d54eacc4f33c0e35f68dde6c052deab95c21",
+  "manifest_inputs": 80083,
+  "all_original_frozen_input_hashes_unchanged": 80075,
+  "profile_guard": {
+    "positive": "PASS",
+    "missing_TALL": "REJECTED",
+    "missing_NFACE": "REJECTED"
+  },
+  "real_bind": {
+    "masters_bound": 20,
+    "masters": 146,
+    "instances_bound": 28548,
+    "instances": 29570,
+    "refused": {},
+    "open_inputs": {}
+  },
+  "failure": "die_sta_libs.measured_clock_refs requires missing physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/insertion.json",
+  "source_classification": "Q PHY JSON schema opentallas.qwen-missing.link-phy-abstract is existing ASSUMED licensed boundary model; K distinct schema falls through to measured insertion requirement. No exemption/schema widening performed.",
+  "claim_scope": "Exact source-profile binding/environment restoration only; no geometry/width/port/clock alias or source/GEN/P2R change. Actual PG/access/physicalreach/clock/PLL/package checks remain unqualified. No nativeR=0, otherPHY insertion or oscillator phase invented. No new run until genuine clock contract is supplied."
+}

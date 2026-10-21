@@ -1,0 +1,18 @@
+{
+  "positive": {
+    "rc": 0,
+    "stdout": "{\n  \"status\": \"EXACT_ORIGINAL_PHY_PROFILE_IDENTITY_PASS\",\n  \"scope\": \"source profile/environment only; ASSUMED analog/PG/native clock insertion/package qualifications remain separate\",\n  \"profiles\": [\n    \"ot_qfd_serdes_112g_x12_phy_s597\",\n    \"ot_qfd_ucie_x64_phy\",\n    \"ot_qkvd_ucie_x64_phy\"\n  ],\n  \"native_R_inferred\": false,\n  \"original_GEN_exit\": 1,\n  \"compiler\": \"FAIL\",\n  \"release_eligible\": false\n}\n",
+    "stderr": ""
+  },
+  "missing_tall": {
+    "rc": 1,
+    "stdout": "",
+    "stderr": "missing/wrong original physical environment: OT_SPLIT_PHY_TALL\n"
+  },
+  "missing_nface": {
+    "rc": 1,
+    "stdout": "",
+    "stderr": "missing/wrong original physical environment: OT_SPLIT_PHY_NFACE\n"
+  },
+  "base_frozen_input_hashes_unchanged": 80075
+}

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536/src/tools/qwen_tp8/die_sta_libs.py", line 402, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536/src/tools/qwen_tp8/die_sta_libs.py", line 318, in main
+    leaves[mst] = {c: measured_clock_refs(root / libs[c], vd / 'insertion.json', c) for c in ('tt', 'ff', 'ss')}
+                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536/src/tools/qwen_tp8/die_sta_libs.py", line 60, in measured_clock_refs
+    raise ValueError(f"missing real clock insertion: {insertion_path}")
+ValueError: missing real clock insertion: /srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag_profile1536/src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/insertion.json

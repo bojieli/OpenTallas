@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.qwen.saved_case_phy_profile.v1",
+  "expected_environment": {
+    "OT_SPLIT_PHY_TALL": "1",
+    "OT_SPLIT_PHY_NFACE": "1",
+    "OT_SPLIT_UCIE_PHY_CLK": "1"
+  },
+  "profiles": {
+    "ot_qfd_serdes_112g_x12_phy_s597": {
+      "directory": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597",
+      "requires_lclk": false
+    },
+    "ot_qfd_ucie_x64_phy": {
+      "directory": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy",
+      "requires_lclk": true
+    },
+    "ot_qkvd_ucie_x64_phy": {
+      "directory": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy",
+      "requires_lclk": false
+    }
+  },
+  "sha256": {
+    "original_gen_contract/run.sh": "4d7c31b3ed2aed3f8945577ee9728ce7f5beb9fc5f088b3eca9ee08ebe48a0bc",
+    "original_gen_contract/gen.sh": "7e833916ebd565d76a117485067b4f05b0ab02b1fd91fa3d0e89e2b174bcd070",
+    "original_gen_contract/run_candidate.sh": "6e63467d9582d6b6c624dd37908c9578038adcb72f57f85b56756ae2670949f2",
+    "original_gen_contract/SHA256SUMS": "2b1fdbd657e8ce19c7a9eea169af72fdd474b7b94a43ca1db78e3d8d01402f91",
+    "physical_view_select.json": "20460c1fea5fa56df91bca76c1c903ccb160de959fd3d6224ab4af997666bfc4",
+    "physical_profile_guard.py": "021b44b30d68fa258661746388479cf31c7e333bcee25318389b073473f6eec6",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib": "d158a374117fbfb87ba4e465d9a59d95a2ab3a2dc53e29e16469aac40852bea5",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib": "b32b5383483b0bb6b0c825f50697f179731d7b27863d7f010c35ce04b0388c2e",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef": "4c62ffde575d234fef5ab6dde33f09b3ddda9f9ab8d7cc7501f5a60e75c4cc55",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib": "68c07a17b74bccb67b1f2f77403ada6846b28ad96d8e46193c462442e4c396b2",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_model.sv": "0cd793f260b3ef9e91ea42cd7b6883e5e7571d5a9797b8e9aab30ff98fd4201e",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.json": "56f67bdf1982b6efcc99c48fce8082bad7d86fcc142bb2691989ffeb6fea04c8",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v": "e06197be1fbf7f7c815f1115d393db1aed7674d07e0dd72adce6324bb593cf7e",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_model.sv": "a29d98a67e186c40c5b967eb99c339b5dd78194b87b7727a031cdec21959d013",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ff.lib": "32c45b975dafaf22186881d195b05be421158c4c9ccb309c6b4776fc410acfff",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_ss.lib": "026ce018ba828d6ed925f86a08c61621c37ccaf5bdb192f6fe583fb714a8fd0a",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v": "e459a9f81d360767530dab5142df2592333dd35136e4845741b291b6e794f02f",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.json": "1df4d8eef7a21e532bcaed2cb04243d82833d6b8280549d09854ec43a78c5399",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib": "9e96810b1ccbd899e769e1558714487bf1c0ae730fb8a730e30ebdb9ad757289",
+    "src/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef": "0b763c286c50518244330e57ea367435a98be9ae9f9d1489b946a03f2b402f8c",
+    "src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib": "4537813c653458ff6a9c35be6f3fb4671dc98c124e49be2de00910341c6347dc",
+    "src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef": "f4a2b22a7479ebcbca2a9dbe676e36b20d933d28ae13aff4b15f8b66c7280f66",
+    "src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ff.lib": "a93f474f35cc1b3a72a0e99c6473196d5c30a65c8448230a820861be4585e262",
+    "src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ss.lib": "3a2cff90556b744aa79d7564e47fe1560c8fd5ad1a921a5f99b2a798eafac954",
+    "src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv": "2b14efcc89a0841eddae12d1ca3c8f5ab7944773b2460887fe7496fd10500066",
+    "src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v": "c9699325c5e7134940f41f21b9c8c5d2a65f396f4201ca2d148b1b4d9204c7be",
+    "src/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.json": "a1d77cc57a6a1010e3d40e735a1ca9f9d38be102bb5041487d9eaf7acecf973c"
+  },
+  "source_claim": "Restores actual original TALL/NFACE source profile; analog/PG/nativeR/package qualification not inferred",
+  "previous_failure": "dv2f21g5r10bfp_diag1340 unit3097292 exit11 packaging omission retained"
+}
