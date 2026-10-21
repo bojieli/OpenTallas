@@ -38,6 +38,7 @@ import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
 from clock_roles import contract_clock_nets
+from frame_bind import orientation, orient_point, orient_face
 from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
 import abstract_pin_windows as APW   # noqa: E402
@@ -71,7 +72,13 @@ def clock_sdc(table, top_ports):
             raise ValueError(f'invalid period for {port}: {period}')
         lines.append(f'create_clock -name {port} -period {period} [get_ports {{{port}}}]')
         if domain.get('asynchronous_to_core'):
-            lines.append(f'set_clock_groups -asynchronous -group [get_clocks clk] -group [get_clocks {port}]')
+            # Explicit frame clocks are members of the existing core PLL
+            # family. Preserve the table's existing PHY/core relationship.
+            family = ['clk'] + ([p for p, d in sorted(domains.items())
+                if d.get('relationship') == 'same_pll_fixed_phase' and not d.get('asynchronous_to_core')]
+                if table.get('instance_clock_ports') else [])
+            core_group = 'clk' if len(family) == 1 else '{' + ' '.join(family) + '}'
+            lines.append(f'set_clock_groups -asynchronous -group [get_clocks {core_group}] -group [get_clocks {port}]')
     return '\n'.join(lines)
 
 
@@ -351,7 +358,7 @@ def lef_pins(path):
     return size, pins
 
 
-def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0):
+def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0, orientations=None):
     """move every fwd_<lane> (hop-0 forward cell) to the centroid of the pins that actually drive st_<lane>_0.i.
     Returns {lane: (moved_um, n_source_pins, pin_span_um)}; lanes whose source pins cannot be found keep the plan point."""
     mst_of = {nm: m for m, nm, _, _ in insts}
@@ -384,7 +391,8 @@ def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0):
                     q = pins.get(pn)
                     if q and q[2] == 'OUTPUT':
                         x0, y0 = loc[o][0], loc[o][1]
-                        drv[b] = (o, x0 + q[0], y0 + q[1])
+                        qx, qy = orient_point(q[0], q[1], loc[o][2], loc[o][3], (orientations or {}).get(o, 'R0'))
+                        drv[b] = (o, x0 + qx, y0 + qy)
     moves = {}
     for f, bits in sorted(want.items()):
         pts = [drv[b] for b in bits if b in drv]
@@ -567,6 +575,7 @@ def main():
             (out / 'views' / f'{m}.lib').write_text(tt_lib)
     placer = Placer(W, H)
     loc = {}            # inst -> (x, y lower-left, w, h, status)
+    orientations = {f'u_{b["name"]}': orientation(T, b['name']) for b in blocks.values()}
     for b in blocks.values():
         loc[f'u_{b["name"]}'] = (b['x'], b['y'], b['w'], b['h'], 'FIRM')
         placer.add((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
@@ -650,6 +659,13 @@ def main():
                 kitpin[m_] = plan_
             kit_rows[m_] = dict(ref=r_, kit=k_, source=plan_['source'] if plan_ else None, pins=len(plan_['pins']) if plan_ else 0,
                                 alternatives=kit_alts.get(m_, [])[-5:])
+    # Explicit frame plans are stored in native master coordinates. Placement
+    # applies the instance transform once; never pre-mirror these kit pins.
+    for master, pp in T.get('standin_pin_plans', {}).items():
+        if master in open_masters:
+            kitpin[master] = pp
+            kit_rows[master] = dict(ref=T.get('frame_lp_binding', {}).get('source_ref'),
+                source=pp['source'], pins=len(pp['pins']), coordinates='native_master_unoriented')
     for mst, nm, _, cm in insts:
         if kind[nm] != 'standin':
             census[f'{kind[nm]}:{mst}'] += 1
@@ -729,6 +745,10 @@ def main():
                     f, t = project((x0, y0, w, h), ox, oy)
                     key = (p, f)
                     t = t + PITCH * (slot[key] - (wdt / 2 if wdt > 1 else 0)); slot[key] += 1
+                # Heuristics/projected link endpoints above are in placed
+                # physical coordinates. Invert the instance reflection before
+                # writing the native LEF; place_inst will apply it once.
+                f, t = orient_face(f, t, w, h, orientations.get(nm, 'R0'))
                 lay, rect = pin_rect(f, t, w, h)
                 lefp.append((pn, d, lay, rect)); sig.append((pn, lay, rect))
                 pin_src['heuristic_no_kit' if mst not in kitpin else 'heuristic_bit_not_in_kit'] += 1
@@ -765,7 +785,7 @@ def main():
     # data elsewhere -> fclk 2 repeaters vs data up to 27.  The forwarded clock must launch where its data launches:
     # move fwd_<lane> to the centroid of the actual source pins of st_<lane>_0.i (closed LEF / stand-in LEF), outside
     # that face, so fclk and data run the same wire (DIE-CLOCK +-1).
-    fwd_moves = fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell)
+    fwd_moves = fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, orientations=orientations)
     # ------------------------------------------------------------------ case netlist (bind netlist, stand-in cells, PHYSICAL ties)
     # DIE-S81-LEAD 10-19: every constant bit is driven by its own TIEHI/TIELO cell (was a floating 1-pin wire tz_*: not
     # physical, and the exact fclk payload audit (c5f578d5a/57459e378) counts an undriven payload bit as missing).  The
@@ -814,7 +834,7 @@ def main():
     # ------------------------------------------------------------------ placement
     pl = []
     for i, (x, y, w_, h_, st) in sorted(loc.items()):
-        pl.append(f'place_inst -name {i} -location {{{x:.3f} {y:.3f}}} -orientation R0 -status {st}')
+        pl.append(f'place_inst -name {i} -location {{{x:.3f} {y:.3f}}} -orientation {orientations.get(i, "R0")} -status {st}')
     (out / 'place.tcl').write_text('\n'.join(pl) + '\n')
 
     # ------------------------------------------------------------------ landing / frame-lane window model (land plan)
