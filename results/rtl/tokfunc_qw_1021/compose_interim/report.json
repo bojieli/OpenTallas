@@ -1,0 +1,108 @@
+{
+ "schema": "opentallas.tokfunc.qwen_rom.v1",
+ "base_rev": "94cd97b7a",
+ "asm": "c0f8097f3",
+ "grade": "RTL-functional (source assembly)",
+ "model_of_record": {
+  "u1_tok_s": 4403.2,
+  "u4_tok_s": 11750.6,
+  "cycles": 272641
+ },
+ "base_reproduced": {
+  "cycles": 272641,
+  "tok_s": 4403.2,
+  "chained": 7471,
+  "l0_cold": 8005,
+  "pct_measured": 62.8,
+  "pct_rel": 60.0,
+  "vs_price": -8.48,
+  "by": {
+   "REL": 163601,
+   "PLAN_GAP": 1297,
+   "PRICED": 32358,
+   "DIAG": 67643,
+   "NEWEST": 7742
+  },
+  "die_edges_per_layer": 934,
+  "sched_added_per_layer": 1143,
+  "u4": 11750.6,
+  "variants": {
+   "variant_plan": [
+    4528.1,
+    12066.5
+   ],
+   "variant_asbuilt": [
+    4585.7,
+    12210.9
+   ]
+  }
+ },
+ "stages": {
+  "xdie": "PASS",
+  "ovl4u": "PASS",
+  "ctx4u": "PASS",
+  "head": "PASS"
+ },
+ "missing_stages": [
+  "stg",
+  "xt1",
+  "tp8",
+  "kv"
+ ],
+ "applied": [
+  "attention c2k 32 kv_service 1779 roundtrip 1842 -> plan 1827 <- xdie",
+  "4u frame 4026800 tokens [16, 15, 8, 7] <- ovl4u",
+  "head 3135 <- head",
+  "dv: not re-measured -> DIAG",
+  "tile: not re-measured -> DIAG",
+  "allreduce: not re-measured -> DIAG"
+ ],
+ "problems": [],
+ "token": {
+  "cycles": 272675,
+  "tok_s": 4402.6,
+  "chained": 7471,
+  "l0_cold": 8005,
+  "pct_measured": 4.9,
+  "pct_rel": 2.0,
+  "vs_price": -8.49,
+  "by": {
+   "DIAG": 228865,
+   "PLAN_GAP": 1297,
+   "REL": 5513,
+   "PRICED": 29257,
+   "NEWEST": 7742
+  },
+  "die_edges_per_layer": 934,
+  "sched_added_per_layer": 1143,
+  "u4": 11750.6,
+  "variants": {
+   "variant_plan": [
+    4527.5,
+    12066.5
+   ],
+   "variant_asbuilt": [
+    4585.1,
+    12210.9
+   ]
+  }
+ },
+ "gaps": [
+  "ATTENTION RETURN: measured span 98 != compiled 137 (re-bench the attn family)",
+  "IMAGE CAPACITY: the full layer needs 13942 PW words (calendar 854 + tables 12608 = (PROG 72 + BTAB 188 + CROM 528) x 16) > CMD_CEIL 976: tt_ctlm cannot hold one layer's slice tables + calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream (ROM-resident slice tables or a table DMA) is needed",
+  "COLUMN-HEAD x CONSUMER: the qkv / gu / down / o matvecs read x from the slice x stream; the hr / xpf control that makes the column heads tap those words on the compiled edges is not lowered (QLB-C4b/3a left)",
+  "TILE DELIVERY: tile_first 40 (ME issue -> first far cluster word) and the AR stagger (slice s gets block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar",
+  "PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image blocks only (no producer of the per-token row on the die)",
+  "AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last only on the message last word; slice2 sends tag = row address, last per STN op (fault_code[2])"
+ ],
+ "u1": {
+  "cycles": 272675,
+  "tok_s": 4402.6,
+  "vs_model_pct": -0.01
+ },
+ "u4": {
+  "tok_s": 11750.6,
+  "vs_model_pct": 0.0
+ },
+ "verdict": "INCOMPLETE/FAIL (see stages/problems)"
+}

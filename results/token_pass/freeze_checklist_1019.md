@@ -51,3 +51,11 @@ Old single-user dies (S81 p4l-SU, dv2f14*, kvs14c, GEN2) are diagnostic only. Ru
 - [ ] Re-export the token page (compose + tools/token_pass_status.py --page-data). Remove the PRICED label from MU.CURVE
       points that are now measured.
 - [ ] Update the HANDOFF, then tick TOK.REC / TOK.FREEZE / MU.CURVE in RELEASE_TREE_DONE.md.
+
+## 6. Rerun hook: the proven functional script (TOK-FUNC-QW, owner 10-21)
+- [ ] Qwen ROM: the RTL-functional token pass (grade "RTL-functional (source assembly)") is
+      `tools/qwen_tokfunc/run_tok_func_qw.sh` (assembly recipe tools/qwen_tokfunc/asm_recipe.json, first run on asm c0f8097f3).
+      At freeze rerun the SAME script against the frozen die: `run_tok_func_qw.sh --asm <frozen main> --die-netlist
+      <compute GEN out/case>:<KV GEN out/case>` -> grade "die-netlist"; stages take the GEN carve where they have one
+      (xt1 = XT1g die_carve; others = source RTL of the frozen commit, which equals the netlist's source by strict bind).
+      Composition engine = toksim_compose @94cd97b7a (record 272,641 cyc = 4,403.2 tok/s 1u, 11,750.6 4u; reproduced by --base-only).
