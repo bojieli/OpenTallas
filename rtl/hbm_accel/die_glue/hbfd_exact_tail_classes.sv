@@ -48,14 +48,14 @@ endmodule
 module hbfd_lh0_136_EW_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [TW-1:0] b, output wire eb, output wire ck_o);
     ot_hbm_lane_stf #(.W(TW), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
-module hbfd_lh0_136_EW_f2_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [2*TW-1:0] b, output wire [1:0] eb, output wire [1:0] ck_o);
-    ot_hbm_lane_stf #(.W(TW), .N(2), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
-endmodule
 module hbfd_lh0_136_EW_f3_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [3*TW-1:0] b, output wire [2:0] eb, output wire [2:0] ck_o);
     ot_hbm_lane_stf #(.W(TW), .N(3), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh0_136_NS_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [TW-1:0] b, output wire eb, output wire ck_o);
     ot_hbm_lane_stf #(.W(TW), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+endmodule
+module hbfd_lh0_136_NS_f2_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [2*TW-1:0] b, output wire [1:0] eb, output wire [1:0] ck_o);
+    ot_hbm_lane_stf #(.W(TW), .N(2), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh0_136_NS_f3_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [3*TW-1:0] b, output wire [2:0] eb, output wire [2:0] ck_o);
     ot_hbm_lane_stf #(.W(TW), .N(3), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
@@ -63,8 +63,8 @@ endmodule
 module hbfd_lh0_136_SN_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [TW-1:0] b, output wire eb, output wire ck_o);
     ot_hbm_lane_stf #(.W(TW), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
-module hbfd_lh0_136_SN_f3_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [3*TW-1:0] b, output wire [2:0] eb, output wire [2:0] ck_o);
-    ot_hbm_lane_stf #(.W(TW), .N(3), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
+module hbfd_lh0_136_SN_f2_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [2*TW-1:0] b, output wire [1:0] eb, output wire [1:0] ck_o);
+    ot_hbm_lane_stf #(.W(TW), .N(2), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
 endmodule
 module hbfd_lh0_136_WE_tw #(parameter integer TW = 136) (input wire ck, input wire en, input wire [TW-1:0] a, output wire [TW-1:0] b, output wire eb, output wire ck_o);
     ot_hbm_lane_stf #(.W(TW), .N(1), .FIRST(1)) u_st (.ck(ck), .en(en), .a(a), .b(b), .eb(eb), .ck_o(ck_o));
