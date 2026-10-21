@@ -594,7 +594,12 @@ module ot_s81dv_xfin #(
         .eng(md), .ej_v(ej_v), .ej_b({vtag, sid_c}), .ej_d(vdat), .ej_free(ej_free), .fault(xf));
     // ---------------------------------------------------------------- NORM finish (closed x5; ENG flits gated off)
     wire fr_v; wire [31:0] fr;
-    ot_s81dv_norm_finish #(.NV(NS * NVL), .K(NVL), .P(3), .D(64 * NVL * NS), .LM(LM), .LA(LA)) u_f (.clk(clk),
+`ifdef OT_S81DV_XFIN_SRAM
+    ot_s81dv_norm_finish_sram #(.NV(NS * NVL)
+`else
+    ot_s81dv_norm_finish #(.NV(NS * NVL)
+`endif
+      , .K(NVL), .P(3), .D(64 * NVL * NS), .LM(LM), .LA(LA)) u_f (.clk(clk),
         .rst_n(rstn), .go(go_c), .f_v(dl_v & {3{!md}}), .f_base(dl_b), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));
     always @(posedge clk or negedge rstn) if (!rstn) rb_v <= 1'b0; else rb_v <= fr_v;
     always @(posedge clk) rb_d <= fr;
@@ -613,7 +618,12 @@ module ot_s81dv_xfin #(
             for (pp = 0; pp < 3; pp = pp + 1) begin : g_v
                 assign fv[pp] = md && dl_v[pp] && dl_b[pp * 8 + 4 +: 2] == cc && dl_b[pp * 8 + 6 +: 2] != 2'd3;
             end
-            ot_s81dv_eng_finish #(.NV(NS * NVL), .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rstn), .go(go_c),
+`ifdef OT_S81DV_XFIN_SRAM
+            ot_s81dv_eng_finish_sram #(.NV(NS * NVL)
+`else
+            ot_s81dv_eng_finish #(.NV(NS * NVL)
+`endif
+      , .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rstn), .go(go_c),
                 .f_v(fv), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(cr_v[cc]), .r_hh(chh[cc]), .r_kk(ckk[cc]), .r_dd(cdd[cc]),
                 .fault(cf[cc]));
         end

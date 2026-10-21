@@ -1,0 +1,1187 @@
+`timescale 1ns/1ps
+// Opt-in XFIN SRAM payload successor. Source-bound model18f13c8ce; same operand capture edge.
+module ot_s81dv_norm_finish_sram #(
+    parameter integer NV = 80,          // global beats (NS slices x NVL)
+    parameter integer K  = 5,           // beat partials per flit (NVL)
+    parameter integer P  = 3,           // flit input ports (own, from W, from E)
+    parameter integer D  = 5120,
+    parameter integer LM = 5,
+    parameter integer LA = 6
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              go,
+    input  wire [P-1:0]      f_v,
+    input  wire [P*8-1:0]    f_base,      // global index of the flit's first partial
+    input  wire [P*K*32-1:0] f_d,
+    input  wire [31:0]       eps,
+    output wire              r_v,
+    output wire [31:0]       r,
+    output wire              fault
+);
+    // SEQUENCED golden-order finish (gate 10-16: the replicated parallel tree was 58.7k flops on one root).  The tree is
+    // ot_dsrom_su_norm's vector-level tree exactly (heap over NVP leaves; a node adds its two children when its right
+    // subtree holds a real beat, else it passes its left child), evaluated by ONE pipelined adder with dataflow issue
+    // (highest-index ready node first).  Same additions, same operands, same order of association -> bit-identical;
+    // arrival times are compiler static, so the issue schedule is fixed (no flow control).
+    localparam integer NVP = (NV <= 1) ? 1 : (1 << $clog2(NV));
+    localparam integer HB  = $clog2(NVP);
+    localparam integer LAV = (LA >= 5) ? LA : LA + 1;
+    function automatic integer tz(input integer x);
+        integer t;
+        begin
+            t = 0;
+            while (t < 31 && ((x >> t) & 1) == 0) t = t + 1;
+            tz = t;
+        end
+    endfunction
+    function automatic integer isadd(input integer n);  // the verbatim g_add condition
+        integer H;
+        begin
+            H = HB - ($clog2(n + 1) - 1);
+            isadd = (n >= 1 && n < NVP && ((((2 * n + 1) << (H - 1)) - NVP) < NV)) ? 1 : 0;
+        end
+    endfunction
+    localparam integer DK = tz(D);
+    localparam integer DF = D >> DK;
+    localparam integer NRS = 64;         // reset relay copies (one per 16-node region; gate 10-16: 766 loads on one flop)
+    reg [1:0] rs;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+    wire rstn = rs[1];
+    wire [NRS-1:0] rsr;
+    ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
+    reg go_t;
+    always @(posedge clk or negedge rstn) if (!rstn) go_t <= 1'b0; else go_t <= go;
+    reg [P-1:0] iv; reg [P*8-1:0] ib; reg [P*K*32-1:0] id; reg [31:0] eps_c;
+    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t ? {P{1'b0}} : f_v;
+    always @(posedge clk) begin ib <= f_base; id <= f_d; eps_c <= eps; end
+    // ---------------------------------------------------------------- node values: leaves (beats) and add nodes
+    wire        VD [1:2*NVP-1];
+    wire [NVP-1:0] dup;
+    wire        wr_v;                   // adder result write-back
+    wire [7:0]  wr_n;
+    wire [31:0] wr_d;
+    genvar n, p, k;
+    generate
+        for (n = NVP; n < 2 * NVP; n = n + 1) begin : g_leaf
+            localparam integer IX = n - NVP;
+            if (IX < NV) begin : g_live
+                wire [P*K-1:0] m;
+                wire [31:0] mv [0:P*K];
+                assign mv[0] = 32'd0;
+                for (p = 0; p < P; p = p + 1) begin : g_p
+                    for (k = 0; k < K; k = k + 1) begin : g_k
+`ifdef OT_S81DV_MUT_LEAF
+                        // NEGATIVE CONTROL: leaf 1 is fed beat 2's partial (a wrong-operand exchange / tag error).
+                        // (A 0/1 swap only commutes one add, and a 1/2 association swap rounded identically on the DS1M
+                        // row: order exactness is evidenced by the golden match, operand identity by this control.)
+                        localparam integer IXM = (IX == 1) ? 2 : IX;
+`else
+                        localparam integer IXM = IX;
+`endif
+                        if (IXM - k >= 0) begin : g_m
+                            assign m[p * K + k] = iv[p] && (ib[p * 8 +: 8] == IXM - k);
+                        end else begin : g_n
+                            assign m[p * K + k] = 1'b0;
+                        end
+                        assign mv[p * K + k + 1] = mv[p * K + k] | ({32{m[p * K + k]}} & id[(p * K + k) * 32 +: 32]);
+                    end
+                end
+                wire hit = |m;
+                reg vld;
+                always @(posedge clk or negedge rsr[IX % NRS])
+                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (hit) vld <= 1'b1;
+
+                assign dup[IX] = hit && (vld || ((m & (m - 1)) != 0));
+                 assign VD[n] = vld;
+            end else begin : g_pad
+                assign dup[IX] = 1'b0;
+                 assign VD[n] = 1'b0;
+            end
+        end
+        for (n = 1; n < NVP; n = n + 1) begin : g_node
+            if (isadd(n)) begin : g_add
+                reg vld;
+                always @(posedge clk or negedge rsr[n % NRS])
+                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (wr_v && wr_n == n) vld <= 1'b1;
+
+                 assign VD[n] = vld;
+            end else begin : g_pass
+                 assign VD[n] = VD[2 * n];
+            end
+        end
+    endgenerate
+    // ---------------------------------------------------------------- dataflow issue + the one adder
+    // Ready add nodes (both children valid, not issued) are selected lowest heap index first in two registered
+    // levels (16 groups of 8: in-group one-hot, then the lowest non-empty group), re-masked by `iss` at the second
+    // level so a node never issues twice (a stale pick is a bubble).  Any fixed priority is exact: every node still adds
+    // its own two golden children exactly once; arrival times are compiler static, so the issue schedule is static.
+    localparam integer NG8 = NVP / 8;
+    wire [NVP-1:0] rdy, iss_v;
+    wire [NVP-1:0] oh1;                 // stage 1: in-group one-hot (lowest ready node of each group)
+    wire [NG8-1:0] ga1;                 // stage 1: group has a ready node
+    genvar q;
+    generate
+        for (n = 0; n < NVP; n = n + 1) begin : g_rdy
+            if (n >= 1 && isadd(n)) begin : g_a
+                reg iss;
+                always @(posedge clk or negedge rsr[(n + 3) % NRS])
+                    if (!rsr[(n + 3) % NRS]) iss <= 1'b0; else if (go_t) iss <= 1'b0; else if (win[n]) iss <= 1'b1;
+                assign iss_v[n] = iss;
+                assign rdy[n] = VD[2 * n] && VD[2 * n + 1] && !iss && !go_t;
+            end else begin : g_n
+                assign iss_v[n] = 1'b1; assign rdy[n] = 1'b0;
+            end
+        end
+        for (q = 0; q < NG8; q = q + 1) begin : g_grp
+            wire [7:0] r8 = rdy[q * 8 +: 8];
+            wire [7:0] o8 = r8 & ~(r8 - 8'd1);          // lowest set bit (8-bit)
+            reg [7:0] o_r; reg g_r;
+            always @(posedge clk or negedge rsr[q % NRS])
+                if (!rsr[q % NRS]) begin o_r <= 8'd0; g_r <= 1'b0; end
+                else begin o_r <= o8; g_r <= |r8; end
+            assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r;
+        end
+    endgenerate
+    wire [NG8-1:0] gs = ga1 & ~(ga1 - {{(NG8-1){1'b0}}, 1'b1});   // lowest non-empty group (16-bit)
+    wire [NVP-1:0] win;
+    generate
+        for (n = 0; n < NVP; n = n + 1) begin : g_win
+            assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n] && !go_t;
+        end
+    endgenerate
+    wire fire = |win;
+    wire [7:0]  ot [0:NVP];
+    assign ot[0] = 8'd0;
+    generate
+        for (n = 1; n <= NVP; n = n + 1) begin : g_mux
+            if (n < NVP && isadd(n)) begin : g_m
+
+
+                assign ot[n] = ot[n - 1] | ({8{win[n]}} & n[7:0]);
+            end else begin : g_z
+                assign ot[n]=ot[n-1];
+            end
+        end
+    endgenerate
+    reg f_q; wire [31:0] a_q, b_q; reg [7:0] t_q;      // operand stage (registered: issue mux -> adder)
+    always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire;
+    always @(posedge clk) t_q <= ot[NVP];
+    ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(1)) u_values(
+      .clk(clk),.iv(iv),.it({(P*2){1'b0}}),.ib(ib),.id(id),.fire(fire),.issue_tag({1'b0,ot[NVP]}),
+      .rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag({1'b0,wr_n}),.wr_d(wr_d));
+    wire [LAV:0] av;
+    wire f_add;
+    ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rstn), .v(f_q), .vd(av));
+    ot_dsrom_qadd #(.LAT(LAV)) u_a (clk, rstn, f_q, a_q, b_q, wr_d, f_add);
+    ot_hdc_delay #(.W(8), .D(LAV)) u_t (.clk(clk), .rst_n(rstn), .d(t_q), .q(wr_n));
+    assign wr_v = av[LAV];
+    // ---------------------------------------------------------------- tail: / D, + eps, rsqrt (ot_dsrom_su_norm)
+    reg ssr_v; reg [31:0] ssr;
+    always @(posedge clk or negedge rstn) if (!rstn) ssr_v <= 1'b0; else ssr_v <= wr_v && wr_n == 8'd1 && !go_t;
+    always @(posedge clk) ssr <= wr_d;
+    wire [31:0] mq, me, rr;
+    wire        mq_v, me_v, rr_v, f_div, f_eps, f_rsq;
+    ot_dsrom_divc #(.F(DF), .K(DK)) u_div (.clk(clk), .rst_n(rstn), .v(ssr_v), .x(ssr), .y(mq), .vo(mq_v), .fault(f_div));
+    wire [LA:0] ve;
+    ot_hdc_vline #(.D(LA)) u_ve (.clk(clk), .rst_n(rstn), .v(mq_v), .vd(ve));
+    ot_dsrom_qadd #(.LAT(LA)) u_eps (clk, rstn, mq_v, mq, eps_c, me, f_eps);
+    assign me_v = ve[LA];
+    ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rstn), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
+    reg r_v_o; reg [31:0] r_o; reg flt;
+    always @(posedge clk or negedge rstn)
+        if (!rstn) begin r_v_o <= 1'b0; flt <= 1'b0; end
+        else begin
+            r_v_o <= rr_v;
+            if (go_t) flt <= 1'b0;
+            else if (f_add || f_div || f_eps || f_rsq || (|dup)) flt <= 1'b1;
+        end
+    always @(posedge clk) r_o <= rr;
+    assign r_v = r_v_o; assign r = r_o; assign fault = flt;
+endmodule
+
+module ot_s81dv_eng_finish_sram #(
+    parameter integer NV = 80,
+    parameter integer K  = 5,
+    parameter integer P  = 3,
+    parameter integer LA = 6
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              go,
+    input  wire [P-1:0]      f_v,
+    input  wire [P*2-1:0]    f_t,         // tree (0 hh, 1 kk, 2 dd)
+    input  wire [P*8-1:0]    f_base,      // global index of the flit's first partial
+    input  wire [P*K*32-1:0] f_d,
+    output reg               r_v,         // one pulse when all three roots are final
+    output reg  [31:0]       r_hh, r_kk, r_dd,
+    output wire              fault
+);
+    localparam integer T   = 3;
+    localparam integer NVP = (NV <= 1) ? 1 : (1 << $clog2(NV));
+    localparam integer HB  = $clog2(NVP);
+    localparam integer NC  = T * NVP;   // issue candidates (tree-major)
+    localparam integer CW  = $clog2(NC);
+    localparam integer LAV = (LA >= 5) ? LA : LA + 1;
+    function automatic integer isadd(input integer n);
+        integer H;
+        begin
+            H = HB - ($clog2(n + 1) - 1);
+            isadd = (n >= 1 && n < NVP && ((((2 * n + 1) << (H - 1)) - NVP) < NV)) ? 1 : 0;
+        end
+    endfunction
+    function automatic integer ca(input integer n);     // left operand node
+        begin
+`ifdef OT_S81DV_MUT_EASSOC
+            ca = (n == 4) ? 8 : (n == 5) ? 9 : 2 * n;
+`else
+            ca = 2 * n;
+`endif
+        end
+    endfunction
+    function automatic integer cb(input integer n);     // right operand node
+        begin
+`ifdef OT_S81DV_MUT_EASSOC
+            cb = (n == 4) ? 10 : (n == 5) ? 11 : 2 * n + 1;
+`else
+            cb = 2 * n + 1;
+`endif
+        end
+    endfunction
+    localparam integer NRS = 64;
+    reg [1:0] rs;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+    wire rstn = rs[1];
+    wire [NRS-1:0] rsr;
+    ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
+    reg go_t;
+    always @(posedge clk or negedge rstn) if (!rstn) go_t <= 1'b0; else go_t <= go;
+    reg [P-1:0] iv; reg [P*2-1:0] it; reg [P*8-1:0] ib; reg [P*K*32-1:0] id;
+    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t ? {P{1'b0}} : f_v;
+    always @(posedge clk) begin it <= f_t; ib <= f_base; id <= f_d; end
+    wire        wr_v;
+    wire [CW-1:0] wr_n;
+    wire [31:0] wr_d;
+    wire [NC-1:0] rdy, iss_v, win;
+    wire [T*NVP-1:0] dup;
+    wire        VD [0:T-1][1:2*NVP-1];
+    genvar t, n, p, k;
+    generate for (t = 0; t < T; t = t + 1) begin : g_t
+        for (n = NVP; n < 2 * NVP; n = n + 1) begin : g_leaf
+            localparam integer IX = n - NVP;
+            if (IX < NV) begin : g_live
+                wire [P*K-1:0] m;
+                wire [31:0] mv [0:P*K];
+                assign mv[0] = 32'd0;
+                for (p = 0; p < P; p = p + 1) begin : g_p
+                    for (k = 0; k < K; k = k + 1) begin : g_k
+                        // ENG flit bases are sid * K by construction (xfin fb), so leaf IX is only ever slot IX % K:
+                        // the other slots are not wired (3:1 leaf mux instead of 15:1)
+                        if (k == IX % K) begin : g_m
+                            assign m[p * K + k] = iv[p] && it[p * 2 +: 2] == t && (ib[p * 8 +: 8] == IX - k);
+                        end else begin : g_n
+                            assign m[p * K + k] = 1'b0;
+                        end
+                        assign mv[p * K + k + 1] = mv[p * K + k] | ({32{m[p * K + k]}} & id[(p * K + k) * 32 +: 32]);
+                    end
+                end
+                wire hit = |m;
+                reg vld;
+                always @(posedge clk or negedge rsr[IX % NRS])
+                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (hit) vld <= 1'b1;
+
+                assign dup[t * NVP + IX] = hit && (vld || ((m & (m - 1)) != 0));
+                 assign VD[t][n] = vld;
+            end else begin : g_pad
+                assign dup[t * NVP + IX] = 1'b0;
+                 assign VD[t][n] = 1'b0;
+            end
+        end
+        for (n = 1; n < NVP; n = n + 1) begin : g_node
+            if (isadd(n)) begin : g_add
+                reg vld;
+                always @(posedge clk or negedge rsr[n % NRS])
+                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0;
+                    else if (wr_v && wr_n == t * NVP + n) vld <= 1'b1;
+
+                 assign VD[t][n] = vld;
+            end else begin : g_pass
+                 assign VD[t][n] = VD[t][2 * n];
+            end
+        end
+        for (n = 0; n < NVP; n = n + 1) begin : g_rdy
+            if (n >= 1 && isadd(n)) begin : g_a
+                reg iss;
+                always @(posedge clk or negedge rsr[(n + 3) % NRS])
+                    if (!rsr[(n + 3) % NRS]) iss <= 1'b0; else if (go_t) iss <= 1'b0; else if (win[t * NVP + n]) iss <= 1'b1;
+                assign iss_v[t * NVP + n] = iss;
+                assign rdy[t * NVP + n] = VD[t][ca(n)] && VD[t][cb(n)] && !iss && !go_t;
+            end else begin : g_n
+                assign iss_v[t * NVP + n] = 1'b1; assign rdy[t * NVP + n] = 1'b0;
+            end
+        end
+    end endgenerate
+    // two-level registered priority issue (as ot_s81dv_norm_finish): 8-node groups, then the lowest non-empty group
+    localparam integer NG8 = NC / 8;
+    wire [NC-1:0] oh1; wire [NG8-1:0] ga1;
+    genvar q;
+    generate for (q = 0; q < NG8; q = q + 1) begin : g_grp
+        wire [7:0] r8 = rdy[q * 8 +: 8];
+        wire [7:0] o8 = r8 & ~(r8 - 8'd1);
+        reg [7:0] o_r; reg g_r;
+        always @(posedge clk or negedge rsr[q % NRS])
+            if (!rsr[q % NRS]) begin o_r <= 8'd0; g_r <= 1'b0; end
+            else begin o_r <= o8; g_r <= |r8; end
+        assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r;
+    end endgenerate
+    wire [NG8-1:0] gs = ga1 & ~(ga1 - {{(NG8-1){1'b0}}, 1'b1});
+    generate for (n = 0; n < NC; n = n + 1) begin : g_win
+        assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n] && !go_t;
+    end endgenerate
+    wire fire = |win;
+    wire [CW-1:0] ot [0:NC];
+    assign ot[0] = {CW{1'b0}};
+    generate for (t = 0; t < T; t = t + 1) begin : g_mt
+        for (n = 0; n < NVP; n = n + 1) begin : g_mux
+            localparam integer C = t * NVP + n;
+            if (n >= 1 && isadd(n)) begin : g_m
+
+
+                assign ot[C + 1] = ot[C] | ({CW{win[C]}} & C[CW-1:0]);
+            end else begin : g_z
+                assign ot[C+1]=ot[C];
+            end
+        end
+    end endgenerate
+    reg f_q; wire [31:0] a_q, b_q; reg [CW-1:0] t_q;
+    always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire;
+    always @(posedge clk) t_q <= ot[NC];
+    ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(3)) u_values(
+      .clk(clk),.iv(iv),.it(it),.ib(ib),.id(id),.fire(fire),.issue_tag(ot[NC]),
+      .rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag(wr_n),.wr_d(wr_d));
+    wire [LAV:0] av; wire f_add;
+    ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rstn), .v(f_q), .vd(av));
+    ot_dsrom_qadd #(.LAT(LAV)) u_a (clk, rstn, f_q, a_q, b_q, wr_d, f_add);
+    ot_hdc_delay #(.W(CW), .D(LAV)) u_t (.clk(clk), .rst_n(rstn), .d(t_q), .q(wr_n));
+    assign wr_v = av[LAV];
+    // roots: node 1 of each tree
+    reg [T-1:0] dn; reg flt;
+    always @(posedge clk or negedge rstn)
+        if (!rstn) begin dn <= {T{1'b0}}; r_v <= 1'b0; flt <= 1'b0; end
+        else begin
+            r_v <= 1'b0;
+            if (go_t) begin dn <= {T{1'b0}}; flt <= 1'b0; end
+            else begin
+                if (wr_v && wr_n == 1 * 1)           dn[0] <= 1'b1;
+                if (wr_v && wr_n == NVP + 1)         dn[1] <= 1'b1;
+                if (wr_v && wr_n == 2 * NVP + 1)     dn[2] <= 1'b1;
+                if (dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
+                    == {T{1'b1}}) r_v <= 1'b1;
+                if (f_add || (|dup)) flt <= 1'b1;
+            end
+        end
+    always @(posedge clk) begin
+        if (wr_v && wr_n == 1)           r_hh <= wr_d;
+        if (wr_v && wr_n == NVP + 1)     r_kk <= wr_d;
+        if (wr_v && wr_n == 2 * NVP + 1) r_dd <= wr_d;
+    end
+    assign fault = flt;
+endmodule
+module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
+ input wire clk,input wire[P-1:0] iv,input wire[P*2-1:0] it,input wire[P*8-1:0] ib,input wire[P*K*32-1:0] id,
+ input wire fire,input wire[8:0] issue_tag,input wire rd_active,output reg[31:0] a_q,b_q,
+ input wire wr_v,input wire[8:0] wr_tag,input wire[31:0] wr_d
+);
+ localparam integer RM=(TREES==3)?2:1,NB=P*K+2*RM;
+ localparam integer MUT_ASSOC=`ifdef OT_S81DV_MUT_EASSOC (TREES==3) `else 0 `endif;
+ if(NV!=80 || K!=5 || P!=3 || (TREES!=1 && TREES!=3))begin:g_bad_profile
+  ot_s81dv_finish_SRAM_requires_NV80_K5_P3_T1or3 u_bad();
+ end
+ reg[1:0] owner[0:TREES*NV-1];
+ function automatic integer eligible(input integer pp,input integer tt,input integer ix);
+  integer kk;
+  begin
+   eligible=0;
+   if(TREES==1)begin
+    for(kk=0;kk<K;kk=kk+1)if(iv[pp] && $unsigned(ib[pp*8+:8])+kk==ix)eligible=1;
+   end else eligible=iv[pp] && it[pp*2+:2]==tt && ib[pp*8+:8]==ix-(ix%K);
+  end
+ endfunction
+ for(genvar t=0;t<TREES;t=t+1)begin:g_ot
+  for(genvar ix=0;ix<NV;ix=ix+1)begin:g_ox
+   integer pp;
+   always @(posedge clk)begin
+    for(pp=P-1;pp>=0;pp=pp-1)if(eligible(pp,t,ix))owner[t*NV+ix]<=2'(pp);
+   end
+  end
+ end
+    function automatic [7:0] ca_node(input [7:0] n);
+      begin
+        if(MUT_ASSOC) begin
+          case(n)
+            8'd1: ca_node=8'd2;
+            8'd2: ca_node=8'd4;
+            8'd4: ca_node=8'd8;
+            8'd5: ca_node=8'd9;
+            8'd8: ca_node=8'd16;
+            8'd9: ca_node=8'd18;
+            8'd10: ca_node=8'd20;
+            8'd11: ca_node=8'd22;
+            8'd12: ca_node=8'd24;
+            8'd16: ca_node=8'd32;
+            8'd17: ca_node=8'd34;
+            8'd18: ca_node=8'd36;
+            8'd19: ca_node=8'd38;
+            8'd20: ca_node=8'd40;
+            8'd21: ca_node=8'd42;
+            8'd22: ca_node=8'd44;
+            8'd23: ca_node=8'd46;
+            8'd24: ca_node=8'd48;
+            8'd25: ca_node=8'd50;
+            8'd32: ca_node=8'd64;
+            8'd33: ca_node=8'd66;
+            8'd34: ca_node=8'd68;
+            8'd35: ca_node=8'd70;
+            8'd36: ca_node=8'd72;
+            8'd37: ca_node=8'd74;
+            8'd38: ca_node=8'd76;
+            8'd39: ca_node=8'd78;
+            8'd40: ca_node=8'd80;
+            8'd41: ca_node=8'd82;
+            8'd42: ca_node=8'd84;
+            8'd43: ca_node=8'd86;
+            8'd44: ca_node=8'd88;
+            8'd45: ca_node=8'd90;
+            8'd46: ca_node=8'd92;
+            8'd47: ca_node=8'd94;
+            8'd48: ca_node=8'd96;
+            8'd49: ca_node=8'd98;
+            8'd50: ca_node=8'd100;
+            8'd51: ca_node=8'd102;
+            8'd64: ca_node=8'd128;
+            8'd65: ca_node=8'd130;
+            8'd66: ca_node=8'd132;
+            8'd67: ca_node=8'd134;
+            8'd68: ca_node=8'd136;
+            8'd69: ca_node=8'd138;
+            8'd70: ca_node=8'd140;
+            8'd71: ca_node=8'd142;
+            8'd72: ca_node=8'd144;
+            8'd73: ca_node=8'd146;
+            8'd74: ca_node=8'd148;
+            8'd75: ca_node=8'd150;
+            8'd76: ca_node=8'd152;
+            8'd77: ca_node=8'd154;
+            8'd78: ca_node=8'd156;
+            8'd79: ca_node=8'd158;
+            8'd80: ca_node=8'd160;
+            8'd81: ca_node=8'd162;
+            8'd82: ca_node=8'd164;
+            8'd83: ca_node=8'd166;
+            8'd84: ca_node=8'd168;
+            8'd85: ca_node=8'd170;
+            8'd86: ca_node=8'd172;
+            8'd87: ca_node=8'd174;
+            8'd88: ca_node=8'd176;
+            8'd89: ca_node=8'd178;
+            8'd90: ca_node=8'd180;
+            8'd91: ca_node=8'd182;
+            8'd92: ca_node=8'd184;
+            8'd93: ca_node=8'd186;
+            8'd94: ca_node=8'd188;
+            8'd95: ca_node=8'd190;
+            8'd96: ca_node=8'd192;
+            8'd97: ca_node=8'd194;
+            8'd98: ca_node=8'd196;
+            8'd99: ca_node=8'd198;
+            8'd100: ca_node=8'd200;
+            8'd101: ca_node=8'd202;
+            8'd102: ca_node=8'd204;
+            8'd103: ca_node=8'd206;
+            default: ca_node=8'd0;
+          endcase
+        end else begin
+          case(n)
+            8'd1: ca_node=8'd2;
+            8'd2: ca_node=8'd4;
+            8'd4: ca_node=8'd8;
+            8'd5: ca_node=8'd10;
+            8'd8: ca_node=8'd16;
+            8'd9: ca_node=8'd18;
+            8'd10: ca_node=8'd20;
+            8'd11: ca_node=8'd22;
+            8'd12: ca_node=8'd24;
+            8'd16: ca_node=8'd32;
+            8'd17: ca_node=8'd34;
+            8'd18: ca_node=8'd36;
+            8'd19: ca_node=8'd38;
+            8'd20: ca_node=8'd40;
+            8'd21: ca_node=8'd42;
+            8'd22: ca_node=8'd44;
+            8'd23: ca_node=8'd46;
+            8'd24: ca_node=8'd48;
+            8'd25: ca_node=8'd50;
+            8'd32: ca_node=8'd64;
+            8'd33: ca_node=8'd66;
+            8'd34: ca_node=8'd68;
+            8'd35: ca_node=8'd70;
+            8'd36: ca_node=8'd72;
+            8'd37: ca_node=8'd74;
+            8'd38: ca_node=8'd76;
+            8'd39: ca_node=8'd78;
+            8'd40: ca_node=8'd80;
+            8'd41: ca_node=8'd82;
+            8'd42: ca_node=8'd84;
+            8'd43: ca_node=8'd86;
+            8'd44: ca_node=8'd88;
+            8'd45: ca_node=8'd90;
+            8'd46: ca_node=8'd92;
+            8'd47: ca_node=8'd94;
+            8'd48: ca_node=8'd96;
+            8'd49: ca_node=8'd98;
+            8'd50: ca_node=8'd100;
+            8'd51: ca_node=8'd102;
+            8'd64: ca_node=8'd128;
+            8'd65: ca_node=8'd130;
+            8'd66: ca_node=8'd132;
+            8'd67: ca_node=8'd134;
+            8'd68: ca_node=8'd136;
+            8'd69: ca_node=8'd138;
+            8'd70: ca_node=8'd140;
+            8'd71: ca_node=8'd142;
+            8'd72: ca_node=8'd144;
+            8'd73: ca_node=8'd146;
+            8'd74: ca_node=8'd148;
+            8'd75: ca_node=8'd150;
+            8'd76: ca_node=8'd152;
+            8'd77: ca_node=8'd154;
+            8'd78: ca_node=8'd156;
+            8'd79: ca_node=8'd158;
+            8'd80: ca_node=8'd160;
+            8'd81: ca_node=8'd162;
+            8'd82: ca_node=8'd164;
+            8'd83: ca_node=8'd166;
+            8'd84: ca_node=8'd168;
+            8'd85: ca_node=8'd170;
+            8'd86: ca_node=8'd172;
+            8'd87: ca_node=8'd174;
+            8'd88: ca_node=8'd176;
+            8'd89: ca_node=8'd178;
+            8'd90: ca_node=8'd180;
+            8'd91: ca_node=8'd182;
+            8'd92: ca_node=8'd184;
+            8'd93: ca_node=8'd186;
+            8'd94: ca_node=8'd188;
+            8'd95: ca_node=8'd190;
+            8'd96: ca_node=8'd192;
+            8'd97: ca_node=8'd194;
+            8'd98: ca_node=8'd196;
+            8'd99: ca_node=8'd198;
+            8'd100: ca_node=8'd200;
+            8'd101: ca_node=8'd202;
+            8'd102: ca_node=8'd204;
+            8'd103: ca_node=8'd206;
+            default: ca_node=8'd0;
+          endcase
+        end
+      end
+    endfunction
+    function automatic [7:0] cb_node(input [7:0] n);
+      begin
+        if(MUT_ASSOC) begin
+          case(n)
+            8'd1: cb_node=8'd12;
+            8'd2: cb_node=8'd5;
+            8'd4: cb_node=8'd10;
+            8'd5: cb_node=8'd11;
+            8'd8: cb_node=8'd17;
+            8'd9: cb_node=8'd19;
+            8'd10: cb_node=8'd21;
+            8'd11: cb_node=8'd23;
+            8'd12: cb_node=8'd25;
+            8'd16: cb_node=8'd33;
+            8'd17: cb_node=8'd35;
+            8'd18: cb_node=8'd37;
+            8'd19: cb_node=8'd39;
+            8'd20: cb_node=8'd41;
+            8'd21: cb_node=8'd43;
+            8'd22: cb_node=8'd45;
+            8'd23: cb_node=8'd47;
+            8'd24: cb_node=8'd49;
+            8'd25: cb_node=8'd51;
+            8'd32: cb_node=8'd65;
+            8'd33: cb_node=8'd67;
+            8'd34: cb_node=8'd69;
+            8'd35: cb_node=8'd71;
+            8'd36: cb_node=8'd73;
+            8'd37: cb_node=8'd75;
+            8'd38: cb_node=8'd77;
+            8'd39: cb_node=8'd79;
+            8'd40: cb_node=8'd81;
+            8'd41: cb_node=8'd83;
+            8'd42: cb_node=8'd85;
+            8'd43: cb_node=8'd87;
+            8'd44: cb_node=8'd89;
+            8'd45: cb_node=8'd91;
+            8'd46: cb_node=8'd93;
+            8'd47: cb_node=8'd95;
+            8'd48: cb_node=8'd97;
+            8'd49: cb_node=8'd99;
+            8'd50: cb_node=8'd101;
+            8'd51: cb_node=8'd103;
+            8'd64: cb_node=8'd129;
+            8'd65: cb_node=8'd131;
+            8'd66: cb_node=8'd133;
+            8'd67: cb_node=8'd135;
+            8'd68: cb_node=8'd137;
+            8'd69: cb_node=8'd139;
+            8'd70: cb_node=8'd141;
+            8'd71: cb_node=8'd143;
+            8'd72: cb_node=8'd145;
+            8'd73: cb_node=8'd147;
+            8'd74: cb_node=8'd149;
+            8'd75: cb_node=8'd151;
+            8'd76: cb_node=8'd153;
+            8'd77: cb_node=8'd155;
+            8'd78: cb_node=8'd157;
+            8'd79: cb_node=8'd159;
+            8'd80: cb_node=8'd161;
+            8'd81: cb_node=8'd163;
+            8'd82: cb_node=8'd165;
+            8'd83: cb_node=8'd167;
+            8'd84: cb_node=8'd169;
+            8'd85: cb_node=8'd171;
+            8'd86: cb_node=8'd173;
+            8'd87: cb_node=8'd175;
+            8'd88: cb_node=8'd177;
+            8'd89: cb_node=8'd179;
+            8'd90: cb_node=8'd181;
+            8'd91: cb_node=8'd183;
+            8'd92: cb_node=8'd185;
+            8'd93: cb_node=8'd187;
+            8'd94: cb_node=8'd189;
+            8'd95: cb_node=8'd191;
+            8'd96: cb_node=8'd193;
+            8'd97: cb_node=8'd195;
+            8'd98: cb_node=8'd197;
+            8'd99: cb_node=8'd199;
+            8'd100: cb_node=8'd201;
+            8'd101: cb_node=8'd203;
+            8'd102: cb_node=8'd205;
+            8'd103: cb_node=8'd207;
+            default: cb_node=8'd0;
+          endcase
+        end else begin
+          case(n)
+            8'd1: cb_node=8'd12;
+            8'd2: cb_node=8'd5;
+            8'd4: cb_node=8'd9;
+            8'd5: cb_node=8'd11;
+            8'd8: cb_node=8'd17;
+            8'd9: cb_node=8'd19;
+            8'd10: cb_node=8'd21;
+            8'd11: cb_node=8'd23;
+            8'd12: cb_node=8'd25;
+            8'd16: cb_node=8'd33;
+            8'd17: cb_node=8'd35;
+            8'd18: cb_node=8'd37;
+            8'd19: cb_node=8'd39;
+            8'd20: cb_node=8'd41;
+            8'd21: cb_node=8'd43;
+            8'd22: cb_node=8'd45;
+            8'd23: cb_node=8'd47;
+            8'd24: cb_node=8'd49;
+            8'd25: cb_node=8'd51;
+            8'd32: cb_node=8'd65;
+            8'd33: cb_node=8'd67;
+            8'd34: cb_node=8'd69;
+            8'd35: cb_node=8'd71;
+            8'd36: cb_node=8'd73;
+            8'd37: cb_node=8'd75;
+            8'd38: cb_node=8'd77;
+            8'd39: cb_node=8'd79;
+            8'd40: cb_node=8'd81;
+            8'd41: cb_node=8'd83;
+            8'd42: cb_node=8'd85;
+            8'd43: cb_node=8'd87;
+            8'd44: cb_node=8'd89;
+            8'd45: cb_node=8'd91;
+            8'd46: cb_node=8'd93;
+            8'd47: cb_node=8'd95;
+            8'd48: cb_node=8'd97;
+            8'd49: cb_node=8'd99;
+            8'd50: cb_node=8'd101;
+            8'd51: cb_node=8'd103;
+            8'd64: cb_node=8'd129;
+            8'd65: cb_node=8'd131;
+            8'd66: cb_node=8'd133;
+            8'd67: cb_node=8'd135;
+            8'd68: cb_node=8'd137;
+            8'd69: cb_node=8'd139;
+            8'd70: cb_node=8'd141;
+            8'd71: cb_node=8'd143;
+            8'd72: cb_node=8'd145;
+            8'd73: cb_node=8'd147;
+            8'd74: cb_node=8'd149;
+            8'd75: cb_node=8'd151;
+            8'd76: cb_node=8'd153;
+            8'd77: cb_node=8'd155;
+            8'd78: cb_node=8'd157;
+            8'd79: cb_node=8'd159;
+            8'd80: cb_node=8'd161;
+            8'd81: cb_node=8'd163;
+            8'd82: cb_node=8'd165;
+            8'd83: cb_node=8'd167;
+            8'd84: cb_node=8'd169;
+            8'd85: cb_node=8'd171;
+            8'd86: cb_node=8'd173;
+            8'd87: cb_node=8'd175;
+            8'd88: cb_node=8'd177;
+            8'd89: cb_node=8'd179;
+            8'd90: cb_node=8'd181;
+            8'd91: cb_node=8'd183;
+            8'd92: cb_node=8'd185;
+            8'd93: cb_node=8'd187;
+            8'd94: cb_node=8'd189;
+            8'd95: cb_node=8'd191;
+            8'd96: cb_node=8'd193;
+            8'd97: cb_node=8'd195;
+            8'd98: cb_node=8'd197;
+            8'd99: cb_node=8'd199;
+            8'd100: cb_node=8'd201;
+            8'd101: cb_node=8'd203;
+            8'd102: cb_node=8'd205;
+            8'd103: cb_node=8'd207;
+            default: cb_node=8'd0;
+          endcase
+        end
+      end
+    endfunction
+    function automatic [7:0] node_role(input [7:0] n);
+      begin
+        if(MUT_ASSOC) begin
+          case(n)
+            8'd2: node_role=8'd0;
+            8'd4: node_role=8'd0;
+            8'd5: node_role=8'd1;
+            8'd8: node_role=8'd0;
+            8'd9: node_role=8'd0;
+            8'd10: node_role=8'd1;
+            8'd11: node_role=8'd1;
+            8'd12: node_role=8'd1;
+            8'd16: node_role=8'd0;
+            8'd17: node_role=8'd1;
+            8'd18: node_role=8'd0;
+            8'd19: node_role=8'd1;
+            8'd20: node_role=8'd0;
+            8'd21: node_role=8'd1;
+            8'd22: node_role=8'd0;
+            8'd23: node_role=8'd1;
+            8'd24: node_role=8'd0;
+            8'd25: node_role=8'd1;
+            8'd32: node_role=8'd0;
+            8'd33: node_role=8'd1;
+            8'd34: node_role=8'd0;
+            8'd35: node_role=8'd1;
+            8'd36: node_role=8'd0;
+            8'd37: node_role=8'd1;
+            8'd38: node_role=8'd0;
+            8'd39: node_role=8'd1;
+            8'd40: node_role=8'd0;
+            8'd41: node_role=8'd1;
+            8'd42: node_role=8'd0;
+            8'd43: node_role=8'd1;
+            8'd44: node_role=8'd0;
+            8'd45: node_role=8'd1;
+            8'd46: node_role=8'd0;
+            8'd47: node_role=8'd1;
+            8'd48: node_role=8'd0;
+            8'd49: node_role=8'd1;
+            8'd50: node_role=8'd0;
+            8'd51: node_role=8'd1;
+            8'd64: node_role=8'd0;
+            8'd65: node_role=8'd1;
+            8'd66: node_role=8'd0;
+            8'd67: node_role=8'd1;
+            8'd68: node_role=8'd0;
+            8'd69: node_role=8'd1;
+            8'd70: node_role=8'd0;
+            8'd71: node_role=8'd1;
+            8'd72: node_role=8'd0;
+            8'd73: node_role=8'd1;
+            8'd74: node_role=8'd0;
+            8'd75: node_role=8'd1;
+            8'd76: node_role=8'd0;
+            8'd77: node_role=8'd1;
+            8'd78: node_role=8'd0;
+            8'd79: node_role=8'd1;
+            8'd80: node_role=8'd0;
+            8'd81: node_role=8'd1;
+            8'd82: node_role=8'd0;
+            8'd83: node_role=8'd1;
+            8'd84: node_role=8'd0;
+            8'd85: node_role=8'd1;
+            8'd86: node_role=8'd0;
+            8'd87: node_role=8'd1;
+            8'd88: node_role=8'd0;
+            8'd89: node_role=8'd1;
+            8'd90: node_role=8'd0;
+            8'd91: node_role=8'd1;
+            8'd92: node_role=8'd0;
+            8'd93: node_role=8'd1;
+            8'd94: node_role=8'd0;
+            8'd95: node_role=8'd1;
+            8'd96: node_role=8'd0;
+            8'd97: node_role=8'd1;
+            8'd98: node_role=8'd0;
+            8'd99: node_role=8'd1;
+            8'd100: node_role=8'd0;
+            8'd101: node_role=8'd1;
+            8'd102: node_role=8'd0;
+            8'd103: node_role=8'd1;
+            default: node_role=8'd0;
+          endcase
+        end else begin
+          case(n)
+            8'd2: node_role=8'd0;
+            8'd4: node_role=8'd0;
+            8'd5: node_role=8'd1;
+            8'd8: node_role=8'd0;
+            8'd9: node_role=8'd1;
+            8'd10: node_role=8'd0;
+            8'd11: node_role=8'd1;
+            8'd12: node_role=8'd1;
+            8'd16: node_role=8'd0;
+            8'd17: node_role=8'd1;
+            8'd18: node_role=8'd0;
+            8'd19: node_role=8'd1;
+            8'd20: node_role=8'd0;
+            8'd21: node_role=8'd1;
+            8'd22: node_role=8'd0;
+            8'd23: node_role=8'd1;
+            8'd24: node_role=8'd0;
+            8'd25: node_role=8'd1;
+            8'd32: node_role=8'd0;
+            8'd33: node_role=8'd1;
+            8'd34: node_role=8'd0;
+            8'd35: node_role=8'd1;
+            8'd36: node_role=8'd0;
+            8'd37: node_role=8'd1;
+            8'd38: node_role=8'd0;
+            8'd39: node_role=8'd1;
+            8'd40: node_role=8'd0;
+            8'd41: node_role=8'd1;
+            8'd42: node_role=8'd0;
+            8'd43: node_role=8'd1;
+            8'd44: node_role=8'd0;
+            8'd45: node_role=8'd1;
+            8'd46: node_role=8'd0;
+            8'd47: node_role=8'd1;
+            8'd48: node_role=8'd0;
+            8'd49: node_role=8'd1;
+            8'd50: node_role=8'd0;
+            8'd51: node_role=8'd1;
+            8'd64: node_role=8'd0;
+            8'd65: node_role=8'd1;
+            8'd66: node_role=8'd0;
+            8'd67: node_role=8'd1;
+            8'd68: node_role=8'd0;
+            8'd69: node_role=8'd1;
+            8'd70: node_role=8'd0;
+            8'd71: node_role=8'd1;
+            8'd72: node_role=8'd0;
+            8'd73: node_role=8'd1;
+            8'd74: node_role=8'd0;
+            8'd75: node_role=8'd1;
+            8'd76: node_role=8'd0;
+            8'd77: node_role=8'd1;
+            8'd78: node_role=8'd0;
+            8'd79: node_role=8'd1;
+            8'd80: node_role=8'd0;
+            8'd81: node_role=8'd1;
+            8'd82: node_role=8'd0;
+            8'd83: node_role=8'd1;
+            8'd84: node_role=8'd0;
+            8'd85: node_role=8'd1;
+            8'd86: node_role=8'd0;
+            8'd87: node_role=8'd1;
+            8'd88: node_role=8'd0;
+            8'd89: node_role=8'd1;
+            8'd90: node_role=8'd0;
+            8'd91: node_role=8'd1;
+            8'd92: node_role=8'd0;
+            8'd93: node_role=8'd1;
+            8'd94: node_role=8'd0;
+            8'd95: node_role=8'd1;
+            8'd96: node_role=8'd0;
+            8'd97: node_role=8'd1;
+            8'd98: node_role=8'd0;
+            8'd99: node_role=8'd1;
+            8'd100: node_role=8'd0;
+            8'd101: node_role=8'd1;
+            8'd102: node_role=8'd0;
+            8'd103: node_role=8'd1;
+            default: node_role=8'd0;
+          endcase
+        end
+      end
+    endfunction
+    function automatic [7:0] node_rank(input [7:0] n);
+      begin
+        if(MUT_ASSOC) begin
+          case(n)
+            8'd2: node_rank=8'd0;
+            8'd4: node_rank=8'd1;
+            8'd5: node_rank=8'd0;
+            8'd8: node_rank=8'd2;
+            8'd9: node_rank=8'd3;
+            8'd10: node_rank=8'd1;
+            8'd11: node_rank=8'd2;
+            8'd12: node_rank=8'd3;
+            8'd16: node_rank=8'd4;
+            8'd17: node_rank=8'd4;
+            8'd18: node_rank=8'd5;
+            8'd19: node_rank=8'd5;
+            8'd20: node_rank=8'd6;
+            8'd21: node_rank=8'd6;
+            8'd22: node_rank=8'd7;
+            8'd23: node_rank=8'd7;
+            8'd24: node_rank=8'd8;
+            8'd25: node_rank=8'd8;
+            8'd32: node_rank=8'd9;
+            8'd33: node_rank=8'd9;
+            8'd34: node_rank=8'd10;
+            8'd35: node_rank=8'd10;
+            8'd36: node_rank=8'd11;
+            8'd37: node_rank=8'd11;
+            8'd38: node_rank=8'd12;
+            8'd39: node_rank=8'd12;
+            8'd40: node_rank=8'd13;
+            8'd41: node_rank=8'd13;
+            8'd42: node_rank=8'd14;
+            8'd43: node_rank=8'd14;
+            8'd44: node_rank=8'd15;
+            8'd45: node_rank=8'd15;
+            8'd46: node_rank=8'd16;
+            8'd47: node_rank=8'd16;
+            8'd48: node_rank=8'd17;
+            8'd49: node_rank=8'd17;
+            8'd50: node_rank=8'd18;
+            8'd51: node_rank=8'd18;
+            8'd64: node_rank=8'd19;
+            8'd65: node_rank=8'd19;
+            8'd66: node_rank=8'd20;
+            8'd67: node_rank=8'd20;
+            8'd68: node_rank=8'd21;
+            8'd69: node_rank=8'd21;
+            8'd70: node_rank=8'd22;
+            8'd71: node_rank=8'd22;
+            8'd72: node_rank=8'd23;
+            8'd73: node_rank=8'd23;
+            8'd74: node_rank=8'd24;
+            8'd75: node_rank=8'd24;
+            8'd76: node_rank=8'd25;
+            8'd77: node_rank=8'd25;
+            8'd78: node_rank=8'd26;
+            8'd79: node_rank=8'd26;
+            8'd80: node_rank=8'd27;
+            8'd81: node_rank=8'd27;
+            8'd82: node_rank=8'd28;
+            8'd83: node_rank=8'd28;
+            8'd84: node_rank=8'd29;
+            8'd85: node_rank=8'd29;
+            8'd86: node_rank=8'd30;
+            8'd87: node_rank=8'd30;
+            8'd88: node_rank=8'd31;
+            8'd89: node_rank=8'd31;
+            8'd90: node_rank=8'd32;
+            8'd91: node_rank=8'd32;
+            8'd92: node_rank=8'd33;
+            8'd93: node_rank=8'd33;
+            8'd94: node_rank=8'd34;
+            8'd95: node_rank=8'd34;
+            8'd96: node_rank=8'd35;
+            8'd97: node_rank=8'd35;
+            8'd98: node_rank=8'd36;
+            8'd99: node_rank=8'd36;
+            8'd100: node_rank=8'd37;
+            8'd101: node_rank=8'd37;
+            8'd102: node_rank=8'd38;
+            8'd103: node_rank=8'd38;
+            default: node_rank=8'd0;
+          endcase
+        end else begin
+          case(n)
+            8'd2: node_rank=8'd0;
+            8'd4: node_rank=8'd1;
+            8'd5: node_rank=8'd0;
+            8'd8: node_rank=8'd2;
+            8'd9: node_rank=8'd1;
+            8'd10: node_rank=8'd3;
+            8'd11: node_rank=8'd2;
+            8'd12: node_rank=8'd3;
+            8'd16: node_rank=8'd4;
+            8'd17: node_rank=8'd4;
+            8'd18: node_rank=8'd5;
+            8'd19: node_rank=8'd5;
+            8'd20: node_rank=8'd6;
+            8'd21: node_rank=8'd6;
+            8'd22: node_rank=8'd7;
+            8'd23: node_rank=8'd7;
+            8'd24: node_rank=8'd8;
+            8'd25: node_rank=8'd8;
+            8'd32: node_rank=8'd9;
+            8'd33: node_rank=8'd9;
+            8'd34: node_rank=8'd10;
+            8'd35: node_rank=8'd10;
+            8'd36: node_rank=8'd11;
+            8'd37: node_rank=8'd11;
+            8'd38: node_rank=8'd12;
+            8'd39: node_rank=8'd12;
+            8'd40: node_rank=8'd13;
+            8'd41: node_rank=8'd13;
+            8'd42: node_rank=8'd14;
+            8'd43: node_rank=8'd14;
+            8'd44: node_rank=8'd15;
+            8'd45: node_rank=8'd15;
+            8'd46: node_rank=8'd16;
+            8'd47: node_rank=8'd16;
+            8'd48: node_rank=8'd17;
+            8'd49: node_rank=8'd17;
+            8'd50: node_rank=8'd18;
+            8'd51: node_rank=8'd18;
+            8'd64: node_rank=8'd19;
+            8'd65: node_rank=8'd19;
+            8'd66: node_rank=8'd20;
+            8'd67: node_rank=8'd20;
+            8'd68: node_rank=8'd21;
+            8'd69: node_rank=8'd21;
+            8'd70: node_rank=8'd22;
+            8'd71: node_rank=8'd22;
+            8'd72: node_rank=8'd23;
+            8'd73: node_rank=8'd23;
+            8'd74: node_rank=8'd24;
+            8'd75: node_rank=8'd24;
+            8'd76: node_rank=8'd25;
+            8'd77: node_rank=8'd25;
+            8'd78: node_rank=8'd26;
+            8'd79: node_rank=8'd26;
+            8'd80: node_rank=8'd27;
+            8'd81: node_rank=8'd27;
+            8'd82: node_rank=8'd28;
+            8'd83: node_rank=8'd28;
+            8'd84: node_rank=8'd29;
+            8'd85: node_rank=8'd29;
+            8'd86: node_rank=8'd30;
+            8'd87: node_rank=8'd30;
+            8'd88: node_rank=8'd31;
+            8'd89: node_rank=8'd31;
+            8'd90: node_rank=8'd32;
+            8'd91: node_rank=8'd32;
+            8'd92: node_rank=8'd33;
+            8'd93: node_rank=8'd33;
+            8'd94: node_rank=8'd34;
+            8'd95: node_rank=8'd34;
+            8'd96: node_rank=8'd35;
+            8'd97: node_rank=8'd35;
+            8'd98: node_rank=8'd36;
+            8'd99: node_rank=8'd36;
+            8'd100: node_rank=8'd37;
+            8'd101: node_rank=8'd37;
+            8'd102: node_rank=8'd38;
+            8'd103: node_rank=8'd38;
+            default: node_rank=8'd0;
+          endcase
+        end
+      end
+    endfunction
+ function automatic [10:0] descriptor(input [7:0] n,input integer tree);
+  integer ix,slot,bank;
+  begin
+   if(n>=128)begin
+    ix=n-128;
+`ifdef OT_S81DV_MUT_LEAF
+    if(TREES==1 && ix==1)ix=2;
+`endif
+    slot=tree*16+ix/5;bank=owner[tree*NV+ix]*K+ix%K;
+   end else begin
+    slot=tree*39+node_rank(n);bank=P*K+node_role(n)*RM+slot/64;
+   end
+   descriptor={5'(bank),5'((slot>>1)%32),1'(slot%2)};
+  end
+ endfunction
+ wire[10:0] da=descriptor(ca_node({1'b0,issue_tag[6:0]}),issue_tag[8:7]);
+ wire[10:0] db=descriptor(cb_node({1'b0,issue_tag[6:0]}),issue_tag[8:7]);
+ wire[10:0] dw=descriptor({1'b0,wr_tag[6:0]},wr_tag[8:7]);
+ reg[NB-1:0] asel,bsel;reg ah,bh;
+ always @(posedge clk)begin
+  asel<=fire?({{(NB-1){1'b0}},1'b1}<<da[10:6]):{NB{1'b0}};
+  bsel<=fire?({{(NB-1){1'b0}},1'b1}<<db[10:6]):{NB{1'b0}};
+  ah<=da[0];bh<=db[0];
+ end
+ function automatic [31:0] merged(input integer target_tree,input integer target_ix);
+  integer pp,kk;
+  begin
+   merged=0;
+   for(pp=0;pp<P;pp=pp+1)begin
+    for(kk=0;kk<K;kk=kk+1)begin
+     if(eligible(pp,target_tree,target_ix) && $unsigned(ib[pp*8+:8])+kk==target_ix)
+       merged=merged|id[(pp*K+kk)*32+:32];
+    end
+   end
+  end
+ endfunction
+ function automatic [38:0] leaf_write(input integer pp,input integer residue);
+  integer kk,ix,tree,slot;reg en;reg[31:0] data;reg[4:0] addr;reg half;
+  begin
+   en=0;data=0;addr=0;half=0;
+   tree=(TREES==1)?0:it[pp*2+:2];
+   for(kk=0;kk<K;kk=kk+1)begin
+    ix=$unsigned(ib[pp*8+:8])+kk;
+    if(ix<NV && ix%K==residue && tree<TREES && eligible(pp,tree,ix))begin
+     en=1;data=merged(tree,ix);slot=tree*16+ix/5;addr=5'(slot>>1);half=1'(slot%2);
+    end
+   end
+   leaf_write={en,addr,half,data};
+  end
+ endfunction
+ wire[63:0] rd[0:NB-1];
+ for(genvar bank=0;bank<NB;bank=bank+1)begin:g_bank
+  wire ren=fire && (da[10:6]==bank || db[10:6]==bank);
+  wire[4:0] ra=(da[10:6]==bank)?da[5:1]:db[5:1];
+  wire[38:0] wp;
+  if(bank<P*K)begin:g_leaf
+   assign wp=leaf_write(bank/K,bank%K);
+  end else begin:g_internal
+   assign wp={wr_v && wr_tag[6:0]!=1 && dw[10:6]==bank,dw[5:1],dw[0],wr_d};
+  end
+  wire[63:0] mask;
+  for(genvar b=0;b<8;b=b+1)begin:g_mask
+   ot_s81dv_finish_mask8 #(.UPPER(b>=4)) u_m(.en(wp[38]),.half(wp[32]),.m(mask[8*b+:8]));
+  end
+  ot_sram_1r1w_32x64_m1 u_m(.clk(clk),.r_ce_in(ren),.r_addr_in(ra),.rd_out(rd[bank]),
+    .w_ce_in(wp[38]),.w_addr_in(wp[37:33]),.wd_in({wp[31:0],wp[31:0]}),.w_mask_in(mask));
+ end
+ integer b;
+ always @*begin
+  a_q=0;b_q=0;
+  if(rd_active)for(b=0;b<NB;b=b+1)begin
+   if(asel[b])a_q=a_q|(ah?rd[b][63:32]:rd[b][31:0]);
+   if(bsel[b])b_q=b_q|(bh?rd[b][63:32]:rd[b][31:0]);
+  end
+ end
+endmodule
+(* keep_hierarchy=1 *) module ot_s81dv_finish_mask8 #(parameter integer UPPER=0)(input wire en,half,output wire[7:0] m);
+ assign m={8{en && (half==UPPER)}};
+endmodule
+// Same two release edges as the original rsr forest, bounded real regional consumers.
+module ot_s81dv_finish_reset2 #(parameter integer LEAVES=64)(input wire clk,rst_n,output wire[LEAVES-1:0] q);
+ localparam integer NP=(LEAVES+23)/24;
+ (* keep=1 *) reg[NP-1:0] prefix;
+ always @(posedge clk or negedge rst_n)if(!rst_n)prefix<=0;else prefix<={NP{1'b1}};
+ for(genvar g=0;g<LEAVES;g=g+1)begin:g_leaf
+  (* keep=1 *) reg r;
+  always @(posedge clk or negedge prefix[g/24])if(!prefix[g/24])r<=0;else r<=1;
+  assign q[g]=r;
+ end
+endmodule
