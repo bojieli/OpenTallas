@@ -35,6 +35,16 @@ def parse(out):
     return r
 
 
+def calibration(out, mutant=False):
+    text = out.read_text(errors='replace') if out.exists() else ''
+    lines = text.splitlines()
+    rc = next((int(line[3:]) for line in reversed(lines) if re.fullmatch(r'rc=-?\d+', line)), None)
+    failed = 'CALIBRATE FAIL' in text or (rc is not None and rc != 0)
+    return dict(rc=rc, verdict='FAIL' if failed else 'PASS' if rc == 0 else 'NOT_RECORDED',
+                scope='mutant-configuration diagnostic; not credited as a causal negative' if mutant else 'required nominal calibration',
+                raw_output=str(out), summary=lines[-3:])
+
+
 def main():
     R = Path(sys.argv[1]).resolve()
     ST = sys.argv[2] if len(sys.argv) > 2 else 'stg'
@@ -66,6 +76,11 @@ def main():
                   stn_ages=f'{ST}/{c}/cal_mat/stn_ages.json' if (d / 'cal_mat/stn_ages.json').exists() else None,
                   slice_ages=f'{ST}/{c}/build/slice_ages.json' if (d / 'build/slice_ages.json').exists() else None,
                   stages=st)
+        cc['calibration_results'] = {phase: calibration(d / name, mutant=c == 'mut') for phase, name in
+                                     (('slice', 'build/slice_calibrate.out'), ('vec', 'build/calibrate.out'),
+                                      ('mat', 'cal_mat/calibrate.out'))}
+        for value in cc['calibration_results'].values():
+            value['raw_output'] = str(Path(value['raw_output']).relative_to(R))
         cfgs[c] = cc
         cy = {f: {} for f in FAMS}
         for name, r in st.items():
@@ -102,6 +117,9 @@ def main():
         missing = required - set(cfgs.get(c, {}).get('stages', {}))
         if missing:
             bad.append(f'{c} missing {len(missing)} required stages: {sorted(missing)[:8]}')
+        for phase, result in cfgs.get(c, {}).get('calibration_results', {}).items():
+            if result['verdict'] != 'PASS':
+                bad.append(f'{c}/{phase} required calibration {result["verdict"]} rc={result["rc"]}')
     for line in (S / 'runlist.txt').read_text().splitlines() if (S / 'runlist.txt').exists() else []:
         c, name, *_ = line.split()
         if name not in cfgs.get(c, {}).get('stages', {}):
@@ -120,9 +138,16 @@ def main():
                         and any(type(row.get(k)) is not int for k in
                                 ('first_vm_write_edge', 'last_vm_write_edge'))]
     verdict = 'PASS' if not bad else 'FAIL'
+    numeric_cases = [(c, name, row) for c, cfg in cfgs.items() for name, row in cfg['stages'].items()]
+    numeric_unmet = [f'{c}/{name}' for c, name, row in numeric_cases
+                     if row['verdict'] != ('FAIL' if EXPECT_FAIL.match(name) else 'PASS')]
     res = dict(delivery_timing_qualified=not unknown_delivery,
                unknown_delivery_cases=unknown_delivery,
                delivery_timing_scope='actual VM-write edges required; legacy schedule anchors are not delivery measurements',
+               numeric_case_summary=dict(cases=len(numeric_cases), expected_outcomes_met=len(numeric_cases) - len(numeric_unmet),
+                                         unmet_cases=numeric_unmet),
+               calibration_gate=dict(required_nominal=['rel', 'pos'], mutant_diagnostic=['mut'],
+                                     mutant_calibration_negative_credit=False),
         stage=ST, grade='RTL-functional (source assembly)', src_commit=src_commit, verdict=verdict,
         golden=(f'per layer L0..L35 (TP4 36-layer ISA golden at P8191 re-executed per layer, reproduction-checked, '
                 f'cut to TP8 compute die 0): bench hdc_golden expectation bit-exact on the RTL outputs AND == ISA gold '
@@ -146,6 +171,7 @@ def main():
         logs=[f'{ST}/runs.log', f'{ST}/fixtures.log', f'{ST}/timing.txt', f'{ST}/runlist.txt'] +
              [f'{ST}/{c}/runs/<name>/bench.out' for c in cfgs] + [f'{ST}/build_{c}.log' for c in cfgs] +
              [f'{ST}/{c}/{name}' for c in cfgs for name in ('vtb.sha256', 'vflags.txt')] +
+             [f'{ST}/{c}/{name}' for c in cfgs for name in ('build/slice_calibrate.out', 'build/calibrate.out', 'cal_mat/calibrate.out')] +
              [f'{ST}/mat_contract_sources.sha256'],
         configs=cfgs)
     (S / 'result.json').write_text(json.dumps(res, indent=1) + '\n')

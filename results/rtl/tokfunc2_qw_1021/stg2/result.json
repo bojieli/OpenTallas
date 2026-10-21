@@ -147,6 +147,25 @@
   "pos/L9_qkv"
  ],
  "delivery_timing_scope": "actual VM-write edges required; legacy schedule anchors are not delivery measurements",
+ "numeric_case_summary": {
+  "cases": 527,
+  "expected_outcomes_met": 524,
+  "unmet_cases": [
+   "rel/lm",
+   "pos/LGPOS_lm_arf",
+   "pos/lm"
+  ]
+ },
+ "calibration_gate": {
+  "required_nominal": [
+   "rel",
+   "pos"
+  ],
+  "mutant_diagnostic": [
+   "mut"
+  ],
+  "mutant_calibration_negative_credit": false
+ },
  "stage": "stg2",
  "grade": "DIAG (historical reused c0 binary; exact build-source/overlay identity unverified)",
  "src_commit": "c0f8097f3",
@@ -789,7 +808,8 @@
  "failures": [
   "rel/lm FAIL 26/26",
   "pos/LGPOS_lm_arf FAIL 26/26",
-  "pos/lm FAIL 26/26"
+  "pos/lm FAIL 26/26",
+  "pos/mat required calibration FAIL rc=1"
  ],
  "fixtures": {
   "layers_ok": [
@@ -856,6 +876,15 @@
   "stg2/pos/vflags.txt",
   "stg2/mut/vtb.sha256",
   "stg2/mut/vflags.txt",
+  "stg2/rel/build/slice_calibrate.out",
+  "stg2/rel/build/calibrate.out",
+  "stg2/rel/cal_mat/calibrate.out",
+  "stg2/pos/build/slice_calibrate.out",
+  "stg2/pos/build/calibrate.out",
+  "stg2/pos/cal_mat/calibrate.out",
+  "stg2/mut/build/slice_calibrate.out",
+  "stg2/mut/build/calibrate.out",
+  "stg2/mut/cal_mat/calibrate.out",
   "stg2/mat_contract_sources.sha256"
  ],
  "configs": {
@@ -863,7 +892,20 @@
    "vflags": "-GMU_NU=4 -GSU_LT=1",
    "built": true,
    "timing": null,
-   "calibrate": {},
+   "calibrate": {
+    "build/slice_calibrate.out": [
+     "CALIBRATE ssq_psum_out=[104, 120, 136] sc_hop=2 per_slice={11: [104, 120], 1: [104, 120, 136]}",
+     "rc=0"
+    ],
+    "build/calibrate.out": [
+     "CALIBRATE PASS",
+     "rc=0"
+    ],
+    "cal_mat/calibrate.out": [
+     "CALIBRATE OK",
+     "rc=0"
+    ]
+   },
    "vec_ages": "stg2/rel/build/vec_ages.json",
    "stn_ages": "stg2/rel/cal_mat/stn_ages.json",
    "slice_ages": "stg2/rel/build/slice_ages.json",
@@ -3876,13 +3918,60 @@
       "S0AG stn_busy still set at the end (1000000000)"
      ]
     }
+   },
+   "calibration_results": {
+    "slice": {
+     "rc": 0,
+     "verdict": "PASS",
+     "scope": "required nominal calibration",
+     "raw_output": "stg2/rel/build/slice_calibrate.out",
+     "summary": [
+      "CALIBRATE ssq_psum_out=[104, 120, 136] sc_hop=2 per_slice={11: [104, 120], 1: [104, 120, 136]}",
+      "rc=0"
+     ]
+    },
+    "vec": {
+     "rc": 0,
+     "verdict": "PASS",
+     "scope": "required nominal calibration",
+     "raw_output": "stg2/rel/build/calibrate.out",
+     "summary": [
+      "CALIBRATE raw {\"add@1\": [104, 120, 136], \"add@11\": [104, 120], \"xs@1\": [55, 63, 71, 79, 87, 95], \"xs@10\": [55, 63, 71, 79], \"silu@3\": [181, 189], \"red_vm@2\": [104], \"rs@2\": [109], \"qn@2\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62], \"rope_q@2\": [47, 48, 49, 50, 51, 52, 53, 54], \"rope_k@8\": [47, 48, 49, 50, 51, 52, 53, 54], \"v@10\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62], \"gur@3\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78], \"readback@1\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94]}",
+      "CALIBRATE PASS",
+      "rc=0"
+     ]
+    },
+    "mat": {
+     "rc": 0,
+     "verdict": "PASS",
+     "scope": "required nominal calibration",
+     "raw_output": "stg2/rel/cal_mat/calibrate.out",
+     "summary": [
+      "CALIBRATE {\"schema\": \"opentallas.qwen.dv-mat-ages.v1\", \"l8_ar\": 26, \"ar_hop\": 2.0, \"xc_cc\": 2, \"amax_ami\": 3, \"arx_after_amv\": 3, \"faults\": []}",
+      "CALIBRATE OK",
+      "rc=0"
+     ]
+    }
    }
   },
   "pos": {
    "vflags": "-GMU_NU=4 -GSU_LT=1 -GARF=1 -GRP=1",
    "built": true,
    "timing": null,
-   "calibrate": {},
+   "calibrate": {
+    "build/slice_calibrate.out": [
+     "CALIBRATE ssq_psum_out=[104, 120, 136] sc_hop=2 per_slice={11: [104, 120], 1: [104, 120, 136]}",
+     "rc=0"
+    ],
+    "build/calibrate.out": [
+     "CALIBRATE PASS",
+     "rc=0"
+    ],
+    "cal_mat/calibrate.out": [
+     "CALIBRATE FAIL",
+     "rc=1"
+    ]
+   },
    "vec_ages": "stg2/pos/build/vec_ages.json",
    "stn_ages": "stg2/pos/cal_mat/stn_ages.json",
    "slice_ages": "stg2/pos/build/slice_ages.json",
@@ -6748,13 +6837,60 @@
       "S0AG stn_busy still set at the end (1000000000)"
      ]
     }
+   },
+   "calibration_results": {
+    "slice": {
+     "rc": 0,
+     "verdict": "PASS",
+     "scope": "required nominal calibration",
+     "raw_output": "stg2/pos/build/slice_calibrate.out",
+     "summary": [
+      "CALIBRATE ssq_psum_out=[104, 120, 136] sc_hop=2 per_slice={11: [104, 120], 1: [104, 120, 136]}",
+      "rc=0"
+     ]
+    },
+    "vec": {
+     "rc": 0,
+     "verdict": "PASS",
+     "scope": "required nominal calibration",
+     "raw_output": "stg2/pos/build/calibrate.out",
+     "summary": [
+      "CALIBRATE raw {\"add@1\": [104, 120, 136], \"add@11\": [104, 120], \"xs@1\": [55, 63, 71, 79, 87, 95], \"xs@10\": [55, 63, 71, 79], \"silu@3\": [181, 189], \"red_vm@2\": [104], \"rs@2\": [109], \"qn@2\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62], \"rope_q@2\": [47, 48, 49, 50, 51, 52, 53, 54], \"rope_k@8\": [47, 48, 49, 50, 51, 52, 53, 54], \"v@10\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62], \"gur@3\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78], \"readback@1\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94]}",
+      "CALIBRATE PASS",
+      "rc=0"
+     ]
+    },
+    "mat": {
+     "rc": 1,
+     "verdict": "FAIL",
+     "scope": "required nominal calibration",
+     "raw_output": "stg2/pos/cal_mat/calibrate.out",
+     "summary": [
+      "CALIBRATE {\"schema\": \"opentallas.qwen.dv-mat-ages.v1\", \"l8_ar\": 26, \"ar_hop\": 2.0, \"xc_cc\": 2, \"amax_ami\": 3, \"arx_after_amv\": 3, \"faults\": [\"S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)\"]}",
+      "CALIBRATE FAIL",
+      "rc=1"
+     ]
+    }
    }
   },
   "mut": {
    "vflags": "-GMU_NU=4 -GSU_LT=1 -GARF=2 -GRP=2",
    "built": true,
    "timing": null,
-   "calibrate": {},
+   "calibrate": {
+    "build/slice_calibrate.out": [
+     "CALIBRATE ssq_psum_out=[104, 120, 136] sc_hop=2 per_slice={11: [104, 120], 1: [104, 120, 136]}",
+     "rc=0"
+    ],
+    "build/calibrate.out": [
+     "CALIBRATE PASS",
+     "rc=0"
+    ],
+    "cal_mat/calibrate.out": [
+     "CALIBRATE FAIL",
+     "rc=1"
+    ]
+   },
    "vec_ages": "stg2/mut/build/vec_ages.json",
    "stn_ages": "stg2/mut/cal_mat/stn_ages.json",
    "slice_ages": "stg2/mut/build/slice_ages.json",
@@ -6792,6 +6928,40 @@
       "DV_LOWER_VEC qk FAIL 2/4 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=0 q heads 4 / k / v, d2d words=96 span_cycles=1047 isa_gold=none",
       "q: 512/512 mismatches, first (0, 0) got 0xbd94e559 want 0x3e17671e",
       "k: 104/128 mismatches, first (1, 0) got 0x3ee00000 want 0xbf000000"
+     ]
+    }
+   },
+   "calibration_results": {
+    "slice": {
+     "rc": 0,
+     "verdict": "PASS",
+     "scope": "mutant-configuration diagnostic; not credited as a causal negative",
+     "raw_output": "stg2/mut/build/slice_calibrate.out",
+     "summary": [
+      "CALIBRATE ssq_psum_out=[104, 120, 136] sc_hop=2 per_slice={11: [104, 120], 1: [104, 120, 136]}",
+      "rc=0"
+     ]
+    },
+    "vec": {
+     "rc": 0,
+     "verdict": "PASS",
+     "scope": "mutant-configuration diagnostic; not credited as a causal negative",
+     "raw_output": "stg2/mut/build/calibrate.out",
+     "summary": [
+      "CALIBRATE raw {\"add@1\": [104, 120, 136], \"add@11\": [104, 120], \"xs@1\": [55, 63, 71, 79, 87, 95], \"xs@10\": [55, 63, 71, 79], \"silu@3\": [181, 189], \"red_vm@2\": [104], \"rs@2\": [109], \"qn@2\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62], \"rope_q@2\": [47, 48, 49, 50, 51, 52, 53, 54], \"rope_k@8\": [47, 48, 49, 50, 51, 52, 53, 54], \"v@10\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62], \"gur@3\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78], \"readback@1\": [47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94]}",
+      "CALIBRATE PASS",
+      "rc=0"
+     ]
+    },
+    "mat": {
+     "rc": 1,
+     "verdict": "FAIL",
+     "scope": "mutant-configuration diagnostic; not credited as a causal negative",
+     "raw_output": "stg2/mut/cal_mat/calibrate.out",
+     "summary": [
+      "CALIBRATE {\"schema\": \"opentallas.qwen.dv-mat-ages.v1\", \"l8_ar\": 26, \"ar_hop\": 2.0, \"xc_cc\": 2, \"amax_ami\": 3, \"arx_after_amv\": 3, \"faults\": [\"S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)\"]}",
+      "CALIBRATE FAIL",
+      "rc=1"
      ]
     }
    }

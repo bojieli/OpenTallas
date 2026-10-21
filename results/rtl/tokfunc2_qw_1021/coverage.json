@@ -29,14 +29,19 @@
   "delivery_timing_qualified": false,
   "scope": "Per-K cluster-output CUT; true running recurrence and actual STN/VM; upstream MAC not simulated, no VM-write probes",
   "grade": "DIAG (historical reused binary; build-source/overlay identity unverified)",
-  "source_identity_qualified": false
+  "source_identity_qualified": false,
+  "nominal_calibration_failures": [
+   "pos/mat FAIL rc1"
+  ],
+  "mutant_calibration_scope": "diagnostic; not a credited causal negative"
  },
  "stg3": {
   "verdict": "PENDING",
   "unit": "oth-ubuntu-2229361-1792609846",
   "host": "ot-gold1",
   "rtl_overlay": "a83df1ef1d1ee80444b38832ed13e6cfba2c8fbe",
-  "scope": "Existing rebuilt old-monolith tail correction, not selected S8 physical/source qualification"
+  "scope": "Existing rebuilt old-monolith tail correction, not selected S8 physical/source qualification",
+  "calibration_status": "rel PASS; pos MAT FAIL rc1; mut MAT FAIL diagnostic. Existing cases continue under original script; source collector will gate calibration separately."
  },
  "ovl4u_rel": {
   "verdict": "PASS",
