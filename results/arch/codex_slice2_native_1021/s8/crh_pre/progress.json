@@ -1,0 +1,24 @@
+{
+  "start_commit": "d13d01357cb3360c5142b3f1f3602e0700b8efce",
+  "identity": "exact_content_snapshot",
+  "archive_sha256": "17b24602edd1ef26f4f9ec0c8df2bd160435a1f673567fb80f1779b6a47a445a",
+  "manifest_sha256": "4a7ef16f29e88d4d558754756d0c5e1e477fdb24af850c7812e80e4564ad8bb5",
+  "daemon_start_commit": "85fcc1f96936d9da9298c648cc6a48c6deacf1a2",
+  "remote_host": "ot-epyc9",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s8_crh_rp1-20261021-110510",
+  "native_status": "PASS",
+  "max_dynamic_loads": 32,
+  "pin_geometry": "PASS",
+  "textbook": {
+    "status": "PASS",
+    "cells": 6122,
+    "flops": 2137,
+    "depth_ps": 190.0,
+    "utilization": 0.3693,
+    "reported_preCTS_reach_um": 0.0
+  },
+  "qualification": "Partial: placement/trialGRT still progressing; no clock qualification/route/closedview",
+  "first_session": 14526,
+  "canceled_second_session": 32659,
+  "canceled_reason": "Canceled local staging before remote admission to preserve progressing first trialGRT"
+}
