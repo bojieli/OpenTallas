@@ -15,7 +15,7 @@
 // (c) group reads/writes and VM fills on the quadrant's 16 PCs exact, no fault anywhere.
 // Params: QE, KSMUT (kshare MUT), WBMUT (wb_kport_q MUT), WOPEN.  Exit: "PASS" line, else WB_INTEGRITY / FAIL.
 module tb_hbm_svc_wb_kshare_qh;
- parameter integer QE=1, KSMUT=0, WBMUT=0, WOPEN=0, FAW=3;   // FAW: HBM-WBK2 crossing FIFO depth log2
+ parameter integer QE=1, KSMUT=0, WBMUT=0, WOPEN=0, FAW=2, PP=1;   // FAW: crossing FIFO depth log2; PP: HBM-WBK8 ping-pong pairs
  localparam [31:0] K_BASE=32'h28800000;localparam [31:0] O_BASE=K_BASE>>1;localparam integer K_MEM=65536;localparam [1:0] STK=2'd2;
  localparam integer P0=16*QE;
  integer errors=0,cur_cycle=0;
@@ -27,7 +27,7 @@ module tb_hbm_svc_wb_kshare_qh;
  reg rv=0,rb=0,fb=0,fs=0;reg[15:0]re=0,fe=0;reg[11:0]rt=0;reg[31:0]rbase=0;reg[2311:0]wd=0;
  wire wb_ready,fault_wb;wire[11:0]wa;wire wbw_v;wire[29:0]wbw_base;wire[11:0]wbw_total;
  wire[15:0]w_k_v,w_k_rdy,w_k_wr_done;wire[479:0]w_k_addr;wire[4095:0]w_k_wdata;
- ot_hbm_svc_wb_kport_q #(.WOPEN(WOPEN),.MUT(WBMUT),.FAW(FAW)) u_wbp(.stream_clk(stream),.stream_rst_n(srst),.hbm_clk(hbm),.hbm_rst_n(hrst),
+ ot_hbm_svc_wb_kport_q #(.WOPEN(WOPEN),.MUT(WBMUT),.FAW(FAW),.PP(PP)) u_wbp(.stream_clk(stream),.stream_rst_n(srst),.hbm_clk(hbm),.hbm_rst_n(hrst),
   .stream_fifo_clk({4{stream}}),.stk(STK),.quad(1'(QE)),
   .wb_reserve_v(rv),.wb_reserve_bank(rb),.wb_fill_bank(fb),.wb_reserve_epoch(re),.wb_fill_epoch(fe),.wb_reserve_sectors(rt),
   .wb_reserve_base(rbase),.wb_fill_start(fs),.wd(wd),.wb_ready(wb_ready),.wa(wa),
