@@ -42,8 +42,8 @@ endmodule
 
 # copies the pin-register wrapper supplies (field, width, copies)
 COPIES = [('lane_id', 11, 5), ('cx_imm3', 32, 8), ('ca_ad', 3, 4), ('cs_sfu', 3, 2), ('cm_m1', 3, 2),
-          ('cm_m2', 2, 2), ('co_rnd', 1, 2), ('ce_e2', 2, 2), ('cs_e1', 3, 2), ('cp_m1', 3, 4), ('ci_sfu', 3, 4)]
-NS = 4                    # insertion-line slices (each slice's load select reads its own v / sel copy)
+          ('cm_m2', 2, 2), ('co_rnd', 1, 2), ('ce_e2', 2, 2), ('cs_e1', 3, 2), ('cp_m1', 3, 8), ('ci_sfu', 3, 8)]
+NS = 8                    # insertion-line slices (HBM-KIND9: 8; it3 u_l4 slice selects 60) (each slice's load select reads its own v / sel copy)
 
 
 def ins(src, old_mod, new_mod):
@@ -354,6 +354,28 @@ def lane():
     # ---- OUT rounding select (co_rnd) halves
     s = sub(s, '    wire [31:0] out = co_rnd ? u_bf : U;',
             '    wire [31:0] out = {co_rnd_c[1] ? u_bf[31:16] : U[31:16], co_rnd_c[0] ? u_bf[15:0] : U[15:0]};')
+    # ---- HBM-KIND9: wide code selects as kept per-slice decode + mux (ot_k9_eqmux_kh)
+    s = sub(s, "        f_o <= (dst_e == DST_KVT) ? kvt : sum_e[4*AW +: AW];", "        f_o <= f_o_d;")
+    s = sub(s, "    reg [AW-1:0] f_a, f_b, f_c, f_d, f_o;", """    reg [AW-1:0] f_a, f_b, f_c, f_d, f_o;
+    wire [AW-1:0] f_o_d;                             // HBM-KIND9: (dst_e == DST_KVT) ? kvt : sum_e[4], per AW half
+    ot_k9_eqmux_kh #(.W(AW/2), .CW(2), .VAL(DST_KVT)) u_fol (.c(dst_e), .a(kvt[AW/2-1:0]), .b(sum_e[4*AW +: AW/2]), .y(f_o_d[AW/2-1:0]));
+    ot_k9_eqmux_kh #(.W(AW-AW/2), .CW(2), .VAL(DST_KVT)) u_foh (.c(dst_e), .a(kvt[AW-1:AW/2]), .b(sum_e[4*AW+AW/2 +: AW-AW/2]), .y(f_o_d[AW-1:AW/2]));""")
+    s = sub(s, "    wire [31:0] P2 = (a2_m2 == M2_BYP) ? m2_byp : m2_y;", """    wire [31:0] P2;                                  // HBM-KIND9: (a2_m2 == M2_BYP) ? m2_byp : m2_y, per 16-bit half
+    ot_k9_eqmux_kh #(.W(16), .CW(2), .VAL(M2_BYP)) u_p2l (.c(a2_m2), .a(m2_byp[15:0]), .b(m2_y[15:0]), .y(P2[15:0]));
+    ot_k9_eqmux_kh #(.W(16), .CW(2), .VAL(M2_BYP)) u_p2h (.c(a2_m2), .a(m2_byp[31:16]), .b(m2_y[31:16]), .y(P2[31:16]));""")
+    s = sub(s, "    wire [31:0] byp_in = (cp_m1 == M1_MAXB && !ba_ge) ? p_b : p_a;",
+            "    wire [31:0] byp_in = {(cp_m1_c[5:3] == M1_MAXB && !ba_ge) ? p_b[31:16] : p_a[31:16],   // HBM-KIND9: per-half select copies\n"
+            "                          (cp_m1_c[2:0] == M1_MAXB && !ba_ge) ? p_b[15:0] : p_a[15:0]};")
+    # ---- HBM-KIND9: ordered-key compares without the key XORs (ot_k9_fge: two 31-bit magnitude compares + sign select)
+    for o, n in [('u_lex (.a(k_imm3), .b(okey(x_a)), .ge(le_x));', 'u_lex (.a(imm3_0), .b(x_a), .ge(le_x));'),
+                 ('u_let (.a(k_imm3t), .b(okey(a_t)), .ge(le_t));', 'u_let (.a(imm3_4), .b(a_t), .ge(le_t));'),
+                 ('u_leu (.a(k_imm3u), .b(okey(a_u)), .ge(le_u));', 'u_leu (.a(imm3_5), .b(a_u), .ge(le_u));'),
+                 ("u_le0 (.a(k_imm30), .b(32'h80000000), .ge(le_0));", "u_le0 (.a(imm3_6), .b(32'h00000000), .ge(le_0));"),
+                 ('u_cgl (.a(okey(x_c2)), .b(okey(c_lo)), .ge(c_ge_lo));', 'u_cgl (.a(x_c2), .b(c_lo), .ge(c_ge_lo));'),
+                 ('u_clh (.a(k_imm3c), .b(okey(x_c)), .ge(c_le_hi));', 'u_clh (.a(imm3_7), .b(x_c), .ge(c_le_hi));'),
+                 ('u_clo (.a(k_imm3c), .b(okey(c_lo)), .ge(c_lohi));', 'u_clo (.a(imm3_7), .b(c_lo), .ge(c_lohi));'),
+                 ('u_mxb (.a(okey(p_a)), .b(okey(p_b)), .ge(ba_ge));', 'u_mxb (.a(p_a), .b(p_b), .ge(ba_ge));')]:
+        s = sub(s, 'ot_hdc_kge #(.W(32), .K(K)) ' + o, 'ot_k9_fge #(.K(K)) ' + n)
     return s + KFF
 
 

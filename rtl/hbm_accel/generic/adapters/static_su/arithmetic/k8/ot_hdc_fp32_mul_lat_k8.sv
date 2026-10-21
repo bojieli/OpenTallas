@@ -105,8 +105,13 @@ module ot_hdc_fp32_mul_lat_k8 #(
     wire [4:0]  n_al, n_bl;
     wire [11:0] n_ap, n_bp;
     assign {n_v, n_bz, n_err, n_sign, n_ar, n_br, n_al, n_bl, n_ap, n_bp} = c5;
-    wire [23:0] a_n = n_ar << n_al;
-    wire [23:0] b_n = n_br << n_bl;
+    // HBM-KIND9: each normalise shift as two kept halves with their own count (ot_k9_shl24h_k8; n_al / n_bl now feed
+    // nothing but are kept in the cut word for the bench-visible equivalence)
+    wire [23:0] a_n, b_n;
+    ot_k9_shl24h_k8 #(.HI(1)) u_ash (.x(n_ar), .y(a_n[23:12]));
+    ot_k9_shl24h_k8 #(.HI(0)) u_asl (.x(n_ar), .y(a_n[11:0]));
+    ot_k9_shl24h_k8 #(.HI(1)) u_bsh (.x(n_br), .y(b_n[23:12]));
+    ot_k9_shl24h_k8 #(.HI(0)) u_bsl (.x(n_br), .y(b_n[11:0]));
     localparam integer W1 = 1 + 1 + 2 + 1 + 24 + 24 + 12 + 12;
     wire [W1-1:0] c1;
     ot_hdc_w11_cut #(.W(W1), .CUT(CUT1), .VB(DRST ? -1 : W1-1)) u_c1 (.clk(clk), .rst_n(rst_n),
@@ -230,7 +235,8 @@ module ot_hdc_fp32_mul_lat_k8 #(
 
     // ---- S3a: select, subnormal shift, round/sticky bits ------------------------------------------
     // three kept same-edge copies of the S3a select top = prod[47] (was 63 loads): is_sub / fl, n_main high, n_main low + rb/st
-    wire [2:0] top_c;
+    wire [3:0] top_c;                                // HBM-KIND9: [3] = is_sub copy for the upper half of main (it3: 54-57)
+    ot_hdc_kff1_k8 u_top3 (.clk(clk), .d(prod[47]), .q(top_c[3]));
     ot_hdc_kff1_k8 u_top0 (.clk(clk), .d(prod[47]), .q(top_c[0]));
     ot_hdc_kff1_k8 u_top1 (.clk(clk), .d(prod[47]), .q(top_c[1]));
     ot_hdc_kff1_k8 u_top2 (.clk(clk), .d(prod[47]), .q(top_c[2]));
@@ -250,7 +256,8 @@ module ot_hdc_fp32_mul_lat_k8 #(
     end
     wire s_rb = |(s2_prod & s2_mr);
     wire s_st = |(s2_prod & s2_ms);
-    wire [23:0] main = is_sub ? s_main : n_main;
+    wire is_sub_h = top_c[3] ? s2_sub47 : s2_sub46;
+    wire [23:0] main = {is_sub_h ? s_main[23:12] : n_main[23:12], is_sub ? s_main[11:0] : n_main[11:0]};
     wire rb = is_sub ? s_rb : n_rb;
     wire st = is_sub ? s_st : n_st;
     localparam integer W3 = 1 + 1 + 2 + 1 + 1 + 12 + 24 + 1;
@@ -373,4 +380,15 @@ endmodule
 module ot_hdc_fp32_mul_lat4i_k8 #(parameter integer YN = 1) (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                                  output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_mul_lat_k8 #(.LAT(4), .CUTS(1), .KCP(4), .YN(YN)) u (.*);
+endmodule
+
+// HBM-KIND9: one half of the normalise shift x << lzc(x) (24 bits): HI 1 -> bits [23:12], HI 0 -> [11:0].  Kept, with
+// its OWN leading-zero count of x (the same ot_hdc_lzc32 as u_la / u_lb, which still feed the exponent): each count bit
+// then loads one half's shift network (it3: the shared count bits drove 46-56 loads).  Same value as n_ar << n_al.
+(* keep_hierarchy = "yes" *)
+module ot_k9_shl24h_k8 #(parameter integer HI = 0) (input wire [23:0] x, output wire [11:0] y);
+    wire [5:0] lz;
+    ot_hdc_lzc32 u_lz (.x({x, 8'hff}), .n(lz));
+    wire [23:0] f = x << lz[4:0];
+    assign y = HI ? f[23:12] : f[11:0];
 endmodule

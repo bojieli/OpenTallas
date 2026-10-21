@@ -101,3 +101,30 @@ module ot_k9_famr #(parameter integer W = 1, parameter integer N = 3) (
         end
     end endgenerate
 endmodule
+
+// okey(a) >= okey(b) (the lane's binary32 total order, okey(v) = v[31] ? ~v : {1, v[30:0]}), exactly, WITHOUT the
+// ordered-key XORs: two 31-bit magnitude compares and a sign select (HBM-KIND9; it3 census: each okey operand's sign bit
+// drove its 32 key XORs and the compare, 34-41 loads).  Mixed signs: the positive operand is larger (+0 > -0, as okey);
+// both negative: |a| <= |b|; both positive: |a| >= |b|.
+module ot_k9_fge #(parameter integer K = 1) (
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire        ge
+);
+    wire ge_ab, ge_ba;
+    ot_hdc_kge #(.W(31), .K(K)) u_ab (.a(a[30:0]), .b(b[30:0]), .ge(ge_ab));
+    ot_hdc_kge #(.W(31), .K(K)) u_ba (.a(b[30:0]), .b(a[30:0]), .ge(ge_ba));
+    assign ge = (a[31] != b[31]) ? b[31] : (a[31] ? ge_ba : ge_ab);
+endmodule
+
+// y = (c == VAL) ? a : b with its OWN decode of c (keep_hierarchy, so per-slice copies are never merged back): a wide
+// code-selected mux built from slices of this loads each decode node with one slice (HBM-KIND9; it3: 34-48)
+(* keep_hierarchy = "yes" *)
+module ot_k9_eqmux_kh #(parameter integer W = 16, parameter integer CW = 2, parameter [CW-1:0] VAL = 0) (
+    input  wire [CW-1:0] c,
+    input  wire [W-1:0]  a,
+    input  wire [W-1:0]  b,
+    output wire [W-1:0]  y
+);
+    assign y = (c == VAL) ? a : b;
+endmodule

@@ -80,8 +80,8 @@ module ot_hbm_su_static_lane_k8 #(
     input  wire [2*1-1:0] co_rnd_c,     // HBM-KIND8: 2 kept pin-register copies of co_rnd
     input  wire [2*2-1:0] ce_e2_c,     // HBM-KIND8: 2 kept pin-register copies of ce_e2
     input  wire [2*3-1:0] cs_e1_c,     // HBM-KIND8: 2 kept pin-register copies of cs_e1
-    input  wire [4*3-1:0] cp_m1_c,     // HBM-KIND8: 4 kept pin-register copies of cp_m1
-    input  wire [4*3-1:0] ci_sfu_c,     // HBM-KIND8: 4 kept pin-register copies of ci_sfu
+    input  wire [8*3-1:0] cp_m1_c,     // HBM-KIND8: 8 kept pin-register copies of cp_m1
+    input  wire [8*3-1:0] ci_sfu_c,     // HBM-KIND8: 8 kept pin-register copies of ci_sfu
     input  wire [16-1:0] ld_x,     // HBM-KIND8: kept copies of the ld strobe
     input  wire [5-1:0] bank_x,   // HBM-KIND8: kept copies of bank (one per stream)
     input  wire              ld,
@@ -456,6 +456,9 @@ module ot_hbm_su_static_lane_k8 #(
                                         .s(vi_sum), .cout(unused_c1[2]));
     reg          f_v, f_g, f_par;
     reg [AW-1:0] f_a, f_b, f_c, f_d, f_o;
+    wire [AW-1:0] f_o_d;                             // HBM-KIND9: (dst_e == DST_KVT) ? kvt : sum_e[4], per AW half
+    ot_k9_eqmux_kh #(.W(AW/2), .CW(2), .VAL(DST_KVT)) u_fol (.c(dst_e), .a(kvt[AW/2-1:0]), .b(sum_e[4*AW +: AW/2]), .y(f_o_d[AW/2-1:0]));
+    ot_k9_eqmux_kh #(.W(AW-AW/2), .CW(2), .VAL(DST_KVT)) u_foh (.c(dst_e), .a(kvt[AW-1:AW/2]), .b(sum_e[4*AW+AW/2 +: AW-AW/2]), .y(f_o_d[AW-1:AW/2]));
     reg [7:0]    f_src;
     reg          f_cpair;
     always @(posedge clk_stage[0] `OT_SU_ARST(rst_stage_n[0])) begin
@@ -468,7 +471,7 @@ module ot_hbm_su_static_lane_k8 #(
         f_b <= sum_e[AW +: AW];
         f_c <= sum_e[2*AW +: AW];
         f_d <= sum_e[3*AW +: AW];
-        f_o <= (dst_e == DST_KVT) ? kvt : sum_e[4*AW +: AW];
+        f_o <= f_o_d;
         f_par <= il_e[0];
         f_src <= srcs_e;
         f_cpair <= cpair_e;
@@ -592,10 +595,10 @@ module ot_hbm_su_static_lane_k8 #(
     wire [31:0] k_imm3 = okey(imm3_0), k_imm3c = okey(imm3_7), k_imm3t = okey(imm3_4), k_imm3u = okey(imm3_5),
                 k_imm30 = okey(imm3_6);
     wire        le_x, le_t, le_u, le_0;
-    ot_hdc_kge #(.W(32), .K(K)) u_lex (.a(k_imm3), .b(okey(x_a)), .ge(le_x));
-    ot_hdc_kge #(.W(32), .K(K)) u_let (.a(k_imm3t), .b(okey(a_t)), .ge(le_t));
-    ot_hdc_kge #(.W(32), .K(K)) u_leu (.a(k_imm3u), .b(okey(a_u)), .ge(le_u));
-    ot_hdc_kge #(.W(32), .K(K)) u_le0 (.a(k_imm30), .b(32'h80000000), .ge(le_0));
+    ot_k9_fge #(.K(K)) u_lex (.a(imm3_0), .b(x_a), .ge(le_x));
+    ot_k9_fge #(.K(K)) u_let (.a(imm3_4), .b(a_t), .ge(le_t));
+    ot_k9_fge #(.K(K)) u_leu (.a(imm3_5), .b(a_u), .ge(le_u));
+    ot_k9_fge #(.K(K)) u_le0 (.a(imm3_6), .b(32'h00000000), .ge(le_0));
     wire [31:0] a_mx = pre_a2(x_a2, cx_arelu, cx_amin, imm3_1, le_x, le_0);
     wire [31:0] a_mt = pre_a2(a_t, cx_arelu, cx_amin, imm3_1, le_t, le_0);
     wire [31:0] a_mu = pre_a2(a_u, cx_arelu, cx_amin, imm3_1, le_u, le_0);
@@ -604,9 +607,9 @@ module ot_hbm_su_static_lane_k8 #(
     // ties included: proven by tools/w11_equiv_clip.ys; the chained form was the lane's critical path, W11)
     wire [31:0] c_lo = {1'b1, imm3_2[30:0]};
     wire        c_ge_lo, c_le_hi, c_lohi;
-    ot_hdc_kge #(.W(32), .K(K)) u_cgl (.a(okey(x_c2)), .b(okey(c_lo)), .ge(c_ge_lo));
-    ot_hdc_kge #(.W(32), .K(K)) u_clh (.a(k_imm3c), .b(okey(x_c)), .ge(c_le_hi));
-    ot_hdc_kge #(.W(32), .K(K)) u_clo (.a(k_imm3c), .b(okey(c_lo)), .ge(c_lohi));
+    ot_k9_fge #(.K(K)) u_cgl (.a(x_c2), .b(c_lo), .ge(c_ge_lo));
+    ot_k9_fge #(.K(K)) u_clh (.a(imm3_7), .b(x_c), .ge(c_le_hi));
+    ot_k9_fge #(.K(K)) u_clo (.a(imm3_7), .b(c_lo), .ge(c_lohi));
     wire [31:0] c_m = !cx_cclip ? x_c : c_ge_lo ? (c_le_hi ? x_c : imm3_3) : (c_lohi ? c_lo : imm3_3);
     reg  [31:0] p_a, p_b, p_c, p_d;
     reg  [AW-1:0] p_o;
@@ -614,8 +617,8 @@ module ot_hbm_su_static_lane_k8 #(
     always @(posedge clk_stage[0] `OT_SU_ARST(rst_stage_n[0])) begin
         if (!rst_stage_n[0]) p_v <= 1'b0; else p_v <= x_v;
     end
-    wire [4-1:0] p_vc;                             // HBM-KIND8: kept copies of p_v for the M1 insertion line slices
-    for (genvar c = 0; c < 4; c = c + 1) begin : g_pvc
+    wire [8-1:0] p_vc;                             // HBM-KIND8: kept copies of p_v for the M1 insertion line slices
+    for (genvar c = 0; c < 8; c = c + 1) begin : g_pvc
         ot_su_kffr_k8 u_k (.clk(clk_stage[0]), .rst_n(rst_stage_n[0]), .d(x_v), .q(p_vc[c]));
     end
     always @(posedge clk_stage[0]) begin
@@ -629,8 +632,9 @@ module ot_hbm_su_static_lane_k8 #(
     ot_hdc_qmul_lat_k8 #(MLAT) u_m1 (clk_stage[1], rst_stage_n[1], p_v && p_mul, p_a, (cp_m1 == M1_AB) ? p_b : (cp_m1 == M1_AA) ? p_a : cp_imm1,
                       mul1_y, f_m1);
     wire        ba_ge;                               // okey(p_a) >= okey(p_b), i.e. not (okey(p_b) > okey(p_a))
-    ot_hdc_kge #(.W(32), .K(K)) u_mxb (.a(okey(p_a)), .b(okey(p_b)), .ge(ba_ge));
-    wire [31:0] byp_in = (cp_m1 == M1_MAXB && !ba_ge) ? p_b : p_a;
+    ot_k9_fge #(.K(K)) u_mxb (.a(p_a), .b(p_b), .ge(ba_ge));
+    wire [31:0] byp_in = {(cp_m1_c[5:3] == M1_MAXB && !ba_ge) ? p_b[31:16] : p_a[31:16],   // HBM-KIND9: per-half select copies
+                          (cp_m1_c[2:0] == M1_MAXB && !ba_ge) ? p_b[15:0] : p_a[15:0]};
     ot_hdc_delay #(.W(32), .D(MLAT)) u_b1 (.clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .d(byp_in), .q(byp1));
     localparam integer T1W = 32 * 3 + AW + 1;            // B, C', D, O, parity
     wire [T1W-1:0] t1;
@@ -641,8 +645,8 @@ module ot_hbm_su_static_lane_k8 #(
         if (HAS_SFU != 0) begin : g_m1s
             ot_hdc_v41x_fdiv_k8 u_d1 (.clk(clk_stage[1]), .rst_n(rst_stage_n[1]), .v(p_v && p_div), .a(p_a),
                                    .b((cp_m1 == M1_DIVB) ? p_b : cp_imm1), .y(div1_y), .vo(), .fault(f_d1));
-            wire [2*4-1:0] l1_sel;
-            for (genvar c = 0; c < 4; c = c + 1) begin : g_l1s
+            wire [2*8-1:0] l1_sel;
+            for (genvar c = 0; c < 8; c = c + 1) begin : g_l1s
                 wire dv = (cp_m1_c[3*c +: 3] == M1_DIVB) || (cp_m1_c[3*c +: 3] == M1_DIVIMM);
                 assign l1_sel[2*c +: 2] = {dv, !dv};
             end
@@ -680,7 +684,9 @@ module ot_hbm_su_static_lane_k8 #(
     wire [MLAT:0] v2l;
     ot_hdc_vline #(.D(MLAT)) u_v2 (.clk(clk_stage[2]), .rst_n(rst_stage_n[2]), .v(v1), .vd(v2l));
     wire v2 = v2l[MLAT];
-    wire [31:0] P2 = (a2_m2 == M2_BYP) ? m2_byp : m2_y;
+    wire [31:0] P2;                                  // HBM-KIND9: (a2_m2 == M2_BYP) ? m2_byp : m2_y, per 16-bit half
+    ot_k9_eqmux_kh #(.W(16), .CW(2), .VAL(M2_BYP)) u_p2l (.c(a2_m2), .a(m2_byp[15:0]), .b(m2_y[15:0]), .y(P2[15:0]));
+    ot_k9_eqmux_kh #(.W(16), .CW(2), .VAL(M2_BYP)) u_p2h (.c(a2_m2), .a(m2_byp[31:16]), .b(m2_y[31:16]), .y(P2[31:16]));
     // ---- AD ------------------------------------------------------------------------------------------------
     reg [31:0] ad_y;
     wire [31:0] nb_b = {~a2_b[31], a2_b[30:0]};
@@ -706,8 +712,8 @@ module ot_hbm_su_static_lane_k8 #(
     wire [ALAT:0] v3l;
     ot_hdc_vline #(.D(ALAT)) u_v3 (.clk(clk_stage[3]), .rst_n(rst_stage_n[3]), .v(v2), .vd(v3l));
     wire v3 = v3l[ALAT];
-    wire [4-1:0] v3c;                              // HBM-KIND8: kept copies of v3 for the S insertion line slices
-    for (genvar c = 0; c < 4; c = c + 1) begin : g_v3c
+    wire [8-1:0] v3c;                              // HBM-KIND8: kept copies of v3 for the S insertion line slices
+    for (genvar c = 0; c < 8; c = c + 1) begin : g_v3c
         ot_su_kffr_k8 u_k (.clk(clk_stage[3]), .rst_n(rst_stage_n[3]), .d(v3l[ALAT-1]), .q(v3c[c]));
     end
     wire [31:0] R = (r_ad == AD_BYP) ? add_byp : add_y;
@@ -740,14 +746,14 @@ module ot_hbm_su_static_lane_k8 #(
             wire [6:0] sel;
             assign sel = {ci_sfu == SFU_EGATE, ci_sfu == SFU_SPSQRT, ci_sfu == SFU_SQRT, ci_sfu == SFU_RSQRT,
                           is_sig, is_exp, ci_sfu == SFU_NONE};
-            wire [7*4-1:0] l4_sel;
-            for (genvar c = 0; c < 4; c = c + 1) begin : g_l4s
+            wire [7*8-1:0] l4_sel;
+            for (genvar c = 0; c < 8; c = c + 1) begin : g_l4s
                 wire [2:0] cf = ci_sfu_c[3*c +: 3];
                 assign l4_sel[7*c +: 7] = {cf == SFU_EGATE, cf == SFU_SPSQRT, cf == SFU_SQRT, cf == SFU_RSQRT,
                                            cf == SFU_SIGM || cf == SFU_SILU, cf == SFU_EXP, cf == SFU_NONE};
             end
-            wire [3*4-1:0] l4_sel3;
-            for (genvar c = 0; c < 4; c = c + 1) begin : g_l4t
+            wire [3*8-1:0] l4_sel3;
+            for (genvar c = 0; c < 8; c = c + 1) begin : g_l4t
                 assign l4_sel3[3*c +: 3] = l4_sel[7*c +: 3];
             end
             if (FULL != 0) begin : g_full

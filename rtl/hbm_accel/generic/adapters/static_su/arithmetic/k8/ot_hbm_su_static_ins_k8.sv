@@ -9,7 +9,7 @@
 `endif
 `timescale 1ns/1ps
 module ot_hbm_su_static_ins_k8 #(
-    parameter integer NS = 4,             // HBM-KIND8: v / sel copies, one per data slice
+    parameter integer NS = 8,             // HBM-KIND8: v / sel copies, one per data slice
     parameter integer W = 32,
     parameter integer K = 2,                 // depth choices
     parameter [16*K-1:0] DEPTHS = {16'd3, 16'd0},   // choice k = DEPTHS[16k +: 16]
