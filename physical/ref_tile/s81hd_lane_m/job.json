@@ -1,0 +1,136 @@
+{
+ "name": "s81hd_lane_m-s81hd_lane_m-COMMIT",
+ "block": "ot_s81hd_lane",
+ "ref_tile": true,
+ "owner": "Claude:S81-HEAD-HD-CTLGATE",
+ "purpose": "S81.HEAD: head-die lane block (safe8_ntf lane + static core adapter) to closure (TT setup / FF hold / DRC 0). SAFE review in kit README.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-head-ctlgate-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "physical/common_flow/clock_split_km.tcl",
+   "results/rtl/s81_head_ctlgate_1021"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81hd_lane u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLL_NATIVE32 -DOT_COLL_NATIVE32_OFF --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/link/ot_link_crc32.sv rtl/lib/ot_rst_relay_tree3.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/lib/ot_sram_oldread_b64.sv rtl/lib/ot_sram_showahead_b64.sv rtl/common/ot_link_credit_rx_b64.sv rtl/common/ot_link_credit_tx_rc.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv rtl/dsrom_sys/s81_head/ot_s81hd_util.sv rtl/dsrom_sys/s81_head/ot_s81hd_lane.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hd_lane_base",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane flits \\d+/\\d+ exact, overflow flagged",
+    "pass_witness": "results/rtl/s81_head_ctlgate_1021/lane/base.log"
+   },
+   {
+    "name": "hd_lane_mut_ovf",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane OVF",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane",
+    "fail_regex": "^FAIL hd_lane static overflow not flagged",
+    "fail_witness": "results/rtl/s81_head_ctlgate_1021/lane/mut_OVF.log"
+   },
+   {
+    "name": "hd_lane_mut_rp",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane RP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane",
+    "fail_regex": "^FAIL hd_lane data: errors [1-9]",
+    "fail_witness": "results/rtl/s81_head_ctlgate_1021/lane/mut_RP.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hd_lane_m/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hd_lane_m/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hd_lane_m --out {RUN}/record/views/ot_s81hd_lane --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81hd_lane_m/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81hd_lane_m/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81hd_lane_m/s81hd_lane_m-s81hd_lane_m-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HD-CTLGATE (S81-HEAD 10-21): NEW head-die lane block ot_s81hd_lane (13 per head die: 6 TP4 mesh, 2 host, 5 draft) as a FLAT leaf = dsfd_coll_lane_w_safe8_ntf (the S81-COLL s8nr/s8nq lane structure: same sources, defines, 55-SRAM macro map, W SerDes face, k-means regional CTS) + the static core adapter (valid-only core side, bit-sliced 3-flit TX buffer + credit sender, always-accept RX, sticky would-overflow faults). Outline 812.16 x 583.2 = s8nr body + 86.4-um E adapter band; SerDes pins (rx/tx) on W, core pins (tx_d/rx_d/v/flt/ck/rst_n/chb) on E; K=32 regional roots. MAIN."
+}

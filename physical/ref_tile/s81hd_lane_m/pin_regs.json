@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81hd_lane",
+ "enable": false,
+ "reason": "Source-registered: tx_d lands in txd_p, tx_v in 2 kept ot_s81hd_kf pin flops, rx_v / rx_d / flt leave flops (rv_q / rd_q / flt_q); rx enters the lane rx landing flops (lr_f / lr_d) and tx is the gearbox registered beat, as dscoll_lane_w_s8nr. A recipe pin stage would add an unpriced edge."
+}

@@ -1,0 +1,207 @@
+{
+ "name": "s81hd_ctl_m",
+ "top": "ot_s81hd_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+  "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1036.8,
+  "h": 1036.8
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xa0",
+   "at": [
+    432.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xa1",
+   "at": [
+    432.0,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xb0",
+   "at": [
+    432.0,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xb1",
+   "at": [
+    432.0,
+    691.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "sn_o",
+   "sn_i",
+   "mtx_v",
+   "mtx_d"
+  ],
+  "S": [
+   "ss_o",
+   "ss_i",
+   "mrx_v",
+   "mrx_d",
+   "mflt"
+  ],
+  "E": [
+   "dtx_v",
+   "dtx_d",
+   "drx_v",
+   "drx_d",
+   "dflt"
+  ],
+  "W": [
+   "ri",
+   "ro",
+   "mu_c",
+   "mu_rt",
+   "mu_rc",
+   "lw",
+   "lep_f",
+   "ctl_f",
+   "htx_v",
+   "htx_d",
+   "hrx_v",
+   "hrx_d",
+   "hflt",
+   "ck",
+   "rst_n"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_s81hd_kf",
+   "ot_s81hd_hreg32",
+   "ot_s81hd_cmp",
+   "ot_s81hd_pick"
+  ]
+ },
+ "structural_change": "HD-CTLGATE (S81-HEAD 10-21): NEW head-die controller ot_s81hd_ctl (HD-CTL b4f571642: x store 80 kb in 4 x ot_sram_1r1w_64x512_m1_r2c2, bus B stream, N/S final, rank merge, host / draft endpoints, XB forward, MU replay) as a FLAT leaf: dsfd_mtp_seq is synthesised in (its only closed views, dsfd_mtp_seq_b/_c 10-08, are MAXL M7 legacy views that a M5-cap cluster cannot bind; the M5 reroute is NEEDS_RTL). 19,016 signal pins -> pin-bound outline: N sn + mesh TX, S ss + mesh RX, E draft lanes, W lep ring + host lanes. MAIN: 1,036.8 square, the 4 x-store SRAMs (171.3 x 77.8, W/E data pins) in one centre column (x 432, 129.6 pitch, 51.8-um N/S gaps, wide W/E pin channels), pin flops in the face bands; k-means K=16.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (HD-CTL): every input lands in a pin flop, every output leaves a flop (ot_s81hd_hreg32 / kf / grx pin stages); a recipe pin stage would add unpriced edges."
+ },
+ "job": {
+  "owner": "Claude:S81-HEAD-HD-CTLGATE",
+  "branch": "claude/s81-head-ctlgate-1021",
+  "tag": "s81hd_ctl_m",
+  "purpose": "S81.HEAD: head-die controller ot_s81hd_ctl to closure (TT setup / FF hold / DRC 0). SAFE review in kit README.",
+  "views_to": "physical/ref_tile/s81hd_ctl_m/views",
+  "record_to": "results/rtl/ref_tile/s81hd_ctl_m",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/common",
+   "rtl/dsrom_sys/mtp",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/common_flow/clock_split_km.tcl"
+  ],
+  "benches": [
+   {
+    "name": "hd_ctl_base",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_ctl_bench.sh {RUN}/ctl sim base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "pass_witness": "rtl/dsrom_sys/s81_head/test/witness/base.log"
+   },
+   {
+    "name": "hd_ctl_mut_slice",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_ctl_bench.sh {RUN}/ctl sim SLICE",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl xa slice mismatch",
+    "fail_witness": "rtl/dsrom_sys/s81_head/test/witness/mut_SLICE.log"
+   },
+   {
+    "name": "hd_ctl_mut_tie",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_ctl_bench.sh {RUN}/ctl sim TIE",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl local best tie \\(lowest id\\)",
+    "fail_witness": "rtl/dsrom_sys/s81_head/test/witness/mut_TIE.log"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "16",
+  "OT_CKKM_PORT": "ck"
+ },
+ "fill_reason": {
+  "pin_bound": "Pin-bound: 19,016 signal pins (13 lanes x 1,112 + 2 x 1,130 bus B + 2,298 lep ring) need >= 3,170 um of face at 6/um; the 1036.8-um square carries E 5,560 / W 4,522 / N 4,454 / S 4,478 pins (5.4/um max). Std cells (~7k um2 glue + dsfd_mtp_seq) + 4 SRAM (53k um2) leave fill far below 45%: the perimeter, not the area, sets the outline."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

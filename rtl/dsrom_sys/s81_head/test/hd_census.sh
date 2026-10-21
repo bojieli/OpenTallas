@@ -9,7 +9,7 @@ Y=yosys; [ -x ~/.local/opentallas-tools/yosys-0.68/bin/yosys ] && Y=~/.local/ope
 F=rtl/dsrom_sys/s81_head/test/hd_files.f
 SRC=$(grep -v '^+' $F | grep -v '^physical/' | tr '\n' ' ')
 MAC=$(grep '^physical/' $F | tr '\n' ' ')   # SRAM macro models: read as -lib (port shells, hard macros)
-HARD="dsfd_mtp_seq dsfd_coll_lane_w_safe8_ntf ot_s81sl_lep_mu_ab dsdv_mu_land"
+HARD=${HD_HARD-"dsfd_mtp_seq dsfd_coll_lane_w_safe8_ntf ot_s81sl_lep_mu_ab dsdv_mu_land"}   # HD_HARD overrides (flat kits: HD-CTLGATE)
 LIBS=$(ls $L/asap7sc7p5t_*RVT_TT*.lib); AL=""; for f in $LIBS; do AL="$AL -liberty $f"; done
 cat > $O/parse.ys <<YS
 read_verilog -lib $MAC
