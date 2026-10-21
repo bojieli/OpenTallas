@@ -861,6 +861,98 @@ def reset_sinks(g, A, x):
     return tot, ff, mac, ex
 
 
+def async_reset_relay_proof(g, A, net):
+    """Recognise a mapped two-sync-edge + one regional-edge async-assert relay.
+
+    This is a topology check, not a reset fanout waiver: the raw reset may
+    clear only the synchronizer and relay FFs. Every publication edge, clock,
+    inactive set pin and consumer is checked, without relying on instance names.
+    Other relay shapes retain the existing landing rule.
+    """
+    def fail(reason):
+        return {"pass": False, "reason": reason}
+
+    def terminals(q):
+        stack, seen, ends, ports = [(q, 0)], set(), [], 0
+        while stack:
+            y, inv = stack.pop()
+            if (y, inv) in seen:
+                continue
+            seen.add((y, inv))
+            ports += len(A['out_ports'].get(y, ()))
+            for ci, pn, _ in A['loads'].get(y, ()):
+                if A['kind'][ci] == 'buf':
+                    typ, _, pins = g.cells[ci]
+                    if set(pins) - {'A', 'Y'} or len(pins.get('A', [])) != 1:
+                        return None, ports
+                    neg = bool(re.match(r'^(INV|CKINV)', typ))
+                    for z in _out_nets(g, A, ci):
+                        stack.append((z, inv ^ neg))
+                else:
+                    ends.append((ci, pn, inv))
+        return ends, ports
+
+    def high(x):
+        if x == g.find(1):
+            return True
+        ci, pn = A['driver'].get(x, (-1, ''))
+        return (ci >= 0 and pn == 'H' and
+                re.fullmatch(r'TIEHIx[0-9]+_ASAP7_75t_[RSL]', g.cells[ci][0]) is not None)
+
+    root, ports = terminals(net)
+    if root is None or ports or not 3 <= len(root) <= 32:
+        return fail('raw reset is exported, unbounded, or has unsupported buffers')
+    cells = {ci for ci, _, _ in root}
+    if len(cells) != len(root):
+        return fail('raw reset reaches multiple pins of one cell')
+    clock = None
+    for ci, pn, inv in root:
+        typ, _, pins = g.cells[ci]
+        if (not re.fullmatch(r'DFFASRHQNx[0-9]+_ASAP7_75t_[RSL]', typ) or
+                pn != 'RESETN' or inv != 0 or
+                set(pins) != {'CLK', 'D', 'QN', 'RESETN', 'SETN'} or
+                any(len(bits) != 1 for bits in pins.values()) or not high(pins['SETN'][0])):
+            return fail('raw reset reaches a non-relay clear or inactive set is not high')
+        ck = pins['CLK'][0]
+        if clock is None:
+            clock = ck
+        if ck != clock or A['driver'].get(ck, (0, ''))[0] != -1:
+            return fail('relay clocks differ or are not one literal input clock')
+    first = [ci for ci in cells if high(g.cells[ci][2]['D'][0])]
+    if len(first) != 1:
+        return fail('expected exactly one constant-one first synchronizer')
+    first = first[0]
+
+    def publication(ci):
+        return terminals(g.cells[ci][2]['QN'][0])
+
+    stage2, ports = publication(first)
+    if (stage2 is None or ports or len(stage2) != 1 or
+            stage2[0][0] not in cells - {first} or stage2[0][1:] != ('D', 1)):
+        return fail('first synchronizer is exposed or lacks one positive second edge')
+    second = stage2[0][0]
+    regional, ports = publication(second)
+    final = cells - {first, second}
+    if (regional is None or ports or not final or len(regional) != len(final) or
+            {ci for ci, _, _ in regional} != final or
+            any(pn != 'D' or inv != 1 for _, pn, inv in regional)):
+        return fail('second synchronizer bypasses the regional edge or has wrong polarity')
+    max_loads = 0
+    for ci in final:
+        ends, ports = publication(ci)
+        if ends is None or ports or not ends or len(ends) > 32:
+            return fail('regional reset is exported, unused, or exceeds 32 loads')
+        max_loads = max(max_loads, len(ends))
+        for target, pn, inv in ends:
+            pins = g.cells[target][2]
+            if (target in cells or A['kind'][target] != 'ff' or pn != 'RESETN' or inv != 1 or
+                    pins.get('CLK') != [clock]):
+                return fail('regional reset has a bypass, wrong polarity, or different consumer clock')
+    return {'pass': True, 'raw_clear_loads': len(root), 'sync_stages': 2,
+            'regional_stages': 1, 'regional_leaves': len(final), 'release_edges': 3,
+            'max_regional_loads': max_loads, 'clock': net_label(g, A, clock)}
+
+
 def balanced_reset_proof(g, A, port, net, profile):
     """Opt-in mapped proof, never a threshold waiver: exactly two plain-FF levels.
 
@@ -1036,6 +1128,10 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
                 continue
             bad.append(f"reset port {b}: balanced landing refused: {proof['reason']}")
         if tot > T["rst_land_max"]:
+            relay_proof = async_reset_relay_proof(g, A, x)
+            if relay_proof['pass']:
+                land[-1]['async_relay_proof'] = relay_proof
+                continue
             bad.append(f"reset port {b}: {tot:,} sinks ({ff:,} flops, {mac} hard-child / macro pins, e.g. {ex}) reached "
                        f"without a landing register (> {T['rst_land_max']}): land it at the face in 2 registered stages "
                        f"(ref_tile \"reset_landing\": {{\"enable\": true}}, or RTL rst_l0 -> rst_l1 per region), then "
