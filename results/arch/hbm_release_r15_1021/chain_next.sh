@@ -158,7 +158,7 @@ import json,collections; v=json.load(open('$2/views.json')); print('VIEW_KINDS_$
 }
 views_to() {      # $1 remote views dir  $2 vplan dir  $3 contract  (all earlier synth overlays, own last)
   ssh $HOST "rm -rf $1 && mkdir -p $1/synth" || return 17
-  for P in $METAS $A/vplan_b/synth $2/synth; do [ -d $P ] && rsync -a $P/ $HOST:$1/synth/; done
+  for P in $METAS $A/vplan_b/synth $2/synth; do [ -d $P ] && rsync -azW --partial --timeout=120 -e 'ssh -J ot-epyc5 -S none -o ConnectTimeout=20 -o ServerAliveInterval=20 -o ServerAliveCountMax=3' $P/ $HOST:$1/synth/; done
   scp -q $2/views.json $HOST:$1/ && scp -q $3 $HOST:$1/contract.json || return 17
 }
 views_up() { views_to $B/views "$@"; }
@@ -215,19 +215,9 @@ python3 tools/hbm_die_v15/check_contract_modules.py --contract $A/net/pre_relay_
 python3 tools/hbm_die_v16/d4g_functional_bind.py $A/net/pre_relay_r14.json --report $A/net/functional_bind_pre_relay_r14.json --lat warn > $A/net/functional_bind_pre_relay_r14.log 2>&1; tail -1 $A/net/functional_bind_pre_relay_r14.log
 echo "R14_PRE_RELAY $(sha256sum $A/net/pre_relay_r14.json | cut -c1-16)"
 step S2a synth_a_r14_masters
-if [ -n "${R14_REUSE_PRIMARY:-}" ]; then
-  step S2a_wait_primary_preserve_admitted
-  while kill -0 2765338 2>/dev/null; do sleep 20; done
-  CELLS=$(cat /home/ubuntu/scratch/codex-hbm-r14-primary-cells.txt)
-  # Single bounded retry reuses completed/running paths; repairs the one missing CSA source input.
-  python3 tools/hbm_die_v15/v16_synth_drive.py --source-root /home/ubuntu/wt/codex-hbm-die14-release-1021 --views $A/vplan_a_primary --commit 1fe61477b --legacy-source-commit 1fe61477b --remote-root $B --workers 8 --resume-remote $CELLS > $A/drive_a_finish.log 2>&1
-  python3 tools/hbm_die_v15/v16_fetch.py --views $A/vplan_a_primary --remote-root $B --commit 1fe61477b --contract $A/net/pre_relay_r14.json $CELLS > $A/fetch_a_primary.log 2>&1 || { echo S2_FETCH_FAIL; tail -8 $A/fetch_a_primary.log; exit 12; }
-  cp -a $A/vplan_a_primary/. $A/vplan_a/
-  python3 tools/hbm_die_v15/v16_views.py --out $A/vplan_a --contract $A/net/pre_relay_r14.json
-  # ETMs retain their actual 1fe source receipts; CLOSED views consume current explicit selections.
-else
-  synth_round $A/net/pre_relay_r14.json $A/vplan_a a $R11A/vplan_b || { echo S2A_SYNTH_FAIL; exit 12; }
-fi
+# ROWS256 changes the source and parameters; old r14 S2 receipts cannot be reused wholesale.
+[ -z "${R14_REUSE_PRIMARY:-}" ] || { echo R15_REFUSES_R14_PRIMARY_REUSE; exit 12; }
+synth_round $A/net/pre_relay_r14.json $A/vplan_a a $R11A/vplan_b || { echo S2A_SYNTH_FAIL; exit 12; }
 ssh $HOST "mkdir -p $B && rm -rf $B/a $B/p $B/q && mkdir -p $B/a $B/p $B/q && cp -al $R11B/p/views $B/p/views" || { echo R14_INIT_REMOTE_FAIL; exit 9; }
 views_to $B/a/views $A/vplan_a $A/net/pre_relay_r14.json || { echo R14_INIT_AVIEWS_FAIL; exit 9; }
 (cat $A/src_paths_a.txt; echo tools/hbm_die_v16/d4g_layers/l26_closed_views.py; echo physical/ref_tile/hdie_col_idx256r_b; echo physical/ref_tile/hdie_pc_ctrl_cfg_h9c) | sort -u > $A/src_paths_init.txt
