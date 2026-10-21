@@ -1,0 +1,43 @@
+
+21. Printing statistics.
+
+=== dsdv_hostb_return ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1502        - wires
+     3759        - wire bits
+       27        - public wires
+     2284        - public wire bits
+       20        - ports
+     1468        - port bits
+     2188  295.624 cells
+        1        -   $scopeinfo
+        1    0.087   AND2x2_ASAP7_75t_R
+        2    0.204   AND4x1_ASAP7_75t_R
+        1    0.087   AOI211xp5_ASAP7_75t_R
+        1    0.073   AOI21xp33_ASAP7_75t_R
+        1    0.102   AOI221xp5_ASAP7_75t_R
+        6    0.525   AOI22xp33_ASAP7_75t_R
+        7    2.654   DFFASRHQNx1_ASAP7_75t_R
+      706   205.87   DFFHQNx1_ASAP7_75t_R
+      729   31.886   INVx1_ASAP7_75t_R
+        3    0.175   NAND2xp33_ASAP7_75t_R
+      354   25.807   NAND3xp33_ASAP7_75t_R
+        3    0.306   NAND5xp2_ASAP7_75t_R
+        2    0.146   NOR3xp33_ASAP7_75t_R
+      355    25.88   OAI21xp33_ASAP7_75t_R
+        2    0.204   OAI221xp5_ASAP7_75t_R
+        1    0.146   OAI222xp33_ASAP7_75t_R
+        3    0.262   OAI22xp33_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+        2    0.204   OR4x1_ASAP7_75t_R
+        4    0.525   XNOR2xp5_ASAP7_75t_R
+        3    0.394   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\dsdv_hostb_return': 295.624080
+     of which used for sequential elements: 208.523160 (70.54%)
+

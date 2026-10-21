@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-native-r2-1021/src
+ot-run: ot-epyc7       admits   214 GB (avail 211, growth 61, headroom 0, waiters 0/0 GB) load 37/96 running 13 disk 4478 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-native-r2-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-native-r2-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-native-r2-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-native-r2-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-hostb-native-r2-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1781883-1792622947 after 0 s
+HBE_NATIVE dsdv_hostb_stage FAIL 96 5 0
+HBE_NATIVE dsdv_hostb_return FAIL 355 3 0
+HBE_NATIVE dsdv_hostb_head PASS 6 0 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1781883-1792622947): exit 0
