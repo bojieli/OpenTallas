@@ -38,9 +38,9 @@ def main():
    if re.search(r"[\s;#\"{}]",name):raise ValueError("unsupported exact wire identifier "+name)
    alias="A_ot_qcore_copy_alias_%05d"%len(rows)
    if alias in m["netnames"]:raise ValueError("alias collision")
-   cmd += ["add -wire \\"+alias+" "+str(len(bits)),"connect -set \\"+alias+" \\"+name,"setattr -set keep 1 w:"+alias,"setattr -set ot_rst_split 1 w:"+alias]
+   cmd += ["add -wire \\"+alias+" "+str(len(bits)),"connect -set \\"+alias+" \\"+name]
    rows.append({"original":name,"alias":alias,"width":len(bits)})
-  cmd.append("cd ..");Path(a.after).write_text("\n".join(cmd)+"\n");Path(a.manifest).write_text(json.dumps(rows,indent=2)+"\n");print("COPY_ALIASES",len(rows));return
+  cmd += (["setattr -set keep 1 w:A_ot_qcore_copy_alias_*","setattr -set ot_rst_split 1 w:A_ot_qcore_copy_alias_*"] if rows else []);cmd.append("cd ..");Path(a.after).write_text("\n".join(cmd)+"\n");Path(a.manifest).write_text(json.dumps(rows,indent=2)+"\n");print("COPY_ALIASES",len(rows));return
  c=json.loads(Path(a.after).read_text());assert b["modules"].keys()==c["modules"].keys();cells=0
  for mn,old in b["modules"].items():
   new=c["modules"][mn];assert old["cells"].keys()==new["cells"].keys(),mn

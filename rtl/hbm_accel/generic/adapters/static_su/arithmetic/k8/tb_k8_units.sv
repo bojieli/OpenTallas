@@ -20,10 +20,14 @@ module tb_k8_units;
     wire [31:0] q0, q1; wire qo0, qo1, qf0, qf1;
     ot_hdc_v41x_fdiv    d_ref (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(q0), .vo(qo0), .fault(qf0));
     ot_hdc_v41x_fdiv_k8 d_k8  (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(q1), .vo(qo1), .fault(qf1));
+    // HBM-KIND9: ot_k9_fge vs the ordered-key compare it replaces (combinational, checked every edge)
+    function automatic [31:0] okey(input [31:0] v); okey = v[31] ? ~v : {1'b1, v[30:0]}; endfunction
+    wire g_k9; ot_k9_fge #(.K(1)) f_k9 (.a(a), .b(b), .ge(g_k9));
+    wire g_ref = (okey(a) >= okey(b));
     reg [2:0] av = 0;
     always @(posedge clk) av <= {av[1:0], v};
-    integer n = 0, err = 0, mchk = 0, echk = 0, achk = 0, dchk = 0, subs = 0, N = 400000;
-    bit mm, me, ma, md;
+    integer n = 0, err = 0, gchk = 0, mchk = 0, echk = 0, achk = 0, dchk = 0, subs = 0, N = 400000;
+    bit mm, me, ma, md, mg;
     function automatic [31:0] rnd_fp(input integer mode);
         reg [31:0] r;
         begin
@@ -37,7 +41,7 @@ module tb_k8_units;
         end
     endfunction
     initial begin
-        mm = $test$plusargs("MUT_MUL"); me = $test$plusargs("MUT_EXP"); ma = $test$plusargs("MUT_ADD"); md = $test$plusargs("MUT_DIV");
+        mm = $test$plusargs("MUT_MUL"); me = $test$plusargs("MUT_EXP"); ma = $test$plusargs("MUT_ADD"); md = $test$plusargs("MUT_DIV"); mg = $test$plusargs("MUT_FGE");
         if (!$value$plusargs("N=%d", N)) N = 400000;
         repeat (3) @(negedge clk); rst_n = 1;
         for (n = 0; n < N; n = n + 1) begin
@@ -47,7 +51,7 @@ module tb_k8_units;
             x = (($urandom % 4) == 0) ? $urandom : {$urandom % 2 == 0, 8'(110 + $urandom % 25), 23'($urandom)};
         end
         repeat (80) @(negedge clk);
-        $display("K8_UNITS %s mul_checks=%0d exp_checks=%0d add_checks=%0d div_checks=%0d sub_results=%0d errors=%0d", err ? "FAIL" : "PASS", mchk, echk, achk, dchk, subs, err);
+        $display("K8_UNITS %s mul_checks=%0d exp_checks=%0d add_checks=%0d div_checks=%0d fge_checks=%0d sub_results=%0d errors=%0d", err ? "FAIL" : "PASS", mchk, echk, achk, dchk, gchk, subs, err);
         if (err) $fatal(1, "K8_UNITS FAIL");
         $finish;
     end
@@ -62,6 +66,8 @@ module tb_k8_units;
             echk = echk + 1;
             if ({e0, ef0} !== {e1 ^ (me ? 32'h100 : 32'h0), ef1}) begin err = err + 1; if (err < 8) $display("K8 exp y %h/%h", e0, e1); end
         end
+        gchk = gchk + 1;
+        if (g_ref !== (g_k9 ^ mg)) begin err = err + 1; if (err < 8) $display("K8 fge %h %h ref %b k9 %b", a, b, g_ref, g_k9); end
         if (qo0 !== qo1) begin err = err + 1; if (err < 8) $display("K8 div valid mismatch"); end
         if (qo0) begin
             dchk = dchk + 1;

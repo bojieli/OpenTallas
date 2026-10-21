@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # HBM-KIND8: lockstep bench of the k8 native-32 multiplier / exp vs the released units (Verilator 5.050).
-# Usage: su_k8_units_run.sh OUT [MUT_MUL|MUT_EXP|MUT_ADD|MUT_DIV] [N]   (HBM-KIND9: + n32 adder lockstep)
+# Usage: su_k8_units_run.sh OUT [MUT_MUL|MUT_EXP|MUT_ADD|MUT_DIV|MUT_FGE] [N]   (HBM-KIND9: + n32 adder lockstep)
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1"); mut=${2:-}; n=${3:-400000}

@@ -47,7 +47,15 @@ def mk(kind, form, name, side=None):
     s['job'].update({'owner': 'Claude:HBM-KIND9', 'branch': 'claude/hbm-kind8-1020', 'tag': form,
                      'purpose': sc, 'auto_merge': False})
     d = WT / 'physical/ref_tile' / name; d.mkdir(parents=True, exist_ok=True)
-    shutil.copy(QC / 'copy_aliases.py', d / 'copy_aliases.py')
+    # HBM-KIND9: the alias commands are batched (one wildcard setattr pair instead of two per alias: 3,641 aliases made the
+    # per-alias `setattr w:<name>` scans the long pole of synthesis); same aliases, same attributes, same graph verify
+    ca = (QC / 'copy_aliases.py').read_text()
+    o1 = 'cmd += ["add -wire \\\\"+alias+" "+str(len(bits)),"connect -set \\\\"+alias+" \\\\"+name,"setattr -set keep 1 w:"+alias,"setattr -set ot_rst_split 1 w:"+alias]'
+    n1 = 'cmd += ["add -wire \\\\"+alias+" "+str(len(bits)),"connect -set \\\\"+alias+" \\\\"+name]'
+    o2 = 'cmd.append("cd ..")'
+    n2 = 'cmd += (["setattr -set keep 1 w:A_ot_qcore_copy_alias_*","setattr -set ot_rst_split 1 w:A_ot_qcore_copy_alias_*"] if rows else []);cmd.append("cd ..")'
+    assert ca.count(o1) == 1 and ca.count(o2) == 1, 'copy_aliases.py drift'
+    (d / 'copy_aliases.py').write_text(ca.replace(o1, n1).replace(o2, n2))
     (d / 'synth_canonicalize.tcl').write_text((QC / 'synth_canonicalize.tcl').read_text().replace(
         'physical/ref_tile/hbm_su_qcore_r13_1020/copy_aliases.py', f'physical/ref_tile/{name}/copy_aliases.py').replace(
         '# hbm_su_qcore_r13_1020 kit-scoped', f'# {name} kit-scoped (copied by HBM-KIND9 from hbm_su_qcore_r13_1020)'))
