@@ -40,6 +40,7 @@ hc coefficient path (FIXED 10-18 by vp op 7 NORMR + POST row order, S81-SLICE 50
     (a1 = global beat index stays in the template); and POST step 0 reads the post row a0, steps 1..4 comb rows
     a0 + 1..a0 + 4 (L5 order) -> NORMR a0 = R, POST a0 = R + 1, both static templates.
 """
+import json
 import re
 
 OPS = [
