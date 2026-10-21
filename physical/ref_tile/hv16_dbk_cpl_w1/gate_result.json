@@ -1,0 +1,995 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M6, parent strap M8; children PG {'ot_hgi_dma_back_landing_bank': 'M5', 'ot_hgi_dma_back_static_vp4_controller': 'M5', 'ot_hgi_dma_back_cp_collar': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "6 port group(s) left to the IO placer (ANY): ['clk_bank', 'clk_land', 'clk_rly', 'rr']",
+   "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc5 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hv16_dbk_cpl_w1_20261021-072508.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hv16_dbk_cpl_w1_20261021-072508.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hv16_dbk_cpl_w1-20261021-072508",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=13",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc5 in 82 s (gate total 1677 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 4962, 'pin_rectangles': 4962, 'pin_track_checked': 4962, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 0954f67524820deaa3994a14c4e9f3b9dfdc2f7d530d9699518d71a0100665cd",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "6 port group(s) left to the IO placer (ANY): ['clk_bank', 'clk_land', 'clk_rly', 'rr']",
+   "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 1854 um2 + macros 122631 in core 324124: util 1% (std-cell density 1.1% of placeable 176112 um2; total fill 38.4%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS ot_hgi_dma_back_static_vp4_banks_cplw cells 12,495 flops 4,974 depth 11.7 ps util 0.3841 reach 0.0 um (0.4 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 168.6..168.6 ps (spread 0.0), boundary mean 168.6; tt insertion all 169.4..169.4 ps (spread 0.0), boundary mean 169.4; ff insertion all 170.8..170.8 ps (spread 0.0), boundary mean 170.8; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hv16_dbk_cpl_w1/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->macro  335 paths, worst slack 84.7 ps (e.g. u_ot_pr_core.u_dbk.L[7].u_bank/write_slot[0])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->macro     300 paths, worst slack 109.6 ps (e.g. u_ot_pr_core.u_dbk.u_control/stk[1])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg   1635 paths, worst slack 167.6 ps (e.g. u_ot_pr_core.mv_fault$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro   2365 paths, worst slack 185.0 ps (e.g. u_ot_pr_core.u_dbk.u_control/rr_valid_i[5])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg      2009 paths, worst slack 186.6 ps (e.g. u_ot_pr_core.u_dbk.L[2].cv_q$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg       44 paths, worst slack 320.0 ps (e.g. u_ot_pr_core.u_dbk.wb_fill_start$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      300 paths, worst slack 414.7 ps (e.g. wd[1878])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 8.47324987951481e-11 hold WNS 5.6142146487303535e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_1 max: 2 undeclared timed path(s), worst 252.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_1 min: 2 undeclared timed path(s), worst 215.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_2 max: 23 undeclared timed path(s), worst 167.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_2 min: 23 undeclared timed path(s), worst 86.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_3 max: 7 undeclared timed path(s), worst 132.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_3 min: 7 undeclared timed path(s), worst 351.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_4 max: 7 undeclared timed path(s), worst 224.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_4 min: 7 undeclared timed path(s), worst 261.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_5 max: 7 undeclared timed path(s), worst 172.8 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_5 min: 7 undeclared timed path(s), worst 316.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_6 max: 7 undeclared timed path(s), worst 160.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_6 min: 7 undeclared timed path(s), worst 315.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_7 max: 7 undeclared timed path(s), worst 140.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_7 min: 7 undeclared timed path(s), worst 327.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_8 max: 7 undeclared timed path(s), worst 88.3 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_8 min: 7 undeclared timed path(s), worst 380.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_9 max: 7 undeclared timed path(s), worst 120.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_9 min: 7 undeclared timed path(s), worst 337.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_10 max: 7 undeclared timed path(s), worst 84.7 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_10 min: 7 undeclared timed path(s), worst 374.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_14 max: 112 undeclared timed path(s), worst 236.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_14 min: 112 undeclared timed path(s), worst 191.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_19 max: 123 undeclared timed path(s), worst 263.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_19 min: 123 undeclared timed path(s), worst 100.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_20 max: 123 undeclared timed path(s), worst 301.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_20 min: 123 undeclared timed path(s), worst 88.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_21 max: 82 undeclared timed path(s), worst 292.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_21 min: 82 undeclared timed path(s), worst 105.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_25 max: 62 undeclared timed path(s), worst 187.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_25 min: 62 undeclared timed path(s), worst 235.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_0 max: 341 undeclared timed path(s), worst 266.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_0 min: 341 undeclared timed path(s), worst 118.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_2 max: 3 undeclared timed path(s), worst 303.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_2 min: 3 undeclared timed path(s), worst 132.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_0 max: 1 undeclared timed path(s), worst 393.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_0 min: 1 undeclared timed path(s), worst 84.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_1 max: 1 undeclared timed path(s), worst 395.7 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_1 min: 1 undeclared timed path(s), worst 86.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_3 max: 1 undeclared timed path(s), worst 201.9 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_3 min: 1 undeclared timed path(s), worst 251.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_4 max: 1 undeclared timed path(s), worst 294.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_4 min: 1 undeclared timed path(s), worst 163.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_5 max: 1 undeclared timed path(s), worst 330.1 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_5 min: 1 undeclared timed path(s), worst 128.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_6 max: 1 undeclared timed path(s), worst 239.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_6 min: 1 undeclared timed path(s), worst 211.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_7 max: 1 undeclared timed path(s), worst 223.6 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_7 min: 1 undeclared timed path(s), worst 229.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_8 max: 1 undeclared timed path(s), worst 220.2 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_8 min: 1 undeclared timed path(s), worst 236.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_9 max: 1 undeclared timed path(s), worst 263.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_9 min: 1 undeclared timed path(s), worst 191.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_10 max: 1 undeclared timed path(s), worst 277.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_10 min: 1 undeclared timed path(s), worst 176.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_25 max: 18 undeclared timed path(s), worst 320.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_25 min: 18 undeclared timed path(s), worst 106.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_22 max: 289 undeclared timed path(s), worst 319.8 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_3->ot_entry_22 min: 289 undeclared timed path(s), worst 91.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_4->ot_entry_23 max: 289 undeclared timed path(s), worst 347.2 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_4->ot_entry_23 min: 289 undeclared timed path(s), worst 80.7 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_23 max: 289 undeclared timed path(s), worst 389.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_5->ot_entry_23 min: 289 undeclared timed path(s), worst 87.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_22 max: 289 undeclared timed path(s), worst 323.6 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_6->ot_entry_22 min: 289 undeclared timed path(s), worst 175.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_24 max: 289 undeclared timed path(s), worst 303.2 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_7->ot_entry_24 min: 289 undeclared timed path(s), worst 139.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_24 max: 289 undeclared timed path(s), worst 315.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_8->ot_entry_24 min: 289 undeclared timed path(s), worst 127.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_25 max: 289 undeclared timed path(s), worst 307.8 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_9->ot_entry_25 min: 289 undeclared timed path(s), worst 79.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_25 max: 289 undeclared timed path(s), worst 377.8 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_10->ot_entry_25 min: 289 undeclared timed path(s), worst 84.8 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_3 max: 257 undeclared timed path(s), worst 297.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_11->ot_entry_3 min: 257 undeclared timed path(s), worst 113.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_12->ot_entry_4 max: 257 undeclared timed path(s), worst 291.6 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_12->ot_entry_4 min: 257 undeclared timed path(s), worst 135.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_5 max: 257 undeclared timed path(s), worst 257.8 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_13->ot_entry_5 min: 257 undeclared timed path(s), worst 178.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_6 max: 257 undeclared timed path(s), worst 334.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_14->ot_entry_6 min: 257 undeclared timed path(s), worst 127.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_7 max: 257 undeclared timed path(s), worst 332.3 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_15->ot_entry_7 min: 257 undeclared timed path(s), worst 122.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_16->ot_entry_8 max: 257 undeclared timed path(s), worst 291.2 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_16->ot_entry_8 min: 257 undeclared timed path(s), worst 135.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_17->ot_entry_9 max: 257 undeclared timed path(s), worst 306.4 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_17->ot_entry_9 min: 257 undeclared timed path(s), worst 86.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_18->ot_entry_10 max: 257 undeclared timed path(s), worst 289.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_18->ot_entry_10 min: 257 undeclared timed path(s), worst 104.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_0 max: 3 undeclared timed path(s), worst 213.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_0 min: 3 undeclared timed path(s), worst 172.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_3 max: 41 undeclared timed path(s), worst 333.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_3 min: 41 undeclared timed path(s), worst 159.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_4 max: 41 undeclared timed path(s), worst 409.2 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_4 min: 41 undeclared timed path(s), worst 110.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_5 max: 41 undeclared timed path(s), worst 315.4 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_19->ot_entry_5 min: 41 undeclared timed path(s), worst 176.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_0 max: 3 undeclared timed path(s), worst 185.0 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_0 min: 3 undeclared timed path(s), worst 152.9 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_6 max: 41 undeclared timed path(s), worst 394.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_6 min: 41 undeclared timed path(s), worst 103.5 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_7 max: 41 undeclared timed path(s), worst 302.3 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_7 min: 41 undeclared timed path(s), worst 127.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_8 max: 41 undeclared timed path(s), worst 259.2 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_20->ot_entry_8 min: 41 undeclared timed path(s), worst 211.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_21->ot_entry_0 max: 2 undeclared timed path(s), worst 247.4 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_21->ot_entry_0 min: 2 undeclared timed path(s), worst 213.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_21->ot_entry_9 max: 41 undeclared timed path(s), worst 394.9 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_21->ot_entry_9 min: 41 undeclared timed path(s), worst 127.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_21->ot_entry_10 max: 41 undeclared timed path(s), worst 300.3 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_21->ot_entry_10 min: 41 undeclared timed path(s), worst 150.6 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_25->ot_entry_0 max: 13 undeclared timed path(s), worst 193.5 ps (uncertainty 210.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_25->ot_entry_0 min: 13 undeclared timed path(s), worst 262.0 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "26 register clocks (ot_entry_0,ot_entry_1,ot_entry_2,ot_entry_3,ot_entry_4,ot_entry_5,ot_entry_6,ot_entry_7,ot_entry_8,ot_entry_9,ot_entry_10,ot_entry_11,ot_entry_12,ot_entry_13,ot_entry_14,ot_entry_15,ot_entry_16,ot_entry_17,ot_entry_18,ot_entry_19,ot_entry_20,ot_entry_21,ot_entry_22,ot_entry_23,ot_entry_24,ot_entry_25): no undeclared cross-clock reg->reg setup violation under signoff.sdc",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk (ot_entry_0, 1 sinks): TT pin-flop spread 0.0 / FF 0.0 ps, insertion TT 305.4 / FF 280.3 ps; WARN (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_cp (ot_entry_1, 1 sinks): TT pin-flop spread 0.0 / FF 0.0 ps, insertion TT 226.5 / FF 191.9 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_rst (ot_entry_2, 41 sinks): TT pin-flop spread 22.5 / FF 21.6 ps, insertion TT 450.8 / FF 380.3 ps; WARN (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_bank[0] (ot_entry_3, 1 sinks): TT pin-flop spread None / FF None ps, insertion TT 39.5 / FF 40.6 ps; INFO (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_bank[1] (ot_entry_4, 1 sinks): TT pin-flop spread None / FF None ps, insertion TT 69.1 / FF 70.7 ps; INFO (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_bank[2] (ot_entry_5, 1 sinks): TT pin-flop spread None / FF None ps, insertion TT 65.9 / FF 67.4 ps; INFO (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_bank[3] (ot_entry_6, 1 sinks): TT pin-flop spread None / FF None ps, insertion TT 39.5 / FF 40.6 ps; INFO (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_bank[4] (ot_entry_7, 1 sinks): TT pin-flop spread None / FF None ps, insertion TT 39.5 / FF 40.6 ps; INFO (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_bank[5] (ot_entry_8, 1 sinks): TT pin-flop spread None / FF None ps, insertion TT 4.4 / FF 4.6 ps; INFO (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_bank[6] (ot_entry_9, 1 sinks): TT pin-flop spread None / FF None ps, insertion TT 4.4 / FF 4.6 ps; INFO (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_bank[7] (ot_entry_10, 1 sinks): TT pin-flop spread None / FF None ps, insertion TT 4.4 / FF 4.6 ps; INFO (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_land[0] (ot_entry_11, 257 sinks): TT pin-flop spread 37.3 / FF 36.2 ps, insertion TT 118.7 / FF 99.9 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_land[1] (ot_entry_12, 257 sinks): TT pin-flop spread 57.8 / FF 56.4 ps, insertion TT 142.6 / FF 122.9 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_land[2] (ot_entry_13, 257 sinks): TT pin-flop spread 68.6 / FF 66.9 ps, insertion TT 147.9 / FF 128.9 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_land[3] (ot_entry_14, 393 sinks): TT pin-flop spread 32.8 / FF 32.1 ps, insertion TT 122.7 / FF 102.9 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_land[4] (ot_entry_15, 257 sinks): TT pin-flop spread 29.9 / FF 29.2 ps, insertion TT 109.6 / FF 91.5 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_land[5] (ot_entry_16, 257 sinks): TT pin-flop spread 49.6 / FF 48.1 ps, insertion TT 130.4 / FF 111.4 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_land[6] (ot_entry_17, 257 sinks): TT pin-flop spread 8.0 / FF 8.0 ps, insertion TT 90.9 / FF 72.9 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_land[7] (ot_entry_18, 257 sinks): TT pin-flop spread 23.1 / FF 22.5 ps, insertion TT 99.9 / FF 82.3 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_rly[0] (ot_entry_19, 126 sinks): TT pin-flop spread 13.2 / FF 13.5 ps, insertion TT 235.9 / FF 198.0 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_rly[1] (ot_entry_20, 126 sinks): TT pin-flop spread 42.2 / FF 42.4 ps, insertion TT 243.4 / FF 209.5 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_rly[2] (ot_entry_21, 84 sinks): TT pin-flop spread 2.8 / FF 2.3 ps, insertion TT 139.2 / FF 117.1 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_out[0] (ot_entry_22, 578 sinks): TT pin-flop spread 34.7 / FF 34.4 ps, insertion TT 124.6 / FF 104.2 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_out[1] (ot_entry_23, 578 sinks): TT pin-flop spread 42.6 / FF 41.9 ps, insertion TT 131.9 / FF 111.5 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_root",
+   "message": "root clk_out[2] (ot_entry_24, 578 sinks): TT pin-flop spread 35.9 / FF 35.3 ps, insertion TT 127.5 / FF 106.7 ps; PASS (limit 80)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk_out[3]: 671 sinks on the largest root; measured TT insertion 129.8 ps, FF insertion 108.4 ps, TT pin-flop spread 39.6 ps, FF pin-flop spread 39.2 ps (spread <= 80 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/safe-dbk-1021/physical/ref_tile/hv16_dbk_cpl_w1/gate_layout/floorplan.png; density /home/ubuntu/wt/safe-dbk-1021/physical/ref_tile/hv16_dbk_cpl_w1/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 38% = (hard macros 122630.6 + synthesized std cells 1853.7) / outline 329069.4 um2; pin demand per face: S 1688 pins over 601.8/607.0 um (99%), N 1771 pins over 601.8/607.0 um (99%), W 1222 pins over 517.0/542.2 um (95%), E 393 pins over 529.3/542.2 um (98%) (< 50%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 9.59% used; GRT 446 s",
+   "fix": ""
+  }
+ ]
+}
