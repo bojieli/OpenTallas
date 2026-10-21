@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T15:20:50.330584-07:00",
+  "updated": "2026-10-21T15:48:20.976183-07:00",
   "owner": "CODEX-S81-XFV-1021 /root/s81_lead/slice_collect",
   "qualified_FP": {
     "source": "560abe5d2",
@@ -7,38 +7,44 @@
     "MUL": "LAT5 CUTS01101010 nativePASS32 +2M sampled comparisons, runtime seed not explicitly set bad0/badr0",
     "ADD": "LAT6 CUTS1101011, modulebyteidentical96 PASS28+2M",
     "reset": "raw2edges early; internal6samephase2edge leaves",
-    "ENG_parent_receipt": "2358d5666/7c0f9b771 allpositive+6causalsPASS; separateENGnativepending"
+    "ENG_parent_receipt": "2358d5666/7c0f9b771 allpositive+6causalsPASS; separateENGnativepending",
+    "DIV": {
+      "source": "731be030b",
+      "receipt": "77fd9373d",
+      "native": "PASS26/0/0",
+      "equivalence": "2,000,000 sampled comparisons bad0, runtime seed not explicitly set, LAT9/F5/K10 unchanged"
+    },
+    "metadata_correction": "7bc832496 / PROOF_METADATA_CORRECTION.json"
   },
   "current_whole_source": {
-    "source": "8f3718c55",
-    "qualification": "latergo + three-bank groupeddescriptor successor, r22fleetlintPASS0; fullproof/nativepending",
-    "changes": "19\u21927 descriptorcopies/ENGfinish, same3bank actualconsumerbound; independent same-edge go owners; no topport or protocoledgechange",
+    "finish_control": "b00440f56",
+    "FP": "731be030b",
+    "qualification": "fulltop lint r25 PASS; ADD28/MUL32/DIV26 leaf native PASS, current whole native/mechanisms pending",
+    "changes": "real-only 12 scheduler groups/ceil(NB/3) consumer copies; separate16 leaf-go plus12 command-go loads28; same-edge control, no protocol edge change",
     "no_adoption": true
   },
   "active_XFIN": {
     "native": {
-      "source": "560abe5d2",
-      "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r20-1021",
-      "local_pid": 3756329,
-      "unit": "oth-ubuntu-1410224-1792620024",
+      "source": "8f3718c55",
+      "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r23-1021",
+      "unit": "oth-ubuntu-1622436-1792621560",
       "mem_gib": 64,
-      "log": "scratch/codex-s81-xfin-takeover2-1021/r20_native.log",
-      "state": "TERMINAL Error247/noNETLIST/peak66960120KB under64GiB; Diskcausalclassification pending, no native verdict"
+      "state": "LIVE OPT_EXPR after TECHMAP; diagnostic predecessor contains unused kept copies corrected in current source, no adoption",
+      "binding": "r23_live_container_binding.json"
     },
     "mechanism": {
-      "source": "40eb5678a",
-      "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r18-1021",
-      "local_pid": 3725689,
-      "unit": "oth-ubuntu-1375622-1792619679",
-      "mem_gib": 32,
-      "log": "scratch/codex-s81-xfin-takeover2-1021/r18_eng_base_s1.log"
+      "source": "8f3718c55",
+      "unit": "oth-ubuntu-1622434-1792621560",
+      "state": "LIVE existing ENG base; compiler binary built, guarded Verilator wrapper still active; no raw run verdict yet"
     }
   },
   "prior_measured": {
     "source46e": "all3fullpositivegoldensPASS exactNORM234/13+ENG526/464+542/362 sealedac53; no newer source/causal promotion",
     "source_a980": "all7mechanismPASS775, authoritative nativeFAIL155/920 dc11",
     "r9native": "16GiB OOMbeforeNETLIST noverdict",
-    "bench8and16": "MEMCGOOM infrastructures; exact32continuationPASS"
+    "bench8and16": "MEMCGOOM infrastructures; exact32continuationPASS",
+    "r18": "40eb5678a exact fullENG base PASS16slices/128results err0/fault0/rb0 GO526 partial464 sealed eb8198685",
+    "r20": "560 fullnative terminal Error247/noNETLIST/peak66960120KB;64GiB kernelMEMCG strongly consistent timing/RSS but exact removed Docker binding unproven; no native verdict"
   },
   "VS": {
     "source": "8f57521dc",
@@ -61,14 +67,9 @@
   },
   "next_actions": [
     "Collect current native/mechanism snapshots without mutation",
-    "Use actual current native failures to finish bounded structural repair; latergo3eb is not qualified",
+    "Collect R23 concrete native failures, integrate only necessary remaining source fixes into current b004+731, then exact whole-source qualification",
     "Current exact whole-source goldens+causals/native required before XFINphysicalgate;criticalprefix rootreview",
     "Collect terminal XGT views and reviewPNG/submit per actual policy; preserve livejobs",
     "Collect VS daemon terminal closure; no MAIN retry"
-  ],
-  "staged_only_successor": {
-    "source": "8f3718c55",
-    "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r23-1021",
-    "state": "no heavy jobs launched; awaits failureclassification/currentmechanism"
-  }
+  ]
 }

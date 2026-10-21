@@ -1,0 +1,41 @@
+{
+  "Id": "786714ea0fb72dd2770338ce35269c84f9957053aea694c65a95a038edc59991",
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 1622537,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-21T22:26:01.057273471Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "Memory": 68719476736,
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch/claude/codex-xfin-r23-1021/src",
+      "Destination": "/src",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch/claude/codex-xfin-r23-1021/native",
+      "Destination": "/work",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    }
+  ],
+  "Path": "bash",
+  "Args": [
+    "-lc",
+    "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base synth"
+  ]
+}
