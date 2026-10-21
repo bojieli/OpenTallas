@@ -46,3 +46,5 @@ NL to1 alone drops logical rows. No virtual-context implementation, new native
 area measurement, CAP/reader/landing integration, 405um relay graph, strict GEN
 bind or trial GRT is supplied by these capacity probes. No new stage count,
 user count or rate is admitted by this packet.
+
+The first completed transport probe (`dense_L0_n0`, fleet unit3139993) finds **zero of112 candidate frames** in the original62 classes; all18 candidate classes are absent. `transport_dense_L0_n0.json` preserves the signatures and missing mappings. This rejects transport before any old receipt is inherited. The existing SVCPLAN full139/147 campaigns use this exact inventory SHA and wrapper; their first L0 full-stage specs pass (139: N106 q8112/8192;147: N100 q7680/8192), with the remaining specs still live. No full-stage verdict or calendar was inherited from the earlier vehicle.
