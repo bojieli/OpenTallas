@@ -1,0 +1,176 @@
+{
+ "scope": "Source-body geometry MODEL only, no native/physical source qualification",
+ "baseline_source": "Actual G8IQ553 gold2 plan_routed_g8.json; dieSHA8ef3b748e5b14da4446d29576702d2828a056943481c650a65b5f5b18bf84838",
+ "baseline_sha256": "6674ac57a36fcc2f81c3a24289dfe0eab8fd8e12822a8bf194d03cc29721f114",
+ "body_count": 163,
+ "real_blocks": 161,
+ "reserves": 2,
+ "frames": 72,
+ "h10_count": 12,
+ "selected_h10_old_um": [
+  1436.832,
+  3672
+ ],
+ "candidate_h10_source": "91dcb1c93",
+ "candidate_h10_um": [
+  1782.432,
+  3672
+ ],
+ "fixed_coordinates_wide_overlaps": [
+  {
+   "names": [
+    "f_0L01",
+    "f_0R01"
+   ],
+   "overlap_um": [
+    259.20000000000005,
+    3672.0
+   ]
+  },
+  {
+   "names": [
+    "f_0R01",
+    "f_1L01"
+   ],
+   "overlap_um": [
+    259.1999999999998,
+    3672.0
+   ]
+  },
+  {
+   "names": [
+    "f_1L01",
+    "f_2L01"
+   ],
+   "overlap_um": [
+    259.1999999999998,
+    3672.0
+   ]
+  },
+  {
+   "names": [
+    "f_2L01",
+    "f_2R01"
+   ],
+   "overlap_um": [
+    259.1999999999998,
+    3672.0
+   ]
+  },
+  {
+   "names": [
+    "f_4R01",
+    "f_4R12"
+   ],
+   "overlap_um": [
+    259.2000000000007,
+    764.7999999999993
+   ]
+  },
+  {
+   "names": [
+    "f_4R01",
+    "f_4R13"
+   ],
+   "overlap_um": [
+    259.2000000000007,
+    2820.7999999999993
+   ]
+  },
+  {
+   "names": [
+    "f_5L01",
+    "f_5R01"
+   ],
+   "overlap_um": [
+    259.2000000000007,
+    3672.0
+   ]
+  },
+  {
+   "names": [
+    "f_5R01",
+    "f_6R01"
+   ],
+   "overlap_um": [
+    259.2000000000007,
+    3672.0
+   ]
+  },
+  {
+   "names": [
+    "f_6R01",
+    "f_7L01"
+   ],
+   "overlap_um": [
+    259.2000000000007,
+    3672.0
+   ]
+  },
+  {
+   "names": [
+    "f_7L01",
+    "f_7R01"
+   ],
+   "overlap_um": [
+    259.2000000000007,
+    3672.0
+   ]
+  },
+  {
+   "names": [
+    "f_3L01",
+    "s_1S"
+   ],
+   "overlap_um": [
+    172.8000000000011,
+    3070.600000000002
+   ]
+  },
+  {
+   "names": [
+    "f_3L01",
+    "s_1N"
+   ],
+   "overlap_um": [
+    172.8000000000011,
+    428.59999999999854
+   ]
+  },
+  {
+   "names": [
+    "f_2R01",
+    "lk_WN0"
+   ],
+   "overlap_um": [
+    259.1999999999998,
+    1339.2000000000007
+   ]
+  },
+  {
+   "names": [
+    "f_2R01",
+    "lk_WN1"
+   ],
+   "overlap_um": [
+    259.1999999999998,
+    2246.3999999999996
+   ]
+  }
+ ],
+ "fixed_coordinates_wide_outside": [
+  {
+   "name": "f_7R01",
+   "right_um": 33245.6,
+   "top_um": 14140.0
+  }
+ ],
+ "baseline_block_area_mm2": 690.0806727200005,
+ "baseline_reserved_area_mm2": 3.98628864,
+ "new_real_block_area_mm2": 705.3091911200006,
+ "independent_candidate": "candidate.json",
+ "certificate": "geometry_certificate.json",
+ "runtime_unit": "oth-ubuntu-1110842-1792619213",
+ "host": "ot-epyc5",
+ "endpoint_hold": "819nominalsourcepaths reprojected only to sameboxportfacefractions; actualclosedviewpins+clock/reset+relaypacking/sourceGEN and calendar qualification owed. No currentfitphysicalclaim."
+}
