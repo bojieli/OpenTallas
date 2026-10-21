@@ -1,0 +1,173 @@
+{
+ "name": "hcoll_issuer_r128v9b-r128v9b-COMMIT",
+ "block": "ot_hgi_coll_issuer_m_r128",
+ "ref_tile": true,
+ "owner": "Claude:HBM-COLLQ7-ISS",
+ "purpose": "HBM-COLLQ7-ISS (SAFE successor of r128v8b, clock spine + W-centre clock entry, PARALLEL FALLBACK of r128v9): same RTL as hcoll_issuer_r128v8; 302.4 x 432 with 49.1 um through-channels. Bind first to close, cancel the other.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/collq7-iss-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "results/arch/landed_parent_1018/collq",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_issuer_m_r128 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v7r128.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "issuer_v8r128_miter_pos",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r128_miter.sh {RUN}/bench/miter_pos pos 3 600",
+    "expect": "pass",
+    "pass_regex": "ISSUER_V8R128_MITER PASS",
+    "min_count_regex": "ISSUER_V8R128_MITER PASS seed\\d+ progs\\d+ checks(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "note": "leaf body ot_hgi_coll_issuer_m128v8 == ot_hgi_coll_issuer_m #(ROWS 128) (v6) every port every edge, 600 random programmes"
+   },
+   {
+    "name": "issuer_v8r128_miter_mut_reload",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r128_miter.sh {RUN}/bench/miter_reload reload 1 300",
+    "expect": "fail",
+    "fail_regex": "ISSUER_V8R128_MUTANT_REJECTED reload",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_coll_iss8_1020/witness/miter_reload.log"
+   },
+   {
+    "name": "issuer_v8r128_miter_mut_nofwd",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r128_miter.sh {RUN}/bench/miter_nofwd nofwd 1 300",
+    "expect": "fail",
+    "fail_regex": "ISSUER_V8R128_MUTANT_REJECTED nofwd",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_coll_iss8_1020/witness/miter_nofwd.log"
+   },
+   {
+    "name": "issuer_v8r128_miter_mut_swap",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_issuer_v8r128_miter.sh {RUN}/bench/miter_swap swap 1 300",
+    "expect": "fail",
+    "fail_regex": "ISSUER_V8R128_MUTANT_REJECTED swap",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/hbm_coll_iss8_1020/witness/miter_swap.log"
+   },
+   {
+    "name": "coll_q3_lp_ars_eq_v8",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/q3_eq eq",
+    "expect": "pass",
+    "pass_regex": "COLL_LP_ARS_ALL_EXIT 0",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "SAFE q3 COLL parent ot_hfd_coll_q3_lpf_ars (binds this leaf, v8 body) == v8x/v8g #(AR_ITER 1, ROWS 128) (v6 issuer) every output every cycle + 3 EQ mutants rejected"
+   },
+   {
+    "name": "coll_q2_lp_ars_eq_v8",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_eq eq",
+    "expect": "pass",
+    "pass_regex": "COLL_LP_ARS_ALL_EXIT 0",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "SAFE q2 COLL parent ot_hfd_coll_q2_lpf_ars (binds this leaf, v8 body) == v8x/v8g #(AR_ITER 1, ROWS 128) (v6 issuer) every output every cycle + 3 EQ mutants rejected"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_issuer_r128v9b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_issuer_r128v9b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_issuer_r128v9b --out {RUN}/record/views/ot_hgi_coll_issuer_m_r128 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir --macro-view physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_issuer_r128v9b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_issuer_r128v9b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hcoll_issuer_r128v9b/hcoll_issuer_r128v9b-r128v9b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "COLLQ7 10-21 SAFE successor of hcoll_issuer_r128v8b (--cts gate FAILED clock_rule only: TT/FF pin-flop spread 105.9/107.5; macro->reg placement -118 ps from the late TritonCTS macro clock). CLASS clock tree (sink-driven TritonCTS over a macro-dominated tile: 1,536 W-face pin flops over the full 410-432 um face + 10 SRAM clock pins). FIX: planned pre-placed equal-delay clock SPINE (clock_spine.tcl, measured-arrival leaf padding, SRAM clock pins as own leaves) in place of TritonCTS, as hidx_rootctl_am_1018 (spine 28 ps) / hidx_link_r4h (spine 75.6 vs TritonCTS 147.6); clock entry moved S x100 -> W face centre beside the uop_d1 pin-flop column (parallel fallback). RTL / outline / macro lattice unchanged (bf2ba3fe5 body, census PASS max32)."
+}

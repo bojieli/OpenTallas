@@ -1,9 +1,14 @@
-ot-run: ot-agidock128  admits    99 GB (avail 82, growth 13, headroom 0, waiters 0/0 GB) load 25/64 running 11 disk 255 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/collq6-iss-1020/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/collq6-iss-1020/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/collq6-iss-1020/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/collq6-iss-1020/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collq6-iss-1020/src
+ot-run: ot-agidock128  admits    41 GB (avail 41, growth 13, headroom 0, waiters 0/0 GB) load 22/64 running 20 disk 201 GB 
 ot-run: -> ot-agidock128
-ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1566097-1792558398 after 1 s
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3048537-1792565906 after 1 s
 LEAF_MISMATCH t=9880000 busy 0/0 fault 0/0 uop_v 1/1 pc 17/17 d1_eq 1
 LEAF_MISMATCH t=9890000 busy 0/0 fault 0/0 uop_v 0/0 pc 17/17 d1_eq 1
 LEAF_MISMATCH t=9900000 busy 0/0 fault 0/0 uop_v 0/0 pc 17/17 d1_eq 1
 ISSUER_V8R128_MITER FAIL mismatches116346 leaf116346 checks751087
 ISSUER_V8R128_MUTANT_REJECTED nofwd
-ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1566097-1792558398): exit 1
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3048537-1792565906): exit 1
