@@ -122,10 +122,12 @@ SU2_ARGS=(); [ "$SU_LOWER2" = 1 ] && SU2_ARGS=(--su-lower2 --rf-local "$RFL" --n
 say "SU native timing READ_RETURN=$RR WRITE_RETURN=$WR (contract su_SW0)"
 B=$OUT/bundle/slice/boundary.json; RJ=$OUT/rj; mkdir -p "$RJ"
 CXR=""
+PV_ARGS=()
+[ "${PV_PROBABILITY_CANDIDATE:-0}" != 1 ] || PV_ARGS=(--pv-probability-candidate --pv-probability-source "$OUT/bundle" --pv-probability-contract "$FC")
 for LL in 00 02 14; do l=$((10#$LL))
   CXA=(); if [ "$CX" = 1 ]; then CXA=(--cx --cx-contract "$FC" --cx-l12 "$OUT/l12.json" --cx-checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}" --cx-ops "COLL,HC$([ "$CX_IDX" = 1 ] && echo ,IDX)"); [ "$l" = 14 ] && CXA+=($CX_L14); fi
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/layer_images.py --design ds --layer $l --programme "$FIX_DS/L$LL/images/ds_v41_1M_L${LL}_per_die.json" \
-     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" "${SU2_ARGS[@]}" --native-read-return $RR --native-write-return $WR "${CXA[@]}" "${SM_ARGS[@]}" --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
+     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" "${SU2_ARGS[@]}" --native-read-return $RR --native-write-return $WR "${CXA[@]}" "${SM_ARGS[@]}" "${PV_ARGS[@]}" --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
     || { say "EMIT_FAIL ds_l$l"; exit 3; }; cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
   for xp in "$OUT/emit/ds_l$l/replay_x"[0-9]*.json; do [ -f "$xp" ] || continue   # SU_LOWER2 independent parts (NEV fit)
     xn=$(basename "$xp" .json); cp "$xp" "$RJ/ds_l${l}_${xn#replay_}.json"; SU2_EXTRA="${SU2_EXTRA:-} ds_l${l}_${xn#replay_}"
