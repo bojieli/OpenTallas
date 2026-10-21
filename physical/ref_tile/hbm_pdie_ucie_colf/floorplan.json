@@ -1,0 +1,165 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hbm_pdie_ucie_colf",
+ "top": "ot_pdie_ucie_col",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  259.2,
+  1771.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  257.03999999999996,
+  1769.04
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M6",
+  "rlayers": [
+   "M2",
+   "M6"
+  ],
+  "strap_layer": "M7",
+  "layer_cap": "M6",
+  "cap_basis": "granted"
+ },
+ "pins": {
+  "N": [
+   "rx",
+   "st",
+   "ck_rx",
+   "rst_rx",
+   "ck_rck",
+   "rst_rck",
+   "ck_tx",
+   "rst_tx",
+   "tx"
+  ],
+  "S": [
+   "pma_rx",
+   "pma_tx",
+   "pma_tck"
+  ]
+ },
+ "clock_port": "ck_tx",
+ "clock_ports": [
+  "ck_tx",
+  "ck_rx",
+  "ck_rck"
+ ],
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_ucie_pma_rxm",
+   "master": "ot_ucie_pma_rxm",
+   "inst": "u_prx",
+   "idx": 0,
+   "x": 10.812,
+   "y": 86.4,
+   "w": 108.0,
+   "h": 1252.8,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_ucie_pma_txm",
+   "master": "ot_ucie_pma_txm",
+   "inst": "u_ptx",
+   "idx": 0,
+   "x": 140.412,
+   "y": 86.4,
+   "w": 108.0,
+   "h": 1252.8,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "master": "ot_sram_1r1w2c_16x546_m1",
+   "inst": "u_rmm",
+   "idx": 0,
+   "x": 43.2,
+   "y": 1555.2,
+   "w": 176.904,
+   "h": 81.0,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "259.2 x 1771.2 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv",
+  "rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv",
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm_bb.v",
+  "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
+  "tools/ref_tile/specs/hbm_pdie_ucie_colf_rx_band.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/kit.env",
+  "physical/ref_tile/hbm_pdie_ucie_colf/clock.sdc",
+  "physical/ref_tile/hbm_pdie_ucie_colf/signoff.sdc",
+  "physical/ref_tile/hbm_pdie_ucie_colf/pdn.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/pre_cts.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/post_cts.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/post_grt.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/pre_drt.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/pre_fill.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/post_fill.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/pre_grt.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/pre_gpl.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/pre_dpl.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/hbm_pdie_ucie_colf/clock_entry.sdc",
+  "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm.lef",
+  "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm_ss.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm_ff.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm_tt.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm.lef",
+  "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm_ss.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm_ff.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib",
+  "physical/ref_tile/hbm_pdie_ucie_colf/place.tcl",
+  "tools/ref_tile/raw_macro_clocks.py",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm_ff.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_rxm/ot_ucie_pma_rxm_tt.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm_ff.lib",
+  "physical/asap7_memory_macros/ot_ucie_pma_txm/ot_ucie_pma_txm_tt.lib"
+ ]
+}
