@@ -69,13 +69,22 @@
   "negative_controls": 8
  },
  "kv": {
-  "verdict": "PENDING",
+  "verdict": "PASS",
   "host": "ot-epyc5",
   "job_pid": 1443002,
   "compiler_pid": null,
   "unit": "oth-ubuntu-1443002-1792562956",
   "out": "/srv/opentallas-scratch2/claude/kv-mu6-kvattn4-1020/out_0e597ed1c",
-  "status": "Original compile complete; original case suite running, no record.json yet"
+  "status": "Original job terminal; all8positives/7mutants/32krefusal/calibration outcomes required",
+  "positive_cases": 8,
+  "mutants_caught": 7,
+  "bound_32k": "REFUSED",
+  "calibration": "PASS",
+  "measured_nu4_cmd_period": 2025,
+  "period_scope": "component only",
+  "receipt": "kv/receipt.json",
+  "source_identity_receipt": "kv/provenance/source_binding.json",
+  "selected_coherent73_qualified": false
  },
  "sole73": {
   "verdict": "NOT_GENERATED",
