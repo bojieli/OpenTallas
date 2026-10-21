@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
 import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
+from clock_roles import contract_clock_nets
 from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
 import abstract_pin_windows as APW   # noqa: E402
@@ -537,6 +538,12 @@ def main():
         for p in cps:
             if p and p in ibits[nm]:
                 clocknets |= {n_ for n_, _ in ibits[nm][p] if n_ not in ('CONST', 'Z', 'UNDECL')}
+
+    # Bind-table clock roles cover direct source->frame lanes too. Such lanes
+    # have no fwd_ gate or relay to seed clocknets (e.g. slice ck_xc -> xk).
+    clocknets, contract_clock_inputs = contract_clock_nets(
+        insts, ibits, T['masters'], mod2master,
+        {m: {p: r[0] for p, r in module.ports.items()} for m, module in idx.items()}, clocknets)
 
     # ------------------------------------------------------------------ positions of every instance (centre) + sizes
     vsize = {}
