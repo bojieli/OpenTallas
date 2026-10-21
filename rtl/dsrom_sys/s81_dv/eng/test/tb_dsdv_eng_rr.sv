@@ -227,9 +227,10 @@ module tb_dsdv_eng_rr;
             while (cyc < tw - 160) begin
                 @(negedge ck);
                 vi_s = 0; vi_n = 0; rdr_rq[0] = 0; rdr_rq[46] = 0;
-                if (cyc < tw - 40 && cyc % 9 == 0) begin
+                rdr_rq[1] = own[0] > 0; rdr_rq[47] = own[1] > 0;   // reader window: open while its requests are owed
+                if (cyc >= tw - 400 && cyc < tw - 40 && cyc % 9 == 0) begin
                     vi_s[275:20] = {8{mix(cyc * 3 + 1)}}; vi_s[3:0] = 4'b0001; rung_n = rung_n + 1; end
-                if (cyc < tw - 40 && cyc % 11 == 0) begin
+                if (cyc >= tw - 400 && cyc < tw - 40 && cyc % 11 == 0) begin
                     vi_n[275:20] = {8{mix(cyc * 5)}}; vi_n[3:0] = 4'b0001; rung_n = rung_n + 1; end
             end
             while (cyc < tw - 20) begin
@@ -244,7 +245,7 @@ module tb_dsdv_eng_rr;
                     rqq[p].push_back(r); own[p] = own[p] + 1; rd_rq = rd_rq + 1; n = n + 1;
                 end
             end
-            @(negedge ck); rdr_rq = 0;
+            @(negedge ck); rdr_rq[0] = 0; rdr_rq[46] = 0; rdr_rq[1] = own[0] > 0; rdr_rq[47] = own[1] > 0;
             // the token start of user users[w % 6]
             u = users[w % 6]; tok = 21'(mix(64'h6200_0000 + w) % 129280);
             begin : g_exp
@@ -254,9 +255,9 @@ module tb_dsdv_eng_rr;
                 hist[u][2] = hist[u][1]; hist[u][1] = hist[u][0]; hist[u][0] = c;
             end
             f_ks = {1'b1, 10'(u), tok, 21'(posn[u])}; posn[u] = posn[u] + 1;
-            @(negedge ck); f_ks = 0;
+            @(negedge ck); f_ks = 0; rdr_rq[1] = own[0] > 0; rdr_rq[47] = own[1] > 0;
         end
-        while (cyc < t0 + 200 + NW * SP) @(negedge ck);
+        while (cyc < t0 + 200 + NW * SP) begin @(negedge ck); rdr_rq[1] = own[0] > 0; rdr_rq[47] = own[1] > 0; end
         // ------------------------------------------------------------------ verdict
         if (win_n != NW) begin e_win = e_win + 1; $display("TB_ENG_RR windows %0d != %0d", win_n, NW); end
         if (ob_n != 48 * NW) begin e_ob = e_ob + 1; $display("TB_ENG_RR row beats %0d != %0d", ob_n, 48 * NW); end
