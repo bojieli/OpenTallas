@@ -642,9 +642,9 @@ module ot_s81dv_xfin_fp_mul_n32 #(
       ot_s81dv_xfin_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(K0)) u_na(.clk(clk),.x({o0_af,1'b0}),.raw_count(a_cz[4:0]),.y(a_shift));
       ot_s81dv_xfin_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(K0)) u_nb(.clk(clk),.x({o0_bf,1'b0}),.raw_count(b_cz[4:0]),.y(b_shift));
     end else begin:g_norm_comb
-      for(genvar g=0;g<3;g=g+1)begin:g_byte
-        ot_s81dv_xfin_fp_norm8 #(.LO(8*g)) u_a(.frac(o0_af),.y(a_shift[8*g+:8]));
-        ot_s81dv_xfin_fp_norm8 #(.LO(8*g)) u_b(.frac(o0_bf),.y(b_shift[8*g+:8]));
+      for(genvar g=0;g<2;g=g+1)begin:g_byte
+        ot_s81dv_xfin_fp_norm12 #(.LO(12*g)) u_a(.frac(o0_af),.y(a_shift[12*g+:12]));
+        ot_s81dv_xfin_fp_norm12 #(.LO(12*g)) u_b(.frac(o0_bf),.y(b_shift[12*g+:12]));
       end
     end
     wire[23:0] a_normal={1'b1,o0_af},b_normal={1'b1,o0_bf};
@@ -935,9 +935,9 @@ endmodule
  assign clear=byp||zero||over||!nz;
 endmodule
 
-// LAT5 has no K0 register: decode the leading-one locally for eight real
+// LAT5 has no K0 register: decode the leading-one locally for twelve real
 // normalized payload consumers rather than broadcast a five-bit shift count.
-(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_norm8 #(parameter integer LO=0)(input wire[22:0] frac,output wire[7:0] y);
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_norm12 #(parameter integer LO=0)(input wire[22:0] frac,output wire[11:0] y);
  wire[23:0] padded={1'b0,frac};
  wire[5:0] zero4;
  wire[23:0] local_lead;
@@ -949,7 +949,7 @@ endmodule
    ot_s81dv_xfin_fp_lead_enable #(.G(g)) u_e(.zero4(zero4),.local_oh(local_lead[g*4+:4]),.oh(qualified_lead[g*4+:4]));
  end
  wire[22:0] lead=qualified_lead[22:0];
- for(genvar b=0;b<8;b=b+1)begin:g_out
+ for(genvar b=0;b<12;b=b+1)begin:g_out
    wire[22:0] term;
    for(genvar k=0;k<23;k=k+1)begin:g_term
      if(LO+b+k>=23 && LO+b+k<=45)
