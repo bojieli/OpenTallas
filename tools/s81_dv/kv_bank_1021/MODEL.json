@@ -38,7 +38,8 @@
     "scratch_lifetime": "input672..819 completely consumed before any output write; output672..771; exp words masked",
     "read_bw_bits_per_edge": 256,
     "write_bw_bits_per_edge": 256,
-    "spine_active_slots_per_two_responses": 1
+    "spine_active_slots_per_two_responses": 1,
+    "producer_layout": "requires72frame DENSE2A/B56activeframesx4rows and TP4 KV128gather; no112frame owner assumptions"
   },
   "staging": {
     "macro": "ot_sram_1r1w2c_32x64_m1",
@@ -70,5 +71,6 @@
     "both masked exponent fragments must survive",
     "prove complete input consumption before first output",
     "compile source hierarchy with opt-in s_3N leaf0 only"
-  ]
+  ],
+  "transport": "TRANSPORT.json pins existing XRT typedV/localcopy; source-only normal-slice opt-in binding"
 }
