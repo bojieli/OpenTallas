@@ -1,15 +1,17 @@
 {
  "schema": "opentallas.tile_visual_review.v1",
  "tile": "hbm_su_cx_ijq_1019t",
- "reviewer": "LEAD2-HBM/L2H-SU (Claude) 2026-10-19",
+ "reviewer": "coordinator",
  "verdict": "APPROVED",
- "time": "2026-10-19T17:01:58-07:00",
+ "time": "2026-10-21T03:24:00-07:00",
+ "gate_commit": "52b4c9280",
  "checklist": {
   "lattice": "PASS: no macros",
-  "std_cell_band": "PASS: one full band; logic centred between the W/E pin faces (1019s density.png, identical outline/pins)",
-  "pin_spread": "PASS: full W/E faces split by port group, clock at the N-E corner; 6,293 pins pin-bound outline (util waiver in README)",
-  "clock_entry": "PASS: single root clk_q, unclustered CTS (w spread 33.9/33.2)",
-  "shape": "PASS: 216 x 388.8 exact closed-view sub-slot"
+  "std_cell_band": "PASS: one std-cell region, logic mass centred, E pin-flop column, peak density ~0.6, no hot spot",
+  "pin_spread": "PASS: W/E full faces by port group (6,293 pins, pin-bound 216x388.8 sub-slot; util 5% waived, rule freeze 10-20 09:35)",
+  "clock_entry": "PASS: one root clk_q at NE corner, 7,010 sinks, pin-flop spread TT 36.5/FF 36.2 (<=80); insertion 347.7/290.9 guidance",
+  "shape": "PASS: 216x388.8 (1.8:1) closed-view sub-slot"
  },
- "notes": "Reviewed 1019s floorplan.png/density.png (same outline, pins, RTL); 1019t only splits the landed reset into 3 kept copies <=32 loads. Gate: PRE_ROUTE_GATE: WARN (0 fail, 5 warn)"
+ "notes": "COLLECT-1021 coordinator review of 1019t gate (WARN 0 fail, GRT ovf 0, M3 40.8%); floorplan+density PNGs viewed 10-21; reroute_reason rtl_change SAFE_GATHER+landed reset",
+ "geometry_sha256": "353b9605069710ae1933820e59c6bc881508146e5664995fa57898ea53fe7636"
 }
