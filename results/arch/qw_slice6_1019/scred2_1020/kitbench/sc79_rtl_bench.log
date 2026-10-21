@@ -1,0 +1,9 @@
+== eq79
+SC2_EQ PASS dn=2236 up=2125 w1=552 tok=630 (merges 160, psum 802, rsqrt 17, total 23) OFF0=2 DT=20 DR=96
+== eq79s2
+SC2_EQ PASS dn=2191 up=2196 w1=523 tok=649 (merges 160, psum 786, rsqrt 21, total 19) OFF0=2 DT=20 DR=96
+== mut79
+SC2_EQ FAIL errors=4222
+[194690000] %Fatal: tb_sc2.sv:138: Assertion failed in tb_sc2: SC2_EQ FAIL
+%Error: rtl/test/qwen_dv/s5_scred2/tb_sc2.sv:138: Verilog $stop
+Aborting...
