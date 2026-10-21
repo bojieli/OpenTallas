@@ -1,0 +1,187 @@
+"""Explicit new-record recovery of a lost hold ECO; parent history is immutable."""
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import re
+import subprocess
+
+SCHEMA = 'opentallas.closure_loop.infra-eco-continuation.v1'
+SHA = re.compile(r'[0-9a-f]{64}')
+NAME = re.compile(r'[A-Za-z0-9_][A-Za-z0-9_.-]*')
+ALLOWED = {'verdict', 'hold_eco', 'eco_install', 'collect', 'export', 'commit'}
+
+
+def canonical_sha(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def file_sha(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as f:
+        for block in iter(lambda: f.read(8*1024*1024), b''): h.update(block)
+    return h.hexdigest()
+
+
+def relative(path):
+    p = Path(path)
+    if p.is_absolute() or not p.parts or any(x in ('.', '..') for x in p.parts):
+        raise ValueError('expected confined relative input path')
+    return p
+
+
+def build(parent, manifest, new_name):
+    """Pure preparation: no daemon/state/remote writes and no EDA launches."""
+    m = copy.deepcopy(manifest)
+    if m.get('schema') != SCHEMA or m.get('operation') != 'lost_hold_eco':
+        raise ValueError('unsupported continuation operation')
+    if not NAME.fullmatch(new_name) or new_name == parent['name']:
+        raise ValueError('new distinct record name required')
+    link = m.get('parent', {})
+    if (link.get('name') != parent['name'] or link.get('state_sha256') != canonical_sha(parent)
+            or link.get('source_commit') != parent.get('commit_full')):
+        raise ValueError('immutable parent state/source does not match')
+    if (parent.get('status') != 'CANCELLED' or not parent.get('cancelled_at')
+            or not re.search(r'EPYC\d*[-_ ]RETIRE|scheduled.*retire', parent.get('reason', ''), re.I)
+            or m.get('infrastructure_cause') != 'scheduled_retirement'):
+        raise ValueError('only explicitly identified infrastructure retirement is supported')
+    physics = m.get('physical_disposition', {})
+    pre = (parent.get('eco') or {}).get('pre') or {}
+    if (physics.get('kind') != 'hold_only' or physics.get('source_structural_required') is not False
+            or physics.get('setup_tt_ps') != pre.get('ss_ps')
+            or physics.get('hold_ff_ps') != pre.get('ff_ps')
+            or type(pre.get('ss_ps')) not in (float, int) or not math.isfinite(pre['ss_ps']) or pre['ss_ps'] < 0
+            or type(pre.get('ff_ps')) not in (float, int) or not math.isfinite(pre['ff_ps']) or pre['ff_ps'] >= 0
+            or (parent.get('eco') or {}).get('result') is not None
+            or parent.get('metrics', {}).get('drc') != 0
+            or physics.get('drc') != 0 or (parent.get('eco') or {}).get('installed')):
+        raise ValueError('measured source/setup/DRC failure is not a lost hold ECO')
+    if not (parent.get('eco') or {}).get('started') or m.get('interrupted_eco_checkpoint') != 'none':
+        raise ValueError('lost ECO must have started without a durable ECO checkpoint')
+    if not parent.get('benches') or not all(x.get('ok') is True for x in parent['benches'].values()):
+        raise ValueError('original source-bound benchmarks are incomplete')
+    runtime = m['runtime']; run = Path(runtime['run'])
+    if (not run.is_absolute() or '..' in run.parts or run.name != new_name or str(run) == parent['run']
+            or str(run).startswith(parent['run'].rstrip('/')+'/')):
+        raise ValueError('runtime must be an exclusive distinct new record root')
+    if type(runtime.get('ram_gb')) is not int or runtime['ram_gb'] <= 0:
+        raise ValueError('positive admitted runtime RAM required')
+    image = runtime['image']
+    if not re.fullmatch(r'sha256:[0-9a-f]{64}', image) or not runtime.get('library_hashes'):
+        raise ValueError('new immutable image and exact loaded-library hashes required')
+    hashes = m.get('file_hashes') or {}
+    for path, expected in hashes.items():
+        relative(path)
+        if not isinstance(expected, str) or not SHA.fullmatch(expected): raise ValueError('invalid input SHA')
+    if not any(x.startswith('src/rtl/') for x in hashes) or not any(x.startswith('cl/') for x in hashes):
+        raise ValueError('exact restored source and frozen helpers required')
+    for entry in parent.get('route_overlay_plan', {}).get('files', []):
+        if hashes.get('cl/'+Path(entry['path']).name) != entry['sha256']:
+            raise ValueError('frozen helper SHA missing or changed: '+entry['path'])
+    if not parent.get('freeze_helper_overlay') or not parent.get('route_overlay_plan', {}).get('files'):
+        raise ValueError('source-bound frozen helper plan required')
+    cp = m['checkpoint']; base = relative(cp['route_base'])
+    if cp['config'] != str(base.parents[3]/'config.mk'):
+        raise ValueError('original route configuration location differs')
+    if cp.get('kind') != '5_2_route' or cp.get('eco_odb') != str(base/'5_2_route.odb'):
+        raise ValueError('actual original 5_2 route checkpoint required')
+    required = [str(base/x) for x in ('5_2_route.odb','6_final.odb','6_final.spef','6_final.sdc')]
+    required += [cp['config'], cp['corner_sta'], *m.get('post_sdc_files', [])]
+    if not m.get('post_sdc_files') or any(x not in hashes for x in required):
+        raise ValueError('checkpoint/config/signoff/reference input hash missing')
+    for path, expected in runtime['library_hashes'].items():
+        if not path.startswith('/OpenROAD-flow-scripts/') or not SHA.fullmatch(expected):
+            raise ValueError('unbound immutable-image library')
+    if not m.get('source_completeness', {}).get('known_required_source_bytes_missing') == []:
+        raise ValueError('known required source bytes remain missing')
+    old_run = parent['run']
+    def relocate(x):
+        if isinstance(x, dict): return {k: relocate(v) for k,v in x.items()}
+        if isinstance(x, list): return [relocate(v) for v in x]
+        return x.replace(old_run, str(run)) if isinstance(x,str) else x
+    spec = relocate(copy.deepcopy(parent['spec'])); old_label = parent['name'].replace('-', '_')
+    def fixed_label(x):
+        if isinstance(x,dict): return {k:fixed_label(v) for k,v in x.items()}
+        if isinstance(x,list): return [fixed_label(v) for v in x]
+        return x.replace('{LABEL}', old_label) if isinstance(x,str) else x
+    spec = fixed_label(spec); spec['name'] = new_name
+    # No execution path for route, calibrate, benchmark or signoff reconstruction.
+    spec['stages'] = {k:v for k,v in spec['stages'].items() if k in ('collect','export')}
+    spec['hold_eco'] = dict(spec.get('hold_eco') or {}, enabled=True, allow_fresh_grt=False, vtswap=False, combo=False)
+    spec['auto_react'] = False
+    spec['peak_ram_gb'] = max(spec.get('peak_ram_gb',0), runtime['ram_gb'])
+    guard = str(run/'cl/linked_infra_eco/inputs.json')
+    j = dict(name=new_name, spec=spec, origin='linked-infrastructure-continuation',
+             status='READY', stage_idx=0, stage_key='verdict', attempt=parent['attempt']+1,
+             retries_used=0, benches={}, bench_par=False, hosts_tried=[runtime['host']],
+             host=runtime['host'], run=str(run), commit_full=parent['commit_full'],
+             source_synced=True, freeze_helper_overlay=True,
+             route_overlay_plan=copy.deepcopy(parent['route_overlay_plan']),
+             pinflop_ref_applied=parent.get('pinflop_ref_applied',False),
+             metrics=relocate(copy.deepcopy(parent['metrics'])), events=[], errors=[],
+             eco_overlay_recovery=dict(guard=guard,out=str(run/'cl/linked_infra_eco/candidate')),
+             linked_infra_eco=dict(parent=link,manifest=m,manifest_sha256=canonical_sha(m),
+                 inherited_benches=copy.deepcopy(parent['benches']),
+                 historical_provenance=m.get('historical_provenance',{})))
+    return j
+
+
+def pinned_env(job):
+    """Pin override-aware helpers, and fail closed for frozen helpers using the two legacy aliases."""
+    import shlex
+    link = job.get('linked_infra_eco')
+    if not link: return ''
+    image=link['manifest']['runtime']['image']
+    if not re.fullmatch(r'sha256:[0-9a-f]{64}',image): raise ValueError('invalid pinned runtime image')
+    out='export ORFS_IMAGE='+shlex.quote(image)+'\n'
+    for alias in ('openroad/orfs:asap7lock','openroad/orfs:latest'):
+        out+='[ "$(docker image inspect --format \'{{.Id}}\' '+shlex.quote(alias)+')" = '+shlex.quote(image)+' ] || exit 86\n'
+    return out
+
+
+def verify_runtime(manifest):
+    """Read-only verification of already restored fresh runtime; never copy or mutate a parent."""
+    r = manifest['runtime']; root = Path(r['run']); canonical_root=root.resolve()
+    for rel, expected in manifest['file_hashes'].items():
+        p = root/relative(rel)
+        if not p.resolve().is_relative_to(canonical_root) or file_sha(p) != expected:
+            raise ValueError('restored input differs: '+rel)
+    cp=manifest['checkpoint']
+    measured=json.loads((root/cp['corner_sta']).read_text())
+    expected_orfs=str(root/relative(cp['route_base']).parents[3])
+    if measured.get('orfs_dir') != expected_orfs:
+        raise ValueError('corner STA still points outside restored route; explicit path-only rebase required')
+    if (root/'cl/SRC_DIR').read_text().strip() != str(root/'src'):
+        raise ValueError('restored SRC_DIR still refers to old runtime')
+    actual = subprocess.check_output(['docker','image','inspect',r['image'],'--format','{{.Id}}'],text=True).strip()
+    if actual != r['image']: raise ValueError('immutable runtime image differs')
+    for alias in ('openroad/orfs:asap7lock','openroad/orfs:latest'):
+        if subprocess.check_output(['docker','image','inspect',alias,'--format','{{.Id}}'],text=True).strip()!=actual:
+            raise ValueError('frozen helper image alias differs: '+alias)
+    code = 'import hashlib,json,sys;d=json.loads(sys.argv[1]);' \
+           'assert all(hashlib.sha256(open(p,"rb").read()).hexdigest()==h for p,h in d.items()),"library SHA differs"'
+    subprocess.run(['docker','run','--rm','--entrypoint','python3',r['image'],'-c',code,
+                    json.dumps(r['library_hashes'])],check=True,capture_output=True)
+    return dict(verified=True,manifest_sha256=canonical_sha(manifest),files=len(manifest['file_hashes']),image=actual)
+
+
+def prepare_runtime(manifest, parent):
+    if Path(manifest['runtime']['run']).resolve() == Path(parent['run']).resolve():
+        raise ValueError('runtime aliases immutable parent root')
+    result = verify_runtime(manifest)
+    root = Path(manifest['runtime']['run']); dest = root/'cl/linked_infra_eco'; dest.mkdir()
+    (dest/'parent_state.json').write_text(json.dumps(parent,indent=1)+'\n')
+    (dest/'restoration_manifest.json').write_text(json.dumps(manifest,indent=1)+'\n')
+    # Existing frozen eco_recovery.py verifies these before ECO and installation.
+    guard = dict(hashes={str(root/p):h for p,h in manifest['file_hashes'].items()},
+                 source_commit=parent['commit_full'],job=parent['name'])
+    (dest/'inputs.json').write_text(json.dumps(guard,indent=1)+'\n')
+    return result
+
+
+if __name__ == '__main__':
+    import sys
+    request=json.loads(sys.argv[2])
+    result=verify_runtime(request['manifest']) if sys.argv[1]=='verify' else prepare_runtime(request['manifest'],request['parent'])
+    print(json.dumps(result))

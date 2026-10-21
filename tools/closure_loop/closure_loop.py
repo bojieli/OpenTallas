@@ -62,6 +62,7 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import infra_eco_continuation as IEC
 import bench_count
 import macro_clk
 import retired_hosts
@@ -3726,6 +3727,9 @@ def bench_copy_script(original, private):
 
 
 def launch_stage(j, st, cmd):
+    linked = j.get("linked_infra_eco")
+    if linked and st["kind"] not in IEC.ALLOWED:
+        raise ValueError("linked infrastructure continuation cannot launch " + st["kind"])
     if st["kind"] == "route" and (j.get("eco") or j.get("eco_history") or j.get("eco_stack")):
         retire_eco_for_reroute(j)       # LOST-CLOSED (ROOT-1130): a new route is never judged by the old route's ECO
     if st["kind"] in ("route", "calibrate"):
@@ -3749,6 +3753,7 @@ def launch_stage(j, st, cmd):
         BLOCK=j["spec"]["block"], COMMIT=rebound["source_commit"] if rebound else j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    env += IEC.pinned_env(j)
     env += f"export OT_PG_JOB_STRICT={int(pg_strict(j))}\n"
     if not pg_strict(j):
         env += "export OT_PG_STRICT=0\n"
@@ -3823,7 +3828,8 @@ def launch_stage(j, st, cmd):
         # (SKIP_CTS_REPAIR_TIMING=1 through hold_corners_patch.py OT_CAL_CTS_ONLY): 40 calibrates sat 4-25 h in CTS hold
         # repair (mm, HM 50) measuring nothing.  Applied to every calibrate, whatever its route_hold_corners.
         ship_helpers(j["host"], j["run"], j)
-        env += f"export OT_CAL_CTS_ONLY=1\npython3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
+        if not linked:  # linked source was explicitly restored/transformed and hash-sealed
+            env += f"export OT_CAL_CTS_ONLY=1\npython3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
         if route_ref(j):
             # CALIB-CORNER: CTS at the route corner, insertion referenced to it (ck_insertion.py --route-corner)
             env += f"export OT_ORFS_CORNER={shlex.quote(route_corner(j))}\nexport OT_CAL_ROUTE_CORNER={shlex.quote(route_corner(j))}\n"
@@ -4100,7 +4106,7 @@ def remote_ok(j, cmd, timeout=300):
     if not cmd:
         return True, ""
     source = j.get("stage_source", f"{j['run']}/src")
-    r = ssh(j["host"], f"cd {shlex.quote(source)} && {subst(cmd, j)}", timeout=timeout)
+    r = ssh(j["host"], IEC.pinned_env(j) + f"cd {shlex.quote(source)} && {subst(cmd, j)}", timeout=timeout)
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
@@ -6177,7 +6183,8 @@ def routed_ioref(j, m):
         ssh(j["host"], f"mkdir -p {j['run']}/cl_ioref && cat > {j['run']}/cl_ioref/meas_resta.py",
             input=mr_body.decode(), timeout=60, check=True)
         rr["meas_resta_sha256"] = hashlib.sha256(mr_body).hexdigest()
-        r = ssh(j["host"], f"python3 {j['run']}/cl_ioref/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
+        image_arg = (" --image " + shlex.quote(j["linked_infra_eco"]["manifest"]["runtime"]["image"])) if j.get("linked_infra_eco") else ""
+        r = ssh(j["host"], f"python3 {j['run']}/cl_ioref/meas_resta.py{image_arg} --orfs {shlex.quote(orfs)} --src {j['run']}/src "
                            f"--out {out} {app}", timeout=12000)
     try:
         res = json.loads([x for x in r.stdout.splitlines() if x.startswith("{")][-1])
@@ -10422,6 +10429,39 @@ for c in $(docker ps -q); do {DIE_CONTAINER_SKIP}docker inspect --format '{{{{ra
     save_job(j)
 
 
+@locked_job_command
+def cmd_link_infra_eco(a):
+    """Create a separate postroute-only record; never alter or retry a CANCELLED parent."""
+    parent = load_job(a.name)
+    manifest = json.loads(Path(a.manifest).read_text())
+    child = IEC.build(parent, manifest, a.new_name)
+    if child["host"] not in {h["name"] for h in hosts_table()}:
+        raise ValueError("restored runtime host is not in the current fleet")
+    if not a.apply:
+        print(json.dumps(dict(dry=True, new_record=child), indent=1))
+        return
+    with job_lock(a.new_name):
+        if jpath(a.new_name).exists():
+            raise ValueError("new record already exists")
+        for path in (STATE / "jobs").glob("*.json"):
+            other = json.loads(path.read_text())
+            if ((other.get("linked_infra_eco") or {}).get("parent") or {}).get("name") == a.name:
+                raise ValueError("parent already has a linked infrastructure continuation")
+        request = dict(manifest=manifest, parent=parent)
+        program = "import sys\nsys.argv=" + repr(["infra_eco_continuation", "prepare", json.dumps(request)]) + "\n"
+        program += (HERE / "infra_eco_continuation.py").read_text()
+        r = ssh(child["host"], "python3 -", input=program, timeout=600, check=True)
+        verified = json.loads(r.stdout)
+        if verified.get("manifest_sha256") != IEC.canonical_sha(manifest) or not verified.get("verified"):
+            raise ValueError("remote restoration verification differs")
+        child["linked_infra_eco"]["runtime_verification"] = verified
+        child["created"] = now_iso()
+        event(child, "new linked infrastructure ECO-only continuation of immutable " + a.name)
+        save_job(child)
+        ledger(child, "LINKED-INFRA-ECO: original CANCELLED parent unchanged; no route or bench stages")
+        print(child["name"])
+
+
 def validate_overlay_recovery(j):
     expected_failure = dict(ss_ps=-340500.58, ff_ps=-59.43, drc=0, cells_added=0, errors=[])
     expected_pre = dict(ss_ps=190.49, ff_ps=-70.99)
@@ -10697,6 +10737,9 @@ def main():
     ks = sub.add_parser("kill-stage"); ks.add_argument("name"); ks.add_argument("--why", required=True)
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
+    li = sub.add_parser("link-infra-eco", help="new linked ECO-only record from a verified infrastructure-cancelled parent")
+    li.add_argument("name"); li.add_argument("--new-name", required=True); li.add_argument("--manifest", required=True)
+    li.add_argument("--apply", action="store_true", help="default read-only; apply verifies restored runtime then creates only new record")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
     el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
@@ -10723,6 +10766,8 @@ def main():
         cmd_submit_recheck(a)
     elif a.cmd == "retry":
         cmd_retry(a)
+    elif a.cmd == "link-infra-eco":
+        cmd_link_infra_eco(a)
     elif a.cmd == "retry-eco":
         cmd_retry_eco(a)
     elif a.cmd == "bench-rebind":

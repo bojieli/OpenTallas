@@ -1,0 +1,140 @@
+.{
+ "dry": true,
+ "new_record": {
+  "name": "new-linked",
+  "spec": {
+   "name": "new-linked",
+   "block": "actual_block",
+   "source": {
+    "commit": "ffffffffffffffffffffffffffffffffffffffff",
+    "branch": "source"
+   },
+   "stages": {
+    "collect": {
+     "cmd": "collect {RUN}/routes/old_parent"
+    }
+   },
+   "verdict": {
+    "corner_sta": "{RUN}/routes/old_parent/corner_sta.json"
+   },
+   "hold_eco": {
+    "enabled": true,
+    "allow_fresh_grt": false,
+    "vtswap": false,
+    "combo": false
+   },
+   "auto_react": false,
+   "peak_ram_gb": 64
+  },
+  "origin": "linked-infrastructure-continuation",
+  "status": "READY",
+  "stage_idx": 0,
+  "stage_key": "verdict",
+  "attempt": 4,
+  "retries_used": 0,
+  "benches": {},
+  "bench_par": false,
+  "hosts_tried": [
+   "live"
+  ],
+  "host": "live",
+  "run": "/tmp/tmp3fkcumvs/new-linked",
+  "commit_full": "ffffffffffffffffffffffffffffffffffffffff",
+  "source_synced": true,
+  "freeze_helper_overlay": true,
+  "route_overlay_plan": {
+   "files": [
+    {
+     "path": "tools/closure_loop/helper.py",
+     "sha256": "f6c61e5655d8649d25f1e791c60edf5ace1463ed835dbb2703ef367f4ad4130f"
+    }
+   ]
+  },
+  "pinflop_ref_applied": false,
+  "metrics": {
+   "ss_ps": 82.85,
+   "ff_ps": -15.07,
+   "drc": 0
+  },
+  "events": [],
+  "errors": [],
+  "eco_overlay_recovery": {
+   "guard": "/tmp/tmp3fkcumvs/new-linked/cl/linked_infra_eco/inputs.json",
+   "out": "/tmp/tmp3fkcumvs/new-linked/cl/linked_infra_eco/candidate"
+  },
+  "linked_infra_eco": {
+   "parent": {
+    "name": "old-parent",
+    "state_sha256": "b1b349c1cc85e107b4e2551f5d962d54230aa234af44692cc00826ba1828dbf6",
+    "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
+   },
+   "manifest": {
+    "schema": "opentallas.closure_loop.infra-eco-continuation.v1",
+    "operation": "lost_hold_eco",
+    "infrastructure_cause": "scheduled_retirement",
+    "parent": {
+     "name": "old-parent",
+     "state_sha256": "b1b349c1cc85e107b4e2551f5d962d54230aa234af44692cc00826ba1828dbf6",
+     "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
+    },
+    "physical_disposition": {
+     "kind": "hold_only",
+     "source_structural_required": false,
+     "setup_tt_ps": 82.85,
+     "hold_ff_ps": -15.07,
+     "drc": 0
+    },
+    "interrupted_eco_checkpoint": "none",
+    "source_completeness": {
+     "known_required_source_bytes_missing": []
+    },
+    "runtime": {
+     "host": "live",
+     "run": "/tmp/tmp3fkcumvs/new-linked",
+     "image": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+     "ram_gb": 64,
+     "library_hashes": {
+      "/OpenROAD-flow-scripts/lib.lib": "2222222222222222222222222222222222222222222222222222222222222222"
+     }
+    },
+    "checkpoint": {
+     "kind": "5_2_route",
+     "route_base": "routes/old_parent/work/orfs/results/asap7/design/base",
+     "eco_odb": "routes/old_parent/work/orfs/results/asap7/design/base/5_2_route.odb",
+     "config": "routes/old_parent/work/orfs/config.mk",
+     "corner_sta": "routes/old_parent/corner_sta.json"
+    },
+    "post_sdc_files": [
+     "src/physical/signoff.sdc"
+    ],
+    "file_hashes": {
+     "routes/old_parent/work/orfs/results/asap7/design/base/5_2_route.odb": "50d87be4582247b1c05f87ab065e3cffcc293af881f0096e9be47abf96e77a42",
+     "routes/old_parent/work/orfs/results/asap7/design/base/6_final.odb": "56cdc49f730a9b2d0786caadba070a158bf9eeb4cf14c8c38befbbb1004002f6",
+     "routes/old_parent/work/orfs/results/asap7/design/base/6_final.spef": "2b8ee72bf53746b6c76a43af86c7b6f21d7c323aa01ed6ddd64dfa93b0aeca82",
+     "routes/old_parent/work/orfs/results/asap7/design/base/6_final.sdc": "ef304a4272171a383c7eb5260ee0f7d7ac3a5ef3d0fd6b529903d3c6b5c755a7",
+     "routes/old_parent/work/orfs/config.mk": "987c5cebae2983cec257e4bd210c8a580ca4b53644666e8d708879070f9991a1",
+     "routes/old_parent/corner_sta.json": "566e74eba541fee59cb33ed167b01948a88b1d972bd955f9d977b76b47a02aca",
+     "src/physical/signoff.sdc": "794b26946f13307e1d486099a9c121b64de70ba25609e2f06600d2b055eb0539",
+     "src/rtl/actual.sv": "2dbe9f150e21fb48f5cef4106915089b410dd23e4657965a5a678e0d8e8d7c48",
+     "cl/helper.py": "f6c61e5655d8649d25f1e791c60edf5ace1463ed835dbb2703ef367f4ad4130f"
+    }
+   },
+   "manifest_sha256": "c1ee335207185b0580c261ba1a0e4f4ca19d5bdebfdbe0d1950e558c5f938c4c",
+   "inherited_benches": {
+    "bench:positive": {
+     "ok": true,
+     "rc": 0
+    }
+   },
+   "historical_provenance": {}
+  }
+ }
+}
+2026-10-21T15:47:28-07:00 [new-linked] new linked infrastructure ECO-only continuation of immutable old-parent
+..new-linked
+2026-10-21T15:47:28-07:00 [new-linked] hold-only miss (UNKNOWN +82.85 / FF -15.07, DRC 0): post-route hold ECO launched on /new/route/5_2_route.odb
+.....
+----------------------------------------------------------------------
+Ran 8 tests in 0.016s
+
+OK
