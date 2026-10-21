@@ -8,8 +8,7 @@
       "logical_master": "col_h9_l4",
       "release_instances": 36,
       "physical_master": "col_h9_l4_lp",
-      "required_final_orientation": "R0",
-      "orientation_note": "Apply the class mirror once; retain an existing plan MX instead of applying it twice.",
+      "orientation_note": "This is the logical master-local transform, composed with the actual die-plan orientation exactly once. If the die plan already includes the class mirror, retain it; do not apply a second MX. No final die orientation is inferred here.",
       "kit": "physical/ref_tile/s81frame_col_h9_rf3rlfs1",
       "view_pending": "physical/ref_tile/s81frame_col_h9_rf3rlfs1/views/col_h9_l4_lp",
       "top_source": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_rf3r.sv",
@@ -62,14 +61,14 @@
           "bits": 1
         }
       },
-      "regional_clock_net_mapping": null
+      "regional_clock_net_mapping": null,
+      "required_master_local_transform": "R0"
     },
     {
       "logical_master": "col_h9_MX_l4",
       "release_instances": 24,
       "physical_master": "col_h9_l4_lp",
-      "required_final_orientation": "MX",
-      "orientation_note": "Apply the class mirror once; retain an existing plan MX instead of applying it twice.",
+      "orientation_note": "This is the logical master-local transform, composed with the actual die-plan orientation exactly once. If the die plan already includes the class mirror, retain it; do not apply a second MX. No final die orientation is inferred here.",
       "kit": "physical/ref_tile/s81frame_col_h9_rf3rlfs1",
       "view_pending": "physical/ref_tile/s81frame_col_h9_rf3rlfs1/views/col_h9_l4_lp",
       "top_source": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_rf3r.sv",
@@ -122,14 +121,14 @@
           "bits": 1
         }
       },
-      "regional_clock_net_mapping": null
+      "regional_clock_net_mapping": null,
+      "required_master_local_transform": "MX"
     },
     {
       "logical_master": "col_h10_l4",
       "release_instances": 12,
       "physical_master": "col_h10_l4_lp",
-      "required_final_orientation": "R0",
-      "orientation_note": "Apply the class mirror once; retain an existing plan MX instead of applying it twice.",
+      "orientation_note": "This is the logical master-local transform, composed with the actual die-plan orientation exactly once. If the die plan already includes the class mirror, retain it; do not apply a second MX. No final die orientation is inferred here.",
       "kit": "physical/ref_tile/s81frame_col_h10_rf3rlfs1",
       "view_pending": "physical/ref_tile/s81frame_col_h10_rf3rlfs1/views/col_h10_l4_lp",
       "top_source": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit_rf3r.sv",
@@ -182,7 +181,8 @@
           "bits": 1
         }
       },
-      "regional_clock_net_mapping": null
+      "regional_clock_net_mapping": null,
+      "required_master_local_transform": "R0"
     }
   ],
   "regional_clock_contract": "Three actual die source/region entries for ck_r0/1/2. Do not alias or tie old clk/cr/cr_s. Reflection transforms coordinates, not region labels.",
