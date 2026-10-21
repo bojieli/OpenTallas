@@ -1,0 +1,8 @@
+  OK      u_cf.rst (dsfd_cfifo_crs4) released by ck_r0 via pad u_frl_rst; child clocks ck_r0
+  FOREIGN u_xo0.rs (dsfd_dvrly_276_NS) released by ck_r0 via pad u_frl_rst; child clocks xk[0]
+  FOREIGN u_xo1.rs (dsfd_dvrly_276_NS) released by ck_r0 via pad u_frl_rst; child clocks xk[1]
+  FOREIGN u_xo2.rs (dsfd_dvrly_276_NS) released by ck_r0 via pad u_frl_rst; child clocks xk[2]
+  FOREIGN u_xo3.rs (dsfd_dvrly_276_NS) released by ck_r0 via pad u_frl_rst; child clocks xk[3]
+  LANDED  u_lpr_r1 (forest): ck_r0 -> ck_r1 (first stage on the receiving clock)
+  LANDED  u_lpr_r2 (forest): ck_r0 -> ck_r2 (first stage on the receiving clock)
+RESET_AUDIT FAIL col_h9_l4_lp rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_rf3.sv: reset pins=331 foreign=4 unknown=0 landed_crossings=2
