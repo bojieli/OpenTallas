@@ -68,5 +68,12 @@
     "q8b": "Minimum next data: net10846 actual driver/sink ITerms, exact pin shapes/coords, intersecting SRAM/routing OBS/place blocks and stored grid capacities/usage from this immutable saved ODB; map those concrete endpoints back to original mapped source. Existing same read-only recipe can supply once authorized; no new probe launched.",
     "both": "A structural successor needs the complete affected local segment/end-site graph and actual clock-root/endpoint arrival geometry; q8b complete clock TT115.8/FF114.3ps and pin90.9/82.5ps already exceed80, so routing-only repair would not qualify clock. Saved grid is not final failed maze heap."
   },
-  "limits": "No reroute, retry, route-presumption, native/source ABI change, extra EDA probe or physical qualification."
+  "limits": "No reroute, retry, route-presumption, native/source ABI change, extra EDA probe or physical qualification.",
+  "followup": {
+    "receipt": "net10846/CLASSIFICATION.json",
+    "commit": "d5e6a7791",
+    "one_authorized_readonly_dump": "COMPLETE exit0 unit2277928-1792625540; no route/design mutation",
+    "endpoint_and_original_source_mapping": "RESOLVED: actual 3ITerms and original u_sd.wd123 data-mux role retained in CLASSIFICATION.json",
+    "remaining_model_gap": "Current snapshot endpoint/OBS/grid facts are now available. The 30 removed transient hook shapes and failed maze heap remain unavailable, so exact terminal search-frontier reconstruction is not claimed. A structural successor still needs an explicit legal/priced branch+SRAM-pin-access site graph and separate actual clock repair."
+  }
 }
