@@ -29,3 +29,5 @@ Source58f946148 byte result mux native7 max257/338violations (276seq), rst1/role
 Sourcee8072e473 weights/returnedRA native8 max257/345violations(289seq), rst1/roles0; VSallopsPASS/MUT9caught33. Highweightselector257 and RAreturnedcapture201 removed; remaining257 traces ENG gate128b capture, next181 arithmeticresultmux. Next localgatebytes/reduce-copy selectors/resultbytes source partition; still not admissible.
 
 Sourceab0a9f5f1 native9 max172/350violations(300seq), rst1/roles0. Gatecapture257/resultmux181 removed. VSallopsPASS; ENG159/73PASS/MUT7caught16. Largest172 globalcommandaccept,133SWinputvalid; next source byte commandcapture + independent kept same-edge busy/valid regional state + SWpreviousbytecaptures. Shared ot_hdc_f12_cut FP payload136 remains scoped to existing peer after XG terminal collection. No new layout.
+
+Sourcefbe323bfd native10 max170/361violations(305seq), rst1/roles0; VSallops/ENG159/73PASS. Broad commandaccept172 removed; current170 c_bad fans region decode/state cones. Next same-edge packet capture+command validation in8kept regions; sharedFP source scope assigned existingworker, no defaultFP change.
