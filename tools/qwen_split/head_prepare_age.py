@@ -45,10 +45,17 @@ def measure(case, tt_source_receipt=None):
         record=json.loads(lp.read_text())
         offsets=record['compiler']['output_port_offset_edges']
         values=[offsets[p] for p in ('emb_start','emb_token','emb_position','emb_user')]
-        if record['audit']['ok'] is not True or any(type(n)!=int or n<0 for n in values) or len(set(values))!=1:
+        producer=row['producer_instance']
+        producer_offset=record['compiler']['child_offset_edges'][producer]
+        if type(producer_offset)!=int or producer_offset<0 or producer!='u_gi':
+            raise ValueError('TT embedding actual calendar producer offset missing/invalid')
+        if record['audit']['ok'] is not True or any(type(n)!=int or n<0 for n in values) or len(set(values))!=1 or values[0]<producer_offset:
             raise ValueError('TT embedding LP output offsets are missing/unequal/unqualified')
-        tt_local=1+values[0]
+        source_to_output=values[0]-producer_offset
+        tt_local=1+source_to_output
         tt_source=dict(master=tt_master,calendar_sample_edges=1,output_offset_edges=values[0],
+                       producer_instance=producer,producer_offset_edges=producer_offset,
+                       source_to_output_edges=source_to_output,
                        receipt_sha256=hashlib.sha256(receipt.read_bytes()).hexdigest(),
                        rtl_sha256=row['rtl_sha256'],lp_record_sha256=row['lp_record_sha256'])
     selected=[]
