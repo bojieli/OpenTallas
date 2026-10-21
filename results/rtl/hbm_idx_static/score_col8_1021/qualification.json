@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.score_col8.source_qualification.v1",
+  "status": "PARTIAL_PENDING_SWAP_QLATE1",
+  "source_commit": "88fb6153c49d08b88e2db6580806c37409cdcf70",
+  "gate_source_commit": "56210c530bd0ab22713ee24af2bea984fc1d4a7c",
+  "tar_sha256": "25365f0e1133ea3bf8c5330531089e933e759866808247de5144442b95e150b3",
+  "source_parent": "ot_hbm_idx_chunk_rt_c with OT_IDX_COL8",
+  "RESET_F32": 0,
+  "reference_online_lag": 2,
+  "active_data_edge_delta": 0,
+  "extra_boot_online_edges_vs_col7": 1,
+  "positive": {
+    "status": "PASS",
+    "checks": 2339,
+    "outputs": 1063,
+    "nonzero_sums": 1063,
+    "errors": 0
+  },
+  "causal_seam": {
+    "status": "REJECTED",
+    "errors": 1061
+  },
+  "native_all_four_RID": {
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "roots_examined": [
+      76711,
+      80839,
+      82618,
+      85243
+    ]
+  },
+  "selected_release_lineage": "Legacy quarter_static -> score_leaf -> ot_hbm_idx_chunk_rt (QLATE only); future Col8 adoption requires explicit source/online-lag binding. No RESET_F32=1 qualification claimed.",
+  "approval": "No critical geometry approval/submission; await actual CTS/GRT/PNG and ROOT review"
+}
