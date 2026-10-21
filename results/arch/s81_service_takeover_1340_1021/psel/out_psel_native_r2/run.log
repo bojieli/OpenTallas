@@ -1,0 +1,5 @@
+PSEL_RESULT checks=40000 errors=0 missingprefetch_mismatches=2532
+- tools/s81_dv/svc_rs/psel_n32/tb_psel.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100us; walltime 0.475 s; speed 210.787 us/s
+- Verilator: cpu 0.475 s on 1 threads; allocated 7 MB

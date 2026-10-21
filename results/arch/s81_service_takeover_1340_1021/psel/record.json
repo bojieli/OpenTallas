@@ -1,0 +1,46 @@
+{
+  "status": "ACTUAL_MECHANISM_SOURCE_PASS_NOT_WHOLECORE",
+  "source_selection": "OT_SVC_PSEL_N32 defaultabsent; actual dsdv_svc_att_core P-bank swap only",
+  "model_before_RTL": [
+    "99a625e2d",
+    "e5f758484",
+    "PSEL_MODEL.md cohort31 feedback correction"
+  ],
+  "scope": "Three true pr[0] parity-state replicas;64sameedge selectorcopies;31selectorD+1parityD pernextroot. No data/reset/ABI/cycle change. Actualpr onlyreset0/ep_v increment; PMEM0/MUT4/MUT5 exactlypreserved.",
+  "proof": {
+    "unit": "1719656-1792622202 ep7",
+    "comparisons": 40000,
+    "errors": 0,
+    "missing_prefetch_negative": 2532,
+    "epochs": 4,
+    "configs": [
+      "PMEM1normal",
+      "MUT4 invert",
+      "MUT5 no prefetch",
+      "PMEM0"
+    ]
+  },
+  "paired_native": {
+    "baseline": {
+      "max": 2048,
+      "status": "FAIL",
+      "violations": 1,
+      "roles": 0
+    },
+    "candidate": {
+      "max": 32,
+      "status": "PASS",
+      "violations": 0,
+      "roles": 0
+    }
+  },
+  "prior_failure": {
+    "unit": "1703210-1792622097 ep7",
+    "max": 33,
+    "violations": 2,
+    "roles": 0,
+    "reason": "Two cohorts of32 selectorD plusownparityD=33; correctedthreecohorts31+1; immutable source/census retained."
+  },
+  "wholecore": "OPEN; reset source7a golden3097102 stillruns unchanged/noinheritance; no new fullATT/native/physical/calendar qualification",
+  "source_sha256": "08237090e3b4d203efca9e5e94e44e71e2faff6e0eb604b8760092aaa2310230"
+}

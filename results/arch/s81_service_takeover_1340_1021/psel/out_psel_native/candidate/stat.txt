@@ -1,0 +1,36 @@
+
+17. Printing statistics.
+
+=== psel_gate ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1888        - wires
+     6041        - wire bits
+      285        - public wires
+     4438        - public wire bits
+        7        - ports
+     2052        - port bits
+     2762   19.421 cells
+       67        -   $scopeinfo
+      512        -   AOI21xp33_ASAP7_75t_R
+        2    0.758   DFFASRHQNx1_ASAP7_75t_R
+       64   18.662   DFFHQNx1_ASAP7_75t_R
+      578        -   INVx1_ASAP7_75t_R
+      513        -   NAND2xp33_ASAP7_75t_R
+      512        -   NOR2xp33_ASAP7_75t_R
+      512        -   OAI21xp33_ASAP7_75t_R
+        2        -   XNOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \NAND2xp33_ASAP7_75t_R is unknown!
+   Area for cell type \NOR2xp33_ASAP7_75t_R is unknown!
+   Area for cell type \XNOR2xp5_ASAP7_75t_R is unknown!
+   Area for cell type \AOI21xp33_ASAP7_75t_R is unknown!
+   Area for cell type \OAI21xp33_ASAP7_75t_R is unknown!
+   Area for cell type \INVx1_ASAP7_75t_R is unknown!
+
+   Chip area for module '\psel_gate': 19.420560
+     of which used for sequential elements: 19.420560 (100.00%)
+

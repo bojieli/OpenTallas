@@ -585,8 +585,14 @@ module dsdv_svc_att_core #(
         assign pb_rd = '0;
         always @(posedge clk) pr_odd <= 1'b0;
     end endgenerate
+`ifdef OT_SVC_PSEL_N32
+    wire[TD*16-1:0]pw0,pw1;
+    dsdv_svc_pword_pick_n32 #(.W(TD*16),.PMEM(PMEM),.MUT(MUT))u_ppick(
+      .clk(clk),.rst_n(rst_n),.step(ep_v),.oddstep(pstep[0]),.banks(pb_rd),.word0(pw0),.word1(pw1));
+`else
     wire [TD*16-1:0] pw0 = pr_odd ? pb_rd[TD*16 +: TD*16] : pb_rd[0 +: TD*16];   // word pr
     wire [TD*16-1:0] pw1 = pr_odd ? pb_rd[0 +: TD*16] : pb_rd[TD*16 +: TD*16];   // word pr + 1
+`endif
     wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pw1 : {TD*16{1'b1}}, pw0} : '0;
 
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
