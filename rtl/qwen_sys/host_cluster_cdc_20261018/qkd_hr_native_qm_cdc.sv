@@ -175,8 +175,12 @@ module qkd_hr_native_qm_cdc #(
     wire [545:0] hx_q;
     ot_sram_1r1w2c_32x546_m1_p192_mir u_hxm (.wclk(clk_h), .rclk(clk_i), .r_ce_in(1'b1),
         .r_addr_in(5'(hx_rp_n[HFA-1:0])), .rd_out(hx_q), .w_ce_in(hx_push), .w_addr_in(5'(hx_wp[HFA-1:0])),
-        .wd_in({32'd0, hc_q, hd_q}), .w_mask_in({546{1'b1}}));
+        .wd_in({28'd0, hc_q, hc_q, hc_q, hd_q}), .w_mask_in({546{1'b1}}));
+    // QKC-HROOT 10-21: the 2 class bits are stored THREE times in spare macro columns (513:512 / 515:514 / 517:516)
+    // and each copy feeds one consumer group (accept / pop+CSR mark / CSR+fault): every macro read pin <= 32 loads
+    // in the native32 primitive copy (a macro output cannot be replicated). Identical stored bits -> same behaviour.
     assign hx_head = hx_q[513:0];
+    wire [1:0] hcl_b = hx_q[515:514], hcl_c = hx_q[517:516];
     always @(posedge clk_h or negedge rn_h) if (!rn_h) h_crn <= 0; else h_crn <= hx_freed;
 
     // =============================================================================================================
@@ -225,7 +229,7 @@ module qkd_hr_native_qm_cdc #(
         hx_pop = 1'b0;
         if (hv_i) begin
             if (f_any) hx_pop = 1'b1;                                   // fail closed: drain and drop
-            else case (hcl)
+            else case (hcl_b)
                 2'd0: hx_pop = (hx_head[7:0] == 8'd2) ? mark_go :
                               ((CSR_HOLD_ACK != 0 && hx_head[7:0] == 0) ? csr_ready : 1'b1);
                 2'd1: hx_pop = (bad_qkv || bad_rmw || bad_native) ? 1'b1 : e_drdy;
@@ -251,7 +255,7 @@ module qkd_hr_native_qm_cdc #(
     reg  [RFA+1:0] outst;                   // RMW reads issued, not yet handed to the engine
     wire         rd_room = outst < (1 << RFA);
     // CSR 2 (boot end): one marker word, in order after every sector of the descriptors before it
-    wire         csr_mark = hv_i && !f_any && hcl == 2'd0 && hx_head[7:0] == 8'd2;
+    wire         csr_mark = hv_i && !f_any && hcl_b == 2'd0 && hx_head[7:0] == 8'd2;
     wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && !ox_full;
     assign e_wrdy = !ox_full;
     assign e_rrdy = (RMW_EN != 0 && QPIPE == 0) && !e_wv && !ox_full && rd_room;
@@ -277,7 +281,7 @@ module qkd_hr_native_qm_cdc #(
             f_code <= 0; share_i <= 0; csr_tgl <= 1'b0; all_done <= 1'b0; pcnt <= 0; outst <= 0;
             e_rdv <= 1'b0; cx_wr <= 1'b0; f_sent <= 1'b0;
         end else begin
-            if (hv_i && !f_any && hcl == 2'd0) begin
+            if (hv_i && !f_any && hcl_c == 2'd0) begin
                 if (hx_head[7:0] == 8'd0 && (CSR_HOLD_ACK == 0 || csr_ready)) begin
                     share_i <= hx_head[40:32]; csr_tgl <= ~csr_tgl;
                 end
@@ -286,10 +290,10 @@ module qkd_hr_native_qm_cdc #(
             if (take_p && e_inrdy && pcnt != 4'd15) pcnt <= pcnt + 4'd1;
             // faults: the first one wins
             if (!f_any) begin
-                if (hv_i && hcl == 2'd1 && bad_qkv)      f_code <= 8'd1;
-                else if (hv_i && hcl == 2'd1 && bad_rmw) f_code <= 8'd2;
-                else if (hv_i && hcl == 2'd1 && bad_native) f_code <= 8'd7;
-                else if (hv_i && hcl == 2'd3)            f_code <= 8'd3;
+                if (hv_i && hcl_c == 2'd1 && bad_qkv)      f_code <= 8'd1;
+                else if (hv_i && hcl_c == 2'd1 && bad_rmw) f_code <= 8'd2;
+                else if (hv_i && hcl_c == 2'd1 && bad_native) f_code <= 8'd7;
+                else if (hv_i && hcl_c == 2'd3)            f_code <= 8'd3;
                 else if (hx_ovf_i)                        f_code <= 8'd4;
                 else if (cx_ovf)                          f_code <= 8'd5;
                 else if (rx_ovf_i)                        f_code <= 8'd6;
