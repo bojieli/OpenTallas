@@ -4186,6 +4186,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if _g1 - _g0 >= 43.0 and _y1 > _y0:
                 _xch.append((_g0, _y0, _g1, _y1))
         m.setdefault('fwd_land_ew', {})['channels'] = [[round(z, 3) for z in c_] for c_ in _xch]
+        if _os.environ.get('OT_SPLIT_FWD_LAND_EW_TRACE'):
+            print(f'EWCHAN {len(_xch)} channels {_xch[:3]} ew_bids {len(_ew_bids)} tpads_ew {sum(1 for b_ in tpads if b_ in _ew_bids)} '
+                  f'sample {sorted(b_ for b_ in tpads if b_.startswith("dv_ch_W0"))[:6]}', flush=True)
 
     def _in_xchan(x0, y0, W_, H_):
         return any(a_ - 1e-3 <= x0 and x0 + W_ <= c_ + 1e-3 and b_ - 1e-3 <= y0 and y0 + H_ <= d_ + 1e-3 for a_, b_, c_, d_ in _xch)
@@ -4200,7 +4203,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for a_, b_, c_, d_ in _xch:
             if c_ - a_ < W_ - 1e-3 or abs((a_ + c_) / 2 - qx) > 2 * RELAY_REACH_UM:
                 continue
-            xs_ = sorted({v.up(a_, v.GX), v.dn(c_ - W_, v.GX), v.dn((a_ + c_ - W_) / 2, v.GX)})
+            # two edge-aligned station columns when both fit (a centred station blocks both); centred only when one fits
+            xs_ = sorted({v.up(a_, v.GX), v.dn(c_ - W_, v.GX)}) if c_ - a_ >= 2 * W_ - 1e-3 else [v.dn((a_ + c_ - W_) / 2, v.GX)]
             lo_, hi_ = max(b_, qy - H_ / 2 - RELAY_REACH_UM), min(d_ - H_, qy - H_ / 2 + RELAY_REACH_UM)
             if hi_ < lo_:
                 continue
@@ -4222,7 +4226,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                             best_ = (sc_, (x0, y0))
                 if best_ is not None and k_ * ys_ > best_[0]:
                     break
-        return best_[1] if best_ else None
+        return best_
+
     pad_done = {}
     pad_hop_centre = {}
     if tpads:
@@ -4266,7 +4271,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
                 sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None and bid not in _lc_bids else None
                 if sp is None and _xch and bid in _ew_bids and bid not in _lc_bids:
-                    sp = _xchan_spot(qx, qy, w + v.SHAVE, h + v.SHAVE, Q, (x1, y1))
+                    _xb = _xchan_spot(qx, qy, w + v.SHAVE, h + v.SHAVE, Q, (x1, y1))
+                    sp = _xb[1] if _xb else None
+                    if _os.environ.get('OT_SPLIT_FWD_LAND_EW_TRACE'):
+                        print(f'EWPAD {bid} b{pl["bits"]} f{w:.1f}x{h:.1f} Q{Q[0]:.0f},{Q[1]:.0f} S{x1:.0f},{y1:.0f} sp{sp}', flush=True)
                 if sp is None and bid in _lc_bids:
                     # Q-DIE12 LAND_CROSS: the landing station takes the free site that minimises its LONGER hop
                     # (source -> station, station -> sink), not the site nearest the midpoint (first try: 17 hops > 405)
@@ -4290,7 +4298,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                 continue
                             if y0 >= g['y0'] and y0 + H_ <= die_top and free((x0, y0, x0 + W_, y0 + H_)):
                                 best_ = (sc_, (x0, y0))
+                    # QW-G5REACH 10-20: the ring grid above steps 4 * GY from the walk point, so in a 129.6-um slice channel it
+                    # only ever reached ONE 64.8-um station column (dv2f20g5r: every W0 landing at x 14894, stacked 1.3 mm,
+                    # 1-/32-b ar/rt stations 500-700 um off their pins); the channel scan adds the edge-aligned columns
+                    if _xch and bid in _ew_bids:
+                        _xb = _xchan_spot(qx, qy, W_, H_, Q, (x1, y1))
+                        # edge-aligned columns win whenever their longer hop stays well inside reach: a station centred in the
+                        # channel (ring grid) blocks BOTH columns for every later landing at that height
+                        if _xb is not None and (best_ is None or _xb[0] <= max(best_[0], 0.75 * RELAY_REACH_UM)):
+                            best_ = _xb
                     sp = best_[1] if best_ else None
+                    if _os.environ.get('OT_SPLIT_FWD_LAND_EW_TRACE') and bid in _ew_bids:
+                        print(f'EWLC {bid} {pl["bits"]} {W_:.1f} {H_:.1f} {Q[0]:.0f} {Q[1]:.0f} {x1:.0f} {y1:.0f} '
+                              f'{sp} {best_[0] if best_ else None}', flush=True)
                 if sp is None and cc is None and not sink_in_field:
                     sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
                 if sp is None and cc is None and sink_in_field:
