@@ -1,29 +1,7 @@
 {
-  "status": "SOURCE_ONLY_UNCLOSED_PARENT_NOT_SELECTED",
+  "status": "SOURCE_RECOVERED_ACTUAL_SPLIT_PARENT_BINDING_PENDING",
   "scope": "same pending coherent Q73 successor; no competing vehicle",
-  "source_projection": [
-    {
-      "recovered_source": "rtl/test/qwen_dv/qfd_dv_su_lane_safe2_fixture.sv",
-      "recovered_commit": "b0af28298",
-      "recovered_sha256": "089792625c3bd930686b1b273c6c0a9d4ade39bf9555b6f56c1a21c4dd62e310",
-      "production_source": "rtl/qwen_dv/qfd_dv_su_lane_safe2.sv",
-      "production_sha256": "4052332e2bb4c7028cd64db02b715c47d92d5636e7774a862f102a9f1b89af46",
-      "exact_replacements": {
-        "module qfd_dv_su_lane_landed (": "module qfd_dv_su_lane_safe2 ("
-      }
-    },
-    {
-      "recovered_source": "rtl/qwen_dv/qfd_dv_su8_landed.sv",
-      "recovered_commit": "b0af28298",
-      "recovered_sha256": "e7780f891c2e18a0b9dfb7e7d15ae9a591a7666fbcae815bbe98ad4dad9b3ec1",
-      "production_source": "rtl/qwen_dv/qfd_dv_su8_safe2.sv",
-      "production_sha256": "7414c7765f542a0b07f8bc5707dfccb633f759cae946372fdeb1e5798e03d6cb",
-      "exact_replacements": {
-        "module qfd_dv_su8_landed #(": "module qfd_dv_su8_safe2 #(",
-        "qfd_dv_su_lane_landed u_tile (": "qfd_dv_su_lane_safe2 u_tile ("
-      }
-    }
-  ],
+  "source_projection": [],
   "head": {
     "master": "qfd_dv_lane_h_safe2",
     "source": "rtl/qwen_dv/qfd_dv_head_safe1.sv",
@@ -38,13 +16,15 @@
     "added_steady_state_edges_vs_recovered_safe2_fixture": 0
   },
   "binding": {
-    "new_parent_masters": [
-      "qfd_dv_su_lane_safe2",
-      "qfd_dv_su8_safe2"
-    ],
+    "selected_monolithic_r14": "legacy ML1 wrapper, no s5/s7 source in actual r14 snapshot",
+    "intended_single_successor": "cb16_slice s8 split RP consumer",
+    "actual_existing_split_parent": "rtl/qwen_dv/s5/s7/qfd_dv_s7_flat.sv already directly instantiates qfd_dv_lane_h_safe2 u_head0..7",
+    "physical_view_selector": "tools/qwen_dv/slice9_kit.py VHEAD physical/ref_tile/qfd_dv_lane_h_safe2/views/qfd_dv_lane_h_safe2",
+    "controller": "qfd_dv_s5_su8_rst3 is control-only; retain it, never replace with generic SU8 landed API",
+    "source_dependency": "root main b0af28298 restored exact safe2 body/spec/closure dependencies",
     "old_master_alias_allowed": false,
     "production_selected": false,
-    "remaining": "Bind actual selected s7 suvm/SU8 interface, source-bound parent frames, complete parent reset/steady timing composition; combine RP consumer and TT source before full GEN"
+    "remaining": "Bind actual selected s8 source/physical child identity, complete reset/steady timing composition; combine RP consumer and TT source before full GEN"
   },
   "evidence": {
     "reused": "immutable safe2 golden W10 and three causal mutants; numerical/source production receipt",
@@ -52,5 +32,6 @@
     "full_GEN": "NOTRUN",
     "transport_ages": "UNKNOWN",
     "SS_signoff": false
-  }
+  },
+  "withdrawn_projection": "943f4d0f7 generic landed SU wrappers were source-only recovery candidates, never selected or launched; removed after actual split API trace proved direct safe2 heads already exist"
 }
