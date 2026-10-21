@@ -338,8 +338,7 @@
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
-    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=1 ",
-    "fail_witness": "results/rtl/s81_slice_1017/capc5c_1020/gold_mut1.out"
+    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=1 "
    },
    {
     "name": "c5c_gold_mut2",
@@ -347,8 +346,7 @@
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
-    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=2 ",
-    "fail_witness": "results/rtl/s81_slice_1017/capc5c_1020/gold_mut2.out"
+    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=2 "
    },
    {
     "name": "c5c_gold_mut4",
@@ -356,8 +354,7 @@
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
-    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=4 ",
-    "fail_witness": "results/rtl/s81_slice_1017/capc5c_1020/gold_mut4.out"
+    "fail_regex": "^CAP_C5C_MUTANT_DETECTED MUT=4 "
    }
   ],
   "extra_paths": [
