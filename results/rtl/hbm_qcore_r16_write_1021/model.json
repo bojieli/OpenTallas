@@ -21,5 +21,22 @@
   "function": "exact source4 existing qcore lockstep PASS9104/scalars312/5918validreads/fault_lags0, source4 COL wrongword MUT128 rejected27938errors",
   "physical": "new r16a canonical CTS gate active; firstfloorplan actual complete, reported synthesis chip area28549.200140um2 (not a standard-cell-only area); same302.4x280.8 geometrycandidate/off43.2 SRAM origins/10pinsum explicitrisk. No clock/GRT/route qualification yet",
   "qualification": "fullparent native and exactsource4 componentfunctional qualified; physicalpending, no main adoption/sourcealias",
-  "source4_sha256": "d6f717ec7a14bbd43dc291fd150f78101ea9a8b7cddb04c798960ef0843894ec"
+  "source4_sha256": "d6f717ec7a14bbd43dc291fd150f78101ea9a8b7cddb04c798960ef0843894ec",
+  "CTS_checkpoint": {
+    "source": "dd9a11282",
+    "boundary_spread_ps": {
+      "tt": 54.7,
+      "ff": 51.8
+    },
+    "internal_all_spread_ps": {
+      "tt": 62.1,
+      "ff": 64.4
+    },
+    "clock_sinks": 25284,
+    "boundary_sinks": 7581,
+    "placement_RC_diagnostic_setup_ps": 46.3,
+    "placement_RC_diagnostic_hold_ps": 48.08,
+    "rule": "Existing actual boundary80TT/FF; no all-internal80rule. Historical q15a57.1/52.8 are measured values, not thresholds.",
+    "qualification": "Canonical finalGRT/reach/geometry verdict pending; no finalroute/main adoption"
+  }
 }
