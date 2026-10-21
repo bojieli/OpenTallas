@@ -19,7 +19,8 @@
 //                  exposing iq [512:0].  Same parameters / ports as ot_s81sl_slice plus iq.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_idx_bsplit #(
-    parameter integer BW = 513
+    parameter integer BW = 513,
+    parameter integer MUT = 0      // bench negative control only: 1 = type 10 (tree frame) stays on the svc output
 ) (
     input  wire           ck,
     input  wire           rst_n,
@@ -33,7 +34,7 @@ module dsdv_idx_bsplit #(
     wire        v    = i[0];
     wire [3:0]  ty   = i[512:509];          // d[511:508]
     wire [11:0] ln   = i[492:481];          // d[491:480]
-    wire        hidx = (ty == 4'd4) || (ty == 4'd8) || (ty == 4'd10);
+    wire        hidx = (ty == 4'd4) || (ty == 4'd8) || (ty == 4'd10 && MUT != 1);
     reg         infr, rt;
     reg  [11:0] left;
     wire        r_now = infr ? rt : hidx;   // route of this word
