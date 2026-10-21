@@ -276,7 +276,7 @@ fi
 # ---------------- S4 + S5 + S5b remote (capacity planner) || lockstep ----------------
 if [ -z "${RESUME_S5L:-}" ]; then
 step S4_S5 remote_capacity_stations_layer
-scp -q $AR/s4s5_remote.sh $HOST:$B/s4s5_remote.sh || exit 14
+scp -q results/arch/hbm_release_r15_1021/s4s5_remote.sh $HOST:$B/s4s5_remote.sh || exit 14
 [ -n "${RESUME_BIND:-}" ] && echo "RESUME_BIND from S5 bind (S4/S5 layer outputs of this run reused)"
 git -C $W archive HEAD results/arch/hbm_unread_gen2e3_1019 | ssh $HOST "cd $B/src_$H && rm -rf results/arch/hbm_unread_gen2e3_1019 && tar -x" || exit 14
 $OTRUN --mem 96 --threads 16 --disk 20 --priority die --dir $B -- env B=$B H=$H PD=$PD RESUME_BIND=${RESUME_BIND:-} OT_CAP_ARGS="--plan-um $PLAN_UM" PINS_CASE=$B/q/x12_q PINS_A_L23=1 bash $B/s4s5_remote.sh > $A/s4s5.otrun 2>&1; rc=$?
@@ -306,7 +306,7 @@ step S5S strict_unread_local
 strict_manifest $A/net/post_landing.json $A/pb S5 || echo "S5_STRICT_NOT_PASS recorded (DIAGNOSTIC; l25 renewed review path; release needs PASS)"
 strict_manifest $A/net/contract_pre.json $A/pb5b S5B || echo "S5B_STRICT_NOT_PASS recorded (DIAGNOSTIC; renewed review owed)"
 step S5L relay_lockstep
-bash $AR/lockstep_runner_unpinned.sh $A/net/relays_d4g_land.json.gz $A/lockstep 120 > $A/lockstep_land.log 2>&1; tail -12 $A/lockstep_land.log
+bash results/arch/hbm_release_r15_1021/lockstep_runner_unpinned.sh $A/net/relays_d4g_land.json.gz $A/lockstep 120 > $A/lockstep_land.log 2>&1; tail -12 $A/lockstep_land.log
 grep -q "RELAY_LOCKSTEP_GATE PASS" $A/lockstep_land.log || { echo S5_LOCKSTEP_FAIL; exit 15; }
 python3 tools/hbm_die_v15/check_contract_modules.py --contract $A/net/contract_pre.json --rev HEAD --json $A/pb5b/contract_modules_check.json > $A/pb5b/cmc_local.log 2>&1; tail -1 $A/pb5b/cmc_local.log
 # ---------------- S6 / S7 post-landing case ----------------
