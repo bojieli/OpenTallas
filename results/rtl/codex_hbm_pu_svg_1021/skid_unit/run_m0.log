@@ -1,0 +1,5 @@
+SVG_CIRCULAR_SKID_EQUIV PASS checks=32640 full=3334 stalled=7179 widths=51,277 data_edges=0 reset_landing_edges=1
+- rtl/hbm_accel/loader/service_native/tb_hbm_svg_circular_skid_equiv.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 328us; walltime 0.031 s; speed 10.651 ms/s
+- Verilator: cpu 0.031 s on 1 threads; allocated 7 MB
