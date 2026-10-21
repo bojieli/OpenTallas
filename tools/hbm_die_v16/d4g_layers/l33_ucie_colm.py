@@ -3,13 +3,13 @@
 import argparse,collections,copy,hashlib,json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
-VIEW='physical/ref_tile/hbm_pdie_ucie_colm/views/ot_pdie_ucie_col'
-RECORD='ca4620637'
+VIEW='physical/ref_tile/hbm_pdie_ucie_colh/views/ot_pdie_ucie_col'
+RECORD='84e9c94d03338c6959a5cff779c2032bb1dd63ef'
 def apply(c,grants):
  n='host_N';i=c['instances'][n];old=copy.deepcopy(i)
  assert i['master']=='ot_pdie_ucie' and i.get('params',{}) in ({},{'PMA_LAT':2}), 'Unreviewed host source/params'
  assert i['ports']['pma_rck']==dict(direction='input',bits=1)
- spec=json.loads((ROOT/'physical/ref_tile/hbm_pdie_ucie_colm/spec.json').read_text())
+ spec=json.loads((ROOT/'physical/ref_tile/hbm_pdie_ucie_colh/spec.json').read_text())
  ledger=json.loads((ROOT/'results/arch/hbm_release_r16_1021/ucie_colm_integration.json').read_text())
  for f in ledger['source_manifest']:
   assert hashlib.sha256((ROOT/f['path']).read_bytes()).hexdigest()==f['sha256'], ('frozen source differs',f['path'])
@@ -34,7 +34,7 @@ def apply(c,grants):
  c['masters']=dict(collections.Counter(a['master'] for a in c['instances'].values()))
  slot=next(s for s in grants['slots'] if s['name']==i['slot']);before=copy.deepcopy(slot)
  slot.update(cell=i['master'],source=i['source']);slot['outline']=copy.deepcopy(spec['outline']);slot['outline'].pop('exact',None)
- slot['notes']=slot.get('notes','')+'; exactCLOSEDcolm259.2x1771.2, source3e3,3clocks, nooldbodyalias'
+ slot['notes']=slot.get('notes','')+'; exactCLOSEDcolh259.2x1555.2, source3e3,3clocks, nooldbodyalias'
  report=dict(status='EXACT_COMPONENT_BOUND_PARENT_CLOCK_CALENDAR_OPEN',instance=n,record=RECORD,old=old,new=i,
   old_slot=before,new_slot=slot,external_clock_entry=ext,source_manifest=ledger['source_manifest'],
   source_qualification='All9 exact frozenblobs; no reusedoldmaster or oldclockalias',
@@ -47,4 +47,4 @@ if __name__=='__main__':
  for n in ['input','grants','output','out_grants','report']:p.add_argument(n,type=Path)
  a=p.parse_args();c=json.loads(a.input.read_text());g=json.loads(a.grants.read_text());r=apply(c,g)
  for path,obj in [(a.output,c),(a.out_grants,g),(a.report,r)]:path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(obj,indent=1)+'\n')
- print('L33_UCIE_COLM EXACT_COMPONENT_BOUND PARENT_CLOCK_CALENDAR_OPEN')
+ print('L33_UCIE_COLH EXACT_COMPONENT_BOUND PARENT_CLOCK_CALENDAR_OPEN')

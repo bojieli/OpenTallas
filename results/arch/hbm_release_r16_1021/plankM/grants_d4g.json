@@ -22806,7 +22806,7 @@
    "parent": "die",
    "outline": {
     "w": 259.2,
-    "h": 1771.2
+    "h": 1555.2
    },
    "origin": {
     "x": 15146.784,
@@ -22815,7 +22815,7 @@
    },
    "version": 6,
    "grant": "hard_macro_real_rtl_1405",
-   "notes": "host UCIe-A shoreline macro (off-die boundary, elastic/credit at the boundary only, owner 0az); N edge of the centre column east of the endpoints; exactCLOSEDcolm259.2x1771.2, source3e3,3clocks, nooldbodyalias",
+   "notes": "host UCIe-A shoreline macro (off-die boundary, elastic/credit at the boundary only, owner 0az); N edge of the centre column east of the endpoints; exactCLOSEDcolh259.2x1555.2, source3e3,3clocks, nooldbodyalias",
    "flow_control": "elastic (off-die boundary, 0az)",
    "source": "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv",
    "source_sha256": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
