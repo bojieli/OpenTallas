@@ -23,17 +23,17 @@ def report(out, mode, rev, contract, names):
                           replay_sha256=hashlib.sha256((out / "rj" / f"{name}.json").read_bytes()).hexdigest(),
                           priced_layer_cycles=replay.get("priced_layer_cycles"), events=len(replay["events"]), **values)
     manifests = {}
-    for pattern in ("emit/**/manifest.json", "qemit/**/manifest.json"):
+    for pattern in ("emit/**/manifest.json", "qemit/**/manifest.json", "pay/*_parts.json"):
         for path in sorted(out.glob(pattern)):
             data = json.loads(path.read_text())
-            manifests[str(path.relative_to(out))] = {k: data[k] for k in ("scope", "counts", "qualifies_native_layer", "qualifies_native_chain") if k in data}
+            manifests[str(path.relative_to(out))] = {k: data[k] for k in ("scope", "counts", "qualifies_native_layer", "qualifies_native_chain", "shared_calendar_epochs", "emitted_fraction") if k in data}
     grade = "RTL-functional (source assembly)" if mode == "source" else "RTL-functional (GEN composition; source children)"
     result = dict(schema="opentallas.tok_func_hbm.v2", grade=grade, src_rev=rev,
                   contract=str(contract), contract_sha256=hashlib.sha256(contract.read_bytes()).hexdigest(),
                   replays=rows, emission=manifests, qualifies_full_token=False,
                   token_verdict="INCOMPLETE", replay_verdict="PASS" if rows and all(x["verdict"] == "PASS" for x in rows.values()) else "FAIL",
                   mapped_netlist_rerun="BLOCKED until frozen mapped hierarchy and simulation libraries are supplied; GEN top with source children is RTL evidence",
-                  note="SW SU component probes only. format_open and unsupported operators prevent layer/chain/full-token qualification; priced cycles are schedule targets, not measured token cycles.")
+                  note="SW SU and HC/COLL component probes only; payloads retain explicit fixture/far-end provenance and do not connect produced data across units. format_open and unsupported operators prevent layer/chain/full-token qualification; priced cycles are schedule targets, not measured token cycles.")
     (out / "report.json").write_text(json.dumps(result, indent=2) + "\n")
     return result
 

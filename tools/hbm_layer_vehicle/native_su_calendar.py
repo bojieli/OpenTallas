@@ -100,7 +100,7 @@ def add_host_replay(source,boundary,output,words,meta, *, stream_limit=3700,
                 policy='all original drives and numeric checks in the observation window retained byte-for-byte; only later events omitted')
     (output/'calendar_model.json').write_text(json.dumps(meta,indent=2)+'\n')
 
-def reserve_component(replay, boundary):
+def reserve_component(replay, boundary, *, finite=False):
     """Reserve all SW banks for the isolated SU component probe.
 
     Grants are a static resident calendar, including idle slots. Bank owner0
@@ -132,6 +132,12 @@ def reserve_component(replay, boundary):
                        lg_local_read=255, lg_local_write=255)
     words = [prog_row(i, payload, 187) for i in range(rows)]
     cp, launch, _ = cp_frames(96, words, 3, loops=65535)
+    loops = 65535
+    if finite:
+        loops = max(1, (stream_end - launch + 64 + rows - 1)//rows)
+        if loops > 65535:
+            raise ValueError("finite SU epoch exceeds loop field")
+        cp, launch, _ = cp_frames(96, words, 3, loops=loops)
     missing = {e['port'] for e in cp} - ports
     if missing:
         raise ValueError(f'calendar ingress missing from slice: {sorted(missing)}')
@@ -141,14 +147,16 @@ def reserve_component(replay, boundary):
     # fixed guard beyond host publication before allowing that start.
     if (4*first_start)//3 <= launch + 32:
         raise ValueError('SU starts before calendar publication; increase load gap')
-    if stream_end >= launch + rows*65535:
+    if stream_end >= launch + rows*loops:
         raise ValueError('calendar reservation ends before final observation')
     result = dict(replay)
     result.update(scope='component_probe', qualifies_native_layer=False, qualifies_native_chain=False)
     result['events'] = sorted(events + cp, key=lambda e:(e['dom'],e['cyc'],e['k']))
     result['su_owner_calendar'] = dict(
         schema='opentallas.su_component_reservation.v1', target=96,
-        owner=0, banks=list(range(8)), rows=rows, loops=65535,
+        owner=0, banks=list(range(8)), rows=rows, loops=loops,
+        end_reservation_stream=launch + 10 + rows*loops,
+        finite_epoch=finite,
         host_launch_stream=launch, end_observation_stream=stream_end,
         first_su_start_serial=first_start,
         calendar_sha256=hashlib.sha256(''.join(f'{w:064x}\n' for w in words).encode()).hexdigest(),

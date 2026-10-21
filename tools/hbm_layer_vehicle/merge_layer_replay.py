@@ -90,11 +90,12 @@ def comp_events(g, kind):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--shared-calendar", action="store_true", help="compile finite SU owner epoch then nonoverlapping CP client epochs; component-only, no connected-data claim")
     ap.add_argument("--su", type=Path, required=True, help="SU layer replay (layer_images replay.json)")
     ap.add_argument("--su-manifest", type=Path, required=True)
     ap.add_argument("--fixtures", type=Path, required=True)
     ap.add_argument("--contract", type=Path, required=True)
-    ap.add_argument("--l12", type=Path, required=True)
+    ap.add_argument("--l12", type=Path, help="l12 report; otherwise derive exact pad depths from source contract")
     ap.add_argument("--boundary", type=Path, required=True)
     ap.add_argument("--nev", type=int, default=11633)
     ap.add_argument("--out", type=Path, required=True)
@@ -111,6 +112,9 @@ def main():
     ins = {e["name"] for e in bnd["inputs"]}
     outs = {e["name"] for e in bnd["outputs"]}
     cap = a.nev - 1
+    if a.shared_calendar:
+        from hbm_layer_vehicle.native_su_calendar import reserve_component
+        su = reserve_component(su, bnd, finite=True)
     sev = su["events"]
     su_M = [e for e in sev if e["k"] == "M"]
     su_D = [e for e in sev if e["k"] == "D"]
@@ -119,7 +123,8 @@ def main():
     base0 = a.sector_base if a.sector_base is not None else ((max(used_su) // 64) + 1) * 64
     comps = components(meta, z, recs, tim, vm_rt)
     # ---- absolute timeline (sequential CP placement, priced order); sector-independent
-    t = 0
+    phase0 = su.get("su_owner_calendar", {}).get("end_reservation_stream", 0) + GAP if a.shared_calendar else 0
+    t = phase0
     for c in comps:
         g = c["build"](base0)
         evs = comp_events(g, c["kind"])
@@ -168,7 +173,7 @@ def main():
                                                      gather_row0_at=g.get("gather_row0_at"))))
     a.out.mkdir(parents=True, exist_ok=True)
     pr_all = [r for r in sman["records"] if r.get("i") is not None]
-    su_em = sorted(r["i"] for r in sman["records"] if str(r.get("status", "")).startswith("emitted"))
+    su_em = sorted(r["i"] for r in sman["records"] if r.get("status") == "emitted")
     comp_i = sorted({c["i"] for c in comps})
     man_parts = []
     for k, p in enumerate(parts):
@@ -179,6 +184,7 @@ def main():
                    qualifies_native_chain=False, lane="TOK-FUNC-HBM-PAY", t0_serial=su.get("t0_serial"),
                    priced_layer_cycles=su.get("priced_layer_cycles"), merged_part=k, su_checks=p["su_checks"],
                    standalone_component=p["standalone"], components=[c["i"] for c in p["comps"]],
+                   shared_vm_calendar=dict(policy="finite SU owner0 epoch followed by disjoint HC/COLL CP epochs" if a.shared_calendar else "legacy overlapping diagnostics; no shared calendar proof", static=True, production_qualified=False, su_epoch=su.get("su_owner_calendar"), payload_first_stream=phase0, data_connection="independent relocated fixture probes; no produced-to-consumed connection"),
                    timing=dict(hc={kk: v for kk, v in tim.items() if kk != "hc_params"}, coll_vm_rt=vm_rt),
                    assumptions=["SU part = layer_images replay as emitted (serial domain, absolute cycles)",
                                 "components: sequential CP placement in priced order, GAP %d edges; VM sectors relocated "
@@ -194,7 +200,7 @@ def main():
                su_replay=str(a.su), fixtures=str(a.fixtures), contract=str(a.contract), nev=a.nev,
                priced_records=len(pr_all), su_emitted=su_em, component_emitted=comp_i,
                emitted_fraction=round((len(set(su_em) | set(comp_i))) / max(1, len(pr_all)), 4),
-               timeline_stream_edges=t, parts=man_parts)
+               timeline_stream_edges=t, shared_calendar_epochs=a.shared_calendar, qualifies_native_layer=False, qualifies_native_chain=False, scope="component_probe", parts=man_parts)
     (a.out / f"{a.name}_parts.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps(dict(layer=doc["layer"], priced=len(pr_all), su=len(su_em), comps=len(comp_i),
                           fraction=doc["emitted_fraction"], parts=[(m["name"], m["events"]) for m in man_parts])))
