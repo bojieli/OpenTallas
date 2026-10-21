@@ -33,8 +33,8 @@ module qkd_host_status_obs #(
     ot_qwen_status_obs_v1_valid u_schema(.x(status_obs_payload),.good(schema_good));
     wire accept=alive&&status_obs_v&&schema_good;
     reg ev_q,bad_q;
-    reg[15:0]ep_q,receipt_epoch;
-    reg[31:0]count_q,previous_count,delta;
+    reg[15:0]ep_q;wire[15:0]receipt_epoch;
+    reg[31:0]count_q;wire[31:0]previous_count,delta;
     reg overflow_q,seen;
     reg[3:0]errors;
     always @(posedge clk)begin ep_q<=status_obs_epoch16;count_q<=status_obs_payload[92:61];overflow_q<=status_obs_payload[93];end
@@ -50,10 +50,14 @@ module qkd_host_status_obs #(
           if(seq_full_lo)errors[2]<=1;
         end
       end
-    always @(posedge clk)if(ev_q)begin
-      receipt_epoch<=ep_q;previous_count<=count_q;
-      delta<=MUT==3?{31'd0,|count_q}:(!seen||ep_q!=receipt_epoch)?count_q:
-             count_q>=previous_count?count_q-previous_count:32'd0;
+    wire[31:0]delta_d;
+    qkd_status_obs_capture #(.W(16)) u_epoch(.ck(clk),.event_v(ev_q),.active(alive),.d(ep_q),.q(receipt_epoch));
+    genvar md;
+    for(md=0;md<2;md=md+1)begin:g_metadata
+      if(MUT==3)assign delta_d[16*md+:16]=md==0?{15'd0,|count_q}:16'd0;
+      else qkd_status_obs_delta #(.LO(16*md)) u_value(.seen(seen),.ep(ep_q),.prior_ep(receipt_epoch),.count(count_q),.prior_count(previous_count),.d(delta_d[16*md+:16]));
+      qkd_status_obs_capture #(.W(16)) u_previous(.ck(clk),.event_v(ev_q),.active(alive),.d(count_q[16*md+:16]),.q(previous_count[16*md+:16]));
+      qkd_status_obs_capture #(.W(16)) u_delta(.ck(clk),.event_v(ev_q),.active(alive),.d(delta_d[16*md+:16]),.q(delta[16*md+:16]));
     end
     reg[15:0]seq_lo,seq_hi;
     wire seq_full_lo,seq_full_hi;
@@ -71,7 +75,7 @@ module qkd_host_status_obs #(
     reg[2:0]rd_ph;
     reg[6:0]idx_r;
     reg data_r;
-    reg[31:0]ctl_r,o_rdata;
+    reg[31:0]ctl_r;wire[31:0]o_rdata,local_rdata;
     reg[1:0]o_rresp;
     reg snapshot_valid,cap_q;
     wire wr_go=alive&&u_awvalid&&u_wvalid&&aw_win&&!o_bvalid&&!d_wpend;
@@ -90,7 +94,7 @@ module qkd_host_status_obs #(
     assign u_bvalid=o_bvalid|d_bvalid;assign u_bresp=o_bvalid?2'b00:d_bresp;
     assign u_arready=ar_win?rd_go:(d_arready&&!o_rvalid&&!rd_busy);
     assign u_rvalid=o_rvalid|d_rvalid;
-    assign u_rdata=MUT==4?o_rdata:o_rvalid?o_rdata:d_rdata;
+    assign u_rdata=MUT==4?o_rdata:local_rdata;
     assign u_rresp=o_rvalid?o_rresp:d_rresp;
     wire[31:0]part[0:(NB+15)/16];
     assign part[0]=0;
@@ -127,8 +131,13 @@ module qkd_host_status_obs #(
     always @(posedge clk)begin
       ctl_r<=idx_r[6]?32'd0:idx_r[5:0]==0?{8'h53,8'd1,8'd10,7'd0,snapshot_valid}:
              idx_r[5:0]==1?{16'd208,16'd293}:32'd0;
-      if(rd_ph[1])o_rdata<=data_r?part[(NB+15)/16]:ctl_r;
+
+    end    genvar rp;
+    for(rp=0;rp<4;rp=rp+1)begin:g_response
+      qkd_status_obs_response #(.W(8)) u_response(.ck(clk),.rst_n(rn[0]),.start(rd_ph[1]),.active(rd_busy),.ready(u_rready),
+        .data_sel(data_r),.d(part[(NB+15)/16][8*rp+:8]),.alt(ctl_r[8*rp+:8]),.down(d_rdata[8*rp+:8]),.raw(o_rdata[8*rp+:8]),.out(local_rdata[8*rp+:8]));
     end
+
 endmodule
 
 // Real per16-bit payload/snapshot/read partitions. All data are invalid until
@@ -151,4 +160,33 @@ endmodule
  reg a,b;
  always @(posedge ck or negedge rst_n)if(!rst_n)begin a<=0;b<=0;end else begin a<=1;b<=a;end
  assign out_n=b;
+endmodule
+
+// Each metadata partition owns a real capture enable. The kept gate prevents
+// mapping the shared event into every data mux; no event or data edge is added.
+(* keep_hierarchy=1 *)module qkd_status_obs_capture_enable(input wire a,b,output wire y);
+ assign y=a&&b;
+endmodule
+(* keep_hierarchy=1 *)module qkd_status_obs_capture #(parameter integer W=16)(
+ input wire ck,event_v,active,input wire[W-1:0]d,output reg[W-1:0]q);
+ wire en;
+ qkd_status_obs_capture_enable u_en(.a(event_v),.b(active),.y(en));
+ always @(posedge ck)if(en)q<=d;
+endmodule
+// This partition owns response data and valid together. Its private response
+// state selects its own AXI data half and clears on the actual read handshake.
+(* keep_hierarchy=1 *)module qkd_status_obs_response #(parameter integer W=16)(
+ input wire ck,rst_n,start,active,ready,data_sel,input wire[W-1:0]d,alt,down,output wire[W-1:0]raw,out);
+ reg valid;wire local_sel;
+ qkd_status_obs_capture_enable u_select(.a(data_sel),.b(active),.y(local_sel));
+ qkd_status_obs_capture #(.W(W)) u_data(.ck(ck),.event_v(start),.active(active),.d(local_sel?d:alt),.q(raw));
+ always @(posedge ck or negedge rst_n)if(!rst_n)valid<=0;
+ else begin if(valid&&ready)valid<=0;if(start)valid<=1;end
+ assign out=valid?raw:down;
+endmodule
+
+(* keep_hierarchy=1 *)module qkd_status_obs_delta #(parameter integer LO=0)(
+ input wire seen,input wire[15:0]ep,prior_ep,input wire[31:0]count,prior_count,output wire[15:0]d);
+ wire[31:0]difference=count-prior_count;
+ assign d=(!seen||ep!=prior_ep)?count[LO+:16]:count>=prior_count?difference[LO+:16]:16'd0;
 endmodule

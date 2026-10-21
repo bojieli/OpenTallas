@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   786 GB (avail 664, growth 113, headroom 0, waiters 0/0 GB) load 47/128 running 32 disk 2109 GB 
+ot-run: ot-epyc7       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native-v3
+ot-run: ot-epyc9       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native-v3
+ot-run: ot-gold2       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native-v3
+ot-run: ot-gold1       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native-v3
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native-v3
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-scratch/claude/codex-k-die-1021/status-host-native-v3
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1126579-1792607998 after 0 s
+OT_KEEP_REGS: keep set on 0 register cells driving keep wires
+PRE_GATE_NATIVE_CENSUS PASS report=native/census.json
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1126579-1792607998): exit 0

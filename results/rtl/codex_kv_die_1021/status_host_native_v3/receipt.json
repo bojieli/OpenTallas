@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS",
+  "max_dynamic_loads": 32,
+  "role_errors": [],
+  "source_sha256": "8004e0c7db8ca2cb1bd6f56a315eecd9731b9062e6d2791dea941e056594d4d5",
+  "codec_source": "44f48aa01",
+  "causal": "PASS good + expected failure count-as-level mutant",
+  "calendar_delta": 0,
+  "latency": "unchanged record2samples/CAPTURE2samples/read3samples",
+  "partitions": "five actual16-bit metadata capture partitions, four 8-bit response data+valid owners, private half-word delta arithmetic",
+  "physical": "NOTRUN",
+  "host_wrapper_elaboration": "pending"
+}
