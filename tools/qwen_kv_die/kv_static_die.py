@@ -476,6 +476,7 @@ NATIVE_SLOTS = os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'
 # faces): OT_KV_CTL_PORTRAIT=1 takes ONLY the 345.6 x 475.2 portrait ctl slot (5.3 pins/um), not NATIVE_SLOTS' group
 # squares; the hroot words keep their planned control-channel corridors (_hroot_waypoints) as the feedthrough channel.
 CTL_PORTRAIT = os.environ.get('OT_KV_CTL_PORTRAIT', '0') == '1'
+CTL_PORTRAIT_LATE = os.environ.get('OT_KV_CTL_PORTRAIT_LATE', '0') == '1'   # KV-CTL11: place the portrait after attn/emb
 if NATIVE_SLOTS:
     FRAME['ctl'] = (345.6, 475.2)
 if CTL_PORTRAIT:
@@ -2397,11 +2398,18 @@ def place(m, K, geo, F):
         anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - ew_ / 2), ey_)
         emb_keep = [('emb_west_pocket', host.x - 21.6, host.y + host.h, d2d.x - (host.x - 21.6), d2d.y + d2d.h - host.y - host.h)]
         m['geo']['emb_west'] = dict(pocket=list(emb_keep[0][1:]), anchor=list(anchors['kvs_emb']))
+    if CTL_PORTRAIT and CTL_PORTRAIT_LATE:
+        # KV-CTL11 10-20 (OT_KV_CTL_PORTRAIT_LATE=1, default off): the 475.2-um portrait ctl takes its free spot AFTER the
+        # attention / embedding tiles, so it never displaces their D2D / HOST corridor homes (ctl11pB1: portrait first
+        # moved the D2D srx approach -> 'no spot for seqst_rx__f0'); the ctl <-> hroot words keep their channel corridors.
+        order = [o for o in order if o[0] != 'kvs_ctl'] + [('kvs_ctl', 'ctl')]
     for nm, kind in order + hro:
         w, h = FRAME[kind]
         x, y = free_spot(m, w, h, anchors[nm], GX, GY, extra=emb_keep)
         m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
+        if CTL_PORTRAIT:
+            print(f'KV-CTL11 static tile {nm} at ({x:.1f}, {y:.1f}) {w} x {h} anchor ({anchors[nm][0]:.1f}, {anchors[nm][1]:.1f})')
     if NATIVE_SLOTS:
         m['geo']['native_slot_reservations'] = dict(
             group_um=[388.8, 388.8], ctl_um=list(FRAME['ctl']),
