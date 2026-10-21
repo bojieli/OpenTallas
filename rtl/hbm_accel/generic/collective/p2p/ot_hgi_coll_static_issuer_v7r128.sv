@@ -417,7 +417,7 @@ module ot_hgi_coll_issuer_m128v8 (
  (* keep = "true" *) reg [3:0] pe1_c;          // prime C (phe == 1, no mw / advance)
  (* keep = "true" *) reg [7:0] pe2_c;          // prime CT / CN (phe == 2)
  (* keep = "true" *) reg [1:0] p0_c,p1_c,p2_c; // effective priming phase (macros 0-1 / 2-3)
- (* keep = "true" *) reg [1:0] fwt_c,fwn_c;    // counter forwarding into the CT / CN reads (lo / hi bits)
+ (* keep = "true" *) reg [3:0] fwt_c,fwn_c;    // counter forwarding into the CT / CN reads: 4 kept copies, 8 counter bits each (r128v11: census fwn_c[0] 34 loads)
  (* keep = "true" *) reg [31:0] stl,sth,snl,snh;   // one-hot lid(CT) / lid(CN) & valid & !zero, lo / hi bit copies
  (* keep = "true" *) reg [31:0] wac,wbc,wcc;   // L1 write one-hot (update && lid(C)): bits 9:0 + valid / zero, 20:10, 31:21
  (* keep = "true" *) reg [15:0] aen_a,aen_b,aen_c;   // assembly fragment enables: bits 10:0 / 21:11 / 31:22
@@ -485,8 +485,8 @@ module ot_hgi_coll_issuer_m128v8 (
 `ifdef OT_COLL_ISS8_MUT_NOFWD
  wire [31:0] l_t=aot,l_n=aon;
 `else
- wire [31:0] l_t={fwt_c[1] ? nft[31:16] : aot[31:16],fwt_c[0] ? nft[15:0] : aot[15:0]};
- wire [31:0] l_n={fwn_c[1] ? nfn[31:16] : aon[31:16],fwn_c[0] ? nfn[15:0] : aon[15:0]};
+ wire [31:0] l_t={fwt_c[3] ? nft[31:24] : aot[31:24],fwt_c[2] ? nft[23:16] : aot[23:16],fwt_c[1] ? nft[15:8] : aot[15:8],fwt_c[0] ? nft[7:0] : aot[7:0]};
+ wire [31:0] l_n={fwn_c[3] ? nfn[31:24] : aon[31:24],fwn_c[2] ? nfn[23:16] : aon[23:16],fwn_c[1] ? nfn[15:8] : aon[15:8],fwn_c[0] ? nfn[7:0] : aon[7:0]};
 `endif
  wire tt=f_take(r_has(rt),l_t,r_cnt(rt)),tn=f_take(r_has(rn),l_n,r_cnt(rn));
  // ---------------- data next state (per-bit select copies) ----------------
@@ -624,12 +624,12 @@ module ot_hgi_coll_issuer_m128v8 (
  always @(posedge clk or negedge rcp[4])
   if(!rcp[4])begin vm1<=0;mw_c<=0;p0_c<=2'b11;p1_c<=0;p2_c<=0;end
   else begin vm1<={16{fv_c[1]}};mw_c<={3{mw_x}};p0_c<={2{phe_x==2'd0}};p1_c<={2{phe_x==2'd1}};p2_c<={2{phe_x==2'd2}};end
- // G5: bank-2 mask, forwarding, prime C (24)
+ // G5: bank-2 mask, forwarding, prime C (28)
  always @(posedge clk or negedge rcp[5])
   if(!rcp[5])begin vm2<=0;fwt_c<=0;fwn_c<=0;pe1_c<=0;end
   else begin
    vm2<={16{fv_c[2]}};
-   fwt_c<={2{upd_x && r_lid(rt_n)==rc_n[6:2]}};fwn_c<={2{upd_x && r_lid(rn_n)==rc_n[6:2]}};
+   fwt_c<={4{upd_x && r_lid(rt_n)==rc_n[6:2]}};fwn_c<={4{upd_x && r_lid(rn_n)==rc_n[6:2]}};
    pe1_c<={4{!mw_x && !adv_x && phe_x==2'd1}};
   end
  // G6: start accept + prime CT / CN (27)
