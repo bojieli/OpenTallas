@@ -44,6 +44,8 @@ TT_STAGE_ME = 1                                  # Q-DIE14 (QLB-PROG 3fac5f0ef):
 HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
 HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
 STATUS_OBS = os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1'
+FAULT_FACE = os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1'
+SF_MASTER = 'qfd_sys_face_ovl_fault1' if FAULT_FACE else 'qfd_sys_face_ovl'
 if STATUS_OBS and not HEAD_PREP:
     raise ValueError('STATUS observer v1 requires coherent head-prepare source')
 NATIVE_MASTER = 'qfd_native59_dv_headprep_obs1' if STATUS_OBS else 'qfd_native59_dv_headprep'
@@ -166,17 +168,17 @@ def gen_params(insts, hr_rows, image=IMAGE):
             out['qfd_sys_face']['_source'] = 'MU-DQ-BOOTCTX: MU_HEAD 1 (filler head contexts not checked by the HOST RX)'
         rec['fctx'] = 1
     if os.environ.get('OT_QWEN_ROPE', '0') == '1':
-        for master in ('qfd_sys_face', 'qfd_sys_face_ovl', 'qfd_embedding_word_provider', 'qfd_native59_dv_service', NATIVE_MASTER):
+        for master in ('qfd_sys_face', SF_MASTER, 'qfd_embedding_word_provider', 'qfd_native59_dv_service', NATIVE_MASTER):
             if master in masters:
                 out.setdefault(master, {}).update(ROPE=1)
         rec['rope'] = dict(words=8, payload_flag=512, expected_args=list(range(65, 73)),
                            read_bank='embed_code_addr = 9723904 + token*8 + beat',
                            scope='requires the shared 73-item pair image and matching source-complete views')
     if HEAD_PREP:
-        if NATIVE_MASTER not in masters or 'qfd_sys_face_ovl' not in masters:
+        if NATIVE_MASTER not in masters or SF_MASTER not in masters:
             raise ValueError('head prepare requires the actual source-complete native and OVL face masters')
         out.setdefault(NATIVE_MASTER, {}).update(HEAD_PREP=1, NU=nu)
-        out.setdefault('qfd_sys_face_ovl', {}).update(MU=int(nu>1), MU_HEAD=int(nu>1), ROPE=1)
+        out.setdefault(SF_MASTER, {}).update(MU=int(nu>1), MU_HEAD=int(nu>1), ROPE=1)
         rec['head_prepare'] = dict(source='c_emb stored token/position/user, never RESULT',
                                   transport='derive both bundle ages from actual GEN; no zero default')
     if D2D_MASTER in masters:

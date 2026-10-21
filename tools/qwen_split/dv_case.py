@@ -69,6 +69,9 @@ WCOL_RTL = {'native59': ('qfd_native59_dv_service', 'rtl/qwen_split/qfd_native59
 # Source-complete recurring RoPE authority integration. Historical 595 masters remain default.
 HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
 STATUS_OBS = os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1'
+FAULT_FACE = os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1'
+if FAULT_FACE and not HEAD_PREP:
+    raise ValueError('fault1 requires coherent head-prepare source')
 if STATUS_OBS and not HEAD_PREP:
     raise ValueError('STATUS observer v1 requires the coherent head-prepare source')
 if HEAD_PREP:
@@ -76,6 +79,8 @@ if HEAD_PREP:
         raise ValueError('OT_QWEN_HEAD_PREP requires the sole 73-item RoPE programme')
     WCOL_RTL['native59'] = ('qfd_native59_dv_headprep', 'rtl/qwen_split/qfd_native59_dv_headprep.sv')
     WCOL_RTL['sys_face'] = ('qfd_sys_face_ovl', 'rtl/qwen_split/qfd_sys_face_ovl.sv')
+    if FAULT_FACE:
+        WCOL_RTL['sys_face'] = ('qfd_sys_face_ovl_fault1', 'rtl/qwen_split/qfd_sys_face_ovl_fault1.sv')
     if STATUS_OBS:
         WCOL_RTL['native59'] = ('qfd_native59_dv_headprep_obs1', 'rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv')
 # the embedding provider is CLOSED (rr1, native audit PASS): its die master is drawn as the closed view (outline + pins)
@@ -886,13 +891,14 @@ def apply_dv(v, m):
         if HEAD_PREP:
             expected = {'head_descriptor_v','head_descriptor_tag','head_descriptor_generation'}
             debt = set(m.get('sys_face_bind', {}).get('deferred_inputs', []))
-            if debt != expected:
+            remaining = {'obs_fault'} if FAULT_FACE else set()
+            if debt != expected | remaining:
                 raise ValueError(f'actual DV head descriptor debt mismatch {debt} vs {expected}')
             for p_ in expected:
                 actual = [es for _,_,_,es in out if ('sys_face',p_) in es]
                 if len(actual)!=1 or actual[0] != [('native59',p_),('sys_face',p_)]:
                     raise ValueError(f'head descriptor lacks one exact actual producer: {p_} {actual}')
-            m['sys_face_bind']['deferred_inputs'] = []
+            m['sys_face_bind']['deferred_inputs'] = sorted(remaining)
             m['sys_face_bind']['head_descriptor_bound'] = sorted(expected)
         # chain-end idle inputs (rule c): W5 sc up-travelling input from the W column side (no scalar producer west of
         # W5: the scalar chain is slice-to-slice, its ROOT is on W5), E5 up-face inputs, the l9_wi of an unpaired slice --

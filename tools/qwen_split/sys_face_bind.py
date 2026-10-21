@@ -27,6 +27,12 @@ HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
 if HEAD_PREP:
     MASTER = 'qfd_sys_face_ovl'
     SOURCE = 'rtl/qwen_split/qfd_sys_face_ovl.sv'
+FAULT_FACE = os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1'
+if FAULT_FACE:
+    if not HEAD_PREP:
+        raise ValueError('fault1 requires the coherent head-prepare source')
+    MASTER = 'qfd_sys_face_ovl_fault1'
+    SOURCE = 'rtl/qwen_split/qfd_sys_face_ovl_fault1.sv'
 INST = 'sys_face'
 WH_HIST = (302.4, 216.0)
 
@@ -184,6 +190,8 @@ def apply(model):
     conn = {alias.get(p, (p, None))[0] for p in conn}
     open_in = sorted(p for p, (n, d) in sf.items() if d == 'input' and p not in conn)
     late_inputs = {'head_descriptor_v','head_descriptor_tag','head_descriptor_generation'} if HEAD_PREP else set()
+    if FAULT_FACE:
+        late_inputs.add('obs_fault')
     if HEAD_PREP and not os.environ.get('OT_SPLIT_DV'):
         raise ValueError('head descriptor requires the actual DV rebind stage')
     if set(open_in) != late_inputs:

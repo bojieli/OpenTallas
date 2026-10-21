@@ -302,6 +302,93 @@ def _ctr(i):
     return (i.x + i.w / 2, i.y + i.h / 2)
 
 
+def _source_bit_point(pos, entry):
+    points = []
+    for port in dict.fromkeys((entry['port'], f"{entry['real']}[{entry['bit']}]")):
+        q = pos.bits(entry['inst'], port, 1)
+        if q is not None and len(q) == 1:
+            points.append(q[0])
+    if not points or any(_man(points[0], p) > 1e-6 for p in points[1:]):
+        raise ValueError(f'fault source pin: missing or conflicting emitted bit geometry {entry}')
+    return points[0]
+
+
+def source_bit_geometry(v, m, G, hard=None):
+    """Bind open fault outputs to their real emitted scalar pin fragments.
+
+    Register fragments before building masters: partition_master removes the
+    whole port, so neither a whole-port centroid nor an instance-centre fallback
+    is a valid physical endpoint after partitioning.
+    """
+    from types import SimpleNamespace
+    hard = _hard() if hard is None else hard
+    by = {i.name:i for i in m['insts']}
+    entries = m.get('fault_source_bit_contract')
+    if entries is None:
+        original = v.masters(m, 1)
+        entries = []
+        for inst, ports in hard.items():
+            master = by[inst].master
+            for port in ports:
+                if port not in original[master].ports:
+                    raise ValueError(f'fault source pin: missing native port {inst}.{port}')
+                width = original[master].ports[port][1]
+                for bit in range(width):
+                    alias = f'flt_{port}_{bit}' if width > 1 else port
+                    if width > 1:
+                        join = m.setdefault('port_join', {}).setdefault(master, {})
+                        value = (port, [bit])
+                        if alias in join and join[alias] != value:
+                            raise ValueError(f'fault source pin: conflicting fragment {master}.{alias}')
+                        join[alias] = value
+                    entries.append(dict(inst=inst, port=alias, real=port, bit=bit))
+        m['fault_source_bit_contract'] = entries
+    if getattr(v, '_fault_source_master_projection_model', None) is not m:
+        # DV has already frozen its selected physical master set. Updating
+        # port_join cannot rebuild that set. Project the new fragments onto
+        # copies of the selected native pin rectangles instead of regenerating
+        # a master from peers or assuming a later wrapper will see aliases.
+        import copy
+        from qwen_split.direct_up4 import partition_master
+        selected = v.masters(m, 1)
+        projected = {}
+        for name in {by[e['inst']].master for e in entries}:
+            q = copy.deepcopy(selected[name])
+            source_ports = {e['port'] for e in entries if by[e['inst']].master == name}
+            pending = {a: rb for a, rb in m.get('port_join', {}).get(name, {}).items()
+                       if a in source_ports and rb[0] in q.ports}
+            if pending:
+                rects = v.pin_rects(q, 1, {p: sp[1] for p, sp in q.ports.items()})
+                partition_master(q, pending, rects)
+            projected[name] = q
+        base_masters = v.masters
+        def projected_masters(model, k=1, port_bits=None):
+            out = base_masters(model, k, port_bits)
+            out.update(projected)
+            return out
+        v.masters = projected_masters
+        v._fault_source_master_projection = projected
+        v._fault_source_master_projection_model = m
+    masters = v.masters(m, 1)
+    # Unconnected outputs have no bus width yet. Their source-native scalar
+    # fragment must still exist while choosing the first capture node.
+    widths = dict(v.port_widths(m, 1))
+    for e in entries:
+        key = (by[e['inst']].master, e['port'])
+        if e['port'] not in masters[key[0]].ports:
+            raise ValueError(f'fault source pin: fragment missing from master {key}')
+        widths[key] = 1
+    for i in m['insts']:
+        if i.master.startswith('qfd_landh'):
+            widths[(i.master, 'fault')] = 1
+    view = SimpleNamespace(masters=lambda *a:masters, port_widths=lambda *a:widths,
+                           pin_rects=v.pin_rects, PIN_POS_EXTRA=getattr(v, 'PIN_POS_EXTRA', {}))
+    pos = G._pin_pos(view, m, strict=True)
+    for e in entries:
+        e['xy'] = list(_source_bit_point(pos, e))
+    return masters, pos, entries
+
+
 def pre(v, m, G):
     """region roots + their MST (before _relays)."""
     if not enabled():
@@ -311,13 +398,24 @@ def pre(v, m, G):
     M = v.masters(m, 1)
     hard = _hard()
     owners = dict(plan['owners'])
-    pos = G._pin_pos(v, m)
+    bit_sources = os.environ.get('OT_SPLIT_FAULT_SOURCE_BITS', '0') == '1'
+    if bit_sources:
+        M, pos, source_entries = source_bit_geometry(v, m, G, hard)
+        for inst in hard:
+            pts = [e['xy'] for e in source_entries if e['inst'] == inst]
+            row = dict(owners.get(inst, {}))
+            row.setdefault('xy', [sum(q[j] for q in pts)/len(pts) for j in (0, 1)])
+            row.setdefault('landings', 0)
+            row['pts'] = list(row.get('pts', [])) + pts
+            owners[inst] = row
+    else:
+        pos = G._pin_pos(v, m)
     for inst, ports in hard.items():
         if inst not in by:
             raise ValueError(f'fault emit: hard fault block {inst} not on this GEN')
         mp = M[by[inst].master].ports
         for p in ports:
-            if p not in mp:
+            if p not in mp and not bit_sources:
                 raise ValueError(f'fault emit: {inst} ({by[inst].master}) has no port {p}')
         if inst not in owners:
             pts = [pos(inst, p) for p in ports]
@@ -535,6 +633,9 @@ def pre(v, m, G):
     rec['zone_roots'] = nz
     rec['root_owner'] = ROOT_OWNER
     rec['zones'] = dict(collections.Counter(r['zone'] for r in roots.values()))
+    if os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1':
+        from qwen_split.fault_face_bind import install
+        install(v, m, rec)
     M_ = dict(M)
     v.masters = lambda model, k=1, port_bits=None: dict(M_)
     rec['wide_end_keepclear'] = dict(bits=WIDE_BITS, um=KEEP_UM, boxes=kc)
@@ -622,7 +723,11 @@ def post(v, m, G):
         return None
     by = {i.name: i for i in m['insts']}
     M = v.masters(m, 1)
-    pos = G._pin_pos(v, m)
+    bit_sources = os.environ.get('OT_SPLIT_FAULT_SOURCE_BITS', '0') == '1'
+    if bit_sources:
+        M, pos, source_entries = source_bit_geometry(v, m, G)
+    else:
+        pos = G._pin_pos(v, m)
     ckx, rsx = _bus_index(m, 'clock_trunk'), _reset_index(m)
     used = set()
     for bid, cl, bits, eps in m['buses']:
@@ -639,7 +744,14 @@ def post(v, m, G):
                 bad.append(f'{it.name}: landing without ck bus'); continue
             src.append((it.name, 'fault', 'fault', 0, cj, rj, pos(it.name, 'fault')))
     pj = m.get('port_join')
-    for inst, ports in _hard().items():
+    if bit_sources:
+        for e in source_entries:
+            inst, port = e['inst'], e['port']
+            if (inst, port) in used:
+                bad.append(f'{inst}.{port}: already connected'); continue
+            cj, rj = _clock_bus(ckx, inst, None), _reset_bus(rsx, inst)
+            src.append((inst, port, e['real'], e['bit'], cj, rj, tuple(e['xy'])))
+    for inst, ports in ([] if bit_sources else _hard().items()):
         it = by[inst]
         mp = M[it.master].ports
         cj, rj = _clock_bus(ckx, inst, None), _reset_bus(rsx, inst)
@@ -1049,12 +1161,21 @@ def post(v, m, G):
     v.masters = lambda model, k=1, port_bits=None: dict(M_)
     m['buses'] += new_buses
     # 4. reach audit of every new wire (pin to pin)
-    pos2 = G._pin_pos(v, m)
+    pos2 = G._pin_pos(v, m, strict=bit_sources)
     alias = {(s[0], s[1]): (s[0], s[2]) for s in src}
+    bit_refs = {(s[0], s[1]): dict(inst=s[0], port=s[1], real=s[2], bit=s[3]) for s in src}
     worst, over = 0.0, []
     for bid, cl, bits, eps in new_buses:
         for e1 in eps[1:]:
-            L = _man(pos2(*alias.get(tuple(eps[0]), eps[0])), pos2(*e1))
+            if bit_sources:
+                ref = bit_refs.get(tuple(eps[0]))
+                a = [_source_bit_point(pos2, ref)] if ref is not None else pos2.bits(*eps[0], 1)
+                b = pos2.bits(*e1, 1)
+                if a is None or b is None:
+                    raise ValueError(f'fault emit: missing emitted bit geometry {bid} {eps[0]} -> {e1}')
+                L = _man(a[0], b[0])
+            else:
+                L = _man(pos2(*alias.get(tuple(eps[0]), eps[0])), pos2(*e1))
             worst = max(worst, L)
             if L > 405.0:
                 over.append((bid, round(L, 1)))
@@ -1066,7 +1187,7 @@ def post(v, m, G):
                nodes=len(nodes), node_kinds=dict(kinds), node_N=dict(sorted(counts.items())),
                flops=sum(d['n'] + 4 for d in nodes.values()), new_wires=len(new_buses),
                worst_new_wire_um=round(worst, 1), worst_source_to_leaf_um=round(worst_src, 1),
-               root=rec['roots'][ROOT_OWNER]['inst'], root_sink='OPEN: sys_face obs_fault absent (Q.MU.FACE.3)')
+               root=rec['roots'][ROOT_OWNER]['inst'], root_sink=rec.get('root_sink', 'OPEN: sys_face obs_fault absent (Q.MU.FACE.3)'))
     print(f'FAULT_EMIT post: {len(src)} source bits -> {len(nodes)} nodes {dict(kinds)} N {dict(sorted(counts.items()))}, '
-          f'{len(new_buses)} new wires, worst {worst:.0f} um; root {rec["root"]} o OPEN (sink owed)', flush=True)
+          f'{len(new_buses)} new wires, worst {worst:.0f} um; root {rec["root"]} sink {rec["root_sink"]}', flush=True)
     return rec
