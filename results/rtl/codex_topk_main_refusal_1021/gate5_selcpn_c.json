@@ -1,0 +1,155 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered: dsfd_selt_c lands every quarter bundle in its pin flops (sq / oq) and launches t_c / t_cr / vd from flops.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81dvbk_selcpn_c_20261021-132442.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81dvbk_selcpn_c_20261021-132442.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81dvbk_selcpn_c-20261021-132442",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 603 s (gate total 10551 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 6072, 'pin_rectangles': 6072, 'pin_track_checked': 6072, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 1acfdbe5f4cc707cd0e0d490265e5719de051810dbdaa52f3640e65dec5cce1b",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 25637 um2 + macros 24651 in core 114606: util 30% (std-cell density 30.2% of placeable 84994 um2; total fill 43.9%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsdv_bksel_c_pa_n32 cells 229,074 flops 30,470 depth 533.4 ps util 0.3756 reach 0.0 um (6.5 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 30,470 flops > 15,000 on one root (+0 ICGs, 12 macro clock pins; e.g. u_c.act[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:ck: 30,482 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 30,482 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 516.6..660.6 ps (spread 144.0), boundary mean 603.7; tt insertion all 381.8..526.1 ps (spread 144.3), boundary mean 471.2; ff insertion all 301.9..443.9 ps (spread 142.0), boundary mean 389.9; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81dvbk_selcpn_c/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg     42 paths, worst slack 60.9 ps (e.g. u_c.g_packet[1].u/done$_DFF_PN1_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      337 paths, worst slack 65.7 ps (e.g. u_c.g_l[0].u_q/u_mem.g_slice[22].prev_q$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro     13 paths, worst slack 67.6 ps (e.g. u_c.g_l[0].u_q/u_mem.g_bank[2].u_m/r_addr_in[1])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       208 paths, worst slack 236.5 ps (e.g. u_c.g_rst[412].u/q$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 6.085676407252549e-11 hold WNS 4.8390735862824386e-12",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "30,482 sinks on the largest root; measured TT insertion 526.1 ps, FF insertion 443.9 ps, TT pin-flop spread 104.9 ps, FF pin-flop spread 102.8 ps; TT pin-flop spread 104.9 ps > 80 and FF pin-flop spread 102.8 ps > 80 (declared clock 'cts' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/claude-s81-topk-n32-kit-1021/physical/ref_tile/s81dvbk_selcpn_c/gate_layout/floorplan.png; density /home/ubuntu/wt/claude-s81-topk-n32-kit-1021/physical/ref_tile/s81dvbk_selcpn_c/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 37% = (hard macros 24651.2 + synthesized std cells 18391.1) / outline 117573.1 um2; pin demand per face: S 2589 pins over 386.6/388.8 um (99%), N 2588 pins over 386.6/388.8 um (99%), W 469 pins over 258.6/302.4 um (86%), E 570 pins over 107.9/302.4 um (36%) (< 50%)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "trial_route",
+   "message": "trial global route failed (GATE_GRT_RC=2); trial GRT: total overflow 0; worst layer M2 43.69% used; GRT 2076 s",
+   "fix": "read the remote grt.log; preserve this failed run"
+  }
+ ]
+}
