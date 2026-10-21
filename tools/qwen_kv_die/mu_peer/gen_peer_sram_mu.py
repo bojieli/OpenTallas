@@ -28,11 +28,26 @@ def once(s, a, b, n=1):
 def w(name, text):
     (OD / name).write_text(text); print('wrote', OD / name)
 
+# prefix wires that read body registers before their declaration (Verilator accepts the forward reference; Yosys
+# refuses it): declared in the prefix, assigned after the body (same expressions, no logic change).
+def split_prefix(prefix):
+    pre, post = [], []
+    for ln in prefix.splitlines(True):
+        m = re.match(r'\s*wire(\[[^\]]*\])?\s*(\w+)=(.*);(.*)$', ln.rstrip('\n'))
+        if m:
+            pre.append(' wire%s %s;%s\n' % (m.group(1) or '', m.group(2), m.group(4)))
+            post.append(' assign %s=%s;\n' % (m.group(2), m.group(3)))
+        else:
+            pre.append(ln)
+    return pre, post
 # codec _pd -> _pd_mu
 src = (H / 'peer_pd/qkd_host_peer_coordinator_codec_pd.sv').read_text()
-w('qkd_host_peer_coordinator_codec_pd_mu.sv', build(src, 'qkd_host_peer_coordinator_codec_pd',
+cpre, cpost = split_prefix(G.CODEC_PREFIX)
+out = build(src, 'qkd_host_peer_coordinator_codec_pd',
   TAG + G.CODEC_HEAD.replace('qkd_host_peer_coordinator_codec.sv', 'qkd_host_peer_coordinator_codec_pd.sv (KV-HOST/PEER r6 fork)'),
-  G.CODEC_EDITS, body_prefix=G.CODEC_PREFIX))
+  G.CODEC_EDITS, body_prefix=''.join(cpre))
+out = once(out, 'end endgenerate\nendmodule\n', ''.join(cpost) + 'end endgenerate\nendmodule\n')
+w('qkd_host_peer_coordinator_codec_pd_mu.sv', out)
 # token service _pd2 -> _pd2_mu.  The pd2 fork computes the token-frame test once at queue write (rf[15] = f_tok22, used by
 # both peer_token_frame and the class-22 decode) and names the command head cmd_head: same MU edits on those spellings.
 TS_PD2 = []
@@ -43,10 +58,17 @@ for e in G.TS_EDITS:
     elif a == "if(cq[cr][17:13]!=0||cq[cr][35:18]>=18'd151936)fault<=1;":
         e = ("if(cmd_head[17:13]!=0||cmd_head[35:18]>=18'd151936)fault<=1;", "if(cmd_head[15:13]!=0||cmd_head[35:18]>=18'd151936)fault<=1;")
     TS_PD2.append(e)
+# TS_PREFIX's cu_latest / cu_epoch read allocated_*_q before the body declares them (Verilator accepts the forward
+# reference; Yosys refuses it: "Failed to detect width of signal access g_mu.allocated_token_q").  Same expressions,
+# declared in the prefix and assigned after the body (no logic change).
+pre, post = split_prefix(G.TS_PREFIX)
+assert len(post) == 4, post
 src = (H / 'peer_pd/qkd_host_ctrl_token_service_packet_collected_pd2.sv').read_text()
-w('qkd_host_ctrl_token_service_packet_collected_pd2_mu.sv', build(src, 'qkd_host_ctrl_token_service_packet_collected_pd2',
+out = build(src, 'qkd_host_ctrl_token_service_packet_collected_pd2',
   TAG + G.TS_HEAD.replace('packet_collected.sv', 'packet_collected_pd2.sv (KV-HOST/PEER r6 fork)'),
-  TS_PD2, body_prefix=G.TS_PREFIX))
+  TS_PD2, body_prefix=''.join(pre))
+out = once(out, 'end endgenerate\nendmodule\n', ''.join(post) + 'end endgenerate\nendmodule\n')
+w('qkd_host_ctrl_token_service_packet_collected_pd2_mu.sv', out)
 # coordinator _pd -> _pd_mu
 src = (H / 'peer_pd/qkd_host_tp8_coordinator_pd.sv').read_text()
 ed = [(a.replace('qkd_host_peer_coordinator_codec u_peer(', 'qkd_host_peer_coordinator_codec_pd u_peer('),

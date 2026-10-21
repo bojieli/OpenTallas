@@ -81,10 +81,10 @@ generate if(MU==0)begin:g_plain
 end else begin:g_mu
  reg[3:0]rr,u_granted;reg rr_seen;reg[17:0]job_tok[0:3],job_pos[0:3];reg[1:0]job_gen[0:3];reg[15:0]u_ep[0:3];
  reg[3:0]pe_seen;reg[13:0]pe_last[0:3];
- wire retained_request=|rr;
- wire[1:0]cu=rr[0]?2'd0:rr[1]?2'd1:rr[2]?2'd2:2'd3;   // the retained user an abort cancels next
- wire cu_latest=allocated_token_q==job_tok[cu]&&allocated_position_q==job_pos[cu]&&allocated_generation_q==job_gen[cu];
- wire[15:0]cu_epoch=cu_latest?allocated_epoch_q:u_ep[cu];
+ wire retained_request;
+ wire[1:0] cu;   // the retained user an abort cancels next
+ wire cu_latest;
+ wire[15:0] cu_epoch;
 
  reg[2:0]did_q,die_capture;reg role_valid,die_sampled;
  wire[2:0]role=STRAPPED?did_q:3'(DIE);
@@ -437,5 +437,9 @@ wire[2:0]src=h[18:16];wire[7:0]target=h[31:24];
    end
   end
  end
+ assign retained_request=|rr;
+ assign cu=rr[0]?2'd0:rr[1]?2'd1:rr[2]?2'd2:2'd3;
+ assign cu_latest=allocated_token_q==job_tok[cu]&&allocated_position_q==job_pos[cu]&&allocated_generation_q==job_gen[cu];
+ assign cu_epoch=cu_latest?allocated_epoch_q:u_ep[cu];
 end endgenerate
 endmodule

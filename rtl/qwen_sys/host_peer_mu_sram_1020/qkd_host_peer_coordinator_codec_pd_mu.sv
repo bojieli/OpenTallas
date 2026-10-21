@@ -87,12 +87,12 @@ generate if(MU==0)begin:g_plain
 end else begin:g_mu
  reg[58:0]tq_tag[0:3];reg[1:0]tq_gen[0:3];reg[1:0]tq_w,tq_r;reg[2:0]tq_n;
  reg[3:0]al_v,term_v;reg[58:0]al_tag[0:3],term_tag[0:3];reg[1:0]al_gen[0:3],term_gen[0:3];reg[58:0]al_last;reg al_last_v;
- wire tq_push=terminal_accepted&&!(tq_n==3'd4||term_v[terminal_tag[44:43]]);
+ wire tq_push;
  // POST retires the head terminal once its barrier finished (class5 sent, 8 class8 releases); the transport may
  // already carry another user's result (the global result_transport_idle stays the recovery / POST-collector input)
- wire head_done=terminal_active&&terminal_send==0&&(&terminal_released);
- wire tq_pop=post_retired&&head_done;
- wire[2:0]tq_next=tq_n+3'(tq_push)-3'(tq_pop);
+ wire head_done;
+ wire tq_pop;
+ wire[2:0] tq_next;
 
  reg[15:0]rx_seq[0:7],tx_seq[0:7];
  reg[7:0]request_queued;
@@ -223,5 +223,9 @@ end else begin:g_mu
    end
   end
  end
+ assign tq_push=terminal_accepted&&!(tq_n==3'd4||term_v[terminal_tag[44:43]]);
+ assign head_done=terminal_active&&terminal_send==0&&(&terminal_released);
+ assign tq_pop=post_retired&&head_done;
+ assign tq_next=tq_n+3'(tq_push)-3'(tq_pop);
 end endgenerate
 endmodule

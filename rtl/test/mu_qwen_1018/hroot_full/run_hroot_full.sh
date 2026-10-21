@@ -77,6 +77,13 @@ for rec in subs.split('\x1e'):
     open(p, 'w').write(s.replace(a, b))
 PY
 fi
+# PEER members: the coordinator's MU body sits one level down in the _rr wrapper (co.u_m.g_mu); bench probes follow it
+if [ $PRR = 1 ]; then python3 - "$W/$TB" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p).read(); n = s.count('co.g_mu.'); assert n > 0
+open(p, 'w').write(s.replace('co.g_mu.', 'co.u_m.g_mu.')); print('PEER_RR probes', n)
+PY
+fi
 cd "$W"
 if [ "$CASE" = cells ]; then
   python3 "$H/gen_cell_check.py" "$H/asap7_func_cells.v" "${ASAP7_CELLS:?ASAP7_CELLS=dir of official asap7sc7p5t_*.v}" cell_check.sv > "$OUT/$CASE.gen.log" 2>&1 \
