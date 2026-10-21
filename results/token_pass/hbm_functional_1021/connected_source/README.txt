@@ -1,0 +1,5 @@
+Committed source compiler invocation (RUN=0; no hardware grade):
+
+env OUT=/home/ubuntu/scratch/tok-func-hbm/connected_l0_source_final SRC_REV=5fbd4d07ac12750940f3e76884cd52c1cb675a96 CONTRACT=/home/ubuntu/scratch/codex-hbm-die-chain-1021/pre_relay_r15_functional.json FIX_DS=/home/ubuntu/scratch/tok-func-hbm/rsrc QOP=/home/ubuntu/scratch/tok-func-hbm/qop CONNECTED_LOWERING=1 OVERLAY=rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv@7f5a5d10f RUN=0 TAG=connected_l0_source_final bash tools/hbm_layer_vehicle/tok_func_hbm.sh
+
+Tools commit 9f2ae79aac7a25d72eba314e4cc0d641e79aed49. Pure validation: test_layer_images.t_layout(selected die), explicit tree packing roundtrip, py_compile, bash -n, git diff --check. New source/cut requires fresh compilation. Existing admitted old builds and input packets unchanged. SU records carry actual emitted bounded 375/188 stream-edge prices and explicit invalid inherited prices; this is no updated native layer or token rate. HC root coefficients are actual released checkpoint base24/scale3; all expected outputs remain comparison-only. Other quarters are inactive component inputs, not a full projection proof.

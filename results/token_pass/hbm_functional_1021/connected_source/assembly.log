@@ -1,0 +1,17 @@
+2026-10-21T11:55:26-07:00 TOK_FUNC_HBM mode=source src=5fbd4d07ac12750940f3e76884cd52c1cb675a96 contract=/home/ubuntu/scratch/codex-hbm-die-chain-1021/pre_relay_r15_functional.json (99756f7ec3fe40e1) tools=9f2ae79aa
+2026-10-21T11:55:33-07:00 L12_OK pads=365 pad_flops=223702 stripped=0 lat_fail=0 over_budget=0 e8_recheck=0 problems=0
+2026-10-21T11:55:36-07:00 FUNCTIONAL_BIND PASS paths=1284 bits=289940 fail_paths=0 stale_gaps=0 open_gaps=0
+2026-10-21T11:55:43-07:00 DIE_FILELIST modules=634 files=238 ambiguous=30 missing=0 uniquified=2 blackboxes=['ot_hbm3e_phy_rc_e8p5']
+2026-10-21T11:55:44-07:00 OVERLAY rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv <- 7f5a5d10f 7f5a5d10f72b85131c6132565f92a8f8fb54bb14 sha256=175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee
+2026-10-21T11:55:44-07:00 SLICE hbm_v16_die_slice_sw: 559 instances, 78 masters, 172 in (32534 b), 215 out (25679 b), 2256 internal nets -> /home/ubuntu/scratch/tok-func-hbm/connected_l0_source_final/bundle/slice
+2026-10-21T11:55:44-07:00 SU native timing READ_RETURN=18 WRITE_RETURN=15 (contract su_SW0)
+2026-10-21T11:55:45-07:00 EMIT ds_l0 {"records": 91, "events": 9545, "counts": {"blocked:format_open": 57, "blocked:unsupported_lowering": 3, "blocked:v1_unsupported": 1, "emitted": 10, "emitted_unparameterised": 1, "unsupported_lowering": 10, "v1_unsupported": 9}, "t0_serial": 398}
+2026-10-21T11:55:45-07:00 EMIT ds_l2 {"records": 101, "events": 8181, "counts": {"blocked:format_open": 64, "blocked:unsupported_lowering": 3, "blocked:v1_unsupported": 1, "emitted": 9, "emitted_unparameterised": 2, "unsupported_lowering": 11, "v1_unsupported": 11}, "t0_serial": 91}
+2026-10-21T11:55:46-07:00 EMIT ds_l14 {"records": 164, "events": 11569, "counts": {"blocked:format_open": 117, "blocked:unsupported_lowering": 3, "blocked:v1_unsupported": 1, "emitted": 10, "emitted_unparameterised": 2, "unsupported_lowering": 14, "v1_unsupported": 17}, "t0_serial": 681}
+2026-10-21T11:55:47-07:00 EMIT qw_L0 "counts": {"emitted": 6, "format_open": 24, "unsupported_lowering": 2, "v1_unsupported": 2}
+2026-10-21T11:55:49-07:00 EMIT qw_chain "counts": {"chain_stale": 1, "emitted": 11, "format_open": 45, "unsupported_lowering": 4, "v1_unsupported": 4}
+2026-10-21T11:55:50-07:00 PAY ds_l0 {"layer": "0", "priced": 91, "su": 10, "comps": 15, "fraction": 0.2747, "parts": [["ds_l0_pay_p0", 8667], ["ds_l0_pay_p1", 11096], ["ds_l0_pay_p2", 11543], ["ds_l0_pay_p3", 11145]]} shared_static_epochs=1 connected_data=0
+2026-10-21T11:55:50-07:00 PAY ds_l2 {"layer": "2", "priced": 101, "su": 9, "comps": 18, "fraction": 0.2673, "parts": [["ds_l2_pay_p0", 9701], ["ds_l2_pay_p1", 11495], ["ds_l2_pay_p2", 10945], ["ds_l2_pay_p3", 7084]]} shared_static_epochs=1 connected_data=0
+2026-10-21T11:55:51-07:00 PAY ds_l14 {"layer": "14", "priced": 164, "su": 10, "comps": 20, "fraction": 0.1829, "parts": [["ds_l14_pay_p0", 10185], ["ds_l14_pay_p1", 10152], ["ds_l14_pay_p2", 10947], ["ds_l14_pay_p3", 10795], ["ds_l14_pay_p4", 10595]]} shared_static_epochs=1 connected_data=0
+2026-10-21T11:55:52-07:00 TB /home/ubuntu/scratch/tok-func-hbm/connected_l0_source_final/bundle/slice/tb_slice.sv: 170 replay inputs, 215 checked outputs, MAXW 4096, NEV 11651, 20 replay set(s); die pins ['hb_ckgen__por_n', 'hb_ckgen__refclk']
+2026-10-21T11:55:52-07:00 ASSEMBLED (RUN=0)

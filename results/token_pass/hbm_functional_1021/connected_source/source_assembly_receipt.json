@@ -1,0 +1,460 @@
+{
+  "status": "PASS_SOURCE_ASSEMBLY_ONLY",
+  "source_tools": "9f2ae79aac7a25d72eba314e4cc0d641e79aed49",
+  "source_revision": "5fbd4d07ac12750940f3e76884cd52c1cb675a96",
+  "source_overlay": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv@7f5a5d10f72b85131c6132565f92a8f8fb54bb14",
+  "artifact_root": "/home/ubuntu/scratch/tok-func-hbm/connected_l0_source_final",
+  "files": {
+    "contract_func.json": "ac05e98f3e9e37d78c68d7917f55b8e91fd627d8316e795b2763797cb9cad269",
+    "die.v": "35350876531724e4d2cc33c71ef85724d8e85ff1685e0bc8b612dacce906b432",
+    "bundle/slice/boundary.json": "ae99ac870cbf35cb7b2a4e53e7f207045752bb175b97e6128dd5ad8b23bda8a7",
+    "bundle/slice/tb_slice.sv": "2d514653142ffbb3170dc870479274d69961db26deee1b761b26127847099a9a",
+    "bundle/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee",
+    "emit/ds_l0/manifest.json": "a541739669202d886af0355d42ccdbf2c2eb81397418f97aa2a29ee879d9aea4",
+    "emit/ds_l0/replay.json": "1da387376610b950e3132f40e0c8cbb833c65456ea829f3df824db19152befce",
+    "pay/ds_l0_pay_parts.json": "d301573d974d31a6c1842af616ff382779c1fd4f645751ecba43a84fc62ba841",
+    "log/summary.log": "fe47bcd597cf66289da576824d5487c882657c65ea9cbebe29fdf098bb466107"
+  },
+  "selected_SU": [
+    {
+      "i": 4,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "q_norm.ss",
+      "start": 1479.31,
+      "end": 1661.49,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "words": 1280,
+        "issue_groups": 10,
+        "execution_qualified": false,
+        "owner": "SU-LAYER-1021",
+        "mode": "single_quarter_serialized",
+        "source": "su_pretree_lower + actual lane AA + selected stree RF calendar"
+      },
+      "inputs_placeholder": false,
+      "timing_obligations": {
+        "issue_to_tree": 29,
+        "tree_to_red": 80,
+        "reducer_RAW": 10,
+        "RF_relay": 32,
+        "RF_export_to_commit": 45,
+        "RF_LOCAL": 1,
+        "serial_edges": 281,
+        "stream_edges": 375,
+        "old_price_preserved": false,
+        "connected_selected_case_RTL_required": true
+      },
+      "source_contract": {
+        "command_low_bits": 2422,
+        "tree_group_fields": [
+          [
+            2422,
+            2433
+          ],
+          [
+            2434,
+            2445
+          ],
+          [
+            2446,
+            2457
+          ],
+          [
+            2458,
+            2469
+          ]
+        ],
+        "selected_die": "r15phaseall/die.v",
+        "selected_qcore": "sucore_SW",
+        "RF_route": "stl_SW.up -> stu_SW_00..13 -> str_C -> std_SW_00..13a/b -> stl_SW.rf_w* -> sucore_SW.rf_w*",
+        "RF_stage_counts": {
+          "leaf_up": 1,
+          "up_relays": 14,
+          "root": 2,
+          "down_relays": 14,
+          "leaf_down": 1
+        },
+        "RF_external_drive": false,
+        "collective_rr_external_drive": false,
+        "stage_definition": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv"
+      },
+      "execution_qualified": false,
+      "quarter_ownership": {
+        "quarter": 0,
+        "words": 1280,
+        "complete_record": true,
+        "external_quarter_partial_values_injected": false
+      },
+      "expected_reference": {
+        "value": "40a2a1ed",
+        "role": "comparison_only",
+        "source": "independent csum8(mul(original A,A)); downstream k10.A"
+      },
+      "fixture_reduction_reference": {
+        "value": "40a2a1ed",
+        "source": "actual downstream fixture k10 A, not prior R input"
+      },
+      "compiled_record_stream_edges": 375,
+      "prior_record_price": 182.18000000000006,
+      "prior_record_price_qualified": false,
+      "record_price_delta_stream_edges": 192.81999999999994,
+      "price_scope": "actual emitted bounded programme, no inherited layer/token throughput claim",
+      "fixture": {
+        "matched": true,
+        "k_layer": 6,
+        "checked_words": 0,
+        "mismatched_words": 0,
+        "pad_words_zero": 0,
+        "post_record_output_available": false,
+        "comparison_reference": "downstream input plus independent csum8; comparison only"
+      },
+      "edges": 281,
+      "fill_sectors": 160,
+      "drain_sectors": 1,
+      "programme": 0,
+      "line0_serial": 1467,
+      "compiled_commit_serial": 1747,
+      "priced_end_serial": 1645,
+      "commit_slack_edges": -102
+    },
+    {
+      "i": 8,
+      "unit": "SU",
+      "op": "SU.VOP",
+      "tag": "q_norm.rs",
+      "start": 1661.49,
+      "end": 1804.51,
+      "cls": "-",
+      "grade": "TB_IMAGE_LOAD_ONLY",
+      "blocked_by": [],
+      "open_gaps": [
+        "G-CIL-HOSTN",
+        "G-HOST-PROGRAM-INSTALL",
+        "G-SMVM-CALISS",
+        "G-SU-PROG-HOST"
+      ],
+      "target_ports": [
+        "su_prog__r_we",
+        "su_prog__r_bank",
+        "su_prog__r_row",
+        "su_prog__r_data",
+        "su_prog__r_start",
+        "su_prog__r_len"
+      ],
+      "status": "emitted",
+      "reasons": [],
+      "lowering": {
+        "supported": true,
+        "owner": "SU-LAYER-1021",
+        "execution_qualified": false,
+        "mode": "actual_quarter0_FULL_lane0_divider_add_rsqrt"
+      },
+      "inputs_placeholder": false,
+      "timing_obligations": {
+        "issue_to_output": 89,
+        "divider": 19,
+        "rsqrt": 46,
+        "serial_edges": 141,
+        "stream_edges": 188,
+        "old_price_preserved": false,
+        "connected_selected_case_RTL_required": true
+      },
+      "source_contract": {
+        "lane": "su_SW0.g_lane[0] FULL",
+        "side_MLAT": 4,
+        "side_ALAT": 3,
+        "side_repair_required": true,
+        "scalar_external_drive": false,
+        "scoped_source_sha256": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee"
+      },
+      "execution_qualified": false,
+      "quarter_ownership": null,
+      "expected_reference": {
+        "role": "comparison_only",
+        "source": "NumPy IEEE DIV + hdc_golden add/rsqrt"
+      },
+      "fixture_reduction_reference": null,
+      "compiled_record_stream_edges": 188,
+      "prior_record_price": 143.01999999999998,
+      "prior_record_price_qualified": false,
+      "record_price_delta_stream_edges": 44.98000000000002,
+      "price_scope": "actual emitted bounded programme, no inherited layer/token throughput claim",
+      "fixture": {
+        "matched": true,
+        "k_layer": 10,
+        "checked_words": 1,
+        "mismatched_words": 0,
+        "pad_words_zero": 0
+      },
+      "edges": 141,
+      "fill_sectors": 0,
+      "drain_sectors": 1,
+      "programme": 0,
+      "line0_serial": 1748,
+      "compiled_commit_serial": 1888,
+      "priced_end_serial": 1752,
+      "commit_slack_edges": -136
+    }
+  ],
+  "cut": {
+    "in:central:col_idx": {
+      "ports": 8,
+      "bits": 1038
+    },
+    "in:central:col_su": {
+      "ports": 3,
+      "bits": 3
+    },
+    "in:central:ep_S0": {
+      "ports": 4,
+      "bits": 615
+    },
+    "in:central:ep_S1": {
+      "ports": 4,
+      "bits": 615
+    },
+    "in:central:ep_S3": {
+      "ports": 1,
+      "bits": 1
+    },
+    "in:central:hb_argmax": {
+      "ports": 1,
+      "bits": 338
+    },
+    "in:central:hb_idx__ctl": {
+      "ports": 3,
+      "bits": 2530
+    },
+    "in:central:hb_idx__link": {
+      "ports": 2,
+      "bits": 2184
+    },
+    "in:central:hb_router_ids": {
+      "ports": 4,
+      "bits": 79
+    },
+    "in:central:host_cp_ingress": {
+      "ports": 9,
+      "bits": 320
+    },
+    "in:central:obs_C": {
+      "ports": 3,
+      "bits": 41
+    },
+    "in:central:su_prog": {
+      "ports": 6,
+      "bits": 348
+    },
+    "in:die_pin": {
+      "ports": 2,
+      "bits": 2
+    },
+    "in:quadrant_NE": {
+      "ports": 21,
+      "bits": 3236
+    },
+    "in:quadrant_NW": {
+      "ports": 24,
+      "bits": 6020
+    },
+    "in:quadrant_SE": {
+      "ports": 77,
+      "bits": 15164
+    },
+    "out:central:col_idx": {
+      "ports": 8,
+      "bits": 281
+    },
+    "out:central:col_su": {
+      "ports": 12,
+      "bits": 285
+    },
+    "out:central:ep_N0": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:ep_N2": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:ep_S0": {
+      "ports": 5,
+      "bits": 1266
+    },
+    "out:central:ep_S1": {
+      "ports": 5,
+      "bits": 1266
+    },
+    "out:central:ep_S3": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:hb_argmax": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:hb_idx__ctl": {
+      "ports": 12,
+      "bits": 2195
+    },
+    "out:central:hb_idx__link": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:hb_idx__nwsh": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:hb_idx__selector": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:hb_idx__xq_N": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:hb_idx__xq_S": {
+      "ports": 3,
+      "bits": 308
+    },
+    "out:central:hb_idx__xqr": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:hb_router_ids": {
+      "ports": 4,
+      "bits": 11
+    },
+    "out:central:host_N": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:host_cp_ingress": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:host_cp_rxs": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:host_ep": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:host_status": {
+      "ports": 17,
+      "bits": 148
+    },
+    "out:central:l12p_argmax_cq_cr_hb_argmax_cr_0": {
+      "ports": 3,
+      "bits": 550
+    },
+    "out:central:l12p_ctl_cq_cr_hb_idx__ctl_cr_0": {
+      "ports": 3,
+      "bits": 550
+    },
+    "out:central:l12p_ctl_sel_hb_idx__ctl_selected_v_0": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:l12p_hb_argmax_hb_idx__ctl_argmax_rq_0": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:lk_N0": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:lk_N2": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:lk_S0": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:lk_S1": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:lk_S3": {
+      "ports": 2,
+      "bits": 2
+    },
+    "out:central:obs_C": {
+      "ports": 3,
+      "bits": 3
+    },
+    "out:central:su_prog": {
+      "ports": 3,
+      "bits": 3
+    },
+    "out:central:vm_status4": {
+      "ports": 3,
+      "bits": 21
+    },
+    "out:quadrant_NE": {
+      "ports": 28,
+      "bits": 3840
+    },
+    "out:quadrant_NW": {
+      "ports": 31,
+      "bits": 6624
+    },
+    "out:quadrant_SE": {
+      "ports": 160,
+      "bits": 17433
+    }
+  },
+  "instances": 559,
+  "masters": 78,
+  "capacity": {
+    "NEV": 11651,
+    "MAXW": 4096,
+    "replay_sets": 20,
+    "derived_from_actual_emission": true,
+    "truncated": false,
+    "requires_fresh_top_build": true,
+    "old_top_binary_reusable": false
+  },
+  "real_HC_root": true,
+  "external_root_result_inputs": false,
+  "real_four_core_RF_tree": true,
+  "selected_RF_relay_edges": 32,
+  "command_bits": 2470,
+  "hardware_executed": false,
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "qualifies_full_token": false,
+  "full_token_status": "INCOMPLETE",
+  "scope": "bounded component programmes; independent fixture allocations remain, shared calendar serializes finite owner epochs",
+  "remaining": [
+    "actual coupled selected SU/HC source execution",
+    "i10 RF broadcast source/coupled execution",
+    "runtime indexed MDESC producer/address engine",
+    "HC_POST/QDQ helpers need common calendar/source execution",
+    "HC_PRE full runtime reduction/rsqrt/gain join",
+    "checkpoint gain shape160 versus selected D5120 needs supported model mapping; no repetition invented",
+    "global cross-die/collective producer joins and native chain"
+  ]
+}
