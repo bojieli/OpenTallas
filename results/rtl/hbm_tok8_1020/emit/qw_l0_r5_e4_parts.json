@@ -1,0 +1,35 @@
+{
+ "source": "qemit/L0/r5/replay.json",
+ "nev": 9873,
+ "parts": [
+  {
+   "name": "qw_l0_r5_e4",
+   "events": 7556,
+   "preload": 1936,
+   "cycles": 34112,
+   "programmes": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "records": [
+    6,
+    10,
+    17,
+    23,
+    27,
+    33
+   ],
+   "carried_sectors": 0,
+   "state_seed_provenance": "no_cross_part_carry"
+  }
+ ],
+ "scope": "component_probe",
+ "qualifies_native_layer": false,
+ "qualifies_native_chain": false,
+ "state_seed_provenance": [
+  "unspecified_initial_image"
+ ]
+}
