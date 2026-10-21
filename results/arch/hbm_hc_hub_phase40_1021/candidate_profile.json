@@ -96,7 +96,9 @@
     "ring_RAW0_candidate": 179,
     "G22_MIX_POST_quarter_reduction_active": false,
     "G22_gather_calendar_delta_vs_legacy11": 0,
-    "profile_helper": "tools/hbm_layer_vehicle/hc_safe2_phase40_1021.py"
+    "profile_helper": "tools/hbm_layer_vehicle/hc_safe2_phase40_1021.py",
+    "scope": "rank0 k31 HC.HC_MIX_POST, priced record30 hc_attn (mixes + Sinkhorn), K20480, npos1, explicit relocated component VM A64/O72; not native L0",
+    "multi_position_root_calendar": "NOT_GENERATED_OR_QUALIFIED; reader40 cadence adds16 edges per additional position, gm_open/tail windows require actual npos price"
   },
   "clock_entries": {
     "glue": [
