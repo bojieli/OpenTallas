@@ -1,0 +1,1664 @@
+{
+  "scope": "same-flow bounded combinational four-final-address projection model only; primary input to output scalar depth, no fullproduction reconvergence/mux, no STA/wire/load/slew/corner or qualification",
+  "parser_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+  "script_sha256": "deb89f0aa0ecfe6f7cb5be54d9e9edf3233a733331dcf1d530e2539848f40078",
+  "depth_scale": 1.667,
+  "original": {
+    "mapped_sha256": "f739e3aea782d19aabb2a42fa192b94b79c6ac3d1c5d570ccbcc349b2b8e97f5",
+    "cells": 1944,
+    "kinds": {
+      "buf": 128,
+      "comb": 1816
+    },
+    "worst_by_address": {
+      "scale": {
+        "endpoint": "addresses[31]",
+        "estimate_ps": 1195.2,
+        "levels": 36,
+        "start": "st_d[113]",
+        "cone": [
+          {
+            "instance": "_1884_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1888_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1891_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1894_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1897_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1901_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1904_",
+            "master": "NAND5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2302_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2312_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2313_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2318_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2320_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2322_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2326_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2964_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3361_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3367_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3369_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3371_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3373_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3375_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3379_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3382_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3386_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3391_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3394_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3397_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3486_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3493_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3500_",
+            "master": "NAND2xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3512_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3519_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3520_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3539_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3562_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3567_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3704_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      },
+      "code": {
+        "endpoint": "addresses[63]",
+        "estimate_ps": 1195.2,
+        "levels": 36,
+        "start": "st_d[113]",
+        "cone": [
+          {
+            "instance": "_1884_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1888_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1891_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1894_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1897_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1901_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1904_",
+            "master": "NAND5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2302_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2312_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2313_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2318_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2320_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2322_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2326_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2964_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3361_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3367_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3369_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3371_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3373_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3375_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3379_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3382_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3386_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3391_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3394_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3397_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3486_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3493_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3500_",
+            "master": "NAND2xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3512_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3519_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3520_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3539_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3562_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3567_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3568_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      },
+      "rows": {
+        "endpoint": "addresses[95]",
+        "estimate_ps": 1230.2,
+        "levels": 37,
+        "start": "st_d[113]",
+        "cone": [
+          {
+            "instance": "_1884_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1888_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1891_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1894_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1897_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1901_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_1904_",
+            "master": "NAND5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2302_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2312_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2313_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2318_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2320_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3044_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3045_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3073_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3076_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3098_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3116_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3174_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3175_",
+            "master": "OAI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3177_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3181_",
+            "master": "OAI221xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3183_",
+            "master": "AO31x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3187_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3189_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3193_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3197_",
+            "master": "OA211x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3199_",
+            "master": "OAI31xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3204_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3208_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3211_",
+            "master": "OAI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3216_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3220_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3224_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3227_",
+            "master": "OA31x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3228_",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3258_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      },
+      "raw": {
+        "endpoint": "addresses[127]",
+        "estimate_ps": 1100.2,
+        "levels": 32,
+        "start": "st_d[16]",
+        "cone": [
+          {
+            "instance": "_3591_",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3593_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3595_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3596_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3597_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3598_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3599_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3600_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3601_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3602_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3603_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3604_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3605_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3606_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3607_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3608_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3609_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3610_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3611_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3612_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3613_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3614_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3615_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3616_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3617_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3618_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3619_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3620_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3621_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3622_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3623_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3624_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3625_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3626_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3628_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      }
+    }
+  },
+  "current_baseline": {
+    "mapped_sha256": "6eafb36fdaa730386f5da76f3457af1d9d31efd8de3b2599590e9b8d5e13c371",
+    "cells": 2451,
+    "kinds": {
+      "buf": 158,
+      "comb": 2293
+    },
+    "worst_by_address": {
+      "scale": {
+        "endpoint": "addresses[31]",
+        "estimate_ps": 1143.6,
+        "levels": 35,
+        "start": "st_d[112]",
+        "cone": [
+          {
+            "instance": "_2535_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2537_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2540_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2543_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2546_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2549_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2555_",
+            "master": "NAND5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2695_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2697_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2702_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2706_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2806_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2811_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4218_",
+            "master": "OR2x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4219_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4220_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4221_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4222_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4223_",
+            "master": "AOI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4224_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4226_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4228_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4230_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4232_",
+            "master": "OA31x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4338_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4340_",
+            "master": "AND4x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4622_",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4625_",
+            "master": "OR2x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4662_",
+            "master": "OR4x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4665_",
+            "master": "NOR4xp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4666_",
+            "master": "NAND3xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4667_",
+            "master": "NOR2xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4668_",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4669_",
+            "master": "NAND2xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4773_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      },
+      "code": {
+        "endpoint": "addresses[63]",
+        "estimate_ps": 1201.9,
+        "levels": 35,
+        "start": "st_d[112]",
+        "cone": [
+          {
+            "instance": "_2535_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2537_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2540_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2543_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2546_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2549_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2555_",
+            "master": "NAND5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2695_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2697_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2702_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2706_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2810_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2915_",
+            "master": "OAI211xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3016_",
+            "master": "AO211x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3124_",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3126_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4114_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4208_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4209_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4301_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4302_",
+            "master": "OR3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4399_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4403_",
+            "master": "NAND3xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4405_",
+            "master": "OR2x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4408_",
+            "master": "OR3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4411_",
+            "master": "OR4x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4417_",
+            "master": "NOR4xp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4429_",
+            "master": "NAND3xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4431_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4432_",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4465_",
+            "master": "OR4x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4469_",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4536_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4538_",
+            "master": "NAND3xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4772_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      },
+      "rows": {
+        "endpoint": "addresses[95]",
+        "estimate_ps": 1170.2,
+        "levels": 35,
+        "start": "st_d[112]",
+        "cone": [
+          {
+            "instance": "_2535_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2537_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2540_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2543_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2546_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2549_",
+            "master": "NOR5xp2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2554_",
+            "master": "AND5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2603_",
+            "master": "AOI31xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2629_",
+            "master": "OAI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2754_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2755_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2761_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2765_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2768_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2812_",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2835_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2837_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2942_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2992_",
+            "master": "AOI31xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3048_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3153_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3255_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3313_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3465_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3519_",
+            "master": "OAI211xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3679_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3782_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3783_",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3787_",
+            "master": "AOI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3890_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_3986_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4028_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4725_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4759_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4760_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      },
+      "raw": {
+        "endpoint": "addresses[127]",
+        "estimate_ps": 950.2,
+        "levels": 29,
+        "start": "st_d[16]",
+        "cone": [
+          {
+            "instance": "_2330_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2384_",
+            "master": "NOR2xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2408_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2409_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2410_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2411_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2412_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2413_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2414_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2415_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2416_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2417_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2418_",
+            "master": "INVx1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2419_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2421_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2423_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2425_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2471_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2472_",
+            "master": "NOR3xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2473_",
+            "master": "OAI31xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2475_",
+            "master": "OR2x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2478_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2480_",
+            "master": "OAI22xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2482_",
+            "master": "OR2x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2484_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2485_",
+            "master": "AOI211xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2486_",
+            "master": "OR3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2488_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_2490_",
+            "master": "OAI22xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4721_",
+            "master": "OAI221xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4722_",
+            "master": "OAI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_4724_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      }
+    }
+  },
+  "late_ring_model": {
+    "mapped_sha256": "8342689fc4ae2edf0f0ad2ec19077deaa2a0076e366de01f26ced58d05591511",
+    "cells": 4595,
+    "kinds": {
+      "buf": 263,
+      "comb": 4332
+    },
+    "worst_by_address": {
+      "scale": {
+        "endpoint": "addresses[30]",
+        "estimate_ps": 786.8,
+        "levels": 25,
+        "start": "s_stk[1]",
+        "cone": [
+          {
+            "instance": "_5437_",
+            "master": "AND4x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5439_",
+            "master": "OR3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5441_",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5445_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5452_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5453_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5498_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5505_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5506_",
+            "master": "AO211x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5509_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5516_",
+            "master": "OAI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5521_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5523_",
+            "master": "OAI211xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5525_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5530_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5532_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5535_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5538_",
+            "master": "AO211x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5540_",
+            "master": "AOI31xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5541_",
+            "master": "OAI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5545_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5547_",
+            "master": "AO22x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5567_",
+            "master": "AOI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5568_",
+            "master": "OA21x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_5569_",
+            "master": "AOI31xp33_ASAP7_75t_R"
+          }
+        ]
+      },
+      "code": {
+        "endpoint": "addresses[63]",
+        "estimate_ps": 793.5,
+        "levels": 25,
+        "start": "s_stk[1]",
+        "cone": [
+          {
+            "instance": "_6371_",
+            "master": "AND4x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6374_",
+            "master": "AOI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6378_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6403_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6425_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6428_",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6440_",
+            "master": "OR3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6442_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6448_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6450_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6452_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6455_",
+            "master": "OAI31xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6458_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6463_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6466_",
+            "master": "OAI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6468_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6470_",
+            "master": "OAI211xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6477_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6480_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6493_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6496_",
+            "master": "AOI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6501_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_6503_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_9004_",
+            "master": "AO21x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_9006_",
+            "master": "AOI21xp33_ASAP7_75t_R"
+          }
+        ]
+      },
+      "rows": {
+        "endpoint": "addresses[95]",
+        "estimate_ps": 823.5,
+        "levels": 25,
+        "start": "st_d[113]",
+        "cone": [
+          {
+            "instance": "_4878_",
+            "master": "OR5x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8416_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8440_",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8446_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8447_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8483_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8484_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8517_",
+            "master": "XOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8522_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8549_",
+            "master": "OR3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8615_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8618_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8621_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8625_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8630_",
+            "master": "OAI211xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8633_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8635_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8637_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8639_",
+            "master": "OA211x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8643_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8645_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8649_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R"
+          },
+          {
+            "instance": "_9038_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_9057_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_9058_",
+            "master": "AOI22xp33_ASAP7_75t_R"
+          }
+        ]
+      },
+      "raw": {
+        "endpoint": "addresses[126]",
+        "estimate_ps": 800.2,
+        "levels": 25,
+        "start": "st_d[16]",
+        "cone": [
+          {
+            "instance": "_4493_",
+            "master": "AND2x2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8847_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8848_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8849_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8850_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8851_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8852_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8853_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8854_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8855_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8856_",
+            "master": "MAJx2_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8858_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8860_",
+            "master": "MAJIxp5_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8862_",
+            "master": "OAI21xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8863_",
+            "master": "NAND3xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8867_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8871_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8875_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8879_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8882_",
+            "master": "AOI31xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8883_",
+            "master": "AND3x1_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8887_",
+            "master": "OAI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8892_",
+            "master": "AOI311xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8895_",
+            "master": "OAI22xp33_ASAP7_75t_R"
+          },
+          {
+            "instance": "_8896_",
+            "master": "XNOR2xp5_ASAP7_75t_R"
+          }
+        ]
+      }
+    }
+  }
+}

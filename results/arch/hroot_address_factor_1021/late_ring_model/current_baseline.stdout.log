@@ -1,0 +1,1138 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command ` read_liberty -lib libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib; read_liberty -lib libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib; read_liberty -lib libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib; read_liberty -lib libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib; read_liberty -lib libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib; read_verilog -sv current_baseline.sv; hierarchy -check -top current_baseline; synth -flatten -top current_baseline; abc -liberty libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib; hilomap -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L; opt_clean; stat; write_verilog -noattr current_baseline.mapped.v' --
+
+1. Executing Liberty frontend: libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+Imported 42 cell types from liberty file.
+
+2. Executing Liberty frontend: libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+3. Executing Liberty frontend: libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+5. Executing Liberty frontend: libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: current_baseline.sv
+Parsing SystemVerilog input from `current_baseline.sv' to AST representation.
+Generating RTLIL representation for module `\current_baseline'.
+Warning: Replacing memory \af_add32$func$current_baseline.sv:66$36.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:66$36.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:65$35.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:65$35.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:64$34.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:64$34.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:63$33.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:63$33.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:60$32.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:60$32.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:59$31.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:59$31.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:59$30.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:59$30.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:59$29.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:59$29.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:59$28.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:59$28.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:58$27.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:58$27.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:58$26.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:58$26.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:54$25.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:54$25.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:46$24.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:46$24.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:51$22.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:51$22.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:30$21.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:30$21.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:50$19.p with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Warning: Replacing memory \af_add32$func$current_baseline.sv:50$19.g with list of registers. See current_baseline.sv:15, current_baseline.sv:8
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \current_baseline
+
+7.2. Analyzing design hierarchy..
+Top module:  \current_baseline
+Removed 0 unused modules.
+
+8. Executing SYNTH pass.
+
+8.1. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1.1. Analyzing design hierarchy..
+Top module:  \current_baseline
+
+8.1.2. Analyzing design hierarchy..
+Top module:  \current_baseline
+Removed 0 unused modules.
+
+8.2. Executing PROC pass (convert processes to netlists).
+
+8.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:66$11199'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:65$10461'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:64$9723'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:63$8985'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:60$8246'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:59$7506'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:59$6767'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:59$6028'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:59$5294'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:58$4555'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:58$3816'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:54$3078'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:54$2286'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:51$1546'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:51$778'.
+Found and cleaned up 160 empty switches in `\current_baseline.$proc$current_baseline.sv:50$44'.
+Cleaned up 2560 empty switches.
+
+8.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+8.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 10404 assignments to connections.
+
+8.2.4. Executing PROC_INIT pass (extract init attributes).
+
+8.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+8.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+8.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:66$11199'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:65$10461'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:64$9723'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:63$8985'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:60$8246'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:59$7506'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:59$6767'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:59$6028'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:59$5294'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:58$4555'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:58$3816'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:54$3078'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:54$2286'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:51$1546'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:51$778'.
+Creating decoders for process `\current_baseline.$proc$current_baseline.sv:50$44'.
+
+8.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:66$18.$result' from process `\current_baseline.$proc$current_baseline.sv:66$11199'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:65$17.$result' from process `\current_baseline.$proc$current_baseline.sv:65$10461'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:64$16.$result' from process `\current_baseline.$proc$current_baseline.sv:64$9723'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:63$15.$result' from process `\current_baseline.$proc$current_baseline.sv:63$8985'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:60$14.$result' from process `\current_baseline.$proc$current_baseline.sv:60$8246'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:59$13.$result' from process `\current_baseline.$proc$current_baseline.sv:59$7506'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:59$12.$result' from process `\current_baseline.$proc$current_baseline.sv:59$6767'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:59$11.$result' from process `\current_baseline.$proc$current_baseline.sv:59$6028'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:59$10.$result' from process `\current_baseline.$proc$current_baseline.sv:59$5294'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:58$9.$result' from process `\current_baseline.$proc$current_baseline.sv:58$4555'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:58$8.$result' from process `\current_baseline.$proc$current_baseline.sv:58$3816'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:54$7.$result' from process `\current_baseline.$proc$current_baseline.sv:54$3078'.
+No latch inferred for signal `\current_baseline.\af_mul5$func$current_baseline.sv:54$6.$result' from process `\current_baseline.$proc$current_baseline.sv:54$2286'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:51$5.$result' from process `\current_baseline.$proc$current_baseline.sv:51$1546'.
+No latch inferred for signal `\current_baseline.\af_mul3$func$current_baseline.sv:51$4.$result' from process `\current_baseline.$proc$current_baseline.sv:51$778'.
+No latch inferred for signal `\current_baseline.\af_add32$func$current_baseline.sv:50$3.$result' from process `\current_baseline.$proc$current_baseline.sv:50$44'.
+
+8.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+8.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `current_baseline.$proc$current_baseline.sv:66$11199'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:65$10461'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:64$9723'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:63$8985'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:60$8246'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:59$7506'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:59$6767'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:59$6028'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:59$5294'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:58$4555'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:58$3816'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:54$3078'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:54$2286'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:51$1546'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:51$778'.
+Removing empty process `current_baseline.$proc$current_baseline.sv:50$44'.
+Cleaned up 0 empty switches.
+
+8.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+<suppressed ~407 debug messages>
+
+8.3. Executing CHECK pass (checking for obvious problems).
+Checking module current_baseline...
+Found and reported 0 problems.
+
+8.4. Executing FLATTEN pass (flatten design).
+
+8.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+Removed 678 unused cells and 9700 unused wires.
+<suppressed ~679 debug messages>
+
+8.7. Executing CHECK pass (checking for obvious problems).
+Checking module current_baseline...
+Found and reported 0 problems.
+
+8.8. Executing OPT pass (performing simple optimizations).
+
+8.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5361 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Computing hashes of 5323 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Computing hashes of 5320 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+<suppressed ~123 debug messages>
+Removed a total of 41 cells.
+
+8.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \current_baseline..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+8.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \current_baseline.
+Performed a total of 0 changes.
+
+8.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5320 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+Removed 0 unused cells and 41 unused wires.
+<suppressed ~1 debug messages>
+
+8.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+<suppressed ~65 debug messages>
+
+8.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \current_baseline..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+8.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \current_baseline.
+Performed a total of 0 changes.
+
+8.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5255 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+Removed 31 unused cells and 96 unused wires.
+<suppressed ~32 debug messages>
+
+8.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \current_baseline..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+8.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \current_baseline.
+Performed a total of 0 changes.
+
+8.8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5224 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+
+8.8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.8.23. Finished fast OPT passes. (There is nothing left to do.)
+
+8.9. Executing FSM pass (extract and optimize FSM).
+
+8.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+8.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+8.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+
+8.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+8.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+8.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+8.10. Executing OPT pass (performing simple optimizations).
+
+8.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5224 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \current_baseline..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+8.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \current_baseline.
+Performed a total of 0 changes.
+
+8.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5224 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+
+8.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.10.9. Finished fast OPT passes. (There is nothing left to do.)
+
+8.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 28 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:50$41 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$or$current_baseline.sv:28$818 ($or).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$or$current_baseline.sv:28$818 ($or).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:28$818 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$827 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$827 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$827 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$1568 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$1568 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$1568 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$or$current_baseline.sv:40$2330 ($or).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$or$current_baseline.sv:40$2330 ($or).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:40$2330 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$or$current_baseline.sv:42$2340 ($or).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$or$current_baseline.sv:42$2340 ($or).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:42$2340 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$or$current_baseline.sv:44$2350 ($or).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$or$current_baseline.sv:44$2350 ($or).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:44$2350 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$2359 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$2359 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$2359 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$3098 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$3098 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$3098 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$3837 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$3837 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$3837 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$4576 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$4576 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$4576 ($and).
+Removed top 28 bits (of 32) from port A of cell current_baseline.$xor$current_baseline.sv:18$6026 ($xor).
+Removed top 27 bits (of 32) from port B of cell current_baseline.$xor$current_baseline.sv:18$6026 ($xor).
+Removed top 27 bits (of 32) from port Y of cell current_baseline.$xor$current_baseline.sv:18$6026 ($xor).
+Removed top 20 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$6049 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$6049 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$6049 ($and).
+Removed top 20 bits (of 32) from port B of cell current_baseline.$xor$current_baseline.sv:8$6050 ($xor).
+Removed top 25 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$6788 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$6788 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$6788 ($and).
+Removed top 25 bits (of 32) from port B of cell current_baseline.$xor$current_baseline.sv:8$6789 ($xor).
+Removed top 27 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$7528 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$7528 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$7528 ($and).
+Removed top 27 bits (of 32) from port B of cell current_baseline.$xor$current_baseline.sv:8$7529 ($xor).
+Removed top 25 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$8267 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$8267 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$8267 ($and).
+Removed top 25 bits (of 32) from port B of cell current_baseline.$xor$current_baseline.sv:8$8268 ($xor).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$9005 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$9005 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$9005 ($and).
+Removed top 27 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$9743 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$9743 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$9743 ($and).
+Removed top 27 bits (of 32) from port B of cell current_baseline.$xor$current_baseline.sv:8$9744 ($xor).
+Removed top 29 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$10481 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$10481 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$10481 ($and).
+Removed top 29 bits (of 32) from port B of cell current_baseline.$xor$current_baseline.sv:8$10482 ($xor).
+Removed top 31 bits (of 32) from mux cell current_baseline.$ternary$current_baseline.sv:66$11220 ($mux).
+Removed top 31 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:8$11221 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:8$11221 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:8$11221 ($and).
+Removed top 31 bits (of 32) from port B of cell current_baseline.$xor$current_baseline.sv:8$11222 ($xor).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$or$current_baseline.sv:28$816 ($or).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$or$current_baseline.sv:28$816 ($or).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:28$816 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:28$817 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:28$817 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:28$817 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$or$current_baseline.sv:40$2328 ($or).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$or$current_baseline.sv:40$2328 ($or).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:40$2328 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:40$2329 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:40$2329 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:40$2329 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$or$current_baseline.sv:42$2338 ($or).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$or$current_baseline.sv:42$2338 ($or).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:42$2338 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:42$2339 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:42$2339 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:42$2339 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$or$current_baseline.sv:44$2348 ($or).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$or$current_baseline.sv:44$2348 ($or).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$or$current_baseline.sv:44$2348 ($or).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:44$2349 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:44$2349 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:44$2349 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:28$814 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:28$814 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:28$814 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:28$815 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:28$815 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:28$815 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:40$2326 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:40$2326 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:40$2326 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:40$2327 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:40$2327 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:40$2327 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:42$2336 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:42$2336 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:42$2336 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:42$2337 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:42$2337 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:42$2337 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:44$2346 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:44$2346 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:44$2346 ($and).
+Removed top 1 bits (of 32) from port Y of cell current_baseline.$and$current_baseline.sv:44$2347 ($and).
+Removed top 1 bits (of 32) from port A of cell current_baseline.$and$current_baseline.sv:44$2347 ($and).
+Removed top 1 bits (of 32) from port B of cell current_baseline.$and$current_baseline.sv:44$2347 ($and).
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.p[4][31:0]$6046.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.p[3][31:0]$6045.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.p[2][31:0]$6044.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.p[1][31:0]$6043.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.g[0][31:0]$4563.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.g[1][31:0]$4564.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.g[5][31:0]$6041.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.g[4][31:0]$6040.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.g[3][31:0]$6039.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.g[2][31:0]$6038.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.g[1][31:0]$6037.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.g[0][31:0]$7514.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.g[1][31:0]$7515.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.g[2][31:0]$7516.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.g[3][31:0]$7517.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.g[4][31:0]$7518.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.g[5][31:0]$7519.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.p[1][31:0]$7521.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.p[2][31:0]$7522.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.p[3][31:0]$7523.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$31.p[4][31:0]$7524.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$29.g[0][31:0]$6036.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.g[2][31:0]$4565.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.g[0][31:0]$10469.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.g[1][31:0]$10470.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.g[2][31:0]$10471.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.g[3][31:0]$10472.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.g[4][31:0]$10473.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.g[5][31:0]$10474.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.p[1][31:0]$10476.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.p[2][31:0]$10477.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.p[3][31:0]$10478.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:65$35.p[4][31:0]$10479.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.g[3][31:0]$4566.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.g[4][31:0]$4567.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.p[4][31:0]$1564.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.p[3][31:0]$1563.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.p[2][31:0]$1562.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.p[1][31:0]$1561.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.g[5][31:0]$1559.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.g[4][31:0]$1558.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.g[3][31:0]$1557.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.g[2][31:0]$1556.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.g[1][31:0]$1555.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:51$22.g[0][31:0]$1554.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.g[5][31:0]$4568.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.p[4][31:0]$3096.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.p[3][31:0]$3095.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.p[2][31:0]$3094.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.p[1][31:0]$3093.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.g[5][31:0]$3091.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.g[4][31:0]$3090.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.g[3][31:0]$3089.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.g[2][31:0]$3088.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.g[1][31:0]$3087.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:54$25.g[0][31:0]$3086.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.g[0][31:0]$6775.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.g[1][31:0]$6776.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.g[2][31:0]$6777.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.g[3][31:0]$6778.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.g[4][31:0]$6779.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.g[5][31:0]$6780.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.p[1][31:0]$6782.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.p[2][31:0]$6783.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.p[3][31:0]$6784.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$30.p[4][31:0]$6785.
+Removed top 28 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$28.p[1][31:0]$5308.
+Removed top 28 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$28.p[0][31:0]$5307.
+Removed top 28 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$28.g[2][31:0]$5303.
+Removed top 30 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:59$28.g[1][31:0]$5302.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.p[1][31:0]$4570.
+Removed top 31 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.b[31:0]$11203.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.p[2][31:0]$4571.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.g[0][31:0]$11207.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.g[1][31:0]$11208.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.g[2][31:0]$11209.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.g[3][31:0]$11210.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.g[4][31:0]$11211.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.g[5][31:0]$11212.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.p[1][31:0]$11214.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.p[2][31:0]$11215.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.p[3][31:0]$11216.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:66$36.p[4][31:0]$11217.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.g[0][31:0]$9731.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.g[1][31:0]$9732.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.g[2][31:0]$9733.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.g[3][31:0]$9734.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.g[4][31:0]$9735.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.g[5][31:0]$9736.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.p[1][31:0]$9738.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.p[2][31:0]$9739.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.p[3][31:0]$9740.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:64$34.p[4][31:0]$9741.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.p[3][31:0]$4572.
+Removed top 1 bits (of 32) from wire current_baseline.$or$current_baseline.sv:28$818_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:28$817_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$or$current_baseline.sv:28$816_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:28$815_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:28$814_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.p[4][31:0]$805.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.p[3][31:0]$804.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.p[2][31:0]$803.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.p[1][31:0]$802.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.g[5][31:0]$800.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.g[4][31:0]$799.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.g[3][31:0]$798.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.g[2][31:0]$797.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.g[1][31:0]$796.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:30$21.g[0][31:0]$795.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.p[4][31:0]$3834.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.p[3][31:0]$3833.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.p[2][31:0]$3832.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.p[1][31:0]$3831.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.g[5][31:0]$3829.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.g[4][31:0]$3828.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.g[3][31:0]$3827.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.g[2][31:0]$3826.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.g[1][31:0]$3825.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$26.g[0][31:0]$3824.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:58$27.p[4][31:0]$4573.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.g[0][31:0]$8254.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.g[1][31:0]$8255.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.g[2][31:0]$8256.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.g[3][31:0]$8257.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.g[4][31:0]$8258.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.g[5][31:0]$8259.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.p[1][31:0]$8261.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.p[2][31:0]$8262.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.p[3][31:0]$8263.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:60$32.p[4][31:0]$8264.
+Removed top 1 bits (of 32) from wire current_baseline.$or$current_baseline.sv:44$2350_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:44$2349_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$or$current_baseline.sv:44$2348_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:44$2347_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:44$2346_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$or$current_baseline.sv:42$2340_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:42$2339_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$or$current_baseline.sv:42$2338_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:42$2337_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:42$2336_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$or$current_baseline.sv:40$2330_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:40$2329_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$or$current_baseline.sv:40$2328_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:40$2327_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$and$current_baseline.sv:40$2326_Y.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.g[0][31:0]$8993.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.g[1][31:0]$8994.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.g[2][31:0]$8995.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.g[3][31:0]$8996.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.g[4][31:0]$8997.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.p[4][31:0]$2317.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.p[3][31:0]$2316.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.p[2][31:0]$2315.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.p[1][31:0]$2314.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.g[5][31:0]$2312.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.g[4][31:0]$2311.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.g[3][31:0]$2310.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.g[2][31:0]$2309.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.g[1][31:0]$2308.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:46$24.g[0][31:0]$2307.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.g[5][31:0]$8998.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.p[1][31:0]$9000.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.p[2][31:0]$9001.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.p[3][31:0]$9002.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:63$33.p[4][31:0]$9003.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.p[4][31:0]$61.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.p[3][31:0]$60.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.p[2][31:0]$59.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.p[1][31:0]$58.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.g[5][31:0]$56.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.g[4][31:0]$55.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.g[3][31:0]$54.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.g[2][31:0]$53.
+Removed top 1 bits (of 32) from wire current_baseline.$0\af_add32$func$current_baseline.sv:50$19.g[1][31:0]$52.
+Removed top 27 bits (of 32) from wire current_baseline.af_add32$func$current_baseline.sv:59$10.$result.
+Removed top 6 bits (of 32) from wire current_baseline.k_sb.
+
+8.12. Executing PEEPOPT pass (run peephole optimizers).
+
+8.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+Removed 0 unused cells and 180 unused wires.
+<suppressed ~1 debug messages>
+
+8.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module current_baseline:
+  created 0 $alu and 0 $macc cells.
+
+8.15. Executing SHARE pass (SAT-based resource sharing).
+
+8.16. Executing OPT pass (performing simple optimizations).
+
+8.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5224 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \current_baseline..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+8.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \current_baseline.
+Performed a total of 0 changes.
+
+8.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5224 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+
+8.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+8.17. Executing MEMORY pass.
+
+8.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+8.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+8.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+8.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+8.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+8.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+
+8.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+8.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+8.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+
+8.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+8.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+
+8.19. Executing OPT pass (performing simple optimizations).
+
+8.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+<suppressed ~2252 debug messages>
+
+8.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 3614 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Computing hashes of 3583 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Computing hashes of 3560 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Computing hashes of 3548 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Computing hashes of 3544 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+<suppressed ~210 debug messages>
+Removed a total of 70 cells.
+
+8.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+Removed 132 unused cells and 1110 unused wires.
+<suppressed ~133 debug messages>
+
+8.19.5. Finished fast OPT passes.
+
+8.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+8.21. Executing OPT pass (performing simple optimizations).
+
+8.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 3412 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \current_baseline..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+8.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \current_baseline.
+Performed a total of 0 changes.
+
+8.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 3412 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.21.6. Executing OPT_SHARE pass.
+
+8.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+
+8.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+8.22. Executing TECHMAP pass (map to technology primitives).
+
+8.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+8.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $xor.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $eq.
+No more expansions possible.
+<suppressed ~3489 debug messages>
+
+8.23. Executing OPT pass (performing simple optimizations).
+
+8.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+<suppressed ~35 debug messages>
+
+8.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 5413 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+8.23.5. Finished fast OPT passes.
+
+8.24. Executing ABC pass (technology mapping using ABC).
+
+8.24.1. Extracting gate netlist of module `\current_baseline' to `<abc-temp-dir>/input.blif'..
+
+8.24.1.1. Executed ABC.
+Extracted 5413 gates and 5589 wires to a netlist network with 175 inputs and 128 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+8.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      843
+ABC RESULTS:            ANDNOT cells:      121
+ABC RESULTS:               MUX cells:       27
+ABC RESULTS:              NAND cells:     1038
+ABC RESULTS:               NOR cells:       47
+ABC RESULTS:               NOT cells:       15
+ABC RESULTS:                OR cells:      388
+ABC RESULTS:             ORNOT cells:      145
+ABC RESULTS:              XNOR cells:      327
+ABC RESULTS:               XOR cells:      289
+ABC RESULTS:        internal signals:     5286
+ABC RESULTS:           input signals:      175
+ABC RESULTS:          output signals:      128
+Removing temp directory.
+Removing global temp directory.
+
+8.25. Executing OPT pass (performing simple optimizations).
+
+8.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module current_baseline.
+
+8.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\current_baseline'.
+Computing hashes of 3240 cells of `\current_baseline'.
+Finding duplicate cells in `\current_baseline'.
+Removed a total of 0 cells.
+
+8.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+Removed 0 unused cells and 1499 unused wires.
+<suppressed ~10 debug messages>
+
+8.25.5. Finished fast OPT passes.
+
+8.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `current_baseline'. Setting top module to current_baseline.
+
+8.26.1. Analyzing design hierarchy..
+Top module:  \current_baseline
+
+8.26.2. Analyzing design hierarchy..
+Top module:  \current_baseline
+Removed 0 unused modules.
+
+8.27. Printing statistics.
+
+=== current_baseline ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     3418 wires
+    12450 wire bits
+      306 public wires
+     9338 public wire bits
+        7 ports
+      459 port bits
+     3240 cells
+      121   $_ANDNOT_
+      843   $_AND_
+       27   $_MUX_
+     1038   $_NAND_
+       47   $_NOR_
+       15   $_NOT_
+      145   $_ORNOT_
+      388   $_OR_
+      327   $_XNOR_
+      289   $_XOR_
+
+8.28. Executing CHECK pass (checking for obvious problems).
+Checking module current_baseline...
+Found and reported 0 problems.
+
+9. Executing ABC pass (technology mapping using ABC).
+
+9.1. Extracting gate netlist of module `\current_baseline' to `<abc-temp-dir>/input.blif'..
+
+9.1.1. Executed ABC.
+Extracted 3240 gates and 3415 wires to a netlist network with 175 inputs and 128 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_840d15f0.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:       40
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:       22
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      104
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       29
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       46
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO211x2_ASAP7_75t_R cells:        4
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:       62
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        3
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:       20
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:      107
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:        2
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:       50
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:       10
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:       38
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        4
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      158
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:       74
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:       23
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:      298
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:       70
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:       28
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:        2
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:      283
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:       41
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:       14
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        8
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:       46
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:        8
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:       29
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OA31x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:       12
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:       72
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:        8
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:       18
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:       22
+ABC RESULTS:   OAI321xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:       66
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:       17
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        8
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        6
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:      411
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:      175
+ABC RESULTS:        internal signals:     3112
+ABC RESULTS:           input signals:      175
+ABC RESULTS:          output signals:      128
+Removing temp directory.
+Removing global temp directory.
+
+10. Executing HILOMAP pass (mapping to constant drivers).
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \current_baseline..
+Removed 0 unused cells and 3415 unused wires.
+<suppressed ~1 debug messages>
+
+12. Printing statistics.
+
+=== current_baseline ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2629 wires
+    11661 wire bits
+      306 public wires
+     9338 public wire bits
+        7 ports
+      459 port bits
+     2451 cells
+       40   A2O1A1Ixp33_ASAP7_75t_R
+       22   A2O1A1O1Ixp25_ASAP7_75t_R
+      104   AND2x2_ASAP7_75t_R
+       29   AND3x1_ASAP7_75t_R
+       46   AND4x1_ASAP7_75t_R
+        2   AND5x1_ASAP7_75t_R
+        4   AO211x2_ASAP7_75t_R
+       62   AO21x1_ASAP7_75t_R
+        3   AO221x1_ASAP7_75t_R
+        2   AO22x1_ASAP7_75t_R
+        4   AO32x1_ASAP7_75t_R
+       20   AOI211xp5_ASAP7_75t_R
+      107   AOI21xp33_ASAP7_75t_R
+        2   AOI221xp5_ASAP7_75t_R
+       50   AOI22xp33_ASAP7_75t_R
+       10   AOI311xp33_ASAP7_75t_R
+       38   AOI31xp33_ASAP7_75t_R
+        4   AOI32xp33_ASAP7_75t_R
+      158   INVx1_ASAP7_75t_R
+       74   MAJIxp5_ASAP7_75t_R
+       23   MAJx2_ASAP7_75t_R
+      298   NAND2xp33_ASAP7_75t_R
+       70   NAND3xp33_ASAP7_75t_R
+       28   NAND4xp25_ASAP7_75t_R
+        2   NAND5xp2_ASAP7_75t_R
+      283   NOR2xp33_ASAP7_75t_R
+       41   NOR3xp33_ASAP7_75t_R
+       14   NOR4xp25_ASAP7_75t_R
+        8   NOR5xp2_ASAP7_75t_R
+       46   O2A1O1Ixp33_ASAP7_75t_R
+        8   OA211x2_ASAP7_75t_R
+       29   OA21x2_ASAP7_75t_R
+        1   OA22x2_ASAP7_75t_R
+        1   OA31x2_ASAP7_75t_R
+       12   OAI211xp5_ASAP7_75t_R
+       72   OAI21xp33_ASAP7_75t_R
+        1   OAI221xp5_ASAP7_75t_R
+        8   OAI22xp33_ASAP7_75t_R
+       18   OAI311xp33_ASAP7_75t_R
+       22   OAI31xp33_ASAP7_75t_R
+        2   OAI321xp33_ASAP7_75t_R
+       66   OR2x2_ASAP7_75t_R
+       17   OR3x1_ASAP7_75t_R
+        8   OR4x1_ASAP7_75t_R
+        6   OR5x1_ASAP7_75t_R
+      411   XNOR2xp5_ASAP7_75t_R
+      175   XOR2xp5_ASAP7_75t_R
+
+13. Executing Verilog backend.
+
+13.1. Executing BMUXMAP pass.
+
+13.2. Executing DEMUXMAP pass.
+Dumping module `\current_baseline'.
+
+Warnings: 32 unique messages, 32 total
+End of script. Logfile hash: 36cab7cfc0, time: 11.67s, user: 8.92s, system: 0.34s, MEM: 86.73 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 57% 3x read_verilog (6 sec), 22% 2x abc (2 sec), ...

@@ -1,0 +1,1513 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command ` read_liberty -lib libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib; read_liberty -lib libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib; read_liberty -lib libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib; read_liberty -lib libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib; read_liberty -lib libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib; read_verilog -sv late_ring_model.sv; hierarchy -check -top late_ring_model; synth -flatten -top late_ring_model; abc -liberty libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib; hilomap -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L; opt_clean; stat; write_verilog -noattr late_ring_model.mapped.v' --
+
+1. Executing Liberty frontend: libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+Imported 42 cell types from liberty file.
+
+2. Executing Liberty frontend: libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+Imported 37 cell types from liberty file.
+
+3. Executing Liberty frontend: libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+
+5. Executing Liberty frontend: libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: late_ring_model.sv
+Parsing SystemVerilog input from `late_ring_model.sv' to AST representation.
+Generating RTLIL representation for module `\late_ring_model'.
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:120$16.p with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:120$16.g with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:118$15.p with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:118$15.g with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:101$14.p with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:101$14.g with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:88$13.p with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:88$13.g with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:71$12.p with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:71$12.g with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:60$11.p with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:60$11.g with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:53$10.p with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Warning: Replacing memory \af_add32$func$late_ring_model.sv:53$10.g with list of registers. See late_ring_model.sv:36, late_ring_model.sv:29
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \late_ring_model
+
+7.2. Analyzing design hierarchy..
+Top module:  \late_ring_model
+Removed 0 unused modules.
+
+8. Executing SYNTH pass.
+
+8.1. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1.1. Analyzing design hierarchy..
+Top module:  \late_ring_model
+
+8.1.2. Analyzing design hierarchy..
+Top module:  \late_ring_model
+Removed 0 unused modules.
+
+8.2. Executing PROC pass (convert processes to netlists).
+
+8.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 160 empty switches in `\late_ring_model.$proc$late_ring_model.sv:120$5042'.
+Found and cleaned up 160 empty switches in `\late_ring_model.$proc$late_ring_model.sv:118$4304'.
+Found and cleaned up 160 empty switches in `\late_ring_model.$proc$late_ring_model.sv:101$3566'.
+Found and cleaned up 160 empty switches in `\late_ring_model.$proc$late_ring_model.sv:88$2828'.
+Found and cleaned up 160 empty switches in `\late_ring_model.$proc$late_ring_model.sv:71$2090'.
+Found and cleaned up 160 empty switches in `\late_ring_model.$proc$late_ring_model.sv:60$1352'.
+Found and cleaned up 160 empty switches in `\late_ring_model.$proc$late_ring_model.sv:53$614'.
+Cleaned up 1120 empty switches.
+
+8.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+8.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 4543 assignments to connections.
+
+8.2.4. Executing PROC_INIT pass (extract init attributes).
+
+8.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+8.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+8.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\late_ring_model.$proc$late_ring_model.sv:120$5042'.
+Creating decoders for process `\late_ring_model.$proc$late_ring_model.sv:118$4304'.
+Creating decoders for process `\late_ring_model.$proc$late_ring_model.sv:101$3566'.
+Creating decoders for process `\late_ring_model.$proc$late_ring_model.sv:88$2828'.
+Creating decoders for process `\late_ring_model.$proc$late_ring_model.sv:71$2090'.
+Creating decoders for process `\late_ring_model.$proc$late_ring_model.sv:60$1352'.
+Creating decoders for process `\late_ring_model.$proc$late_ring_model.sv:53$614'.
+
+8.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\late_ring_model.\af_add32$func$late_ring_model.sv:120$9.$result' from process `\late_ring_model.$proc$late_ring_model.sv:120$5042'.
+No latch inferred for signal `\late_ring_model.\af_add32$func$late_ring_model.sv:118$8.$result' from process `\late_ring_model.$proc$late_ring_model.sv:118$4304'.
+No latch inferred for signal `\late_ring_model.\af_add32$func$late_ring_model.sv:101$7.$result' from process `\late_ring_model.$proc$late_ring_model.sv:101$3566'.
+No latch inferred for signal `\late_ring_model.\af_add32$func$late_ring_model.sv:88$6.$result' from process `\late_ring_model.$proc$late_ring_model.sv:88$2828'.
+No latch inferred for signal `\late_ring_model.\af_add32$func$late_ring_model.sv:71$5.$result' from process `\late_ring_model.$proc$late_ring_model.sv:71$2090'.
+No latch inferred for signal `\late_ring_model.\af_add32$func$late_ring_model.sv:60$4.$result' from process `\late_ring_model.$proc$late_ring_model.sv:60$1352'.
+No latch inferred for signal `\late_ring_model.\af_add32$func$late_ring_model.sv:53$3.$result' from process `\late_ring_model.$proc$late_ring_model.sv:53$614'.
+
+8.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+8.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `late_ring_model.$proc$late_ring_model.sv:120$5042'.
+Removing empty process `late_ring_model.$proc$late_ring_model.sv:118$4304'.
+Removing empty process `late_ring_model.$proc$late_ring_model.sv:101$3566'.
+Removing empty process `late_ring_model.$proc$late_ring_model.sv:88$2828'.
+Removing empty process `late_ring_model.$proc$late_ring_model.sv:71$2090'.
+Removing empty process `late_ring_model.$proc$late_ring_model.sv:60$1352'.
+Removing empty process `late_ring_model.$proc$late_ring_model.sv:53$614'.
+Cleaned up 0 empty switches.
+
+8.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+<suppressed ~191 debug messages>
+
+8.3. Executing CHECK pass (checking for obvious problems).
+Checking module late_ring_model...
+Found and reported 0 problems.
+
+8.4. Executing FLATTEN pass (flatten design).
+
+8.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+Removed 315 unused cells and 4410 unused wires.
+<suppressed ~316 debug messages>
+
+8.7. Executing CHECK pass (checking for obvious problems).
+Checking module late_ring_model...
+Found and reported 0 problems.
+
+8.8. Executing OPT pass (performing simple optimizations).
+
+8.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2882 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 2779 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 2744 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 2729 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 2720 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 2718 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 2717 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 2715 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+<suppressed ~501 debug messages>
+Removed a total of 167 cells.
+
+8.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \late_ring_model..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~24 debug messages>
+
+8.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \late_ring_model.
+Performed a total of 0 changes.
+
+8.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2715 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 2709 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+<suppressed ~18 debug messages>
+Removed a total of 6 cells.
+
+8.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+Removed 0 unused cells and 168 unused wires.
+<suppressed ~1 debug messages>
+
+8.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+<suppressed ~36 debug messages>
+
+8.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \late_ring_model..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~12 debug messages>
+
+8.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \late_ring_model.
+Performed a total of 0 changes.
+
+8.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2673 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+Removed 34 unused cells and 68 unused wires.
+<suppressed ~48 debug messages>
+
+8.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \late_ring_model..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \late_ring_model.
+Performed a total of 0 changes.
+
+8.8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2639 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+
+8.8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.8.23. Finished fast OPT passes. (There is nothing left to do.)
+
+8.9. Executing FSM pass (extract and optimize FSM).
+
+8.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+8.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+8.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+
+8.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+8.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+8.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+8.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+8.10. Executing OPT pass (performing simple optimizations).
+
+8.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2639 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \late_ring_model..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \late_ring_model.
+Performed a total of 0 changes.
+
+8.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2639 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+
+8.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.10.9. Finished fast OPT passes. (There is nothing left to do.)
+
+8.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:50$102 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:50$102 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:50$102 ($or).
+Removed top 29 bits (of 32) from port B of cell late_ring_model.$xor$late_ring_model.sv:51$105 ($xor).
+Removed top 29 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:52$107 ($and).
+Removed top 29 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:52$109 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:52$110 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:52$110 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:52$110 ($or).
+Removed top 25 bits (of 32) from port B of cell late_ring_model.$xor$late_ring_model.sv:56$128 ($xor).
+Removed top 25 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:57$131 ($and).
+Removed top 25 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:57$134 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:57$135 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:57$135 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:57$135 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:59$149 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:59$149 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:59$149 ($or).
+Removed top 27 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:62$168 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:62$169 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:62$169 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:62$169 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:64$213 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:64$213 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:64$213 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:66$221 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:66$221 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:66$221 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:68$229 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:68$229 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:68$229 ($or).
+Removed top 31 bits (of 32) from port B of cell late_ring_model.$sub$late_ring_model.sv:70$244 ($sub).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:70$249 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:70$249 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:70$249 ($or).
+Removed top 25 bits (of 32) from port B of cell late_ring_model.$xor$late_ring_model.sv:74$268 ($xor).
+Removed top 27 bits (of 32) from port B of cell late_ring_model.$xor$late_ring_model.sv:74$271 ($xor).
+Removed top 25 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:75$275 ($and).
+Removed top 31 bits (of 32) from port A of cell late_ring_model.$add$late_ring_model.sv:75$276 ($add).
+Removed top 28 bits (of 32) from port B of cell late_ring_model.$add$late_ring_model.sv:75$276 ($add).
+Removed top 27 bits (of 32) from port Y of cell late_ring_model.$add$late_ring_model.sv:75$276 ($add).
+Removed top 20 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:75$280 ($and).
+Removed top 27 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:75$280 ($and).
+Removed top 20 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:75$280 ($and).
+Removed top 20 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:75$281 ($or).
+Removed top 25 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:75$285 ($and).
+Removed top 27 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:75$285 ($and).
+Removed top 25 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:75$285 ($and).
+Removed top 25 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:75$286 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:75$286 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:75$286 ($or).
+Removed top 29 bits (of 32) from port A of cell late_ring_model.$xor$late_ring_model.sv:76$290 ($xor).
+Removed top 29 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:77$296 ($and).
+Removed top 29 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:77$299 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:77$306 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:77$306 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:77$306 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:79$314 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:79$314 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:79$314 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:81$322 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:81$322 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:81$322 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:83$330 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:83$330 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:83$330 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:85$338 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:85$338 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:85$338 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:87$352 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:87$352 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:87$352 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:90$366 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:90$366 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:90$366 ($or).
+Removed top 25 bits (of 32) from port A of cell late_ring_model.$xor$late_ring_model.sv:91$371 ($xor).
+Removed top 25 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:92$378 ($and).
+Removed top 25 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:92$382 ($and).
+Removed top 31 bits (of 32) from mux cell late_ring_model.$ternary$late_ring_model.sv:92$385 ($mux).
+Removed top 31 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:92$388 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:92$389 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:92$389 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:92$389 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:94$397 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:94$397 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:94$397 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:96$417 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:96$417 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:96$417 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:98$425 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:98$425 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:98$425 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:100$433 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:100$433 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:100$433 ($or).
+Removed top 27 bits (of 32) from port B of cell late_ring_model.$xor$late_ring_model.sv:102$435 ($xor).
+Removed top 27 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:103$442 ($and).
+Removed top 27 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:103$455 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:103$456 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:103$456 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:103$456 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:105$509 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:105$509 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:105$509 ($or).
+Removed top 28 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:107$532 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:107$544 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:107$544 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:107$544 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:109$552 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:109$552 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:109$552 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:111$560 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:111$560 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:111$560 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:113$568 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:113$568 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:113$568 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:115$576 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:115$576 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:115$576 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:117$590 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:117$590 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:117$590 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:29$634 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:29$634 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:29$634 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:29$1372 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:29$1372 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:29$1372 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:29$2110 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:29$2110 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:29$2110 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:29$2848 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:29$2848 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:29$2848 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:29$3586 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:29$3586 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:29$3586 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:29$4324 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:29$4324 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:29$4324 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:29$5062 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:29$5062 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:29$5062 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:50$100 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:50$100 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:50$100 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:50$101 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:50$101 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:50$101 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:52$108 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:52$108 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:52$108 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:52$109 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:52$109 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:57$132 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:57$132 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:57$132 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:57$134 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:57$134 ($and).
+Removed top 31 bits (of 32) from port B of cell late_ring_model.$xor$late_ring_model.sv:58$140 ($xor).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:59$145 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:59$145 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:59$145 ($or).
+Removed top 31 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:59$148 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:59$148 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:59$148 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:62$163 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:62$163 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:62$163 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:62$168 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:62$168 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:64$203 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:64$203 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:64$203 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:64$212 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:64$212 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:64$212 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:66$219 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:66$219 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:66$219 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:66$220 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:66$220 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:66$220 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:68$227 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:68$227 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:68$227 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:68$228 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:68$228 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:68$228 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:70$243 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:70$243 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:70$243 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:70$248 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:70$248 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:70$248 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:75$281 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:75$281 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:77$300 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:77$300 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:77$300 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:79$312 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:79$312 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:79$312 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:79$313 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:79$313 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:79$313 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:81$320 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:81$320 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:81$320 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:81$321 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:81$321 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:81$321 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:83$328 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:83$328 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:83$328 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:83$329 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:83$329 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:83$329 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:85$336 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:85$336 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:85$336 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:85$337 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:85$337 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:85$337 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:87$348 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:87$348 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:87$348 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:87$351 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:87$351 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:87$351 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:90$362 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:90$362 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:90$362 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:90$365 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:90$365 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:90$365 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:92$383 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:92$383 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:92$383 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:92$388 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:92$388 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:94$395 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:94$395 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:94$395 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:94$396 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:94$396 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:94$396 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:96$411 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:96$411 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:96$411 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:96$416 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:96$416 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:96$416 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:98$423 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:98$423 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:98$423 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:98$424 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:98$424 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:98$424 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:100$431 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:100$431 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:100$431 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:100$432 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:100$432 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:100$432 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:103$449 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:103$449 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:103$449 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:103$455 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:103$455 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:105$497 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:105$497 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:105$497 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:105$508 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:105$508 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:105$508 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:107$538 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:107$538 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:107$538 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:107$543 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:107$543 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:107$543 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:109$550 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:109$550 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:109$550 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:109$551 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:109$551 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:109$551 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:111$558 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:111$558 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:111$558 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:111$559 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:111$559 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:111$559 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:113$566 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:113$566 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:113$566 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:113$567 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:113$567 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:113$567 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:115$574 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:115$574 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:115$574 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:115$575 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:115$575 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:115$575 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$or$late_ring_model.sv:117$586 ($or).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$or$late_ring_model.sv:117$586 ($or).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$or$late_ring_model.sv:117$586 ($or).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:117$589 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:117$589 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:117$589 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:50$99 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:50$99 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:50$99 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:52$106 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:52$106 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:52$106 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:52$107 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:52$107 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:57$131 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:57$131 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:59$141 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:59$141 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:59$141 ($and).
+Removed top 31 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:59$144 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:59$144 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:59$144 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:62$162 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:62$162 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:62$162 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:64$193 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:64$193 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:64$193 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:64$202 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:64$202 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:64$202 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:66$217 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:66$217 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:66$217 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:66$218 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:66$218 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:66$218 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:68$225 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:68$225 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:68$225 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:68$226 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:68$226 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:68$226 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:70$237 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:70$237 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:70$237 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:70$242 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:70$242 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:70$242 ($and).
+Removed top 20 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:75$275 ($and).
+Removed top 20 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:75$275 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:77$296 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:77$296 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:77$299 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:77$299 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:79$311 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:79$311 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:79$311 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:81$318 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:81$318 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:81$318 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:81$319 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:81$319 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:81$319 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:83$326 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:83$326 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:83$326 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:83$327 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:83$327 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:83$327 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:85$334 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:85$334 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:85$334 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:85$335 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:85$335 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:85$335 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:87$344 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:87$344 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:87$344 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:87$347 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:87$347 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:87$347 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:90$359 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:90$359 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:90$359 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:90$361 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:90$361 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:90$361 ($and).
+Removed top 31 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:92$378 ($and).
+Removed top 25 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:92$378 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:92$382 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:92$382 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:94$393 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:94$393 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:94$393 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:94$394 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:94$394 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:94$394 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:96$407 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:96$407 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:96$407 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:96$410 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:96$410 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:96$410 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:98$421 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:98$421 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:98$421 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:98$422 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:98$422 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:98$422 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:100$429 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:100$429 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:100$429 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:100$430 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:100$430 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:100$430 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:103$442 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:103$442 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:103$448 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:103$448 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:103$448 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:105$485 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:105$485 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:105$485 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:105$496 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:105$496 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:105$496 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:107$529 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:107$529 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:107$529 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:107$537 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:107$537 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:107$537 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:109$548 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:109$548 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:109$548 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:109$549 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:109$549 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:109$549 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:111$556 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:111$556 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:111$556 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:111$557 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:111$557 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:111$557 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:113$564 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:113$564 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:113$564 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:113$565 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:113$565 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:113$565 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:115$572 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:115$572 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:115$572 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:115$573 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:115$573 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:115$573 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:117$582 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:117$582 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:117$582 ($and).
+Removed top 1 bits (of 32) from port Y of cell late_ring_model.$and$late_ring_model.sv:117$585 ($and).
+Removed top 1 bits (of 32) from port A of cell late_ring_model.$and$late_ring_model.sv:117$585 ($and).
+Removed top 1 bits (of 32) from port B of cell late_ring_model.$and$late_ring_model.sv:117$585 ($and).
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.p[2][31:0]$5058.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.p[1][31:0]$5057.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.g[0][31:0]$3574.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.g[1][31:0]$3575.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.g[2][31:0]$3576.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.g[3][31:0]$3577.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.g[4][31:0]$3578.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.g[5][31:0]$3579.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.p[1][31:0]$3581.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.p[2][31:0]$3582.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.p[3][31:0]$3583.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:101$14.p[4][31:0]$3584.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.p[4][31:0]$632.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.p[3][31:0]$631.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.p[2][31:0]$630.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.p[1][31:0]$629.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.g[5][31:0]$627.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.g[4][31:0]$626.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.g[3][31:0]$625.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.g[2][31:0]$624.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.g[1][31:0]$623.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:53$10.g[0][31:0]$622.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.p[4][31:0]$2846.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.g[5][31:0]$5055.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.g[4][31:0]$5054.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.g[3][31:0]$5053.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.g[2][31:0]$5052.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.p[3][31:0]$2845.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:117$590_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:117$589_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:117$586_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:117$585_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.g[1][31:0]$5051.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.p[2][31:0]$2844.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:117$582_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:115$576_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:115$575_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:115$574_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:115$573_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:115$572_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:113$568_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:113$567_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:113$566_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:113$565_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:113$564_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.p[1][31:0]$2843.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:111$560_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:111$559_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:111$558_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:111$557_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:111$556_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:109$552_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:109$551_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:109$550_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:109$549_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:109$548_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:107$544_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:107$543_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.g[0][31:0]$5050.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.g[5][31:0]$2841.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:107$538_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:107$537_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.g[4][31:0]$2840.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:107$529_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.g[3][31:0]$2839.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.g[2][31:0]$2838.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.g[1][31:0]$2837.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:88$13.g[0][31:0]$2836.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:105$509_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:105$508_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:105$497_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:105$496_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.p[3][31:0]$5059.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:105$485_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:103$456_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:103$455_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:103$449_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:103$448_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:103$442_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:100$433_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:100$432_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:100$431_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:100$430_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:100$429_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:98$425_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:98$424_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:98$423_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:98$422_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:98$421_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:96$417_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:96$416_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:96$411_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:96$410_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:96$407_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:94$397_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:94$396_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:94$395_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:94$394_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:92$389_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:92$388_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:92$383_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:92$382_Y.
+Removed top 25 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:92$378_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.g[0][31:0]$4312.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.g[1][31:0]$4313.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.g[2][31:0]$4314.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.g[3][31:0]$4315.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.g[4][31:0]$4316.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:87$352_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:87$351_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.g[5][31:0]$4317.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:87$348_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:87$347_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:87$344_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:85$338_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:85$337_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:85$336_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:85$335_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:85$334_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.p[1][31:0]$4319.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:83$330_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:83$329_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:83$328_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:83$327_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.p[2][31:0]$4320.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.p[3][31:0]$4321.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:81$322_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:81$321_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:81$320_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:81$319_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:81$318_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:77$306_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:118$15.p[4][31:0]$4322.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:77$300_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:77$299_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:77$296_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.p[4][31:0]$2108.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.p[3][31:0]$2107.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.p[2][31:0]$2106.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.p[1][31:0]$2105.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.g[5][31:0]$2103.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.g[4][31:0]$2102.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:70$249_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:70$248_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:70$243_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:70$242_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.g[3][31:0]$2101.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:70$237_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.g[2][31:0]$2100.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.g[1][31:0]$2099.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:68$229_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:68$228_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:68$227_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:68$226_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:68$225_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:71$12.g[0][31:0]$2098.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:66$221_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:66$220_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:66$219_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:66$218_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:66$217_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:64$213_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:64$212_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:64$203_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:64$202_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:64$193_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:62$169_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:62$168_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:62$163_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:62$162_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:59$149_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:59$148_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:59$145_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:59$144_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:59$141_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:120$16.p[4][31:0]$5060.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:57$135_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:57$134_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:57$132_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:57$131_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:52$110_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:52$109_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:52$108_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:52$107_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:52$106_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:50$102_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:50$101_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:50$100_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:50$99_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:50$98_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:48$94_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:48$93_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:48$92_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:48$91_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:48$90_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:46$86_Y.
+Removed top 25 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:46$85_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:46$81_Y.
+Removed top 20 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:46$80_Y.
+Removed top 20 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:46$75_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:44$63_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:44$62_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$or$late_ring_model.sv:44$59_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:44$58_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$and$late_ring_model.sv:44$56_Y.
+Removed top 31 bits (of 32) from wire late_ring_model.$ternary$late_ring_model.sv:19$49_Y.
+Removed top 27 bits (of 32) from wire late_ring_model.$add$late_ring_model.sv:12$35_Y.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.g[0][31:0]$1360.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.g[1][31:0]$1361.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.g[2][31:0]$1362.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.p[4][31:0]$1370.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.p[3][31:0]$1369.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.p[2][31:0]$1368.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.p[1][31:0]$1367.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.g[3][31:0]$1363.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.g[4][31:0]$1364.
+Removed top 1 bits (of 32) from wire late_ring_model.$0\af_add32$func$late_ring_model.sv:60$11.g[5][31:0]$1365.
+Removed top 6 bits (of 32) from wire late_ring_model.k_sb.
+
+8.12. Executing PEEPOPT pass (run peephole optimizers).
+
+8.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+Removed 0 unused cells and 248 unused wires.
+<suppressed ~1 debug messages>
+
+8.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module late_ring_model:
+  creating $macc model for $add$late_ring_model.sv:75$276 ($add).
+  creating $macc model for $sub$late_ring_model.sv:70$244 ($sub).
+  creating $alu model for $macc $sub$late_ring_model.sv:70$244.
+  creating $alu model for $macc $add$late_ring_model.sv:75$276.
+  creating $alu cell for $add$late_ring_model.sv:75$276: $auto$alumacc.cc:512:replace_alu$5998
+  creating $alu cell for $sub$late_ring_model.sv:70$244: $auto$alumacc.cc:512:replace_alu$6001
+  created 2 $alu and 0 $macc cells.
+
+8.15. Executing SHARE pass (SAT-based resource sharing).
+
+8.16. Executing OPT pass (performing simple optimizations).
+
+8.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2639 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \late_ring_model..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+8.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \late_ring_model.
+Performed a total of 0 changes.
+
+8.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2639 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+
+8.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+8.17. Executing MEMORY pass.
+
+8.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+8.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+8.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+8.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+8.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+8.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+
+8.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+8.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+8.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+
+8.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+8.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+
+8.19. Executing OPT pass (performing simple optimizations).
+
+8.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+<suppressed ~2475 debug messages>
+
+8.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2452 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+Removed 60 unused cells and 834 unused wires.
+<suppressed ~61 debug messages>
+
+8.19.5. Finished fast OPT passes.
+
+8.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+8.21. Executing OPT pass (performing simple optimizations).
+
+8.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2392 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \late_ring_model..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+8.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \late_ring_model.
+Performed a total of 0 changes.
+
+8.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 2392 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.21.6. Executing OPT_SHARE pass.
+
+8.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+
+8.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+8.22. Executing TECHMAP pass (map to technology primitives).
+
+8.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+8.22.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $xor.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod$c04af8dbf0e5d1d69bbccb2c7bd8a93fc9ef54dc\_90_alu for cells of type $alu.
+Using template $paramod$943564b9366bbc392bf4bbc801aa0a2d7742a4e0\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~2959 debug messages>
+
+8.23. Executing OPT pass (performing simple optimizations).
+
+8.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+<suppressed ~306 debug messages>
+
+8.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 7698 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 7659 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 7624 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Computing hashes of 7608 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+<suppressed ~270 debug messages>
+Removed a total of 90 cells.
+
+8.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+Removed 17 unused cells and 153 unused wires.
+<suppressed ~18 debug messages>
+
+8.23.5. Finished fast OPT passes.
+
+8.24. Executing ABC pass (technology mapping using ABC).
+
+8.24.1. Extracting gate netlist of module `\late_ring_model' to `<abc-temp-dir>/input.blif'..
+
+8.24.1.1. Executed ABC.
+Extracted 7591 gates and 7766 wires to a netlist network with 175 inputs and 128 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+8.24.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:     1337
+ABC RESULTS:            ANDNOT cells:      179
+ABC RESULTS:               MUX cells:      134
+ABC RESULTS:              NAND cells:     1957
+ABC RESULTS:               NOR cells:       28
+ABC RESULTS:               NOT cells:       71
+ABC RESULTS:                OR cells:      641
+ABC RESULTS:             ORNOT cells:      282
+ABC RESULTS:              XNOR cells:      687
+ABC RESULTS:               XOR cells:      322
+ABC RESULTS:        internal signals:     7463
+ABC RESULTS:           input signals:      175
+ABC RESULTS:          output signals:      128
+Removing temp directory.
+Removing global temp directory.
+
+8.25. Executing OPT pass (performing simple optimizations).
+
+8.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module late_ring_model.
+
+8.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\late_ring_model'.
+Computing hashes of 5638 cells of `\late_ring_model'.
+Finding duplicate cells in `\late_ring_model'.
+Removed a total of 0 cells.
+
+8.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+Removed 0 unused cells and 1409 unused wires.
+<suppressed ~28 debug messages>
+
+8.25.5. Finished fast OPT passes.
+
+8.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `late_ring_model'. Setting top module to late_ring_model.
+
+8.26.1. Analyzing design hierarchy..
+Top module:  \late_ring_model
+
+8.26.2. Analyzing design hierarchy..
+Top module:  \late_ring_model
+Removed 0 unused modules.
+
+8.27. Printing statistics.
+
+=== late_ring_model ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     5700 wires
+    11409 wire bits
+      190 public wires
+     5899 public wire bits
+        7 ports
+      459 port bits
+     5638 cells
+      179   $_ANDNOT_
+     1337   $_AND_
+      134   $_MUX_
+     1957   $_NAND_
+       28   $_NOR_
+       71   $_NOT_
+      282   $_ORNOT_
+      641   $_OR_
+      687   $_XNOR_
+      322   $_XOR_
+
+8.28. Executing CHECK pass (checking for obvious problems).
+Checking module late_ring_model...
+Found and reported 0 problems.
+
+9. Executing ABC pass (technology mapping using ABC).
+
+9.1. Extracting gate netlist of module `\late_ring_model' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_840d15f0.scl (4 files)
+
+9.1.1. Executed ABC.
+Extracted 5638 gates and 5813 wires to a netlist network with 175 inputs and 128 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_840d15f0.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:       65
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:       27
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      129
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       78
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       51
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AO211x2_ASAP7_75t_R cells:        6
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:      106
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        6
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:       10
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:        8
+ABC RESULTS:   AO33x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:       50
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:      241
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:        2
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:       61
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:       13
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:       49
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        4
+ABC RESULTS:   AOI33xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      263
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:      132
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:       84
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:      650
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:      161
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:       48
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:        4
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:      533
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:      110
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:       10
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        1
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:      106
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:       42
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:       71
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:        3
+ABC RESULTS:   OA31x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OA33x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:       59
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:      194
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:        4
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:       26
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:       11
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:       33
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:       69
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:       67
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        5
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:      656
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:      337
+ABC RESULTS:        internal signals:     5510
+ABC RESULTS:           input signals:      175
+ABC RESULTS:          output signals:      128
+Removing temp directory.
+Removing global temp directory.
+
+10. Executing HILOMAP pass (mapping to constant drivers).
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \late_ring_model..
+Removed 231 unused cells and 6086 unused wires.
+<suppressed ~274 debug messages>
+
+12. Printing statistics.
+
+=== late_ring_model ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     4615 wires
+     9146 wire bits
+      148 public wires
+     4679 public wire bits
+        7 ports
+      459 port bits
+     4595 cells
+       65   A2O1A1Ixp33_ASAP7_75t_R
+       27   A2O1A1O1Ixp25_ASAP7_75t_R
+      129   AND2x2_ASAP7_75t_R
+       78   AND3x1_ASAP7_75t_R
+       51   AND4x1_ASAP7_75t_R
+        1   AND5x1_ASAP7_75t_R
+        6   AO211x2_ASAP7_75t_R
+      106   AO21x1_ASAP7_75t_R
+        6   AO221x1_ASAP7_75t_R
+       10   AO22x1_ASAP7_75t_R
+        8   AO32x1_ASAP7_75t_R
+        1   AO33x2_ASAP7_75t_R
+       50   AOI211xp5_ASAP7_75t_R
+      241   AOI21xp33_ASAP7_75t_R
+        2   AOI221xp5_ASAP7_75t_R
+       61   AOI22xp33_ASAP7_75t_R
+       13   AOI311xp33_ASAP7_75t_R
+       49   AOI31xp33_ASAP7_75t_R
+        4   AOI32xp33_ASAP7_75t_R
+        1   AOI33xp33_ASAP7_75t_R
+      263   INVx1_ASAP7_75t_R
+      132   MAJIxp5_ASAP7_75t_R
+       84   MAJx2_ASAP7_75t_R
+      650   NAND2xp33_ASAP7_75t_R
+      161   NAND3xp33_ASAP7_75t_R
+       48   NAND4xp25_ASAP7_75t_R
+        4   NAND5xp2_ASAP7_75t_R
+      533   NOR2xp33_ASAP7_75t_R
+      110   NOR3xp33_ASAP7_75t_R
+       10   NOR4xp25_ASAP7_75t_R
+        1   NOR5xp2_ASAP7_75t_R
+      106   O2A1O1Ixp33_ASAP7_75t_R
+       42   OA211x2_ASAP7_75t_R
+       71   OA21x2_ASAP7_75t_R
+        3   OA22x2_ASAP7_75t_R
+        1   OA31x2_ASAP7_75t_R
+        1   OA33x2_ASAP7_75t_R
+       59   OAI211xp5_ASAP7_75t_R
+      194   OAI21xp33_ASAP7_75t_R
+        4   OAI221xp5_ASAP7_75t_R
+       26   OAI22xp33_ASAP7_75t_R
+       11   OAI311xp33_ASAP7_75t_R
+       33   OAI31xp33_ASAP7_75t_R
+        1   OAI32xp33_ASAP7_75t_R
+       69   OR2x2_ASAP7_75t_R
+       67   OR3x1_ASAP7_75t_R
+        4   OR4x1_ASAP7_75t_R
+        5   OR5x1_ASAP7_75t_R
+      656   XNOR2xp5_ASAP7_75t_R
+      337   XOR2xp5_ASAP7_75t_R
+
+13. Executing Verilog backend.
+
+13.1. Executing BMUXMAP pass.
+
+13.2. Executing DEMUXMAP pass.
+Dumping module `\late_ring_model'.
+
+Warnings: 14 unique messages, 14 total
+End of script. Logfile hash: 57bc035942, time: 8.69s, user: 3.31s, system: 0.27s, MEM: 78.75 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 60% 2x abc (5 sec), 17% 3x read_verilog (1 sec), ...

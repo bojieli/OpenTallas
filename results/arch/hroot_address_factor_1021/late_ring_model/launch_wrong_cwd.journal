@@ -1,0 +1,3 @@
+Oct 21 16:06:44 vm-xry57mhfyn systemd[1954]: Started codex-hroot-latering-model-1021.service - [systemd-run] /bin/bash -lc "docker run --rm --memory=8g --cpus=4 --user \"\$(id -u):\$(id -g)\" -v \"\$PWD:/work\" -w /work openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 bash run_map.sh > map_docker.log 2>&1".
+Oct 21 16:06:44 vm-xry57mhfyn systemd[1954]: codex-hroot-latering-model-1021.service: Main process exited, code=exited, status=127/n/a
+Oct 21 16:06:44 vm-xry57mhfyn systemd[1954]: codex-hroot-latering-model-1021.service: Failed with result 'exit-code'.
