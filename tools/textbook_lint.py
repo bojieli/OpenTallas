@@ -883,7 +883,8 @@ def async_reset_relay_proof(g, A, net):
             for ci, pn, _ in A['loads'].get(y, ()):
                 if A['kind'][ci] == 'buf':
                     typ, _, pins = g.cells[ci]
-                    if set(pins) - {'A', 'Y'} or len(pins.get('A', [])) != 1:
+                    if (set(pins) != {'A', 'Y'} or any(len(bs) != 1 for bs in pins.values()) or
+                            not re.fullmatch(r'(?:BUF|INV|CKINV)x[0-9]+(?:p[0-9]+)?_ASAP7_75t_[RSL]', typ)):
                         return None, ports
                     neg = bool(re.match(r'^(INV|CKINV)', typ))
                     for z in _out_nets(g, A, ci):
@@ -945,7 +946,9 @@ def async_reset_relay_proof(g, A, net):
         max_loads = max(max_loads, len(ends))
         for target, pn, inv in ends:
             pins = g.cells[target][2]
-            if (target in cells or A['kind'][target] != 'ff' or pn != 'RESETN' or inv != 1 or
+            if (target in cells or A['kind'][target] != 'ff' or
+                    not re.fullmatch(r'DFFASRHQNx[0-9]+_ASAP7_75t_[RSL]', g.cells[target][0]) or
+                    pn != 'RESETN' or inv != 1 or
                     pins.get('CLK') != [clock]):
                 return fail('regional reset has a bypass, wrong polarity, or different consumer clock')
     return {'pass': True, 'raw_clear_loads': len(root), 'sync_stages': 2,

@@ -77,3 +77,23 @@ def test_unknown_flop_polarity_cannot_claim_recognition():
     _, name, pins = g.cells[ci]
     g.cells[ci] = ('FOREIGN_ASR', name, pins)
     assert not proof(g)['pass']
+
+
+def test_unknown_consumer_clear_and_buffer_polarity_refuse():
+    for name, typ in [('c0', 'DFF_UNKNOWN'), ('is0', 'BUF_UNKNOWN')]:
+        g = graph()
+        ci = next(i for i,c in enumerate(g.cells) if c[1] == name)
+        _, nm, pins = g.cells[ci]
+        g.cells[ci] = (typ, nm, pins)
+        assert not proof(g)['pass'], (name, typ)
+
+
+def test_tied_or_derived_common_clock_cannot_claim_input_clock():
+    for ck in ("1'0", 'derived'):
+        g = graph()
+        if ck == 'derived':
+            g.cells.append(('BUFx1_ASAP7_75t_R', 'clockbuf', {'A': [g.net('clk')], 'Y': [g.net(ck)]}))
+        for ci, (typ, nm, pins) in enumerate(g.cells):
+            if 'CLK' in pins:
+                pins['CLK'] = [g.net(ck)]
+        assert not proof(g)['pass'], ck
