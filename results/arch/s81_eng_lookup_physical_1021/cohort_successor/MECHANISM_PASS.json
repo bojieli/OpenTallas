@@ -1,0 +1,67 @@
+{
+  "source_ref": "58b11ec53",
+  "rtl_ref": "97fd22a11",
+  "profile": "OT_ENGRAM_CRCMAT+OT_S81ENG_HASH_COHORTS; originalRRdefaults",
+  "positives": {
+    "base.log": {
+      "tb_pass": true,
+      "python_pass": true,
+      "record_count": 578,
+      "all_records_cycle_byte_identical": true,
+      "record_sha256": "35f2d897913fbfa7fbf85ae657500af59c7b5137dba92fc822ee5028af2f9c1d",
+      "log_sha256": "a82bd7326c2b20d77010e26a63af6ee82b992f63eda44202b0b06dd8e7f6c562"
+    },
+    "var__SEED_2__LAT_160.log": {
+      "tb_pass": true,
+      "python_pass": true,
+      "record_count": 578,
+      "all_records_cycle_byte_identical": true,
+      "record_sha256": "6de494dc3c9294a8c8f2902bb67fca44c4ee35a9e3e8bb5ce20077a7bba495d3",
+      "log_sha256": "7e91efbad60a99fa701f172fc778a11a9fa782a58b60a08659b371629ce57d17"
+    },
+    "var__SEED_3__LAT_60.log": {
+      "tb_pass": true,
+      "python_pass": true,
+      "record_count": 578,
+      "all_records_cycle_byte_identical": true,
+      "record_sha256": "26f07beb9e5da9266cdd3feeb28bf767cde6e6e5d5f8351105a3c559d05c68b0",
+      "log_sha256": "f7d1440f43f7ac8a28ea4378f07235cd4ac8e562bd12fc99b1acd47279b6738f"
+    }
+  },
+  "causals": [
+    {
+      "name": "xq1",
+      "failed": true,
+      "log": "xq1.log"
+    },
+    {
+      "name": "xq2",
+      "failed": true,
+      "log": "xq2.log"
+    },
+    {
+      "name": "tap1",
+      "failed": true,
+      "log": "tap1.log"
+    },
+    {
+      "name": "tap2",
+      "failed": true,
+      "log": "tap2.log"
+    },
+    {
+      "name": "rpar",
+      "failed": true,
+      "log": "rpar.log"
+    },
+    {
+      "name": "onesc",
+      "failed": true,
+      "log": "onesc.log"
+    }
+  ],
+  "comparison_baseline_ref": "2358d5666 /7c0f9b771 existing golden+age trace",
+  "native": "PENDING source-direct diagnostic only, completephysicalkit qualification stillowed",
+  "status": "PASS existingfullmechanisms/6causals and exactrecordageidentity",
+  "added_cycles_measured": 0
+}
