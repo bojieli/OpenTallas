@@ -24,7 +24,7 @@ def apply(contract):
         # A closed view of another parameterisation cannot qualify this parent.
         for key in ('physical_view', 'closed_record'):
             item.pop(key, None)
-        item['rtl_deps'] = sorted(set(item.get('rtl_deps', [])) | {s['path'] for s in sources if s['kind'] == 'die' and s['path'] != item['source']})
+        item['rtl_deps'] = sorted(set(item.get('rtl_deps', [])) | {s['path'] for s in sources if s['kind'] == 'die' and Path(s['path']).suffix in ('.sv', '.v') and s['path'] != item['source']})
         selected.append(name)
     return dict(selected=selected, params=dict(AR_ITER=1, ROWS=256),
                 evidence='claude/tok-func-hbm-xdie-1021 results/rtl/tok_func_hbm_1021/xdie',
