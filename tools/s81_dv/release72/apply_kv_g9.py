@@ -25,6 +25,12 @@ def apply(plan, table, source_ref):
     row = copy.deepcopy(original)
     assert not original.get('params'), 'KV512 fixed wrapper requires actual default HB0/DL4/DR6/DX6/VQ2/VS_MUT0'
     row['module'] = 'ot_s81sl_slice_kv512'
+    # Literal18-port passthrough: preserve the exact declared widths used by
+    # strict bind for existing input pads/output-copy declarations.
+    widths = table.setdefault('rtl_widths', {})
+    assert 'ot_s81sl_slice' in widths, 'missing exact base slice port-width contract'
+    assert 'ot_s81sl_slice_kv512' not in widths, 'KV512 width contract already present'
+    widths['ot_s81sl_slice_kv512'] = copy.deepcopy(widths['ot_s81sl_slice'])
     row['params'] = {}
     row['ref'] = source_ref
     row['view'] = None
