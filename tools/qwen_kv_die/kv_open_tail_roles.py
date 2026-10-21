@@ -74,8 +74,9 @@ SOURCES = {
 # kv_qkh_safe32; default byte-identical) + default-off OT_KV_CTL_PORTRAIT (ctl frame only, placement); no PC / GRP
 # chain-end text changed (GEN_ASSERT).
 # LEAD10-KV 10-20: re-pinned after KV-BIND12 2ccd74749/969e007ec (OT_KV_EMB_WEST, default off): placement-only change
-# (kvs_emb anchor + a per-placement keep-out in free_spot); no instance, port or chain-end text changed.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '5fbd507cd680725927c9db087443a28d07c5c372bc8167d809eb862fca8a393c')
+# (kvs_emb anchor + a per-placement keep-out in free_spot); no instance, port or chain-end text changed. KV-ATTN7 7a25d7bf9:
+# face-land kit qkd_kvs_attn_rv3 -> rv5 (same ports/edges/params; view selection only).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'd06d0424efb51d1e13cd1483c267b960a204620f5dba8a833dcfb0f46109b2cf')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
