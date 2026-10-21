@@ -1,0 +1,95 @@
+{
+  "observed_at": "2026-10-21T15:14:50.190487-07:00",
+  "source_ref": "363295685",
+  "actual_finish": "2026-10-21T15:09:21.142839-07:00",
+  "status": "FAIL",
+  "max_dynamic_loads": 1053,
+  "role_errors": [],
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qfd_dv_s8_lp_asap7_ref_census/base/1_2_yosys.v",
+    "sha256": "863c615b80da58438286ff9c0a671f57a6b83f664e58a56c31767ddef2c68211"
+  },
+  "violations": [
+    {
+      "driver": "_335317_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_021162_",
+      "loads": 526
+    },
+    {
+      "driver": "_335322_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_021166_",
+      "loads": 1053
+    },
+    {
+      "driver": "_339454_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_021887_",
+      "loads": 69
+    },
+    {
+      "driver": "_345670_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_023267_",
+      "loads": 81
+    },
+    {
+      "driver": "_345718_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_023300_",
+      "loads": 33
+    },
+    {
+      "driver": "_392978_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_062484_",
+      "loads": 35
+    },
+    {
+      "driver": "_441240_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_103054_",
+      "loads": 36
+    },
+    {
+      "driver": "_465339_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_123305_",
+      "loads": 35
+    },
+    {
+      "driver": "u_tap.u_114.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_114._0_",
+      "loads": 48
+    },
+    {
+      "driver": "u_tap.u_115.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_115._0_",
+      "loads": 48
+    },
+    {
+      "driver": "u_tap.u_116.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_116._0_",
+      "loads": 48
+    },
+    {
+      "driver": "u_tap.u_117.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_117._0_",
+      "loads": 48
+    },
+    {
+      "driver": "u_tap.u_118.Q$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_tap.u_118._0_",
+      "loads": 48
+    }
+  ],
+  "raw_gzip_sha256": "334d5c32d8df76b6f6cdb48e278267bcda2ce6be1c0aa6a2156e119a450682f9",
+  "scope": "Actual wholeparent mappednative FAIL, no layout; standaloneprefixchild32PASS is separate",
+  "analysis_owner": "Q_CLASS mapping8anonymouscomb roots; no duplicate build"
+}
