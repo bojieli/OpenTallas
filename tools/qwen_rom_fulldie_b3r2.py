@@ -5194,7 +5194,8 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         #    a group that does not fit one net is split per sink (repeater nearest each pin)
         grp = collections.defaultdict(list)
         for s in net['sinks']:
-            grp[(int(s[2][0] // RST_LEAF_UM), int(s[2][1] // RST_LEAF_UM))].append(s)
+            owner = (net.get('sink_groups') or {}).get((s[0], s[1]), ())
+            grp[(int(s[2][0] // RST_LEAF_UM), int(s[2][1] // RST_LEAF_UM), owner)].append(s)
         leaves = []
         work = [grp[k] for k in sorted(grp)]
         while work:
@@ -5495,6 +5496,10 @@ def _reset_tree(v, m):
     if _os.environ.get('OT_RESET_DUMP'):
         import json as _json
         _json.dump(dict(nets=nets, rects=rects, W=m['die']['w'], H=m['die']['h'], gx=v.GX, gy=v.GY), open(_os.environ['OT_RESET_DUMP'], 'w'))
+    if _os.environ.get('OT_SPLIT_RST_REGION_LAND', '0') == '1':
+        from qwen_split.reset_region_capture import sink_capture_groups
+        for net in nets:
+            net['sink_groups'] = sink_capture_groups(m, net['sinks'], ckof)
     cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
     if errors:
         rec.update(errors=errors, per_net=dict(per))

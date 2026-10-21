@@ -100,3 +100,47 @@ def finalize(model, per, source_root=None):
                   qualified=False)
     model['final_reset_capture_plan'] = result
     return result
+
+
+def sink_capture_groups(model, sinks, clock_inputs):
+    """Stable receiving-clock ownership for the allocator's initial leaf bins.
+
+    Unknown/multiple clock identities isolate the endpoint rather than merging
+    it with another receiver. Every bin still obtains its own real occ.site().
+    """
+    by = {i.name: i for i in model['insts']}
+    follow = model.get('ck_follow') or {}
+    related = {}
+    for key in ('dv_cluster_clocks', 'native_static_io_bind'):
+        spec = model.get(key) or {}
+        if spec.get('master'):
+            related[spec['master']] = spec.get('related_pins') or {}
+    groups = {}
+    for inst, port, _xy in sinks:
+        p = port.lstrip('*')
+        refs = set(related.get(by[inst].master, {}).get(p) or [])
+        inputs = {cp.lstrip('*'): net for net, cp in clock_inputs.get(inst, [])}
+        if by[inst].kind == 'relay' and p == 'en':
+            refs = {'ck_s' if 'ck_s' in inputs else 'ck'}
+        elif by[inst].kind == 'relay' and p == 'rs':
+            refs = {'ck'}
+        elif not refs and len(inputs) == 1:
+            refs = set(inputs)
+        if len(refs) != 1:
+            groups[inst, port] = ('isolated_endpoint', inst, p)
+            continue
+        cp = next(iter(refs)); owner = inst
+        seen = set()
+        while (owner, cp) in follow and (owner, cp) not in seen:
+            seen.add((owner, cp)); owner = follow[owner, cp]
+            ports = {q.lstrip('*') for _net, q in clock_inputs.get(owner, [])}
+            if len(ports) != 1:
+                # No per-port ownership was supplied for the followed owner.
+                # A dedicated capture is safer than assuming its roots equal.
+                owner, cp = inst, 'isolated:'+p
+                break
+            cp = next(iter(ports))
+        if (owner, cp) in seen:
+            owner, cp = inst, 'isolated:'+p
+        groups[inst, port] = ('receiving_owner', owner, cp)
+    return groups
