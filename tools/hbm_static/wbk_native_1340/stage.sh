@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 WT=${1:?caller-owned WT}; HOST=${2:?staging host}; ROOT=${3:?fresh immutable root}; SOURCE=${4:?source commit}
-HELPER=99eff96d0ee86f973604b0190e0cebd01388cc2f
+HELPER=$(git -C "$WT" rev-parse "${WBK1340_HELPER_COMMIT:-99eff96d0ee86f973604b0190e0cebd01388cc2f}^{commit}")
 [ "$(git -C "$WT" rev-parse --show-toplevel)" = "$WT" ]
 ssh "$HOST" "test ! -e '$ROOT' && mkdir -p '$ROOT/src'"
 git -C "$WT" archive "$HELPER" tools physical/common_flow physical/qwen_die_masters | ssh "$HOST" "tar -x -C '$ROOT/src'"
