@@ -1,0 +1,19 @@
+{
+  "reference_commit": "4b027d3be",
+  "candidate_commit": "0b50e2106",
+  "path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+  "reference_original_sha256": "072cd9b8844115f868b7c16ad13eef062939a2f7716124099266839f6dc32f1c",
+  "reference_transform": "replace single module declaration dsdv_svc_att with dsdv_svc_att_ref only",
+  "candidate_sha256": "3cb8e85008fcabe79cb3a0feb914b898bc3f8e278a3ef6b830d36d456f0d754e",
+  "defines": [
+    "OT_SVC_LAND_SRAM",
+    "OT_SVC_ATT_SRAM"
+  ],
+  "params": {
+    "SRAM_MACRO": 1,
+    "NTP": 1,
+    "PMEM": 1,
+    "QMEM_SRAM": 0,
+    "PINREG": false
+  }
+}
