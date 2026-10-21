@@ -1,0 +1,283 @@
+{
+ "name": "s81sl_xg5fb-xg5fb-COMMIT",
+ "block": "ot_s81sl_xg5",
+ "ref_tile": true,
+ "owner": "Claude:S81-XG5FP-1021",
+ "purpose": "S81.STA.LEAF.5 s81sl_xg5fb: structural floorplan successor of s81sl_xg5 (GPL routability failure): split macro stacks, full-width macro-free centre band, 648.0 x 864.0.",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/s81-xg5fp-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/v41rom",
+   "rtl/common",
+   "tools/s81_slice",
+   "tools/s81_static_control",
+   "tools/s81/pq_static_calendar_abi.json",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage0",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage3",
+   "results/rtl/s81_slice_1019/xg4",
+   "results/rtl/s81_slice_1019/xg5"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_xg5 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/v41rom/ot_v41_kreg.sv rtl/common/ot_prefix.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rs.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg5.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xg5_bench",
+    "cmd": "bash tools/s81_slice/xg5_bench.sh {RUN}/xg5",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^XG5_BENCH PASS",
+    "pass_witness": "results/rtl/s81_slice_1019/xg5/xg5_bench.log"
+   },
+   {
+    "name": "rs_equiv",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv",
+    "expect": "pass",
+    "pass_regex": "^RS_EQUIV_BENCH PASS$",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rs_equiv_mutslice",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv_slice slice",
+    "expect": "fail",
+    "fail_regex": "^RS_CASE sid=5 seed=2 dens=40 legal=0 rstat=0 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4/rs_equiv_slice.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rs_equiv_mutcixb",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv_cixb cixb",
+    "expect": "fail",
+    "fail_regex": "^RS_CASE sid=5 seed=2 dens=40 legal=0 rstat=0 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4/rs_equiv_cixb.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rs_equiv_mutfrag",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv_frag frag",
+    "expect": "fail",
+    "fail_regex": "^RS_CASE sid=5 seed=2 dens=40 legal=0 rstat=0 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4/rs_equiv_frag.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rs_equiv_mutvasm",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv_vasm vasm",
+    "expect": "fail",
+    "fail_regex": "^RS_CASE sid=5 seed=2 dens=40 legal=0 rstat=0 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4/rs_equiv_vasm.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rs_equiv_mutgswap",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv_gswap gswap",
+    "expect": "fail",
+    "fail_regex": "^RS_CASE sid=5 seed=2 dens=40 legal=0 rstat=0 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4/rs_equiv_gswap.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rs_equiv_muttiercol",
+    "cmd": "bash tools/s81_slice/rs_equiv.sh {RUN}/rs_equiv_tiercol tiercol",
+    "expect": "fail",
+    "fail_regex": "^RS_CASE sid=5 seed=2 dens=40 legal=0 rstat=0 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4/rs_equiv_tiercol.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv",
+    "expect": "pass",
+    "pass_regex": "^XS4_EQUIV_BENCH PASS$",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutbank",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_bank bank",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg5/xs4_equiv_bank.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutoff",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_off off",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg5/xs4_equiv_off.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutqswap",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_qswap qswap",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg5/xs4_equiv_qswap.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutwcopy",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_wcopy wcopy",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg5/xs4_equiv_wcopy.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_muttpar",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_tpar tpar",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg5/xs4_equiv_tpar.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutexp",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_exp exp",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg5/xs4_equiv_exp.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_xg5fb/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_xg5fb/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_xg5fb --out {RUN}/record/views/ot_s81sl_xg5 --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_xg5fb/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_xg5fb/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_xg5fb/s81sl_xg5fb-xg5fb-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-XG5FP (10-21, LEAD-S81): STRUCTURAL floorplan successor of s81sl_xg5 after both xg5/xg5k routes crashed at\n3_5 DPL-0038 (util 121%): 3_3 GPL routability never converged (36-47% of gcells overflowed, weighted congestion 1.6-2.0,\n8 inflation rounds), then repair_design inserted 965k buffers for 231k slew violations.\nCause: the 37 macros obstruct M1-M4 and the tile routes M2-M5, so NO horizontal (M2/M4) wire can cross a macro. The xg5\nplan stacked 8 SRAMs per bank column (y 108-437) and all 7 ROMs in one column (y 64.8-505.6 = 441 of 561.6 um): at the\nROM column only 121 um of height is free for W<->E wires (~1.4k M2+M4 tracks) while the ring needs ri_w->ro_e +\nri_e->ro_w (2 x 1,104 b) + nx (346 b) + the 3,072-b gather port + 6,144 SRAM read bits across it.  SRAM pin faces\n(W/E, 412 pins on 41 um = 10/um, 3.3k per 8-stack face) face 34.8-43 um channels, the W one shared with 2,554 tile pins.\nFix (xg5fb): no column stacks more than 4 SRAMs (164 um) or 2+2 ROMs; every column is split into a S stack and a N\nstack with a full-width macro-free centre band, so >= 420 um of height is free for W<->E routing at every x, and\n8-stack pin faces become 4-stack faces (1.65k pins) (xg5 channels, half the pins per face); W pin face no longer abuts an SRAM face.\nfb: 648 x 864 (same x columns as xg5: banks 43.2 / 216 / 432, ROM 345.6, exp 561.6); mac 0-3 S y 86.4, mac 4-7 N\ny 611.28; ROMs 3 S (y 86.4) + 4 N (y 524.88); exp SRAMs 3 S + 3 N.\nRTL, pins (faces/order), clock K=16, census fixes = xg5c e1c24fa0a unchanged.\n\nPrevious:\nS81-TILES-E (10-20, LEAD9-S81 decision 14:30): kit s81sl_xg5 = the slice gather sub-leaf re-merged (ot_s81sl_xg5 =\not_s81sl_rs + ot_s81sl_xs4 + issuer relay) so the 3 x 1,031-b gather port stays inside one tile.\n\nWhy: the split rs4 leaf was PIN-BOUND (13,750 signal pins in 864 x 518.4, util 2.6%; at <= 6 pins/um its minimum outline\ngives ~3.7%) and its placement TT was -313.8 ps; owner 10-20 09:09 REPARTITION rule for pin-bound tiles.\nOutline = the original xg slot 648 x 561.6 (base spec base_s81sl_xg_spec_xg1019.json, claude/s81-xg-1019): estimated\nstd ~30k um2 (rs4 synth 12.3k + xs4 synth 16.5k + XG5 copies) + 37 macros 115.8k um2 = 146k -> util ~40%; pins\n11,914 on full faces <= 5.8/um (W/E 4.5, N 5.8, S 4.7).\nMacro map (SRAM / ROM / exp-SRAM pins are on the L/R faces only -> deliberate N-S abutted stacks, gap 0.024 um, bare\ntouching faces; channels only between columns; stack origins on the 43.2 / 21.6 grid, as the original xg kit):\n  x 43.2   bank 1 (W ring source) 8 x 128x256 SRAM, y 108 + 41.088 k   | x 216.0 bank 0 (own) | x 432.0 bank 2 (E source)\n  x 345.6  7 x ROM 4096x72, y 64.8 + 62.976 k\n  x 561.6  6 x exponent SRAM 128x64 (source 0/1/2 x beat bit 2), y 108 + 27.6 k\nChannels: 34.8-78 um between macro columns, W edge 43.2, E edge 52.7, S strip 108 / N strip 108 for the face pin cells.\n\nXG5c (DRIVE-S81-XG 10-20): xg5b gate PRE_GATE_NATIVE_CENSUS_REFUSED, 3 roots > 32 in ot_s81sl_xs4_cal: pok[2] (base_q 12 + nrows 13 enables, 36 mapped), due[4] (last_ts 24-b mux + age/act/rpt, 57), due5 (consume_index 13 + count/fault/fetch, 37). Fix: pq 4 -> 6 kept copies (pok[4] nrows, pok[5] consume_index); kept due instances u_due5c (consume_index) and u_due4l0/u_due4l1 (last_ts 12 b each). Value-preserving (same function per copy)."
+}
