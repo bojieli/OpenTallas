@@ -1,0 +1,30 @@
+[
+  {
+    "name": "hbm_hcq_bank_e2_rw9sp-20261021-103756",
+    "path": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_bank_e2_rw9sp-20261021-103756/routes/gate/work/orfs/native_census.json",
+    "sha256": "d12420810ee453407ed2a94dff0f1ea12ff1431f2a99e6ed5c1034cb613640f2",
+    "source": "8eafe4ec3",
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hbm_hc_bankq_ft_rw8_static_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "57b6ff08c281807ef06a1313ffa8c218778824082ad86edc1fb7898b04ff68eb"
+    },
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "roots_examined": 23422,
+    "violations": 0
+  },
+  {
+    "name": "hbm_hcq_bank_e2_rw9spb-20261021-103757",
+    "path": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_bank_e2_rw9spb-20261021-103757/routes/gate/work/orfs/native_census.json",
+    "sha256": "1a330f4464e20ecee38d40293b8c427adc5fb46b7e0e3c9e43c7b80ed7a72101",
+    "source": "8eafe4ec3",
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hbm_hc_bankq_ft_rw8_static_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "57b6ff08c281807ef06a1313ffa8c218778824082ad86edc1fb7898b04ff68eb"
+    },
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "roots_examined": 23422,
+    "violations": 0
+  }
+]
