@@ -21,7 +21,7 @@ module ot_s81sl_fp_add_n32 #(
     parameter integer CUTS = 7'b1101011
 ) (
     input  wire        clk,
-    input  wire        rst_n,
+    input  wire [5:0]  rst_n,
     input  wire        valid_in,
     input  wire [31:0] a,
     input  wire [31:0] b,
@@ -44,17 +44,20 @@ module ot_s81sl_fp_add_n32 #(
     wire a_zero = (a[30:0] == 31'd0);
     wire b_zero = (b[30:0] == 31'd0);
     wire bypass = nonfinite || a_zero || b_zero;
-    wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
+    wire [31:0] bypass_code;
+    for(genvar g=0;g<4;g=g+1)begin:g_bypass
+      ot_s81sl_fp_bypass #(.LO(8*g)) u_bp(.a(a),.b(b),.y(bypass_code[8*g+:8]));
+    end
     wire [7:0] dab, dba;
     wire dab_c, dba_c;
     ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
     ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
     wire [5:0] g6, g0;                         // {valid, f_eq, f_lt, -, dab >= 28, dba >= 28}
-    ot_s81sl_fp_cut #(.W(6), .CUT(K6)) u_g6 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(6), .CUT(K6)) u_g6 (.clk(clk), .rst_n(rst_n[0]),
         .d({valid_in, a_field == b_field, a_field < b_field, 1'b0, dab >= 8'd28, dba >= 8'd28}), .q(g6));
     localparam integer WA6 = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8 + 31 + 31;
     wire [WA6-1:0] q6;
-    ot_s81sl_fp_cut #(.W(WA6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(WA6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rst_n[0]),
         .d({valid_in, bypass, (nonfinite ? E_NONFINITE : E_NONE), bypass_code, a[31] ^ b[31], a[31], b[31],
             a_exp, b_exp, a_man, b_man, dab, dba, a[30:0], b[30:0]}), .q(q6));
     wire [30:0] c_a = q6[61:31], c_b = q6[30:0];
@@ -67,7 +70,7 @@ module ot_s81sl_fp_add_n32 #(
     wire cmp_c = g6[4] ? frac_c : !g6[3];          // a >= b
     localparam integer WA = 1 + 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8;
     wire [WA-1:0] qa;
-    ot_s81sl_fp_cut #(.W(WA), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(WA), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n[0]),
         .d({q6[WA6-1], !cmp_c, q6[WA6-2:62]}), .q(qa));
     wire        x_v, x_swap, x_byp, x_sub, x_as, x_bs;
     wire [1:0]  x_err;
@@ -106,7 +109,7 @@ module ot_s81sl_fp_add_n32 #(
             end
         end
     endfunction
-    ot_s81sl_fp_cut #(.W(6), .CUT(K0)) u_g0 (.clk(clk), .rst_n(rst_n), .d(g6), .q(g0));
+    ot_s81sl_fp_cut #(.W(6), .CUT(K0)) u_g0 (.clk(clk), .rst_n(rst_n[0]), .d(g6), .q(g0));
     wire [7:0] swap_cp;
     ot_s81sl_fp_copy #(.W(1),.N(8),.CUT(K0)) u_swap_cp(.clk(clk),.d(!cmp_c),.q(swap_cp));
     wire [7:0] pick_exp; wire [23:0] pick_big; wire [27:0] pick_small;
@@ -123,7 +126,7 @@ module ot_s81sl_fp_add_n32 #(
     ot_s81sl_fp_jam28 u_jb(.clk(clk),.man(x_bman),.raw_count(q6[74:70]),.raw_far(g6[1]),.y(small_b));
     localparam integer W1 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 28;
     wire [W1-1:0] q1;
-    ot_s81sl_fp_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n[0]),
         .d({x_v, x_byp, x_sub, x_swap ? x_bs : x_as, x_err, x_code, pick_exp,
             pick_big, pick_small}), .q(q1));
     wire        s1_v, s1_byp, s1_sub, s1_sign;
@@ -141,7 +144,7 @@ module ot_s81sl_fp_add_n32 #(
     ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
     localparam integer W2 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
     wire [W2-1:0] q2;
-    ot_s81sl_fp_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rst_n[0]),
         .d({s1_v, s1_byp, s1_sub, s1_sign, s1_err, s1_code, s1_exp, sum_w, dif_w}), .q(q2));
     wire        t_v, t_byp, t_sub, t_sign;
     wire [1:0]  t_err;
@@ -151,14 +154,18 @@ module ot_s81sl_fp_add_n32 #(
     assign {t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, sum, dif} = q2;
     // ---- the add's renormalise; the sentinel leading-zero count ------------------------------------------
     wire carry = sum[27];
-    wire [26:0] add_val = carry ? {sum[27:2], sum[1] | sum[0]} : sum[26:0];
+    wire[26:0] add_val;
+    for(genvar g=0;g<7;g=g+1)begin:g_add_val
+      localparam integer W=(g==6)?3:4;
+      ot_s81sl_fp_add_pick #(.LO(4*g),.W(W)) u_p(.a(big28),.b(s1_small),.sum(sum),.y(add_val[4*g+:W]));
+    end
     wire [7:0]  room = t_exp - 8'd1;
     wire [26:0] sentinel = (room <= 8'd26) ? (27'd1 << (5'd26 - room[4:0])) : 27'd0;
     wire [5:0]  lz_w;
     ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
     localparam integer W3 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 6 + 1;
     wire [W3-1:0] q3;
-    ot_s81sl_fp_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rst_n[0]),
         .d({t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, lz_w, carry}), .q(q3));
     wire        w_v, w_byp, w_sub, w_sign, w_carry;
     wire [1:0]  w_err;
@@ -178,9 +185,17 @@ module ot_s81sl_fp_add_n32 #(
     ot_hdc_inc_k #(.W(8)) u_eadd (.a(w_exp), .inc(w_carry), .y(exp_add), .co(exp_add_c));
     localparam integer W4 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27;
     wire [W4-1:0] q4;
-    ot_s81sl_fp_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rst_n),
-        .d({w_v, w_byp, w_sign, w_sub && (w_dif == 28'd0), w_err, w_code, w_sub ? exp_sub : exp_add,
-            w_sub ? sub_val : w_add}), .q(q4));
+    wire[7:0] sub_cp;
+    ot_s81sl_fp_copy #(.W(1),.N(8),.CUT(K3)) u_sub_cp(.clk(clk),.d(t_sub),.q(sub_cp));
+    wire[7:0] pick_ex;wire[26:0] pick_val;
+    ot_s81sl_fp_mux #(.W(8)) u_ex(.s(sub_cp[0]),.a(exp_sub),.b(exp_add),.y(pick_ex));
+    for(genvar g=0;g<7;g=g+1)begin:g_val
+      localparam integer W=(g==6)?3:4;
+      ot_s81sl_fp_mux #(.W(W)) u_p(.s(sub_cp[g+1]),.a(sub_val[4*g+:W]),.b(w_add[4*g+:W]),.y(pick_val[4*g+:W]));
+    end
+    ot_s81sl_fp_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rst_n[0]),
+        .d({w_v, w_byp, w_sign, w_sub && (w_dif == 28'd0), w_err, w_code, pick_ex,
+            pick_val}), .q(q4));
     wire        s2_v, s2_byp, s2_sign, s2_zero;
     wire [1:0]  s2_err;
     wire [31:0] s2_code;
@@ -194,7 +209,7 @@ module ot_s81sl_fp_add_n32 #(
     ot_hdc_inc_k #(.W(24)) u_rnd (.a(s2_val[26:3]), .inc(inc), .y(rnd_w), .co(rnd_cw));
     localparam integer W5 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 1;
     wire [W5-1:0] q5;
-    ot_s81sl_fp_cut #(.W(W5), .CUT(K5)) u_k5 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W5), .CUT(K5)) u_k5 (.clk(clk), .rst_n(rst_n[0]),
         .d({s2_v, s2_byp, s2_zero, s2_sign, s2_err, s2_code, s2_exp, rnd_w, rnd_cw}), .q(q5));
     wire        u_v, u_byp, u_zero, u_sign, rnd_c;
     wire [1:0]  u_err;
@@ -213,15 +228,20 @@ module ot_s81sl_fp_add_n32 #(
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (u_exp == 8'hff) || (e >= 9'd255);
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
-        else begin
-            valid_out <= u_v;
-            if (u_byp) begin y <= u_code; err <= u_err; end
-            else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
-            else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
-            else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
-        end
+    wire[3:0] byp_cp;
+    ot_s81sl_fp_copy #(.W(1),.N(4),.CUT(K5)) u_byp_cp(.clk(clk),.d(s2_byp),.q(byp_cp));
+    wire nz=|code[30:0];
+    for(genvar g=0;g<4;g=g+1)begin:g_out
+      wire[7:0] nd;
+      ot_s81sl_fp_out_byte u_e(.byp(byp_cp[g]),.zero(u_zero),.over(over),.nz(nz),.code(code[8*g+:8]),.bc(u_code[8*g+:8]),.y(nd));
+      always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
+    end
+    always @(posedge clk or negedge rst_n[5])begin
+      if(!rst_n[5])begin err<=E_NONE;valid_out<=0;end
+      else begin
+        valid_out<=u_v;
+        if(u_byp)err<=u_err;else if(u_zero)err<=E_NONE;else if(over)err<=E_OVERFLOW;else err<=E_NONE;
+      end
     end
 endmodule
 
@@ -229,7 +249,7 @@ module ot_s81sl_fp_mul_n32 #(
     parameter integer CUTS = 8'b01101011
 ) (
     input  wire        clk,
-    input  wire        rst_n,
+    input  wire [5:0]  rst_n,
     input  wire        valid_in,
     input  wire [31:0] a,
     input  wire [31:0] b,
@@ -258,7 +278,7 @@ module ot_s81sl_fp_mul_n32 #(
     ot_hdc_lzc32 u_lb (.x({b[22:0], 9'h1ff}), .n(b_cz));
     localparam integer W0 = 1 + 1 + 2 + 1 + 23 + 23 + 8 + 8 + 5 + 5;
     wire [W0-1:0] q0;
-    ot_s81sl_fp_cut #(.W(W0), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W0), .CUT(K0)) u_k0 (.clk(clk), .rst_n(rst_n[0]),
         .d({valid_in, nonfinite || zero, (nonfinite ? E_NONFINITE : E_NONE), a[31] ^ b[31], a[22:0], b[22:0],
             a_field, b_field, a_cz[4:0], b_cz[4:0]}), .q(q0));
     wire        o0_v, o0_byp, o0_sign;
@@ -281,7 +301,7 @@ module ot_s81sl_fp_mul_n32 #(
     wire signed [11:0] b_power = b_s ? (-12'sd150 - {7'd0, o0_bcz}) : ($signed({4'd0, o0_be}) - 12'sd150);
     localparam integer W1 = 1 + 1 + 2 + 1 + 24 + 24 + 12 + 12;
     wire [W1-1:0] q1;
-    ot_s81sl_fp_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W1), .CUT(K1)) u_k1 (.clk(clk), .rst_n(rst_n[0]),
         .d({o0_v, o0_byp, o0_err, o0_sign, a_n, b_n, a_power, b_power}), .q(q1));
     wire        p_v, p_byp, p_sign;
     wire [1:0]  p_err;
@@ -307,7 +327,7 @@ module ot_s81sl_fp_mul_n32 #(
     assign rows[288+:96]=row_l2[432+:96];
     localparam integer W2 = 1 + 1 + 2 + 1 + 48 * 8 + 12;
     wire [W2-1:0] q2;
-    ot_s81sl_fp_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rst_n[0]),
         .d({p_v, p_byp, p_err, p_sign, rows, power}), .q(q2));
     wire        s1_v, s1_byp, s1_sign;
     wire [1:0]  s1_err;
@@ -329,7 +349,7 @@ module ot_s81sl_fp_mul_n32 #(
     endgenerate
     localparam integer W3 = 1 + 1 + 2 + 1 + 48 * 4 + 12;
     wire [W3-1:0] q3;
-    ot_s81sl_fp_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W3), .CUT(K3)) u_k3 (.clk(clk), .rst_n(rst_n[0]),
         .d({s1_v, s1_byp, s1_err, s1_sign, l5, s1_power}), .q(q3));
     wire        r3_v, r3_byp, r3_sign;
     wire [1:0]  r3_err;
@@ -346,17 +366,13 @@ module ot_s81sl_fp_mul_n32 #(
     wire signed [11:0] fl46 = r3_power + 12'sd46;
     wire signed [11:0] sh_sub = -(r3_power + 12'sd149);
     wire [5:0] shc = (sh_sub > 12'sd63) ? 6'd63 : sh_sub[5:0];
-    reg [47:0] m_round, m_sticky;
-    integer k;
-    always @* begin
-        for (k = 0; k < 48; k = k + 1) begin
-            m_round[k] = ({6'd0, k[5:0]} == {6'd0, shc} - 12'd1);
-            m_sticky[k] = ({6'd0, k[5:0]} < {6'd0, shc} - 12'd1);
-        end
+    wire[47:0] m_round,m_sticky;
+    for(genvar g=0;g<6;g=g+1)begin:g_mask
+      ot_s81sl_fp_mask8 #(.LO(8*g)) u_m(.sh(shc),.mr(m_round[8*g+:8]),.ms(m_sticky[8*g+:8]));
     end
     localparam integer W4 = 1 + 1 + 2 + 1 + 96 + 1 + 1 + 12 + 12 + 6 + 48 + 48;
     wire [W4-1:0] q4;
-    ot_s81sl_fp_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W4), .CUT(K4)) u_k4 (.clk(clk), .rst_n(rst_n[0]),
         .d({r3_v, r3_byp, r3_err, r3_sign, l7, fl47 < -12'sd126, fl46 < -12'sd126, fl47, fl46, shc, m_round, m_sticky}),
         .q(q4));
     wire        q_v, q_byp, q_sign, q_s47, q_s46;
@@ -372,7 +388,7 @@ module ot_s81sl_fp_mul_n32 #(
     ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(q_l7[47:0]), .b(q_l7[95:48]), .cin(1'b0), .s(prod), .cout(unused_cout));
     localparam integer W5 = 1 + 1 + 2 + 1 + 48 + 1 + 1 + 12 + 12 + 6 + 48 + 48;
     wire [W5-1:0] q5;
-    ot_s81sl_fp_cut #(.W(W5), .CUT(K5)) u_k5 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W5), .CUT(K5)) u_k5 (.clk(clk), .rst_n(rst_n[0]),
         .d({q_v, q_byp, q_err, q_sign, prod, q_s47, q_s46, q_fl47, q_fl46, q_sh, q_mr, q_ms}), .q(q5));
     wire        s2_v, s2_byp, s2_sign, s2_sub47, s2_sub46;
     wire [1:0]  s2_err;
@@ -384,7 +400,12 @@ module ot_s81sl_fp_mul_n32 #(
     wire top = s2_prod[47];
     wire is_sub = top ? s2_sub47 : s2_sub46;
     wire signed [11:0] fl = top ? s2_fl47 : s2_fl46;
-    wire [23:0] n_main = top ? s2_prod[47:24] : s2_prod[46:23];
+    wire[9:0] top_cp;
+    ot_s81sl_fp_copy #(.W(1),.N(10),.CUT(K5)) u_top_cp(.clk(clk),.d(prod[47]),.q(top_cp));
+    wire[23:0] n_main;
+    for(genvar g=0;g<3;g=g+1)begin:g_n_main
+      ot_s81sl_fp_mux #(.W(8)) u_p(.s(top_cp[g]),.a(s2_prod[24+8*g+:8]),.b(s2_prod[23+8*g+:8]),.y(n_main[8*g+:8]));
+    end
     wire n_rb = top ? s2_prod[23] : s2_prod[22];
     wire n_st = top ? (|s2_prod[22:0]) : (|s2_prod[21:0]);
     wire [47:0] sub_shifted;
@@ -393,7 +414,10 @@ module ot_s81sl_fp_mul_n32 #(
     wire [23:0] s_main = sub_shifted[23:0];
     wire s_rb = |(s2_prod & s2_mr);
     wire s_st = |(s2_prod & s2_ms);
-    wire [23:0] main = is_sub ? s_main : n_main;
+    wire[23:0] main;
+    for(genvar g=0;g<3;g=g+1)begin:g_main
+      ot_s81sl_fp_sub_pick u_m(.top(top_cp[7+g]),.s47(s2_sub47),.s46(s2_sub46),.s(s_main[8*g+:8]),.n(n_main[8*g+:8]),.y(main[8*g+:8]));
+    end
     wire rb = is_sub ? s_rb : n_rb;
     wire st = is_sub ? s_st : n_st;
     // mul_lat's encode: floor_ = fl + carry; over = !sub && floor_ > 127; field = floor_[7:0] + 127.  Both
@@ -403,11 +427,13 @@ module ot_s81sl_fp_mul_n32 #(
     wire [7:0]  fa46 = s2_fl46[7:0] + 8'd127, fb46 = f46p1[7:0] + 8'd127;
     wire        oa47 = s2_fl47 > 12'sd127, ob47 = f47p1 > 12'sd127;
     wire        oa46 = s2_fl46 > 12'sd127, ob46 = f46p1 > 12'sd127;
-    wire [7:0]  fa = top ? fa47 : fa46, fb = top ? fb47 : fb46;
-    wire        oa = top ? oa47 : oa46, ob = top ? ob47 : ob46;
+    wire[7:0] fa,fb;
+    ot_s81sl_fp_mux #(.W(8)) u_fa(.s(top_cp[3]),.a(fa47),.b(fa46),.y(fa));
+    ot_s81sl_fp_mux #(.W(8)) u_fb(.s(top_cp[4]),.a(fb47),.b(fb46),.y(fb));
+    wire        oa = top_cp[5] ? oa47 : oa46, ob = top_cp[6] ? ob47 : ob46;
     localparam integer W6 = 1 + 1 + 2 + 1 + 1 + 24 + 1 + 8 + 8 + 1 + 1;
     wire [W6-1:0] q6;
-    ot_s81sl_fp_cut #(.W(W6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W6), .CUT(K6)) u_k6 (.clk(clk), .rst_n(rst_n[0]),
         .d({s2_v, s2_byp, s2_err, s2_sign, is_sub, main, rb && (st || main[0]), fa, fb, oa, ob}), .q(q6));
     wire        r_v, r_byp, r_sign, r_sub, r_inc, r_oa, r_ob;
     wire [1:0]  r_err;
@@ -420,7 +446,7 @@ module ot_s81sl_fp_mul_n32 #(
     ot_hdc_inc_k #(.W(24)) u_rnd (.a(r_main), .inc(r_inc), .y(rnd_w), .co(rnd_cw));
     localparam integer W7 = 1 + 1 + 2 + 1 + 1 + 24 + 1 + 8 + 8 + 1 + 1;
     wire [W7-1:0] q7;
-    ot_s81sl_fp_cut #(.W(W7), .CUT(K7)) u_k7 (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_fp_cut #(.W(W7), .CUT(K7)) u_k7 (.clk(clk), .rst_n(rst_n[0]),
         .d({r_v, r_byp, r_err, r_sign, r_sub, rnd_w, rnd_cw, r_fa, r_fb, r_oa, r_ob}), .q(q7));
     wire        o_v, o_byp, o_sign, o_sub, rnd_c, o_oa, o_ob;
     wire [1:0]  o_err;
@@ -435,14 +461,15 @@ module ot_s81sl_fp_mul_n32 #(
     wire sub_carry = o_sub && rnd[23];
     wire [31:0] code = o_sub ? (sub_carry ? {o_sign, 8'h01, 23'd0} : {o_sign, 8'h00, rnd[22:0]})
                              : {o_sign, field, man[22:0]};
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
-        else begin
-            valid_out <= o_v;
-            if (o_byp) begin y <= 32'd0; err <= o_err; end
-            else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
-            else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
-        end
+    wire nz=|code[30:0];
+    for(genvar g=0;g<4;g=g+1)begin:g_out
+      wire[7:0] nd;
+      ot_s81sl_fp_out_zero u_e(.byp(o_byp),.over(over),.nz(nz),.code(code[8*g+:8]),.y(nd));
+      always @(posedge clk or negedge rst_n[g+1])if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
+    end
+    always @(posedge clk or negedge rst_n[5])begin
+      if(!rst_n[5])begin err<=E_NONE;valid_out<=0;end
+      else begin valid_out<=o_v;if(o_byp)err<=o_err;else if(over)err<=E_OVERFLOW;else err<=E_NONE;end
     end
 endmodule
 
@@ -477,13 +504,13 @@ endmodule
  assign y[47:0]=r0^r1^r2;
  assign y[95:48]=((r0&r1)|(r0&r2)|(r1&r2))<<1;
 endmodule
-module ot_s81sl_qadd_n32 #(parameter integer LAT=6)(input wire clk,rst_n,v,input wire[31:0] a,b,output wire[31:0] y,output wire fault);
+module ot_s81sl_qadd_n32 #(parameter integer LAT=6)(input wire clk,input wire[5:0] rst_n,input wire v,input wire[31:0] a,b,output wire[31:0] y,output wire fault);
  wire[1:0] err;wire vo;
  if(LAT!=6)begin:g_bad ot_s81sl_FP_LAT_must_equal_6 u_bad();end
  ot_s81sl_fp_add_n32 u(.clk(clk),.rst_n(rst_n),.valid_in(v),.a(a),.b(b),.y(y),.err(err),.valid_out(vo));
  assign fault=vo&&(err!=0);
 endmodule
-module ot_s81sl_qmul_n32 #(parameter integer LAT=6)(input wire clk,rst_n,v,input wire[31:0] a,b,output wire[31:0] y,output wire fault);
+module ot_s81sl_qmul_n32 #(parameter integer LAT=6)(input wire clk,input wire[5:0] rst_n,input wire v,input wire[31:0] a,b,output wire[31:0] y,output wire fault);
  wire[1:0] err;wire vo;
  if(LAT!=6)begin:g_bad ot_s81sl_FP_LAT_must_equal_6 u_bad();end
  ot_s81sl_fp_mul_n32 u(.clk(clk),.rst_n(rst_n),.valid_in(v),.a(a),.b(b),.y(y),.err(err),.valid_out(vo));
@@ -527,4 +554,29 @@ module ot_s81sl_fp_jam28(input wire clk,input wire[23:0] man,input wire[4:0] raw
 endmodule
 (* keep_hierarchy=1 *) module ot_s81sl_fp_norm_pick(input wire[7:0] e,input wire[3:0] s,n,output wire[3:0] y);
  assign y=(e==0)?s:n;
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81sl_fp_bypass #(parameter integer LO=0)(input wire[31:0] a,b,output wire[7:0] y);
+ wire nf=(a[30:23]==255)||(b[30:23]==255);wire az=(a[30:0]==0),bz=(b[30:0]==0);
+ assign y=nf?0:(az?(bz?0:b[LO+:8]):a[LO+:8]);
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_fp_add_pick #(parameter integer LO=0,W=4)(input wire[27:0] a,b,sum,output wire[W-1:0] y);
+ wire[27:0] local_sum=a+b;
+ wire[26:0] cv={sum[27:2],sum[1]|sum[0]};
+ assign y=local_sum[27]?cv[LO+:W]:sum[LO+:W];
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_fp_mask8 #(parameter integer LO=0)(input wire[5:0] sh,output wire[7:0] mr,ms);
+ for(genvar g=0;g<8;g=g+1)begin:g_b
+  assign mr[g]=({6'd0,6'(LO+g)}=={6'd0,sh}-12'd1);
+  assign ms[g]=({6'd0,6'(LO+g)}<{6'd0,sh}-12'd1);
+ end
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_fp_sub_pick(input wire top,s47,s46,input wire[7:0] s,n,output wire[7:0] y);
+ wire sub=top?s47:s46;assign y=sub?s:n;
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_fp_out_byte(input wire byp,zero,over,nz,input wire[7:0] code,bc,output wire[7:0] y);
+ assign y=byp?bc:((zero||over||!nz)?8'd0:code);
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_fp_out_zero(input wire byp,over,nz,input wire[7:0] code,output wire[7:0] y);
+ assign y=(byp||over||!nz)?8'd0:code;
 endmodule
