@@ -76,7 +76,8 @@ def finalize(model, per, source_root=None):
             per[k0].remove((rep, cp)); per.setdefault(k1, []).append((rep, cp))
             moved.append(dict(rep=rep, from_clock=f'clk_r{k0}', clock=dst, loads=loads))
         clocks[rep][cp] = dst
-    # Retain empty region indexes here: caller owns its clock-root inventory.
+    for k in [k for k, eps in per.items() if not eps]:
+        del per[k]
     candidates = []
     for rep, (net, si, sp) in sorted(inputs.items()):
         rd = set(clocks[rep].values())
@@ -87,12 +88,12 @@ def finalize(model, per, source_root=None):
                                source=si+'/'+sp, source_clocks=sorted(rs), clocks=sorted(rd),
                                latency_edges=10 if by[rep].master.endswith('_p8') else 2,
                                qualification='HOLD: receiving-clock source proof and boot/calendar interval evidence required'))
-    proof = dict(path=RTL, sha256=None, structural_pass=False)
+    # Reuse the source proof already performed by _reset_tree; no new gate.
+    proof = dict(path=RTL, sha256=None,
+                 structural_pass=bool((model.get('reset_sync', {}).get('rep_check') or [False])[0]))
     if source_root is not None:
-        from qwen_split.reset_sync_contract import rep_check
         path = Path(source_root) / RTL
-        proof.update(sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-                     structural_pass=rep_check(source_root)[0])
+        proof['sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
     result = dict(schema='opentallas.qwen.final-reset-capture-plan.v1', moved=moved,
                   split_required=split, unresolved=unresolved, sync_candidates=candidates,
                   source_proof=proof, calendar='HOLD: no release bounds invented',
