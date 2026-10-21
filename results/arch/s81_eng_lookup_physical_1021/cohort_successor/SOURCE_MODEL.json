@@ -45,7 +45,51 @@
       "clock_entry_proposal": {
         "face": "S",
         "axis_um": 259.2
-      }
+      },
+      "original_roll_h_landing_box_um": [
+        270.0,
+        129.6,
+        324.0,
+        172.8
+      ],
+      "original_seed_roll_s_box_um": [
+        313.2,
+        108.0,
+        318.59999999999997,
+        118.8
+      ],
+      "original_seed_roll_n_box_um": [
+        313.2,
+        118.8,
+        324.0,
+        129.6
+      ],
+      "original_res_n_box_um": [
+        216.0,
+        205.2,
+        237.60000000000002,
+        216.0
+      ],
+      "original_core_res_c_box_um": [
+        216.0,
+        216.0,
+        237.60000000000002,
+        226.8
+      ],
+      "critical_bounds_um": {
+        "seedmain_to_roll_s_fullcycle": 280.8,
+        "roll_s_to_roll_n_halfcycle": 32.4,
+        "roll_n_to_roll_h_halfcycle": 108.0,
+        "res_n_to_res_c_halfcycle": 43.2
+      },
+      "register_owners": {
+        "roll_h": "u_e.u_hash.u_group0.u_x_<column>_<copy> existing6x64captures/column,8columns",
+        "roll_s": "u_e.u_hash.u_seed originalroll_s_0_1,64FF Q-netowner",
+        "roll_n": "u_e.u_hash.u_seed.u_n[01]_0_1,128FF",
+        "res_n": "u_e.u_hash.u_group0 outputdrivers,192negativeFF",
+        "res_c": "u_e.res_c[0+:192] existingpositiveFF"
+      },
+      "main_logic_region": "Originalgroup rectangle minus its two actualroll_h/res_n landingrectangles, retainedasnonoverlappingrectangularunion; actualmappedarea/legalrows beforegate."
     },
     {
       "index": 1,
@@ -72,7 +116,51 @@
       "clock_entry_proposal": {
         "face": "S",
         "axis_um": 388.8
-      }
+      },
+      "original_roll_h_landing_box_um": [
+        361.8,
+        129.6,
+        415.8,
+        172.8
+      ],
+      "original_seed_roll_s_box_um": [
+        383.4,
+        108.0,
+        388.79999999999995,
+        118.8
+      ],
+      "original_seed_roll_n_box_um": [
+        383.4,
+        118.8,
+        394.2,
+        129.6
+      ],
+      "original_res_n_box_um": [
+        345.6,
+        205.2,
+        367.2,
+        216.0
+      ],
+      "original_core_res_c_box_um": [
+        345.6,
+        216.0,
+        367.2,
+        226.8
+      ],
+      "critical_bounds_um": {
+        "seedmain_to_roll_s_fullcycle": 210.6,
+        "roll_s_to_roll_n_halfcycle": 32.4,
+        "roll_n_to_roll_h_halfcycle": 86.4,
+        "res_n_to_res_c_halfcycle": 43.2
+      },
+      "register_owners": {
+        "roll_h": "u_e.u_hash.u_group1.u_x_<column>_<copy> existing6x64captures/column,8columns",
+        "roll_s": "u_e.u_hash.u_seed originalroll_s_0_2,64FF Q-netowner",
+        "roll_n": "u_e.u_hash.u_seed.u_n[01]_0_2,128FF",
+        "res_n": "u_e.u_hash.u_group1 outputdrivers,192negativeFF",
+        "res_c": "u_e.res_c[192+:192] existingpositiveFF"
+      },
+      "main_logic_region": "Originalgroup rectangle minus its two actualroll_h/res_n landingrectangles, retainedasnonoverlappingrectangularunion; actualmappedarea/legalrows beforegate."
     },
     {
       "index": 2,
@@ -99,7 +187,51 @@
       "clock_entry_proposal": {
         "face": "S",
         "axis_um": 518.4
-      }
+      },
+      "original_roll_h_landing_box_um": [
+        453.6,
+        129.6,
+        507.6,
+        172.8
+      ],
+      "original_seed_roll_s_box_um": [
+        453.6,
+        108.0,
+        459.0,
+        118.8
+      ],
+      "original_seed_roll_n_box_um": [
+        453.6,
+        118.8,
+        464.40000000000003,
+        129.6
+      ],
+      "original_res_n_box_um": [
+        475.20000000000005,
+        205.2,
+        496.8,
+        216.0
+      ],
+      "original_core_res_c_box_um": [
+        475.20000000000005,
+        216.0,
+        496.8,
+        226.8
+      ],
+      "critical_bounds_um": {
+        "seedmain_to_roll_s_fullcycle": 232.2,
+        "roll_s_to_roll_n_halfcycle": 32.4,
+        "roll_n_to_roll_h_halfcycle": 108.0,
+        "res_n_to_res_c_halfcycle": 43.2
+      },
+      "register_owners": {
+        "roll_h": "u_e.u_hash.u_group2.u_x_<column>_<copy> existing6x64captures/column,8columns",
+        "roll_s": "u_e.u_hash.u_seed originalroll_s_0_3,64FF Q-netowner",
+        "roll_n": "u_e.u_hash.u_seed.u_n[01]_0_3,128FF",
+        "res_n": "u_e.u_hash.u_group2 outputdrivers,192negativeFF",
+        "res_c": "u_e.res_c[384+:192] existingpositiveFF"
+      },
+      "main_logic_region": "Originalgroup rectangle minus its two actualroll_h/res_n landingrectangles, retainedasnonoverlappingrectangularunion; actualmappedarea/legalrows beforegate."
     },
     {
       "index": 3,
@@ -126,7 +258,51 @@
       "clock_entry_proposal": {
         "face": "N",
         "axis_um": 259.2
-      }
+      },
+      "original_roll_h_landing_box_um": [
+        270.0,
+        237.6,
+        324.0,
+        280.8
+      ],
+      "original_seed_roll_s_box_um": [
+        313.2,
+        216.0,
+        318.59999999999997,
+        226.79999999999998
+      ],
+      "original_seed_roll_n_box_um": [
+        313.2,
+        226.79999999999998,
+        324.0,
+        237.6
+      ],
+      "original_res_n_box_um": [
+        216.0,
+        313.2,
+        237.60000000000002,
+        324.0
+      ],
+      "original_core_res_c_box_um": [
+        216.0,
+        324.0,
+        237.60000000000002,
+        334.8
+      ],
+      "critical_bounds_um": {
+        "seedmain_to_roll_s_fullcycle": 388.8,
+        "roll_s_to_roll_n_halfcycle": 32.4,
+        "roll_n_to_roll_h_halfcycle": 108.0,
+        "res_n_to_res_c_halfcycle": 43.2
+      },
+      "register_owners": {
+        "roll_h": "u_e.u_hash.u_group3.u_x_<column>_<copy> existing6x64captures/column,8columns",
+        "roll_s": "u_e.u_hash.u_seed originalroll_s_1_1,64FF Q-netowner",
+        "roll_n": "u_e.u_hash.u_seed.u_n[01]_1_1,128FF",
+        "res_n": "u_e.u_hash.u_group3 outputdrivers,192negativeFF",
+        "res_c": "u_e.res_c[576+:192] existingpositiveFF"
+      },
+      "main_logic_region": "Originalgroup rectangle minus its two actualroll_h/res_n landingrectangles, retainedasnonoverlappingrectangularunion; actualmappedarea/legalrows beforegate."
     },
     {
       "index": 4,
@@ -153,7 +329,51 @@
       "clock_entry_proposal": {
         "face": "N",
         "axis_um": 388.8
-      }
+      },
+      "original_roll_h_landing_box_um": [
+        361.8,
+        237.6,
+        415.8,
+        280.8
+      ],
+      "original_seed_roll_s_box_um": [
+        383.4,
+        216.0,
+        388.79999999999995,
+        226.79999999999998
+      ],
+      "original_seed_roll_n_box_um": [
+        383.4,
+        226.79999999999998,
+        394.2,
+        237.6
+      ],
+      "original_res_n_box_um": [
+        345.6,
+        313.2,
+        367.2,
+        324.0
+      ],
+      "original_core_res_c_box_um": [
+        345.6,
+        324.0,
+        367.2,
+        334.8
+      ],
+      "critical_bounds_um": {
+        "seedmain_to_roll_s_fullcycle": 318.6,
+        "roll_s_to_roll_n_halfcycle": 32.4,
+        "roll_n_to_roll_h_halfcycle": 86.4,
+        "res_n_to_res_c_halfcycle": 43.2
+      },
+      "register_owners": {
+        "roll_h": "u_e.u_hash.u_group4.u_x_<column>_<copy> existing6x64captures/column,8columns",
+        "roll_s": "u_e.u_hash.u_seed originalroll_s_1_2,64FF Q-netowner",
+        "roll_n": "u_e.u_hash.u_seed.u_n[01]_1_2,128FF",
+        "res_n": "u_e.u_hash.u_group4 outputdrivers,192negativeFF",
+        "res_c": "u_e.res_c[768+:192] existingpositiveFF"
+      },
+      "main_logic_region": "Originalgroup rectangle minus its two actualroll_h/res_n landingrectangles, retainedasnonoverlappingrectangularunion; actualmappedarea/legalrows beforegate."
     },
     {
       "index": 5,
@@ -180,7 +400,51 @@
       "clock_entry_proposal": {
         "face": "N",
         "axis_um": 518.4
-      }
+      },
+      "original_roll_h_landing_box_um": [
+        453.6,
+        237.6,
+        507.6,
+        280.8
+      ],
+      "original_seed_roll_s_box_um": [
+        453.6,
+        216.0,
+        459.0,
+        226.79999999999998
+      ],
+      "original_seed_roll_n_box_um": [
+        453.6,
+        226.79999999999998,
+        464.40000000000003,
+        237.6
+      ],
+      "original_res_n_box_um": [
+        475.20000000000005,
+        313.2,
+        496.8,
+        324.0
+      ],
+      "original_core_res_c_box_um": [
+        475.20000000000005,
+        324.0,
+        496.8,
+        334.8
+      ],
+      "critical_bounds_um": {
+        "seedmain_to_roll_s_fullcycle": 340.2,
+        "roll_s_to_roll_n_halfcycle": 32.4,
+        "roll_n_to_roll_h_halfcycle": 108.0,
+        "res_n_to_res_c_halfcycle": 43.2
+      },
+      "register_owners": {
+        "roll_h": "u_e.u_hash.u_group5.u_x_<column>_<copy> existing6x64captures/column,8columns",
+        "roll_s": "u_e.u_hash.u_seed originalroll_s_1_3,64FF Q-netowner",
+        "roll_n": "u_e.u_hash.u_seed.u_n[01]_1_3,128FF",
+        "res_n": "u_e.u_hash.u_group5 outputdrivers,192negativeFF",
+        "res_c": "u_e.res_c[960+:192] existingpositiveFF"
+      },
+      "main_logic_region": "Originalgroup rectangle minus its two actualroll_h/res_n landingrectangles, retainedasnonoverlappingrectangularunion; actualmappedarea/legalrows beforegate."
     }
   ],
   "bbox_candidate_um": [
@@ -197,14 +461,8 @@
   "seed_logic_box_um": [
     302.4,
     43.2,
-    561.6,
+    518.4,
     108
-  ],
-  "seed_roll_n_box_um": [
-    388.8,
-    216,
-    410.4,
-    237.6
   ],
   "area_basis": "actualpriorstd46294um2 andhalo-adjustedmacro11682um2; sixgroup boxes each11197.44um2,5312registerclockpins~1550um2DFFarea lowerbound; actual per-groupmappedcomb+seqarea androwcapacity MUSTmeasure beforegate",
   "latency": {
@@ -223,21 +481,7 @@
     "Actual hierarchygroup fencedarea/rows/nonemptygroups andallregisteredlegs+clockentries, parentclockfacegrant beforephysicaladoption.",
     "PhysicalcriticalPNGrootreview required; no arbitraryCTSkinob retry or clockconstraintrelaxation."
   ],
-  "seed_roll_to_group_conservative_bounds_um": [
-    324.0,
-    194.4,
-    302.4,
-    324.0,
-    194.4,
-    302.4
-  ],
-  "seed_roll_s_box_um": [
-    367.2,
-    216,
-    388.8,
-    237.6
-  ],
-  "seed_logic_to_roll_s_bound_um": 388.8,
-  "seed_roll_s_to_roll_n_bound_um": 64.8,
-  "seed_ownership_refinement": "Disjoint seedmain fence excludes original roll_s FFs (Q-net semantic match) and kept u_n* negative FF leaves; separate adjacent21.6square fences in the row gap216..237.6. No source/edge/register change. Must bind actual mapped Qnets/nonempty groups, no guessed instance match."
+  "seed_ownership_refinement": "Per-clockgroup original64roll_s and128roll_n FFs lie in adjacent smallboxes below theiroriginal3072roll_h inputcaptures. SourceFFs/edges unchanged. Mainlogic separate L-shapedfences. Core1152res_c existingcaptures followactual192-bit groupoutputs.",
+  "halfcycle_budget": "Original negative/positive edges are preserved. Halfcycle wire bounds targeted108um atinput and43.2um atoutput; these are geometry bounds, not delay/STA proof. ActualTT/FFcross-root timing required.",
+  "candidate_fence_tcl_status": "d5a initialwholegroupfence binding is superseded by this refinedhalfcycle model; do not executeunchanged. MustbindactualmappedoutputQnets andnonoverlapmainregions."
 }
