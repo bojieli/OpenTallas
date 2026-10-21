@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qb12b-readonly-1021
+ot-run: ot-epyc7       admits   152 GB (avail 405, growth 299, headroom 0, waiters 0/0 GB) load 54/96 running 12 disk 4440 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qb12b-readonly-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/qb12b-readonly-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/qb12b-readonly-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qb12b-readonly-1021
+ot-run: ot-agidock128  admits    72 GB (avail 61, growth 10, headroom 0, waiters 0/0 GB) load 31/64 running 15 disk 193 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3929735-1792620841 after 0 s
+READONLY_NET_DUMP COMPLETE net39744 (no design mutation/STA/route)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3929735-1792620841): exit 0

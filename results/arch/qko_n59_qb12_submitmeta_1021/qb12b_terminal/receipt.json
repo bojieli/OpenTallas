@@ -1,0 +1,179 @@
+{
+  "unit": "oth-ubuntu-3929735-1792620841",
+  "exit": 0,
+  "net": "net39744",
+  "gate": "FAIL GRT-0183; no reroute",
+  "original_hashes_unchanged": true,
+  "staged_hashes_unchanged": true,
+  "nearby_grid": {
+    "M1": {
+      "cells": 9216,
+      "positive_capacity": 0,
+      "saturated_positive": 0,
+      "overflow_cells": 0,
+      "capacity": 0.0,
+      "usage": 0.0
+    },
+    "M2": {
+      "cells": 9216,
+      "positive_capacity": 9216,
+      "saturated_positive": 3074,
+      "overflow_cells": 0,
+      "capacity": 134656.0,
+      "usage": 119786.0
+    },
+    "M3": {
+      "cells": 9216,
+      "positive_capacity": 9216,
+      "saturated_positive": 1157,
+      "overflow_cells": 0,
+      "capacity": 145908.0,
+      "usage": 82223.0
+    },
+    "M4": {
+      "cells": 9216,
+      "positive_capacity": 9216,
+      "saturated_positive": 7383,
+      "overflow_cells": 0,
+      "capacity": 109568.0,
+      "usage": 103849.0
+    },
+    "M5": {
+      "cells": 9216,
+      "positive_capacity": 9216,
+      "saturated_positive": 427,
+      "overflow_cells": 0,
+      "capacity": 109440.0,
+      "usage": 55159.0
+    },
+    "M6": {
+      "cells": 9216,
+      "positive_capacity": 9216,
+      "saturated_positive": 9216,
+      "overflow_cells": 0,
+      "capacity": 82176.0,
+      "usage": 82176.0
+    },
+    "M7": {
+      "cells": 9216,
+      "positive_capacity": 0,
+      "saturated_positive": 0,
+      "overflow_cells": 0,
+      "capacity": 0.0,
+      "usage": 0.0
+    },
+    "M8": {
+      "cells": 9216,
+      "positive_capacity": 0,
+      "saturated_positive": 0,
+      "overflow_cells": 0,
+      "capacity": 0.0,
+      "usage": 0.0
+    },
+    "M9": {
+      "cells": 9216,
+      "positive_capacity": 0,
+      "saturated_positive": 0,
+      "overflow_cells": 0,
+      "capacity": 0.0,
+      "usage": 0.0
+    }
+  },
+  "endpoint_gcells": {
+    "driver": {
+      "gcell": [
+        217,
+        441
+      ],
+      "capacity_usage": {
+        "M1": [
+          0.0,
+          0.0
+        ],
+        "M2": [
+          14.0,
+          14.0
+        ],
+        "M3": [
+          16.0,
+          11.0
+        ],
+        "M4": [
+          12.0,
+          12.0
+        ],
+        "M5": [
+          12.0,
+          3.0
+        ],
+        "M6": [
+          9.0,
+          9.0
+        ],
+        "M7": [
+          0.0,
+          0.0
+        ],
+        "M8": [
+          0.0,
+          0.0
+        ],
+        "M9": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "sink": {
+      "gcell": [
+        437,
+        440
+      ],
+      "capacity_usage": {
+        "M1": [
+          0.0,
+          0.0
+        ],
+        "M2": [
+          15.0,
+          13.0
+        ],
+        "M3": [
+          16.0,
+          9.0
+        ],
+        "M4": [
+          12.0,
+          9.0
+        ],
+        "M5": [
+          11.0,
+          9.0
+        ],
+        "M6": [
+          9.0,
+          9.0
+        ],
+        "M7": [
+          0.0,
+          0.0
+        ],
+        "M8": [
+          0.0,
+          0.0
+        ],
+        "M9": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "geometry": "Driver x123.916..124.236,y251.667..251.883 -> sink x249.606..249.624,y251.206..251.300 um; 125.708um horizontal span below next SRAM row y259.2. No SRAM-body crossing shown.",
+  "interpretation": "Driver M2/M4/M6 saturated with spare M3/M5; M6 saturated across local window; no zero-capacity wall on M2..M6. This is a bounded saved-state fact, not proof of failed maze cause or legal escape.",
+  "limitations": [
+    "18 transient hook shapes were dropped before checkpoint; original transient obstruction state unavailable",
+    "Stored GCell usage is checkpoint state; not every transient maze state",
+    "No design mutation, STA, repair, resume or reroute"
+  ]
+}
