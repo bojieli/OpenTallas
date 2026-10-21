@@ -6,7 +6,7 @@ import dv_bind as D
 
 class PortClockBind(unittest.TestCase):
  def setUp(self):
-  source=(Path(__file__).resolve().parents[2]/'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv').read_text()
+  source=(Path(__file__).resolve().parent/'fixtures/regional_lep_ports.svh').read_text()
   header=source.split(');',1)[0]
   for clock in ('clk','clk_a','clk_b'):
    self.assertRegex(header,r'input\s+wire\s+'+clock+r'\s*[,\n]')
