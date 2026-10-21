@@ -3282,7 +3282,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         cur_bits[0] = bits
-        path = poly_of(cl, P0, P1, bid=bid, eps=eps)
+        # QW-G5FROOT 10-20: a fault-tree edge (flt_*, observation only) takes NO pass-1 site and no pass-1 path allocation
+        # (_poly0 / die_lane_path book band-gap / lane loads): it is searched after every data bus in pass 2
+        # (dv2f20g5rc: pass-1 'no free spot for flt_t_dvs_W2_g5'; rfs try 4: q3h_col 516-b nets moved by the fault edges'
+        # pass-1 bookings although the roots were invisible)
+        _flt_skip = str(bid).startswith('flt_') and _os.environ.get('OT_SPLIT_FAULT_EMIT', '0') == '1' and \
+            _os.environ.get('OT_RELAY_FAULT_LAST', '1') == '1'
+        path = [P0, (P0[0], P1[1]), P1] if _flt_skip else poly_of(cl, P0, P1, bid=bid, eps=eps)
         span1 = bits * 0.048 + 4.0
         span2 = bits * 0.096 + 4.0
 
@@ -3372,10 +3378,6 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                           'c', [round(q) if isinstance(q, float) else q for q in got[0]], 'at', (round(x0), round(y0)))
             return frames
 
-        # QW-G5FROOT 10-20: a fault-tree edge (flt_*, observation only) takes NO pass-1 site: it is searched after every
-        # data bus in pass 2 (dv2f20g5rc: pass-1 'no free spot for flt_t_dvs_W2_g5' aborted the GEN)
-        _flt_skip = str(bid).startswith('flt_') and _os.environ.get('OT_SPLIT_FAULT_EMIT', '0') == '1' and \
-            _os.environ.get('OT_RELAY_FAULT_LAST', '1') == '1'
         frames = [] if _flt_skip else _chain(path)
         if FIELD_ALLOC and not _flt_skip and cl != 'corridor' and not cl.startswith('kvn') and (in_field(*P0) or in_field(*P1)):
             # it24: feedback from placement to the allocator.  A chain whose relays could not keep <= RMAX hops (or that
@@ -3422,8 +3424,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     unplace(frames2)
                     replace_frames(frames)
                     break
-        if FIELD_ALLOC:
+        if FIELD_ALLOC and not _flt_skip:
             # it24: book the PLACED chain (the allocator's load model = the placement)
+            # (QW-G5FROOT: a skipped fault edge books nothing, so the data repairs see the data-only GEN's load model)
             cp_ = chain_path(P0, frames, P1, path)
             book(cp_, bits)
             booked[idx] = (cp_, bits)
