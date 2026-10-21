@@ -205,8 +205,11 @@
    "master": "dsdv_idx_qf",
    "source_candidate": "f7412b6c2",
    "receipt": "ed9c179a2",
-   "qualification": "Owner14:34actualMAIN/FBnativePASSmax30/0violations/roles; publicports3edgesunchanged, existingmechanism+MUT1/2+6seedG8eqPASS. CTS/physicalpending, noCLOSED",
-   "normal_routes": "MAIN d20b68c2b and FB617c496ef approvednormalroutes RUNNING perowner15:06; neitherCLOSED, no bindingadoption"
+   "qualification": "ExactCLOSEDview/sourceboundcandidate; no wholeG9physicalclaim",
+   "normal_routes": "MAIN CLOSED TT59.20/FF13.56 DRC0; FBpreservedpendingnormalpolicyconfirmation",
+   "first_closed_record": "f7c53f5e52ff08254a2fdbc983b151cc398df305",
+   "first_closed_source": "d20b68c2baec0cb1c095550c6b7f743a107b720c",
+   "binding": "apply_qf_g9.py exactnative30CLOSEDMAIN, params{}, 3edges/2resetunchanged; all2579pins0offtrack atR0origin8321.04,100.032; whole163bodymodelseal100/minsep86.4PASS; route/405um/clock/parentSTA owed"
   },
   "idx_nq": {
    "master": "dsdv_idx_rg3_nq",

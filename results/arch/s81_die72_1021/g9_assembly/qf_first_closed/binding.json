@@ -1,0 +1,72 @@
+{
+  "record": "f7c53f5e52ff08254a2fdbc983b151cc398df305",
+  "source_ref": "d20b68c2baec0cb1c095550c6b7f743a107b720c",
+  "view": "physical/ref_tile/dsdv_idx_qf/views/dsdv_idx_qf",
+  "old_origin_um": [
+    8320.96,
+    100.0
+  ],
+  "candidate_origin_um": [
+    8321.04,
+    100.032
+  ],
+  "delta_nm": [
+    80,
+    32
+  ],
+  "original_fullpins": {
+    "orient": "R0",
+    "origin_nm": [
+      8320960,
+      100000
+    ],
+    "layers": {
+      "M4": {
+        "pins": 1541,
+        "offtrack": 1541,
+        "max_offset_nm": 16.0
+      },
+      "M3": {
+        "pins": 520,
+        "offtrack": 520,
+        "max_offset_nm": 8.0
+      },
+      "M5": {
+        "pins": 518,
+        "offtrack": 518,
+        "max_offset_nm": 16.0
+      }
+    }
+  },
+  "candidate_fullpins": {
+    "orient": "R0",
+    "origin_nm": [
+      8321040,
+      100032
+    ],
+    "layers": {
+      "M4": {
+        "pins": 1541,
+        "offtrack": 0,
+        "max_offset_nm": 0.0
+      },
+      "M3": {
+        "pins": 520,
+        "offtrack": 0,
+        "max_offset_nm": 0.0
+      },
+      "M5": {
+        "pins": 518,
+        "offtrack": 0,
+        "max_offset_nm": 0.0
+      }
+    }
+  },
+  "wholeplan_bodies_plus_reserves": 163,
+  "minimum_body_separation_um": 86.39999999999714,
+  "seal_um": 100,
+  "wholeplan_body_seal": "PASS",
+  "rejected_nearest_phase": "X-64nm reduceslk_WS0corridor86.4->86.336; Y-16nm crossesseal; chooselegalnextphaseX+80/Y+32",
+  "source_delta": "ONLYdsdv_idx_qfchanged/newdsdv_qf_copy; allotheridx_treemodulebodiesbyteidentical",
+  "qualification": "ExactCLOSEDview/source/params only; freshpaths/405um/clock/STAstillowed"
+}
