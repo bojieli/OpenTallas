@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.s81.service96.capacity_refusal.v1",
+  "verdict": "FAIL",
+  "scope": "actual_allocator_geometry_inventory_not_bound_die",
+  "inventory_sha256": "3ec8547d14da46bacc2534bcf572c8bf0691d118a46b23ef8369fae167297375",
+  "frames": 96,
+  "dense_rank_rows": {
+    "wq_a": 320,
+    "wkv": 128
+  },
+  "rows_per_phase": 4,
+  "minimum_frames_necessary": 112,
+  "actual_proportional_frames": [
+    69,
+    27
+  ],
+  "first_fault": "('a_proj one-phase capacity', 'wq_a', 320, 69)",
+  "fleet_unit": "oth-ubuntu-2530564-1792559799",
+  "fleet_exit": 1,
+  "stage_count": "NOT_ADMITTED",
+  "calendar": "NOT_ADMITTED",
+  "rate": "NOT_QUALIFIED"
+}
