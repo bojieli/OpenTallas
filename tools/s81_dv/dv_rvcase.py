@@ -576,8 +576,17 @@ def main():
     placer = Placer(W, H)
     loc = {}            # inst -> (x, y lower-left, w, h, status)
     orientations = {f'u_{b["name"]}': orientation(T, b['name']) for b in blocks.values()}
+    _rm = a.bind_dir / 'relay_mirror.json'  # historical IDX4 opposite vertical view placed MX
+    if _rm.exists():
+        orientations.update({i: v['orient'] for i, v in json.loads(_rm.read_text()).items()})
     for b in blocks.values():
         loc[f'u_{b["name"]}'] = (b['x'], b['y'], b['w'], b['h'], 'FIRM')
+        placer.add((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+    # S81-LINKS gap reserves (plan['blockages']): geometry only -- no instance, no pins; the Python placer, the hard
+    # placement blockage and the M1-M6 routing obstruction below keep every cell and lower-layer wire out of them
+    # (M7/M8 stay open over them exactly as over the stand-in SerDes columns beside them)
+    reserves = plan.get('blockages', [])
+    for b in reserves:
         placer.add((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
     mst_of = {nm: mst for mst, nm, _, _ in insts}
     for nm, L in links.items():
@@ -926,6 +935,14 @@ proc ot_rv_place_ties {report} {
                 'if {[ot_rv_place_ties /work/out/tie_spread.json] != 0} { puts "OT_TIE_PLACE_FAIL"; exit 4 }\n') if ties else '# no tie cells\n'
     if ties and not a.die_repair:
         raise SystemExit('dv_rvcase: tie cells need --die-repair (the tie spread uses the die repeater legaliser)')
+    reserve_tcl = ''
+    if reserves:
+        reserve_tcl = ('# S81-LINKS gap reserves: hard placement blockage + M1-M6 obstruction (no master, no pins)\n'
+                       'set ot_rsv_blk [ord::get_db_block]; set ot_rsv_dbu [$ot_rsv_blk getDbUnitsPerMicron]; set ot_rsv_tech [ord::get_db_tech]\n')
+        for b in reserves:
+            q = ' '.join(f'[expr {{round({v:.4f} * $ot_rsv_dbu)}}]' for v in (b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+            reserve_tcl += (f'set ot_rsv_b [odb::dbBlockage_create $ot_rsv_blk {q}]; puts "OT_RESERVE {b["name"]} placement_blockage"\n'
+                            f'foreach L {{M1 M2 M3 M4 M5 M6}} {{ odb::dbObstruction_create $ot_rsv_blk [$ot_rsv_tech findLayer $L] {q} }}\n')
     tcl = f'''# S81-DIE7 REAL-VIEW die case (tools/s81_dv/dv_rvcase.py) -- census in case.json (stand-ins labelled)
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
@@ -946,7 +963,7 @@ make_tracks M4 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.012 -y_pitch 0.048
 make_tracks M3 -x_offset 0.009 -x_pitch 0.640 -y_offset 0.009 -y_pitch 0.640
 make_tracks M2 -x_offset 0.009 -x_pitch 0.640 -y_offset 0.045 -y_pitch 0.640
 make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
-set p0 [clock seconds]
+{reserve_tcl}set p0 [clock seconds]
 source /work/place.tcl
 puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('place', max_dpl_gsites=2.0)}

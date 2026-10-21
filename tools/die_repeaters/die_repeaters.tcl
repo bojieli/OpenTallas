@@ -97,6 +97,16 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
       for {set j [expr {[lindex $m 1] / $cb}]} {$j <= [lindex $m 3] / $cb} {incr j} { lappend ob($i,$j) $k }
     }
   }
+  # hard placement blockages (e.g. S81 die72 gap reserves) are obstacles exactly like placed macros
+  foreach bk [$blk getBlockages] {
+    if {[$bk isSoft]} { continue }
+    set bb [$bk getBBox]
+    set m [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+    set k [llength $obs]; lappend obs $m
+    for {set i [expr {[lindex $m 0] / $cb}]} {$i <= [lindex $m 2] / $cb} {incr i} {
+      for {set j [expr {[lindex $m 1] / $cb}]} {$j <= [lindex $m 3] / $cb} {incr j} { lappend ob($i,$j) $k }
+    }
+  }
   if {![info exists ::ot_die_rep_obs]} { set ::ot_die_rep_obs $obs; array set ::ot_die_rep_ob [array get ob] }
   if {![info exists ::ot_die_rep_occ]} { set ::ot_die_rep_occ [dict create] }
   array set cap {}; array set hcap {}; array set used {}; array set fl {}; array set memoS {}; array set memoH {}; set nhard 0; set onobs 0

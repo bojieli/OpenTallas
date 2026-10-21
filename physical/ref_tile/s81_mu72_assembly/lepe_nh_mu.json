@@ -4,6 +4,9 @@
   "source": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_nh_mu_72.sv",
   "sources": [
     "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepe_nh_mu_72.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r.sv",
+    "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
     "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
@@ -18,6 +21,7 @@
     "rtl/lib/ot_reset_sync.sv",
     "rtl/common/landed_parent/ot_pl_land_n32.sv",
     "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
     "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv"
   ],
@@ -48,7 +52,7 @@
     "safe8_lanes": "445e6c74c"
   },
   "outline": {
-    "w": 2505.6,
+    "w": 2851.2,
     "h": 6825.6,
     "exact": true
   },
@@ -476,8 +480,8 @@
       "inst": "u_ln0",
       "master": "dsfd_coll_lane_e_safe8_ntf",
       "at": [
-        1468.8,
-        43.2
+        2073.6,
+        2203.2
       ],
       "reserved_envelope_um": [
         725.76,
@@ -491,8 +495,8 @@
       "inst": "u_ln1",
       "master": "dsfd_coll_lane_e_safe8_ntf",
       "at": [
-        1468.8,
-        799.2
+        2073.6,
+        2894.4
       ],
       "reserved_envelope_um": [
         725.76,
@@ -507,14 +511,14 @@
       "master": "ot_s81sl_lep_mu_a",
       "at": [
         1468.8,
-        1555.2
+        2548.8
       ],
       "reserved_envelope_um": [
         561.6,
         561.6
       ],
       "count": 1,
-      "orient": "R0",
+      "orient": "MY",
       "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
     },
     {
@@ -522,7 +526,7 @@
       "master": "dsdv_mu_land",
       "at": [
         1468.8,
-        2289.6
+        3283.2
       ],
       "reserved_envelope_um": [
         475.2,
@@ -536,6 +540,7 @@
   "clock_ports": [
     "ck_S",
     "ck_K",
+    "ck_ML",
     "ck_L0",
     "ck_L1",
     "ck_L3",
@@ -561,15 +566,55 @@
     "u_ln0.ck": "ck_K",
     "u_ln1.ck": "ck_K",
     "u_lep.clk": "ck_K",
-    "u_land.clk": "ck_K"
+    "u_land.clk": "ck_ML"
   },
   "transport": {
     "existing_S_to_K_cycles": 3,
     "existing_K_to_S_cycles": 3,
     "existing_fault_output_cycles": 2,
     "CAP5_capture_increment_vs_CAPC2": 12,
-    "new_K_transport_cycles": null
+    "new_K_transport_cycles": null,
+    "MU_land_write_cycles": 3,
+    "MU_land_command_cycles": 3,
+    "MU_land_return_cycles": 3,
+    "MU_rc_to_first_return_cycles": 10,
+    "MU_rc_to_first_return_increment": 6
   },
+  "soft_transport": [
+    {
+      "inst": "u_ml_wr",
+      "bank_cell_corridor": [
+        1468.8,
+        3110.4,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    },
+    {
+      "inst": "u_ml_cmd",
+      "bank_cell_corridor": [
+        1468.8,
+        3110.4,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    },
+    {
+      "inst": "u_ml_ret",
+      "bank_cell_corridor": [
+        1468.8,
+        3110.4,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    }
+  ],
   "unclosed_bundles": [
     {
       "ends": [
@@ -587,10 +632,10 @@
         "rxv[0]"
       ],
       "centre_distance_um": [
-        82.08,
-        1501.2
+        686.88,
+        334.8
       ],
-      "state": "UNLANDED long K transport; ready/data/status ages must align"
+      "state": "G3: lane W face abuts the lep lane face (43.2 gap), same K region, no long transport"
     },
     {
       "ends": [
@@ -608,10 +653,10 @@
         "rxv[1]"
       ],
       "centre_distance_um": [
-        82.08,
-        745.2
+        686.88,
+        356.4
       ],
-      "state": "UNLANDED long K transport; ready/data/status ages must align"
+      "state": "G3: lane W face abuts the lep lane face (43.2 gap), same K region, no long transport"
     },
     {
       "ends": [
@@ -629,13 +674,14 @@
         43.2,
         561.6
       ],
-      "state": "UNLANDED long K transport; write/read calendar alignment owed"
+      "state": "SOURCE FIXED: D4/K2 wr/cmd/ret +3 each; physical ring placement/STA and compiler +6 return remain open"
     }
   ],
   "physical_holds": [
     "No parent CLOSED record or SS/FF/GRT claim",
     "K clock is an explicit diagnostic implementation root; no balanced-region closure assumption",
-    "Actual lane/endpoint/MU-land relay and regional landing geometry pending",
+    "Actual lane/endpoint relay geometry pending; MU-land three real rings occupy172.8um face gap",
+    "Compiler replay return and identity-use calendar must add6 cycles before release",
     "Actual child pins, clock/reset placement and PG composition feed ongoing die flow",
     "External ports and source widths preserved; no tied functional ports or false paths",
     "No copy-B/AB physical release alias: this two-lane envelope is copy-A only"

@@ -509,6 +509,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         if not ab or not mm.get('module'):
             continue
         insts = sorted((b for b in blocks if b['master'] == mname), key=lambda b: b['x'])
+        if not insts:
+            continue        # S81-IDX3M: an unused table master has no PHY abutment to wire
         peers = [b for b in blocks if b['master'] == ab['peer']]
         assert len(peers) == 1, (mname, ab['peer'])
         pn = peers[0]['name']
@@ -796,6 +798,18 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         straps.append([ICG, 'SE'])      # S81-LBGAP/G1: the hop-0 gate's scan enable is a test strap (no scan chain on the die)
     # relay chains (F1)
     nst = collections.Counter(); fwd_cells = 0; gate_cells = 0
+    # DRIVE-S81-IDX4 (10-20): a vertical relay direction with no closed view (e.g. dsfd_dvrlyh_562_NS: the --idxrd 4 hrrd
+    # lanes come DOWN into the reader N face) uses the closed opposite-direction view mirrored about X (MX): same module,
+    # i on the upstream face.  Opt-in per table (relay_mirror_vertical); the mirrored stations go to relay_mirror.json.
+    _rv_views = T.get('relay_views', {}); relay_mirror = {}
+    def rly_pick(b_, d_, inst_):
+        m_ = rly_master(b_, d_, T.get('relay_prefix', 'dsfd_dvrly'))
+        if T.get('relay_mirror_vertical') and m_ not in _rv_views and d_ in ('NS', 'SN'):
+            o_ = rly_master(b_, 'SN' if d_ == 'NS' else 'NS', T.get('relay_prefix', 'dsfd_dvrly'))
+            if o_ in _rv_views:
+                relay_mirror[inst_] = dict(master=o_, for_dir=d_, orient='MX')
+                return o_
+        return m_
     for l in plan['links']:
         nm = l['i'].replace('-', '_'); b = l['b']
         a = blocks[l['e'][0][0]]['name']
@@ -812,10 +826,10 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             # pads (tied 0 at the station input, never read by the receiver)
             cov = lane_spare[root_nm]
             src = f"{{{b - cov}'d0, {src}[{cov - 1}:0]}}"
-            pads.setdefault(f'st_{nm}_0', dict(master=rly_master(b, sdir[(nm, 0)], T.get('relay_prefix', 'dsfd_dvrly')),
+            pads.setdefault(f'st_{nm}_0', dict(master=rly_pick(b, sdir[(nm, 0)], f'st_{nm}_0'),
                                                reason=f'lane quantisation: {cov}-b RTL payload on a {b}-b relay master (spare top bits)',
                                                ports={}))['ports']['i'] = [[cov, b - 1]]
-            pad_rows.append(dict(inst=f'st_{nm}_0', master=rly_master(b, sdir[(nm, 0)], T.get('relay_prefix', 'dsfd_dvrly')),
+            pad_rows.append(dict(inst=f'st_{nm}_0', master=rly_pick(b, sdir[(nm, 0)], f'st_{nm}_0'),
                                  port='i', bits=b - cov, lo=cov, hi=b - 1, reason='lane quantisation spare bits'))
         if root_nm in lane_copy:
             segs_ = []          # (plo, nb, expr) covering the lane: own wire where bound, copied bits elsewhere
@@ -855,9 +869,10 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             if k < st - 1:
                 v.append(f'  wire [{b - 1}:0] {wn};')
             cki = ck if (k == 0 and ck) else f'n{nm}_fck[{k}]'
-            v.append(f'  {rly_master(b, d, T.get("relay_prefix", "dsfd_dvrly"))} st_{nm}_{k} (.i({prev}), .o({wn}), .ck({cki}), .ck_o(n{nm}_fck[{k + 1}]), '
+            rm_ = rly_pick(b, d, f'st_{nm}_{k}')
+            v.append(f'  {rm_} st_{nm}_{k} (.i({prev}), .o({wn}), .ck({cki}), .ck_o(n{nm}_fck[{k + 1}]), '
                      f'.rs({rst["station_leaf"][(nm, k)]}));')
-            nst[rly_master(b, d, T.get('relay_prefix', 'dsfd_dvrly'))] += 1
+            nst[rm_] += 1
             prev = wn
     v += rst['verilog']
     v.append('endmodule')
@@ -954,6 +969,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # S81-DIE7 (10-18): placement hints for the real-view physical case (dv_rvcase.py): reset stations of the regional
     # reset tree (street cells + lane companions at the station points), the root synchroniser point and the block reset
     # pin points (top-down pin assignment); landings / relays / forward cells are placed from the plan by dv_rvcase
+    (out / 'relay_mirror.json').write_text(json.dumps(relay_mirror, indent=1))
     (out / 'place_hints.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.place_hints.v1', reset_place=rst['place'] + cal_place + frame_cal_place, reset_root_xy=rst['summary']['root_xy'],
         block_rst_pin={b: [round(x, 3), round(y, 3)] for b, (x, y) in rst['block_pin'].items()},
@@ -1094,16 +1110,18 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     rr = {d: master for d in RST_RLY} if master else RST_RLY
     W, H = plan['facts']['die_um']
     blocks = plan['blocks']
+    # S81-LINKS gap reserves (geometry-only blockages, no pins): no reset street station inside them; they take no sink
+    geo = blocks + plan.get('blockages', [])
     nx, ny = int(math.ceil(W / GRID)), int(math.ceil(H / GRID))
 
     def inside(x, y):
-        for b in blocks:
+        for b in geo:
             if b['x'] - 5 <= x <= b['x'] + b['w'] + 5 and b['y'] - 5 <= y <= b['y'] + b['h'] + 5:
                 return True
         return False
     free = {}
     cellb = collections.defaultdict(list)          # blocks (inflated 5 um) touching each grid cell
-    for b in blocks:
+    for b in geo:
         for i in range(max(0, int((b['x'] - 5) // GRID)), min(nx, int((b['x'] + b['w'] + 5) // GRID) + 1)):
             for j in range(max(0, int((b['y'] - 5) // GRID)), min(ny, int((b['y'] + b['h'] + 5) // GRID) + 1)):
                 cellb[(i, j)].append(b)
@@ -1217,7 +1235,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
 
     def buried(x, y, own):
         return any(b['name'] != own and b['x'] + 0.5 < x < b['x'] + b['w'] - 0.5 and b['y'] + 0.5 < y < b['y'] + b['h'] - 0.5
-                   for b in blocks)
+                   for b in geo)
     block_srv, block_pin = {}, {}
     for b in blocks:
         cands = [(b['x'] + b['w'] / 2, b['y'])]          # default: S face centre
@@ -1245,7 +1263,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     for s in list(station_srv.values()) + list(block_srv.values()):
         while s is not None and s not in tree:
             tree.add(s); s = par[s]
-    gate = reset_reach_gate(blocks, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
+    gate = reset_reach_gate(geo, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
     # nearest block region for each tree node (station clock = that region's root)
     cen = [(b['x'] + b['w'] / 2, b['y'] + b['h'] / 2, reg[b['name']]) for b in blocks]
 
