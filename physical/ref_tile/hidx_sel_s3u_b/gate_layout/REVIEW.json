@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hidx_sel_s3u_b",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T06:40:00-07:00",
+ "gate_commit": "1b099f4cf",
+ "checklist": {
+  "lattice": "3 SRAMs stacked N on lattice, abutted (pins N face)",
+  "std_cell_band": "full-width std band S, moderate density, no hot spot",
+  "pin_spread": "W/E full faces, clock S centre",
+  "clock_entry": "spread TT 48.4 / FF 43.4 ps",
+  "shape": "259.2x216, trial GRT overflow 0"
+ },
+ "notes": "COORD 10-21 07:05 APPROVED s3u_b fresh resubmit (prior NEEDS_RTL = daemon bench-host bug); s3u_c fallback in route",
+ "geometry_sha256": "6b264186db50d887a4c49f60c7de0b4bbf4b776d63e1ceec3f46f90c8a740597"
+}
