@@ -9,9 +9,8 @@
 set ot_skc [get_cells -quiet {sk_c* *.sk_c* */sk_c*}]
 if {[llength $ot_skc] == 0} { set ot_skc [get_cells -quiet -hierarchical {*sk_c*}] }
 set ot_skr {}
-foreach_in_collection ot_c $ot_skc { if {[string match DFF* [get_property $ot_c ref_name]]} { lappend ot_skr [get_full_name $ot_c] } }
+foreach ot_c $ot_skc { if {[string match DFF* [get_property $ot_c ref_name]]} { lappend ot_skr $ot_c } }   ;# OpenSTA: a collection is a Tcl list
 puts "OT_TAILC_SKMCP sinkhorn cells [llength $ot_skc] registers [llength $ot_skr]"
 if {[llength $ot_skr] < 1000} { error "tailc_skmcp.sdc: expected >= 1000 Sinkhorn registers sk_c*, found [llength $ot_skr]" }
-set ot_skr [get_cells $ot_skr]
 set_multicycle_path -setup 7 -from $ot_skr -to $ot_skr
 set_multicycle_path -hold 6 -from $ot_skr -to $ot_skr
