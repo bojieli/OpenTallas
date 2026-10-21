@@ -307,9 +307,9 @@ module ot_v41_bterm4_w10 #(
     reg [40:0] nma;
     reg [5:0]  lza;
 `ifdef OT_BF_N32
-    // S81-BF6: the three coarse steps' predicates {z32, z16, z8} formed by 3 kept ot_v41_n32_cnz copies; copy c steers
-    // bit range c of every step of an explicit left shifter by lza = {z32, z16, z8, 000} (ot_v41_forep_shl), so no
-    // predicate drives a full 41-bit step (the p4_m zero detects drove 35..52 loads, native85).  Same nma / lza.
+    // S81-BF6: the three coarse steps' predicates {z32, z16, z8} formed by 3 kept ot_v41_n32_cnz copies, each with the
+    // shift lza = 8 * z as a one-hot; bit i of nma = m << lza is one AND-OR over the one-hot of its 14-bit slice copy,
+    // so no predicate drives a full 41-bit step (the p4_m zero detects drove 35..52 loads, native85).  Same nma / lza.
     wire [2:0]  cz [0:2];
     wire [7:0]  coh [0:2];
     wire [40:0] nma_n;
@@ -333,15 +333,6 @@ module ot_v41_bterm4_w10 #(
         end
         assign nma_n[ib] = |t;
     end
-    always @(*) begin
-        nma = nma_n; lza = {cz[0], 3'b000};
-    end
-`else
-        assign czk[6*cc +: 6] = {cz[cc], 3'b000};
-`endif
-    end
-    wire [40:0] nma_n;
-    ot_v41_forep_shl #(.W(41), .SW(6), .K(3)) u_cn (.shk(czk), .d(p4_m), .q(nma_n));
     always @(*) begin
         nma = nma_n; lza = {cz[0], 3'b000};
     end
