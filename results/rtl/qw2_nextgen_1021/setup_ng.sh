@@ -30,6 +30,10 @@ tar -xf $K/overlay.tar -C $S/src
 cp $K/SOURCE_COMMIT $S/src/SOURCE_COMMIT
 for f in gen.sh run.sh run_candidate.sh land_plan_bi_chain.json reset_release_prior_g4try3.json; do cp $CS/$f $S/; done
 cp $G/receiver_plan.json $S/receiver_plan.json
+if [ "${OT_QWEN_HEAD_PREP:-0}" = 1 ]; then
+  sed -i 's#OT_SPLIT_HOMES=$D/dieplan2_1016/q3h4-homes.json#OT_SPLIT_HOMES=$S/src/results/arch/qw_headprep_1021/homes_ovl.json#' $S/run.sh
+  grep -q 'OT_SPLIT_HOMES=$S/src/results/arch/qw_headprep_1021/homes_ovl.json' $S/run.sh || exit 4
+fi
 python3 $S/src/tools/qwen_split/dv_slice_slot_plan.py $G/receiver_plan.json $S/receiver_plan.json --slot-w ${SLOT_W:-2462.4} --slot-h ${SLOT_H:-4276.8} --sgap $SG --record $S/slice_slot.json >> $S/PILOT.log 2>&1 || { echo "slice slot plan refused (PILOT.log)"; exit 4; }
 sed -i "s#$C#$S#g" $S/gen.sh $S/run.sh $S/run_candidate.sh
 sed -i 's#^O=../out; L=../out.log;#O=$S/out; L=$S/out.log;#' $S/run.sh
@@ -74,6 +78,9 @@ sed -i 's#"reason":"g5f3: g5 + emitted fault-OR tree (QW-G5STA);#"reason":"g5r3 
 cp $R/project_reset.sh $S/project_reset_g5.sh
 ln -sfn $S /srv/opentallas-scratch/claude/qwen-split-compute/$T
 ( cd $S && sha256sum gen.sh run.sh run_candidate.sh receiver_plan.json land_plan_bi_chain.json reset_release_prior_g4try3.json pre.sh chain.sh follow.sh phase2_fleet.sh phase3.sh src/SOURCE_COMMIT src/tools/qwen_rom_fulldie_b3r2.py src/tools/qwen_split/fwd_class_emit.py src/tools/qwen_split/fault_emit.py src/tools/qwen_split/dv_slice_slot_plan.py slice_slot.json src/results/arch/qwen_split_compute_1014/bind_view_select.json src/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew595_r16.svh > SHA256SUMS )
+if [ "${OT_QWEN_HEAD_PREP:-0}" = 1 ]; then
+  (cd $S && sha256sum src/results/arch/qw_headprep_1021/homes_ovl.json >> SHA256SUMS)
+fi
 SG_UM=$SG python3 - $S $T $GEOM $FAULT "$BASE" $K/SOURCE_COMMIT $CLASSES <<'PY'
 import json, sys, hashlib
 s, t, geom, fault, base, sc, _cls = sys.argv[1:]

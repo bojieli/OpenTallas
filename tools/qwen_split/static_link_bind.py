@@ -121,6 +121,9 @@ def apply(model):
                qualified=False)
     if frame is not None:
         rec['view_frame'] = frame
+    if os.environ.get('OT_QWEN_HEAD_PREP','0') == '1':
+        rec['physical_status'] = 'NEW unclosed source pins; historical OVL outline only, no old view/source alias'
+        rec['historical_outline_um'] = [d2d.w,d2d.h]
     model['static_link_bind'] = rec
     return rec
 
@@ -130,7 +133,7 @@ def install_masters(M, model, Master, partition_master):
         return
     from qwen_split.native_graph_bind import assign_pins, peer_map
     by = {i.name: i for i in model['insts']}
-    if view_enabled() and view_frame(MASTER) is not None:
+    if os.environ.get('OT_QWEN_HEAD_PREP','0') != '1' and view_enabled() and view_frame(MASTER) is not None:
         # Q-VIEWFRAME 10-16: every die port on the closed view's own pin (fails closed on any port without one)
         view_install(M, model, Master, by['d2d_rom'], MASTER, rtl_ports(ROOT / SOURCE, MASTER), partition_master)
     else:
