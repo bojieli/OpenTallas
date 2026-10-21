@@ -55,6 +55,7 @@
   "rtl/hdc/ot_hdc_fastfp.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/lib/ot_rst_relay_l.sv",
+  "physical/hbm_idx_score/native_touchable.tcl",
   "physical/ref_tile/hidx_score_col7_a/kit.env",
   "physical/ref_tile/hidx_score_col7_a/clock.sdc",
   "physical/ref_tile/hidx_score_col7_a/signoff.sdc",
@@ -77,6 +78,8 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/hidx_score_col7_a/pre_gpl.tcl",
+  "physical/ref_tile/hidx_score_col7_a/pre_dpl.tcl"
  ]
 }

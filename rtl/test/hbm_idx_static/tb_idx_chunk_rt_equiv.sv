@@ -44,12 +44,17 @@ module tb_idx_chunk_rt_equiv;
   integer j; begin for(j=0;j<NB*4;j=j+1) c[32*j+:32]=$random(seed); for(j=0;j<NB;j=j+1) s[8*j+:8]=scale(seed); end
  endtask
  reg [NB*128-1:0] tc; reg [NB*8-1:0] ts;
+`ifdef OT_CHUNK_RT_C
+ // Only the online boot release gains edges: +1 column reset landing (HBM-IDXSQ8), +1 more with the glue RESET_F32 tree.
+ // Data valid / numeric results keep their exact active-operation edge after the bench waits for both online.
 `ifdef OT_IDX_GLUE_F32
- // Only online boot release gains one edge. Data valid/numeric results retain
- // their exact active-operation edge after the bench waits for both online.
- reg a_on_d=0;
- always @(posedge clk or negedge rst_n)if(!rst_n)a_on_d<=0;else a_on_d<=a_on;
- wire a_on_expected=a_on_d;
+ localparam integer ONL_LAG = 2;
+`else
+ localparam integer ONL_LAG = 1;
+`endif
+ reg [ONL_LAG-1:0] a_on_d = 0;
+ always @(posedge clk or negedge rst_n) if (!rst_n) a_on_d <= 0; else a_on_d <= (ONL_LAG == 1) ? a_on : {a_on_d, a_on};
+ wire a_on_expected = a_on_d[ONL_LAG-1];
 `else
  wire a_on_expected=a_on;
 `endif

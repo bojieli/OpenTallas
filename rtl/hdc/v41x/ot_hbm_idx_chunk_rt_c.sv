@@ -364,10 +364,17 @@ module ot_hidx_score_col (
     localparam integer QG = 14, NQG = SW / QG;          // 40 write-enable copies of 14 bits (~2 mapped loads a bit)
     wire [31:0] cs [0:HC]; wire cf [0:HC];
     genvar r, hh, bb, k;
+    // HBM-IDXSQ8 reset landing (col7_a r1 gate: rst_n reached 8 synchroniser flops, 2 per region): the port lands in ONE
+    // column synchroniser pair (u_rl, 2 sinks), whose relay stage gives the 4 region roots; each region keeps its relay copy
+    // stage below that root. Boot release +1 edge (column online one edge later; active data edges unchanged).
+    wire [3:0] rroot;
+    ot_rst_relay_l #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rl (.clk(clk), .rst_n_in(rst_n), .rst_n(rroot));
     for (r = 0; r < 4; r = r + 1) begin : g_rgn
         localparam integer NRS = 1 + 2 * NB;
         wire [NRS-1:0] srr; wire rs = srr[0];
-        ot_rst_relay_l #(.REGIONS(NRS), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(srr));
+        (* keep = "true", dont_touch = "true" *) reg [NRS-1:0] srr_q;
+        always @(posedge clk or negedge rroot[r]) if (!rroot[r]) srr_q <= {NRS{1'b0}}; else srr_q <= {NRS{1'b1}};
+        assign srr = srr_q;
         reg rn_p, onl;
         always @(posedge clk) rn_p <= rs;
         always @(posedge clk or negedge rs) if (!rs) onl <= 1'b0; else onl <= rs && rn_p;

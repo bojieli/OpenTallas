@@ -1,6 +1,6 @@
 {
  "top": "ot_hbm_idx_score_quarter_f7",
- "why": "HBM-IDXSQ8 10-20 (owner clock rule 10-20 08:50; landed-regions-standard-1018): the IDX quarter scorer (1.3 x 2.7 mm, 8 x 47k-flop-column leaves) as a LANDED parent. One region per child: W glue, 8 leaves (each the die's chunk clock), E glue. Every W->leaf, leaf->leaf and leaf->E crossing lands in a 2-slot ring (E = K = 1, +2 edges = the old W-pin + E-pin hop cost); the dataflow is a W->E DAG, so the offsets schedule keeps the flat calendar (score +10 edges). Geometry plan (centres, um): leaves 648 sq on a 691.2 pitch, 43.2 landing channels, W/E glue columns 86.4; native32 landings (16-bit kept chunk selectors, reset forest); reset root l01 (centre), hops <= 405 um.",
+ "why": "HBM-IDXSQ8 10-20 (owner clock rule 10-20 08:50; landed-regions-standard-1018): the IDX quarter scorer (1.3 x 2.7 mm, 8 x 47k-flop-column leaves) as a LANDED parent. One region per child: W glue, 8 leaves (each the die's chunk clock), E glue. Every W->leaf, leaf->leaf and leaf->E crossing lands in a 2-slot ring (E = K = 1, +2 edges = the old W-pin + E-pin hop cost); the dataflow is a W->E DAG, so the offsets schedule keeps the flat calendar (score +10 edges). Geometry plan (centres, um): leaves 648 sq on a 691.2 pitch, 43.2 landing channels, W/E glue columns 86.4; native32 landings (16-bit kept chunk selectors, reset forest); reset root l01 (centre), hops <= 405 um. Bench: query/beat valids start at cyc 61 (no traffic before the quarter is online, as the die calendar); MUT0 r1 with valid beats DURING reset FAILED 15/2928 at the first output burst: unreset W A-stage valids carry pre-release beats that the flat parent passes but the reset-held ring writers drop (start-up artefact). MUT 4 holds u_l00's reset 80 stages.",
  "sources": [
   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_f7.sv"
  ],
@@ -149,9 +149,15 @@
  "bench": {
   "cycles": 1500,
   "reset_cycles": 8,
-  "sim": "verilator"
+  "sim": "verilator",
+  "expr": {
+   "ql_v": "(cyc > 60) ? $urandom : 0",
+   "beat_v": "(cyc > 60) ? $urandom : 0"
+  }
  },
  "reset_region": "l01",
  "landing_chunk_bits": 16,
- "landing_reset_forest": true
+ "landing_reset_forest": true,
+ "mut4_stages": 80,
+ "mut_child": "u_l00"
 }

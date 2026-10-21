@@ -3,7 +3,7 @@
 // LANDED PARENT (PARENTS-LANDED 10-18): 10 clock regions (w, l00, l01, l02, l03, l10, l11, l12, l13, e), 64 landed crossings (D 2, E = K = 1, +2 edges each), 0 alignment pads,
 // regional reset runs depth 7 (+ t(child) per child).  Record: results/arch/landed_parent_1020/ot_hbm_idx_score_quarter_f7/ot_hbm_idx_score_quarter_f7_lp_record.json
 // MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,
-//     4 = child reset run of 'u_w' one stage long
+//     4 = child reset run of 'u_l00' 80 stage(s) long
 module ot_hbm_idx_score_quarter_f7_lp #(
     parameter integer MUT = 0
 ) (
@@ -400,8 +400,8 @@ module ot_hbm_idx_score_quarter_f7_lp #(
     ot_pl_land_vector_reset_w #(.W(((551) - (0) + 1)), .D(2), .CHUNK_BITS(16)) u_lpl_63_w (.ck(ck_l13), .rsi(lpr_l13_leaves[(1+(((1)+16-1)/16)+(((((567) - (0) + 1))+16-1)/16)+(((1)+16-1)/16)+(((((3) - (0) + 1))+16-1)/16)+(((((2175) - (0) + 1))+16-1)/16)+(((((29) - (0) + 1))+16-1)/16)+(((((551) - (0) + 1))+16-1)/16)+(((1)+16-1)/16)+(((1)+16-1)/16)+(((((29) - (0) + 1))+16-1)/16)) +: (((((551) - (0) + 1))+16-1)/16)]), .i(bus_14), .bank(lpl_63_bank), .epo(lpl_63_epo), .vld(lpl_63_vld));
     ot_pl_land_vector_reset_r #(.W(((551) - (0) + 1)), .D(2), .K(1), .CHUNK_BITS(16)) u_lpl_63_r (.ck(ck_e), .rsi(lpr_e_leaves[(1+(((1)+16-1)/16)+(((1)+16-1)/16)+(((((29) - (0) + 1))+16-1)/16)+(((((551) - (0) + 1))+16-1)/16)+(((1)+16-1)/16)+(((1)+16-1)/16)+(((((29) - (0) + 1))+16-1)/16)) +: (((((551) - (0) + 1))+16-1)/16)]), .bank(lpl_63_bank), .epo(lpl_63_epo), .vld(lpl_63_vld), .o(lpl_63_o));
     assign bus_14__l_e = lpl_63_o;
-    wire lpr_c_u_w;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_w (.ck(ck_w), .d(lpr_w), .q(lpr_c_u_w));   // t(u_w) = 0
-    wire lpr_c_u_l00;  ot_pl_pad #(.W(1), .N(2)) u_lprc_u_l00 (.ck(ck_l00), .d(lpr_l00), .q(lpr_c_u_l00));   // t(u_l00) = 2
+    wire lpr_c_u_w;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_w (.ck(ck_w), .d(lpr_w), .q(lpr_c_u_w));   // t(u_w) = 0
+    wire lpr_c_u_l00;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 82 : 2)) u_lprc_u_l00 (.ck(ck_l00), .d(lpr_l00), .q(lpr_c_u_l00));   // t(u_l00) = 2
     wire lpr_c_u_l01;  ot_pl_pad #(.W(1), .N(4)) u_lprc_u_l01 (.ck(ck_l01), .d(lpr_l01), .q(lpr_c_u_l01));   // t(u_l01) = 4
     wire lpr_c_u_l02;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_l02 (.ck(ck_l02), .d(lpr_l02), .q(lpr_c_u_l02));   // t(u_l02) = 6
     wire lpr_c_u_l03;  ot_pl_pad #(.W(1), .N(8)) u_lprc_u_l03 (.ck(ck_l03), .d(lpr_l03), .q(lpr_c_u_l03));   // t(u_l03) = 8

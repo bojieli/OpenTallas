@@ -123,5 +123,8 @@
   "w": 345.6,
   "h": 345.6,
   "exact": true
- }
+ },
+ "pin_hook_before_flops": [
+  "physical/hbm_idx_score/native_touchable.tcl"
+ ]
 }

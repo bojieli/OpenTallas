@@ -10,7 +10,9 @@ qlate1 mutants FAIL (results/rtl/hbm_idx_static/score_col7_1020/, sources.sha256
 
 ## SAFE-DESIGN checklist (owner 10-19)
 1 Pins: PASS -- every input lands in a kept region pin/head register (q_p, qv_p, key_h/key_h2, hid_pa/pb); outputs from cs_o
-  (head 7) and the region online flops; rst_n reaches only the 2 synchroniser flops of each region's ot_rst_relay_l.
+  (head 7) and the region online flops. Reset: fixed after gate r1 (reset_landing 8 sinks = 2 synchronisers x 4 regions):
+  rst_n lands in ONE column synchroniser pair u_rl (2 sinks) -> 4 region roots -> region relay copies (+1 boot-release edge,
+  column online one edge later; the equivalence bench prices it: ONL_LAG 1, 2 with the glue RESET_F32 tree).
 2 Reach: PASS -- block <= 345.6 um.
 3 Fanout: fixed -- actual-Liberty native32 census on the mapped netlist PASS: 0 drivers > 32, max 32, 319,037 roots (synth-only
   gate 20261020-214424, ot-epyc6); was FAIL 1,544 / max 74.
@@ -20,5 +22,7 @@ qlate1 mutants FAIL (results/rtl/hbm_idx_static/score_col7_1020/, sources.sha256
 6 Floorplan: PASS -- square, on the 43.2 hard-child lattice, no macros, one std-cell band; all 1,213 pins on the N face
   (~4.0/um at 302.4) so the leaf glue band abuts the columns' N faces.
 7 Clock: one root (clk) per column (~47k sinks < 110k refuse line), pin-flop spread <= 80 TT/FF to be shown by the --cts gate;
-  io_hold_margin 0.03.
+  io_hold_margin 0.03. Gate r1 also died in timing-driven GPL (RSZ-3006: the bounded native fp32 adder cells are keep +
+  dont_touch): kit PRE_GLOBAL_PLACE hook physical/hbm_idx_score/native_touchable.tcl releases dont_touch inside u_native
+  AFTER the mapped native32 census (pin_hook_before_flops).
 8 Schedule: static, no added cycles (equivalence above). Leaf RESET_F32 = 1: +1 boot-release edge (glue), priced.
