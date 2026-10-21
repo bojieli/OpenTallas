@@ -911,7 +911,7 @@ METADATA_CLASSIFIER_MODULES = frozenset((
     *('tools/ref_tile/' + x + '.py' for x in (
         'async_fifo_hierarchy_audit', 'async_gray_fifo_constraints', 'cdc_fsm_guard',
         'cdc_sync_constraints', 'clock_entry_constraints', 'direct_macro_clock_entries',
-        'gray_fifo_cdc_constraints', 'keep_module_audit', 'kit_orfs_vars', 'layout_png',
+        'gray_fifo_cdc_constraints', 'forwarded_clock_outputs', 'keep_module_audit', 'kit_orfs_vars', 'layout_png',
         'measured_band_fill', 'native_census', 'pre_route_gate', 'raw_macro_clocks',
         'ref_tile', 'single_clock_contract', 'source_binding'))))
 
@@ -960,10 +960,18 @@ def metadata_classification_issues(binding, root, kit, gate, commit=None):
         entries = {e['path']: e for e in binding['files']}
         require(binding['manifest_sha256'] == canonical_digest(binding['files']),
                 'classification manifest hash mismatch')
+        def check_consumed(record, manifest, label):
+            paths = record.get('paths')
+            require(record.get('schema') == CONSUMED_SCHEMA and isinstance(paths, list) and
+                    all(isinstance(p, str) for p in paths) and paths == sorted(set(paths)) and
+                    record.get('count') == len(paths) and type(record.get('count')) is int and
+                    record.get('digest') == canonical_digest(paths) and
+                    isinstance(record.get('sha256'), dict) and set(record['sha256']) == set(paths) and
+                    set(paths) <= set(manifest) and
+                    all(record['sha256'][p] == manifest[p]['sha256'] for p in paths),
+                    f'{label} consumed record schema/digest/count/paths/hashes mismatch')
         consumed = binding['consumed']
-        require(set(consumed['paths']) <= set(entries) and
-                all(consumed['sha256'][p] == entries[p]['sha256'] for p in consumed['paths']),
-                'classification consumed hashes mismatch')
+        check_consumed(consumed, entries, 'classification')
         def input_record(name):
             ref = receipt['parent'][name]
             path = ref['path']; payload = git_bytes(frozen, path)
@@ -997,6 +1005,7 @@ def metadata_classification_issues(binding, root, kit, gate, commit=None):
                 link.get('original_verdict') == 'FAIL' and gate.get('physical_parent') == link and
                 gate.get('cts') is True, 'physical parent link mismatch')
         old_entries = {e['path']: e for e in parent['files']}
+        check_consumed(parent['consumed'], old_entries, 'original physical')
         physical = [p for p in parent['consumed']['paths'] if not p.startswith('tools/')]
         require(len(physical) == 328, 'issuer original physical input census mismatch')
         spec_path = f'physical/ref_tile/{kit}/spec.json'

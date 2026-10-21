@@ -53,6 +53,14 @@ def case(variant=None):
         old_data=archive(root,paths);parent=SB.snapshot(old_data,root,published,root,published,[])
         parent['remote_archive_verified']=True
         parent['consumed']=SB.consumed_record(paths,parent['files'],'physical fixture')
+        if variant=='parent_consumed_duplicate':
+            parent['consumed']['paths'].append(parent['consumed']['paths'][0])
+            parent['consumed']['count']+=1
+            parent['consumed']['digest']=SB.canonical_digest(parent['consumed']['paths'])
+        if variant=='parent_consumed_hash':
+            parent['consumed']['sha256'][paths[0]]='0'*64
+        if variant=='parent_consumed_schema':parent['consumed']['schema']='wrong'
+
         clock={'cts':True,'tt_pin_spread_ps':45.0,'ff_pin_spread_ps':46.7}
         trial={'overflow':0,'rc':'0'}
         old_gate={'schema':'opentallas.ref_tile.gate_result.v2','kit':KIT,'verdict':'FAIL','cts':True,
@@ -99,6 +107,11 @@ class MetadataClassificationTest(unittest.TestCase):
 
     def test_valid_actual_archives_committed_inputs_published_tools_and_physics(self):
         with case() as (root,binding,gate,current):self.assertEqual(self.issues(binding,root,gate,current),[])
+
+    def test_original_consumed_record_strict(self):
+        for variant in ['parent_consumed_duplicate','parent_consumed_hash','parent_consumed_schema']:
+            with self.subTest(variant=variant), case(variant) as (root,binding,gate,current):
+                self.assertIn('original physical consumed record',self.issues(binding,root,gate,current)[0])
 
     def test_missing_parent(self):
         with case() as (root,binding,gate,current):
