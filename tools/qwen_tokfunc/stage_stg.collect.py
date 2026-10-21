@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """TOK-FUNC-QW stage stg: fold RUNROOT/stg/{rel,pos,mut}/runs/*/bench.out + fixtures into RUNROOT/stg/result.json.
-usage: stage_stg.collect.py RUNROOT"""
+usage: stage_stg.collect.py RUNROOT [STAGE (default stg)]"""
 import json
 import re
 import sys
@@ -34,7 +34,8 @@ def parse(out):
 
 def main():
     R = Path(sys.argv[1]).resolve()
-    S = R / 'stg'
+    ST = sys.argv[2] if len(sys.argv) > 2 else 'stg'
+    S = R / ST
     src_commit = (R / 'src' / 'ASM_COMMIT').read_text().strip() if (R / 'src' / 'ASM_COMMIT').exists() else None
     layers_req = list(range(36))
     fx = {}
@@ -58,9 +59,9 @@ def main():
                   calibrate={f: (d / f).read_text(errors='replace').strip().splitlines()[-2:]
                              for f in ('build/slice_calibrate.out', 'build/calibrate.out', 'cal_mat/calibrate.out')
                              if (d / f).exists()},
-                  vec_ages=f'stg/{c}/build/vec_ages.json' if (d / 'build/vec_ages.json').exists() else None,
-                  stn_ages=f'stg/{c}/cal_mat/stn_ages.json' if (d / 'cal_mat/stn_ages.json').exists() else None,
-                  slice_ages=f'stg/{c}/build/slice_ages.json' if (d / 'build/slice_ages.json').exists() else None,
+                  vec_ages=f'{ST}/{c}/build/vec_ages.json' if (d / 'build/vec_ages.json').exists() else None,
+                  stn_ages=f'{ST}/{c}/cal_mat/stn_ages.json' if (d / 'cal_mat/stn_ages.json').exists() else None,
+                  slice_ages=f'{ST}/{c}/build/slice_ages.json' if (d / 'build/slice_ages.json').exists() else None,
                   stages=st)
         cfgs[c] = cc
         cy = {f: {} for f in FAMS}
@@ -111,7 +112,7 @@ def main():
         bad.append(f'fixtures missing for layers {missing_fx}')
     verdict = 'PASS' if not bad else 'FAIL'
     res = dict(
-        stage='stg', grade='RTL-functional (source assembly)', src_commit=src_commit, verdict=verdict,
+        stage=ST, grade='RTL-functional (source assembly)', src_commit=src_commit, verdict=verdict,
         golden=(f'per layer L0..L35 (TP4 36-layer ISA golden at P8191 re-executed per layer, reproduction-checked, '
                 f'cut to TP8 compute die 0): bench hdc_golden expectation bit-exact on the RTL outputs AND == ISA gold '
                 f'words; ISA-gold words matched {gold_ok}/{gold_n} (resid 4097, qk 768, silu 1536, qkv 768, gu 3072 per '
@@ -131,8 +132,8 @@ def main():
             'operands from the TP4 golden (TP4-folded all-reduce returns) applied to the TP8 die-0 cut; stage functions TP-agnostic',
         ],
         notes='rel params per brief (-GMU_NU=4 -GSU_LT=1); physical/ref_tile/qfd_dv_slice2_w/kit.env at c0f8097f3 has PARAMS=()',
-        logs=['stg/runs.log', 'stg/fixtures.log', 'stg/timing.txt', 'stg/runlist.txt'] +
-             [f'stg/{c}/runs/<name>/bench.out' for c in cfgs] + [f'stg/build_{c}.log' for c in cfgs],
+        logs=[f'{ST}/runs.log', f'{ST}/fixtures.log', f'{ST}/timing.txt', f'{ST}/runlist.txt'] +
+             [f'{ST}/{c}/runs/<name>/bench.out' for c in cfgs] + [f'{ST}/build_{c}.log' for c in cfgs],
         configs=cfgs)
     (S / 'result.json').write_text(json.dumps(res, indent=1) + '\n')
     print('STG', verdict, 'gold', f'{gold_ok}/{gold_n}', 'bad', len(bad), bad[:8])

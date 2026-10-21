@@ -26,27 +26,39 @@
 #   tiles (gate-level, with DIR/cells.v the ASAP7 cell models).  tb_qfd_dv2 FACE=1/2 instantiates the face wrappers; the
 #   hook adds those files to the Verilator build in place of rtl/qwen_dv/qfd_dv_slice2*.sv (DV2_EXTRA_SRCS) and grades
 #   die-netlist.  NOT wired yet (no carve exists at c0f8097f3): with --die-netlist the script refuses (exit 4).
+# TOK-FUNC2-QW 10-21 options (all optional; defaults = the original run):
+#   --stage NAME      work dir RUNROOT/NAME (default stg); RUNROOT/stg/{fx_in,fx_res} stay the shared inputs
+#   --fx DIR          reuse finished per-layer fixtures (DIR/L<n>_*.npz + L<n>_fixture.json) instead of regenerating
+#   --reuse-objs DIR  no Verilator build: DIR/{rel,pos,mut} are finished obj_n12 dirs of the SAME source (+ overlay);
+#                     calibrations and every run are redone on them (current per-K LAST-K bench protocol)
+#   --overlay DIR     copy DIR/<repo path> over the tree before the builds (RTL fix branches not yet in the assembly)
 set -u
 RUNROOT=$(readlink -f "$1"); shift
-NET=""; LAYERS=$(seq -s ' ' 0 35); PAR=24
+NET=""; LAYERS=$(seq -s ' ' 0 35); PAR=24; STAGE=stg; FXRE=""; REUSE=""; OVL=""
 while [ $# -gt 0 ]; do case "$1" in
+  --stage) STAGE=$2; shift 2;;
+  --fx) FXRE=$(readlink -f "$2"); shift 2;;
+  --reuse-objs) REUSE=$(readlink -f "$2"); shift 2;;
+  --overlay) OVL=$(readlink -f "$2"); shift 2;;
   --die-netlist) NET=$(readlink -f "$2"); shift 2;;
   --layers) LAYERS=$2; shift 2;;
   --par) PAR=$2; shift 2;;
   *) echo "bad arg $1"; exit 2;; esac; done
 [ -n "$NET" ] && { echo "--die-netlist: not wired yet (see header); RTL-functional run only"; exit 4; }
-SRC=$RUNROOT/src; S=$RUNROOT/stg; FXIN=$S/fx_in; FX=$S/fx; T=$S/tree; HERE=$(dirname "$(readlink -f "$0")")
+SRC=$RUNROOT/src; S=$RUNROOT/$STAGE; FXIN=$RUNROOT/stg/fx_in; FX=$S/fx; T=$S/tree; HERE=$(dirname "$(readlink -f "$0")")
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version | grep -q '5.050' || { echo "need Verilator 5.050"; exit 2; }
 # fixture inputs: $FXIN/.complete marks a finished staging copy (the builds start meanwhile; fixtures wait <= 3 h for it)
 [ -d "$FXIN" ] || { echo "missing $FXIN (P8191 TP4 gold + img_p1)"; exit 2; }
-[ -d "$S/fx_res/results" ] || { echo "missing $S/fx_res/results (bench data files from c0f8097f3)"; exit 2; }
+[ -d "$RUNROOT/stg/fx_res/results" ] || { echo "missing $RUNROOT/stg/fx_res/results (bench data files from c0f8097f3)"; exit 2; }
 # tree = REAL copy of src rtl/tools/configs (the benches resolve ROOT = Path(__file__).resolve().parents[2], so a symlink
 # overlay would point back into src) + physical symlinked + the committed bench data files they read (ROOT/results/*)
 rm -rf "$T"; mkdir -p "$T" "$FX"
 for d in rtl tools configs; do [ -e "$SRC/$d" ] && cp -r "$SRC/$d" "$T/"; done
 [ -e "$SRC/physical" ] && cp -as "$SRC/physical" "$T/"
-cp -r "$S/fx_res/results" "$T/"
+cp -r "$RUNROOT/stg/fx_res/results" "$T/"
+if [ -n "$OVL" ]; then (cd "$OVL" && find . -type f | sort | xargs sha256sum) > "$S/overlay.sha256"; cp -r "$OVL/." "$T/"; fi
+if [ -n "$FXRE" ]; then for f in "$FXRE"/L*_fixture.json "$FXRE"/L*.npz "$FXRE"/L*.log; do ln -sfn "$f" "$FX/"; done; fi
 cd "$T" || exit 3
 # Current LAST-K station consumes all running k blocks. Repair the benchmark cut
 # contract/lifecycle without changing RTL; preserve this overlay in the receipt.
@@ -66,7 +78,7 @@ fixtures() {
     --realmem $FXIN/P8191 --layer $L --out $FX > $FX/L$L.log 2>&1
   echo "rc=$?" >> $FX/L$L.log; echo "L$L $(tail -2 $FX/L$L.log | head -1 | cut -c1-120)"
 }
-export -f fixtures; export FX FXIN T
+export -f fixtures; export FX FXIN T REUSE
 ( for L in $LAYERS; do echo $L; done | xargs -P 9 -I{} bash -c 'fixtures {}' > $S/fixtures.log 2>&1 ) &
 FXPID=$!
 
@@ -76,6 +88,8 @@ build_cfg() {   # build + slice / vec / stn calibrate on this build
   local c=$1 W=$S/$1; export DV_LOWER_VFLAGS="${VF[$1]}"
   rm -rf $W; mkdir -p $W/build $W/cal_mat $W/runs; echo "$DV_LOWER_VFLAGS" > $W/vflags.txt
   local b0=$(date +%s)
+  if [ -n "$REUSE" ]; then [ -x "$REUSE/$c/Vtb" ] || { echo "$c: no $REUSE/$c/Vtb"; return 2; }
+    ln -sfn "$REUSE/$c" $W/build/obj_n12; sha256sum "$REUSE/$c/Vtb" > $W/reused_vtb.sha256; fi
   python3 $T/rtl/test/qwen_dv/dv_lower_bench.py --work $W/build --calibrate > $W/build/slice_calibrate.out 2>&1; echo "rc=$?" >> $W/build/slice_calibrate.out
   echo "build+slice_calibrate $(( $(date +%s) - b0 )) s" > $W/timing.txt
   [ -x $W/build/obj_n12/Vtb ] || { echo "$c BUILD FAILED"; tail -30 $W/build/build.log; return 2; }
@@ -143,4 +157,4 @@ xargs -P $PAR -L 1 bash -c 'job "$@"' _ < $S/runlist.txt > $S/runs.log 2>&1
 echo "total $(( $(date +%s) - t0 )) s" >> $S/timing.txt
 # Preserve completed objects for incremental recovery and collection.
 for c in rel pos mut; do sha256sum $S/$c/build/obj_n12/Vtb 2>/dev/null > $S/$c/vtb.sha256; done
-python3 $HERE/stage_stg.collect.py $RUNROOT
+python3 $HERE/stage_stg.collect.py $RUNROOT $STAGE
