@@ -1,5 +1,5 @@
 {
- "name": "smh_rp5n_m-r5n_m_rs2-8060df44e",
+ "name": "smh_rp5n_m-r5n_m_rs2-27cecb44b",
  "block": "ot_hbm_smh_rp5n_m",
  "ref_tile": true,
  "owner": "CODEX-HBM-HC-1021 SMH reset subtask (PU collects SMH)",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 192,
  "source": {
   "branch": "codex/smh-r5-reset-1340-1021",
-  "commit": "8060df44e",
+  "commit": "27cecb44b",
   "extra_paths": [
    "tools/hbm_sm_repack_1015",
    "tools/landed_parent",
@@ -17,7 +17,8 @@
    "rtl/hbm_accel/sm/repack/h2",
    "rtl/hbm_accel/sm/repack/h2a",
    "results/arch/hbm_smh_r5_1021",
-   "physical/ref_tile/smh_xs_p192d_bay/views"
+   "physical/ref_tile/smh_xs_p192d_bay/views",
+   "results/arch/hbm_smh_r5_reset_1021"
   ]
  },
  "stages": {
@@ -46,7 +47,7 @@
     "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m1 0 1",
     "expect": "fail",
     "fail_regex": "^R5_LOCKSTEP FAIL VAR=0 HMUT=1 mismatches=[1-9]",
-    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v0_m1.log",
+    "fail_witness": "results/arch/hbm_smh_r5_reset_1021/proof/r5_v0_m1.log",
     "threads": 4,
     "peak_ram_gb": 32
    },
@@ -55,7 +56,7 @@
     "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m2 0 2",
     "expect": "fail",
     "fail_regex": "^R5_LOCKSTEP FAIL VAR=0 HMUT=2 mismatches=[1-9]",
-    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v0_m2.log",
+    "fail_witness": "results/arch/hbm_smh_r5_reset_1021/proof/r5_v0_m2.log",
     "threads": 4,
     "peak_ram_gb": 32
    },
@@ -64,7 +65,7 @@
     "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m3 0 3",
     "expect": "fail",
     "fail_regex": "^R5_LOCKSTEP FAIL VAR=0 HMUT=3 mismatches=[1-9]",
-    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v0_m3.log",
+    "fail_witness": "results/arch/hbm_smh_r5_reset_1021/proof/r5_v0_m3.log",
     "threads": 4,
     "peak_ram_gb": 32
    },
@@ -73,7 +74,7 @@
     "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m5 0 5",
     "expect": "fail",
     "fail_regex": "^R5_LOCKSTEP FAIL VAR=0 HMUT=5 mismatches=[1-9]",
-    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v0_m5.log",
+    "fail_witness": "results/arch/hbm_smh_r5_reset_1021/proof/r5_v0_m5.log",
     "threads": 4,
     "peak_ram_gb": 32
    },
@@ -82,7 +83,7 @@
     "cmd": "bash rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh {RUN}/r5m6 0 6",
     "expect": "fail",
     "fail_regex": "^R5_LOCKSTEP FAIL VAR=0 HMUT=6 mismatches=[1-9]",
-    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/r5_v0_m6.log",
+    "fail_witness": "results/arch/hbm_smh_r5_reset_1021/proof/r5_v0_m6.log",
     "threads": 4,
     "peak_ram_gb": 32
    },
@@ -102,7 +103,7 @@
     "threads": 8,
     "peak_ram_gb": 32,
     "fail_regex": "MUT 1: LP_LOCKSTEP FAIL",
-    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/lp_nm_m1.log"
+    "fail_witness": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_m_wrapper.log"
    },
    {
     "name": "lp_nm_mut2",
@@ -111,7 +112,7 @@
     "threads": 8,
     "peak_ram_gb": 32,
     "fail_regex": "MUT 2: LP_LOCKSTEP FAIL",
-    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/lp_nm_m2.log"
+    "fail_witness": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_m_wrapper.log"
    },
    {
     "name": "lp_nm_mut4",
@@ -120,7 +121,7 @@
     "threads": 8,
     "peak_ram_gb": 32,
     "fail_regex": "MUT 4: LP_LOCKSTEP FAIL",
-    "fail_witness": "results/arch/hbm_smh_r5_1021/bench/lp_nm_m4.log"
+    "fail_witness": "results/arch/hbm_smh_r5_reset_1021/proof/lp_n_m_wrapper.log"
    }
   ],
   "calibrate": {
@@ -179,7 +180,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_rp5n_m/smh_rp5n_m-r5n_m_rs2-8060df44e"
+   "to": "results/rtl/ref_tile/smh_rp5n_m/smh_rp5n_m-r5n_m_rs2-27cecb44b"
   }
  ],
  "cycles_added": 0,

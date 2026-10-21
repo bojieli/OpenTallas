@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-finalgen-1021
+ot-run: ot-epyc7       admits   274 GB (avail 455, growth 263, headroom 0, waiters 0/0 GB) load 53/96 running 12 disk 4438 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-finalgen-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-finalgen-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-finalgen-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-finalgen-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-finalgen-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1569110-1792621049 after 0 s
+RESET_KIT_GEN_EXIT n_m 0
+RESET_KIT_GEN_EXIT n_f 0
+RESET_KIT_GEN_EXIT s_m 0
+RESET_KIT_GEN_EXIT s_f 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1569110-1792621049): exit 0

@@ -1,5 +1,5 @@
 {
-  "state": "QUALIFIED_SOURCE_READY_FOR_NECESSARY_LAYOUT_NOT_PHYSICAL_PASS",
+  "state": "SOURCE_QUALIFIED_FINAL_GEN_PASS_PHYSICAL_ADMISSION_PAUSED_CLOCK_MODEL",
   "source_hardware_commit": "0f1f5dff8",
   "scope": "SMHr5 D4 K2 chunk24 same-edge local writer reset copies plus north scalar forest leaf partition. Old native120, later45/39 failures retained. No common primitive/policy modifications.",
   "checklist": {
@@ -9,7 +9,7 @@
     "4_logic_depth": "Reset write guard identical2input logicalcondition; data paths unchanged",
     "5_storage": "Same D4/E2 local ring, W24 chunks; unchanged epoch/valid/unwritten-slot semantics",
     "6_geometry": "No outline/childplacement changes; actual new reset FFs must be evaluated by placement and viewed PNGs",
-    "7_clock": "Same actual existing3/2 roots andhardchildrefs; no regional relabel; strictactual80TT/FF and parent/dieSTA still required",
+    "7_clock": "Real r4 single-root\u2192r5 MAIN3/FB2 regional landed partition, hard ownership C6/X1/M1 or C7/X1; unchanged hard placements. PinnedCTS has default actualLib insertion handling with0.75delayderate, but exportedboundary versus internalLib target mismatch remains unmeasured. Four gates paused pending ROOT prerequisite disposition; no samefailedtree regate/no clock waiver.",
     "8_schedule": "Zero new data/reset edges; existing r5 G18MAIN/G15FB calendar retained. Current VAR0/1 positive PASS12796; all HMUT1/2/3/5/6 causal FAIL qualified. ALL4 LP positive plus M1/M2/M4 causal FAIL qualified; oldMUT4miss retained separately."
   },
   "forms": {
@@ -118,6 +118,7 @@
       }
     }
   },
-  "next": "Final canonical generated-kit freeze; necessary exactsource gate under8client budget. Actual native/clock/reach/GRT/STA and critical PNG root approval before REVIEW/submit; no physical PASS inferred.",
-  "source_capture_commit": "ee878fef4"
+  "next": "All4 finalGENrc0 source27ce. Resolve existing clock-model prerequisite from clock_topology_delta.json before any physical launch. Preserve oldr4/r5failures. ActualALLboundaryTT/FF,parent/dieSTA and criticalPNG ROOT review mandatory before REVIEW/submit.",
+  "source_capture_commit": "ee878fef4",
+  "clock_model_packet_commit": "9c4ecb243"
 }

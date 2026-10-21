@@ -1,0 +1,3 @@
+REF_TILE WARN macro_grid: ot_hbm_accel_smh_xs#0: origin (172.8, 734.424) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch) -> build the child on the common lattice
+REF_TILE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it) -> pass --area-um2 / std_area_um2 from the synthesis smoke
+REF_TILE kit physical/ref_tile/smh_rp5s_m outline 691.2 x 1252.8 um (spec outline); job smh_rp5s_m-r5s_m_rs2-27cecb44b

@@ -16,3 +16,5 @@ SAFE before necessary layout:
 8. Schedule: zero added data/reset edges; existing r5 G18MAIN/G15FB schedule retained. ALL4 LP positive/M1M2M4causal qualified. Both current VAR0/VAR1 positives PASS12796 and all HMUT1/2/3/5/6 causal FAILs qualified; exact raw receipts in r5_qualification.json.
 
 Final source qualification and canonicalGEN precede layout. Actual clock/native/GRT/STA and personally viewed critical geometry require coordinator approval before REVIEW/submit. NativePASS and source proofs do not imply physical closure.
+
+Clock admission is PAUSED pending coordinator disposition of `results/arch/hbm_smh_r5_reset_1021/clock_topology_delta.json`. The r5 region split is a real structural source/load change, with final canonical GEN PASS; actual r5 parent clock delays have never been measured. Generic CTS uses actual Liberty internal max insertion and a0.75 delay derate; real exported child-boundary matching still needs model/physical qualification. Source/reset/native PASS alone does not authorize the four gates.
