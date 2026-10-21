@@ -11,8 +11,20 @@ from pathlib import Path
 from qwen_split import fwd_lane_classes as C
 
 
+def slice_max():
+    """Widest parallel part (bits). Default 600 = the widest class. QW-G5R3N 10-21 (opt-in
+    OT_SPLIT_FWD_CLASS_MAXW=128): every part <= 128 b maps onto the closed 128-b classes, whose
+    frame is 64.776 x 30.216 for ALL four direction groups, so a bent (HV/VH) or vertical lane fits
+    the 64.8-um slice-gap data-landing columns (the 600-b bend frame is 104 um wide and found no site:
+    dv2f21g5r3c/d W4). Parts keep the lane's E/K/n and compiler slot: zero added token cycles."""
+    w = int(os.environ.get('OT_SPLIT_FWD_CLASS_MAXW', '600'))
+    if w not in C.WCLS[1:]:
+        raise ValueError(f'OT_SPLIT_FWD_CLASS_MAXW={w}: must be a closed width class {C.WCLS[1:]}')
+    return w
+
+
 def slices(bits):
-    n = math.ceil(bits / 600)
+    n = math.ceil(bits / slice_max())
     width = math.ceil(bits / n)
     return [(lo, min(bits, lo + width)) for lo in range(0, bits, width)]
 
