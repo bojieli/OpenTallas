@@ -1,0 +1,114 @@
+{
+  "name": "hbm_su_qcore_r16a_1021-q16a-d6df78835",
+  "status": "RUNNING",
+  "created": "2026-10-21T16:23:18-07:00",
+  "updated": "2026-10-21T16:37:42-07:00",
+  "host": "ot-epyc7",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_qcore_r16a_1021-q16a-d6df78835",
+  "commit_full": "d6df78835acf04f69d71f81aa4d66e59fb9db276",
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-21T16:24:54-07:00",
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.405 MB sources in 51 modules, into 0.008 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 5.641 s (elab=0.555, cvt=5.012, bld=0.000); cpu 5.641 s on 1 threads; allocated 388.543 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_qcore_r13_lockstep": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "Verilator 5.050 2026-07-01 rev v5.050\nQCORE_RG PASS checks=9104 scalars=312 valid_reads=5918 fault_lags=0 fault_edges=9094\n- rtl/test/hbm_qcore_physical_1016/tb_qcore_r13_lockstep.sv:70: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 91us; walltime 0.442 s; speed 206.395 us/s\n- Verilator: cpu 0.442 s on 1 threads; allocated 11 MB\n",
+      "track": "parallel"
+    },
+    "bench_qcore_r13_mut256": {
+      "expect": "fail",
+      "rc": 0,
+      "ok": true,
+      "tail": " 2026-07-01 rev v5.050\nRF WORD MISMATCH t=206000 class 2 00000000/bf66a17d\nRF WORD MISMATCH t=226000 class 1 00000000/f88ebfab\nRF WORD MISMATCH t=236000 class 2 bf66a17d/00000000\nRF WORD MISMATCH t=276000 class 1 f88ebfab/00000000\nRF WORD MISMATCH t=416000 class 1 00000000/8b431541\nQCORE_RG FAIL errors=12115 checks=9104 scalars=312\n- rtl/test/hbm_qcore_physical_1016/tb_qcore_r13_lockstep.sv:70: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 91us; walltime 0.419 s; speed 217.727 us/s\n- Verilator: cpu 0.419 s on 1 threads; allocated 11 MB\n",
+      "track": "parallel"
+    },
+    "bench_qcore_r13_pretree_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "Verilator 5.050 2026-07-01 rev v5.050\nPASS tb_hbm_su_red_pretree MUT=0: 10 exports bit-exact at fixed edges (+11), no fault\n- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:72: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2us; walltime 0.240 s; speed 6.675 us/s\n- Verilator: cpu 0.240 s on 1 threads; allocated 19 MB\n",
+      "track": "parallel"
+    },
+    "bench_qcore_r13_pretree_mut512_late": {
+      "expect": "fail",
+      "rc": 0,
+      "ok": true,
+      "tail": "0 (exp c07b9bd9)\nMISMATCH 7: edge 716 (exp 716) tag 00000207 (exp 00000207) x 00000000 (exp 44cacf36)\nMISMATCH 8: edge 727 (exp 727) tag 00000208 (exp 00000208) x 00000000 (exp 440a3da2)\nMISMATCH 9: edge 771 (exp 771) tag 00000209 (exp 00000209) x 45fbc57a (exp 45f4e91e)\nFAULT slices 0000 core 1\nFAIL tb_hbm_su_red_pretree MUT=512: 10 errors\n- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:72: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2us; walltime 0.240 s; speed 6.670 us/s\n- Verilator: cpu 0.240 s on 1 threads; allocated 19 MB\n",
+      "track": "parallel"
+    },
+    "bench_qcore_r13_pretree_mut1024_pairing": {
+      "expect": "fail",
+      "rc": 0,
+      "ok": true,
+      "tail": "Verilator 5.050 2026-07-01 rev v5.050\nMISMATCH 0: edge 221 (exp 221) tag 00000200 (exp 00000200) x 47293cd1 (exp 47293cd0)\nMISMATCH 9: edge 771 (exp 771) tag 00000209 (exp 00000209) x 45f4e921 (exp 45f4e91e)\nFAIL tb_hbm_su_red_pretree MUT=1024: 2 errors\n- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:72: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2us; walltime 0.240 s; speed 6.661 us/s\n- Verilator: cpu 0.240 s on 1 threads; allocated 19 MB\n",
+      "track": "parallel"
+    },
+    "bench_qcore_r16_COL_word_mut128": {
+      "expect": "fail",
+      "rc": 0,
+      "ok": true,
+      "tail": " 2026-07-01 rev v5.050\nRF WORD MISMATCH t=206000 class 2 35dc6680/bf66a17d\nRF WORD MISMATCH t=216000 class 2 35dc6680/bf66a17d\nRF WORD MISMATCH t=226000 class 1 6aee010b/f88ebfab\nRF WORD MISMATCH t=226000 class 2 35dc6680/bf66a17d\nRF WORD MISMATCH t=236000 class 1 6aee010b/f88ebfab\nQCORE_RG FAIL errors=27938 checks=9104 scalars=312\n- rtl/test/hbm_qcore_physical_1016/tb_qcore_r13_lockstep.sv:70: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 91us; walltime 0.405 s; speed 225.410 us/s\n- Verilator: cpu 0.405 s on 1 threads; allocated 11 MB\n",
+      "track": "parallel"
+    }
+  },
+  "fail_witnesses": {
+    "bench_qcore_r13_mut256": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/hbm_su_qcore_r16a_1021_q16a_d6df78835/bench_qcore_r13_mut256.log",
+      "sha256": "83579c851c7feb74db897ed5c84946c953c5e7342975772e817a75cb3288137c",
+      "fail_regex": "QCORE_RG FAIL",
+      "matched": "QCORE_RG FAIL",
+      "captured_at": "2026-10-21T16:27:29-07:00",
+      "declared": null
+    },
+    "bench_qcore_r13_pretree_mut512_late": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/hbm_su_qcore_r16a_1021_q16a_d6df78835/bench_qcore_r13_pretree_mut512_late.log",
+      "sha256": "6048e39491e48a4106c2926e55b7d0d8ca80c5b6e9dee974888605af9155645a",
+      "fail_regex": "FAIL tb_hbm_su_red_pretree MUT=512",
+      "matched": "FAIL tb_hbm_su_red_pretree MUT=512",
+      "captured_at": "2026-10-21T16:31:46-07:00",
+      "declared": null
+    },
+    "bench_qcore_r13_pretree_mut1024_pairing": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/hbm_su_qcore_r16a_1021_q16a_d6df78835/bench_qcore_r13_pretree_mut1024_pairing.log",
+      "sha256": "cdeecd918f009fa2e25fcb5f1b086afb66eee0878f888f6aa91bdcb379f78b79",
+      "fail_regex": "FAIL tb_hbm_su_red_pretree MUT=1024",
+      "matched": "FAIL tb_hbm_su_red_pretree MUT=1024",
+      "captured_at": "2026-10-21T16:33:46-07:00",
+      "declared": null
+    },
+    "bench_qcore_r16_COL_word_mut128": {
+      "path": "/home/ubuntu/.local/state/closure_loop/fail_witnesses/hbm_su_qcore_r16a_1021_q16a_d6df78835/bench_qcore_r16_COL_word_mut128.log",
+      "sha256": "337fccc6e176068a0c72a4c1897f207864aefabae2020aeb9046ae6162b31f4e",
+      "fail_regex": "QCORE_RG FAIL",
+      "matched": "QCORE_RG FAIL",
+      "captured_at": "2026-10-21T16:34:45-07:00",
+      "declared": null
+    }
+  },
+  "helper_overlay_verification": {
+    "status": "verified_original",
+    "origin_main": "af98e40816190885be1f733267818050fbb877e4",
+    "content_sha256": "01377d22bb4c1fab998bf16096f48d5d00e258d9f2bc500a637265378f7e8765",
+    "files": 50,
+    "verified_at": "2026-10-21T16:24:53-07:00",
+    "host": "ot-epyc7",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_qcore_r16a_1021-q16a-d6df78835",
+    "mutation": false
+  },
+  "scope": "Actual ONE normal route submitted by ROOT exclusive publisher after ROOT personal review. Runtime snapshot only; final TT/FF/DRC pending. Prior r15a NEEDS_RTL remains preserved. No die adoption implied.",
+  "publisher_branch": "codex/root-qcore-submit-1021",
+  "approved_gate_geometry_sha256": "b983a03189cdc8c865839db93d99058e23c239ad26fff21a64bb16c4e8de5bdf",
+  "approved_gate_archive_sha256": "a4cb39ec0f41c64594e123cc5fae39545f4f497dd73b6af8b1c23dcd54ba8064",
+  "approved_gate_manifest_sha256": "8f7eb8f535a27b0708ec304d42a5f68238ef7757d68741078587f72fc1f648e0",
+  "preservation": ".keep verified EP7 exact route root16:28:36; original gate and source3/4 objects also retained",
+  "snapshot_time": "2026-10-21T16:37:48.671382"
+}
