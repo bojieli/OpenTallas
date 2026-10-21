@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_hcq_tree16_c1b-c1b-e91f9005e bench bench_qtree16_mut4 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e log cl/bench_qtree16_mut4.a1b1.log captured 2026-10-20T22:21:54-07:00
+# fail_regex 'QTREE16 FAIL MUT=4'
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/bench/m4/cells.v
+QTREE16 FAIL MUT=4 bad=9134 checks=19986
+MISMATCH err n=3 cyc=37
+MISMATCH err n=7 cyc=41
+MISMATCH err n=2 cyc=46
+MISMATCH err n=3 cyc=46
+MISMATCH y cyc=52 c2ecdfe1 c2f6463a
+MISMATCH y cyc=58 c33cd26a c335b3cc
+Verilator 5.050 2026-07-01 rev v5.050
