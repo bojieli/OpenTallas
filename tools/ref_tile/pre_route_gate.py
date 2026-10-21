@@ -1653,7 +1653,7 @@ def check_textbook_execution(g: Gate, out: str):
     return True
 
 
-def check_native_census(g: Gate, out: str):
+def check_native_census(g: Gate, out: str, kit: str | None = None):
     """Missing native admission is an execution failure, never a WARN."""
     rows = re.findall(r'^GATE_NATIVE_CENSUS_RESULT (\{.*\})$', out, re.M)
     try:
@@ -1665,6 +1665,11 @@ def check_native_census(g: Gate, out: str):
             g.add('WARN', 'native_census',
                   'raw native census FAIL max34; exact coordinator waiver for 15 library-adder nodes',
                   NC.KTREE_SCOPE + '; all other drivers retain limit32; timing and physical checks required')
+            return True
+        if kit is not None and NC.mc3c7_scoped_admission(report, kit):
+            g.add('WARN', 'native_census',
+                  f"raw native census FAIL max{report['max_dynamic_loads']}; scoped coordinator waiver <={NC.MC3C7_MAX} for kit {kit}",
+                  NC.MC3C7_SCOPE + '; guidance under rule freeze; route timing decides')
             return True
         if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
                 or report.get('status') != 'PASS' or report.get('limit') != 32
@@ -1687,7 +1692,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     check_textbook_execution(g,out)
-    check_native_census(g,out)
+    check_native_census(g,out,kd.name)
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if binding.get("staged_remeasurement"):
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
