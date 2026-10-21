@@ -57,6 +57,44 @@ def on():
     return os.environ.get('OT_KV_BUNDLE_EQ', '1') == '1'
 
 
+# KV-D2D3 10-20 (OT_KV_SEAM_PIN=1, default off): the K seam bundles are padded UP TO the die stages the bound pair D2D image
+# records (kv_static_programme.image_die_stages: the image the d2d view TXDP, the DCAL view and the compute die were all
+# compiled from), not just to their own max.  A bundle whose natural max exceeds the image stage FAILS CLOSED (the plan
+# must move kvs_attn / the d2d pins, or the pair image + views be recompiled together): never a silent seam change.
+SEAM_PIN_STAGE = {'K.rx_record': 'KS_RXV', 'K.tx_slot': 'KS_TXS', 'K.tx_record': 'SK_TXP'}
+
+
+def seam_pin_on():
+    return os.environ.get('OT_KV_SEAM_PIN', '0') == '1'
+
+
+def seam_targets(img=None):
+    """{bundle: stages} the bound pair image records for the K seam bundles"""
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import kv_static_programme as KSP
+    import d2d_link_calendar as L
+    v = [int(x) for x in KSP.image_die_stages(img).replace('/', ',').split(',')]
+    st = dict(zip(L.STAGE_NAMES, v))
+    return {b: st[s] for b, s in SEAM_PIN_STAGE.items()}
+
+
+def seam_pin_plan(targets):
+    """plan_fn for equalize(): K seam bundles -> every member padded to the image stage; FAIL CLOSED above it"""
+    over = []
+
+    def plan_fn(name, stages, walk):
+        if name not in targets:
+            return plan(stages)
+        t = targets[name]
+        hi = max(stages.values())
+        if hi > t:
+            over.append(f'{name} natural {hi} > image {t}')
+            t = hi
+        return {k: t - n for k, n in stages.items()}
+    return plan_fn, over
+
+
 def plan(stages, offsets=None):
     """{member: n} -> {member: pads}: every member reaches max(n + offset) (offset 0 = a plain record bundle)"""
     off = offsets or {}
