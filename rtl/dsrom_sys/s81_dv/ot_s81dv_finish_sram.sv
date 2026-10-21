@@ -213,7 +213,7 @@ module ot_s81dv_norm_finish_sram #(
     always @(posedge clk) ssr <= wr_d;
     wire [31:0] mq, me, rr;
     wire        mq_v, me_v, rr_v, f_div, f_eps, f_rsq;
-    ot_dsrom_divc #(.F(DF), .K(DK)) u_div (.clk(clk), .rst_n(rstn), .v(ssr_v), .x(ssr), .y(mq), .vo(mq_v), .fault(f_div));
+    ot_s81dv_divc_n32 #(.F(DF), .K(DK)) u_div (.clk(clk), .rst_n(rstn), .v(ssr_v), .x(ssr), .y(mq), .vo(mq_v), .fault(f_div));
     wire [LA:0] ve;
     ot_hdc_vline #(.D(LA)) u_ve (.clk(clk), .rst_n(rstn), .v(mq_v), .vd(ve));
     ot_s81dv_qadd_n32 #(.LAT(LA)) u_eps (clk, rstn, mq_v, mq, eps_c, me, f_eps);

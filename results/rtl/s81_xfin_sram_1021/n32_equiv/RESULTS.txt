@@ -1,0 +1,4 @@
+EQ_ADD 2M random cycles (specials, cancellation, near-exponent): bad=0 (ot_s81dv_qadd_n32 vs ot_dsrom_qadd LAT6)
+EQ_MUL 2M: bad=0 (ot_s81dv_qmul_n32 vs ot_hdc_qmul_lat 5); EQ_RSQ 2M: badr=0 (ot_s81dv_rsqrt_n32 vs ot_dsrom_rsqrt LM5 LA6)
+EQ_DIV 2M: bad=0 (ot_s81dv_divc_n32 vs ot_dsrom_divc F5 K10)
+Verilator 5.050, localhost, 2026-10-21 ELEM-XFV/XFIN
