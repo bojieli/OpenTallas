@@ -1,0 +1,3 @@
+read_json /out/namespace_sources.json
+equiv_make gold gate equiv
+write_json /out/miter_namespace.json

@@ -1,0 +1,9 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-segcal-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-segcal-1019/src
+ot-run: ot-epyc7       admits   416 GB (avail 392, growth 101, headroom 0, waiters 0/0 GB) load 58/96 running 28 disk 5684 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-segcal-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-segcal-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-segcal-1019/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3599181-1792486009 after 0 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3599181-1792486009): exit 1

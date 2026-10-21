@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 293, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 278, in main
+    ok, n, errs, info = run(a)
+                        ~~~^^^
+  File "/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/rtl/test/qwen_dv/tt_ctlm_prog_bench.py", line 190, in run
+    for line in open(lgf):
+                ~~~~^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/codex-qw-segcal-1019/src/results/rtl/qlb_c4b_1018/lmh_cal/codex_r1/w_h1_segmut/log_m0_b0_OT_SEG_MUT.txt'
+rc=1

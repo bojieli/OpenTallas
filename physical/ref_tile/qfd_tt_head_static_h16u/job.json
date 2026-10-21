@@ -1,0 +1,135 @@
+{
+ "name": "qfd_tt_head_static_h16u-h16u-COMMIT",
+ "block": "ot_qfd_tt_ctlm_static_hr_safe32_native32_1r",
+ "ref_tile": true,
+ "owner": "Claude:QW-H16T",
+ "purpose": "h16t successor: single clock region (SRAMs on ck_head, raw ck_pm0/ck_pm1 entries deleted); removes all cross-root reg<->SRAM paths without rings or added edges; same bound_r4 cells, floorplan and pins.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/qw-h16t-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/rtl/qw_head_safe32_1020",
+   "results/rtl/qlb_c4b_1018/lmh_cal",
+   "rtl/qwen_dv",
+   "rtl/test/qwen_dv",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/physical",
+   "rtl/qwen_split/mu",
+   "rtl/qwen_sys",
+   "physical/asap7_memory_macros",
+   "physical/asap7_memory_macros_v2",
+   "physical/ref_tile/qfd_tt_head_static_h16u"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_tt_ctlm_static_hr_safe32_native32_1r u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv results/rtl/qw_head_safe32_1020/h16u/native32_1r_param.v results/rtl/qw_head_safe32_1020/bound_r4/native32_helpers.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bench_h16u_img0",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16u/run_bench.sh {RUN}/bench/bench_h16u_img0 img0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS (123/123|131/131)"
+   },
+   {
+    "name": "bench_h16u_imgh",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16u/run_bench.sh {RUN}/bench/bench_h16u_imgh imgh",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS (123/123|131/131)"
+   },
+   {
+    "name": "bench_h16u_bmut3",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16u/run_bench.sh {RUN}/bench/bench_h16u_bmut3 imgh 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_PROG MUT=0 BMUT=3 HARD_HR=1 HRA=0 DECODE=3: FAIL [0-9]+/131",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16u/bench_witness/bench_h16u_bmut3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tt_head_static_h16u/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tt_head_static_h16u/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_head_static_h16u --out {RUN}/record/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tt_head_static_h16u/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tt_head_static_h16u/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tt_head_static_h16u/qfd_tt_head_static_h16u-h16u-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "h16t gate FAIL 4 (cross_clock only; within-root spread 61.1/58.5 PASS, GRT0, census32): the 8 head SRAMs sat on raw clock entries ck_pm0 (5) / ck_pm1 (3) while all 7,908 flops are on ck_head -> direct reg<->SRAM paths between three roots (TT -111/-21.8/-378.1/-137.1 ps incl. 150-210 ps distinct-entry reserve), forbidden by the owner clock rule 10-20 08:55. The parent (qfd_tt_ctlm_dv u_hr) drives all three entries from the same ck, so the SRAM regions had no physical purpose: h16u deletes the raw entries (results/rtl/qw_head_safe32_1020/h16u/make_1r.py, 4 header/assign edits, cell netlist unchanged) and the head is ONE clock region: one CTS root ck_head reaching 7,908 flops + 8 SRAM clock pins, spread <=80 TT/FF inside it, no region crossing, so no landing ring and 0 added edges."
+}

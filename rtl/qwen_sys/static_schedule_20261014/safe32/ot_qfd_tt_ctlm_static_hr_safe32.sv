@@ -1,0 +1,198 @@
+// Physical regrouping (Q-COMPUTE-ELEM r13 2026-10-15): the static controller head side = the exact
+// ot_qfd_tt_ctlm_static_parent body minus the ROM tree (u_head + native route + resident relocation +
+// loaded stage), one hardened leaf with roots ck_head / ck_me_sched. No logic or edge change; the tree
+// return enters as rom_ret_i. Equivalence vs the original parent: physical/qwen_tt_static_cluster_1015.
+// r14 (2026-10-15): the two program SRAMs take explicit raw clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk).
+// h7 (Q-ELEM-TTH 2026-10-16): ONE standard-cell root ck_head (the former ck_me_sched entry is merged into it; the die
+// already delivers both from one tap). Separate entries carry the die-skew reserve (setup 150/210, hold 100) on every
+// sched<->core hop: h6 gate sched->core -429 ps incl. 210 ps reserve. Raw SRAM entries ck_pm0/ck_pm1 stay separate.
+// Static successor parent: actual WSRC classification and real native status.
+// No native command reaches the ROM tree; native completion comes from endpoint.
+// r2 (Q-COMPUTE-ELEM, 2026-10-15, coordinator 12:50 accepted +1 cycle): rom_cmd leaves the head from a register
+// (CMDREG=1): h3 gate reg->out -633.9 ps = u_sd_me_i_wcs -> native route + resident relocation (16 levels) -> pin.
+// The tree command is one edge later (compiler-visible +1 on every ROM-tree command; ledger row TT.ROMCMD).
+// h6 (Q-ELEM-TTH 2026-10-16, RSTN=1): rst_n drove ~481 async-clear flops directly (reset pins are excluded from the
+// pin registers; scale-leaf tc1 class: native rst_n capture 357 ps). Now rst_n -> one ot_qfd_rst_stn flop at the pin
+// -> the leaf-internal reset rsl (assert asynchronous, release one ck_head edge later; no data/command edge changes).
+// h10 (Q-IO-1815 TTH 2026-10-16, RSTREP=1): the h9b gate's single reset station flop drove 481 async clears (380 of
+// them the rom_cmd_q datapath register, W face; textbook high_fanout + recovery -154..-197 ps). Three kept station
+// copies, each the identical ot_qfd_rst_stn function of the rst_n port (async assert, release RSTN ck_head edges later):
+// rsl -> u_head / native route / stage regs (~120 loads), rsl_c0 / rsl_c1 -> the two halves of rom_cmd_q (190 each).
+// Release timing identical to the single station (exact, 0 edges).
+// h14 (Q-TTH14 2026-10-17, DSEL=1): the decode adds' DYN operand is a register per FIFO head word, written with the
+// word (dyn is fixed in S_RUN); removes the dyn select + its wire from the h13 worst path (dyn -> obase add). Exact, 0 edges.
+// h15 (Q-TTH15 2026-10-17, H15=1, coordinator-approved): PWCP program-SRAM write-pin copies per macro x pin edge, FQWE
+// registered one-hot FIFO write enables + prog_q capture-enable slice copies, OINC o_cnt <= o_cnt1 with a KS incrementer,
+// DTIL me_tiles DPRE/DSEL, SLATE fixed-issue sched_q late start select, AMWC am_wins kept copies, RRH 4 more reset copies
+// for the head-fill slices.  All exact, 0 edges (+~560 flops).  Kit qfd_tt_head_static_h15: mirrored (MY) macros, E home band.
+// h17 (Q-H16C 2026-10-18, STAGE_ME, default 0 = as built): QLB-PROG G-C3 one-image-per-epoch.  STAGE_ME = 1: the ROM
+// relocation stage (loaded_stage / command_stage) is the RUNNING stage, latched from the new stage_start / stage ports
+// (the parent's registered dh stage start + stage, qfd_tt_ctlm_dv s_start / s_stage) instead of the image CALS word
+// (PW1017 [17:12]; as built every one of the 36 layers would read the weights of the one layer the image names).
+// Edges: stage_start / stage and h_start enter through the same pin registers, so loaded_stage is valid on the edge
+// h_start reaches u_head, exactly as the soft parent (HARD_HR 0) latch.  STAGE_ME = 0: the stage ports are ignored.
+module ot_qfd_tt_ctlm_static_hr_safe32 #(parameter integer CMDREG = 1, parameter integer RSTN = 2, parameter integer SREG = 1, parameter integer DPRE = 1,
+    parameter integer RSTREP = 1, parameter integer DSEL = 1,
+    // h15 (Q-TTH15 10-17): PWCP / FQWE / OINC / DTIL / SLATE / AMWC / RRH, see qfd_tt_ctlm_head_static_rk (all exact, 0 edges)
+    parameter integer H15 = 1,
+    parameter integer H16X = 0,   // QW-H16X (10-20): early program read + raw capture, PQP, fixed-issue cuts (exact, 0 edges)
+    parameter integer STAGE_ME = 0, parameter integer SEGCAL = 0) (
+    input wire [94:0] rom_ret_i,
+    input wire cp_active,output wire [55:0] cp,
+    output wire me_image_ready,output wire [75:0] program_obs,
+    output wire layer_context_v,output wire [17:0] native_tok,native_pos,
+    output wire [379:0] rom_cmd,
+    output wire [5:0] command_stage,
+    output wire [379:0] native_cmd,
+    output wire [15:0] me_observe,
+    input wire [94:0] native_ret,
+    input wire ck_head,
+    input wire ck_pm0, ck_pm1,   // r14: raw program-SRAM clock entries (same PLL phase as ck_head)
+    input wire  rst_n,
+    input wire  h_start,
+    input wire  stage_start,      // h17 STAGE_ME: running-stage start (unused when STAGE_ME = 0)
+    input wire [5:0] stage,       // h17 STAGE_ME: running stage
+    input wire [18-1:0] token,
+    input wire [18-1:0] pos,
+    input wire [11:0] prog_base,
+    input wire  pw_v,
+    input wire [9:0] pw_addr,
+    input wire [63:0] pw_data,
+    input wire [24-1:0] x_oacc,
+    input wire  x_oidle,
+    input wire [15:0] x_oprog,
+    input wire [15:0] x_orows,
+    input wire  kv_ok,
+    input wire  kv_write_drained,
+    input wire  me_mem_ok,
+    output wire  m_fin_o,
+    output wire [18-1:0] m_fidx_o,
+    output wire [31:0] m_fval_o,
+    output wire  kvd_v,
+    output wire [24-1:0] kvd_wbase,
+    output wire [24-1:0] kvd_ts,
+    output wire [24-1:0] kvd_ks,
+    output wire [24-1:0] kvd_js,
+    output wire [24-1:0] kvd_wcs,
+    output wire [3:0] kvd_split,
+    output wire [2:0] kvd_jsh,
+    output wire [18-1:0] kvd_tiles,
+    output wire [18-1:0] kvd_k,
+    output wire [18-1:0] kvd_nout,
+    output wire  kvd_kindk,
+    output wire [18-1:0] kvd_pos,
+    output wire  me_clk_en,
+    output wire  c_fault
+);
+    // Two-stage face landing plus same-edge regional leaves. Reset release
+    // is three clocks at EVERY top region (+2 boot clocks vs old RSTN1);
+    // no recurring programme/issue edge changes after legal boot/config.
+    (* keep="true",dont_touch="true" *) reg [1:0] reset_face;
+    (* keep="true",dont_touch="true" *) reg [17:0] reset_region;
+    always @(posedge ck_head or negedge rst_n)
+        if(!rst_n)reset_face<=0;else reset_face<={reset_face[0],1'b1};
+    genvar rs;
+    generate for(rs=0;rs<18;rs=rs+1)begin:g_reset_region
+        always @(posedge ck_head or negedge reset_face[1])
+            if(!reset_face[1])reset_region[rs]<=0;else reset_region[rs]<=1;
+    end endgenerate
+    wire rsl=reset_region[0];
+    wire [11:0] rst_cmd_n=reset_region[12:1];
+    wire [2:0] rst_obs_n=reset_region[15:13];
+    initial if(CMDREG!=1 || RSTN!=2 || RSTREP!=1)
+        $error("safe32 head supports CMDREG1 RSTN2 RSTREP1 only");
+    wire [379:0] cmd;
+    wire [94:0] ret,rom_ret;
+    assign rom_ret=rom_ret_i;
+    wire [379:0] local_rom_cmd;
+    wire head_fault,relocation_fault;
+    reg [5:0] loaded_stage;
+    reg relocation_sticky;
+    // QW-H16V (10-20): the relocation's stage terms (valid / head / code_base / scale_base) are functions of loaded_stage
+    // alone, so they are registered on the SAME edge from the SAME next value (reloc_q == base(loaded_stage) every cycle,
+    // reset base(0)); the (stage-1)*512/816 products leave the rom_cmd_q cone (h16t: command_stage -> rom_cmd_q 37 levels,
+    // -140 ps TT).  Exact, 0 edges.
+    wire [5:0] loaded_stage_n = (STAGE_ME != 0) ? (stage_start ? stage : loaded_stage)
+                              : (pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53) ? pw_data[17:12] : loaded_stage;
+    wire rb_valid_n, rb_head_n; wire [23:0] rb_code_n, rb_scale_n;
+    ot_qwen_tp8_rom_relocate_base u_reloc_base(.in_stage(loaded_stage_n),.valid_stage(rb_valid_n),.head(rb_head_n),
+      .code_base(rb_code_n),.scale_base(rb_scale_n));
+    localparam [23:0] RB_CODE0 = 24'hFFFE00, RB_SCALE0 = 24'hFFFCD0;   // base(0): (0-1)*512, (0-1)*816 mod 2^24
+    reg rb_valid, rb_head; reg [23:0] rb_code, rb_scale;
+    always @(posedge ck_head or negedge rsl)
+      if(!rsl)begin loaded_stage<=0;relocation_sticky<=0;rb_valid<=1'b0;rb_head<=1'b0;rb_code<=RB_CODE0;rb_scale<=RB_SCALE0;end
+      else begin
+        loaded_stage<=loaded_stage_n;
+        rb_valid<=rb_valid_n;rb_head<=rb_head_n;rb_code<=rb_code_n;rb_scale<=rb_scale_n;
+        if(relocation_fault)relocation_sticky<=1;
+      end
+`ifndef SYNTHESIS
+    wire rb_v_ref, rb_h_ref; wire [23:0] rb_c_ref, rb_s_ref;
+    ot_qwen_tp8_rom_relocate_base u_reloc_base_ref(.in_stage(loaded_stage),.valid_stage(rb_v_ref),.head(rb_h_ref),
+      .code_base(rb_c_ref),.scale_base(rb_s_ref));
+    always @(posedge ck_head) if(rsl && {rb_valid,rb_head,rb_code,rb_scale}!=={rb_v_ref,rb_h_ref,rb_c_ref,rb_s_ref})
+      $fatal(1,"H16V reloc base %0h != ref %0h",{rb_valid,rb_head,rb_code,rb_scale},{rb_v_ref,rb_h_ref,rb_c_ref,rb_s_ref});
+`endif
+    assign command_stage=loaded_stage;
+    wire [379:0] rom_cmd_c;
+    ot_qwen_tp8_rom_relocate_pb u_resident_relocation(
+      .in_cmd(local_rom_cmd),.valid_stage(rb_valid),.head(rb_head),.code_base(rb_code),.scale_base(rb_scale),
+      .out_cmd(rom_cmd_c),.fault(relocation_fault));
+    reg [379:0] rom_cmd_q;
+    genvar cr;
+    generate for(cr=0;cr<12;cr=cr+1)begin:g_cmdreg
+        localparam integer LO=32*cr, HI=(32*(cr+1)>380)?380:32*(cr+1);
+        always @(posedge ck_head or negedge rst_cmd_n[cr])
+            if(!rst_cmd_n[cr])rom_cmd_q[HI-1:LO]<=0;
+            else rom_cmd_q[HI-1:LO]<=rom_cmd_c[HI-1:LO];
+    end endgenerate
+    assign rom_cmd=rom_cmd_q;
+    assign c_fault=head_fault|relocation_sticky;
+    ot_qfd_native_cmd_route u_native_route (
+      .clk(ck_head),.rst_n(rsl),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
+      .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
+    qfd_tt_ctlm_head_static_rk_safe32 #(.SEGCAL(SEGCAL),.SREG(SREG),.DPRE(DPRE),.DSEL(DSEL),.PWCP(H15),.FQWE(H15),.OINC(H15),.DTIL(H15),.SLATE(H15),
+        .AMWC(H15),.RRH(H15),.H16X(H16X)) u_head (
+        .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
+        .me_image_ready(me_image_ready),.program_obs(program_obs),
+        .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),
+
+        .clk(ck_head),
+        .ck_pm({ck_pm1,ck_pm0}),
+        .ck_sched(ck_head),   // h7: the static schedule store shares the ck_head root (die ties them)
+        .rst_n(rsl),.rst_program_obs_n(rst_obs_n),
+        .rst_hfc_source_n(reset_region[16]),.rst_fifo_source_n(reset_region[17]),
+        .h_start(h_start),
+        .token(token),
+        .pos(pos),
+        .prog_base(prog_base),
+        .pw_v(pw_v),
+        .pw_addr(pw_addr),
+        .pw_data(pw_data),
+        .x_oacc(x_oacc),
+        .x_oidle(x_oidle),
+        .x_oprog(x_oprog),
+        .x_orows(x_orows),
+        .kv_ok(kv_ok),
+        .kv_write_drained(kv_write_drained),
+        .me_mem_ok(me_mem_ok),
+        .m_fin_o(m_fin_o),
+        .m_fidx_o(m_fidx_o),
+        .m_fval_o(m_fval_o),
+        .me_clk_en(me_clk_en),
+        .c_fault(head_fault),
+        .kvd_v(kvd_v),
+        .kvd_wbase(kvd_wbase),
+        .kvd_ts(kvd_ts),
+        .kvd_ks(kvd_ks),
+        .kvd_js(kvd_js),
+        .kvd_wcs(kvd_wcs),
+        .kvd_split(kvd_split),
+        .kvd_jsh(kvd_jsh),
+        .kvd_tiles(kvd_tiles),
+        .kvd_k(kvd_k),
+        .kvd_nout(kvd_nout),
+        .kvd_kindk(kvd_kindk),
+        .kvd_pos(kvd_pos),
+        .cmd(cmd),.ret(ret));
+endmodule

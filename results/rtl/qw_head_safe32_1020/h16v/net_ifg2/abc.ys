@@ -1,0 +1,8 @@
+read_json /out/bit_generic.json
+hierarchy -top ot_qfd_tt_ctlm_static_hr_safe32
+setattr -set keep 1 w:u_head.fixed_issue w:u_head.fixed_end w:u_head.fixed_pc w:u_head.fixed_unit w:head_fault w:relocation_sticky
+stat
+abc -g AND,NAND,OR,NOR,XOR,XNOR,ANDNOT,ORNOT,MUX -script +strash;&get,-n;&st;&if,-g;&synch2;&if,-g;&put;dch,-f;map,-D,1
+opt_clean
+stat
+write_json /out/bit_generic_abc.json

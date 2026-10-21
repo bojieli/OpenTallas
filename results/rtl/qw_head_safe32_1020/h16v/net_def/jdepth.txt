@@ -1,0 +1,13 @@
+ 27    1 u_head.u_fixed_issue.g_seg.u_store.cfg_fault  <-  u_head.u_fixed_issue.g_seg.u_store.gdesc_q
+ 26    1 u_head.u_fixed_issue.g_seg.u_store.core_fault  <-  u_head.q_x_oprog
+ 22    1 u_head.u_fixed_issue.g_seg.u_store.read_fault  <-  u_head.u_fixed_issue.g_seg.u_store.gdesc_q
+ 22   47 u_head.u_fixed_issue.g_seg.u_store.q  <-  u_head.u_fixed_issue.g_seg.u_store.gdesc_q
+ 21    4 rb_scale  <-  command_stage
+ 21    1 u_head.u_fixed_issue.g_seg.u_store.sealed  <-  u_head.u_fixed_issue.g_seg.u_store.gdesc_q
+ 20    1 u_head.u_fixed_issue.g_seg.u_store.loading  <-  u_head.u_fixed_issue.g_seg.u_store.gdesc_q
+ 18    4 u_head.u_ctrl_me.dyn[]  <-  kvd_pos
+ 17   32 u_head.u_ctrl_me.run_val  <-  u_head.c_me_am_val
+ 16    1 u_head.u_fixed_issue.g_seg.u_store.u_issue.sched_q  <-  u_head.u_fixed_issue.cycle
+ 16    1 u_head.u_ctrl_me.g_hfc.g_fqwe.u_fifo.g_bank[].rd_a  <-  u_head.u_ctrl_me.fq_n
+ 16   18 u_head.u_ctrl_me.run_idx  <-  u_head.c_me_am_val
+ 16   32 u_head.u_ctrl_me.g_amwc.g_c[].u_w.run_key  <-  u_head.c_me_am_val

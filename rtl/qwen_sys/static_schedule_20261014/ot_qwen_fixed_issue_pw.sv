@@ -10,17 +10,27 @@ module ot_qwen_fixed_issue_pw #(
  parameter integer DEPTH=(OWN==1)?8:20,
  parameter integer BASE=(OWN==1)?976:984,
  parameter integer SREG=0,
- parameter integer SLATE=0
+ parameter integer SLATE=0,
+ // SEG (QLB-C4b 10-18, opt-in, 0 = as built; DENSE_IMAGE 1 + OWN 1 only): per-segment calendar.  A start whose
+ // start_base (the programme base of the segment start) is 0 runs the ME8 rows [976..983] exactly as built; a start at
+ // the base named by the image's CALB word [993] runs the segment-G rows [984..991] with their own stop (CALG [992]).
+ // Any other start_base is not a calendar start (the decode stage's later segments continue the base-0 calendar).
+ // See ot_qwen_fixed_issue_seg_pw (ot_qwen_fixed_issue_dense_pw.sv).  start_base is ignored when SEG = 0.
+ parameter integer SEG=0
 )(
  input wire clk,input wire rst_n,
  input wire pw_v,input wire [9:0]pw_addr,input wire[63:0]pw_data,
  input wire start,input wire[5:0]stage,
+ input wire[11:0]start_base,
  input wire candidate_v,input wire[11:0]candidate_pc,input wire[1:0]candidate_unit,
  input wire available,input wire end_ok,input wire cp_available,
  output wire issue_v,output wire end_v,output wire[55:0]cp_cmd,output wire cp_v,output wire[11:0]issue_pc,output wire[1:0]issue_unit,
  output wire active,output wire done,output wire[31:0]cycle,output wire image_ready,output wire fault
 );
- generate if(DENSE_IMAGE!=0)begin:g_dense
+ generate if(SEG!=0)begin:g_seg
+ if(DENSE_IMAGE==0||OWN!=1)begin:g_bad initial $error("ot_qwen_fixed_issue_pw SEG needs DENSE_IMAGE 1, OWN 1"); end
+ ot_qwen_fixed_issue_seg_pw #(.DEPTH(DEPTH),.BASE(BASE),.SREG(SREG),.SLATE(SLATE))u_store(.*);
+ end else if(DENSE_IMAGE!=0)begin:g_dense
  ot_qwen_fixed_issue_dense_pw #(.OWN(OWN),.DEPTH(DEPTH),.BASE(BASE),.SREG(SREG),.SLATE(SLATE))u_store(.*);
  end else begin:g_stream
  ot_qwen_fixed_issue_stream_pw #(.OWN(OWN),.DEPTH(DEPTH),.BASE(BASE),.SREG(SREG),.SLATE(SLATE))u_store(.*);

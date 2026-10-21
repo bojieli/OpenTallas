@@ -1,0 +1,135 @@
+{
+ "name": "qfd_tt_head_static_h16x-h16x-COMMIT",
+ "block": "ot_qfd_tt_ctlm_static_hr_safe32_native32_1r",
+ "ref_tile": true,
+ "owner": "Claude:QW-H16X",
+ "purpose": "h16v successor: depth round 2 (SRAM early read + raw capture, fixed-issue/pq cuts), main.",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/qw-h16x-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/rtl/qw_head_safe32_1020",
+   "results/rtl/qlb_c4b_1018/lmh_cal",
+   "rtl/qwen_dv",
+   "rtl/test/qwen_dv",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/physical",
+   "rtl/qwen_split/mu",
+   "rtl/qwen_sys",
+   "physical/asap7_memory_macros",
+   "physical/asap7_memory_macros_v2",
+   "physical/ref_tile/qfd_tt_head_static_h16x"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_tt_ctlm_static_hr_safe32_native32_1r u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv results/rtl/qw_head_safe32_1020/h16x/net_ifg2/native32_1r_param.v results/rtl/qw_head_safe32_1020/h16x/net_ifg2/native32_helpers.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bench_h16x_img0",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16x/run_bench.sh {RUN}/bench/bench_h16x_img0 img0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS (123/123|131/131)"
+   },
+   {
+    "name": "bench_h16x_imgh",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16x/run_bench.sh {RUN}/bench/bench_h16x_imgh imgh",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS (123/123|131/131)"
+   },
+   {
+    "name": "bench_h16x_bmut3",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16x/run_bench.sh {RUN}/bench/bench_h16x_bmut3 imgh 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_PROG MUT=0 BMUT=3 HARD_HR=1 HRA=0 DECODE=3: FAIL [0-9]+/131",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16x/bench_witness/bench_h16x_bmut3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tt_head_static_h16x/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tt_head_static_h16x/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_head_static_h16x --out {RUN}/record/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tt_head_static_h16x/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tt_head_static_h16x/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tt_head_static_h16x/qfd_tt_head_static_h16x-h16x-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "h16v gate (QW-COLLECT 23:45; CTS ODB TT placement RC, h16v_violators_by_rtl.txt): SRAM rd_out -> prog_q -321.5 (263 paths: macro clk->q 430 ps + ~560 ps wire to prog_q flops placed at their consumers); fixed_issue index -> next_row mux -> 32-b compare -> core_fault -282 (30 lv); gdesc_q -> g_present compare -> sel_g -> q -224; q_pw_addr -> row decode -> 376 row enables -151; q_pos -> dts quotient -> pq_r -158.  h16x RTL (H16X=1, exact, 0 edges; claude/qw-h16x-1020): program-store read issued one edge EARLY (controller fetch condition + prog_base+fpc) into a raw rd_out capture register p_cap (1024 kept flops, no logic), prog_q <= p_cap on the unchanged edge; next-row compare as a late select of two parallel KS compares; g_present registered with gdesc_q; calendar row write decode registered one edge early from pw_addr (u_isd input); dts quotient from pos one edge early (pq_p).  Same netlist chain/ABC as h16v (depth-oriented).  Same h16u/h16v geometry, single clock region."
+}

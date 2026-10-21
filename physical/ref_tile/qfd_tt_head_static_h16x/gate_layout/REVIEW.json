@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_tt_head_static_h16x",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T03:38:00-07:00",
+ "gate_commit": "4a60fc90c",
+ "checklist": {
+  "lattice": "PASS: 8 SRAM macros in two aligned columns (6x 32x128 W, 2x 64x512 centre)",
+  "std_cell_band": "PASS: one std-cell region around macros, density <=0.6, pin-edge columns only",
+  "pin_spread": "PASS: S face 502 pins (30% of face), E face column; same pins as h16v",
+  "clock_entry": "PASS: single root ck_head S face, 8,773 sinks, spread TT 42.5/FF 40.5 (<=80); insertion 484/404 guidance",
+  "shape": "PASS: 345.6x302.4 (1.14:1)"
+ },
+ "notes": "COLLECT-1021: gate WARN 0 fail, GRT ovf 0 (M2 39%), native32 max 32, placement setup WNS -300 diagnostic, hold +50; PNGs viewed; parallel main with h16xb/h16u per owner 10-19 parallel rule; reroute_reason rtl_change (H16X depth round 2)",
+ "geometry_sha256": "b0d0fec49d7de23abcc9fae73d1c2f15c50d2a066df3a72e6b94db934b17930d"
+}

@@ -1,0 +1,50 @@
+{
+  "miter_sha256": "7491ab9fc63fef0162ccb3eefb2fca259359aa970635d6a5bcf18b48ea40fb52",
+  "paired_macro_count": 2,
+  "pairs": [
+    {
+      "gold": "u_head.g_psram.g_m[0].u_pm_gold",
+      "gate": "u_head.g_psram.g_m[0].u_pm_proof_unique_gate",
+      "type": "ot_sram_1r1w_64x512_m1_r2c2",
+      "inputs": {
+        "clk": 1,
+        "cr_en": 2,
+        "cr_sel": 18,
+        "r_addr_in": 6,
+        "r_ce_in": 1,
+        "rr_addr": 12,
+        "rr_en": 2,
+        "w_addr_in": 6,
+        "w_ce_in": 1,
+        "w_mask_in": 512,
+        "wd_in": 512
+      },
+      "shared_output_bits": 512
+    },
+    {
+      "gold": "u_head.g_psram.g_m[1].u_pm_gold",
+      "gate": "u_head.g_psram.g_m[1].u_pm_proof_unique_gate",
+      "type": "ot_sram_1r1w_64x512_m1_r2c2",
+      "inputs": {
+        "clk": 1,
+        "cr_en": 2,
+        "cr_sel": 18,
+        "r_addr_in": 6,
+        "r_ce_in": 1,
+        "rr_addr": 12,
+        "rr_en": 2,
+        "w_addr_in": 6,
+        "w_ce_in": 1,
+        "w_mask_in": 512,
+        "wd_in": 512
+      },
+      "shared_output_bits": 512
+    }
+  ],
+  "macro_input_bits_compared": 2146,
+  "statically_identical_input_bits": 2146,
+  "explicit_equivalence_cells": 0,
+  "shared_arbitrary_read_bits": 1024,
+  "assumption": "same unchanged corresponding macro state, or full prior reinstall; not arbitrary independent SRAM power-up",
+  "claim": "all macro inputs incl clocks/config plus full head RTL relation; no physical timing/reset-glitch claim from async2sync"
+}

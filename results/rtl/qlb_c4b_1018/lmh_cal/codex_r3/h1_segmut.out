@@ -1,0 +1,15 @@
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: FAIL 126/131  rom_go-issue None nat_go-issue None csr@1042 stage1_xt1 [True, True, True, True]
+    ROM fields (slice layout): [{"edge": 1224, "nout": 768, "tiles": 1, "k": 8, "split": 9, "wbase": 0, "xbase": 4096}, {"edge": 3415, "nout": 4096, "tiles": 3, "k": 2, "split": 8, "wbase": 64, "xbase": 50672}, {"edge": 5062, "nout": 3072, "tiles": 1, "k": 32, "split": 7, "wbase": 112, "xbase": 4096}, {"edge": 5746, "nout": 4096, "tiles": 3, "k": 6, "split": 8, "wbase": 368, "xbase": 55280}]
+    fault rise at 24695: head 1 reloc 0 cp 0 start 0 xpf_ld 0 xpf_sch 0 cal 0
+    ROM command at 25195 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 25196 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 25197 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 25198 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    ROM command at 25199 with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    missing ISSUE at 27787 (29, 0)
+    unexpected ISSUE at 24693 (1, 1)
+    unexpected ROM at 24695 None
+    unexpected ISSUE at 25191 (11, 1)
+rc=1

@@ -1,0 +1,124 @@
+f98b93271415032b63f40bdb5167b443ddd49ec2bc5f22ae45170a2c07c6c6a7  yosys_namespace.log
+c72b62f7d043e4342f5c50eb903c6e8b7a6805cfd431cc6f882583f3c3bf2278  yosys_macro_cut_direct.log
+27237f84ae0a0dc72b7fc8cb61265d12130eb234a7683449f4a3976d8a92bf3c  namespace_macro_cut.json
+7491ab9fc63fef0162ccb3eefb2fca259359aa970635d6a5bcf18b48ea40fb52  miter_namespace.json
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_data [61]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_data [62]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_data [63]:ezsat
+ success!
+ Grouping SAT models for \u_head.g_psram.u_program_observer.consumed_addr:
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [0]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [1]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [2]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [3]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [4]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [5]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [6]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [7]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [8]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.u_program_observer.consumed_addr [9]:ezsat
+ success!
+ Grouping SAT models for \u_head.g_psram.rng_c:
+  Trying to prove $equiv for \u_head.g_psram.rng_c [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [1]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [2]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [3]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [4]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [5]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [6]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [7]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [8]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [9]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [10]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [11]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [12]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [13]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [14]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [15]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [16]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [17]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [18]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [19]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [20]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [21]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [22]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [23]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [24]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [25]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [26]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [27]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [28]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [29]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [30]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.rng_c [31]:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.pw_v2:ezsat
+ success!
+  Trying to prove $equiv for \u_head.g_psram.pw_b2:ezsat
+ success!
+  Trying to prove $equiv for \u_head.cp_active_q:ezsat
+ success!
+  Trying to prove $equiv for \relocation_sticky:ezsat
+ezsat
+ success!
+Proved 7352 previously unproven $equiv cells.
+
+6. Executing EQUIV_INDUCT pass.
+Found 8526 unproven $equiv cells in module equiv:
+  Proving existence of base case for step 1. (1145735 clauses over 432011 variables)
+  Proving induction step 1. (2644051 clauses over 976042 variables)
+  Proof for induction step holds. Entire workset of 8526 cells proven!
+Proved 8526 previously unproven $equiv cells.
+
+7. Executing EQUIV_STATUS pass.
+Found 16903 $equiv cells in equiv:
+  Of those cells 16903 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: dd8b2eb673, time: 1119.01s, user: 1113.18s, system: 11.41s, MEM: 8048.93 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 54% 1x equiv_induct (609 sec), 42% 1x equiv_simple (480 sec), ...

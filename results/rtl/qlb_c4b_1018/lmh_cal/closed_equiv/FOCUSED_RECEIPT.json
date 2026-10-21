@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.segcal.default-off.focused-sequential.v1",
+  "status": "PASS",
+  "closed_commit": "ae6b0c59a",
+  "candidate_source_commit": "6e943b668",
+  "module": "ot_qwen_fixed_issue_pw",
+  "parameters": {
+    "DENSE_IMAGE": 1,
+    "OWN": 1,
+    "SREG": 1,
+    "SLATE": 1,
+    "SEG": 0
+  },
+  "new_start_base": "arbitrary shared wrapper input, inactive at SEG0",
+  "equivalence_cells_proven": 1090,
+  "unproven": 0,
+  "standard_cell_models_used": false,
+  "normalization": "cell/net names only exact .genblk1.g_dense. -> .g_dense.; all parameters/connections/logic unchanged",
+  "domain": "clock-sampled RTL relation under explicit common legal reset; see ASSUMPTIONS.md",
+  "independent_reset_checks": 10987,
+  "first_valid_programmes": 2,
+  "whole_hard_head_equivalence": "PENDING; focused proof does not imply completed whole-head proof",
+  "physical_release_view": "old closed head retained; default0 is not physical source-hash adoption",
+  "files": [
+    {
+      "path": "results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/yosys_focus_names.log",
+      "sha256": "b65f5a0e3563524c6909ffc6ccfd5f6d1d94f204c19face9028891b5587ea4e3"
+    },
+    {
+      "path": "results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/focus_name_ledger.json",
+      "sha256": "55307bb16564ceaf971ec0231f81b34182490eb0b070ca159561f6bc5e4ef992"
+    },
+    {
+      "path": "results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/gold_focus.sv",
+      "sha256": "ff242ec8b25e687070b38cc3d76aceee6daba5fd1752831af3d2292a40367a80"
+    },
+    {
+      "path": "results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/gate_focus.sv",
+      "sha256": "900128a9c5aa8e1127628a8e6df4c5d447f7b3c4c44d2df337ee1a90e28b91dc"
+    },
+    {
+      "path": "results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/focus_names.ys",
+      "sha256": "0f22c57174a86c278b76f633c87d67e46caf4d5e5936e1e2e3a02a6a782e92c8"
+    },
+    {
+      "path": "results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/focus_prepare.ys",
+      "sha256": "30a34d5dc141099f6555371cabecd71dc20edada715859cd8a9d9dcb339721f3"
+    },
+    {
+      "path": "results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/source_binding.json",
+      "sha256": "5115cdef23b1c1f98d7acdbb3f6609993726090e34f6a94255f0669e52c4907a"
+    },
+    {
+      "path": "results/rtl/qlb_c4b_1018/lmh_cal/closed_equiv/reset_unit/run.log",
+      "sha256": "ce86b8da186447e93e06342c356c1212c3b4950a163c059ebf062d6946dd5d5d"
+    },
+    {
+      "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+      "sha256": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a"
+    },
+    {
+      "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+      "sha256": "c6fc9d4ac4bdd83bbc0e4368ffbb00824dbf9f07fd756ff5226f5e13df5c0888"
+    },
+    {
+      "path": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+      "sha256": "96dc61b5056caac543f2ca371100255e9df494fd432ebcda7303f23d8f8bb678"
+    }
+  ]
+}
