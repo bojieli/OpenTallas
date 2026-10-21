@@ -1,0 +1,14 @@
+{
+  "observed": "2026-10-21 13:48 PDT",
+  "status": "NEEDS_RTL_NOT_CLOSED",
+  "TT_setup_ps": 108.17,
+  "FF_hold_ps": -13.28,
+  "FF_input_to_reg_ps": 6.27,
+  "FF_output_ps": 8.04,
+  "violating_D_pins": 0,
+  "classification": "Three async reset removal paths: u_hrbank.q[0] to pend and u_wd.sbin[2:3] RESETN; final measured I2R passes. Daemon early repair I2R window is not final root cause.",
+  "files_sha256": {
+    "meas_ff.log": "b86f090293a3960141562df19cb5fce3c6b6c1b0c2d920ee7908555c506b511e",
+    "routed_ioref.a1.json": "ccafdd2ff4ac27a84288d05626d41d854ab67c306f06d66534b0310c922db67d"
+  }
+}
