@@ -4,8 +4,8 @@ per-SRAM write-data copies on per-SRAM-row roots clk_d0..3 (core WROW 1).
 
 e2_rl --cts gate (10-21 00:05): clk_a (hold / asm_q / lb_q / wd_q, 2,817 internal sinks) pin-flop spread 283.5 ps TT:
 the 1,024-b wd_q fed all 12 SRAMs, so its flops spread over the whole SRAM area.  Now each SRAM has its own kept 256-b
-copy loaded from asm_q on the same edge (0 added), anchored beside its wd_in pins (io_flop_at_pins macro_pins wd_in;
-OT_MPFLOP extended to bus base names on this branch), clocked by its SRAM row's root clk_d<r>.
+copy loaded from asm_q on the same edge (0 added), anchored beside its wd_in pins (existing OT_MPFLOP_PINS exact wd_in[0..255];
+no shared hook change), clocked by its SRAM row's root clk_d<r>.
   _rw2: hold / asm_q / lb_q stay on clk_a (cb, e2)      _rw3: they move to clk (cb, e2; boundary-scoped in-face root)
   b0_rw2: hold / asm_q on clk (b0's in face is beside the SRAMs; b0_rp clk boundary 43.9 PASS)
 Usage: python3 tools/ref_tile/specs_hbm_b_rtl2_1017/hc9bank_rw.py
@@ -65,8 +65,7 @@ def make(tile, var):
         pr[f"clk_d{r}"] = rng(ROW_Y0[r] + 69.12 - 24.0) if tile != "e2" else rng(220.0 + 12.0 * r)
     io = dict(s["io_flop_at_pins"])
     io.pop("macro_pins", None)
-    s.setdefault("orfs_vars", {})["OT_MPFLOP_PINS"] = ",".join(f"wd_in[{i}]" for i in range(256))
-    s["orfs_vars"]["OT_MPFLOP_GAP"] = "5.4"
+    s["pin_hook_before_flops"] = list(s.get("pin_hook_before_flops", [])) + [f"physical/ref_tile/{name}/write_pin_names.tcl"]
     s["io_flop_at_pins"] = io
     s["slot_change_request"] = s["slot_change_request"].split(" (")[0] + " (" + ", ".join(rs) + \
         " glue roots, ck_l[7:0], ck_w[7:0], ck_x[3:0]): die clock forest delivers each entry at phi - R"
@@ -85,6 +84,7 @@ def make(tile, var):
     j["benches"] = benches(var)
     d = RT / name
     d.mkdir(parents=True, exist_ok=True)
+    (d / "write_pin_names.tcl").write_text('# HC bank rw2: use existing exact macro-pin anchors, without changing shared helpers.\nset ot_hcb_wdpins {}\nfor {set ot_hcb_bit 0} {$ot_hcb_bit < 256} {incr ot_hcb_bit} {\n  lappend ot_hcb_wdpins [format {wd_in[%d]} $ot_hcb_bit]\n}\nset ::env(OT_MPFLOP_PINS) [join $ot_hcb_wdpins ,]\nset ::env(OT_MPFLOP_GAP) 5.4\n')
     (d / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
     print("wrote", d / "spec.json", len(rs), "roots")
 
