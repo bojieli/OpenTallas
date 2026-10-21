@@ -1,0 +1,466 @@
+{
+ "name": "qfd_tt_head_static_h16w",
+ "top": "ot_qfd_tt_ctlm_static_hr_safe32_native32_1r",
+ "kind": "tile",
+ "sources": [
+  "results/rtl/qw_head_safe32_1020/h16v/net_def/native32_1r_param.v",
+  "results/rtl/qw_head_safe32_1020/h16v/net_def/native32_helpers.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck_head",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 302.4
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "MY",
+   "inst": "u_23340",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    129.6,
+    172.8
+   ],
+   "orient": "MY",
+   "inst": "u_23341",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MY",
+   "inst": "u_23342",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "MY",
+   "inst": "u_23343",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "MY",
+   "inst": "u_23344",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "MY",
+   "inst": "u_23345",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "MY",
+   "inst": "u_23346",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "MY",
+   "inst": "u_23347",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "E": [
+   "cp_active",
+   "cp",
+   "me_image_ready",
+   "program_obs",
+   "layer_context_v",
+   "native_tok",
+   "native_pos",
+   "command_stage",
+   "native_cmd",
+   "native_ret",
+   "h_start",
+   "stage_start",
+   "stage",
+   "token",
+   "pos",
+   "prog_base",
+   "pw_v",
+   "pw_addr",
+   "pw_data",
+   "x_oacc",
+   "x_oidle",
+   "x_oprog",
+   "x_orows",
+   "kv_ok",
+   "kv_write_drained",
+   "me_mem_ok",
+   "m_fin_o",
+   "m_fidx_o",
+   "m_fval_o",
+   "c_fault",
+   "kvd_v",
+   "kvd_wbase",
+   "kvd_ts",
+   "kvd_ks",
+   "kvd_js",
+   "kvd_wcs",
+   "kvd_split",
+   "kvd_jsh",
+   "kvd_tiles",
+   "kvd_k",
+   "kvd_nout",
+   "kvd_kindk",
+   "kvd_pos"
+  ],
+  "S": [
+   "rom_cmd",
+   "rom_ret_i",
+   "me_observe",
+   "me_clk_en",
+   "ck_head",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  },
+  "pin_balance": {
+   "group_max": 1
+  },
+  "pin_min_tracks": 1
+ },
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20",
+  "OT_ROW_MIN_UM": "6",
+  "OT_OFLOP_GAP": "4.5",
+  "OT_MEG_DEPTH_UM": "6.0"
+ },
+ "structural_change": "h16t/h16u logic depth (CTS ODB TT reg->reg: dts r_q -345, fixed_issue sched_q -344, cfg_fault -300, dpre/dtilk -242, rom_cmd_q -140, program_obs -92; 40-level ripples: the gate mapping folded adds/increments/the 16 array dividers into chains). h16v RTL (exact, 0 edges; claude/qw-h16v-1020): shared log-depth DYN_TTILES quotient registered with pos_r (mod-3 KS scan) + kept KS increments; relocation bases registered with loaded_stage + kept KS 24-bit adds; fixed_issue cycle+1 / magnitude compares as kept KS; seal_bad flat-term OR tree + prefix-popcount thresholds selected by count; candidate/prog_a adds kept KS; program write observer in closed form. Netlist: same prepare_generic/bit_generic/bound_head_netlist chain, default ABC -g script (area); bounded-netlist max depth 26 levels (h16u 40). Same h16u geometry, single clock region.",
+ "job": {
+  "owner": "Claude:QW-H16V",
+  "branch": "claude/qw-h16v-1020",
+  "tag": "h16w",
+  "purpose": "h16u successor: RTL depth round (parallel fallback, default ABC), same geometry/pins/clock region.",
+  "extra_paths": [
+   "results/rtl/qw_head_safe32_1020",
+   "results/rtl/qlb_c4b_1018/lmh_cal",
+   "rtl/qwen_dv",
+   "rtl/test/qwen_dv",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/physical",
+   "rtl/qwen_split/mu",
+   "rtl/qwen_sys",
+   "physical/asap7_memory_macros",
+   "physical/asap7_memory_macros_v2",
+   "physical/ref_tile/qfd_tt_head_static_h16w"
+  ],
+  "benches": [
+   {
+    "name": "bench_h16w_img0",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16w/run_bench.sh {RUN}/bench/bench_h16w_img0 img0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS (123/123|131/131)"
+   },
+   {
+    "name": "bench_h16w_imgh",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16w/run_bench.sh {RUN}/bench/bench_h16w_imgh imgh",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=3: PASS (123/123|131/131)"
+   },
+   {
+    "name": "bench_h16w_bmut3",
+    "cmd": "bash physical/ref_tile/qfd_tt_head_static_h16w/run_bench.sh {RUN}/bench/bench_h16w_bmut3 imgh 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_PROG MUT=0 BMUT=3 HARD_HR=1 HRA=0 DECODE=3: FAIL [0-9]+/131",
+    "fail_witness": "physical/ref_tile/qfd_tt_head_static_h16w/bench_witness/bench_h16w_bmut3.log"
+   }
+  ],
+  "structural_change": "h16t/h16u logic depth (CTS ODB TT reg->reg: dts r_q -345, fixed_issue sched_q -344, cfg_fault -300, dpre/dtilk -242, rom_cmd_q -140, program_obs -92; 40-level ripples: the gate mapping folded adds/increments/the 16 array dividers into chains). h16v RTL (exact, 0 edges; claude/qw-h16v-1020): shared log-depth DYN_TTILES quotient registered with pos_r (mod-3 KS scan) + kept KS increments; relocation bases registered with loaded_stage + kept KS 24-bit adds; fixed_issue cycle+1 / magnitude compares as kept KS; seal_bad flat-term OR tree + prefix-popcount thresholds selected by count; candidate/prog_a adds kept KS; program write observer in closed form. Netlist: same prepare_generic/bit_generic/bound_head_netlist chain, default ABC -g script (area); bounded-netlist max depth 26 levels (h16u 40). Same h16u geometry, single clock region.",
+  "cycles_added": 0
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "rom_cmd": [
+   98.0,
+   170.108
+  ],
+  "rom_ret_i": [
+   170.321,
+   188.348
+  ],
+  "me_observe": [
+   188.561,
+   191.597
+  ],
+  "me_clk_en": [
+   191.81,
+   192.023
+  ],
+  "cp_active": [
+   3.0,
+   3.213
+  ],
+  "cp": [
+   3.426,
+   13.114
+  ],
+  "me_image_ready": [
+   13.327,
+   13.54
+  ],
+  "program_obs": [
+   13.753,
+   26.901
+  ],
+  "layer_context_v": [
+   27.114,
+   27.327
+  ],
+  "native_tok": [
+   27.54,
+   30.654
+  ],
+  "native_pos": [
+   30.867,
+   33.981
+  ],
+  "command_stage": [
+   34.194,
+   35.232
+  ],
+  "native_cmd": [
+   35.445,
+   101.185
+  ],
+  "native_ret": [
+   101.398,
+   117.833
+  ],
+  "h_start": [
+   126.0,
+   126.213
+  ],
+  "token": [
+   126.426,
+   129.54
+  ],
+  "pos": [
+   129.753,
+   132.867
+  ],
+  "prog_base": [
+   133.08,
+   135.156
+  ],
+  "pw_v": [
+   135.369,
+   135.582
+  ],
+  "pw_addr": [
+   135.795,
+   137.525
+  ],
+  "pw_data": [
+   137.738,
+   148.81
+  ],
+  "x_oacc": [
+   149.023,
+   153.175
+  ],
+  "x_oidle": [
+   153.388,
+   153.601
+  ],
+  "x_oprog": [
+   153.814,
+   156.582
+  ],
+  "x_orows": [
+   156.795,
+   159.563
+  ],
+  "kv_ok": [
+   159.776,
+   159.989
+  ],
+  "kv_write_drained": [
+   160.202,
+   160.415
+  ],
+  "me_mem_ok": [
+   160.628,
+   160.841
+  ],
+  "m_fin_o": [
+   161.054,
+   161.267
+  ],
+  "m_fidx_o": [
+   161.48,
+   164.594
+  ],
+  "m_fval_o": [
+   164.807,
+   170.343
+  ],
+  "c_fault": [
+   170.556,
+   170.769
+  ],
+  "kvd_v": [
+   170.982,
+   171.195
+  ],
+  "kvd_wbase": [
+   171.408,
+   175.56
+  ],
+  "kvd_ts": [
+   175.773,
+   179.925
+  ],
+  "kvd_ks": [
+   180.138,
+   184.29
+  ],
+  "kvd_js": [
+   184.503,
+   188.655
+  ],
+  "kvd_wcs": [
+   188.868,
+   193.02
+  ],
+  "kvd_split": [
+   193.233,
+   193.925
+  ],
+  "kvd_jsh": [
+   194.138,
+   194.657
+  ],
+  "kvd_tiles": [
+   194.87,
+   197.984
+  ],
+  "kvd_k": [
+   198.197,
+   201.311
+  ],
+  "kvd_nout": [
+   201.524,
+   204.638
+  ],
+  "kvd_kindk": [
+   204.851,
+   205.064
+  ],
+  "kvd_pos": [
+   205.277,
+   208.391
+  ],
+  "ck_head": [
+   194.0,
+   198.0
+  ],
+  "rst_n": [
+   200.0,
+   204.0
+  ],
+  "stage_start": [
+   118.046,
+   118.259
+  ],
+  "stage": [
+   118.472,
+   119.51
+  ]
+ },
+ "pin_regs": {
+  "enable": true,
+  "clock": "ck_head"
+ },
+ "reset_landing": {
+  "enable": true
+ }
+}
