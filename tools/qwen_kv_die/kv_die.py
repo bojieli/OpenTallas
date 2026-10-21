@@ -3169,6 +3169,15 @@ def _relays(m):
                 fx_ = it.w - cx if it.orient in ('MY', 'R180') else cx
                 fy_ = it.h - cy if it.orient in ('MX', 'R180') else cy
                 return (it.x + fx_, it.y + fy_)
+            if os.environ.get('OT_KV_PV_CONTROL_PIN', '0') == '1':
+                # Same canonical N-face control positions used by masters().
+                # pvw_1 is MX: its start input is at the SOUTH strip end.
+                # Starting at its nearest frame edge left codexcpB's branch
+                # at the opposite end, with a 12.945-mm unrepairable last hop.
+                # Preserve a later pin-drawn hint if one already exists.
+                ctx_ = P_['face_pins']['strip']['x']
+                for cp_, delta_ in dict(st=-120.0, ie=60.0, iee=90.0).items():
+                    _PIN_HINT.setdefault((it_.name, cp_), die_xy_(ctx_ + delta_, it_.h))
             for k_ in range(8):
                 for g_ in range(8):
                     f_, yc_ = P_['face_pins']['vc'][f'vc{k_}_{g_}']
