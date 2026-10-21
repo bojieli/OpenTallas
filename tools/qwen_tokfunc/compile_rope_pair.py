@@ -42,8 +42,13 @@ def main():
                 'kv_descriptor_to_header_edges'):
         if type(receipt.get(key)) is not int or receipt[key] < 0:
             raise SystemExit(f'unknown required actual age/programme input: {key}')
-    if receipt['head_prepare_edges'] < 5:
-        raise SystemExit('head_prepare_edges omits source prepare/held-descriptor stages')
+    intrinsic = receipt.get('source_intrinsic_edges')
+    names = ('ct_lm_sample', 'native_prepare_descriptor', 'face_held_bank')
+    if not isinstance(intrinsic, dict) or any(type(intrinsic.get(k)) is not int or intrinsic[k] < 1 for k in names):
+        raise SystemExit('unknown source-bound TT/native/held-bank intrinsic edge ledger')
+    expected_head = sum(intrinsic[k] for k in names) + receipt['tt_to_native_edges'] + receipt['native_to_sysface_edges']
+    if receipt['head_prepare_edges'] != expected_head:
+        raise SystemExit('head_prepare_edges disagrees with actual source-intrinsic/GEN transport ledger')
     if receipt['emb_window'] < 1627 or receipt['kv_codec'] not in (1, 2):
         raise SystemExit('invalid 73-record RoPE programme shape')
     # A new directory retains earlier failed generations and immutable receipts.

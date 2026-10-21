@@ -3,7 +3,7 @@
  "lane": "TOKSIM-QW",
  "tool": "tools/qwen_layerbench/toksim_compose.py",
  "inputs": "results/token_pass/measured_qwen_1019/inputs_tokfunc.json",
- "release_source": "TOK-FUNC-QW RTL assembly ? (RTL-functional (source assembly)); composition engine 94cd97b7a",
+ "release_source": "TOK-FUNC-QW RTL assembly c0f8097f3 (RTL-functional (source assembly)); composition engine 94cd97b7a",
  "result": {
   "1u": {
    "users": 1,

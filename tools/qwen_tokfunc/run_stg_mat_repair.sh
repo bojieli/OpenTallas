@@ -21,7 +21,16 @@ mode=${2:-mat}
 if [ "$mode" = lm ]; then
   ages=$R/ages.json  # exact calibrated receipt from the same source-pinned Vtb
   test -s "$ages"
+  # Retain the positive failure receipt before returning; never run a negative
+  # against an already failing positive or hide an outstanding source defect.
+  set +e
   job lm --run lm --ages "$ages"
+  lm_rc=$?
+  set -e
+  if [ "$lm_rc" -ne 0 ]; then
+    python3 "$T/tools/qwen_tokfunc/collect_mat_repair.py" "$R" --lm-only
+    exit "$lm_rc"
+  fi
   if job amax_local --run lm --ages "$ages" --mutant amax_local; then
     echo 'UNEXPECTED PASS: local AMAX index instead of global owner index'
     exit 1
