@@ -7,7 +7,7 @@ f=['rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv','rtl/hdc/v41/ot_hdc_engram_
 f+=['rtl/dsrom_sys/engram/static_lookup_1015/'+n+'.sv' for n in ['ot_s81_engram_hash_n32','ot_s81_engram_hash_cohort_n32','ot_s81_engram_lookup_ra640','dsfd_engram_lkp_ra640']]
 m='physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2'
 f.append(m+'_bb.v')
-paths=f+[str(pathlib.Path(m).parent),'tools/s81_dv/eng_rr/native_template','tools/ref_tile/native_census.py','physical/common_flow']
+paths=f+[str(pathlib.Path(m).parent),'tools/s81_dv/eng_rr/native_template','tools/ref_tile/native_census.py','tools/textbook_lint.py','physical/common_flow']
 a=subprocess.Popen(['git','--git-dir='+g,'archive',ref,*dict.fromkeys(paths)],stdout=subprocess.PIPE)
 b=subprocess.run(['tar','-xf','-','-C',str(s)],stdin=a.stdout);a.stdout.close();assert a.wait()==0 and b.returncode==0
 ref_full=subprocess.check_output(['git','--git-dir='+g,'rev-parse',ref],text=True).strip();(r/'snapshot_ref.txt').write_text(ref_full+'\n')
