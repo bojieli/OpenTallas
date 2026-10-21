@@ -470,7 +470,13 @@ module ot_s81sl_lep_core #(
         if(MU_EN!=0 && RX_SRAM!=0 && SRAM!=0) begin:g_safe_write
             localparam integer GA=4, NA=(TX_NS+GA-1)/GA;
             wire [NA*AT-1:0] wa_copy,ra_copy;
+`ifdef OT_S81SL_LEP_SYNCRST
+            // r7 SYNCRST: kept group enables (one driver each); with the reset as a D input ABC otherwise copies the
+            // count/credit compare into every payload-bit mux (r7m pre-gate native census: rd_group 39-45 loads).
+            (* keep="true" *) wire [NA-1:0] wr_group,rd_group;
+`else
             wire [NA-1:0] wr_group,rd_group;
+`endif
             for(c=0;c<NA;c=c+1) begin:g_address
                 (* keep="true" *) reg [AT-1:0] wp_r,rp_r;
                 (* keep="true" *) reg [AT:0] count_r;

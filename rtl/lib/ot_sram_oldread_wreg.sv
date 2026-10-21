@@ -44,10 +44,17 @@ module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, SB=16, GA=16, NS=(W
    (* keep="true" *) reg [AW-1:0] addr_r;
    reg [SW-1:0] forwarded;
    wire hit=(MUT==1)?1'b0:(valid_r && ra[AW*(s/GA)+:AW]==addr_r);
+`ifdef OT_S81SL_LEP_SYNCRST
+   // r7 SYNCRST: one kept forward enable per slice, so ABC cannot spread the group read enable into every payload bit
+   // (r7m pre-gate native census: rd_group 39-45 loads through per-bit AND3 once the reset became a D input).
+   (* keep="true" *) wire fwd_en=r_en[s/GA] && hit;
+`else
+   wire fwd_en=r_en[s/GA] && hit;
+`endif
    always @(posedge clk `OT_LEP_AR(rst_n[s]))
      if(!rst_n[s]) begin valid_r<=0;addr_r<=0;select_r<=0;end
      else begin valid_r<=w_en[s/GA];addr_r<=wa[AW*(s/GA)+:AW];if(r_en[s/GA]) select_r<=hit;end
-   always @(posedge clk) if(r_en[s/GA] && hit) forwarded<=wdata[LO+:SW];
+   always @(posedge clk) if(fwd_en) forwarded<=wdata[LO+:SW];
    assign q[LO+:SW]=select_r?forwarded:raw[LO+:SW];
  end endgenerate
 `ifndef SYNTHESIS
