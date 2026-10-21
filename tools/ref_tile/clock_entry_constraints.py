@@ -16,6 +16,7 @@ import direct_macro_clock_entries
 import async_gray_fifo_constraints
 import cdc_sync_constraints
 import gray_fifo_cdc_constraints
+import single_clock_contract
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -25,6 +26,9 @@ ENTRY_DOMAIN_API_VERSION = 1
 
 def signoff_period(spec):
     """Opt-in leaf signoff period; all existing profiles retain their ABI."""
+    actual = single_clock_contract.validate(spec)
+    if actual is not None:
+        return actual
     route = spec.get('route', {})
     value = route.get('signoff_period_ps', 833.333)
     if 'signoff_period_ps' in route and not native_leaf(spec):
@@ -118,6 +122,63 @@ def landed_cluster(spec):
     return spec.get("clock") == "multiple_cts_roots" and spec.get("kind") == "cluster"
 
 
+def forwarded_clock_ports(spec):
+    """S81-FRAME4 10-19 (forwarded-clock class of a LANDED cluster): spec "forwarded_clock_ports" names the parent input
+    ports that carry a FORWARDED clock (a source-synchronous lane clock that travels with its data, e.g. the S81 frame
+    port xk feeding the crs4 landing write side and the dvrly xo relays).  Such a port is not a region CTS root: a
+    bound hard-child clock pin whose net traces structurally (ot_ce_net_root_port, through single-input standard cells)
+    to it is a FORWARDED sink, counted toward the landed coverage and judged per forwarded port bit at the child flops
+    (measured pin arrival + the child's insertion.json boundary min..max): spread <= 80 ps at TT and FF (post-CTS / routed,
+    fail closed; pre-CTS reported).  Opt-in: without the key the generated SDC is byte-identical.  [] / absent = none."""
+    ports = spec.get('forwarded_clock_ports')
+    if ports is None:
+        return []
+    if not landed_cluster(spec):
+        raise ValueError('forwarded_clock_ports: only a landed cluster (kind cluster + multiple_cts_roots) has a forwarded class')
+    if (not isinstance(ports, list) or not all(isinstance(x, str) and re.fullmatch(r'[A-Za-z_]\w*', x) for x in ports)
+            or len(set(ports)) != len(ports)):
+        raise ValueError('forwarded_clock_ports: requires a list of distinct plain port names')
+    ins = {p for d in (spec.get('clock_entry_domains') or {}).values() if isinstance(d, dict) for p in d.get('inputs') or []}
+    if any(x not in ins for x in ports):
+        raise ValueError('forwarded_clock_ports: each forwarded port must be an input of a clock_entry_domains domain '
+                         '(its cells and data belong to that domain)')
+    if set(ports) & set(spec.get('clock_ports') or []):
+        raise ValueError('forwarded_clock_ports: a forwarded port cannot also be a region CTS root (clock_ports)')
+    return list(ports)
+
+
+def forwarded_soft_clocks(spec):
+    """Exact mapped soft-register ownership on a forwarded input, without adding a CTS root.
+
+    Each entry names one actual port bit and its exact mapped sequential cells.
+    Clock ancestry and complete sink membership are checked in the loaded design.
+    """
+    entries = spec.get('forwarded_soft_clocks', [])
+    if not isinstance(entries, list):
+        raise ValueError('forwarded_soft_clocks: expected a list')
+    allowed = forwarded_clock_ports(spec)
+    seen_ports, seen_cells = set(), set()
+    out = []
+    for i, e in enumerate(entries):
+        if not isinstance(e, dict) or set(e) != {'port', 'domain', 'cells'}:
+            raise ValueError('forwarded_soft_clocks: requires exact port/domain/cells')
+        port, domain, cells = e['port'], e['domain'], e['cells']
+        if not isinstance(port, str) or not re.fullmatch(r'[A-Za-z_]\w*(?:\[[0-9]+\])?', port):
+            raise ValueError('forwarded_soft_clocks: requires an exact port bit')
+        base = port.split('[')[0]
+        ds = domains(spec)
+        owners = [n for n, d in ds.items() if base in d['inputs']]
+        if base not in allowed or owners != [domain] or port in seen_ports:
+            raise ValueError('forwarded_soft_clocks: missing, duplicate or wrong source domain')
+        if (not isinstance(cells, list) or not cells or
+                any(not isinstance(c, str) or not c or any(x in c for x in '{}\\;*?\n\r') for c in cells) or
+                len(set(cells)) != len(cells) or set(cells) & seen_cells):
+            raise ValueError('forwarded_soft_clocks: requires unique exact mapped cell names')
+        seen_ports.add(port); seen_cells.update(cells)
+        out.append(dict(e, clock=f'ot_forwarded_{i}'))
+    return out
+
+
 def landed_record(spec, root):
     """The lp.py record (<top>_lp_record.json) of a landed cluster, validated against the spec (fail closed)."""
     if not landed_cluster(spec):
@@ -181,6 +242,82 @@ def landed_raw_pins(view, root):
     return landed_record_pins(view, root)['raw']
 
 
+def _lib_pin_blocks(text):
+    """{pin name: its Liberty pin(...) group text} of an ETM (quoted or bare names, bus bits included)"""
+    out = {}
+    for m in re.finditer(r'\bpin\s*\(\s*"?([^")\s]+)"?\s*\)\s*\{', text):
+        depth, i = 1, m.end()
+        while depth and i < len(text):
+            depth += {'{': 1, '}': -1}.get(text[i], 0)
+            i += 1
+        out[m[1]] = text[m.end():i - 1]
+    return out
+
+
+def landed_unused_pins(view, root):
+    """HBM-PGLG2 10-19: the UNLOADED input pins of a hard child, proven by its CLOSED route's ROUTED NETLIST.
+    KIND0 kind0_l4_leaf1 keeps clock ports clk_insert_0..3 / clk_stage_4 that drive nothing inside the closed leaf; the
+    landed pgslice parent ties them to the region root with the leaf's real clock pins, and clock_entries.tcl refused
+    the root ("must reach only standard-cell clock pins").  Evidence: <record route>/unloaded_pins.json written by
+    tools/ref_tile/unloaded_pins.py from the closed route's 6_final.v (no instance connection, no assign reads the
+    port bit).  Never classified by name.  Every listed pin is cross-checked against the leaf's routed ETMs at every
+    corner (pin group present, capacitance 0, no timing group, not a clock, never a related_pin) and must not be a
+    bound clock pin of the record; any mismatch fails closed.  [] for a child without a closed-record link
+    (port_latency.json) or without the evidence file (every existing kit: byte-identical)."""
+    view = Path(view)
+    try:
+        pl = json.loads((view / 'port_latency.json').read_text())
+    except (OSError, ValueError):
+        return []
+    job = pl.get('job') if isinstance(pl, dict) else None
+    if not job:
+        return []
+    vpath = Path(root) / 'results' / 'closure_loop' / job / 'verdict.json'
+    try:
+        verdict = json.loads(vpath.read_text())
+    except (OSError, ValueError):
+        return []
+    routes = [r.get('to') for r in (verdict.get('job_spec') or {}).get('record') or []
+              if isinstance(r, dict) and str(r.get('from', '')).endswith('/record/route')]
+    if len(routes) != 1 or not routes[0]:
+        return []
+    epath = Path(root) / routes[0] / 'unloaded_pins.json'
+    if not epath.is_file():
+        return []
+    where = f'{view}: unloaded-pin evidence {epath}'
+    if verdict.get('status') != 'CLOSED' or verdict.get('job') != job:
+        raise ValueError(f'{where}: {vpath} is not the CLOSED record of {job}')
+    try:
+        ev = json.loads(epath.read_text())
+        pins = ev['unloaded']
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        raise ValueError(f'{where}: unreadable ({e})')
+    if (ev.get('schema') != 1 or ev.get('job') != job or ev.get('top') != view.name or not ev.get('netlist_sha256')
+            or not isinstance(pins, list) or not all(isinstance(x, str) and x for x in pins) or len(set(pins)) != len(pins)):
+        raise ValueError(f'{where}: not the routed-netlist evidence of {view.name} / {job}')
+    bound = set((pl.get('control_roles') or {}).get('clocks') or [])
+    try:
+        bound |= set(json.loads((view / 'insertion.json').read_text()).get('clock_measurements') or {})
+    except (OSError, ValueError):
+        pass
+    for c in CORNERS:
+        lib = view / f'{view.name}_{c}.lib'
+        try:
+            text = lib.read_text()
+        except OSError as e:
+            raise ValueError(f'{where}: {lib} missing ({e})')
+        blocks = _lib_pin_blocks(text)
+        related = set(re.findall(r'related_pin\s*:\s*"?([^";\s]+)"?\s*;', text))
+        for pin in pins:
+            b = blocks.get(pin)
+            cap = re.search(r'capacitance\s*:\s*([-\d.eE+]+)\s*;', b or '')
+            if (b is None or not re.search(r'direction\s*:\s*input\s*;', b) or not cap or float(cap[1]) != 0.0
+                    or 'timing' in b or re.search(r'clock\s*:\s*true', b) or pin in related or pin in bound):
+                raise ValueError(f'{where}: {pin} is not an unloaded input of the routed ETM {lib.name} '
+                                 '(needs capacitance 0, no timing group, not a clock / related pin / bound clock)')
+    return sorted(pins)
+
+
 def landed_record_pins(view, root):
     """ROOT-INF21 10-19 (coordinator INF.21.1, pgslice_lg children): the closed-record clock reference of a hard child
     with raw clock pins (no routed boundary flops), for BOTH record models:
@@ -197,9 +334,12 @@ def landed_record_pins(view, root):
     "anchor": pin with the largest R (None for 'hybrid'), "R": {pin: {corner: mean}}}.  "raw" pins are judged against
     "ref" = the boundary CTS root with the largest TT boundary mean; "cotimed" boundary pins likewise (post-CTS SDC and
     pre-route gate); the post-CTS tap delays every pin except "anchor" by R(anchor) - R(p) (landed_tap_targets).
-    Children whose pins all have routed boundary flops read no record (empty result, kits byte-identical)."""
+    Children whose pins all have routed boundary flops read no record (empty result, kits byte-identical).
+    HBM-PGLG2 10-19: "unused" = the child's routed-netlist-proven UNLOADED input pins (landed_unused_pins),
+    in every result; a region root may reach them (clock_entries.tcl ::ot_ce_landed_unused), nothing is measured."""
     view = Path(view)
-    empty = dict(model=None, raw={}, cotimed={}, anchor=None, R={})
+    unused = landed_unused_pins(view, root)
+    empty = dict(model=None, raw={}, cotimed={}, anchor=None, R={}, unused=unused)
     ins = json.loads((view / 'insertion.json').read_text())
     cm = ins.get('clock_measurements') or {}
     raw_like = sorted(p for p, r in cm.items() if any(not (r.get(c) or {}).get('boundary') for c in CORNERS))
@@ -296,7 +436,7 @@ def landed_record_pins(view, root):
         out[pin] = dict(ref=ref, tol=tol, refs=refs, record=record, verdict=vrel)
         R[pin] = {c: refs[c][1] for c in CORNERS}
     if not multi:
-        return dict(model='hybrid', raw=out, cotimed={}, anchor=None, R=R)
+        return dict(model='hybrid', raw=out, cotimed={}, anchor=None, R=R, unused=unused)
     for p in bounded:
         R[p] = {c: bmean(p, c) for c in CORNERS}
     meas = pl.get('clock_reference')
@@ -311,7 +451,7 @@ def landed_record_pins(view, root):
                                      f'view reference {R[p][c]}')
     cotimed = {p: dict(ref=ref, tol=tol, record=record, verdict=vrel) for p in bounded if p != ref}
     anchor = max(ports, key=lambda p: (R[p]['tt'], -ports.index(p)))
-    return dict(model='multi_root', raw=out, cotimed=cotimed, anchor=anchor, R=R)
+    return dict(model='multi_root', raw=out, cotimed=cotimed, anchor=anchor, R=R, unused=unused)
 
 
 def landed_raw_targets(spec, root):
@@ -416,6 +556,16 @@ def landed_pre_cts_tcl(spec, root):
     if raw:
         out.append('set ::ot_ce_landed_raw [dict create ' + ' '.join(
             f'{{{k}}} {{ref {v["ref"]}}}' for k, v in sorted(raw.items())) + ']')
+    # HBM-PGLG2 10-19: routed-netlist-proven unloaded child input pins a region root may reach (no sink, no arc)
+    unused, seen = [], set()
+    for ch in spec.get('children', []):
+        view = Path(root) / ch['view']
+        if view.name in seen:
+            continue
+        seen.add(view.name)
+        unused.extend(f'{view.name}/{p}' for p in landed_record_pins(view, root)['unused'])
+    if unused:
+        out.append('set ::ot_ce_landed_unused [dict create ' + ' '.join(f'{{{k}}} 1' for k in sorted(unused)) + ']')
     return out
 
 
@@ -430,12 +580,43 @@ def landed_raw_tcl(spec, root):
 
 def landed_sdc(spec, root):
     """Landing multicycles (LANDING-CONTRACT L5, lp.py Pm.sdc): ring u_lpl_<n>_w -> read u_lpl_<n>_r -setup E -hold D-1.
-    Cell-based, so they are independent of the root clock names; '' for every non-landed spec (kits byte-identical)."""
+    Cell-based, so they are independent of the root clock names; '' for every non-landed spec (kits byte-identical).
+    HBM-PGSTREAM-B 10-19: plus seam_window_sdc (opt-in "seam_windows" of a related_pll_ratio leaf; '' without it)."""
     rec = landed_record(spec, root)
+    seam = seam_window_sdc(spec)
     if rec is None:
-        return ""
+        return seam
+    impl = rec.get("landing_implementation") or {}
+    if impl.get("direct_quarter_period_timing"):
+        if (rec["D"], rec["E"]) != (4, 2) or not 1 <= int(impl.get("chunk_bits", 0)) <= 24:
+            raise ValueError("direct landing requires proven D4/E2 and chunk_bits1..24")
+        residual = int(spec.get("landing_direct_residual_ps", -1))
+        if residual < 150:
+            raise ValueError("direct landing must explicitly preserve high-entry210/hold100 reserves: residual>=150ps")
+        # This block follows ot_ce_apply. Charge the full existing high-entry
+        # reserve plus the conservative default phase envelope; no MCP survives.
+        return ("# PL-KIT direct D4/E2; diagnostic/adoption requires source-pinned native phase receipt.\n"
+                "set ot_lp_direct_T [get_property [get_clocks core_clk] period]\n"
+                "set ot_lp_direct_roots [lmap c [get_clocks ot_entry_*] {get_full_name $c}]\n"
+                "set ot_lp_direct_clocks {}\n"
+                "foreach c [all_clocks] {\n"
+                " if {[ot_cf_root [get_full_name $c]] in $ot_lp_direct_roots} {lappend ot_lp_direct_clocks $c}\n"
+                "}\n"
+                "foreach a $ot_lp_direct_clocks {\n"
+                " foreach b $ot_lp_direct_clocks {\n"
+                "  if {[ot_cf_root [get_full_name $a]] eq [ot_cf_root [get_full_name $b]]} continue\n"
+                f"  set_clock_uncertainty -setup [expr {{{60 + residual}.0 + 0.75 * $ot_lp_direct_T}}] -from $a -to $b\n"
+                f"  set_clock_uncertainty -hold {25 + residual}.0 -from $a -to $b\n"
+                " }\n}\n" + seam)
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
+    if impl.get("no_data_multicycle"):
+        # QW-CTLM3 10-19 (lp.py landing_mcp false): no exception at all -- every ring -> read cone (slot data, valid,
+        # selectors, reset-adjacent) is timed single-cycle at full STA, which is conservative for a read K >= 1 edges
+        # after the slot write.  Tightening only: nothing is relaxed relative to the default related-root analysis.
+        return (f"# ---- PL-KIT landed cluster ({spec['landed_record']}): {len(names)} landings, NO data multicycle "
+                f"(single-cycle full STA, D {D} / K {E})\n"
+                f'puts "OT_LP_LAND_SDC 0 of {len(names)} landings multicycled (no_data_multicycle)"\n' + seam)
     # TW2-PSLICE2 10-19 (lp.py share_rings): a landing may read ANOTHER landing's ring ("ring": "u_lpl_<g>_w (ck_<r>)")
     ring = {L["name"]: (str(L.get("ring") or "").split() or [""])[0] for L in rec.get("landings") or []}
     ring = {n: (g[6:-2] if g.startswith("u_lpl_") and g.endswith("_w") else n) for n, g in ring.items()}
@@ -464,7 +645,82 @@ def landed_sdc(spec, root):
               f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
               f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
               'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
-    return "\n".join(o) + "\n"
+    return "\n".join(o) + "\n" + seam
+
+
+SEAM_WINDOW_KEYS = {'name', 'launch', 'capture', 'from', 'setup_q', 'hold_q', 'why'}
+
+
+def seam_windows(spec):
+    """HBM-PGSTREAM-B 10-19 (coordinator 07:11, CLOCKING STANDARD 10-18 landed crossings): validated "seam_windows" of a
+    related_pll_ratio multiple_cts_roots LEAF tile.  A banked 3:4 seam INSIDE one tile (bank written on one root, read
+    on the other at a fixed calendar edge, no handshake) is a landed crossing, not an ordinary related-clock path: STA's
+    default related window is the nearest edge pair (1 VCO tick q = core period / 3) less the distinct-entry reserve,
+    while the static calendar guarantees setup >= setup_q * q and rewrite-after-read >= hold_q * q (measured by the
+    bench window checker).  Each entry:
+      name     identifier;  launch / capture  two different clock_ports (the bank root, the reader root);
+      from     cell glob patterns of the BANK registers (launch root), e.g. "*u_bq.rq_b0*";
+      setup_q  >= 2 (VCO ticks from the bank write edge to its read edge);  hold_q >= 2 (read edge to rewrite edge);
+      why      the calendar the windows come from.
+    None for every spec without the key (all existing kits)."""
+    sw = spec.get('seam_windows')
+    if sw is None:
+        return None
+    if not (native_leaf(spec) and spec.get('kind') == 'tile' and spec.get('clock') == 'multiple_cts_roots'
+            and spec.get('clock_data_paths') == 'related_pll_ratio'):
+        raise ValueError('seam_windows requires a multiple_cts_roots leaf tile under related_pll_ratio')
+    ports = list(spec.get('clock_ports') or [])
+    if not isinstance(sw, list) or not sw:
+        raise ValueError('seam_windows must be a nonempty list')
+    names = set()
+    for w in sw:
+        if not isinstance(w, dict) or set(w) != SEAM_WINDOW_KEYS:
+            raise ValueError(f'seam_windows entry needs exactly {sorted(SEAM_WINDOW_KEYS)}')
+        if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', str(w['name'])) or w['name'] in names:
+            raise ValueError(f'seam_windows: invalid or duplicate name {w["name"]!r}')
+        names.add(w['name'])
+        if w['launch'] not in ports or w['capture'] not in ports or w['launch'] == w['capture']:
+            raise ValueError(f'seam_windows {w["name"]}: launch / capture must be two different clock_ports')
+        if (not isinstance(w['from'], list) or not w['from']
+                or any(not isinstance(x, str) or not re.fullmatch(r'[A-Za-z0-9_.*]+', x) or '*' not in x[:1] for x in w['from'])):
+            raise ValueError(f'seam_windows {w["name"]}: "from" must be cell globs [A-Za-z0-9_.*] starting with *')
+        for k in ('setup_q', 'hold_q'):
+            if type(w[k]) is not int or not 2 <= w[k] <= 12:
+                raise ValueError(f'seam_windows {w["name"]}: {k} must be an integer 2..12 VCO ticks (landed: >= 2q)')
+        if not isinstance(w['why'], str) or not w['why'].strip():
+            raise ValueError(f'seam_windows {w["name"]}: why (the calendar) is required')
+    return sw
+
+
+def seam_window_sdc(spec):
+    """Seam-window constraints (see seam_windows): per window, from the bank registers to every register of the reader
+    root, set_max_delay setup_q * q and set_min_delay -hold_q * q with clock latency INCLUDED (OpenSTA path delay to a
+    register check: required = window + capture latency + inter-clock uncertainty - setup, launch edge time removed),
+    so the sign-off reserve (setup 150/210, hold 100 between different entries) still applies on top of the calendar
+    window.  q is read from core_clk (period / 3), so the route SDC (route period) and signoff.sdc (sign-off period)
+    scale alike.  Fail closed: a window whose patterns match no cell is an error.  The gate's cross_clock check sees
+    these as declared (max_delay / min_delay); their slack is ordinary sign-off timing.  '' without the key."""
+    sw = seam_windows(spec)
+    if sw is None:
+        return ''
+    ports = list(spec['clock_ports'])
+    o = [f'# ---- seam windows (landed 3:4 crossings inside this leaf, {len(sw)} windows; q = core period / 3)',
+         'set ot_sw_q [expr {[get_property [get_clocks core_clk] period] / 3.0}]']
+    for w in sw:
+        pats = ' '.join(w['from'])
+        o += [f'# {w["name"]}: {w["launch"]} -> {w["capture"]} setup {w["setup_q"]}q hold {w["hold_q"]}q ({w["why"]})',
+              'set ot_sw_f {}',
+              f'foreach ot_sw_p {{{pats}}} {{',
+              '  set ot_sw_c [get_cells -quiet $ot_sw_p]',
+              '  if {![llength $ot_sw_c]} { set ot_sw_c [get_cells -quiet -hierarchical $ot_sw_p] }',
+              '  set ot_sw_f [concat $ot_sw_f $ot_sw_c]', '}',
+              f'if {{![llength $ot_sw_f]}} {{ error "OT_SEAM_WINDOW: {w["name"]} bank patterns match no cell" }}',
+              f'set ot_sw_t [get_clocks ot_entry_{ports.index(w["capture"])}]',
+              f'set_max_delay [expr {{{w["setup_q"]} * $ot_sw_q}}] -from $ot_sw_f -to $ot_sw_t',
+              f'set_min_delay [expr {{-{w["hold_q"]} * $ot_sw_q}}] -from $ot_sw_f -to $ot_sw_t',
+              f'puts "OT_SEAM_WINDOW {w["name"]} cells=[llength $ot_sw_f] setup_ps=[expr {{{w["setup_q"]} * $ot_sw_q}}] '
+              f'hold_ps=[expr {{{w["hold_q"]} * $ot_sw_q}}]"']
+    return '\n'.join(o) + '\n'
 
 
 def domains(spec):
@@ -562,6 +818,15 @@ def clocks(spec, period):
         ratio = ds[owners[port]]['ratio']
         value = period * ratio[0] / ratio[1]
         lines.append(f"create_clock -name ot_entry_{i} -period {value:.9f} [get_ports {{{port}}}]")
+    soft = forwarded_soft_clocks(spec)
+    if soft:
+        lines.append('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
+            '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
+            ' '.join('{' + c + '}' for c in e['cells']) + '}}' for e in soft) + ']')
+    for e in soft:
+        d = ds[e['domain']]
+        value = period * d['ratio'][0] / d['ratio'][1]
+        lines.append(f"create_clock -name {e['clock']} -period {value:.9f} [get_ports {{{e['port']}}}]")
     return '\n'.join(lines) + '\n'
 
 
@@ -698,6 +963,12 @@ def _generate(spec, root):
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
     body = (landed_raw_body(LANDED_BODY, bool(cotimed)) if raw else LANDED_BODY) if landed else LEAF_BODY if native_leaf(spec) else BODY
+    fwd = forwarded_clock_ports(spec)
+    if fwd:
+        body = forwarded_body(body)
+    soft = forwarded_soft_clocks(spec)
+    if soft:
+        body = forwarded_soft_body(body)
     if spec.get('clock_data_paths') == 'async_gray_fifo':
         body = async_gray_fifo_constraints.extend(body, spec, root)
     if spec.get('cdc_synchronizers') is not None and spec.get('clock_data_paths') != gray_fifo_cdc_constraints.POLICY:
@@ -710,6 +981,10 @@ def _generate(spec, root):
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
             + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
             + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '')
+            + ('set ::ot_ce_fwd_ports {' + ' '.join('{' + p + '}' for p in fwd) + '}\n' if fwd else '')
+            + ('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
+                '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
+                ' '.join('{' + c + '}' for c in e['cells']) + '}}' for e in soft) + ']\n' if soft else '')
             + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
                 f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
                if raw else '')
@@ -814,22 +1089,40 @@ proc ot_ce_clock_wire {pin clock} {
   }
   return [lindex $values 0]
 }
-# Match ck_insertion.py's exported insertion.json boundary population: input
-# timing endpoints plus output timing launch registers, intersected with this root.
+# Match the structural IO boundary population in ck_insertion.py and io_ref_routed.sdc.
 proc ot_ce_boundary_cells {} {
-  set boundary {}
-  set inputs [all_inputs -no_clocks]
-  if {[llength $inputs]} {
-    foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}] 1
-    }
+  set regs {}
+  foreach p [all_registers -clock_pins] {
+    set n [get_full_name $p]
+    dict set regs [regsub {/[^/]+$} $n {}] $n
   }
-  if {[llength [all_outputs]]} {
-    foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}] 1
-    }
+
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
+}
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
   }
-  return $boundary
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+
+  return $bnd
 }
 # Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
 # (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
@@ -1589,3 +1882,208 @@ def direct_body(body, direct):
     masters = sorted({e['master'] for e in direct['entries']})
     return ('set ::ot_ce_direct_masters {' + ' '.join(masters) + '}\n'
             + direct['bindings_tcl'] + body)
+
+
+# Generated clocks retain their actual phase/scenario constraints. This only
+# expands physical ownership/census; it creates no timing exceptions.
+CLOCK_FAMILY_TCL = (Path(__file__).resolve().parents[2] /
+                    "physical/common_flow/clock_family.tcl").read_text()
+
+def _clock_family_body(body):
+    for marker in ("  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }",
+                   "set pins [all_registers -clock [get_full_name $clock] -clock_pins]",
+                   "  foreach a [get_clocks ot_entry_*] {\n    foreach b [get_clocks ot_entry_*] {",
+                   "proc ot_ce_clock_wire {pin clock} {"):
+        if body.count(marker) != 1:
+            raise ValueError("clock-entry body changed; revalidate generated-clock family extension")
+    body = body.replace("  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }",
+                        "  foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }\n  ot_cf_refresh")
+    body = body.replace("proc ot_ce_leaf_ownership {inputs outputs} {",
+                        "proc ot_ce_leaf_ownership {inputs outputs} {\n  ot_cf_refresh")
+    body = body.replace("set pins [all_registers -clock [get_full_name $clock] -clock_pins]",
+                        "lassign [ot_cf_pins $clock] pins ot_ce_family_owners")
+    body = body.replace("foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {",
+                        "lassign [ot_cf_pins $clock] ot_ce_family_pins ot_ce_family_owners\n    foreach pin $ot_ce_family_pins {")
+    body = body.replace("foreach c [all_clocks] {lappend actual [get_full_name $c]}",
+                        "foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}")
+    body = body.replace("  foreach a [get_clocks ot_entry_*] {\n    foreach b [get_clocks ot_entry_*] {\n      set an [get_full_name $a]; set bn [get_full_name $b]",
+                        "  set ot_ce_family_clocks {}\n  foreach c [all_clocks] {\n    if {[ot_cf_root [get_full_name $c]] in [lmap x [get_clocks ot_entry_*] {get_full_name $x}]} {lappend ot_ce_family_clocks $c}\n  }\n  foreach a $ot_ce_family_clocks {\n    foreach b $ot_ce_family_clocks {\n      set an [ot_cf_root [get_full_name $a]]; set bn [ot_cf_root [get_full_name $b]]")
+    body = body.replace("proc ot_ce_clock_wire {pin clock} {",
+                        "proc ot_ce_legacy_clock_wire {pin clock} {")
+    # Existing ordinary-clock selection/pre-CTS semantics stay unchanged.
+    wrapper = r'''
+proc ot_ce_clock_wire {pin clock} {
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {
+    set owners [get_property $pin clocks]
+    if {[llength $owners] != 1 || [ot_cf_root [get_full_name $owners]] ne [ot_cf_root [get_full_name $clock]]} {
+      error "OT_CLOCK_FAMILY: wrong/ambiguous source ownership [get_full_name $pin]"
+    }
+    return [ot_cf_wire $pin $owners]
+  }
+  return [ot_ce_legacy_clock_wire $pin $clock]
+}
+'''
+    return CLOCK_FAMILY_TCL + wrapper + body
+
+BODY = _clock_family_body(BODY)
+LEAF_BODY = _clock_family_body(LEAF_BODY)
+LANDED_BODY = _clock_family_body(LANDED_BODY)
+
+
+# S81-FRAME4 10-19: the FORWARDED-CLOCK class of a landed cluster (forwarded_clock_ports).  A forwarded port is a data
+# input of the parent SDC (no create_clock: the frame times it as a core-domain input, as the kit always did), so its
+# sinks carry DATA arrival tags, never "(clock prop)" ones: the pin arrival is the largest finite max data arrival in the
+# current scene.  Within one forwarded port bit the input-delay term is common, so the child-flop spread
+# max(arr + R_max) - min(arr + R_min) over its sinks is the forwarded tree's own skew at the child flops.
+FORWARDED_PROCS = r"""proc ot_ce_fwd_arrival {pin} {
+  set scene [get_property [sta::cmd_scene] name]
+  set best ""
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    foreach transition {rise fall} {
+      set paths [$vertex path_iterator $transition max]
+      while {[$paths has_next]} {
+        set path [$paths next]
+        set tag [$path tag]
+        if {[lindex $tag 1] ne $scene || ![string match *max [lindex $tag 2]]} continue
+        set a [sta::time_sta_ui [$path arrival]]
+        if {![ot_ce_finite $a]} continue
+        if {$best eq "" || $a > $best} {set best $a}
+      }
+      $paths finish
+    }
+  }
+  return $best
+}
+proc ot_ce_fwd_domain {port} {
+  # a forwarded clock travels with its data: its cells belong to the clock-entry domain that owns the port as an input
+  set base $port
+  regsub {\[[0-9]+\]$} $port {} base
+  dict for {domain info} $::ot_ce_domains {
+    foreach p [dict get $info inputs] { if {[string match $p $base] || [string match $p $port]} { return $domain } }
+  }
+  error "OT_LANDED: forwarded clock port $port is no input of a clock-entry domain"
+}
+proc ot_ce_forwarded_visit {corner} {
+  # every bound hard-child clock pin whose net traces to a forwarded port: one FORWARDED sink (fail closed below)
+  set ::ot_ce_fwd_cells [dict create]
+  set groups [dict create]; set hits 0
+  set judged [expr {!([info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts) || ([info exists ::ot_ce_require_wire] && $::ot_ce_require_wire)}]
+  foreach cell [get_cells -quiet -hierarchical *] {
+    set master [get_property $cell ref_name]
+    if {![dict exists $::ot_ce_counts $master]} continue
+    foreach pin [get_pins -quiet -of_objects $cell] {
+      set key "$master/[get_property $pin lib_pin_name]"
+      if {![dict exists $::ot_ce_refs $key]} continue
+      set port [ot_ce_net_root_port $pin]
+      if {$port eq ""} continue
+      set base $port
+      regsub {\[[0-9]+\]$} $port {} base
+      if {[lsearch -exact $::ot_ce_fwd_ports $base] < 0} continue
+      set full [get_full_name $pin]
+      set arr [ot_ce_fwd_arrival $pin]
+      if {$arr eq ""} {
+        if {$judged} { error "OT_LANDED: forwarded clock pin $full (port $port) has no measured arrival" }
+        set arr 0.0
+        puts "OT_LANDED FORWARDED_UNMEASURED $corner $port $full (pre-CTS: wire taken 0)"
+      }
+      lassign [dict get $::ot_ce_refs $key $corner] clo cmean chi
+      set lo [expr {$arr + $clo}]; set hi [expr {$arr + $chi}]
+      dict lappend groups $port [list $full $lo $hi]
+      dict set ::ot_ce_fwd_cells [get_full_name $cell] $port
+      puts "OT_LANDED FORWARDED_SINK $corner $port $full wire=$arr R=$cmean min=$lo max=$hi"
+      incr hits
+    }
+  }
+  dict for {port rows} $groups {
+    set lo ""; set hi ""
+    foreach r $rows {
+      lassign $r full a b
+      if {$lo eq "" || $a < $lo} {set lo $a}
+      if {$hi eq "" || $b > $hi} {set hi $b}
+    }
+    set spread [expr {$hi - $lo}]
+    set verdict [expr {$spread <= 80.0 ? "PASS" : "FAIL"}]
+    puts "OT_LANDED FORWARDED_CLOCK $corner $port sinks=[llength $rows] child_flop_spread=[format %.1f $spread] ps (<= 80 at TT and FF) $verdict[expr {$judged ? {} : { (pre-CTS: reported)}}]"
+    if {$verdict eq "FAIL" && $judged && $corner in {tt ff}} {
+      error "OT_LANDED: forwarded clock $port child-flop spread [format %.1f $spread] ps > 80 at $corner ([llength $rows] sinks)"
+    }
+  }
+  return $hits
+}
+"""
+
+
+def forwarded_body(body):
+    """The landed body with the forwarded-clock class (forwarded_clock_ports): forwarded sinks are visited after the
+    region roots and count toward the landed coverage (a pin reached by neither a region root nor a forwarded port
+    still fails "N of M"); their cells are owned by the forwarded port (OT_MULTI_ROOT ownership); spread judged per port
+    bit at the child flops (FORWARDED_PROCS)."""
+    substitutions = [
+        ('  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}',
+         '  incr ot_ce_landed_hits [ot_ce_forwarded_visit $corner]\n'
+         '  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}'),
+        ('    if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }\n',
+         '    if {![dict exists $cells $cell] && [info exists ::ot_ce_fwd_cells] && [dict exists $::ot_ce_fwd_cells $cell]} {\n'
+         '      dict set cells $cell [ot_ce_fwd_domain [dict get $::ot_ce_fwd_cells $cell]]\n'
+         '    }\n'
+         '    if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }\n'),
+    ]
+    for old, new in substitutions:
+        if body.count(old) != 1:
+            raise ValueError("landed body changed; revalidate the forwarded-clock extension")
+        body = body.replace(old, new)
+    return FORWARDED_PROCS + body
+
+
+FORWARDED_SOFT_PROCS = r"""
+proc ot_ce_forwarded_soft_visit {corner groups_name} {
+  upvar 1 $groups_name groups
+  set seen [dict create]
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_full_name [get_cells -of_objects $pin]]
+    if {[dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]]} continue
+    set port [ot_ce_net_root_port $pin]
+    if {![dict exists $::ot_ce_fwd_soft $port]} continue
+    set info [dict get $::ot_ce_fwd_soft $port]
+    if {[lsearch -exact [dict get $info cells] $cell] < 0} {
+      error "OT_FORWARDED_SOFT: undeclared register $cell on $port"
+    }
+    if {[dict exists $seen $cell]} {error "OT_FORWARDED_SOFT: duplicate clock pin $cell"}
+    dict set seen $cell 1
+    set clock [get_clocks [dict get $info clock]]
+    if {[llength $clock] != 1} {error "OT_FORWARDED_SOFT: missing clock $port"}
+    set actual {}
+    foreach p [all_registers -clock [get_full_name $clock] -clock_pins] {lappend actual [get_full_name $p]}
+    if {[get_full_name $pin] ni $actual} {error "OT_FORWARDED_SOFT: actual clock mismatch $cell $port"}
+    set a [ot_ce_clock_wire $pin $clock]
+    dict lappend groups $port [list [get_full_name $pin] $a $a]
+    dict set ::ot_ce_fwd_cells $cell $port
+    puts "OT_LANDED FORWARDED_SOFT_SINK $corner $port [get_full_name $pin] wire=$a"
+  }
+  dict for {port info} $::ot_ce_fwd_soft {
+    foreach cell [dict get $info cells] {
+      if {![dict exists $seen $cell]} {error "OT_FORWARDED_SOFT: missing or wrong-source register $cell ($port)"}
+    }
+  }
+}
+"""
+
+
+def forwarded_soft_body(body):
+    substitutions = [
+        ('  set_propagated_clock [get_clocks ot_entry_*]',
+         '  set_propagated_clock [get_clocks ot_entry_*]\n  set_propagated_clock [get_clocks ot_forwarded_*]'),
+        ('  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}',
+         '  dict for {port info} $::ot_ce_fwd_soft {lappend expected [dict get $info clock]}\n'
+         '  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}'),
+        ('  dict for {port rows} $groups {',
+         '  ot_ce_forwarded_soft_visit $corner groups\n  dict for {port rows} $groups {'),
+        ('        if {$n in $::ot_ce_ports} continue',
+         '        if {$n in $::ot_ce_ports || [dict exists $::ot_ce_fwd_soft $n]} continue'),
+    ]
+    for old, new in substitutions:
+        if body.count(old) != 1:
+            raise ValueError('forwarded soft clock body changed; revalidate extension')
+        body = body.replace(old, new)
+    return FORWARDED_SOFT_PROCS + body
