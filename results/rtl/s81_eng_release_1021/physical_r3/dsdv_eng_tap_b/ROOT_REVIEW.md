@@ -1,0 +1,14 @@
+# Exact TAP fallback root review
+
+Source c8056173e; evidence36932dfc5. Opt-in OT_S81ENG_TAP_N32R2, top dsdv_eng_tap, no parameter changes. Shipping archive SHA256 3e741262af304814282364a0cab8be5f7c23ff50c93fa0bdc0725b3a191d9b2f, manifest SHA256 319f6e23b7774bf01e9b02038bcc625adb9ac38689543ed0aa0cd21276cbd4af. Full exact-content shipping manifest source_snapshot.json records daemon overlays and remote_archive_verified=true. Immutable consumed source: ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/dsdv_eng_tap_b-20261021-142127/src. Geometry hashes in geometry_sha256.json; current files match shipping entries.
+
+1. Pins: N641/S636 signal count implies2.97/2.94pins/um at216um width, versus4.64/4.60 on original138.24um MAIN. Actual1901pins checked on tracks, zero inaccessible/outside. Every output registered. Static sid settles2clocks during reset; no added traffic edges. Same-region input logic-depth WARN retained; upstream parent timing/reach required.
+2. Reach:216+129.6=345.6um entire-tile Manhattan envelope below405. Parent chain531um needs existing die landing stations; no claim that tile fixes parent reach.
+3. Native: actual loaded-Liberty census PASS32/0/roles0. Real11b kept consumers replace22b selectors; genuine pointer and decode partition. No waiver.
+4. Depth: exact TT input setup+30.5ps, hold+44.1ps. Boundary combinational depth9/10 permitted only same-region contract; no extra register stage inserted.
+5. Storage: unchanged2x6x263b multipoint hold ring, divided24x11b real independently controlled consumers; each ring chunk132b, ownerFIFO8b/bank. No >2kb individual heap; no macro substitute latency claim.
+6. Geometry/cost: macrofree216x129.6=27993.6um2 outline,26519um2 core, postplace3232um2std,12.2% util. Width forced by1901pins and face budget; FB larger than172.8x108 MAIN intentionally buys lower pin density. Low-util warning accepted as candidate disposition pending root choice. No area relaxation hidden. M5 cap, parentM6 strap; GRT0overflow, worstM2usage15.50%; images reviewed unobstructed channels. New abstract/parent slot grant required; no old-view alias.
+7. Clock: oneck,5327sinks, TTinsertion221.5ps/FF180.2ps, spread20.0/17.9ps<80. ActualCTS proof, no clock waiver.
+8. Reset: rawrst_n exactly2root sinks; 2shared literal1 roots ->2middle data/reset groups ->62final leaves. Groups<=32. Async assert, release original3edges. Existing exactbase/seeds2/3 and6causalmutants PASS at source4c/c805. No protocol age added.
+
+Actual gate_result.json WARN0fail/3warn. gate_layout/floorplan.png and gate_layout/density.png reviewed. Root exclusively decides publication; no submit/autosubmit/merge performed. Required next step root review of complete packet, then exact-source closure submission and parent integration; this receipt is not a CLOSED publication.
