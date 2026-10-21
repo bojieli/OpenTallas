@@ -24,7 +24,8 @@ import json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 import svc_rs_embed as E
 
-HOP, G0, PVW = 5, 1, 40
+LINK_EXTRA = int(os.environ.get('OT_SVC_GROUP_LINK_LAT', '0'))
+HOP, G0, PVW = 5 + LINK_EXTRA, 1, 40
 FACES = ['N', 'E', 'S', 'W']
 ENTRY = {'W': (1, 2), 'E': (1, 5)}              # rsv_05, rsv_11
 CROOT = {'W': (1, 3), 'E': (1, 4)}              # chain roots rsv_07, rsv_09 (fold)
@@ -46,7 +47,7 @@ def tree():
 
 def main():
     root = os.path.join(os.path.dirname(__file__), '..', '..', '..')
-    base = E.roles(E.balanced(0, 15), E.NODE, 1, 5)
+    base = E.roles(E.balanced(0, 15), E.NODE, 1, 5, LINK_EXTRA)
     par, depth = tree()
     dmax = max(depth.values())
     offmax = max(base['roles'][s].get('off', 0) for s in range(16))
@@ -91,7 +92,8 @@ def main():
           f'localparam integer RS_ENTRY_W = {es["W"]}, RS_ENTRY_E = {es["E"]}, RS_CROOT_W = {E.sid(CROOT["W"])}, '
           f'RS_CROOT_E = {E.sid(CROOT["E"])}, RS_FOLD = {base["root"]};',
           f'localparam integer RS_HOP = {HOP}, RS_DMAX = {dmax}, RS_G0 = {G0}, RS_PVW = {PVW}, RS_OFFMAX = {offmax};']
-    open(os.path.join(root, 'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles.svh'), 'w').write('\n'.join(L) + '\n')
+    suffix = '_group72' if LINK_EXTRA else ''
+    open(os.path.join(root, f'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles{suffix}.svh'), 'w').write('\n'.join(L) + '\n')
     json.dump(dict(generator='tools/s81_dv/svc_rs/svc_rs_tree.py', plan='S81-DV p4j', hop=HOP, g0=G0, dmax=dmax,
                    entries=es, chain_roots={h: E.sid(rc) for h, rc in CROOT.items()}, fold=base['root'], pv_words=PVW,
                    offmax=offmax, rsv_map='rsv_NN = sid NN = 2 column + row (row 1 upper), as dv_plan.py rsv_links',
@@ -102,7 +104,7 @@ def main():
                                    tp_entry_root='score exchange gather 05 -> 07, 11 -> 09; scatter 09 -> 11, 07 -> 05'),
                    slices={s: rows[s] for s in range(16)},
                    pvslot={f'st{st}_s{s}': v for (st, s), v in sorted(pvslot.items())}),
-              open(os.path.join(root, 'results/arch/s81_dv_1016/svc_rs/tree.json'), 'w'), indent=1)
+              open(os.path.join(root, f'results/arch/s81_dv_1016/svc_rs/tree{suffix}.json'), 'w'), indent=1)
     print(json.dumps({s: (rows[s]['tile'], rows[s]['half'], rows[s]['depth'], rows[s]['gd']) for s in range(16)}))
     print(json.dumps({f'{st}/{s}': v for (st, s), v in sorted(pvslot.items())}))
 
