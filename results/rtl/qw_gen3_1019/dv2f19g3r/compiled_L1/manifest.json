@@ -1,0 +1,167 @@
+{
+ "schema": "opentallas.qwen_layerbench.compile_manifest.v1",
+ "tool": "tools/qwen_layerbench/layer_compile.py",
+ "command": [
+  "python3",
+  "tools/qwen_layerbench/layer_compile.py",
+  "--out",
+  "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/compiled_L1",
+  "--compute-stages",
+  "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/relay_stages_netlist.json",
+  "--kv-stages",
+  "results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/kv_kvs14c_relay_stages.json.gz",
+  "--compute-commit",
+  "6f78e3de2",
+  "--compute-params",
+  "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/die.v.params.json",
+  "--compute-die-v",
+  "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/die.v",
+  "--compute-lanes",
+  "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/fwd_lanes.json"
+ ],
+ "tool_sha256": "e76401a36a033e49a15f11ffd3fc10cf8f138fdb49224ca4b459896687ccc017",
+ "source_commits": {
+  "compute": "6f78e3de2",
+  "kv": "f05f9338f"
+ },
+ "inputs": {
+  "compute_stages": {
+   "path": "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/relay_stages_netlist.json",
+   "sha256": "987866a3b2428ee113342ba41b0ed504d37e9a8020484ab58800693bbf4f87a2"
+  },
+  "kv_stages": {
+   "path": "results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/kv_kvs14c_relay_stages.json.gz",
+   "sha256": "b96c385959835d9b6ed088dff243526075e73da6361a9a9c584271aa7ad3ca4e"
+  },
+  "token_path": {
+   "path": "results/arch/token_path_20261009/qwen_rom.json",
+   "sha256": "b5bbd973447f62fab92bc391755173fa80ee5ed78725c6a1d05c740b42027394"
+  },
+  "link_handoff": {
+   "path": "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "sha256": "3316358c495df3e27a26977b3495b0588396957fa6e6bbf24539a75fd5524fa1"
+  },
+  "compute_die_v": {
+   "path": "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/die.v",
+   "sha256": "6a65da637f9bda4a6cb0ff1d2309ffc7da9fc069ebd7f833a7d2393feed00d5e"
+  },
+  "compute_lanes": {
+   "path": "/home/ubuntu/scratch/qw-gen3/dv2f19g3r/p2/fwd_lanes.json",
+   "sha256": "754eab0d8036edbab7abf75c431f533c63ebbacad2d8752ff4fc4afb1010ecf4"
+  }
+ },
+ "compute_seam": {
+  "stages": {
+   "CS_TXS": 2,
+   "CS_RXV": 2,
+   "CS_RXP": 2,
+   "CS_X3S": 3,
+   "SC_TX": 2,
+   "SC_X3": 2
+  },
+  "source": "record_bundles.seam_stages",
+  "rule": "record_bundles.seam_stages: lane cycles per seam bundle as built (fwd E + 1, plain n, direct 0)"
+ },
+ "die_table_digests": {
+  "qwen_compute": "sha256:e31deb978dd48f3ab2a6732443c143e495d123421f099979f1753ac3dfcde26f",
+  "qwen_kv": "sha256:957ba33f9672035cd1f0bb734e38b6767dda79af334cd0b705217db9c02d10fa"
+ },
+ "layers": {
+  "L1": {
+   "X": 7,
+   "period_compiled": 6842
+  },
+  "L0": {
+   "X": -215,
+   "start": 272
+  },
+  "head": "no D2D traffic (compute-only; terminal RESULT is in the token run segment 1); ME programme = gap"
+ },
+ "stages": {
+  "CS_TXS": 2,
+  "CS_RXV": 2,
+  "CS_RXP": 2,
+  "CS_X3S": 3,
+  "SC_TX": 2,
+  "SC_X3": 2,
+  "KS_RXV": 11,
+  "KS_RXP": 11,
+  "KS_TXS": 9,
+  "KS_TXK": 9,
+  "KS_TXB": 9,
+  "SK_TXV": 11,
+  "SK_TXP": 11
+ },
+ "txd": {
+  "C": [
+   8,
+   3,
+   1,
+   10
+  ],
+  "K": [
+   23,
+   4,
+   3,
+   3
+  ]
+ },
+ "kv_programme": {
+  "RX_CMD": 2,
+  "SERVICE_END": 1777,
+  "STRETCH": 1,
+  "TX_FIRST": 1750,
+  "KV_CODEC": 1,
+  "source": "f05f9338f:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal",
+  "law": "TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)"
+ },
+ "relay_check": {
+  "compute": "PASS",
+  "kv": "FAIL"
+ },
+ "findings": [
+  "SEAM_AGE_SOURCE",
+  "BUNDLE_AGE K.rx_record",
+  "BUNDLE_AGE K.tx_slot",
+  "BUNDLE_AGE K.tx_record",
+  "TXDP K",
+  "L0_WINDOW"
+ ],
+ "gaps": 6,
+ "files": {
+  "compute_programme/sys_face_events.json": "b8e8121a75d0c12596f250596deb0ece1ef4d4b739d767611a2cb24f1266ad7f",
+  "d2d/cal_L1/cal_C_rx.memh": "bdc23c871dcb166f00042da7f75a137614f081d3c30206188fdee7d9f270075b",
+  "d2d/cal_L1/cal_C_tx.memh": "2cd08c83571453dd31feec0be30ab8883c916c08733758f73bf2e67c07f689cd",
+  "d2d/cal_L1/cal_K_rx.memh": "594ac07db05340aa7ba4b8811e0a0b3fe8466ba2838efc05d46f1bddc92f489f",
+  "d2d/cal_L1/cal_K_tx.memh": "83156922acad455546216cf792c28c1bc67c6e5ba82ce541e3540507fed47aaa",
+  "d2d/cal_L1/calendar.json": "ae44fc5591b5737488bf2e1982d81e67e5e69d2430412aef866d97f337fd8812",
+  "d2d/d2d_cal_image.svh": "20dbd69d78d6cf19bb7748ceb68c5eb703e93fea12343571876f95b518e1a3a3",
+  "d2d/image.log": "6a4e4fa1387d1a86310779cbae2e0bfceed823c721fdd7f407c9bedf2d93f95d",
+  "d2d/program/cal_C_rx.memh": "b995bdcf0ab406851b65a058e8becb6997257dc7b3d3a57c6bfbd7a1d3bb1770",
+  "d2d/program/cal_C_rx_seg1.memh": "129805c9e04279ac36de91e8a541a3b3ff5bdda8542b6e7dec6f7771439362cf",
+  "d2d/program/cal_C_rx_seg2.memh": "f2db2d93de7e606002cc2599f4cb1fbc645cc64b6ee58bab8204d5196c9e35d1",
+  "d2d/program/cal_C_tx.memh": "c493047fec9f481861d7eb0f0ca8eb8dfee0cfefb6ca358a9b5919e132a244f7",
+  "d2d/program/cal_C_tx_seg1.memh": "b596659d005974101f82a9e365eba1b188a97200f6b010039ccfd00db78c4f4d",
+  "d2d/program/cal_C_tx_seg2.memh": "b450051df1f8e4a79272a358ae93cdb22266a8bce214b28a57eb8f6bc1424e62",
+  "d2d/program/cal_K_rx.memh": "40c785776606e3b3982edc80dfe77dac08ee153d9cfbaac92b3b492bd5dacfb1",
+  "d2d/program/cal_K_rx_seg1.memh": "b596659d005974101f82a9e365eba1b188a97200f6b010039ccfd00db78c4f4d",
+  "d2d/program/cal_K_rx_seg2.memh": "b450051df1f8e4a79272a358ae93cdb22266a8bce214b28a57eb8f6bc1424e62",
+  "d2d/program/cal_K_tx.memh": "b9c036f32108055091d55e8f77f6c42ba50bcc1526f8ab4ec81667061206523c",
+  "d2d/program/cal_K_tx_seg1.memh": "129805c9e04279ac36de91e8a541a3b3ff5bdda8542b6e7dec6f7771439362cf",
+  "d2d/program/cal_K_tx_seg2.memh": "f2db2d93de7e606002cc2599f4cb1fbc645cc64b6ee58bab8204d5196c9e35d1",
+  "d2d/program/calendar.json": "842bb61e3cd87ec634d30408c4de6aa2f70679c0bff2cfbd9ac7009601ad2454",
+  "d2d/program/txdp.svh": "0cb0e1824aadd329b330a5ba45351b9b3f95bb65976b25057fd9d485de630aaa",
+  "d2d/program.log": "ac3a6cd7114aebec8ada88c84cbae0a3d8d10a419365dc68933f5db17e9d056d",
+  "d2d/token_path_compiled.json.gz": "6a2e9721034e1685087dbea462ba912d3a2d453e8bc7c99f8f51d31bc49dfa01",
+  "d2d/txdp.svh": "b95106295ed0ad09744f1d0a780904aadd2c400dc93d10e81a19daafdfa4167d",
+  "findings.json": "f9ae90b3b5a74392e502d1b964ea86779d527cb7c68760139e7ccc2248381aaa",
+  "kv_programme/boot.hex": "a32882e554f72fce78d426a02f7f2031f5bad7644b2d19c8253b763f53b3cc19",
+  "kv_programme/layer_programme_image.svh": "142627f801397fc23f10143837683a0e02175ff086563304bcb4042bdb9a9c95",
+  "kv_programme/layer_roots.json": "e1774571336ee29ee3c3f2e02b9ad1e3ea869c0eafac3f68dd403b025227cbdc",
+  "kv_programme.log": "a136d04356423ae559571809a99810929f517ba3dac329e13b08fa692a8a11e5",
+  "relay_schedule/compute_compiled.json": "f1efd9bfceb8dca9970b96cbc2ed6a4e9dddb4cbf76fb149be867bd486b44482",
+  "relay_schedule/kv_compiled.json.gz": "be4ab2bb3dd4a6d331c3fa471bd545b60fc8f97f97738f7a9d54bc91bddd7a47",
+  "relay_schedule/relay_check_compute.json": "b99779cae59225a01fecaccf7e8cb4b9efcbcc9ae0b3e7e57348dce28798545d",
+  "relay_schedule/relay_check_kv.json": "9f44fb6414a08989e5b73546c9b353375128c3d4dc8a696d01cb063b155b6df4"
+ }
+}

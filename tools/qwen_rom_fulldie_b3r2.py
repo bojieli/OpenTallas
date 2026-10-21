@@ -1123,6 +1123,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                     # Q-DIEPLAN3 2026-10-17: DIAGNOSTIC dv2r8f2 die case on the q3h model (tools/qwen_split/dv_case.py)
                     from qwen_split.dv_case import apply_dv
                     apply_dv(v, m)
+                    # QW-GEN5 g5 (opt-in): real coll_blk /6 divider, UCIe PHY FDI clock, centre core feed bump
+                    from qwen_split.g5_clocking import apply as apply_g5_clocking
+                    apply_g5_clocking(v, m)
                     if getattr(v, '_write_netlist_pre_b2', None) is not None:
                         v.write_netlist = v._write_netlist_pre_b2   # the b2 trial writer needs the retired b2 buses
             _late_pin_grant(v)
@@ -4382,7 +4385,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     _ckof.setdefault(i_, []).append((bid_, p_.lstrip('*')))
             elif bits_ == 1:
                 for i_, p_ in eps_[1:]:
-                    if p_.lstrip('*') in FWD_RST_PORTS:
+                    if p_.lstrip('*') in FWD_RST_PORTS or re.fullmatch(r'rst_c\d+r\d+', p_.lstrip('*')):
                         _rstof.setdefault(i_, {})[p_.lstrip('*')] = bid_
         _fdi = _os_r.environ.get('OT_SPLIT_FWD_LANES_FDI', '0') == '1'
         _frst = _os_r.environ.get('OT_SPLIT_FWD_LANES_RST', '0') == '1'
@@ -4395,9 +4398,27 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             return next((b_ for b_, p_ in c_ if p_ == 'ck'), None) or next((b_ for b_, p_ in c_ if p_ == 'clk'), None) or \
                 (c_[0][0] if c_ else None)
 
-        def _fwd_rst(inst):
+        # QW-GEN3 10-19 (dv2f19g3r: 264 landed c_b16 links stayed PLAIN relays, 'source / sink reset pin not found'):
+        # a qfd_c_b16_dv has 16 REGIONAL reset pins rst_c<c>r<r> (Q-CB16RST), no rst_n: the lane takes the regional
+        # reset of the region that holds the bus port's pin register (die_clock16 port_domains: port -> ck_cXrY)
+        _pdom = {}
+        if _os_r.environ.get('OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS'):
+            try:
+                _pdom = json.loads(Path(_os_r.environ['OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS']).read_text()).get('port_domains', {})
+            except (OSError, ValueError):
+                _pdom = {}
+
+        def _fwd_rst(inst, port=None):
             r_ = _rstof.get(inst, {})
-            return next((p_ for p_ in FWD_RST_PORTS if p_ in r_), None)
+            p0 = next((p_ for p_ in FWD_RST_PORTS if p_ in r_), None)
+            if p0 is not None:
+                return p0
+            reg = sorted(p_ for p_ in r_ if re.fullmatch(r'rst_c\d+r\d+', p_))
+            if not reg:
+                return None
+            d_ = _pdom.get(re.sub(r'\d+$', lambda mm: mm.group(0), (port or '').lstrip('*')))
+            want = ('rst_' + d_[3:]) if d_ and d_.startswith('ck_') else None
+            return want if want in reg else reg[0]
 
         def _fwd_ok(pl_):
             bid_, cl_, eps_ = pl_['bid'], pl_['cl'], pl_['eps']
@@ -4424,8 +4445,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 return 'BUMP'
             if _fwd_clock(si_) is None or _fwd_clock(di_) is None:
                 return 'source or sink without a clock trunk'
-            if _fwd_rst(si_) is None or _fwd_rst(di_) is None:
-                return f'source / sink reset pin not found (src {_fwd_rst(si_)}, dst {_fwd_rst(di_)})'
+            if _fwd_rst(si_, sp_) is None or _fwd_rst(di_, dp_) is None:
+                return f'source / sink reset pin not found (src {_fwd_rst(si_, sp_)}, dst {_fwd_rst(di_, dp_)})'
             return None
     fwd_eq = {}
     if FWDL:
@@ -4460,7 +4481,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             why_ = _fwd_ok(pl)
             if why_ in (None, 'RST', 'BUMP'):
                 n_ = len(pl['frames'])
-                (si_, _), (di_, _) = eps
+                (si_, sp_), (di_, dp_) = eps
                 es_ = int(_lpE.get(bid, {}).get('E') or FWD_LANE_E_STA)
                 e_ = fwd_e_est(n_) + es_ - FWD_LANE_E_STA
                 k_ = _lpE.get(bid, {}).get('K')
@@ -4468,7 +4489,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if bid in fwd_eq:          # Q-COLLCAL: the bus group's E / landing MCP / total-E K
                     es_, e_, k_ = fwd_eq[bid]['E_sta'], fwd_eq[bid]['E'], fwd_eq[bid]['K']
                 fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_), dst_ck=_fwd_clock(di_),
-                           src_rst=[si_, _fwd_rst(si_)], dst_rst=[di_, _fwd_rst(di_)], E=e_, E_sta=es_, K=k_,
+                           src_rst=[si_, _fwd_rst(si_, sp_)], dst_rst=[di_, _fwd_rst(di_, dp_)], E=e_, E_sta=es_, K=k_,
                            lane={'RST': 'reset', 'BUMP': 'bump'}.get(why_, 'data'),
                            E_basis='land plan (die STA)' if bid in _lpE else 'estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA',
                            K_basis='land plan' if _lpE.get(bid, {}).get('K') is not None else 'E mod 8 (assumes G = R0); re-derive with the reset calendar',
@@ -4486,6 +4507,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         fwd['src_basis'] = 'reset source without a clock: hop 0 on the source-side regional root'
                     fwd.update(E=None, E_sta=None, K=None, E_basis='reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root',
                                K_basis='n/a (no ring)', src_rst=None, dst_rst=None)
+                if _os_r.environ.get('OT_SPLIT_FWD_BUMP_FEED', '0') == '1':
+                    from qwen_split.bump_feed_clock import bind_source
+                    bind_source(m, fwd, eps)
                 fwd_rows.append(fwd)
             else:
                 fwd_skip.append(dict(bid=bid, cl=cl, bits=bits, n=len(pl['frames']), reason=why_))
@@ -4539,7 +4563,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 else:
                     if k == 0:
                         ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck'))
-                        _ckf[(nm, 'ck')] = fwd['src']    # DIE-QWEN-GEN16: hop 0 stays on the SENDER's root
+                        if not fwd.get('source_feed_contract'):
+                            _ckf[(nm, 'ck')] = fwd['src']    # regional source follows its sender
                     else:
                         fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
                     fwd['stations'].append(nm)
@@ -4549,7 +4574,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     # hop 0: the source block's own root at the hop-0 gate; the gate enable / lane epoch = the source's
                     # released reset (attached to the source's reset net after the plan: the reset tree reaches it)
                     ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck' if kind_ == 'rlyh0' else 'ck_s'))
-                    _ckf[(nm, 'ck' if kind_ == 'rlyh0' else 'ck_s')] = fwd['src']   # DIE-QWEN-GEN16: sender's root
+                    if not fwd.get('source_feed_contract'):
+                        _ckf[(nm, 'ck' if kind_ == 'rlyh0' else 'ck_s')] = fwd['src']
                     fwd_attach.append((nm, 'en', *fwd['src_rst']))
                 else:
                     fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
@@ -4690,6 +4716,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
                           relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
     base = v.masters
+    FWD_CK_FACE = _os.environ.get('OT_SPLIT_FWD_CK_FACE', '0') == '1'
+    fwd_ck_area_ = {'rlyh0': ('ck_o',), 'rlyh': ('ckf', 'ck_o'), 'rlyr0': ('ck_o',), 'rlyr': ('ckf', 'ck_o'), 'landh': ('ckf',)}
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
@@ -4707,10 +4735,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     ep_ = {'a': 'ea', 'b': 'eb'}[port]
                     if (ep_ == 'ea' and kind_ in ('rlyh', 'landh')) or (ep_ == 'eb' and kind_ in ('rlyh0', 'rlyh')):
                         M.face(ep_, 1, f, 'M5' if f in 'NS' else 'M4', along / 2 + (bits / 2 + 2) * 0.048 * pitch_tr, pitch_tr)
+                    # QW-GRT4 10-20 (Q.GRT): the forwarded clock travels WITH its data: ck_o leaves on the data-out face
+                    # beside b, ckf enters on the data-in face beside a (mirror of the epoch bit).  As frame-centre area
+                    # pins the rN fck_* hops ran 433-563 um while their data hops stayed < 405 (centre-to-centre adds
+                    # the frame half-widths; die_repeaters over_reach 98 nets).  OT_SPLIT_FWD_CK_FACE=1.
+                    ckp_ = {'a': 'ckf', 'b': 'ck_o'}[port]
+                    if FWD_CK_FACE and ckp_ in fwd_ck_area_.get(kind_, ()):
+                        M.face(ckp_, 1, f, 'M5' if f in 'NS' else 'M4', along / 2 - (bits / 2 + 2) * 0.048 * pitch_tr, pitch_tr)
                 area_ = {'rlyh0': ('ck', 'en', 'ck_o'), 'rlyh': ('ckf', 'ck_o'),
                          'rlyr0': ('ck', 'ck_o'), 'rlyr': ('ckf', 'ck_o'), 'rlyrl': ('ck',),
                          'landh': ('ckf', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault'),
                          'landh0': ('ck_s', 'en', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault')}[kind_]
+                if FWD_CK_FACE:
+                    area_ = tuple(p_ for p_ in area_ if p_ not in fwd_ck_area_.get(kind_, ()))
                 for j_, p_ in enumerate(area_):
                     M.area(p_, 1, w / 2 + (-0.8 if j_ % 2 == 0 else 0.8), h / 2 + 1.62 * (j_ // 2) - 1.62 * ((len(area_) - 1) // 4), 1)
                 o[mn] = M
@@ -4774,6 +4811,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         pair_over.append((bid, cl, bits, round(Lp_, 1), lim_))
         if pair_over:
             over += [t_[:4] for t_ in pair_over if t_[:4] not in over]
+        # QW-GRT4 10-20: the forwarded-clock hop (fck_*: ck_o -> ckf, clock_trunk class, skipped above) is a relay-to-relay
+        # span as well: judged at the same reach; OT_RELAY_FCK_GATE=1 makes an over a GEN error (else reported only)
+        fck_over, fck_max = [], 0.0
+        for bid, cl, bits, eps in m['buses']:
+            if cl != 'clock_trunk' or not bid.startswith('fck_') or len(eps) < 2:
+                continue
+            pts_ = [pos2(*e) for e in eps]
+            L_ = max(q[0] for q in pts_) - min(q[0] for q in pts_) + max(q[1] for q in pts_) - min(q[1] for q in pts_)
+            fck_max = max(fck_max, L_)
+            if L_ > RELAY_REACH_UM:
+                fck_over.append((bid, cl, bits, round(L_, 1)))
+        m['r21_relays'].update(fck_max_um=round(fck_max, 1), fck_over_reach=sorted(fck_over, key=lambda t: -t[3])[:200],
+                               fck_over_reach_n=len(fck_over))
+        if _os.environ.get('OT_RELAY_FCK_GATE', '0') == '1':
+            over += fck_over
         m['r21_relays'].update(reach_um=RELAY_REACH_UM, max_pin_to_pin_um=round(hmax, 1), over_reach=sorted(over, key=lambda t: -t[3]))
         if pg_ is not None:
             m['r21_relays']['pair_check'] = dict(
@@ -4827,6 +4879,11 @@ RST_PITCH_UM = 220.0             # trunk lattice
 RST_LEAF_UM = 200.0              # sinks of one lattice cell share a leaf repeater
 RST_NET_UM = 450.0               # build limit per net (cell centres); the emitted pins are re-checked at RST_OK_UM
 RST_OK_UM = 480.0
+# QW-GRT4 10-20 (Q.GRT): every reset-tree hop is a registered single-cycle wire, so the 405-um planning reach (owner
+# 0cl / SAFE-DESIGN item 2) applies to it too: rN die_repeaters measured rst_io / rst_field / rst_fwd_s / rst_seq_ctlm
+# hops of 434-475 um under the historical 450 / 480 limits.  OT_RST_NET_UM / OT_RST_OK_UM tighten them (e.g. 380 / 405).
+RST_NET_UM = float(os.environ.get('OT_RST_NET_UM', RST_NET_UM))
+RST_OK_UM = float(os.environ.get('OT_RST_OK_UM', RST_OK_UM))
 RST_GAP_UM = 2.16                # clearance to every other instance
 
 
