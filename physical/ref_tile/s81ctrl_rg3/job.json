@@ -1,5 +1,5 @@
 {
- "name": "s81ctrl_rg3-rg3-COMMIT",
+ "name": "s81ctrl_rg3-rg3-6350f8a2b",
  "block": "dsfd_ctrl_rg3",
  "ref_tile": true,
  "owner": "Claude:DRIVE-S81-IDX4-KITS",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-idx4kits-1020",
-  "commit": "COMMIT",
+  "commit": "6350f8a2bc91e2e2c721dc113a72e67f0ca13b0c",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
@@ -149,7 +149,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81ctrl_rg3/s81ctrl_rg3-rg3-COMMIT"
+   "to": "results/rtl/ref_tile/s81ctrl_rg3/s81ctrl_rg3-rg3-6350f8a2b"
   }
  ],
  "cycles_added": 0,
