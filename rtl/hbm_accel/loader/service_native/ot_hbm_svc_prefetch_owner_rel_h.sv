@@ -35,7 +35,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  reg [4:0] pc_q;always @(posedge clk)pc_q<=pc_id; // strap identity (static), this owner's physical PC
  reg [16:0] ticket;reg [9:0] cursor;reg sticky;reg issuing_q;
  reg [ENTRIES-1:0] valid_q;
- (* keep="true",dont_touch="true" *) reg [ENTRIES-1:0] vfree_a,vfree_b;   // KEPT copies of !valid_q (table capture enables)
+ (* keep="true",dont_touch="true" *) reg [ENTRIES-1:0] vfree_a,vfree_b,vfree_c,vfree_d;   // KEPT copies of !valid_q (table capture enables)
  reg [GW-1:0] generation_q[0:ENTRIES-1];reg [15:0] epoch_q[0:ENTRIES-1];
  reg [LB-1:0] bank_q[0:ENTRIES-1];reg permuted_q[0:ENTRIES-1];reg [1:0] row_low_q[0:ENTRIES-1];
  reg [10:0] ordinal_q[0:ENTRIES-1];reg [2:0] length_q[0:ENTRIES-1];reg [3:0] seen_q[0:ENTRIES-1];
@@ -98,15 +98,23 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  always @(posedge clk or negedge rst_n[1])if(!rst_n[1])valid_q<=0;else valid_q<=valid_n;
  always @(posedge clk or negedge rst_n[2])if(!rst_n[2])vfree_a<={ENTRIES{1'b1}};else vfree_a<=~valid_n;
  // vfree_b: no reset -- a pure function of the reset valid_q (all free one edge into reset)
- always @(posedge clk)vfree_b<=(HM==5)?~valid_q:~valid_n;
+ always @(posedge clk)begin
+  vfree_b<=(HM==5)?~valid_q:~valid_n;
+  vfree_d<=(HM==5)?~valid_q:~valid_n;
+  vfree_c<=~valid_n;
+ end
  // datapath: cursor + tag table (no reset)
  always @(posedge clk)begin
   if(blk_start)cursor<=0;
   if(fire)cursor<=t+length;
   for(e=0;e<ENTRIES;e=e+1)begin
-   if(vfree_a[e])begin generation_q[e]<=ticket[16:OWNER_AW];epoch_q[e]<=epoch;end            // 28 flops
+   // Kept free copies bound actual mux pins, not just the number of flops:
+   // each hold mux consumes two enable pins. Epoch16 =>32; generation12 =>24.
+   if(vfree_a[e])generation_q[e]<=ticket[16:OWNER_AW];
+   if(vfree_c[e])epoch_q[e]<=epoch;
+   if(vfree_d[e])begin bank_q[e]<=bank;ordinal_q[e]<={t[8:0],2'b0}+lane;end
    if(vfree_b[e])begin                                                                          // 23 flops
-    bank_q[e]<=bank;ordinal_q[e]<={t[8:0],2'b0}+lane;length_q[e]<=length;
+    length_q[e]<=length;
     seen_q[e]<=0;permuted_q[e]<=full_group;row_low_q[e]<=row[1:0];
    end
    else if(response_take&&ret==e)seen_q[e]<=seen_q[e]|(4'b1<<kr_beat);
