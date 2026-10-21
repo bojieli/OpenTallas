@@ -7,5 +7,11 @@
   },
   "source_plan": "Replace wide CKKM24 subtrees by existing symmetric measured-balanced clock_spine, one explicit isolated leaf per SRAM, <=16 flop loads/leaf, <=30um bins, <=150um spine segment. Same ck port, RTL/registered boundaries/geometry and constraints; no data cycles. Buffers physically priced from actual tree. Actual proof mandatory, main CKKM16 and FB GRT preserved.",
   "existing_qualified_example": "SPR m4/f4 symmetric spine+macro-leaf option CLOSED sourcebb8dd356c; does not qualify this glue",
-  "no_waiver": "clock80ps/macro_slew120ps limits unchanged; parent/ROOT critical review required before physical submission"
+  "no_waiver": "clock80ps/macro_slew120ps limits unchanged; parent/ROOT critical review required before physical submission",
+  "source_binding": {
+    "start_commit": "5c1b2379b64644c92c93be7aff09a3d58024ca7c",
+    "archive_sha256": "fcf0176aa659f2ef91cded9877d80a4eed4b7cbc488f9e769588a6de6cbe443b",
+    "manifest_sha256": "03cb5b922e22093d64877ed49533d2e0a2a07ce23ecf70ded5c135b5b3ffe921"
+  },
+  "raw_ck_sha256": "d9b9c28bd15464252979fd581c2552afa5642247a2a4eac958b8fac51e42b35f"
 }
